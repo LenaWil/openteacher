@@ -146,20 +146,21 @@ class WordsLessonModule(object):
 		pass
 
 	def createLesson(self):
-		enterWidget = EnterWidget()
-		teachWidget = TeachWidget()
-
 		lessons = set()
 		for module in self.manager.mods.supporting("ui"):
+			enterWidget = EnterWidget()
+			teachWidget = TeachWidget()
+			
 			fileTab = module.addFileTab(
 				"Word lesson %s" % self._counter,
 				enterWidget,
 				teachWidget
 			)
+
 			lesson = Lesson(self, self.manager, fileTab, enterWidget)
 			self._references.add(lesson)
 			self.lessonCreated.emit(lesson)
-			
+
 			lessons.add(lesson)
 		self._counter += 1
 		return lessons

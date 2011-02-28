@@ -1,0 +1,39 @@
+#!	Copyright 2011, Marten de Vries
+#!
+#!	This file is part of OpenTeacher.
+#!
+#!	OpenTeacher is free software: you can redistribute it and/or modify
+#!	it under the terms of the GNU General Public License as published by
+#!	the Free Software Foundation, either version 3 of the License, or
+#!	(at your option) any later version.
+#!
+#!	OpenTeacher is distributed in the hope that it will be useful,
+#!	but WITHOUT ANY WARRANTY; without even the implied warranty of
+#!	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#!	GNU General Public License for more details.
+#!
+#!	You should have received a copy of the GNU General Public License
+#!	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Wrts, http://www.wrts.nl/-->
+<wrts>
+	<lijst id="00000000">
+		<titel>@!list.title!@</titel>
+		<datum>
+			<downloaded>@!date!@</downloaded>
+			<created>@!date!@</created>
+			<updated>@!date!@</updated>
+		</datum>
+		<author id="000000">Created by: OpenTeacher</author>
+		<taal>
+			<a>@!list.questionSubject!@</a>
+			<b>@!list.answerSubject!@</b>
+		</taal>
+		<!--(for word in list)-->
+		<woord>
+			<a>@!u", ".join(word.questions)!@</a>
+			<b>@!u", ".join(word.answers)!@</b>
+		</woord>
+		<!--(end)-->
+	</lijst>
+</wrts>

@@ -58,6 +58,8 @@ class GuiModule(object):
 		self.quitEvent = self.manager.createEvent()
 		self.settingsEvent = self.manager.createEvent()		
 		self.aboutEvent = self.manager.createEvent()
+		
+		self.tabChanged = self.manager.createEvent()
 
 	def enable(self):
 		self._app = QtGui.QApplication(sys.argv)
@@ -92,6 +94,9 @@ class GuiModule(object):
 		self._widget.aboutAction.triggered.connect(
 			lambda: self.aboutEvent.emit()
 		)
+		self._widget.tabWidget.currentChanged.connect(
+			lambda: self.tabChanged.emit()
+		)
 
 	def disable(self):
 		del self._widget
@@ -107,9 +112,21 @@ class GuiModule(object):
 		"""Raises AttributeError"""
 		self._widget.hide()
 
+	def showStartTab(self):
+		self._widget.tabWidget.setCurrentWidget(self._widget.tabWidget.startWidget)
+
 	def addLessonCreateButton(self, *args, **kwargs):
 		button = self._widget.tabWidget.startWidget.addLessonCreateButton(*args, **kwargs)
 
+		event = self.manager.createEvent()
+		#Lambda's because otherwise Qt's argument checked is passed ->
+		#error.
+		button.clicked.connect(lambda: event.emit())
+		return event
+
+	def addLessonLoadButton(self, *args, **kwargs):
+		button = self._widget.tabWidget.startWidget.addLessonLoadButton(*args, **kwargs)
+		
 		event = self.manager.createEvent()
 		#Lambda's because otherwise Qt's argument checked is passed ->
 		#error.
@@ -125,7 +142,16 @@ class GuiModule(object):
 			self._widget.tabWidget,
 			widget
 		)
-		self._fileTabs[widget] = fileTab
+		return fileTab
+
+	def addCustomTab(self, text, widget):
+		self._widget.tabWidget.addTab(widget, text)
+		
+		fileTab = self._fileTabs[widget] = FileTab(
+			self.manager,
+			self._widget.tabWidget,
+			widget
+		)
 		return fileTab
 
 	@property
@@ -135,6 +161,10 @@ class GuiModule(object):
 		except KeyError:
 			#startWidget
 			return
+
+	@property
+	def qtParent(self):
+		return self._widget
 
 	def getSavePath(self, startdir, exts):
 		stringExts = []
@@ -149,10 +179,10 @@ class GuiModule(object):
 		))
 
 	def getLoadPath(self, startdir, exts):
-		stringExts = []
+		stringExts = set()
 		for ext in exts:
-			stringExts.append("*." + ext)
-		filter = u"Lessons (%s)" % u" *.".join(stringExts)
+			stringExts.add("*." + ext)
+		filter = u"Lessons (%s)" % u" ".join(stringExts)
 		return unicode(QtGui.QFileDialog.getOpenFileName(
 			self._widget,
 			_("Choose file to open"),
@@ -168,6 +198,25 @@ class GuiModule(object):
 		if not printDialog.exec_():
 			return
 		return printer
+	
+	def enableNew(self, boolean):
+		self._widget.newAction.setEnabled(boolean)
+
+	def enableOpen(self, boolean):
+		self._widget.openAction.setEnabled(boolean)
+
+	def enableSave(self, boolean):
+		self._widget.saveAction.setEnabled(boolean)
+
+	def enableSaveAs(self, boolean):
+		self._widget.saveAsAction.setEnabled(boolean)
+
+	def enablePrint(self, boolean):
+		self._widget.printAction.setEnabled(boolean)
+
+	@property
+	def startTabActive(self):
+		return self._widget.tabWidget.startWidget == self._widget.tabWidget.currentWidget()
 
 def init(manager):
 	ui.ICON_PATH = manager.resourcePath(__file__, "icons/")

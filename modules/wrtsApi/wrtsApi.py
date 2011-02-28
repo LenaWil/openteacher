@@ -1,0 +1,85 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
+#	Copyright 2011, Marten de Vries
+#
+#	This file is part of OpenTeacher.
+#
+#	OpenTeacher is free software: you can redistribute it and/or modify
+#	it under the terms of the GNU General Public License as published by
+#	the Free Software Foundation, either version 3 of the License, or
+#	(at your option) any later version.
+#
+#	OpenTeacher is distributed in the hope that it will be useful,
+#	but WITHOUT ANY WARRANTY; without even the implied warranty of
+#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#	GNU General Public License for more details.
+#
+#	You should have received a copy of the GNU General Public License
+#	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
+
+import api
+import dialogs
+
+class WrtsApiModule(object):
+	def __init__(self, manager):
+		super(self.__class__, self).__init__()
+		
+		self.manager = manager
+		self.references = set()
+		self.supports = ("state",)
+
+	def enable(self):
+		self.wrtsConnection = api.WrtsConnection()
+		
+		for module in self.manager.mods.supporting("ui"):
+			event = module.addLessonLoadButton(_("Import from WRTS")) #FIXME: private gettext!
+			event.handle(self.importFromWrts)
+			self.references.add(event)
+
+	def importFromWrts(self):
+		for module in self.manager.mods.supporting("ui"):
+			ld = dialogs.LoginDialog(module.qtParent)		
+
+			tab = module.addCustomTab(ld.windowTitle(), ld)
+			tab.closeRequested.handle(tab.close)
+			ld.rejected.connect(tab.close)
+			ld.accepted.connect(tab.close)
+
+			ld.exec_()
+			if not ld.result():
+				return
+
+			self.wrtsConnection.logIn(ld.email, ld.password)
+
+			listsParser = self.wrtsConnection.listsParser
+
+			ldc = dialogs.ListChoiceDialog(listsParser.lists, module.qtParent)
+
+			tab = module.addCustomTab(ldc.windowTitle(), ldc)
+			tab.closeRequested.handle(tab.close)
+			ldc.rejected.connect(tab.close)
+			ldc.accepted.connect(tab.close)
+
+			ldc.exec_()
+			if not ldc.result():
+				return
+
+			listUrl = listsParser.getWordListUrl(ldc.selectedRowIndex)
+			list = self.wrtsConnection.importWordList(listUrl)
+			
+			#FIXME
+			print list.title
+			print list.questionSubject + u" - " + list.answerSubject
+			for word in list:
+				print u"".join([
+					u", ".join(word.questions),
+					u" = ",
+					u", ".join(word.answers)
+				])
+
+	def disable(self):
+		del self.wrtsConnection
+
+def init(manager):
+	return WrtsApiModule(manager)

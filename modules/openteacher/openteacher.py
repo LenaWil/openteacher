@@ -285,19 +285,25 @@ class OpenTeacherModule(object):
 			module.lessonCreated.handle(self._lessonAdded)
 
 		self.uiModule = uiModules.items.pop()
+		self._updateMenuItems()
 		self.uiModule.run()
 
 		self._disconnectEvents(uiModules)
 
 	@property
 	def _currentLesson(self):
-		return self._lessons[self.uiModule.currentFileTab]
+		try:
+			return self._lessons[self.uiModule.currentFileTab]
+		except KeyError:
+			return
 
 	def _lessonAdded(self, lesson):
 		self._lessons[lesson.fileTab] = lesson
 		lesson.stopped.handle(
 			lambda: self._removeLesson(lesson.fileTab)
 		)
+		
+		self._updateMenuItems()
 
 	def _removeLesson(self, fileTab):
 		del self._lessons[fileTab]
@@ -313,6 +319,8 @@ class OpenTeacherModule(object):
 			module.aboutEvent.handle(self.about)
 			module.quitEvent.handle(self.quit_)
 
+			module.tabChanged.handle(self._updateMenuItems)
+
 	def _disconnectEvents(self, uiModules):
 		for module in uiModules:
 			module.newEvent.unhandle(self.new)
@@ -323,6 +331,42 @@ class OpenTeacherModule(object):
 			module.settingsEvent.unhandle(self.settings)
 			module.aboutEvent.unhandle(self.about)
 			module.quitEvent.unhandle(self.quit_)
+			
+			module.tabChanged.unhandle(self._updateMenuItems)
+
+	def _updateMenuItems(self):
+		for module in self.manager.mods.supporting("ui"):
+			#new, hide when already on the +-tab
+			hideNew = module.startTabActive
+			module.enableNew(not hideNew)
+
+			#open
+			openSupport = len(self._usableLoadExtensions) != 0
+			module.enableOpen(openSupport)
+
+			#save
+			saveSupport = len(self._usableSaveExtensions) != 0 and not module.startTabActive
+			module.enableSave(saveSupport)
+			module.enableSaveAs(saveSupport)
+
+			#print
+			printSupport = self._printingPossible()
+			module.enablePrint(printSupport)
+
+	def _printingPossible(self):
+		#FIXME: Check the GUI Modules for printing support
+
+		#Checks for printer modules, and if there is a gui module for
+		#the type(s) they can provide
+
+		try:
+			type = self._currentLesson.module.type
+		except AttributeError:
+			return False
+		for module in self.manager.mods.supporting("print"):
+			if type in module.printer.prints:
+				return True
+		return False
 
 def init(manager):
 	return OpenTeacherModule(manager)
