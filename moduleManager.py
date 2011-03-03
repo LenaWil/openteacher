@@ -92,19 +92,18 @@ class ModuleManager(object):
 	def _loadModules(self):
 		self._modules = set()
 
-		for location in os.listdir(self.modulesPath):
-			fullLocation = os.path.join(self.modulesPath, location)
-			mainFile = os.path.join(fullLocation, location + ".py")
+		for moduleName in os.listdir(self.modulesPath):
+			location = os.path.join(self.modulesPath, moduleName)
+			fileName = moduleName.split(".")[-1]
 			valid = (
-				not location.startswith("_") and
-				os.path.isdir(fullLocation) and
-				os.path.isfile(mainFile)
+				not moduleName.startswith("_") and
+				os.path.isdir(location)
 			)
 			if valid:
-				sys.path.insert(0, fullLocation)
-				container = __import__(location)
+				sys.path.insert(0, location)
+				container = __import__(fileName)
 				self._modules.add(container.init(self))
-				sys.path.remove(fullLocation)
+				sys.path.remove(location)
 
 class Event(object):
 	def __init__(self, *args, **kwargs):
