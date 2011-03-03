@@ -18,7 +18,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import pyratemp
 import datetime
 try:
 	from elementTree import ElementTree
@@ -68,11 +67,12 @@ class Importer(object):
 class Exporter(object):
 	def __init__(self, manager):
 		self.manager = manager
+		self._pyratemp = self.manager.import_(__file__, "pyratemp")
 		self.exports = {"words": ["wrts"]}
 
 	def __call__(self, type, list, path):
 		templatePath = self.manager.resourcePath(__file__, "template.txt")
-		t = pyratemp.Template(open(templatePath).read())
+		t = self._pyratemp.Template(open(templatePath).read())
 		data = {
 			"list": list,
 			"date": datetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S %z")

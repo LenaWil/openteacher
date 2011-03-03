@@ -78,6 +78,17 @@ class ModuleManager(object):
 	def mods(self):
 		return ModuleFilterer(self._modules)
 
+	def import_(self, executingFile, moduleName):
+		path = os.path.dirname(executingFile)
+		sys.path.insert(0, path)
+		try:
+			del sys.modules[moduleName]
+		except KeyError:
+			pass
+		module = __import__(moduleName)
+		sys.path.remove(path)
+		return module
+
 	def _loadModules(self):
 		self._modules = set()
 
@@ -92,8 +103,8 @@ class ModuleManager(object):
 			if valid:
 				sys.path.insert(0, fullLocation)
 				container = __import__(location)
-				sys.path.remove(fullLocation)
 				self._modules.add(container.init(self))
+				sys.path.remove(fullLocation)
 
 class Event(object):
 	def __init__(self, *args, **kwargs):

@@ -21,7 +21,6 @@
 from PyQt4 import QtGui
 import sys
 import gettext
-import ui
 
 class FileTab(object):
 	def __init__(self, manager, tabWidget, widget, *args, **kwargs):
@@ -49,6 +48,9 @@ class GuiModule(object):
 		super(GuiModule, self).__init__(*args, **kwargs)
 		self.manager = manager
 		self.supports = ("ui", "state")
+		
+		self._ui = self.manager.import_(__file__, "ui")
+		self._ui.ICON_PATH = manager.resourcePath(__file__, "icons/")
 
 		self.newEvent = self.manager.createEvent()
 		self.openEvent = self.manager.createEvent()
@@ -65,7 +67,7 @@ class GuiModule(object):
 		self._app = QtGui.QApplication(sys.argv)
 		gettext.install("OpenTeacher")
 
-		self._widget = ui.OpenTeacherWidget()
+		self._widget = self._ui.OpenTeacherWidget()
 		self._fileTabs = {}
 
 		#Lambda's because otherwise Qt's argument checked is passed ->
@@ -134,7 +136,7 @@ class GuiModule(object):
 		return event
 
 	def addFileTab(self, text, enterWidget, teachWidget):
-		widget = ui.LessonTabWidget(enterWidget, teachWidget)
+		widget = self._ui.LessonTabWidget(enterWidget, teachWidget)
 		self._widget.tabWidget.addTab(widget, text)
 		
 		fileTab = self._fileTabs[widget] = FileTab(
@@ -219,5 +221,4 @@ class GuiModule(object):
 		return self._widget.tabWidget.startWidget == self._widget.tabWidget.currentWidget()
 
 def init(manager):
-	ui.ICON_PATH = manager.resourcePath(__file__, "icons/")
 	return GuiModule(manager)

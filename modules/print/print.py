@@ -19,16 +19,16 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt4 import QtGui
-import pyratemp
 
 class Printer(object):
 	def __init__(self, manager):
 		self.manager = manager
+		self._pyratemp = self.manager.import_(__file__, "pyratemp")
 		self.prints = ["words"]
 
 	def __call__(self, type, list, printer):
 		templatePath = self.manager.resourcePath(__file__, "template.txt")
-		t = pyratemp.Template(open(templatePath).read())
+		t = self._pyratemp.Template(open(templatePath).read())
 		html = t(**{"list": list})
 
 		doc = QtGui.QTextDocument()

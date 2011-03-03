@@ -18,19 +18,18 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import api
-import dialogs
-
 class WrtsApiModule(object):
 	def __init__(self, manager):
 		super(self.__class__, self).__init__()
-		
+
 		self.manager = manager
+		self._ui = self.manager.import_(__file__, "ui")
+		self._api = self.manager.import_(__file__, "api")
 		self.references = set()
 		self.supports = ("state",)
 
 	def enable(self):
-		self.wrtsConnection = api.WrtsConnection()
+		self.wrtsConnection = self._api.WrtsConnection()
 		
 		for module in self.manager.mods.supporting("ui"):
 			event = module.addLessonLoadButton(_("Import from WRTS")) #FIXME: private gettext!
@@ -39,7 +38,7 @@ class WrtsApiModule(object):
 
 	def importFromWrts(self):
 		for module in self.manager.mods.supporting("ui"):
-			ld = dialogs.LoginDialog(module.qtParent)		
+			ld = self._ui.LoginDialog(module.qtParent)		
 
 			tab = module.addCustomTab(ld.windowTitle(), ld)
 			tab.closeRequested.handle(tab.close)
@@ -54,7 +53,7 @@ class WrtsApiModule(object):
 
 			listsParser = self.wrtsConnection.listsParser
 
-			ldc = dialogs.ListChoiceDialog(listsParser.lists, module.qtParent)
+			ldc = self._ui.ListChoiceDialog(listsParser.lists, module.qtParent)
 
 			tab = module.addCustomTab(ldc.windowTitle(), ldc)
 			tab.closeRequested.handle(tab.close)
