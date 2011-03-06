@@ -18,7 +18,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui
+from PyQt4 import QtWebKit
 
 class Printer(object):
 	def __init__(self, manager):
@@ -27,12 +27,15 @@ class Printer(object):
 		self.prints = ["words"]
 
 	def __call__(self, type, list, printer):
-		templatePath = self.manager.resourcePath(__file__, "template.txt")
+		templatePath = self.manager.resourcePath(__file__, "template.html")
 		t = self._pyratemp.Template(open(templatePath).read())
 		html = t(**{"list": list})
 
-		doc = QtGui.QTextDocument()
+		doc = QtWebKit.QWebView()
 		doc.setHtml(html)
+		
+		printer.setCreator("OpenTeacher")
+		printer.setDocName(list.title)
 		doc.print_(printer)
 
 class PrintModule(object):

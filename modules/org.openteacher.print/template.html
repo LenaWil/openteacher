@@ -1,0 +1,88 @@
+<!--
+	Copyright 2011, Marten de Vries
+
+	This file is part of OpenTeacher.
+
+	OpenTeacher is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	OpenTeacher is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<!doctype html>
+<html>
+	<head>
+		<title>@!list.title!@</title>
+		<style type="text/css">
+			body {
+				font-family:Verdana, Helvetica, Arial, sans-serif;
+				margin:0;
+			}
+			
+			h1 {
+				font-size:x-large;
+			}
+			
+			table {
+				border-collapse:collapse;
+				width:100%;
+			}
+
+			th {
+				text-align:left;
+				border-bottom:1px solid #000;
+			}
+
+			td:first-child {
+				text-align:right;
+				color:#888;
+				padding-left:0;
+			}
+			
+			td:nth-child(2), th:nth-child(2) {
+				padding-left:1em;
+			}
+			
+			td:last-child, th:last-child {
+				padding-left:2em;
+				padding-right:0;
+			}
+			
+			tr:nth-child(even) {
+				background-color:#ddd;
+			}
+
+			th, td {
+				padding: 0.25em;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>@!list.title!@</h1>
+		<table>
+			<thead>
+				<tr>
+					<th></th>
+					<th>@!list.questionSubject!@</th>
+					<th>@!list.answerSubject!@</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--(for question in list)-->
+				<tr>
+					<td>@!list.index(question) +1!@</td>
+					<td>@!", ".join(question.questions)!@</td>
+					<td>@!", ".join(question.answers)!@</td>
+				</tr>
+				<!--(end)-->
+			</tbody>
+		</table>
+	</body>
+</html>

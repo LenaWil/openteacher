@@ -78,8 +78,10 @@ class ModuleManager(object):
 	def mods(self):
 		return ModuleFilterer(self._modules)
 
-	def import_(self, executingFile, moduleName):
-		path = os.path.dirname(executingFile)
+	def import_(self, path, moduleName):
+		if os.path.isfile(path):
+			#so path can be __file__
+			path = os.path.dirname(path)
 		sys.path.insert(0, path)
 		try:
 			del sys.modules[moduleName]
@@ -100,10 +102,8 @@ class ModuleManager(object):
 				os.path.isdir(location)
 			)
 			if valid:
-				sys.path.insert(0, location)
-				container = __import__(fileName)
+				container = self.import_(location, fileName)
 				self._modules.add(container.init(self))
-				sys.path.remove(location)
 
 class Event(object):
 	def __init__(self, *args, **kwargs):
