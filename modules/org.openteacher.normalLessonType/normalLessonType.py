@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Marten de Vries
+#	Copyright 2011, Cas Widdershoven
 #
 #	This file is part of OpenTeacher.
 #
@@ -43,7 +44,7 @@ class NormalLessonTypeModule(object):
 		super(NormalLessonTypeModule, self).__init__(*args, **kwargs)
 
 		self.manager = manager
-		self.supports = ("normalLessonType")
+		self.supports = ("lessonType",)
 
 	def getLessonType(self, list):
 		return NormalLessonType(self.manager, list)
