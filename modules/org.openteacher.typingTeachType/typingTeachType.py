@@ -19,7 +19,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 
 class TypingTeachWidget(QtGui.QWidget):
     def __init__(self, lessonTypeModule, *args, **kwargs):
@@ -30,17 +30,41 @@ class TypingTeachWidget(QtGui.QWidget):
         self.lessonTypeModule.newItem.handle(self.newItem)
         self.lessonTypeModule.lessonDone.handle(self.lessonDone)
         
-        self.wordsLabel = QtGui.QLabel("No words added")
+        self.wordsLabel = QtGui.QLabel(u"No words added")
         labelSizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Expanding)
         self.wordsLabel.setSizePolicy(labelSizePolicy)
         
+        self.inputLineEdit = QtGui.QLineEdit()
+        
+        self.checkButton = QtGui.QPushButton(u"Check!")
+        self.connect(self.checkButton, QtCore.SIGNAL("clicked()"), self.checkAnswer)
+        
+        self.correctButton = QtGui.QPushButton(u"Correct anyway")
+        self.connect(self.correctButton, QtCore.SIGNAL("clicked()"), self.lessonTypeModule.correctLastAnswer)
+        
+        #FIXME: add progressview
+        
         vbox = QtGui.QVBoxLayout()
         vbox.addWidget(self.wordsLabel)
+        vbox.addWidget(self.inputLineEdit)
+        vbox.addWidget(self.checkButton)
+        vbox.addWidget(self.correctButton)
         self.setLayout(vbox)
+        
+        self.item = ""        
+        self.lessonTypeModule.start()
 
-    def newItem(self, item): pass
+    def newItem(self, item):
+		self.item = item
+		self.wordsLabel.setText(u", ".join(self.item.questions))
 
     def lessonDone(self): pass
+    
+    def checkAnswer(self):
+		if self.inputLineEdit.text() in self.item.answers:
+			self.lessonTypeModule.setResult(self.lessonTypeModule.RIGHT)
+		else:
+			self.lessonTypeModule.setResult(self.lessonTypeModule.WRONG)
 
 class TypingTeachTypeModule(object):
 	def __init__(self, manager, *args, **kwargs):

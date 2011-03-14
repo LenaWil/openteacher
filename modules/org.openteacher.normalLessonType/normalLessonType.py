@@ -20,6 +20,8 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 class NormalLessonType(object):
+	RIGHT, WRONG = xrange(2)
+	
 	def __init__(self, manager, list, *args, **kwargs):
 		super(NormalLessonType, self).__init__(*args, **kwargs)
 
@@ -33,11 +35,21 @@ class NormalLessonType(object):
 		self.lessonDone = self.manager.createEvent()
 
 	def start(self):
-		self.newItem.emit(self.list.pop())
+		try:
+			self.newItem.emit(self.list.pop())
+		except IndexError:
+			self.lessonDone.emit()
 
 	def setResult(self, result):
 		#FIXME: store results!
-		self.newItem.emit(self.list.pop())
+		try:
+			self.newItem.emit(self.list.pop())
+		except IndexError:
+			self.lessonDone.emit()
+		
+	def correctLastAnswer(self):
+		#FIXME: do something! ;)
+		pass
 
 class NormalLessonTypeModule(object):
 	def __init__(self, manager, *args, **kwargs):
