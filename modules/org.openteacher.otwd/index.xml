@@ -1,0 +1,75 @@
+#!	Copyright 2011, Marten de Vries
+#!
+#!	This file is part of OpenTeacher.
+#!
+#!	OpenTeacher is free software: you can redistribute it and/or modify
+#!	it under the terms of the GNU General Public License as published by
+#!	the Free Software Foundation, either version 3 of the License, or
+#!	(at your option) any later version.
+#!
+#!	OpenTeacher is distributed in the hope that it will be useful,
+#!	but WITHOUT ANY WARRANTY; without even the implied warranty of
+#!	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#!	GNU General Public License for more details.
+#!
+#!	You should have received a copy of the GNU General Public License
+#!	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
+<!--(macro formatDateTime)-->
+@!dt.strftime("%Y-%m-%dT%H:%M:%S%z")!@
+<!--(end)-->
+<?xml version="1.0" encoding="UTF-8" ?>
+<list type="words">
+	<!--(if exists("list.title"))-->
+	<title>@!list.title!@</title>
+	<!--(end)-->
+	<!--(if exists("list.questionSubject"))-->
+	<question_subject>@!list.questionSubject!@</question_subject>
+	<!--(end)-->
+	<!--(if exists("list.questionSubject"))-->
+	<answer_subject>list.answerSubject</answer_subject>
+	<!--(end)-->
+	<!--(if exists("list.created"))-->
+	<created>@!formatDateTime(dt=list.created)!@</created>
+	<!--(end)-->
+	<items>
+		<!--(for item in list)-->
+		<item id="@!item.id!@">
+			<!--(if exists("item.inserted"))-->
+			<inserted>@!formatDateTime(dt=item.inserted)!@</inserted>
+			<!--(end)-->
+			<questions>
+				<!--(for question in item.questions)-->
+				<question>@!question!@</question>
+				<!--(end)-->
+			</questions>
+			<answers>
+				<!--(for answer in item.answers)-->
+				<answer>@!answer!@</answer>
+				<!--(end)-->
+			</answers>
+		</item>
+		<!--(end)-->
+	</items>
+	<tests>
+		<!--(for test in list.tests)-->
+		<test>
+			<!--(if exists(test.startDate))-->
+			<start_date>@!formatDateTime(dt=test.startDate)!@</start_date>
+			<!--(end)-->
+			<!--(if exists(test.finished))-->
+			<finished><!--(if test.finished)-->true<!--(else)-->false<!--(end)--></finished>
+			<!--(end)-->
+			<!--(if exists(test.duration))-->
+			<duration>@!test.duration!@</duration>
+			<results>
+				<!--(for result in test.results)-->
+				<result id="@!result.id!@">
+					<right>@!result.right!@</right>
+					<wrong>@!result.wrong!@</wrong>
+				</result>
+				<!--(end)-->
+			</results>
+		</test>
+		<!--(end)-->
+	</tests>
+</list>

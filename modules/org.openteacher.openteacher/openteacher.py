@@ -113,7 +113,7 @@ class OpenTeacherModule(object):
 	def __init__(self, manager, *args, **kwargs):
 		super(OpenTeacherModule, self).__init__(*args, **kwargs)
 		self.manager = manager
-		self.supports = ("execute")
+		self.supports = ("execute", "openteacher-core")
 
 		self._lessons = {}
 
@@ -126,7 +126,7 @@ class OpenTeacherModule(object):
 			self._usableLoadExtensions
 		)
 		if path:
-			self._load(path)
+			self.load(path)
 
 	def save(self):
 		#FIXME: this should first check if a path is already known
@@ -199,7 +199,7 @@ class OpenTeacherModule(object):
 		saver()
 		#TODO: inform the user everything went OK.
 
-	def _load(self, path):
+	def load(self, path):
 		loaders = set()
 		#TODO: check if lesson modules can open path
 
@@ -224,6 +224,21 @@ class OpenTeacherModule(object):
 		loader = loaders.pop()
 
 		loader()
+		
+		#TODO: inform the user
+
+	def loadList(self, type, list):
+		loaders = set()
+		for guiModule in self.manager.mods.supporting("lesson", "loadList"):
+			if guiModule.type == type:
+				loaders.add(guiModule)
+		if len(loaders) == 0:
+			raise NotImplementedError()
+		#FIXME: let the user choice which loader to use (should also
+		#take settings into account)
+		loader = loaders.pop()
+
+		loader.loadFromList(list)
 		
 		#TODO: inform the user
 

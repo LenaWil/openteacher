@@ -15,26 +15,22 @@
 #!	You should have received a copy of the GNU General Public License
 #!	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 <?xml version="1.0" encoding="UTF-8"?>
-<openteacher>
-	<metadata>
-		<title>@!list.title!@</title>
-		<question_subject>@!list.questionSubject!@</question_subject>
-		<answer_subject>@!list.answerSubject!@</answer_subject>
-	</metadata>
-	<items>
-		<!--(for item in list)-->
-		<item>
-			<questions>
-				<!--(for q in item.questions)-->
-				<question>@!q!@</question>
-				<!--(end)-->
-			</questions>
-			<answers>
-				<!--(for a in item.answers)-->
-				<answer>@!a!@</answer>
-				<!--(end)-->
-			</answers>
-		</item>
+<root>
+	<title>@!list.title!@</title>
+	<question_language>@!list.questionSubject!@</question_language>
+	<answer_language>@!list.answerSubject!@</answer_language>
+	<!--(for item in list)-->
+	<word>
+		<known>@!u", ".join(item.questions)!@</known>
+		<!--(if len(item.answers) == 0)-->
+		<foreign>-</foreign>
+		<!--(elif len(item.answers) == 1)-->
+		<foreign>@!item.answers[0]!@</foreign>
+		<!--(else)-->
+		<foreign>@!item.answers[0]!@</foreign>
+		<second>@!u", ".join(item.answers[1:])!@</second>
 		<!--(end)-->
-	</items>
-</openteacher>
+		<results>0/0</results>
+	</word>
+	<!--(end)-->
+</root>

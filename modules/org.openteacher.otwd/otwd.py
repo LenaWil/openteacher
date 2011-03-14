@@ -26,17 +26,19 @@ except ImportError:
 class List(list): pass
 
 class Item(object):
-	def __init__(self):
+	def __init__(self, *args, **kwargs):
+		super(Item, self).__init__(*args, **kwargs)
 		self.questions = []
 		self.answers = []
 
 class Importer(object):
-	def __init__(self, manager):
+	def __init__(self, manager, *args, **kwargs):
+		super(Importer, self).__init__(*args, **kwargs)
 		self.manager = manager
-		self.imports = {"ot": ["words"]}
+		self.imports = {"otwd": ["words"]}
 
 	def getFileTypeOf(self, path):
-		if path.endswith(".ot"):
+		if path.endswith(".otwd"):
 			return "words"
 
 	def __call__(self, path):
@@ -69,22 +71,24 @@ class Importer(object):
 		return list
 
 class Exporter(object):
-	def __init__(self, manager):
+	def __init__(self, manager, *args, **kwargs):
+		super(Exporter, self).__init__(*args, **kwargs)
 		self.manager = manager
 		self._pyratemp = self.manager.import_(__file__, "pyratemp")
-		self.exports = {"words": ["ot"]}
+		self.exports = {"words": ["otwd"]}
 
 	def __call__(self, type, list, path):
-		templatePath = self.manager.resourcePath(__file__, "template.txt")
+		templatePath = self.manager.resourcePath(__file__, "index.xml")
 		t = self._pyratemp.Template(open(templatePath).read())
 		data = {
 			"list": list
 		}
 		content = t(**data)
-		open(path, "w").write(content.encode("UTF-8"))
+		print content.encode("UTF-8")
 
-class OpenTeacherFileModule(object):
-	def __init__(self, manager):
+class OpenTeachingWordsFileModule(object):
+	def __init__(self, manager, *args, **kwargs):
+		super(OpenTeachingWordsFileModule, self).__init__(*args, **kwargs)
 		self.manager = manager
 		self.supports = ("state", "import", "export")
 
@@ -97,4 +101,4 @@ class OpenTeacherFileModule(object):
 		del self.exporter
 
 def init(manager):
-	return OpenTeacherFileModule(manager)
+	return OpenTeachingWordsFileModule(manager)

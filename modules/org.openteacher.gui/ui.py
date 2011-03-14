@@ -210,13 +210,17 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 		fileMenu = self.menuBar().addMenu(_("&File"))
 
 		self.newAction = fileMenu.addAction(
-			QtGui.QIcon(ICON_PATH + "new.png"),
-			_("&New"),
+			QtGui.QIcon.fromTheme("filenew",
+				QtGui.QIcon(ICON_PATH + "new.png"),
+			),
+			_("&New")
 		)
 		self.newAction.setShortcut(QtGui.QKeySequence(_("Ctrl+N")))
 
 		self.openAction = fileMenu.addAction(
-			QtGui.QIcon(ICON_PATH + "open.png"),
+			QtGui.QIcon.fromTheme("fileopen",
+				QtGui.QIcon(ICON_PATH + "open.png")
+			),
 			_("&Open")
 		)
 		self.openAction.setShortcut(QtGui.QKeySequence(_("Ctrl+O")))
@@ -224,13 +228,17 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 		fileMenu.addSeparator()
 
 		self.saveAction = fileMenu.addAction(
-			QtGui.QIcon(ICON_PATH + "save.png"),
+			QtGui.QIcon.fromTheme("filesave",
+				QtGui.QIcon(ICON_PATH + "save.png")
+			),
 			_("&Save")
 		)
 		self.saveAction.setShortcut(QtGui.QKeySequence(_("Ctrl+S")))
 
 		self.saveAsAction = fileMenu.addAction(
-			QtGui.QIcon(ICON_PATH + "save_as.png"),
+			QtGui.QIcon.fromTheme("filesaveas",
+				QtGui.QIcon(ICON_PATH + "save_as.png"),
+			),
 			_("Save &As")
 		)
 		self.saveAsAction.setShortcut(QtGui.QKeySequence(_("Ctrl+Shift+S")))
@@ -238,7 +246,9 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 		fileMenu.addSeparator()
 
 		self.printAction = fileMenu.addAction(
-			QtGui.QIcon(ICON_PATH + "print.png"),
+			QtGui.QIcon.fromTheme("fileprint",
+				QtGui.QIcon(ICON_PATH + "print.png")
+			),
 			_("&Print")
 		)
 		self.printAction.setShortcut(QtGui.QKeySequence(_("Ctrl+P")))
@@ -246,7 +256,9 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 		fileMenu.addSeparator()
 
 		self.quitAction = fileMenu.addAction(
-			QtGui.QIcon(ICON_PATH + "quit.png"),
+			QtGui.QIcon.fromTheme("exit",
+				QtGui.QIcon(ICON_PATH + "quit.png")
+			),
 			_("&Quit")
 		)
 		self.quitAction.setShortcut(QtGui.QKeySequence(_("Ctrl+Q")))
