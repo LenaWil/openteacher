@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011, Marten de Vries, Cas Widdershoven
 #
 #	This file is part of OpenTeacher.
 #
@@ -43,8 +43,9 @@ class WordsTextEdit(QtGui.QTextEdit):
 
 class EnterWidget(QtGui.QWidget):
 	def __init__(self, *args, **kwargs):
-		super(self.__class__, self).__init__(*args, **kwargs)
+		super(EnterWidget, self).__init__(*args, **kwargs)
 		
+	def initGUI(self):
 		self.titleTextBox = QtGui.QLineEdit(self)
 		self.questionSubjectTextBox = QtGui.QLineEdit(self)
 		self.answerSubjectTextBox = QtGui.QLineEdit(self)
@@ -66,8 +67,28 @@ class EnterWidget(QtGui.QWidget):
 		vbox.addWidget(self.wordsEnterBox)
 
 		self.setLayout(vbox)
+		
 
-class TeachWidget(QtGui.QWidget): pass
+class TeachWidget(QtGui.QWidget):
+	def __init__(self, manager, *args, **kwargs):
+		super(TeachWidget, self).__init__(*args, **kwargs)
+		self.manager = manager
+	
+	def initGUI(self, lesson):
+		self.teachTab = QtGui.QTabWidget(self)
+		
+		lessonTypeModules = self.manager.mods.supporting('lessonType').items
+		lessonTypeModule = lessonTypeModules.pop() #FIXME; user should choose
+		
+		
+		for module in self.manager.mods.supporting('teachType').items: #yeah, still needs a better name
+			if module.type == 'words':
+				self.teachTab.addTab(module.getWidget(lessonTypeModule.getLessonType(lesson.list)), module.name)
+				
+		vbox = QtGui.QVBoxLayout()
+		vbox.addWidget(self.teachTab)
+
+		self.setLayout(vbox)
 
 class Lesson(object):
 	def __init__(self, module, manager, fileTab, enterWidget, *args, **kwargs):
@@ -149,7 +170,7 @@ class WordsLessonModule(object):
 		lessons = set()
 		for module in self.manager.mods.supporting("ui"):
 			enterWidget = EnterWidget()
-			teachWidget = TeachWidget()
+			teachWidget = TeachWidget(self.manager)
 			
 			fileTab = module.addFileTab(
 				"Word lesson %s" % self._counter,
@@ -158,9 +179,11 @@ class WordsLessonModule(object):
 			)
 
 			lesson = Lesson(self, self.manager, fileTab, enterWidget)
+			enterWidget.initGUI()
+			teachWidget.initGUI(lesson)
 			self._references.add(lesson)
 			self.lessonCreated.emit(lesson)
-
+						
 			lessons.add(lesson)
 		self._counter += 1
 		return lessons

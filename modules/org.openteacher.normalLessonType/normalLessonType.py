@@ -43,7 +43,7 @@ class NormalLessonTypeModule(object):
 		super(NormalLessonTypeModule, self).__init__(*args, **kwargs)
 
 		self.manager = manager
-		self.supports = ("normalLessonType")
+		self.supports = ("lessonType",)
 
 	def getLessonType(self, list):
 		return NormalLessonType(self.manager, list)
