@@ -43,6 +43,17 @@ class FileTab(object):
 		i = self._tabWidget.indexOf(self._widget)
 		self._tabWidget.removeTab(i)
 
+class LessonFileTab(FileTab):
+	def __init__(self, manager, tabWidget, widget, *args, **kwargs):
+		super(LessonFileTab, self).__init__(manager, tabWidget, widget, *args, **kwargs)
+
+		self.tabChanged = self.manager.createEvent()
+		self._widget.currentChanged.connect(lambda: self.tabChanged.emit())
+
+	@property
+	def currentTab(self):
+		return self._widget.currentWidget()
+
 class GuiModule(object):
 	def __init__(self, manager, *args, **kwargs):
 		super(GuiModule, self).__init__(*args, **kwargs)
@@ -139,7 +150,7 @@ class GuiModule(object):
 		widget = self._ui.LessonTabWidget(enterWidget, teachWidget)
 		self._widget.tabWidget.addTab(widget, text)
 		
-		fileTab = self._fileTabs[widget] = FileTab(
+		fileTab = self._fileTabs[widget] = LessonFileTab(
 			self.manager,
 			self._widget.tabWidget,
 			widget

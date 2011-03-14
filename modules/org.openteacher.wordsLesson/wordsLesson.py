@@ -73,24 +73,35 @@ class TeachWidget(QtGui.QWidget):
 	def __init__(self, manager, *args, **kwargs):
 		super(TeachWidget, self).__init__(*args, **kwargs)
 		self.manager = manager
+		self._teachTypeWidgets = []
 	
 	def initGUI(self, lesson):
+		self.lesson = lesson
+
 		self.teachTab = QtGui.QTabWidget(self)
-		
-		lessonTypeModules = self.manager.mods.supporting("lessonType").items
-		lessonTypeModule = lessonTypeModules.pop() #FIXME; user should choose
 
 		for module in self.manager.mods.supporting("teachType").items: #yeah, still needs a better name
 			if module.type == "words":
-				self.teachTab.addTab(module.getWidget(lessonTypeModule.getLessonType(lesson.list)), module.name)
-				
+				widget = module.createWidget()
+				self._teachTypeWidgets.append(widget)
+				self.teachTab.addTab(widget, module.name)
+
 		vbox = QtGui.QVBoxLayout()
 		vbox.addWidget(self.teachTab)
 
 		self.setLayout(vbox)
 
+	def start(self):
+		lessonTypeModules = self.manager.mods.supporting("lessonType").items
+		lessonTypeModule = lessonTypeModules.pop() #FIXME; user should choose
+
+		lessonType = lessonTypeModule.createLessonType(self.lesson.list)
+		for widget in self._teachTypeWidgets:
+			widget.start(lessonType)
+		lessonType.start()
+
 class Lesson(object):
-	def __init__(self, module, manager, fileTab, enterWidget, *args, **kwargs):
+	def __init__(self, module, manager, fileTab, enterWidget, teachWidget, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
 		
 		self.module = module
@@ -98,13 +109,19 @@ class Lesson(object):
 		self.fileTab = fileTab
 
 		self.fileTab.closeRequested.handle(self.stop)
+		self.fileTab.tabChanged.handle(self.tabChanged)
 		self.stopped = self.manager.createEvent()
 		
 		self._enterWidget = enterWidget
+		self._teachWidget = teachWidget
 
 	def stop(self):
 		self.fileTab.close()
 		self.stopped.emit()
+
+	def tabChanged(self):
+		if self.fileTab.currentTab == self._teachWidget:
+			self._teachWidget.start()
 
 	def loadFromList(self, list):
 		self._enterWidget.titleTextBox.setText(list.title)
@@ -177,7 +194,7 @@ class WordsLessonModule(object):
 				teachWidget
 			)
 
-			lesson = Lesson(self, self.manager, fileTab, enterWidget)
+			lesson = Lesson(self, self.manager, fileTab, enterWidget, teachWidget)
 			enterWidget.initGUI()
 			teachWidget.initGUI(lesson)
 			self._references.add(lesson)
