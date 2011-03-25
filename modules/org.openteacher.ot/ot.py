@@ -30,16 +30,23 @@ class Item(object):
 		self.questions = []
 		self.answers = []
 
-class Importer(object):
-	def __init__(self, manager):
-		self.manager = manager
-		self.imports = {"ot": ["words"]}
+class OpenTeacherFileModule(object):
+	def __init__(self, moduleManager):
+		self.supports = ("load", "save", "initializing")
+		self.requires = (1, 0)
+		self.active = False
+
+		self._mm = moduleManager
+
+	def initialize(self):
+		for module in self._mm.activeMods.supporting("settings"):
+			module.registerModule("OpenTeacher file type", self)
 
 	def getFileTypeOf(self, path):
 		if path.endswith(".ot"):
 			return "words"
 
-	def __call__(self, path):
+	def load(self, path):
 		list = List()
 
 		root = ElementTree.parse(open(path)).getroot()
@@ -68,14 +75,8 @@ class Importer(object):
 			list.append(listItem)
 		return list
 
-class Exporter(object):
-	def __init__(self, manager):
-		self.manager = manager
-		self._pyratemp = self.manager.import_(__file__, "pyratemp")
-		self.exports = {"words": ["ot"]}
-
-	def __call__(self, type, list, path):
-		templatePath = self.manager.resourcePath(__file__, "template.txt")
+	def save(self, type, list, path):
+		templatePath = self._mm.resourcePath(__file__, "template.txt")
 		t = self._pyratemp.Template(open(templatePath).read())
 		data = {
 			"list": list
@@ -83,18 +84,17 @@ class Exporter(object):
 		content = t(**data)
 		open(path, "w").write(content.encode("UTF-8"))
 
-class OpenTeacherFileModule(object):
-	def __init__(self, manager):
-		self.manager = manager
-		self.supports = ("state", "import", "export")
-
 	def enable(self):
-		self.importer = Importer(self.manager)
-		self.exporter = Exporter(self.manager)
+		self._pyratemp = self._mm.import_(__file__, "pyratemp")
+		self.loads = {"ot": ["words"]}
+		self.saves = {"words": ["ot"]}
+		self.active = True
 
 	def disable(self):
-		del self.importer
-		del self.exporter
+		self.active = False
+		del self._pyratemp
+		del self.loads
+		del self.saves
 
-def init(manager):
-	return OpenTeacherFileModule(manager)
+def init(moduleManager):
+	return OpenTeacherFileModule(moduleManager)

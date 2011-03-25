@@ -20,34 +20,38 @@
 
 from PyQt4 import QtWebKit
 
-class Printer(object):
-	def __init__(self, manager):
-		self.manager = manager
-		self._pyratemp = self.manager.import_(__file__, "pyratemp")
-		self.prints = ["words"]
+class PrintModule(object):
+	def __init__(self, moduleManager):
+		self._mm = moduleManager
 
-	def __call__(self, type, list, printer):
-		templatePath = self.manager.resourcePath(__file__, "template.html")
+		self.supports = ("print", "initializing")
+		self.requires = (1, 0)
+		self.active = False
+		
+	def initialize(self):
+		for module in self._mm.activeMods.supporting("settings"):
+			module.registerModule("Printing module", self)
+
+	def enable(self):
+		self._pyratemp = self._mm.import_(__file__, "pyratemp")
+		self.prints = ["words"]
+		self.active = True
+
+	def disable(self):
+		self.active = False
+		del self._pyratemp
+
+	def print_(self, type, list, printer):
+		templatePath = self._mm.resourcePath(__file__, "template.html")
 		t = self._pyratemp.Template(open(templatePath).read())
 		html = t(**{"list": list})
 
 		doc = QtWebKit.QWebView()
 		doc.setHtml(html)
-		
+
 		printer.setCreator("OpenTeacher")
 		printer.setDocName(list.title)
 		doc.print_(printer)
 
-class PrintModule(object):
-	def __init__(self, manager):
-		self.manager = manager
-		self.supports = ("print", "state")
-
-	def enable(self):
-		self.printer = Printer(self.manager)
-	
-	def disable(self):
-		del self.printer
-	
-def init(manager):
-	return PrintModule(manager)
+def init(moduleManager):
+	return PrintModule(moduleManager)

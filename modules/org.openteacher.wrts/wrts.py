@@ -31,16 +31,37 @@ class Word(object):
 		self.questions = []
 		self.answers = []
 
-class Importer(object):
-	def __init__(self, manager):
-		self.manager = manager
-		self.imports = {"wrts": ["words"]}
+class WrtsFileModule(object):
+	def __init__(self, moduleManager):
+		self._mm = moduleManager
+
+		self.supports = ("load", "save", "initializing")
+		self.requires = (1, 0)
+		self.active = False
+
+	def initialize(self):
+		for module in self._mm.activeMods.supporting("settings"):
+			module.registerModule("WRTS file type", self)
+
+	def enable(self):
+		self._pyratemp = self._mm.import_(__file__, "pyratemp")
+		self.loads = {"wrts": ["words"]}
+		self.saves = {"words": ["wrts"]}
+
+		self.active = True
+
+	def disable(self):
+		self.active = False
+
+		del self._pyratemp
+		del self.loads
+		del self.saves
 
 	def getFileTypeOf(self, path):
 		if path.endswith(".wrts"):
 			return "words"
 
-	def __call__(self, path):
+	def load(self, path):
 		root = ElementTree.parse(open(path)).getroot()
 		#dutch: lijst = list
 		listTree = root.find("lijst")
@@ -64,14 +85,8 @@ class Importer(object):
 		
 		return wordList
 
-class Exporter(object):
-	def __init__(self, manager):
-		self.manager = manager
-		self._pyratemp = self.manager.import_(__file__, "pyratemp")
-		self.exports = {"words": ["wrts"]}
-
-	def __call__(self, type, list, path):
-		templatePath = self.manager.resourcePath(__file__, "template.txt")
+	def save(self, type, list, path):
+		templatePath = self._mm.resourcePath(__file__, "template.txt")
 		t = self._pyratemp.Template(open(templatePath).read())
 		data = {
 			"list": list,
@@ -80,18 +95,5 @@ class Exporter(object):
 		content = t(**data)
 		open(path, "w").write(content.encode("UTF-8"))
 
-class WrtsFileModule(object):
-	def __init__(self, manager):
-		self.manager = manager
-		self.supports = ("state", "import", "export")
-
-	def enable(self):
-		self.importer = Importer(self.manager)
-		self.exporter = Exporter(self.manager)
-
-	def disable(self):
-		del self.importer
-		del self.exporter
-
-def init(manager):
-	return WrtsFileModule(manager)
+def init(moduleManager):
+	return WrtsFileModule(moduleManager)

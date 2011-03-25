@@ -19,25 +19,39 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 class WrtsApiModule(object):
-	def __init__(self, manager):
+	def __init__(self, moduleManager):
 		super(self.__class__, self).__init__()
 
-		self.manager = manager
-		self._ui = self.manager.import_(__file__, "ui")
-		self._api = self.manager.import_(__file__, "api")
-		self.references = set()
-		self.supports = ("state",)
+		self._mm = moduleManager
+		self.supports = ("initializing")
+		self.requires = (1, 0)
+
+	def initialize(self):
+		for module in self._mm.activeMods.supporting("settings"):
+			module.registerModule(_("Wrts API connection"), self)
 
 	def enable(self):
+		self._ui = self._mm.import_(__file__, "ui")
+		self._api = self._mm.import_(__file__, "api")
+		self._references = set()
+
 		self.wrtsConnection = self._api.WrtsConnection()
 		
-		for module in self.manager.mods.supporting("ui"):
+		for module in self._mm.activeMods.supporting("ui"):
 			event = module.addLessonLoadButton(_("Import from WRTS")) #FIXME: private gettext!
 			event.handle(self.importFromWrts)
-			self.references.add(event)
+			self._references.add(event)
+		self.active = True
+
+	def disable(self):
+		self.active = False
+		del self._ui
+		del self._api
+		del self._references
+		del self.wrtsConnection
 
 	def importFromWrts(self):
-		for module in self.manager.mods.supporting("ui"):
+		for module in self._mm.mods.supporting("ui"):
 			ld = self._ui.LoginDialog(module.qtParent)		
 
 			tab = module.addCustomTab(ld.windowTitle(), ld)
@@ -67,11 +81,8 @@ class WrtsApiModule(object):
 			listUrl = listsParser.getWordListUrl(ldc.selectedRowIndex)
 			list = self.wrtsConnection.importWordList(listUrl)
 
-			for module in self.manager.mods.supporting("openteacher-core"):#FIXME? maybe we should check more. Maybe the function this calls should just be moved...
+			for module in self._mm.activeMods.supporting("openteacher-core"):#FIXME? maybe we should check more. Maybe the function this calls should just be moved...
 				module.loadList("words", list)
 
-	def disable(self):
-		del self.wrtsConnection
-
-def init(manager):
-	return WrtsApiModule(manager)
+def init(moduleManager):
+	return WrtsApiModule(moduleManager)

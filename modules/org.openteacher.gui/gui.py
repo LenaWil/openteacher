@@ -58,7 +58,8 @@ class GuiModule(object):
 	def __init__(self, manager, *args, **kwargs):
 		super(GuiModule, self).__init__(*args, **kwargs)
 		self.manager = manager
-		self.supports = ("ui", "state")
+		self.supports = ("ui",)
+		self.requires = (1,0)
 		
 		self._ui = self.manager.import_(__file__, "ui")
 		self._ui.ICON_PATH = manager.resourcePath(__file__, "icons/")

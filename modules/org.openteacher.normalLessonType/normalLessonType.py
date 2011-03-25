@@ -57,6 +57,10 @@ class NormalLessonTypeModule(object):
 
 		self.manager = manager
 		self.supports = ("lessonType",)
+		self.requires = (1, 0)
+
+	def enable(self): pass #FIXME
+	def disable(self): pass #FIXME
 
 	def createLessonType(self, list):
 		return NormalLessonType(self.manager, list)

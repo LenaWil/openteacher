@@ -30,17 +30,38 @@ class Item(object):
 		self.questions = []
 		self.answers = []
 
-#FIXME: also support other types than words
-class Importer(object):
-	def __init__(self, manager):
-		self.manager = manager
-		self.imports = {"t2k": ["words"]}
+class Teach2000FileModule(object):
+	def __init__(self, moduleManager, *args, **kwargs):
+		super(Teach2000FileModule, self).__init__(*args, **kwargs)
+		self._mm = moduleManager
+
+		self.supports = ("load", "save", "initializing")
+		self.requires = (1, 0)
+		self.active = False
+
+	def initialize(self):
+		for module in self._mm.activeMods.supporting("settings"):
+			module.registerModule("Teach2000 file type", self)
+
+	def enable(self):
+		self._pyratemp = self._mm.import_(__file__, "pyratemp")
+
+		self.saves = {"words": ["t2k"]}
+		self.loads = {"t2k": ["words"]}
+		self.active = True
+
+	def disable(self):
+		del self._pyratemp
+
+		del self.saves
+		del self.loads
+		self.active = False
 
 	def getFileTypeOf(self, path):
 		if path.endswith(".t2k"):
 			return "words"
 
-	def __call__(self, path):
+	def load(self, path):
 		root = ElementTree.parse(open(path)).getroot()
 
 		list = List()
@@ -60,33 +81,14 @@ class Importer(object):
 			list.append(listItem)
 		return list
 
-class Exporter(object):
-	def __init__(self, manager):
-		self.manager = manager
-		self._pyratemp = self.manager.import_(__file__, "pyratemp")
-		self.exports = {"words": ["t2k"]}
-
-	def __call__(self, type, list, path):
-		templatePath = self.manager.resourcePath(__file__, "template.txt")
+	def save(self, type, list, path):
+		templatePath = self._mm.resourcePath(__file__, "template.txt")
 		t = self._pyratemp.Template(open(templatePath).read())
 		data = {
 			"list": list
 		}
 		content = t(**data)
 		open(path, "w").write(content.encode("UTF-8"))
-
-class Teach2000FileModule(object):
-	def __init__(self, manager):
-		self.manager = manager
-		self.supports = ("state", "import", "export")
-
-	def enable(self):
-		self.importer = Importer(self.manager)
-		self.exporter = Exporter(self.manager)
-
-	def disable(self):
-		del self.importer
-		del self.exporter
 
 def init(manager):
 	return Teach2000FileModule(manager)

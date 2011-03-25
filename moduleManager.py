@@ -18,10 +18,16 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+__version__ = (1,0)
+
 import sys
 import os
 
 class ModuleFilterer(object):
+	#Cache used to speed up module lookups, is class member so all
+	#instances can use it.
+	_cache = {}
+
 	def __init__(self, modules, *args, **kwargs):
 		super(ModuleFilterer, self).__init__(*args, **kwargs)
 		self._modules = modules
@@ -30,18 +36,34 @@ class ModuleFilterer(object):
 
 	@property
 	def items(self):
+		#Freeze sets so they are hashable
+		self._includes = frozenset(self._includes)
+		self._excludes = frozenset(self._excludes)
+
+		#do a cache look up, maybe it speeds everything a little up - i
+		#couldn't measure the difference, but it was nice to code ;)
+		try:
+			return self._cache[(self._includes, self._excludes)].copy()
+		except KeyError:
+			pass
+		#Look up the modules manually
 		selectedModules = self._modules.copy()
 		for include in self._includes:
 			group = set()
-			for module in self._modules:
-				excluded = False
-				for exclude in self._excludes:
-					if exclude in module.supports:
-						excluded = True
-				if not excluded and include in module.supports:
+			for module in selectedModules:
+				if include in module.supports:
 					group.add(module)
 			selectedModules = selectedModules.intersection(group)
+		selectedModules = set(filter(self._moduleNotExcluded, selectedModules))
+		#store the result in the cache for later use
+		self._cache[(self._includes, self._excludes)] = selectedModules.copy()
 		return selectedModules
+
+	def _moduleNotExcluded(self, module):
+		for interface in module.supports:
+			if interface in self._excludes:
+				return False
+		return True
 
 	def __iter__(self):
 		return iter(self.items)
@@ -56,6 +78,18 @@ class ModuleFilterer(object):
 	def exclude(self, *features):
 		self._excludes = self._excludes.union(features)
 		return self
+
+class ActiveModuleFilterer(ModuleFilterer):
+	@property
+	def items(self):
+		modules = super(ActiveModuleFilterer, self).items
+		return set(filter(self._isActive, modules))
+
+	def _isActive(self, module):
+		try:
+			return module.active
+		except AttributeError:
+			return True
 
 class ModuleManager(object):
 	def __init__(self, modulesPath, *args, **kwargs):
@@ -77,6 +111,10 @@ class ModuleManager(object):
 	@property
 	def mods(self):
 		return ModuleFilterer(self._modules)
+
+	@property
+	def activeMods(self):
+		return ActiveModuleFilterer(self._modules)
 
 	def import_(self, path, moduleName):
 		if os.path.isfile(path):
@@ -103,7 +141,9 @@ class ModuleManager(object):
 			)
 			if valid:
 				container = self.import_(location, fileName)
-				self._modules.add(container.init(self))
+				module = container.init(self)
+				if module.requires[0] == __version__[0] and module.requires[1] <= __version__[1]:
+					self._modules.add(module)
 
 class Event(object):
 	def __init__(self, *args, **kwargs):

@@ -69,10 +69,14 @@ class TypingTeachWidget(QtGui.QWidget):
 class TypingTeachTypeModule(object):
 	def __init__(self, manager, *args, **kwargs):
 		super(TypingTeachTypeModule, self).__init__(*args, **kwargs)
-		self.supports = ("teachType")
+		self.supports = ("teachType",)
+		self.requires = (1, 0)
 		self.type = "words"
 		self.name = "Normal lesson"
 		self.manager = manager
+
+	def enable(self): pass #FIXME
+	def disable(self): pass #FIXME
 
 	def createWidget(self):
 		return TypingTeachWidget()

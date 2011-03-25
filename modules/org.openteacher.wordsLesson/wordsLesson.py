@@ -70,9 +70,9 @@ class EnterWidget(QtGui.QWidget):
 		self.setLayout(vbox)
 
 class TeachWidget(QtGui.QWidget):
-	def __init__(self, manager, *args, **kwargs):
+	def __init__(self, moduleManager, *args, **kwargs):
 		super(TeachWidget, self).__init__(*args, **kwargs)
-		self.manager = manager
+		self._mm = moduleManager
 		self._teachTypeWidgets = []
 	
 	def initGUI(self, lesson):
@@ -80,7 +80,7 @@ class TeachWidget(QtGui.QWidget):
 
 		self.teachTab = QtGui.QTabWidget(self)
 
-		for module in self.manager.mods.supporting("teachType").items: #yeah, still needs a better name
+		for module in self._mm.mods.supporting("teachType").items: #yeah, still needs a better name
 			if module.type == "words":
 				widget = module.createWidget()
 				self._teachTypeWidgets.append(widget)
@@ -92,7 +92,7 @@ class TeachWidget(QtGui.QWidget):
 		self.setLayout(vbox)
 
 	def start(self):
-		lessonTypeModules = self.manager.mods.supporting("lessonType").items
+		lessonTypeModules = self._mm.mods.supporting("lessonType").items
 		lessonTypeModule = lessonTypeModules.pop() #FIXME; user should choose
 
 		lessonType = lessonTypeModule.createLessonType(self.lesson.list)
@@ -101,16 +101,16 @@ class TeachWidget(QtGui.QWidget):
 		lessonType.start()
 
 class Lesson(object):
-	def __init__(self, module, manager, fileTab, enterWidget, teachWidget, *args, **kwargs):
+	def __init__(self, module, moduleManager, fileTab, enterWidget, teachWidget, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
 		
 		self.module = module
-		self.manager = manager
+		self._mm = moduleManager
 		self.fileTab = fileTab
 
 		self.fileTab.closeRequested.handle(self.stop)
 		self.fileTab.tabChanged.handle(self.tabChanged)
-		self.stopped = self.manager.createEvent()
+		self.stopped = self._mm.createEvent()
 		
 		self._enterWidget = enterWidget
 		self._teachWidget = teachWidget
@@ -161,32 +161,43 @@ class Lesson(object):
 		return wordList
 
 class WordsLessonModule(object):
-	def __init__(self, manager, *args, **kwargs):
+	def __init__(self, moduleManager, *args, **kwargs):
 		super(WordsLessonModule, self).__init__(*args, **kwargs)
 
-		self.manager = manager
-		self.supports = ("state", "lesson", "list", "loadList")
-		self.lessonCreated = self.manager.createEvent()
+		self._mm = moduleManager
+		self.supports = ("lesson", "list", "loadList", "initializing")
+		self.requires = (1, 0)
+
+	def initialize(self):
+		for module in self._mm.activeMods.supporting("settings"):
+			module.registerModule("Words Lesson", self)
+
+	def enable(self):
+		self.lessonCreated = self._mm.createEvent()
 		self.type = "words"
 
 		self._counter = 1
 		self._references = set()
 
-	def enable(self):
-		for module in self.manager.mods.supporting("ui"):
+		for module in self._mm.mods.supporting("ui"):
 			event = module.addLessonCreateButton("Create words lesson")
 			event.handle(self.createLesson)
 			self._references.add(event)
+		self.active = True
 
 	def disable(self):
+		self.active = False
 		#remove create button
-		pass
+		del self.lessonCreated
+		del self.type
+		del self._counter
+		del self._references
 
 	def createLesson(self):
 		lessons = set()
-		for module in self.manager.mods.supporting("ui"):
+		for module in self._mm.mods.supporting("ui"):
 			enterWidget = EnterWidget()
-			teachWidget = TeachWidget(self.manager)
+			teachWidget = TeachWidget(self._mm)
 			
 			fileTab = module.addFileTab(
 				"Word lesson %s" % self._counter,
@@ -194,7 +205,7 @@ class WordsLessonModule(object):
 				teachWidget
 			)
 
-			lesson = Lesson(self, self.manager, fileTab, enterWidget, teachWidget)
+			lesson = Lesson(self, self._mm, fileTab, enterWidget, teachWidget)
 			enterWidget.initGUI()
 			teachWidget.initGUI(lesson)
 			self._references.add(lesson)
@@ -208,5 +219,5 @@ class WordsLessonModule(object):
 		for lesson in self.createLesson():
 			lesson.loadFromList(list)
 
-def init(manager):
-	return WordsLessonModule(manager)
+def init(moduleManager):
+	return WordsLessonModule(moduleManager)

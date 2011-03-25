@@ -31,17 +31,42 @@ class Item(object):
 		self.questions = []
 		self.answers = []
 
-class Importer(object):
-	def __init__(self, manager, *args, **kwargs):
-		super(Importer, self).__init__(*args, **kwargs)
-		self.manager = manager
-		self.imports = {"otwd": ["words"]}
+class OpenTeachingWordsFileModule(object):
+	def __init__(self, moduleManager, *args, **kwargs):
+		super(OpenTeachingWordsFileModule, self).__init__(*args, **kwargs)
+		self._mm = moduleManager
+
+		self.supports = ("load", "save", "initializing")
+		self.requires = (1, 0)
+		self.active = False
+
+	def initialize(self):
+		for module in self._mm.activeMods.supporting("settings"):
+			module.registerModule("Open Teaching Words file type", self)
 
 	def getFileTypeOf(self, path):
 		if path.endswith(".otwd"):
 			return "words"
 
-	def __call__(self, path):
+	def enable(self):
+		self.loads = {"otwd": ["words"]}
+		self.saves = {"words": ["otwd"]}
+		self._pyratemp = self._mm.import_(__file__, "pyratemp")
+
+		self.active = True
+
+	def disable(self):
+		self.active = False
+
+		del self.loads
+		del self.saves
+		del self._pyratemp
+
+	def getFileTypeOf(self, path):
+		if path.endswith(".otwd"):
+			return "words"
+
+	def load(self, path):
 		list = List()
 
 		root = ElementTree.parse(open(path)).getroot()
@@ -70,15 +95,8 @@ class Importer(object):
 			list.append(listItem)
 		return list
 
-class Exporter(object):
-	def __init__(self, manager, *args, **kwargs):
-		super(Exporter, self).__init__(*args, **kwargs)
-		self.manager = manager
-		self._pyratemp = self.manager.import_(__file__, "pyratemp")
-		self.exports = {"words": ["otwd"]}
-
-	def __call__(self, type, list, path):
-		templatePath = self.manager.resourcePath(__file__, "index.xml")
+	def save(self, type, list, path):
+		templatePath = self._mm.resourcePath(__file__, "index.xml")
 		t = self._pyratemp.Template(open(templatePath).read())
 		data = {
 			"list": list
@@ -86,19 +104,5 @@ class Exporter(object):
 		content = t(**data)
 		print content.encode("UTF-8")
 
-class OpenTeachingWordsFileModule(object):
-	def __init__(self, manager, *args, **kwargs):
-		super(OpenTeachingWordsFileModule, self).__init__(*args, **kwargs)
-		self.manager = manager
-		self.supports = ("state", "import", "export")
-
-	def enable(self):
-		self.importer = Importer(self.manager)
-		self.exporter = Exporter(self.manager)
-
-	def disable(self):
-		del self.importer
-		del self.exporter
-
-def init(manager):
-	return OpenTeachingWordsFileModule(manager)
+def init(moduleManager):
+	return OpenTeachingWordsFileModule(moduleManager)

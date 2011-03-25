@@ -28,7 +28,8 @@ class OpenTeacher(object):
 	def run(self):
 		mm = moduleManager.ModuleManager(MODULES_PATH)
 
-		for module in mm.mods.supporting("execute"):
+		for module in mm.mods.supporting("openteacher-core"):
+			#FIXME: execute only one!
 			module.run()
 		return 0
 

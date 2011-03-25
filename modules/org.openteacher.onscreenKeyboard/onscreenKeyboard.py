@@ -135,6 +135,10 @@ class OnscreenKeyboardModule(object):
 			"greek_onscreen_keyboard",
 			"diacritic_onscreen_keyboard"
 		)
+		self.requires = (1, 0)
+
+	def enable(self): pass #FIXME
+	def disable(self): pass #FIXME
 
 	def getWidget(self, characters):
 		return OnscreenKeyboardWidget(self.manager, characters)

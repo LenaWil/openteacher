@@ -18,12 +18,28 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class Exporter(object):
-	def __init__(self, manager):
-		self.manager = manager
-		self.exports = {"words": ["txt"]}
+class TxtFileModule(object):
+	def __init__(self, moduleManager, *args, **kwargs):
+		super(TxtFileModule, self).__init__(*args, **kwargs)
 
-	def __call__(self, type, list, path):
+		self.supports = ("save", "initializing")
+		self.requires = (1, 0)
+		self.active = False
+		self._mm = moduleManager
+
+	def initialize(self):
+		for module in self._mm.activeMods.supporting("settings"):
+			module.registerModule("Plain text file type", self)
+
+	def enable(self):
+		self.saves = {"words": ["txt"]}
+		self.active = True
+
+	def disable(self):
+		self.active = False
+		del self.saves
+
+	def save(self, type, list, path):
 		text = u""
 
 		if list.title:
@@ -48,17 +64,5 @@ class Exporter(object):
 
 		open(path, "w").write(text.encode("UTF-8"))
 
-class TxtFileModule(object):
-	def __init__(self, manager):
-		self.manager = manager
-		
-		self.supports = ("state", "export")
-
-	def enable(self):
-		self.exporter = Exporter(self.manager)
-
-	def disable(self):
-		del self.exporter
-
-def init(manager):
-	return TxtFileModule(manager)
+def init(moduleManager):
+	return TxtFileModule(moduleManager)
