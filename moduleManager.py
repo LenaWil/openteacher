@@ -89,7 +89,7 @@ class ActiveModuleFilterer(ModuleFilterer):
 		try:
 			return module.active
 		except AttributeError:
-			return True
+			return False
 
 class ModuleManager(object):
 	def __init__(self, modulesPath, *args, **kwargs):

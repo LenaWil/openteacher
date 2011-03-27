@@ -23,14 +23,14 @@ import sys
 import gettext
 
 class FileTab(object):
-	def __init__(self, manager, tabWidget, widget, *args, **kwargs):
+	def __init__(self, moduleManager, tabWidget, widget, *args, **kwargs):
 		super(FileTab, self).__init__(*args, **kwargs)
 		
 		self._tabWidget = tabWidget
 		self._widget = widget
-		self.manager = manager
+		self._mm = moduleManager
 		
-		self.closeRequested = self.manager.createEvent()
+		self.closeRequested = self._mm.createEvent()
 		
 		i = self._tabWidget.indexOf(self._widget)
 		closeButton = self._tabWidget.tabBar().tabButton(
@@ -38,16 +38,17 @@ class FileTab(object):
 			QtGui.QTabBar.RightSide
 		)
 		closeButton.clicked.connect(lambda: self.closeRequested.emit())
+		closeButton.setShortcut("Ctrl+F4")
 
 	def close(self):
 		i = self._tabWidget.indexOf(self._widget)
 		self._tabWidget.removeTab(i)
 
 class LessonFileTab(FileTab):
-	def __init__(self, manager, tabWidget, widget, *args, **kwargs):
-		super(LessonFileTab, self).__init__(manager, tabWidget, widget, *args, **kwargs)
+	def __init__(self, moduleManager, tabWidget, widget, *args, **kwargs):
+		super(LessonFileTab, self).__init__(moduleManager, tabWidget, widget, *args, **kwargs)
 
-		self.tabChanged = self.manager.createEvent()
+		self.tabChanged = self._mm.createEvent()
 		self._widget.currentChanged.connect(lambda: self.tabChanged.emit())
 
 	@property
@@ -55,29 +56,30 @@ class LessonFileTab(FileTab):
 		return self._widget.currentWidget()
 
 class GuiModule(object):
-	def __init__(self, manager, *args, **kwargs):
+	def __init__(self, moduleManager, *args, **kwargs):
 		super(GuiModule, self).__init__(*args, **kwargs)
-		self.manager = manager
+		self._mm = moduleManager
 		self.supports = ("ui",)
 		self.requires = (1,0)
-		
-		self._ui = self.manager.import_(__file__, "ui")
-		self._ui.ICON_PATH = manager.resourcePath(__file__, "icons/")
-
-		self.newEvent = self.manager.createEvent()
-		self.openEvent = self.manager.createEvent()
-		self.saveEvent = self.manager.createEvent()
-		self.saveAsEvent = self.manager.createEvent()
-		self.printEvent = self.manager.createEvent()
-		self.quitEvent = self.manager.createEvent()
-		self.settingsEvent = self.manager.createEvent()		
-		self.aboutEvent = self.manager.createEvent()
-		
-		self.tabChanged = self.manager.createEvent()
+		self.active = False
 
 	def enable(self):
+		self.newEvent = self._mm.createEvent()
+		self.openEvent = self._mm.createEvent()
+		self.saveEvent = self._mm.createEvent()
+		self.saveAsEvent = self._mm.createEvent()
+		self.printEvent = self._mm.createEvent()
+		self.quitEvent = self._mm.createEvent()
+		self.settingsEvent = self._mm.createEvent()		
+		self.aboutEvent = self._mm.createEvent()
+
+		self.tabChanged = self._mm.createEvent()
+
+		self._ui = self._mm.import_(__file__, "ui")
+		self._ui.ICON_PATH = self._mm.resourcePath(__file__, "icons/") #FIXME: something less hard to debug?
+
 		self._app = QtGui.QApplication(sys.argv)
-		gettext.install("OpenTeacher")
+		gettext.install("OpenTeacher")#FIXME
 
 		self._widget = self._ui.OpenTeacherWidget()
 		self._fileTabs = {}
@@ -111,8 +113,23 @@ class GuiModule(object):
 		self._widget.tabWidget.currentChanged.connect(
 			lambda: self.tabChanged.emit()
 		)
+		self.active = True
 
 	def disable(self):
+		self.active = False
+
+		del self._ui
+		del self._app
+		del self._fileTabs
+		del self.newEvent
+		del self.openEvent
+		del self.saveEvent
+		del self.saveAsEvent
+		del self.printEvent
+		del self.quitEvent
+		del self.settingsEvent
+		del self.aboutEvent
+		del self.tabChanged
 		del self._widget
 
 	def run(self):
@@ -132,7 +149,7 @@ class GuiModule(object):
 	def addLessonCreateButton(self, *args, **kwargs):
 		button = self._widget.tabWidget.startWidget.addLessonCreateButton(*args, **kwargs)
 
-		event = self.manager.createEvent()
+		event = self._mm.createEvent()
 		#Lambda's because otherwise Qt's argument checked is passed ->
 		#error.
 		button.clicked.connect(lambda: event.emit())
@@ -141,7 +158,7 @@ class GuiModule(object):
 	def addLessonLoadButton(self, *args, **kwargs):
 		button = self._widget.tabWidget.startWidget.addLessonLoadButton(*args, **kwargs)
 		
-		event = self.manager.createEvent()
+		event = self._mm.createEvent()
 		#Lambda's because otherwise Qt's argument checked is passed ->
 		#error.
 		button.clicked.connect(lambda: event.emit())
@@ -152,7 +169,7 @@ class GuiModule(object):
 		self._widget.tabWidget.addTab(widget, text)
 		
 		fileTab = self._fileTabs[widget] = LessonFileTab(
-			self.manager,
+			self._mm,
 			self._widget.tabWidget,
 			widget
 		)
@@ -162,7 +179,7 @@ class GuiModule(object):
 		self._widget.tabWidget.addTab(widget, text)
 		
 		fileTab = self._fileTabs[widget] = FileTab(
-			self.manager,
+			self._mm,
 			self._widget.tabWidget,
 			widget
 		)
@@ -173,7 +190,6 @@ class GuiModule(object):
 		try:
 			return self._fileTabs[self._widget.tabWidget.currentWidget()]
 		except KeyError:
-			#startWidget
 			return
 
 	@property
@@ -185,34 +201,63 @@ class GuiModule(object):
 		for ext in exts:
 			stringExts.append("*." + ext)
 		filter = u"Lessons (%s)" % u" ".join(stringExts)
-		return unicode(QtGui.QFileDialog.getSaveFileName(
-			self._widget,
-			_("Choose location to save"),
-			startdir,
-			filter
-		))
+
+		lastWidget = self._widget.tabWidget.currentWidget()
+		fileDialog = QtGui.QFileDialog()
+		fileDialog.setAcceptMode(QtGui.QFileDialog.AcceptSave)
+		fileDialog.setWindowTitle(_("Choose file to save"))
+		fileDialog.setFilter(filter)
+		fileDialog.setDirectory(startdir)
+
+		tab = self.addCustomTab(fileDialog.windowTitle(), fileDialog)
+		tab.closeRequested.handle(tab.close)
+		fileDialog.rejected.connect(tab.close)
+		fileDialog.accepted.connect(tab.close)
+		result = fileDialog.exec_()
+
+		self._widget.tabWidget.setCurrentWidget(lastWidget)
+		if result:
+			return unicode(fileDialog.selectedFiles()[0])
+		else:
+			return None
 
 	def getLoadPath(self, startdir, exts):
 		stringExts = set()
 		for ext in exts:
 			stringExts.add("*." + ext)
 		filter = u"Lessons (%s)" % u" ".join(stringExts)
-		return unicode(QtGui.QFileDialog.getOpenFileName(
-			self._widget,
-			_("Choose file to open"),
-			startdir,
-			filter
-		))
+
+		fileDialog = QtGui.QFileDialog()
+		fileDialog.setFileMode(QtGui.QFileDialog.ExistingFile)
+		fileDialog.setWindowTitle(_("Choose file to open"))
+		fileDialog.setFilter(filter)
+		fileDialog.setDirectory(startdir)
+
+		tab = self.addCustomTab(fileDialog.windowTitle(), fileDialog)
+		tab.closeRequested.handle(tab.close)
+		fileDialog.rejected.connect(tab.close)
+		fileDialog.accepted.connect(tab.close)
+		if fileDialog.exec_():
+			return unicode(fileDialog.selectedFiles()[0])
+		else:
+			return None
 
 	def getConfiguredPrinter(self):
 		#Setup printer
 		printer = QtGui.QPrinter()
 
 		printDialog = QtGui.QPrintDialog(printer)
-		if not printDialog.exec_():
+		lastWidget = self._widget.tabWidget.currentWidget()
+		tab = self.addCustomTab(printDialog.windowTitle(), printDialog)
+		tab.closeRequested.handle(tab.close)
+		printDialog.rejected.connect(tab.close)
+		printDialog.accepted.connect(tab.close)
+		result = printDialog.exec_()
+		self._widget.tabWidget.setCurrentWidget(lastWidget)
+		if not result:
 			return
 		return printer
-	
+
 	def enableNew(self, boolean):
 		self._widget.newAction.setEnabled(boolean)
 
@@ -232,5 +277,12 @@ class GuiModule(object):
 	def startTabActive(self):
 		return self._widget.tabWidget.startWidget == self._widget.tabWidget.currentWidget()
 
-def init(manager):
-	return GuiModule(manager)
+	def chooseItem(self, items): #FIXME
+		if len(items) == 1:
+			return items.pop()
+		d = self._ui.ItemChooser(items)
+		d.exec_()
+		return d.item
+
+def init(moduleManager):
+	return GuiModule(moduleManager)

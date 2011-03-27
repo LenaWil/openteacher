@@ -25,6 +25,7 @@ class WrtsApiModule(object):
 		self._mm = moduleManager
 		self.supports = ("initializing")
 		self.requires = (1, 0)
+		self.active = False
 
 	def initialize(self):
 		for module in self._mm.activeMods.supporting("settings"):

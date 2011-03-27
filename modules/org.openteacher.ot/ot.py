@@ -42,6 +42,18 @@ class OpenTeacherFileModule(object):
 		for module in self._mm.activeMods.supporting("settings"):
 			module.registerModule("OpenTeacher file type", self)
 
+	def enable(self):
+		self._pyratemp = self._mm.import_(__file__, "pyratemp")
+		self.loads = {"ot": ["words"]}
+		self.saves = {"words": ["ot"]}
+		self.active = True
+
+	def disable(self):
+		self.active = False
+		del self._pyratemp
+		del self.loads
+		del self.saves
+
 	def getFileTypeOf(self, path):
 		if path.endswith(".ot"):
 			return "words"
@@ -83,18 +95,6 @@ class OpenTeacherFileModule(object):
 		}
 		content = t(**data)
 		open(path, "w").write(content.encode("UTF-8"))
-
-	def enable(self):
-		self._pyratemp = self._mm.import_(__file__, "pyratemp")
-		self.loads = {"ot": ["words"]}
-		self.saves = {"words": ["ot"]}
-		self.active = True
-
-	def disable(self):
-		self.active = False
-		del self._pyratemp
-		del self.loads
-		del self.saves
 
 def init(moduleManager):
 	return OpenTeacherFileModule(moduleManager)

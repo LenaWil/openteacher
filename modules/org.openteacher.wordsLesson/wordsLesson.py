@@ -19,86 +19,12 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui
-
 class WordList(list): pass
 
 class Word(object):
 	def __init__(self):
 		self.questions = []
 		self.answers = []
-
-class WordsTextEdit(QtGui.QTextEdit):
-	def highlightLine(self, line, qcolor):
-		cursor = QtGui.QTextCursor(window.textCursor())
-		
-		for i in xrange(line - 1):
-			cursor.movePosition(QtGui.QTextCursor.Down)
-		
-		cursor.movePosition(QtGui.QTextCursor.StartOfLine)
-		cursor.movePosition(QtGui.QTextCursor.EndOfLine, QtGui.QTextCursor.KeepAnchor)
-
-		format = QtGui.QTextBlockFormat()
-		format.setBackground(qcolor)
-		cursor.setBlockFormat(format)
-
-class EnterWidget(QtGui.QWidget):
-	def __init__(self, *args, **kwargs):
-		super(EnterWidget, self).__init__(*args, **kwargs)
-		
-	def initGUI(self):
-		self.titleTextBox = QtGui.QLineEdit(self)
-		self.questionSubjectTextBox = QtGui.QLineEdit(self)
-		self.answerSubjectTextBox = QtGui.QLineEdit(self)
-		
-		self.wordsEnterBox = WordsTextEdit(self)
-
-		layout = QtGui.QGridLayout()
-		layout.addWidget(QtGui.QLabel(_("Title:")), 0, 0)
-		layout.addWidget(self.titleTextBox, 0, 1)
-
-		layout.addWidget(QtGui.QLabel(_("Question language:")), 1, 0)
-		layout.addWidget(self.questionSubjectTextBox, 1, 1)
-
-		layout.addWidget(QtGui.QLabel(_("Answer language:")), 2, 0)
-		layout.addWidget(self.answerSubjectTextBox, 2, 1)
-
-		vbox = QtGui.QVBoxLayout()
-		vbox.addLayout(layout)
-		vbox.addWidget(self.wordsEnterBox)
-
-		self.setLayout(vbox)
-
-class TeachWidget(QtGui.QWidget):
-	def __init__(self, moduleManager, *args, **kwargs):
-		super(TeachWidget, self).__init__(*args, **kwargs)
-		self._mm = moduleManager
-		self._teachTypeWidgets = []
-	
-	def initGUI(self, lesson):
-		self.lesson = lesson
-
-		self.teachTab = QtGui.QTabWidget(self)
-
-		for module in self._mm.mods.supporting("teachType").items: #yeah, still needs a better name
-			if module.type == "words":
-				widget = module.createWidget()
-				self._teachTypeWidgets.append(widget)
-				self.teachTab.addTab(widget, module.name)
-
-		vbox = QtGui.QVBoxLayout()
-		vbox.addWidget(self.teachTab)
-
-		self.setLayout(vbox)
-
-	def start(self):
-		lessonTypeModules = self._mm.mods.supporting("lessonType").items
-		lessonTypeModule = lessonTypeModules.pop() #FIXME; user should choose
-
-		lessonType = lessonTypeModule.createLessonType(self.lesson.list)
-		for widget in self._teachTypeWidgets:
-			widget.start(lessonType)
-		lessonType.start()
 
 class Lesson(object):
 	def __init__(self, module, moduleManager, fileTab, enterWidget, teachWidget, *args, **kwargs):
@@ -121,7 +47,7 @@ class Lesson(object):
 
 	def tabChanged(self):
 		if self.fileTab.currentTab == self._teachWidget:
-			self._teachWidget.start()
+			self.startLesson()
 
 	def loadFromList(self, list):
 		self._enterWidget.titleTextBox.setText(list.title)
@@ -134,7 +60,7 @@ class Lesson(object):
 				u", ".join(word.questions),
 				u", ".join(word.answers)
 			)
-		self._enterWidget.wordsEnterBox.setText(text)
+		self._enterWidget.wordsEnterBox.setText(text.strip())
 
 	@property
 	def list(self):
@@ -160,6 +86,17 @@ class Lesson(object):
 
 		return wordList
 
+	def startLesson(self):
+		lessonTypeModules = self._mm.mods.supporting("lessonType").items
+		for module in lessonTypeModules:
+			module.enable()
+		lessonTypeModule = lessonTypeModules.pop() #FIXME: user should choose, combobox?
+
+		lessonType = lessonTypeModule.createLessonType(self.list)
+		for widget in self._teachWidget._teachTypeWidgets:
+			widget.start(lessonType)
+		lessonType.start()
+
 class WordsLessonModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(WordsLessonModule, self).__init__(*args, **kwargs)
@@ -167,12 +104,15 @@ class WordsLessonModule(object):
 		self._mm = moduleManager
 		self.supports = ("lesson", "list", "loadList", "initializing")
 		self.requires = (1, 0)
+		self.active = False
 
 	def initialize(self):
 		for module in self._mm.activeMods.supporting("settings"):
 			module.registerModule("Words Lesson", self)
 
 	def enable(self):
+		self._ui = self._mm.import_(__file__, "ui")
+
 		self.lessonCreated = self._mm.createEvent()
 		self.type = "words"
 
@@ -188,6 +128,7 @@ class WordsLessonModule(object):
 	def disable(self):
 		self.active = False
 		#remove create button
+		del self._ui
 		del self.lessonCreated
 		del self.type
 		del self._counter
@@ -196,9 +137,9 @@ class WordsLessonModule(object):
 	def createLesson(self):
 		lessons = set()
 		for module in self._mm.mods.supporting("ui"):
-			enterWidget = EnterWidget()
-			teachWidget = TeachWidget(self._mm)
-			
+			enterWidget = self._ui.EnterWidget(self._mm)
+			teachWidget = self._ui.TeachWidget(self._mm)
+
 			fileTab = module.addFileTab(
 				"Word lesson %s" % self._counter,
 				enterWidget,
@@ -206,8 +147,6 @@ class WordsLessonModule(object):
 			)
 
 			lesson = Lesson(self, self._mm, fileTab, enterWidget, teachWidget)
-			enterWidget.initGUI()
-			teachWidget.initGUI(lesson)
 			self._references.add(lesson)
 			self.lessonCreated.emit(lesson)
 						

@@ -137,8 +137,8 @@ class OnscreenKeyboardModule(object):
 		)
 		self.requires = (1, 0)
 
-	def enable(self): pass #FIXME
-	def disable(self): pass #FIXME
+	def enable(self): pass
+	def disable(self): pass
 
 	def getWidget(self, characters):
 		return OnscreenKeyboardWidget(self.manager, characters)

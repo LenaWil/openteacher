@@ -295,3 +295,24 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 		self.setWindowIcon(QtGui.QIcon(ICON_PATH + "openteacher.png"))
 		#activate statusBar
 		self.statusBar()
+
+class ItemChooser(QtGui.QDialog):#FIXME
+	def __init__(self, items, *args, **kwargs):
+		super(ItemChooser, self).__init__(*args, **kwargs)
+		
+		vbox = QtGui.QVBoxLayout()
+		
+		self.dict = {}
+		for item in items:
+			self.dict[str(item)] = item
+
+		for item in self.dict:
+			button = QtGui.QPushButton(item)
+			button.clicked.connect(self.buttonClicked)
+			vbox.addWidget(button)
+		self.setLayout(vbox)
+
+	def buttonClicked(self):
+		key = str(self.sender().text())
+		self.item = self.dict[key]
+		self.accept()

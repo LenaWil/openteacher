@@ -21,6 +21,50 @@
 import os
 import sys
 
+class Saver(object):
+	def __init__(self, module, type, lesson, path, *args, **kwargs):
+		super(Saver, self).__init__(*args, **kwargs)
+		
+		self.module = module
+		self.type = type
+		self.lesson = lesson
+		self.path = path
+
+	def save(self):
+		self.module.save(self.type, self.lesson.list, self.path)
+
+	def __str__(self): #FIXME
+		return str(self.module)
+
+class Loader(object):
+	def __init__(self, loadModule, guiModule, path, *args, **kwargs):
+		super(Loader, self).__init__(*args, **kwargs)
+		
+		self.loadModule = loadModule
+		self.guiModule = guiModule
+		self.path = path
+
+	def load(self):
+		self.guiModule.loadFromList(self.loadModule.load(self.path))
+
+	def __str__(self): #FIXME
+		return str(self.loadModule)
+
+class Printer(object):
+	def __init__(self, module, type, lesson, printer, *args, **kwargs):#FIXME: 'printer' creation (as in the argument) should be handled by a separate module.
+		super(Printer, self).__init__(*args, **kwargs)
+
+		self.module = module
+		self.type = type
+		self.lesson = lesson
+		self.printer = printer
+
+	def print_(self):
+		self.module.print_(self.type, self.lesson.list, self.printer)
+
+	def __str__(self): #FIXME
+		return str(self.module)
+
 class OpenTeacherModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(OpenTeacherModule, self).__init__(*args, **kwargs)
@@ -90,7 +134,7 @@ class OpenTeacherModule(object):
 	def _supportedFileTypes(self):
 		return (module.type for module in self._mm.activeMods.supporting("lesson"))
 
-	def _save(self, path):
+	def _save(self, path):#FIXME: should be public like self.load(path)?
 		path = path.encode(sys.getfilesystemencoding())
 		savers = set()
 
@@ -99,26 +143,21 @@ class OpenTeacherModule(object):
 
 		type = self._currentLesson.module.type
 		for module in self._mm.activeMods.supporting("save"):
-			for ext in module.exporter.exports[type]:
+			for ext in module.saves[type]:
 				if path.endswith(ext):
-					savers.add(lambda: module.save( #FIXME, something cleaner...
-						type,
-						self._currentLesson.list,
-						path)
-					)
+					savers.add(Saver(module, type, self._currentLesson, path))
 
 		if len(savers) == 0:
 			raise NotImplementedError()
 
-		#FIXME: let the user decide (and take settings into account)
-		saver = savers.pop()
+		#Choose item
+		saver = self.uiModule.chooseItem(savers)
 		#Save
-		saver()
-		#TODO: inform the user everything went OK.
+		saver.save()
+		#FIXME: inform the user everything went OK.
 
 	def load(self, path):
 		loaders = set()
-		#TODO: check if lesson modules can open path
 
 		#Checks if loader modules can open it, and which type they would
 		#return if they would load it only adds it as a possibility if
@@ -127,17 +166,16 @@ class OpenTeacherModule(object):
 			fileType = loadModule.getFileTypeOf(path)
 			for guiModule in self._mm.activeMods.supporting("lesson", "loadList"):
 				if guiModule.type == fileType:
-					loaders.add(lambda: guiModule.loadFromList(loadModule.load(path)))
+					loaders.add(Loader(loadModule, guiModule, path))
 
 		if len(loaders) == 0:
 			raise NotImplementedError()
-		#FIXME: let the user choice which loader to use (should also
-		#take settings into account)
-		loader = loaders.pop()
+		#Choose item
+		loader = self.uiModule.chooseItem(loaders)
 
-		loader()
+		loader.load()
 		
-		#TODO: inform the user
+		#FIXME: inform the user
 
 	def print_(self):
 		#Setup printer
@@ -153,16 +191,16 @@ class OpenTeacherModule(object):
 		type = self._currentLesson.module.type
 		for module in self._mm.activeMods.supporting("print"):
 			if type in module.prints:
-				printers.add(lambda: module.print_(type, self._currentLesson.list, printer))
+				printers.add(Printer(module, type, self._currentLesson, printer))
 
 		if len(printers) == 0:
 			raise NotImplementedError()
 
-		#FIXME: let the user decide (and take settings into account)
-		printer = printers.pop()
+		#Choose item
+		printer = self.uiModule.chooseItem(printers)
 		#Save
-		printer()
-		#TODO: inform the user everything went OK.
+		printer.print_()
+		#FIXME: inform the user everything went OK.
 
 	def settings(self):
 		for module in self._mm.activeMods.supporting("settings"):
@@ -175,7 +213,7 @@ class OpenTeacherModule(object):
 		self.uiModule.interrupt()
 
 	def run(self):
-		#FIXME: use one ui module by user's choice.
+		#FIXME: use one ui module by user's choice. Make the choice with command line args
 		for module in self._mm.mods.supporting("ui"):
 			module.enable()
 
@@ -188,11 +226,19 @@ class OpenTeacherModule(object):
 		for module in self._mm.mods.supporting("initializing"):
 			module.initialize()
 
-		#FIXME: modules should activate each other/be activated via the settings!
+		#FIXME: modules should activate each other/be activated via the
+		#settings. Activating/deactivating does already work, but since
+		#the preferences of the user aren't saved yet, I still have this
+		#enabled, because otherwise debugging takes too much time.
+		#(You would have to enable every module you need every time by
+		#hand)
 		for module in self._mm.mods.exclude("ui").exclude("settings"):
 			module.enable()
 
-		for module in self._mm.mods.supporting("lesson"):
+		#FIXME: should be checked when a module gets activated/
+		#deactivated; or should modules just not delete their events
+		#when enabling/desabling?
+		for module in self._mm.activeMods.supporting("lesson"):
 			module.lessonCreated.handle(self._lessonAdded)
 
 		self.uiModule = uiModules.items.pop()
@@ -213,7 +259,6 @@ class OpenTeacherModule(object):
 		lesson.stopped.handle(
 			lambda: self._removeLesson(lesson.fileTab)
 		)
-
 		self._updateMenuItems()
 
 	def _removeLesson(self, fileTab):
@@ -256,7 +301,7 @@ class OpenTeacherModule(object):
 			module.enableOpen(openSupport)
 
 			#save
-			saveSupport = len(self._usableSaveExtensions) != 0 and not module.startTabActive
+			saveSupport = self._currentLesson is not None and len(self._usableSaveExtensions) != 0
 			module.enableSave(saveSupport)
 			module.enableSaveAs(saveSupport)
 
