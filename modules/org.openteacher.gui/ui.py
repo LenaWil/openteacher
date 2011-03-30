@@ -176,7 +176,13 @@ class FilesTabWidget(QtGui.QTabWidget):
 		self.indexes = []
 
 		self.startWidget = StartWidget(self)
-		super(FilesTabWidget, self).addTab(self.startWidget, _("+")) # super because our method does add a close button
+		super(FilesTabWidget, self).addTab(
+			self.startWidget,
+			QtGui.QIcon.fromTheme("add",
+				QtGui.QIcon(ICON_PATH + "add.png"),
+			),
+			""
+		) # super because our method does add a close button
 
 		self.setDocumentMode(True)
 
