@@ -93,7 +93,7 @@ class Lesson(object):
 		lessonTypeModule = lessonTypeModules.pop() #FIXME: user should choose, combobox?
 
 		lessonType = lessonTypeModule.createLessonType(self.list)
-		for widget in self._teachWidget._teachTypeWidgets:
+		for widget in self._teachWidget.teachTypeWidgets:
 			widget.start(lessonType)
 		lessonType.start()
 

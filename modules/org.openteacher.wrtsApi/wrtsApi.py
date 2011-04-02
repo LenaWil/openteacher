@@ -82,7 +82,7 @@ class WrtsApiModule(object):
 			listUrl = listsParser.getWordListUrl(ldc.selectedRowIndex)
 			list = self.wrtsConnection.importWordList(listUrl)
 
-			for module in self._mm.activeMods.supporting("openteacher-core"):#FIXME? maybe we should check more. Maybe the function this calls should just be moved...
+			for module in self._mm.activeMods.supporting("openteacher-core"):
 				module.loadList("words", list)
 
 def init(moduleManager):

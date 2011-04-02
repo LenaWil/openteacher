@@ -87,14 +87,14 @@ class TeachWidget(QtGui.QWidget):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TeachWidget, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
-		self._teachTypeWidgets = []
+		self.teachTypeWidgets = []
 
 		self.teachTab = QtGui.QTabWidget(self)
 
 		for module in self._mm.mods.supporting("teachType").items: #yeah, still needs a better name
 			if module.type == "words":
 				widget = module.createWidget()
-				self._teachTypeWidgets.append(widget)
+				self.teachTypeWidgets.append(widget)
 				self.teachTab.addTab(widget, module.name)
 
 		vbox = QtGui.QVBoxLayout()
