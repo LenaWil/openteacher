@@ -1,31 +1,3 @@
-from PyQt4 import QtCore, QtGui
-
-class SettingsDialog(QtGui.QDialog):
-	def __init__(self, modules, *args, **kwargs):
-		super(SettingsDialog, self).__init__(*args, **kwargs)
-
-		self.modules = {}
-
-		vbox = QtGui.QVBoxLayout()
-		for name, module in sorted(modules.items()):
-			checkBox = QtGui.QCheckBox(name)
-			if module.active:
-				checkBox.setChecked(True)
-			checkBox.stateChanged.connect(self.updateModuleState)
-			self.modules[checkBox] = module
-			vbox.addWidget(checkBox)
-		self.setLayout(vbox)
-		
-		self.setWindowTitle(_("Settings"))
-
-	def updateModuleState(self, state):
-		module = self.modules[self.sender()]
-		
-		if state == QtCore.Qt.Checked:
-			module.enable()
-		else:
-			module.disable()
-
 class SettingsModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(SettingsModule, self).__init__(*args, **kwargs)
@@ -38,23 +10,79 @@ class SettingsModule(object):
 
 	def enable(self):
 		self._modules = {}
+		self._settings = {}
+		self._ui = self._mm.import_(__file__, "ui")
 		self.active = True
+
+########## DEMO CONTENT
+		self.registerSetting(
+			"org.openteacher.settings.test",
+			"Test setting",
+		)
+		self.registerSetting(
+			"org.openteacher.settings.test2",
+			"Test setting 2",
+			"number"
+		)
+		self.registerSetting(
+			"org.openteacher.settings.test3",
+			"Test setting 3",
+			"long_text",
+			"Words lesson",
+			"Test"
+		)
+		self.registerSetting(
+			"org.openteacher.settings.test4",
+			"Test setting 4",
+			"options",
+			"Topo lesson",
+			"Test category 2"
+		)
+########## END DEMO CONTENT
 
 	def disable(self):
 		self.active = False
 		del self._modules
+		del self._settings
+		del self._ui
 
 	def registerModule(self, name, module):
 		self._modules[name] = module
 
+	def registerSetting(self, internal_name, name, type="short_text", lessonType=None, category=None):
+		try:
+			self._settings[lessonType]
+		except KeyError:
+			self._settings[lessonType] = {}
+		try:
+			self._settings[lessonType][category]
+		except KeyError:
+			self._settings[lessonType][category] = {}
+		setting = self._settings[lessonType][category][internal_name] = {}
+		setting["value"] = None
+		setting["name"] = name
+		setting["type"] = type
+
+	def value(self, internal_name):
+		for lessonType in self._settings.values():
+			for category in lessonType.values():
+				try:
+					return category[internal_name]["value"]
+				except KeyError:
+					pass
+
 	def show(self):
 		for module in self._mm.activeMods.supporting("ui"):
-			dialog = SettingsDialog(self._modules)
+			dialog = self._ui.SettingsDialog(self._modules, self._settings)
 			tab = module.addCustomTab(dialog.windowTitle(), dialog)
 			tab.closeRequested.handle(tab.close)
-			dialog.rejected.connect(tab.close)
-			dialog.accepted.connect(tab.close)
-			dialog.exec_()
+
+########## DEMO CONTENT
+		print self.value("org.openteacher.settings.test")
+		print self.value("org.openteacher.settings.test2")
+		print self.value("org.openteacher.settings.test3")
+		print self.value("org.openteacher.settings.test4")
+########## END DEMO CONTENT
 
 def init(moduleManager):
 	return SettingsModule(moduleManager)
