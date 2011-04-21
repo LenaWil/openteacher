@@ -21,7 +21,7 @@ class ModulesTab(QtGui.QWidget):
 
 	def updateModuleState(self, state):
 		module = self.modules[self.sender()]
-		
+
 		if state == QtCore.Qt.Checked:
 			module.enable()
 		else:

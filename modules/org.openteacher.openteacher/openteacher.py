@@ -207,7 +207,8 @@ class OpenTeacherModule(object):
 			module.show()
 
 	def about(self):
-		pass
+		for module in self._mm.activeMods.supporting("about"):
+			module.show()
 
 	def quit_(self):
 		self.uiModule.interrupt()
