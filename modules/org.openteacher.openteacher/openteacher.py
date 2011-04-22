@@ -244,8 +244,8 @@ class OpenTeacherModule(object):
 		#enabled, because otherwise debugging takes too much time.
 		#(You would have to enable every module you need every time by
 		#hand)
-		#for module in self._mm.mods.exclude("ui").exclude("settings").exclude("openteacher-core"):
-		#	module.enable()
+		for module in self._mm.mods.exclude("ui").exclude("settings").exclude("openteacher-core"):
+			module.enable()
 
 		self.uiModule = uiModules.items.pop()
 		self._updateMenuItems()
