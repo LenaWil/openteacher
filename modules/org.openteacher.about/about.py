@@ -24,8 +24,12 @@ class AboutModule(object):
 		self._mm = moduleManager
 
 		self.requires = (1, 0)
-		self.supports = ("about")
+		self.supports = ("about", "initializing")
 		self.active = False
+
+	def initialize(self):
+		for module in self._mm.activeMods.supporting("settings"):
+			module.registerModule("About module", self)
 
 	def show(self):
 		for module in self._mm.activeMods.supporting("ui"):

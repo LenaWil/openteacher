@@ -12,6 +12,7 @@ class SettingsModule(object):
 		self._modules = {}
 		self._settings = {}
 		self._ui = self._mm.import_(__file__, "ui")
+		self.modulesUpdated = self._mm.createEvent()
 		self.active = True
 
 ########## DEMO CONTENT
@@ -42,6 +43,7 @@ class SettingsModule(object):
 
 	def disable(self):
 		self.active = False
+		del self.modulesUpdated
 		del self._modules
 		del self._settings
 		del self._ui
@@ -75,6 +77,7 @@ class SettingsModule(object):
 		for module in self._mm.activeMods.supporting("ui"):
 			dialog = self._ui.SettingsDialog(self._modules, self._settings)
 			tab = module.addCustomTab(dialog.windowTitle(), dialog)
+			tab.closeRequested.handle(self.modulesUpdated.emit)
 			tab.closeRequested.handle(tab.close)
 
 ########## DEMO CONTENT

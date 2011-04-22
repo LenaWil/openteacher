@@ -258,6 +258,7 @@ class GuiModule(object):
 			return
 		return printer
 
+	#FIXME: something more dynamic?
 	def enableNew(self, boolean):
 		self._widget.newAction.setEnabled(boolean)
 
@@ -272,6 +273,12 @@ class GuiModule(object):
 
 	def enablePrint(self, boolean):
 		self._widget.printAction.setEnabled(boolean)
+
+	def enableSettings(self, boolean):
+		self._widget.settingsAction.setEnabled(boolean)
+	
+	def enableAbout(self, boolean):
+		self._widget.aboutAction.setEnabled(boolean)
 
 	@property
 	def startTabActive(self):

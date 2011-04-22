@@ -156,6 +156,14 @@ class OpenTeacherModule(object):
 		saver.save()
 		#FIXME: inform the user everything went OK.
 
+	def loadList(self, type, list):
+		loaders = set()
+		for module in self._mm.activeMods.supporting("loadList"):
+			if module.type == type:
+				loaders.add(module)
+		loader = self.uiModule.chooseItem(loaders)
+		loader.loadFromList(list)
+
 	def load(self, path):
 		loaders = set()
 
@@ -214,6 +222,8 @@ class OpenTeacherModule(object):
 		self.uiModule.interrupt()
 
 	def run(self):
+		self.enable()
+
 		#FIXME: use one ui module by user's choice. Make the choice with command line args
 		for module in self._mm.mods.supporting("ui"):
 			module.enable()
@@ -223,6 +233,7 @@ class OpenTeacherModule(object):
 
 		for module in self._mm.mods.supporting("settings"):
 			module.enable()
+			module.modulesUpdated.handle(self._modulesUpdated)
 
 		for module in self._mm.mods.supporting("initializing"):
 			module.initialize()
@@ -233,20 +244,22 @@ class OpenTeacherModule(object):
 		#enabled, because otherwise debugging takes too much time.
 		#(You would have to enable every module you need every time by
 		#hand)
-		for module in self._mm.mods.exclude("ui").exclude("settings"):
-			module.enable()
-
-		#FIXME: should be checked when a module gets activated/
-		#deactivated; or should modules just not delete their events
-		#when enabling/desabling?
-		for module in self._mm.activeMods.supporting("lesson"):
-			module.lessonCreated.handle(self._lessonAdded)
+		#for module in self._mm.mods.exclude("ui").exclude("settings").exclude("openteacher-core"):
+		#	module.enable()
 
 		self.uiModule = uiModules.items.pop()
 		self._updateMenuItems()
 		self.uiModule.run()
 
 		self._disconnectEvents(uiModules)
+		
+		for module in self._mm.activeMods:
+			module.disable()
+
+	def _modulesUpdated(self):
+		#Keeps track of all created lessons
+		for module in self._mm.activeMods.supporting("lesson"):
+			module.lessonCreated.handle(self._lessonAdded)
 
 	@property
 	def _currentLesson(self):
@@ -309,6 +322,14 @@ class OpenTeacherModule(object):
 			#print
 			printSupport = self._printingPossible()
 			module.enablePrint(printSupport)
+
+			#settings
+			settingsSupport = len(self._mm.activeMods.supporting("settings").items) != 0
+			module.enableSettings(settingsSupport)
+
+			#about
+			aboutSupport = len(self._mm.activeMods.supporting("about").items) != 0
+			module.enableAbout(aboutSupport)
 
 	def _printingPossible(self):
 		#Checks for printer modules, and if there is a gui module for
