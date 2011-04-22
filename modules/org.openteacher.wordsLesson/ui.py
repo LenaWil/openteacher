@@ -63,13 +63,13 @@ class EnterWidget(QtGui.QWidget):
 		vboxWidget = QtGui.QWidget()
 		vboxWidget.setLayout(vbox)
 
-		keyboards = self._mm.mods.supporting("diacritic_onscreen_keyboard").items
+		keyboards = self._mm.mods.supporting("onscreenKeyboard").items
 		for module in keyboards:
 			module.enable()
 		for module in self._mm.activeMods.supporting("ui"):
 			keyboard = module.chooseItem(keyboards)
 
-		keyboardWidget = keyboard.getDiacriticWidget()
+		keyboardWidget = keyboard.getWidget()
 		keyboardWidget.letterChosen.handle(self.addLetter)
 
 		splitter = QtGui.QSplitter()

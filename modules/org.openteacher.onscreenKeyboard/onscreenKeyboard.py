@@ -21,27 +21,6 @@
 
 from PyQt4 import QtCore, QtGui
 
-DIACRITIC_CHARS = (
-	(u"à", u"á", u"â", u"ä", u"ã", u"å"),
-	(u"À", u"Á", u"Â", u"Ä", u"Ã", u"Å"),
-	(u"è", u"é", u"ê", u"ë", u"Ç", u"ç"),
-	(u"È", u"É", u"Ê", u"Ë", u"Ñ", u"ñ"),
-	(u"ì", u"ì", u"î", u"ï", u"Û", u"û"),
-	(u"Ì", u"Í", u"Î", u"Ï", u"Ú", u"ú"),
-	(u"ò", u"ó", u"ô", u"ö", u"Ü", u"ü"),
-	(u"Ò", u"Ó", u"Ô", u"Ö", u"Ù", u"ß")
-)
-
-GREEK_CHARS = (
-	(u"α", u"β", u"γ", u"Γ", u"δ", u"Δ"),
-	(u"ε", u"Ε", u"ζ", u"η", u"Η", u"θ"),
-	(u"Θ", u"ι", u"Ι", u"κ", u"λ", u"Λ"),
-	(u"μ", u"ν", u"ξ", u"Ξ", u"ο", u"Ο"),
-	(u"π", u"Π", u"ρ", u"σ", u"Σ", u"τ"),
-	(u"υ", u"φ", u"Φ", u"χ", u"Χ", u"ψ"),
-	(u"Ψ", u"ω", u"Ω", u"", u"", u"")
-)
-
 class CharactersTableModel(QtCore.QAbstractTableModel):
 	"""This class is a tableModel, which means it can be used in a
 	   QTableView. (What happens in OpenTeacher.)
@@ -104,6 +83,8 @@ class OnscreenKeyboardWidget(QtGui.QTableView):
 		self.manager = manager
 		self._model = CharactersTableModel(characters)
 		self.setModel(self._model)
+		
+		self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 
 	def setModel(self, *args, **kwargs):
 		super(OnscreenKeyboardWidget, self).setModel(*args, **kwargs)
@@ -126,28 +107,27 @@ class OnscreenKeyboardWidget(QtGui.QTableView):
 		self.letterChosen.emit(letter)
 
 class OnscreenKeyboardModule(object):
-	def __init__(self, manager, *args, **kwargs):
+	def __init__(self, moduleManager, *args, **kwargs):
 		super(OnscreenKeyboardModule, self).__init__(*args, **kwargs)
 
-		self.manager = manager
-		self.supports = (
-			"onscreen_keyboard",
-			"greek_onscreen_keyboard",
-			"diacritic_onscreen_keyboard"
-		)
+		self._mm = moduleManager
+		self.supports = ("onscreenKeyboard",)
 		self.requires = (1, 0)
 
 	def enable(self): pass
 	def disable(self): pass
 
-	def getWidget(self, characters):
-		return OnscreenKeyboardWidget(self.manager, characters)
+	def getWidget(self):
+		widget = QtGui.QTabWidget()
+		widget.letterChosen = self._mm.createEvent()
+		for module in self._mm.activeMods.supporting("onscreenKeyboardData"):
+			tab = OnscreenKeyboardWidget(self._mm, module.data)
+			widget.addTab(tab, module.name)
+			tab.letterChosen.handle(widget.letterChosen.emit)
+		return widget
 
-	def getGreekWidget(self):
-		return OnscreenKeyboardWidget(self.manager, GREEK_CHARS)
+	def showLetter(self, letter):
+		print letter
 
-	def getDiacriticWidget(self):
-		return OnscreenKeyboardWidget(self.manager, DIACRITIC_CHARS)
-
-def init(manager):
-	return OnscreenKeyboardModule(manager)
+def init(moduleManager):
+	return OnscreenKeyboardModule(moduleManager)
