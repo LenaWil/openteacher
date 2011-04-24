@@ -50,41 +50,11 @@ class Lesson(object):
 			self.startLesson()
 
 	def loadFromList(self, list):
-		self._enterWidget.titleTextBox.setText(list.title)
-		self._enterWidget.questionSubjectTextBox.setText(list.questionSubject)
-		self._enterWidget.answerSubjectTextBox.setText(list.answerSubject)
-		
-		text = u""
-		for word in list:
-			text += "%s = %s\n" % (
-				u", ".join(word.questions),
-				u", ".join(word.answers)
-			)
-		self._enterWidget.wordsEnterBox.setText(text.strip())
+		self._enterWidget.wordsTableModel.updateList(list)
 
 	@property
 	def list(self):
-		#empty list
-		wordList = WordList()
-		wordList.title = unicode(self._enterWidget.titleTextBox.text())
-		wordList.questionSubject = unicode(self._enterWidget.questionSubjectTextBox.text())
-		wordList.answerSubject = unicode(self._enterWidget.answerSubjectTextBox.text())
-
-		enteredWords = unicode(self._enterWidget.wordsEnterBox.toPlainText())
-		for line in enteredWords.split("\n"):
-			if "=" in line:
-				questions, answers = line.split("=")
-
-				stripper = lambda x: x.strip()
-				splitter = lambda x: map(stripper, x.split(","))
-
-				word = Word()
-				word.questions = splitter(questions)
-				word.answers = splitter(answers)
-
-				wordList.append(word)
-
-		return wordList
+		return self._enterWidget.wordsTableModel.list
 
 	def startLesson(self):
 		lessonTypeModules = self._mm.mods.supporting("lessonType").items
@@ -136,7 +106,7 @@ class WordsLessonModule(object):
 
 	def createLesson(self):
 		lessons = set()
-		for module in self._mm.mods.supporting("ui"):
+		for module in self._mm.activeMods.supporting("ui"):
 			enterWidget = self._ui.EnterWidget(self._mm)
 			teachWidget = self._ui.TeachWidget(self._mm)
 
@@ -149,7 +119,7 @@ class WordsLessonModule(object):
 			lesson = Lesson(self, self._mm, fileTab, enterWidget, teachWidget)
 			self._references.add(lesson)
 			self.lessonCreated.emit(lesson)
-						
+
 			lessons.add(lesson)
 		self._counter += 1
 		return lessons

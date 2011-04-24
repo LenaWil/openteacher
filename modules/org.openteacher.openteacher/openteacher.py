@@ -246,6 +246,7 @@ class OpenTeacherModule(object):
 		#hand)
 		for module in self._mm.mods.exclude("ui").exclude("settings").exclude("openteacher-core"):
 			module.enable()
+		self._modulesUpdated()
 
 		self.uiModule = uiModules.items.pop()
 		self._updateMenuItems()
