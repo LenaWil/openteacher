@@ -35,19 +35,14 @@ class Lesson(object):
 		self.fileTab = fileTab
 
 		self.fileTab.closeRequested.handle(self.stop)
-		self.fileTab.tabChanged.handle(self.tabChanged)
+		self.fileTab.tabChanged.handle(self._tabChanged)
 		self.stopped = self._mm.createEvent()
 		
 		self._enterWidget = enterWidget
 		self._teachWidget = teachWidget
-
-	def stop(self):
-		self.fileTab.close()
-		self.stopped.emit()
-
-	def tabChanged(self):
-		if self.fileTab.currentTab == self._teachWidget:
-			self.startLesson()
+		
+		self._initEnterUi()
+		self._initTeachUi()
 
 	def loadFromList(self, list):
 		self._enterWidget.wordsTableModel.updateList(list)
@@ -56,14 +51,94 @@ class Lesson(object):
 	def list(self):
 		return self._enterWidget.wordsTableModel.list
 
-	def startLesson(self):
-		lessonTypeModules = self._mm.mods.supporting("lessonType").items
-		for module in lessonTypeModules:
+	def stop(self):
+		self.fileTab.close()
+		self.stopped.emit()
+
+	def _tabChanged(self):
+		if self.fileTab.currentTab == self._teachWidget:
+			self._startLesson()
+
+	def _initEnterUi(self):
+		ew = self._enterWidget
+		ew.removeSelectedRowsButton.clicked.connect(
+			self._removeSelectedRows
+		)
+		ew.keyboardWidget.letterChosen.handle(self._addLetter)
+
+		ew.titleTextBox.textChanged.connect(
+			ew.wordsTableModel.updateTitle
+		)
+		ew.questionSubjectTextBox.textChanged.connect(
+			ew.wordsTableModel.updateQuestionSubject
+		)
+		ew.answerSubjectTextBox.textChanged.connect(
+			ew.wordsTableModel.updateAnswerSubject
+		)
+		ew.wordsTableModel.modelReset.connect(self._updateTextBoxes)
+
+	def _updateTextBoxes(self):
+		list = self._enterWidget.wordsTableModel.list
+		ew = self._enterWidget
+
+		ew.titleTextBox.setText(list.title)
+		ew.questionSubjectTextBox.setText(list.questionSubject)
+		ew.answerSubjectTextBox.setText(list.answerSubject)
+
+	def _removeSelectedRows(self):
+		while True:
+			try:
+				i = self._enterWidget.wordsTableView.selectedIndexes()[0]
+			except IndexError:
+				break
+			try:
+				self._enterWidget.wordsTableModel.removeRow(i.row())
+			except IndexError:
+				#trying to remove the empty add row isn't going to work
+				break
+
+	def _addLetter(self, letter):
+		ew = self._enterWidget
+		i = ew.wordsTableView.currentIndex()
+
+		if not i.isValid():
+			return
+		data = ew.wordsTableModel.data(i) + letter
+		ew.wordsTableModel.setData(i, data)
+		ew.wordsTableView.edit(i)
+		ew.wordsTableView.itemDelegate().currentEditor.deselect()
+
+	def _initTeachUi(self):
+		tw = self._teachWidget
+
+		#lessonType
+		self._lessonTypeModules = list(
+			self._mm.mods.supporting("lessonType") #FIXME: activeMods?
+		)
+
+		for module in self._lessonTypeModules:
 			module.enable()
-		lessonTypeModule = lessonTypeModules.pop() #FIXME: user should choose, combobox?
+			tw.lessonTypeComboBox.addItem(module.name)
+
+		tw.lessonTypeComboBox.currentIndexChanged.connect(
+			self._startLesson
+		)
+
+		#teachType
+		self._teachTypeWidgets = []
+		for module in self._mm.mods.supporting("teachType"): #FIXME: activeMods?
+			module.enable()
+			if module.type == "words":
+				widget = module.createWidget()
+				self._teachTypeWidgets.append(widget)
+				tw.teachTab.addTab(widget, module.name)
+
+	def _startLesson(self):
+		i = self._teachWidget.lessonTypeComboBox.currentIndex()
+		lessonTypeModule = self._lessonTypeModules[i]
 
 		lessonType = lessonTypeModule.createLessonType(self.list)
-		for widget in self._teachWidget.teachTypeWidgets:
+		for widget in self._teachTypeWidgets:
 			widget.start(lessonType)
 		lessonType.start()
 
@@ -81,7 +156,8 @@ class WordsLessonModule(object):
 			module.registerModule("Words Lesson", self)
 
 	def enable(self):
-		self._ui = self._mm.import_(__file__, "ui")
+		self._enterUi = self._mm.import_(__file__, "enterUi")
+		self._teachUi = self._mm.import_(__file__, "teachUi")
 
 		self.lessonCreated = self._mm.createEvent()
 		self.type = "words"
@@ -98,7 +174,8 @@ class WordsLessonModule(object):
 	def disable(self):
 		self.active = False
 		#remove create button
-		del self._ui
+		del self._enterUi
+		del self._teachUi
 		del self.lessonCreated
 		del self.type
 		del self._counter
@@ -107,8 +184,8 @@ class WordsLessonModule(object):
 	def createLesson(self):
 		lessons = set()
 		for module in self._mm.activeMods.supporting("ui"):
-			enterWidget = self._ui.EnterWidget(self._mm)
-			teachWidget = self._ui.TeachWidget(self._mm)
+			enterWidget = self._enterUi.EnterWidget(self._mm)
+			teachWidget = self._teachUi.TeachWidget(self._mm)
 
 			fileTab = module.addFileTab(
 				"Word lesson %s" % self._counter,

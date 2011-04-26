@@ -83,8 +83,9 @@ class OnscreenKeyboardWidget(QtGui.QTableView):
 		self.manager = manager
 		self._model = CharactersTableModel(characters)
 		self.setModel(self._model)
-		
+
 		self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+		self.setAlternatingRowColors(True)
 
 	def setModel(self, *args, **kwargs):
 		super(OnscreenKeyboardWidget, self).setModel(*args, **kwargs)

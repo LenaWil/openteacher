@@ -34,52 +34,66 @@ class TypingTeachWidget(QtGui.QWidget):
 		self.checkButton = QtGui.QPushButton(u"Check!")
 		self.correctButton = QtGui.QPushButton(u"Correct anyway")
 
-		#FIXME: add progressview
+		self.progressBar = QtGui.QProgressBar()
 
-		vbox = QtGui.QVBoxLayout()
-		vbox.addWidget(self.wordsLabel)
-		vbox.addWidget(self.inputLineEdit)
-		vbox.addWidget(self.checkButton)
-		vbox.addWidget(self.correctButton)
-		self.setLayout(vbox)
+		mainLayout = QtGui.QVBoxLayout()
+		mainLayout.addWidget(self.wordsLabel)
+		mainLayout.addWidget(self.inputLineEdit)
+		mainLayout.addWidget(self.checkButton)
+		mainLayout.addWidget(self.correctButton)
+		mainLayout.addWidget(self.progressBar)
+		self.setLayout(mainLayout)
 
-	def start(self, lessonTypeModule):
-		self.lessonTypeModule = lessonTypeModule
-		
-		self.lessonTypeModule.newItem.handle(self.newItem)
-		self.lessonTypeModule.lessonDone.handle(self.lessonDone)
+	def start(self, lessonType):
+		self.lessonType = lessonType
+
+		self.lessonType.newItem.handle(self.newItem)
+		self.lessonType.lessonDone.handle(self.lessonDone)
 
 		self.checkButton.clicked.connect(self.checkAnswer)
-		self.correctButton.clicked.connect(self.lessonTypeModule.correctLastAnswer)
+		self.correctButton.clicked.connect(self.lessonType.correctLastAnswer)
+
+	def updateProgress(self):
+		self.progressBar.setValue(self.lessonType.askedQuestions)
+		self.progressBar.setMaximum(self.lessonType.totalQuestions)
 
 	def newItem(self, item):
+		self.updateProgress()
+
 		self.item = item
 		self.wordsLabel.setText(u", ".join(self.item.questions))
 		self.inputLineEdit.clear()
 		self.inputLineEdit.setFocus()
 
-	def lessonDone(self): print "Done!"
+	def lessonDone(self):
+		self.updateProgress()
+		print "Done!" #FIXME: QMessageBox?
 
 	def checkAnswer(self):
 		if self.inputLineEdit.text() in self.item.answers:
-			self.lessonTypeModule.setResult(self.lessonTypeModule.RIGHT)
+			self.lessonType.setResult("right")
 		else:
-			self.lessonTypeModule.setResult(self.lessonTypeModule.WRONG)
+			self.lessonType.setResult("wrong")
 
 class TypingTeachTypeModule(object):
-	def __init__(self, manager, *args, **kwargs):
+	def __init__(self, moduleManager, *args, **kwargs):
 		super(TypingTeachTypeModule, self).__init__(*args, **kwargs)
 		self.supports = ("teachType",)
 		self.requires = (1, 0)
-		self.type = "words"
-		self.name = "Normal lesson"
-		self.manager = manager
+		self._mm = moduleManager
 
-	def enable(self): pass #FIXME
-	def disable(self): pass #FIXME
+	def enable(self):
+		self.type = "words"
+		self.name = "Type Answer"
+		self.active = True
+
+	def disable(self):
+		self.active = False
+		del self.type
+		del self.name
 
 	def createWidget(self):
 		return TypingTeachWidget()
 
-def init(manager):
-	return TypingTeachTypeModule(manager)
+def init(moduleManager):
+	return TypingTeachTypeModule(moduleManager)

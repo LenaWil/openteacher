@@ -20,50 +20,56 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 class NormalLessonType(object):
-	RIGHT, WRONG = xrange(2)
-
-	def __init__(self, manager, list, *args, **kwargs):
+	def __init__(self, moduleManager, list, *args, **kwargs):
 		super(NormalLessonType, self).__init__(*args, **kwargs)
+		self._mm = moduleManager
 
-		self.list = list[:] #copy
+		self.newItem = self._mm.createEvent()
+		self.lessonDone = self._mm.createEvent()
+		self._list = list[:] #copy
 
-		self.name = "Normal lesson" #FIXME: translate
-		self.supports = ("lessonType",)
-		self.manager = manager
-
-		self.newItem = self.manager.createEvent()
-		self.lessonDone = self.manager.createEvent()
+		self.totalQuestions = len(self._list)
+		self.askedQuestions = 0
 
 	def start(self):
 		try:
-			self.newItem.emit(self.list.pop())
+			self.newItem.emit(self._list.pop())
 		except IndexError:
 			self.lessonDone.emit()
 
 	def setResult(self, result):
+		#result: string 'right' or 'wrong'
 		#FIXME: store results!
+
+		self.askedQuestions += 1
+
 		try:
-			self.newItem.emit(self.list.pop())
+			self.newItem.emit(self._list.pop())
 		except IndexError:
 			self.lessonDone.emit()
-		
+
 	def correctLastAnswer(self):
 		#FIXME: do something! ;)
 		pass
 
 class NormalLessonTypeModule(object):
-	def __init__(self, manager, *args, **kwargs):
+	def __init__(self, moduleManager, *args, **kwargs):
 		super(NormalLessonTypeModule, self).__init__(*args, **kwargs)
 
-		self.manager = manager
+		self._mm = moduleManager
 		self.supports = ("lessonType",)
 		self.requires = (1, 0)
 
-	def enable(self): pass #FIXME
-	def disable(self): pass #FIXME
+	def enable(self):
+		self.name = _("Normal lesson") #FIXME: own '_'
+		self.active = True
+
+	def disable(self):
+		self.active = False
+		del self.name
 
 	def createLessonType(self, list):
-		return NormalLessonType(self.manager, list)
+		return NormalLessonType(self._mm, list)
 
-def init(manager):
-	return NormalLessonTypeModule(manager)
+def init(moduleManager):
+	return NormalLessonTypeModule(moduleManager)

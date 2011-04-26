@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Marten de Vries
+#	Copyright 2011, Cas Widdershoven
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,21 +19,18 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import moduleManager
-import sys
-import os
+from PyQt4 import QtGui
 
-MODULES_PATH = os.path.join(os.path.dirname(__file__), "modules")
+class TeachWidget(QtGui.QWidget):
+	def __init__(self, moduleManager, *args, **kwargs):
+		super(TeachWidget, self).__init__(*args, **kwargs)
+		self._mm = moduleManager
 
-class OpenTeacher(object):
-	def run(self):
-		mm = moduleManager.ModuleManager(MODULES_PATH)
+		self.teachTab = QtGui.QTabWidget()
+		self.lessonTypeComboBox = QtGui.QComboBox()
 
-		for module in mm.mods.supporting("openteacher-core"):
-			#FIXME: execute only one!  Command line arguments? Crash?
-			module.run()
-		return 0
+		mainLayout = QtGui.QVBoxLayout()
+		mainLayout.addWidget(self.lessonTypeComboBox)
+		mainLayout.addWidget(self.teachTab)
 
-if __name__ == "__main__":
-	openTeacher = OpenTeacher()
-	sys.exit(openTeacher.run())
+		self.setLayout(mainLayout)

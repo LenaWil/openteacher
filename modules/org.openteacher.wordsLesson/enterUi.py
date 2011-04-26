@@ -21,12 +21,18 @@
 
 from PyQt4 import QtCore, QtGui
 
-class WordList(list): pass
+class WordList(list):
+	def __init__(self, *args, **kwargs):
+		super(WordList, self).__init__(*args, **kwargs)
+
+		self.title = u""
+		self.questionSubject = u""
+		self.answerSubject = u""
 
 class Word(object):
 	def __init__(self, *args, **kwargs):
 		super(Word, self).__init__(*args, **kwargs)
-		
+
 		self.questions = []
 		self.answers = []
 
@@ -39,7 +45,23 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 	def updateList(self, list):
 		self.beginResetModel()
 		self.list = list
+		self.indexes = range(len(self.list))
 		self.endResetModel()
+
+	def sort(self, column, order):
+		if column == 0:
+			items = sorted(self.list, key=lambda word: word.questions[0])
+		elif column == 1:
+			items = sorted(self.list, key=lambda word: word.answers[0])
+		elif column == 2:
+			items = self.list[:]
+
+		if order == QtCore.Qt.DescendingOrder:
+			items.reverse()
+
+		self.layoutAboutToBeChanged.emit()
+		self.indexes = [self.list.index(item) for item in items]
+		self.layoutChanged.emit()
 
 	def updateTitle(self, title):
 		self.list.title = unicode(title)
@@ -55,7 +77,7 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 			return
 		if orientation == QtCore.Qt.Horizontal:
 			return ["Questions", "Answers", "Results"][section]
-		else:
+		elif orientation == QtCore.Qt.Vertical:
 			return section +1
 
 	def rowCount(self, parent=None):
@@ -64,15 +86,17 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 	def columnCount(self, parent=None):
 		return 3
 
-	def data(self, index, role):
+	def data(self, index, role=QtCore.Qt.DisplayRole):
 		if not (index.isValid() and
 			role in (QtCore.Qt.DisplayRole, QtCore.Qt.EditRole)):
 			return
 		try:
-			word = self.list[index.row()]
+			listIndex = self.indexes[index.row()]
 		except IndexError:
 			return u"" #last (empty) row
 		else:
+			word = self.list[listIndex]
+
 			if index.column() == 0:
 				return u", ".join(word.questions)
 			elif index.column() == 1:
@@ -81,21 +105,28 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 				return u"0/0"
 
 	def flags(self, index):
-		return (QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable |
-			QtCore.Qt.ItemIsEditable)
+		if index.column() != 2:
+			return (
+				QtCore.Qt.ItemIsEnabled |
+				QtCore.Qt.ItemIsSelectable |
+				QtCore.Qt.ItemIsEditable
+			)
+		else:
+			return (
+				QtCore.Qt.ItemIsEnabled |
+				QtCore.Qt.ItemIsSelectable
+			)
 
-	def setData(self, index, value, role):
-		if not(index.isValid() and role == QtCore.Qt.EditRole):
+	def setData(self, index, value, role=QtCore.Qt.EditRole):
+		if not (index.isValid() and role == QtCore.Qt.EditRole):
 			return False
+		#makes calling without a QVariant possible (more dynamic).
+		value = QtCore.QVariant(value)
 		while True:
 			try:
-				word = self.list[index.row()]
-				if index.column() == 0:
-					word.questions = unicode(value.toString()).split(", ")
-				elif index.column() == 1:
-					word.answers = unicode(value.toString()).split(", ")
+				listIndex = self.indexes[index.row()]
 			except IndexError:
-				if value == "":
+				if not unicode(value.toString()):
 					return False
 				word = Word()
 				self.beginInsertRows(
@@ -104,10 +135,28 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 					self.rowCount()
 				)
 				self.list.append(word)
+				self.indexes.append(self.list.index(word))
 				self.endInsertRows()
 			else:
+				word = self.list[listIndex]
+
+				if index.column() == 0:
+					word.questions = unicode(value.toString()).split(", ")
+				elif index.column() == 1:
+					word.answers = unicode(value.toString()).split(", ")
 				break
 		return True
+
+	def removeRow(self, row, parent=QtCore.QModelIndex()):
+		listIndex = self.indexes[row]
+		self.beginRemoveRows(parent, row, row)
+		del self.indexes[row]
+		#update self.indexes
+		for i in xrange(len(self.indexes)):
+			if self.indexes[i] > listIndex:
+				self.indexes[i] -= 1
+		del self.list[listIndex]
+		self.endRemoveRows()
 
 class WordsTableItemDelegate(QtGui.QStyledItemDelegate):
 	def eventFilter(self, object, event):
@@ -123,11 +172,19 @@ class WordsTableItemDelegate(QtGui.QStyledItemDelegate):
 			)
 		return super(WordsTableItemDelegate, self).eventFilter(object, event)
 
+	def createEditor(self, parent, option, index):
+		self.currentEditor = super(WordsTableItemDelegate, self).createEditor(
+			parent, option, index
+		)
+		return self.currentEditor
+
 class WordsTableView(QtGui.QTableView):
 	def __init__(self, *args, **kwargs):
 		super(WordsTableView, self).__init__(*args, **kwargs)
 
 		self.setItemDelegate(WordsTableItemDelegate())
+		self.setAlternatingRowColors(True)
+		self.setSortingEnabled(True)
 
 	def moveCursor(self, cursorAction, modifiers):
 		if cursorAction not in (QtGui.QAbstractItemView.MoveNext, QtGui.QAbstractItemView.MovePrevious):
@@ -167,33 +224,22 @@ class EnterWidget(QtGui.QWidget):
 		self.wordsTableModel = WordsTableModel()
 		self.wordsTableView.setModel(self.wordsTableModel)
 
-		self.titleTextBox.textChanged.connect(
-			self.wordsTableModel.updateTitle
-		)
-		self.questionSubjectTextBox.textChanged.connect(
-			self.wordsTableModel.updateQuestionSubject
-		)
-		self.answerSubjectTextBox.textChanged.connect(
-			self.wordsTableModel.updateAnswerSubject
-		)
-		self.wordsTableModel.modelReset.connect(self._updateTextBoxes)
+		topLayout = QtGui.QGridLayout()
+		topLayout.addWidget(QtGui.QLabel(_("Title:")), 0, 0)
+		topLayout.addWidget(self.titleTextBox, 0, 1)
 
-		layout = QtGui.QGridLayout()
-		layout.addWidget(QtGui.QLabel(_("Title:")), 0, 0)
-		layout.addWidget(self.titleTextBox, 0, 1)
+		topLayout.addWidget(QtGui.QLabel(_("Question language:")), 1, 0)
+		topLayout.addWidget(self.questionSubjectTextBox, 1, 1)
 
-		layout.addWidget(QtGui.QLabel(_("Question language:")), 1, 0)
-		layout.addWidget(self.questionSubjectTextBox, 1, 1)
+		topLayout.addWidget(QtGui.QLabel(_("Answer language:")), 2, 0)
+		topLayout.addWidget(self.answerSubjectTextBox, 2, 1)
 
-		layout.addWidget(QtGui.QLabel(_("Answer language:")), 2, 0)
-		layout.addWidget(self.answerSubjectTextBox, 2, 1)
+		leftLayout = QtGui.QVBoxLayout()
+		leftLayout.addLayout(topLayout)
+		leftLayout.addWidget(self.wordsTableView)
 
-		vbox = QtGui.QVBoxLayout()
-		vbox.addLayout(layout)
-		vbox.addWidget(self.wordsTableView)
-
-		vboxWidget = QtGui.QWidget()
-		vboxWidget.setLayout(vbox)
+		leftLayoutWidget = QtGui.QWidget()
+		leftLayoutWidget.setLayout(leftLayout)
 
 		keyboards = self._mm.mods.supporting("onscreenKeyboard").items
 		for module in keyboards:
@@ -201,41 +247,25 @@ class EnterWidget(QtGui.QWidget):
 		for module in self._mm.activeMods.supporting("ui"):
 			keyboard = module.chooseItem(keyboards)
 
-		keyboardWidget = keyboard.getWidget()
-		keyboardWidget.letterChosen.handle(self.addLetter)
+		self.keyboardWidget = keyboard.getWidget()
+		self.removeSelectedRowsButton = QtGui.QPushButton(
+			_("Remove selected row(s)")
+		)
+		self.removeSelectedRowsButton.setShortcut(
+			QtGui.QKeySequence(QtCore.Qt.Key_Delete) #FIXME: translatable?
+		)
 
-		splitter = QtGui.QSplitter()
-		splitter.addWidget(vboxWidget)
-		splitter.addWidget(keyboardWidget)
+		rightLayout = QtGui.QVBoxLayout()
+		rightLayout.addWidget(self.keyboardWidget)
+		rightLayout.addWidget(self.removeSelectedRowsButton)
+		
+		rightLayoutWidget = QtGui.QWidget()
+		rightLayoutWidget.setLayout(rightLayout)
 
-		mainVBox = QtGui.QVBoxLayout()
-		mainVBox.addWidget(splitter)
-		self.setLayout(mainVBox)
+		mainSplitter = QtGui.QSplitter()
+		mainSplitter.addWidget(leftLayoutWidget)
+		mainSplitter.addWidget(rightLayoutWidget)
 
-	def _updateTextBoxes(self):
-		list = self.wordsTableModel.list
-		self.titleTextBox.setText(list.title)
-		self.questionSubjectTextBox.setText(list.questionSubject)
-		self.answerSubjectTextBox.setText(list.answerSubject)
-
-	def addLetter(self, letter):
-		self.wordsEnterBox.setText(self.wordsEnterBox.toPlainText() + letter)
-
-class TeachWidget(QtGui.QWidget):
-	def __init__(self, moduleManager, *args, **kwargs):
-		super(TeachWidget, self).__init__(*args, **kwargs)
-		self._mm = moduleManager
-		self.teachTypeWidgets = []
-
-		self.teachTab = QtGui.QTabWidget(self)
-
-		for module in self._mm.mods.supporting("teachType").items: #yeah, still needs a better name
-			if module.type == "words":
-				widget = module.createWidget()
-				self.teachTypeWidgets.append(widget)
-				self.teachTab.addTab(widget, module.name)
-
-		vbox = QtGui.QVBoxLayout()
-		vbox.addWidget(self.teachTab)
-
-		self.setLayout(vbox)
+		mainLayout = QtGui.QVBoxLayout()
+		mainLayout.addWidget(mainSplitter)
+		self.setLayout(mainLayout)
