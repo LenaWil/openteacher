@@ -21,16 +21,95 @@
 
 from PyQt4 import QtGui
 
-class TeachWidget(QtGui.QWidget):
-	def __init__(self, moduleManager, *args, **kwargs):
+class TeachWidget(QtGui.QStackedWidget):
+	def __init__(self, keyboardWidget, *args, **kwargs):
 		super(TeachWidget, self).__init__(*args, **kwargs)
-		self._mm = moduleManager
 
-		self.teachTab = QtGui.QTabWidget()
+		self.settingsWidget = TeachSettingsWidget()
+		self.lessonWidget = TeachLessonWidget(keyboardWidget)
+
+		self.addWidget(self.settingsWidget)
+		self.addWidget(self.lessonWidget)
+
+class TeachSettingsWidget(QtGui.QWidget):
+	def __init__(self, *args, **kwargs):
+		super(TeachSettingsWidget, self).__init__(*args, **kwargs)
+
 		self.lessonTypeComboBox = QtGui.QComboBox()
 
-		mainLayout = QtGui.QVBoxLayout()
-		mainLayout.addWidget(self.lessonTypeComboBox)
-		mainLayout.addWidget(self.teachTab)
+		#Word modifiers
+		self.modifyWordListView = QtGui.QListView()
+		self.modifyWordUpButton = QtGui.QPushButton("Up")
+		self.modifyWordDownButton = QtGui.QPushButton("Down")
 
+		modifyWordButtonsLayout = QtGui.QVBoxLayout()
+		modifyWordButtonsLayout.addStretch()
+		modifyWordButtonsLayout.addWidget(self.modifyWordUpButton)
+		modifyWordButtonsLayout.addWidget(self.modifyWordDownButton)
+		modifyWordButtonsLayout.addStretch()
+		modifyWordLayout = QtGui.QHBoxLayout()
+		modifyWordLayout.addWidget(self.modifyWordListView)
+		modifyWordLayout.addLayout(modifyWordButtonsLayout)
+
+		#Word list modifiers
+		self.modifyWordListListView = QtGui.QListView()
+		self.modifyWordListUpButton = QtGui.QPushButton("Up")
+		self.modifyWordListDownButton = QtGui.QPushButton("Down")
+
+		modifyWordListButtonsLayout = QtGui.QVBoxLayout()
+		modifyWordListButtonsLayout.addStretch()
+		modifyWordListButtonsLayout.addWidget(self.modifyWordListUpButton)
+		modifyWordListButtonsLayout.addWidget(self.modifyWordListDownButton)
+		modifyWordListButtonsLayout.addStretch()
+		modifyWordListLayout = QtGui.QHBoxLayout()
+		modifyWordListLayout.addWidget(self.modifyWordListListView)
+		modifyWordListLayout.addLayout(modifyWordListButtonsLayout)
+		
+		self.dontShowAgainCheckBox = QtGui.QCheckBox(
+			_("Don't show this screen again when I start a lesson.")
+		)
+		self.startLessonButton = QtGui.QPushButton(
+			_("I'm ready, start the lesson!")
+		)
+
+		gb = QtGui.QGroupBox()
+		gb.setTitle(_("Lesson settings"))
+		formLayout = QtGui.QFormLayout()
+		formLayout.addRow("Lesson type", self.lessonTypeComboBox)
+		formLayout.addRow("Modify word", modifyWordLayout)
+		formLayout.addRow("Modify word list", modifyWordListLayout)
+		formLayout.addRow("", self.dontShowAgainCheckBox)
+		formLayout.addRow("", self.startLessonButton)
+
+		gb.setLayout(formLayout)
+
+		mainLayout = QtGui.QVBoxLayout()
+		mainLayout.addWidget(gb)
 		self.setLayout(mainLayout)
+
+class TeachLessonWidget(QtGui.QSplitter):
+	def __init__(self, keyboardWidget, *args, **kwargs):
+		super(TeachLessonWidget, self).__init__(*args, **kwargs)
+
+		self.changeSettingsButton = QtGui.QPushButton(
+			_("Change lesson settings")
+		)
+		wordLabel = QtGui.QLabel(_("Word:"))
+		self.questionLabel = QtGui.QLabel()
+		self.keyboardWidget = keyboardWidget
+		self.teachTabWidget = QtGui.QTabWidget()
+		self.progressBar = QtGui.QProgressBar()
+
+		leftLayout = QtGui.QVBoxLayout()
+		leftLayout.addWidget(self.changeSettingsButton)
+		leftLayout.addWidget(wordLabel)
+		leftLayout.addWidget(self.questionLabel)
+		leftLayout.addStretch()
+		leftLayout.addWidget(self.teachTabWidget)
+		leftLayout.addWidget(self.progressBar)
+
+		leftWidget = QtGui.QWidget()
+		leftWidget.setLayout(leftLayout)
+
+		self.addWidget(leftWidget)
+		self.addWidget(keyboardWidget)

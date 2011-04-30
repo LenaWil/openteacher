@@ -25,49 +25,29 @@ class TypingTeachWidget(QtGui.QWidget):
 	def __init__(self, *args, **kwargs):
 		super(TypingTeachWidget, self).__init__(*args, **kwargs)
 
-		self.wordsLabel = QtGui.QLabel(u"No words added")
-		labelSizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Expanding)
-		self.wordsLabel.setSizePolicy(labelSizePolicy)
-		
 		self.inputLineEdit = QtGui.QLineEdit()
 
 		self.checkButton = QtGui.QPushButton(u"Check!")
 		self.correctButton = QtGui.QPushButton(u"Correct anyway")
 
-		self.progressBar = QtGui.QProgressBar()
-
-		mainLayout = QtGui.QVBoxLayout()
-		mainLayout.addWidget(self.wordsLabel)
-		mainLayout.addWidget(self.inputLineEdit)
-		mainLayout.addWidget(self.checkButton)
-		mainLayout.addWidget(self.correctButton)
-		mainLayout.addWidget(self.progressBar)
+		mainLayout = QtGui.QGridLayout()
+		mainLayout.addWidget(self.inputLineEdit, 0, 0)
+		mainLayout.addWidget(self.checkButton, 0, 1)
+		mainLayout.addWidget(self.correctButton, 1, 1)
 		self.setLayout(mainLayout)
 
-	def start(self, lessonType):
+	def updateLessonType(self, lessonType):
 		self.lessonType = lessonType
 
 		self.lessonType.newItem.handle(self.newItem)
-		self.lessonType.lessonDone.handle(self.lessonDone)
 
 		self.checkButton.clicked.connect(self.checkAnswer)
 		self.correctButton.clicked.connect(self.lessonType.correctLastAnswer)
 
-	def updateProgress(self):
-		self.progressBar.setValue(self.lessonType.askedQuestions)
-		self.progressBar.setMaximum(self.lessonType.totalQuestions)
-
 	def newItem(self, item):
-		self.updateProgress()
-
 		self.item = item
-		self.wordsLabel.setText(u", ".join(self.item.questions))
 		self.inputLineEdit.clear()
 		self.inputLineEdit.setFocus()
-
-	def lessonDone(self):
-		self.updateProgress()
-		print "Done!" #FIXME: QMessageBox?
 
 	def checkAnswer(self):
 		if self.inputLineEdit.text() in self.item.answers:
