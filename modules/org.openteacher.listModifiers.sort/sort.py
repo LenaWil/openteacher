@@ -18,9 +18,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class SortDescendingModule(object):
+class SortModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(SortDescendingModule, self).__init__(*args, **kwargs)
+		super(SortModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.supports = ("listModifier",)
@@ -28,12 +28,19 @@ class SortDescendingModule(object):
 		self.active = False
 
 	def modifyList(self, indexes, list):
+		def getFirstQuestion(word):
+			try:
+				return word.questions[0]
+			except IndexError:
+				return None
 		#always work on the indexes
-		return sorted(indexes, reverse=True)
+		currentList = [list[i] for i in indexes]
+		newList = sorted(currentList, key=getFirstQuestion)
+		return [list.index(word) for word in newList]
 
 	def enable(self):
 		self.type = "all"
-		self.name = "Sort (descending)"
+		self.name = "Sort"
 		self.active = True
 
 	def disable(self):
@@ -42,4 +49,4 @@ class SortDescendingModule(object):
 		del self.name
 
 def init(moduleManager):
-	return SortDescendingModule(moduleManager)
+	return SortModule(moduleManager)

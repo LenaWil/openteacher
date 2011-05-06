@@ -33,7 +33,7 @@ class AllOnceLessonType(object):
 
 	def start(self):
 		try:
-			self.newItem.emit(self._list.pop())
+			self.newItem.emit(self._list.pop(0))
 		except IndexError:
 			self.lessonDone.emit()
 
@@ -44,7 +44,7 @@ class AllOnceLessonType(object):
 		self.askedQuestions += 1
 
 		try:
-			self.newItem.emit(self._list.pop())
+			self.newItem.emit(self._list.pop(0))
 		except IndexError:
 			self.lessonDone.emit()
 
@@ -61,7 +61,7 @@ class AllOnceModule(object):
 		self.requires = (1, 0)
 
 	def enable(self):
-		self.name = _("Normal lesson") #FIXME: own '_'
+		self.name = _("All once") #FIXME: own '_'
 		self.active = True
 
 	def disable(self):

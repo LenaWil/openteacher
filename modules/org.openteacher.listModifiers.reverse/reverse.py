@@ -28,8 +28,8 @@ class ReverseModule(object):
 		self.active = False
 
 	def modifyList(self, indexes, list):
-		#always work on the indexes
-		return reversed(indexes)
+		#always work on the indexes, and return a list object
+		return list(reversed(indexes))
 
 	def enable(self):
 		self.type = "all"

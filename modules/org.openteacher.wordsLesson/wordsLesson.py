@@ -37,6 +37,9 @@ class Word(object):
 		self.questions = []
 		self.answers = []
 
+	def __repr__(self):
+		return "Word('%s')" % self.questions[0]
+
 class WordsTableModel(QtCore.QAbstractTableModel):
 	def __init__(self, *args, **kwargs):
 		super(WordsTableModel, self).__init__(*args, **kwargs)
@@ -344,7 +347,11 @@ class Lesson(object):
 		indexes = range(len(self.list))
 
 		for listModifier in self._listModifiersModel.modifiers:
-			indexes = listModifier["module"].modifyList(indexes, self.list)
+			if listModifier["active"]:
+				indexes = listModifier["module"].modifyList(
+					indexes,
+					self.list
+				)
 		lessonList = [self.list[i] for i in indexes]
 
 		self._lessonType = lessonTypeModule.createLessonType(lessonList)
@@ -361,7 +368,8 @@ class Lesson(object):
 
 		item = copy.copy(item)
 		for itemModifier in self._itemModifiersModel.modifiers:
-			item = itemModifier["module"].modifyItem(item)
+			if itemModifier["active"]:
+				item = itemModifier["module"].modifyItem(item)
 
 		lw.questionLabel.setText(u", ".join(item.questions))
 		self._updateProgress()

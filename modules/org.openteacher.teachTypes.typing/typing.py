@@ -28,6 +28,7 @@ class TypingTeachWidget(QtGui.QWidget):
 		self.inputLineEdit = QtGui.QLineEdit()
 
 		self.checkButton = QtGui.QPushButton(u"Check!")
+		self.checkButton.setShortcut(QtCore.Qt.Key_Return) #FIXME: translatable?
 		self.correctButton = QtGui.QPushButton(u"Correct anyway")
 
 		mainLayout = QtGui.QGridLayout()
