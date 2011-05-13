@@ -274,8 +274,8 @@ class Lesson(object):
 
 		if not i.isValid():
 			return
-		data = ew.wordsTableModel.data(i) + letter
-		ew.wordsTableModel.setData(i, data)
+		data = self._wordsTableModel.data(i) + letter
+		self._wordsTableModel.setData(i, data)
 		ew.wordsTableView.edit(i)
 		ew.wordsTableView.itemDelegate().currentEditor.deselect()
 

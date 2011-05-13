@@ -19,15 +19,15 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class GreekCharsModule(object):
+class GreekModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(GreekCharsModule, self).__init__(*args, **kwargs)
+		super(GreekModule, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
 		self.requires = (1, 0)
 		self.supports = ("onscreenKeyboardData",)
 		self.active = False
-		
+
 	def enable(self):
 		self.name = _("Greek")
 		self.data = (
@@ -49,4 +49,4 @@ class GreekCharsModule(object):
 		del self.data
 
 def init(moduleManager):
-	return GreekCharsModule(moduleManager)
+	return GreekModule(moduleManager)

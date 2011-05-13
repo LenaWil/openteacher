@@ -19,9 +19,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class DiacriticCharsModule(object):
+class SymbolsModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(DiacriticCharsModule, self).__init__(*args, **kwargs)
+		super(SymbolsModule, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
 		self.requires = (1, 0)
@@ -48,4 +48,4 @@ class DiacriticCharsModule(object):
 		del self.data
 
 def init(moduleManager):
-	return DiacriticCharsModule(moduleManager)
+	return SymbolsModule(moduleManager)
