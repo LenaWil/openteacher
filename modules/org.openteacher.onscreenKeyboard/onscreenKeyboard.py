@@ -21,91 +21,61 @@
 
 from PyQt4 import QtCore, QtGui
 
-class CharactersTableModel(QtCore.QAbstractTableModel):
-	"""This class is a tableModel, which means it can be used in a
-	   QTableView. (What happens in OpenTeacher.)
-
-	   Properties:
-	   - characters - a list of lists of characters
-	   - readOnly - if true, the model doesn't accept edits."""
-	def __init__(self, characters, readOnly=True, *args, **kwargs):
-		super(CharactersTableModel, self).__init__(*args, **kwargs)
-
-		#Set the characters inside the model.
-		self.characters = map(list, characters)
-		self.readOnly = readOnly
-
-	def headerData(self, column, orientation, role):
-		"""Returns the headers to the tableView"""
-		if role == QtCore.Qt.DisplayRole:
-			return unicode(column +1)
-		else:
-			return
-
-	def rowCount(self, parent=None):
-		"""Returns the amount of character rows"""
-		return len(self.characters)
-
-	def columnCount(self, parent=None):
-		"""Returns the length of the first character row. (and should be equal to the length of all rows!)"""
-		try:
-			return len(self.characters[0])
-		except IndexError:
-			return 0
-
-	def data(self, index, role=QtCore.Qt.DisplayRole):
-		"""Returns the character for a specified position (index)."""
-		if index.isValid() and (role == QtCore.Qt.DisplayRole or role == QtCore.Qt.EditRole):
-			return self.characters[index.row()][index.column()]
-	
-	def setData(self, index, value, role):
-		"""Does the same as data(), but now it saves instead of returns."""
-		letter = unicode(value.toString())
-		#Only save when not readOnly, valid index, and when a character (len=1)
-		if index.isValid() and role == QtCore.Qt.EditRole and len(letter) == 1 and not self.readOnly:
-			self.characters[index.row()][index.column()] = letter
-			return True
-		return False
-
-	def flags(self, index):
-		"""Return flags for the specified index. Returns baseflags, and in addition the
-		ItemIsEditable-flag when the model's read-only property isn't true."""
-		baseflags = super(CharactersTableModel, self).flags(index)
-		if self.readOnly:
-			return baseflags
-		else:
-			return baseflags | QtCore.Qt.ItemIsEditable
-
-class OnscreenKeyboardWidget(QtGui.QTableView):
+class OnscreenKeyboardWidget(QtGui.QWidget):
 	def __init__(self, manager, characters, *args,  **kwargs):
 		super(OnscreenKeyboardWidget, self).__init__(*args, **kwargs)
 
-		self.manager = manager
-		self._model = CharactersTableModel(characters)
-		self.setModel(self._model)
+		topWidget = QtGui.QWidget()
 
-		self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-		self.setAlternatingRowColors(True)
+		layout = QtGui.QGridLayout()
+		layout.setSpacing(1)
+		layout.setContentsMargins(0, 0, 0, 0)
 
-	def setModel(self, *args, **kwargs):
-		super(OnscreenKeyboardWidget, self).setModel(*args, **kwargs)
+		i = 0
+		for line in characters:
+			j = 0
+			for item in line:
+				b = QtGui.QPushButton(item)
+				b.clicked.connect(self._letterChosen)
+				b.setMinimumSize(1, 1)
+				b.setFlat(True)
+				b.setAutoFillBackground(True)
+				palette = b.palette()
+				if i % 2 == 0:
+					brush = palette.brush(QtGui.QPalette.Base)
+				else:
+					brush = palette.brush(QtGui.QPalette.AlternateBase)
+				palette.setBrush(QtGui.QPalette.Button, brush)
+				b.setPalette(palette)
+				if not item:
+					b.setEnabled(False)
+				layout.addWidget(b, i, j)
+				j += 1
+			i+= 1
+		topWidget.setLayout(layout)
+		palette = topWidget.palette()
+		brush = palette.brush(QtGui.QPalette.WindowText)
+		palette.setBrush(QtGui.QPalette.Window, QtCore.Qt.darkGray)
+		topWidget.setPalette(palette)
+		topWidget.setAutoFillBackground(True)
 
-		self.resizeColumnsToContents()
-		self.resizeRowsToContents()
+		mainLayout = QtGui.QVBoxLayout()
+		mainLayout.addWidget(topWidget)
+		mainLayout.addStretch()
+		mainLayout.setContentsMargins(0, 0, 0, 0)
+		self.setLayout(mainLayout)
 
-		hheader = self.horizontalHeader()
-		vheader = self.verticalHeader()
-		charWidth = vheader.sizeHint().width() + hheader.length()
-		charHeight = hheader.sizeHint().height() + vheader.length()
-		self.setMinimumSize(charWidth, charHeight)
+		self._mm = manager
+		self.letterChosen = self._mm.createEvent()
 
-		self.clicked.connect(self.indexClicked)
-		
-		self.letterChosen = self.manager.createEvent()
+		topWidget.setSizePolicy(
+			QtGui.QSizePolicy.Expanding,
+			QtGui.QSizePolicy.Maximum
+		)
 
-	def indexClicked(self, index):
-		letter = self._model.data(index)
-		self.letterChosen.emit(letter)
+	def _letterChosen(self):
+		text = unicode(self.sender().text())
+		self.letterChosen.emit(text)
 
 class OnscreenKeyboardModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
