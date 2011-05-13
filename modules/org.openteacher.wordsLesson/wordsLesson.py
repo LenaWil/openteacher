@@ -263,7 +263,7 @@ class Lesson(object):
 			except IndexError:
 				break
 			try:
-				self._enterWidget.wordsTableModel.removeRow(i.row())
+				self._wordsTableModel.removeRow(i.row())
 			except IndexError:
 				#trying to remove the empty add row isn't going to work
 				break
