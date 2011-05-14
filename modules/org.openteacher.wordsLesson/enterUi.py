@@ -49,6 +49,16 @@ class WordsTableView(QtGui.QTableView):
 		self.setAlternatingRowColors(True)
 		self.setSortingEnabled(True)
 
+	def setModel(self, model):
+		value = super(WordsTableView, self).setModel(model)
+		#If the model is empty, let the user start editing
+		#(model) has always one starting row.
+		if self.model().rowCount() == 1:
+			i = self.model().createIndex(0, 0)
+			self.setCurrentIndex(i)
+			self.edit(i)
+		return value
+
 	def moveCursor(self, cursorAction, modifiers):
 		if cursorAction not in (QtGui.QAbstractItemView.MoveNext, QtGui.QAbstractItemView.MovePrevious):
 			return super(WordsTableView, self).moveCursor(cursorAction, modifiers)
@@ -74,7 +84,7 @@ class WordsTableView(QtGui.QTableView):
 		
 		return self.model().index(row, column)
 
-class EnterWidget(QtGui.QWidget):
+class EnterWidget(QtGui.QSplitter):
 	def __init__(self, keyboardWidget, *args, **kwargs):
 		super(EnterWidget, self).__init__(*args, **kwargs)
 
@@ -116,10 +126,5 @@ class EnterWidget(QtGui.QWidget):
 		rightLayoutWidget = QtGui.QWidget()
 		rightLayoutWidget.setLayout(rightLayout)
 
-		mainSplitter = QtGui.QSplitter()
-		mainSplitter.addWidget(leftLayoutWidget)
-		mainSplitter.addWidget(rightLayoutWidget)
-
-		mainLayout = QtGui.QVBoxLayout()
-		mainLayout.addWidget(mainSplitter)
-		self.setLayout(mainLayout)
+		self.addWidget(leftLayoutWidget)
+		self.addWidget(rightLayoutWidget)

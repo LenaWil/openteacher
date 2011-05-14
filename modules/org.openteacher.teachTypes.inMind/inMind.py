@@ -25,6 +25,7 @@ class ThinkWidget(QtGui.QWidget):
 		super(ThinkWidget, self).__init__(*args, **kwargs)
 		
 		self.label = QtGui.QLabel(_("Think about the answer, and press the 'View answer' button when you're done."))
+		self.label.setWordWrap(True)
 		self.button = QtGui.QPushButton("View answer")
 		
 		mainLayout = QtGui.QVBoxLayout()

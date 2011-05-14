@@ -88,7 +88,7 @@ class ExpandingButton(QtGui.QPushButton):
 			QtGui.QSizePolicy.Expanding
 		)
 
-class StartWidget(QtGui.QWidget):
+class StartWidget(QtGui.QSplitter):
 	def __init__(self, *args, **kwargs):
 		super(StartWidget, self).__init__(*args, **kwargs)
 
@@ -128,14 +128,8 @@ class StartWidget(QtGui.QWidget):
 		recentlyOpenedGridBox = QtGui.QGroupBox(_("Recently opened:"))
 		recentlyOpenedGridBox.setLayout(recentlyOpenedLayout)
 
-		splitter = QtGui.QSplitter(self)
-		splitter.addWidget(openWidget)
-		splitter.addWidget(recentlyOpenedGridBox)
-
-		layout = QtGui.QVBoxLayout(self)
-		layout.addWidget(splitter)
-
-		self.setLayout(layout)
+		self.addWidget(openWidget)
+		self.addWidget(recentlyOpenedGridBox)
 
 	def addLessonCreateButton(self, text, icon=QtGui.QIcon()):
 		button = ExpandingButton(icon, text, self)

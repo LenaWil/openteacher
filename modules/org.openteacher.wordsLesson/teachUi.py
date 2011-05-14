@@ -101,7 +101,6 @@ class TeachLessonWidget(QtGui.QSplitter):
 		self.progressBar = QtGui.QProgressBar()
 
 		leftLayout = QtGui.QVBoxLayout()
-		leftLayout.addWidget(self.changeSettingsButton)
 		leftLayout.addWidget(wordLabel)
 		leftLayout.addWidget(self.questionLabel)
 		leftLayout.addStretch()
@@ -110,6 +109,13 @@ class TeachLessonWidget(QtGui.QSplitter):
 
 		leftWidget = QtGui.QWidget()
 		leftWidget.setLayout(leftLayout)
+		
+		rightLayout = QtGui.QVBoxLayout()
+		rightLayout.addWidget(keyboardWidget)
+		rightLayout.addWidget(self.changeSettingsButton)
+		
+		rightWidget = QtGui.QWidget()
+		rightWidget.setLayout(rightLayout)
 
 		self.addWidget(leftWidget)
-		self.addWidget(keyboardWidget)
+		self.addWidget(rightWidget)

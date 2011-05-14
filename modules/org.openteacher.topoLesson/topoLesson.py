@@ -175,7 +175,7 @@ class TeachPictureBox(QtGui.QGraphicsView):
 		
 		self.show()
 
-class EnterWidget(QtGui.QWidget):
+class EnterWidget(QtGui.QSplitter):
 	def __init__(self, parent,*args, **kwargs):
 		super(EnterWidget, self).__init__(*args, **kwargs)
 		self.parent = parent
@@ -247,14 +247,8 @@ class EnterWidget(QtGui.QWidget):
 		rightSideWidget = QtGui.QWidget()
 		rightSideWidget.setLayout(rightSide)
 		
-		splitter = QtGui.QSplitter(self)
-		splitter.addWidget(leftSideWidget)
-		splitter.addWidget(rightSideWidget)
-
-		layout = QtGui.QHBoxLayout(self)
-		layout.addWidget(splitter)
-
-		self.setLayout(layout)
+		self.addWidget(leftSideWidget)
+		self.addWidget(rightSideWidget)
 	
 	def addPlace(self,place):
 		self.places.append(place)

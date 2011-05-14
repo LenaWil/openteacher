@@ -249,7 +249,7 @@ class Lesson(object):
 		self._wordsTableModel.modelReset.connect(self._updateTextBoxes)
 
 	def _updateTextBoxes(self):
-		list = self._enterWidget.wordsTableModel.list
+		list = self._wordsTableModel.list
 		ew = self._enterWidget
 
 		ew.titleTextBox.setText(list.title)
