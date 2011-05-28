@@ -32,10 +32,7 @@ class AllOnceLessonType(object):
 		self.askedQuestions = 0
 
 	def start(self):
-		try:
-			self.newItem.emit(self._list.pop(0))
-		except IndexError:
-			self.lessonDone.emit()
+		self._emitNext()
 
 	def setResult(self, result):
 		#result: string 'right' or 'wrong'
@@ -43,14 +40,17 @@ class AllOnceLessonType(object):
 
 		self.askedQuestions += 1
 
-		try:
-			self.newItem.emit(self._list.pop(0))
-		except IndexError:
-			self.lessonDone.emit()
+		self._emitNext()
 
 	def correctLastAnswer(self):
 		#FIXME: do something! ;)
 		pass
+
+	def _emitNext(self):
+		try:
+			self.newItem.emit(self._list.pop(0))
+		except IndexError:
+			self.lessonDone.emit()
 
 class AllOnceModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
