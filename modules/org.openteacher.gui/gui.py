@@ -72,6 +72,7 @@ class GuiModule(object):
 		self.quitEvent = self._mm.createEvent()
 		self.settingsEvent = self._mm.createEvent()		
 		self.aboutEvent = self._mm.createEvent()
+		self.documentationEvent = self._mm.createEvent()
 
 		self.tabChanged = self._mm.createEvent()
 
@@ -110,6 +111,9 @@ class GuiModule(object):
 		self._widget.aboutAction.triggered.connect(
 			lambda: self.aboutEvent.emit()
 		)
+		self._widget.docsAction.triggered.connect(
+			lambda: self.documentationEvent.emit()
+		)
 		self._widget.tabWidget.currentChanged.connect(
 			lambda: self.tabChanged.emit()
 		)
@@ -129,6 +133,7 @@ class GuiModule(object):
 		del self.quitEvent
 		del self.settingsEvent
 		del self.aboutEvent
+		del self.documentationEvent
 		del self.tabChanged
 		del self._widget
 
@@ -279,6 +284,9 @@ class GuiModule(object):
 	
 	def enableAbout(self, boolean):
 		self._widget.aboutAction.setEnabled(boolean)
+
+	def enableDocumentation(self, boolean):
+		self._widget.docsAction.setEnabled(boolean)
 
 	@property
 	def startTabActive(self):

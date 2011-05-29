@@ -218,6 +218,10 @@ class OpenTeacherModule(object):
 		for module in self._mm.activeMods.supporting("about"):
 			module.show()
 
+	def documentation(self):
+		for module in self._mm.activeMods.supporting("documentation"):
+			module.show()
+
 	def quit_(self):
 		self.uiModule.interrupt()
 
@@ -288,6 +292,7 @@ class OpenTeacherModule(object):
 			module.printEvent.handle(self.print_)
 			module.settingsEvent.handle(self.settings)
 			module.aboutEvent.handle(self.about)
+			module.documentationEvent.handle(self.documentation)
 			module.quitEvent.handle(self.quit_)
 
 			module.tabChanged.handle(self._updateMenuItems)
@@ -301,8 +306,9 @@ class OpenTeacherModule(object):
 			module.printEvent.unhandle(self.print_)
 			module.settingsEvent.unhandle(self.settings)
 			module.aboutEvent.unhandle(self.about)
+			module.documentationEvent.unhandle(self.documentation)
 			module.quitEvent.unhandle(self.quit_)
-			
+
 			module.tabChanged.unhandle(self._updateMenuItems)
 
 	def _updateMenuItems(self):

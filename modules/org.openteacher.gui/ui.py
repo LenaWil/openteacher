@@ -272,6 +272,13 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 
 		#Help
 		helpMenu = self.menuBar().addMenu(_("&Help"))
+
+		self.docsAction = helpMenu.addAction(
+			QtGui.QIcon.fromTheme("help",
+				QtGui.QIcon(ICON_PATH + "help.png")
+			),
+			_("&Documentation")
+		)
 		self.aboutAction = helpMenu.addAction(
 			QtGui.QIcon(ICON_PATH + "about.png"),
 			_("&About OpenTeacher")
