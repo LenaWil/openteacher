@@ -18,30 +18,35 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import __builtin__
+import re
 
-class ReverseModule(object):
+class WordsStringParserModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(ReverseModule, self).__init__(*args, **kwargs)
+		super(WordsStringParserModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("listModifier",)
+		self.supports = ("wordsStringParser",)
 		self.requires = (1, 0)
 		self.active = False
 
-	def modifyList(self, indexes, list):
-		#always work on the indexes, and return a list object
-		return __builtin__.list(reversed(indexes))
+	def parse(self, text):
+		obligatorySegments = self._regex.split(text)
+		obligatorySegments = filter(lambda x: x.strip() != u"", obligatorySegments)
+		item = []
+		for segment in obligatorySegments:
+			words = segment.split(",")
+			words = [word.strip() for word in words]
+			words = filter(lambda x: x.strip() != u"", words)
+			item.append(tuple(words))
+		return item
 
 	def enable(self):
-		self.type = "all"
-		self.name = "Reverse"
+		self._regex = re.compile(r"[0-9]+\.")
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self.type
-		del self.name
+		del self._regex
 
 def init(moduleManager):
-	return ReverseModule(moduleManager)
+	return WordsStringParserModule(moduleManager)

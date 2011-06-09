@@ -23,24 +23,37 @@
 		<font_question>Arial</font_question>
 		<font_answer>Lucida Sans Unicode</font_answer>
 		<items>
-			<!--(for item in list)-->
-			<item id="@!list.index(item)!@">
+			<!--(for word in wordList.words)-->
+			<item id="@!word.id!@">
 				<questions>
-					<!--(for q in item.questions)-->
-					<question id="@!item.questions.index(q)!@">@!q!@</question>
+					<!--(if len(word.questions) == 1)-->
+						<!--(for q in word.questions[0])-->
+#!	!#					<question id="@!word.questions[0].index(q)!@">@!q!@</question>
+						<!--(end)-->
+					<!--(else)-->
+						<!--(for q in word.questions)-->
+#!	!#					<question id="@!word.questions.index(q)!@">@!u", ".join(q)!@</question>
+						<!--(end)-->
 					<!--(end)-->
 				</questions>
 				<answers type="0">
-					<!--(for a in item.answers)-->
-					<answer id="@!item.answers.index(a)!@">@!a!@</answer>
+					<!--(if len(word.answers) == 1)-->
+						<!--(for a in word.answers[0])-->
+#!	!#					<answer id="@!word.answers[0].index(a)!@">@!a!@</answer>
+						<!--(end)-->
+					<!--(else)-->
+						<!--(for a in word.answers)-->
+#!	!#					<answer id="@!word.answers.index(a)!@">@!u", ".join(a)!@</answer>
+						<!--(end)-->
 					<!--(end)-->
 				</answers>
 				<errors>0</errors><!--FIXME: do errorcount-->
 				<testcount>0</testcount><!--FIXME: do errorcount-->
+				<correctcount>0</correctcount><!--FIXME: do correctcount-->
 			</item>
 			<!--(end)-->
 		</items>
-		<testresults/>
+		<testresults/><!--FIXME: we can fill this now! -->
 		<mapquizfile/>
 	</message_data>
 </teach2000>

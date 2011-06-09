@@ -19,16 +19,29 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 try:
-	from elementTree import ElementTree
+	from lxml import etree as ElementTree
 except ImportError:
-	from xml.etree import ElementTree
+	try:
+		from xml.etree import ElementTree
+	except ImportError:
+		from elementTree import ElementTree
 
-class List(list): pass
+class WordList(object):
+	def __init__(self, *args, **kwargs):
+		super(WordList, self).__init__(*args, **kwargs)
 
-class Item(object):
-	def __init__(self):
-		self.questions = []
-		self.answers = []
+		self.words = []
+		self.tests = []
+
+class Word(object):
+	def __init__(self, *args, **kwargs):
+		super(Word, self).__init__(*args, **kwargs)
+
+		self.questions = [[]]
+		self.answers = [[]]
+
+class Test(object): pass #FIXME: stub
+class Result(str): pass #FIXME: stub
 
 class Teach2000FileModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -63,29 +76,26 @@ class Teach2000FileModule(object):
 
 	def load(self, path):
 		root = ElementTree.parse(open(path)).getroot()
+		wordList = WordList()
 
-		list = List()
-
-		list.title = u""
-		list.questionSubject = u""
-		list.answerSubject = u""
-		
 		for item in root.findall("message_data/items/item"):
-			listItem = Item()
+			word = Word()
+			word.id = int(item.get("id"))
 			for question in item.findall("questions/question"):
-				listItem.questions.append(question.text)
+				word.questions[0].append(question.text)
 
 			for answer in item.findall("answers/answer"):
-				listItem.answers.append(answer.text)
+				word.answers[0].append(answer.text)
 
-			list.append(listItem)
-		return list
+			wordList.words.append(word)
+			#FIXME: load tests, also results in the words!
+		return wordList
 
 	def save(self, type, list, path):
 		templatePath = self._mm.resourcePath(__file__, "template.txt")
 		t = self._pyratemp.Template(open(templatePath).read())
 		data = {
-			"list": list
+			"wordList": list
 		}
 		content = t(**data)
 		open(path, "w").write(content.encode("UTF-8"))

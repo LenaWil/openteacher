@@ -16,21 +16,21 @@
 #!	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-	<title>@!list.title!@</title>
-	<question_language>@!list.questionSubject!@</question_language>
-	<answer_language>@!list.answerSubject!@</answer_language>
-	<!--(for item in list)-->
+	<title>@!wordList.title!@</title>
+	<question_language>@!wordList.questionLanguage!@</question_language>
+	<answer_language>@!wordList.answerLanguage!@</answer_language>
+	<!--(for word in wordList.words)-->
 	<word>
-		<known>@!u", ".join(item.questions)!@</known>
-		<!--(if len(item.answers) == 0)-->
+		<known>@!word.known!@</known>
+		<!--(if len(word.foreign) == 0)-->
 		<foreign>-</foreign>
-		<!--(elif len(item.answers) == 1)-->
-		<foreign>@!item.answers[0]!@</foreign>
 		<!--(else)-->
-		<foreign>@!item.answers[0]!@</foreign>
-		<second>@!u", ".join(item.answers[1:])!@</second>
+		<foreign>@!word.foreign!@</foreign>
 		<!--(end)-->
-		<results>0/0</results>
+		<!--(if word.second)-->
+		<second>@!word.second!@</second>
+		<!--(end)-->
+		<results>@!word.results["wrong"]!@/@!word.results["right"] + word.results["wrong"]!@</results>
 	</word>
 	<!--(end)-->
 </root>

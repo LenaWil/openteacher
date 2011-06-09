@@ -19,38 +19,50 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+class Test(list):
+	pass
+
 class AllOnceLessonType(object):
-	def __init__(self, moduleManager, list, *args, **kwargs):
+	def __init__(self, moduleManager, list, indexes, *args, **kwargs):
 		super(AllOnceLessonType, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.newItem = self._mm.createEvent()
 		self.lessonDone = self._mm.createEvent()
-		self._list = list[:] #copy
+		self._list = list
+		self._indexes = indexes
+		self._test = Test()
 
-		self.totalQuestions = len(self._list)
-		self.askedQuestions = 0
+		self.totalItems = len(self._indexes)
+		self.askedItems = 0
 
 	def start(self):
 		self._emitNext()
 
 	def setResult(self, result):
-		#result: string 'right' or 'wrong'
-		#FIXME: store results!
+		self._test.append(result)
 
-		self.askedQuestions += 1
-
+		self.askedItems += 1
 		self._emitNext()
 
-	def correctLastAnswer(self):
-		#FIXME: do something! ;)
-		pass
+	def correctLastAnswer(self, result):
+		self._test[-1] = result
 
 	def _emitNext(self):
 		try:
-			self.newItem.emit(self._list.pop(0))
+			i = self._indexes[self.askedItems]
 		except IndexError:
+			#lesson end
+			if len(self._test) != 0:
+				try:
+					self._list.tests
+				except AttributeError:
+					self._list.tests = []
+				self._list.tests.append(self._test)
 			self.lessonDone.emit()
+		else:
+			self.newItem.emit(self._list.words[i])
+
 
 class AllOnceModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -68,8 +80,8 @@ class AllOnceModule(object):
 		self.active = False
 		del self.name
 
-	def createLessonType(self, list):
-		return AllOnceLessonType(self._mm, list)
+	def createLessonType(self, list, indexes):
+		return AllOnceLessonType(self._mm, list, indexes)
 
 def init(moduleManager):
 	return AllOnceModule(moduleManager)

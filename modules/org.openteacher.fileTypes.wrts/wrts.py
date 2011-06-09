@@ -20,14 +20,24 @@
 
 import datetime
 try:
-	from elementTree import ElementTree
+	from lxml import etree as ElementTree
 except ImportError:
-	from xml.etree import ElementTree
+	try:
+		from xml.etree import ElementTree
+	except ImportError:
+		from elementTree import ElementTree
 
-class WordList(list): pass
+class WordList(object):
+	def __init__(self, *args, **kwargs):
+		super(WordList, self).__init__(*args, **kwargs)
+
+		self.words = []
+		self.tests = []
 
 class Word(object):
-	def __init__(self):
+	def __init__(self, *args, **kwargs):
+		super(Word, self).__init__(*args, **kwargs)
+
 		self.questions = []
 		self.answers = []
 
@@ -71,26 +81,48 @@ class WrtsFileModule(object):
 		#dutch: titel = title
 		wordList.title = listTree.findtext("titel")
 		#dutch: taal = language
-		wordList.questionSubject = listTree.findtext("taal/a")
-		wordList.answerSubject = listTree.findtext("taal/b")
+		wordList.questionLanguage = listTree.findtext("taal/a")
+		wordList.answerLanguage = listTree.findtext("taal/b")
+
+		#counter is used as word id
+		counter = 1
 
 		#dutch: woord = word
 		for wordTree in listTree.findall("woord"):
 			word = Word()
+			word.id = counter
 
-			word.questions = wordTree.findtext("a").split(", ")
-			word.answers = wordTree.findtext("b").split(", ")
+			for module in self._mm.activeMods.supporting("wordsStringParser"):
+				word.questions = module.parse(wordTree.findtext("a"))
+				word.answers = module.parse(wordTree.findtext("b"))
+
+			wordList.words.append(word)
 			
-			wordList.append(word)
-		
+			counter += 1
+
 		return wordList
 
 	def save(self, type, list, path):
+		#Choose one!
+		for module in self._mm.activeMods.supporting("wordsStringComposer"):
+			compose = module.compose
+
+		class EvalPseudoSandbox(self._pyratemp.EvalPseudoSandbox):
+			def __init__(self2, *args, **kwargs):
+				self._pyratemp.EvalPseudoSandbox.__init__(self2, *args, **kwargs)
+
+				self2.register("compose", compose)
+				self2.register("hasattr", hasattr)
+
 		templatePath = self._mm.resourcePath(__file__, "template.txt")
-		t = self._pyratemp.Template(open(templatePath).read())
+		t = self._pyratemp.Template(
+			open(templatePath).read(),
+			eval_class=EvalPseudoSandbox
+		)
+
 		data = {
 			"list": list,
-			"date": datetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S %z")
+			"date": datetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S %z").strip() #FIXME: not datetime.now(), but the real ones!
 		}
 		content = t(**data)
 		open(path, "w").write(content.encode("UTF-8"))

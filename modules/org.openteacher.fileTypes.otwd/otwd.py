@@ -19,9 +19,12 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 try:
-	from elementTree import ElementTree
+	from lxml import etree as ElementTree
 except ImportError:
-	from xml.etree import ElementTree
+	try:
+		from xml.etree import ElementTree
+	except ImportError:
+		from elementTree import ElementTree
 
 class List(list): pass
 

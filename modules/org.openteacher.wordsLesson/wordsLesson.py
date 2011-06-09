@@ -22,70 +22,62 @@
 from PyQt4 import QtCore
 import copy
 
-class WordList(list):
+class WordList(object):
 	def __init__(self, *args, **kwargs):
 		super(WordList, self).__init__(*args, **kwargs)
 
-		self.title = u""
-		self.questionSubject = u""
-		self.answerSubject = u""
+		self.words = []
+		self.tests = []
 
-class Word(object):
-	def __init__(self, *args, **kwargs):
-		super(Word, self).__init__(*args, **kwargs)
-
-		self.questions = []
-		self.answers = []
-
-	def __repr__(self):
-		return "Word('%s')" % self.questions[0]
+class Word(object): pass
 
 class WordsTableModel(QtCore.QAbstractTableModel):
-	def __init__(self, *args, **kwargs):
+	def __init__(self, moduleManager, *args, **kwargs):
 		super(WordsTableModel, self).__init__(*args, **kwargs)
 
+		self._mm = moduleManager
 		self.updateList(WordList())
 
 	def updateList(self, list):
 		self.beginResetModel()
 		self.list = list
-		self.indexes = range(len(self.list))
+		self.indexes = range(len(self.list.words))
 		self.endResetModel()
 
 	def sort(self, column, order):
 		if column == 0:
-			items = sorted(self.list, key=lambda word: word.questions[0])
+			items = sorted(self.list.words, key=lambda word: word.questions[0])
 		elif column == 1:
-			items = sorted(self.list, key=lambda word: word.answers[0])
+			items = sorted(self.list.words, key=lambda word: word.answers[0])
 		elif column == 2:
-			items = self.list[:]
+			items = self.list.words[:]
 
 		if order == QtCore.Qt.DescendingOrder:
 			items.reverse()
 
 		self.layoutAboutToBeChanged.emit()
-		self.indexes = [self.list.index(item) for item in items]
+		self.indexes = [self.list.words.index(item) for item in items]
 		self.layoutChanged.emit()
 
 	def updateTitle(self, title):
 		self.list.title = unicode(title)
 
-	def updateQuestionSubject(self, questionSubject):
-		self.list.questionSubject = unicode(questionSubject)
+	def updateQuestionLanguage(self, questionLanguage):
+		self.list.questionLanguage = unicode(questionLanguage)
 
-	def updateAnswerSubject(self, answerSubject):
-		self.list.answerSubject = unicode(answerSubject)
+	def updateAnswerLanguage(self, answerLanguage):
+		self.list.answerLanguage = unicode(answerLanguage)
 
 	def headerData(self, section, orientation, role):
 		if role != QtCore.Qt.DisplayRole:
 			return
 		if orientation == QtCore.Qt.Horizontal:
-			return ["Questions", "Answers", "Results"][section]
+			return ["Questions", "Answers", "Comment"][section]
 		elif orientation == QtCore.Qt.Vertical:
 			return section +1
 
 	def rowCount(self, parent=None):
-		return len(self.list) +1
+		return len(self.list.words) +1
 
 	def columnCount(self, parent=None):
 		return 3
@@ -99,27 +91,34 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 		except IndexError:
 			return u"" #last (empty) row
 		else:
-			word = self.list[listIndex]
+			word = self.list.words[listIndex]
 
 			if index.column() == 0:
-				return u", ".join(word.questions)
+				#FIXME: choose one
+				for module in self._mm.activeMods.supporting("wordsStringComposer"):
+					try:
+						return module.compose(word.questions)
+					except AttributeError:
+						return u""
 			elif index.column() == 1:
-				return u", ".join(word.answers)
+				#FIXME: choose one
+				for module in self._mm.activeMods.supporting("wordsStringComposer"):
+					try:
+						return module.compose(word.answers)
+					except AttributeError:
+						return u""
 			elif index.column() == 2:
-				return u"0/0"
+				try:
+					return word.comment
+				except AttributeError:
+					return u""
 
 	def flags(self, index):
-		if index.column() != 2:
-			return (
-				QtCore.Qt.ItemIsEnabled |
-				QtCore.Qt.ItemIsSelectable |
-				QtCore.Qt.ItemIsEditable
-			)
-		else:
-			return (
-				QtCore.Qt.ItemIsEnabled |
-				QtCore.Qt.ItemIsSelectable
-			)
+		return (
+			QtCore.Qt.ItemIsEnabled |
+			QtCore.Qt.ItemIsSelectable |
+			QtCore.Qt.ItemIsEditable
+		)
 
 	def setData(self, index, value, role=QtCore.Qt.EditRole):
 		if not (index.isValid() and role == QtCore.Qt.EditRole):
@@ -133,21 +132,33 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 				if not unicode(value.toString()):
 					return False
 				word = Word()
+				try:
+					word.id = self.list.words[-1].id +1
+				except IndexError:
+					word.id = 0
 				self.beginInsertRows(
 					QtCore.QModelIndex(),
 					self.rowCount(),
 					self.rowCount()
 				)
-				self.list.append(word)
-				self.indexes.append(self.list.index(word))
+				self.list.words.append(word)
+				self.indexes.append(self.list.words.index(word))
 				self.endInsertRows()
 			else:
-				word = self.list[listIndex]
+				word = self.list.words[listIndex]
 
 				if index.column() == 0:
-					word.questions = unicode(value.toString()).split(", ")
+					#FIXME: choose one
+					for module in self._mm.activeMods.supporting("wordsStringParser"):
+						word.questions = module.parse(unicode(value.toString()))
 				elif index.column() == 1:
-					word.answers = unicode(value.toString()).split(", ")
+					#FIXME: choose one
+					for module in self._mm.activeMods.supporting("wordsStringParser"):
+						word.answers = module.parse(unicode(value.toString()))
+				elif index.column() == 2:
+					word.comment = unicode(value.toString()).strip()
+					if len(word.comment) == 0:
+						del word.comment
 				break
 		return True
 
@@ -159,7 +170,7 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 		for i in xrange(len(self.indexes)):
 			if self.indexes[i] > listIndex:
 				self.indexes[i] -= 1
-		del self.list[listIndex]
+		del self.list.words[listIndex]
 		self.endRemoveRows()
 
 class ModifiersListModel(QtCore.QAbstractListModel):
@@ -234,17 +245,17 @@ class Lesson(object):
 		)
 		ew.keyboardWidget.letterChosen.handle(self._addLetter)
 
-		self._wordsTableModel = WordsTableModel()
+		self._wordsTableModel = WordsTableModel(self._mm)
 		ew.wordsTableView.setModel(self._wordsTableModel)
 
 		ew.titleTextBox.textChanged.connect(
 			self._wordsTableModel.updateTitle
 		)
-		ew.questionSubjectTextBox.textChanged.connect(
-			self._wordsTableModel.updateQuestionSubject
+		ew.questionLanguageTextBox.textChanged.connect(
+			self._wordsTableModel.updateQuestionLanguage
 		)
-		ew.answerSubjectTextBox.textChanged.connect(
-			self._wordsTableModel.updateAnswerSubject
+		ew.answerLanguageTextBox.textChanged.connect(
+			self._wordsTableModel.updateAnswerLanguage
 		)
 		self._wordsTableModel.modelReset.connect(self._updateTextBoxes)
 
@@ -252,9 +263,18 @@ class Lesson(object):
 		list = self._wordsTableModel.list
 		ew = self._enterWidget
 
-		ew.titleTextBox.setText(list.title)
-		ew.questionSubjectTextBox.setText(list.questionSubject)
-		ew.answerSubjectTextBox.setText(list.answerSubject)
+		try:
+			ew.titleTextBox.setText(list.title)
+		except AttributeError:
+			pass
+		try:
+			ew.questionLanguageTextBox.setText(list.questionLanguage)
+		except AttributeError:
+			pass
+		try:
+			ew.answerLanguageTextBox.setText(list.answerLanguage)
+		except AttributeError:
+			pass
 
 	def _removeSelectedRows(self):
 		while True:
@@ -307,6 +327,8 @@ class Lesson(object):
 		#list modifiers
 		listModifiers = []
 		for module in self._mm.mods.supporting("listModifier"): #FIXME: activeMods?:
+			if not module.type in ("all", "words"):
+				continue
 			module.enable()
 			listModifiers.append({
 				"name": module.name,
@@ -344,7 +366,7 @@ class Lesson(object):
 		i = sw.lessonTypeComboBox.currentIndex()
 		lessonTypeModule = self._lessonTypeModules[i]
 
-		indexes = range(len(self.list))
+		indexes = range(len(self.list.words))
 
 		for listModifier in self._listModifiersModel.modifiers:
 			if listModifier["active"]:
@@ -352,9 +374,7 @@ class Lesson(object):
 					indexes,
 					self.list
 				)
-		lessonList = [self.list[i] for i in indexes]
-
-		self._lessonType = lessonTypeModule.createLessonType(lessonList)
+		self._lessonType = lessonTypeModule.createLessonType(self.list, indexes)
 
 		self._lessonType.newItem.handle(self._newItem)
 		self._lessonType.lessonDone.handle(self._lessonDone)
@@ -364,6 +384,8 @@ class Lesson(object):
 		self._lessonType.start()
 
 	def _newItem(self, item):
+		#FIXME!!!: item modifiers should be applied wider, not only for
+		#the question label, but also for the answers at least.
 		lw = self._teachWidget.lessonWidget
 
 		item = copy.copy(item)
@@ -371,18 +393,18 @@ class Lesson(object):
 			if itemModifier["active"]:
 				item = itemModifier["module"].modifyItem(item)
 
-		lw.questionLabel.setText(u", ".join(item.questions))
+		lw.questionLabel.setText(u", ".join(item.questions[0])) #FIXME: this is bound to crash, parsing should be done by a module...
 		self._updateProgress()
 
 	def _lessonDone(self):
 		self._updateProgress()
-		print "Done!" #FIXME: QMessageBox?
+		print "Done!" #FIXME: QMessageBox + back to enter tab etc.?
 
 	def _updateProgress(self):
 		lw = self._teachWidget.lessonWidget
 
-		lw.progressBar.setMaximum(self._lessonType.totalQuestions)
-		lw.progressBar.setValue(self._lessonType.askedQuestions)
+		lw.progressBar.setMaximum(self._lessonType.totalItems)
+		lw.progressBar.setValue(self._lessonType.askedItems)
 
 class WordsLessonModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

@@ -34,12 +34,12 @@ class SortModule(object):
 			except IndexError:
 				return None
 		#always work on the indexes
-		currentList = [list[i] for i in indexes]
+		currentList = [list.words[i] for i in indexes]
 		newList = sorted(currentList, key=getFirstQuestion)
-		return [list.index(word) for word in newList]
+		return [list.words.index(word) for word in newList]
 
 	def enable(self):
-		self.type = "all"
+		self.type = "words"
 		self.name = "Sort"
 		self.active = True
 

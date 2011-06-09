@@ -42,7 +42,10 @@ class WrtsConnection(object):
 		def get_method(self):
 			return "HEAD"
 
-	def __init__(self):
+	def __init__(self, moduleManager, *args, **kwargs):
+		super(WrtsConnection, self).__init__(*args, **kwargs)
+
+		self._mm = moduleManager
 		self.loggedIn = False
 
 	def logIn(self, email, password):
@@ -78,7 +81,7 @@ class WrtsConnection(object):
 	def importWordList(self, url):
 		"""Downloads a WRTS wordlist from URL and parses it into a WordList object. Throws WrtsConnectionError/WrtsLoginError"""
 		xmlStream = self._openUrl(url)
-		wordListParser = WordListParser(xmlStream)
+		wordListParser = WordListParser(self._mm, xmlStream)
 
 		#return the wordList
 		return wordListParser.list
@@ -133,11 +136,13 @@ class WrtsConnection(object):
 
 		return response
 
-class ListsParser:
+class ListsParser(object):
 	"""This class parses a WRTS-API page: the lists-page. It can return the titles
 	   of the lists as a python list with unicode strings, and it an get the url of the
 	   corresponding wordList if you give the index of that title"""
-	def __init__(self, xmlStream):
+	def __init__(self, xmlStream, *args, **kwargs):
+		super(ListsParser, self).__init__(*args, **kwargs)
+
 		self.root = ElementTree.parse(xmlStream).getroot()
 		self.listsTree = self.root.findall(".//list")
 
@@ -158,50 +163,66 @@ class ListsParser:
 		   which is the needed url."""
 		return self.listsTree[index].attrib["href"]
 
-class WordList(list): pass
-class Word(object): pass
+class WordList(object):
+	def __init__(self, *args, **kwargs):
+		super(WordList, self).__init__(*args, **kwargs)
 
-class WordListParser:
+		self.words = []
+		self.tests = []
+
+class Word(object):
+	pass
+
+class WordListParser(object):
 	"""This class parses a wordlist from the WRTS-API into a WordList-instance."""
-	def __init__(self, xmlStream):
+	def __init__(self, moduleManager,xmlStream, *args, **kwargs):
+		super(WordListParser, self).__init__(*args, **kwargs)
+
+		self._mm = moduleManager
 		self.root = ElementTree.parse(xmlStream).getroot()
 
 	@property
 	def list(self):
 		#Create a new WordList instance
 		wordList = WordList()
-		
+
 		#Read title, question subject and answer subject; sometimes the
 		#element is empty, so the fallback u"" is needed.
 		wordList.title = self.root.findtext("title", u"")
-		wordList.questionSubject = self.root.findtext("lang-a", u"")
-		wordList.answerSubject = self.root.findtext("lang-b", u"")
+		wordList.questionLanguage = self.root.findtext("lang-a", u"")
+		wordList.answerLanguage = self.root.findtext("lang-b", u"")
+
+		#This counter is used to give each word a unique id
+		counter = 0
 
 		#Loop through the words in the xml
 		for wordTree in self.root.findall("words/word"):
 			#Create a Word-instance
 			word = Word()
+			word.id = counter
 
 			#Read the question, again keep in mind that null values are
-			#possible, so again the u"" fallback. Also OT uses multiple
-			#questions by default, so we're using a list with just one
-			#item since WRTS doesn't.
-			word.questions = [wordTree.findtext("word-a", u"")]
-			
-			#Answers are often splitted by ; or ,. So we're checking for
-			#that.
-			answer = wordTree.findtext("word-b", u"")
-			#Try to find a second answer, if there isn't one, just
-			#use the full answer as one item.
-			if "," in answer:
-				word.answers = answer.split(",", 1)
-			elif ";" in answer:
-				word.answers = answer.split(";", 1)
-			else:
-				word.answers = [answer]
+			#possible, so again the u"" fallback. The question is parsed
+			#by a wordsStringParser module.
+
+			#FIXME: only one
+			for module in self._mm.activeMods.supporting("wordsStringParser"):
+				text = wordTree.findtext("word-a", u"")
+				word.questions = module.parse(text)
+
+			#Read the answer, again keep in mind that null values are
+			#possible, so again the u"" fallback. The answer is parsed
+			#by a wordsStringParser module.
+
+			#FIXME: only one
+			for module in self._mm.activeMods.supporting("wordsStringParser"):
+				text = wordTree.findtext("word-b", u"")
+				word.answers = module.parse(text)
 
 			# Add the current edited word to the wordList instance
-			wordList.append(word)
+			wordList.words.append(word)
+
+			counter += 1
 
 		#And finally, return the wordList
 		return wordList

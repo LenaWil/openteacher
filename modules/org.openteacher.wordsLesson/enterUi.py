@@ -89,8 +89,8 @@ class EnterWidget(QtGui.QSplitter):
 		super(EnterWidget, self).__init__(*args, **kwargs)
 
 		self.titleTextBox = QtGui.QLineEdit(self)
-		self.questionSubjectTextBox = QtGui.QLineEdit(self)
-		self.answerSubjectTextBox = QtGui.QLineEdit(self)
+		self.questionLanguageTextBox = QtGui.QLineEdit(self)
+		self.answerLanguageTextBox = QtGui.QLineEdit(self)
 
 		self.wordsTableView = WordsTableView()
 
@@ -99,10 +99,10 @@ class EnterWidget(QtGui.QSplitter):
 		topLayout.addWidget(self.titleTextBox, 0, 1)
 
 		topLayout.addWidget(QtGui.QLabel(_("Question language:")), 1, 0)
-		topLayout.addWidget(self.questionSubjectTextBox, 1, 1)
+		topLayout.addWidget(self.questionLanguageTextBox, 1, 1)
 
 		topLayout.addWidget(QtGui.QLabel(_("Answer language:")), 2, 0)
-		topLayout.addWidget(self.answerSubjectTextBox, 2, 1)
+		topLayout.addWidget(self.answerLanguageTextBox, 2, 1)
 
 		leftLayout = QtGui.QVBoxLayout()
 		leftLayout.addLayout(topLayout)

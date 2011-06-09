@@ -40,22 +40,29 @@ class TxtFileModule(object):
 		del self.saves
 
 	def save(self, type, list, path):
+		def exists(obj, attr):
+			return hasattr(obj, attr) and getattr(obj, attr)
+
 		text = u""
 
-		if list.title:
+		if exists(list, "title"):
 			text += list.title + "\n\n"
-		if list.questionSubject and list.answerSubject:
-			text += list.questionSubject + " - " + list.answerSubject + "\n\n"
+		if exists(list, "questionLanguage") and exists(list, "answerLanguage"):
+			text += list.questionLanguage + " - " + list.answerLanguage + "\n\n"
 
-		if len(list) != 0:
-			lengths = map(lambda x: len(u", ".join(x.questions)) +1, list)
-			maxLen = max(lengths) +1
+		if len(list.words) != 0:
+			#FIXME: choose one
+			for module in self._mm.activeMods.supporting("wordsStringComposer"):
+				lengths = map(lambda x: len(module.compose(x.questions)) +1, list.words)
+				maxLen = max(lengths) +1
 			if maxLen < 8:
 				maxLen = 8
 
-			for word in list:
-				questions = u", ".join(word.questions)
-				answers = u", ".join(word.answers)
+			for word in list.words:
+				#FIXME: choose one
+				for module in self._mm.activeMods.supporting("wordsStringComposer"):
+					questions = module.compose(word.questions)
+					answers = module.compose(word.answers)
 				text += "%s%s %s\n" % (
 					questions,
 					(maxLen - len(questions)) * " ",

@@ -19,16 +19,32 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 try:
-	from elementTree import ElementTree
+	from lxml import etree as ElementTree
 except ImportError:
-	from xml.etree import ElementTree
+	try:
+		from xml.etree import ElementTree
+	except ImportError:
+		from elementTree import ElementTree
 
-class List(list): pass
+class WordList(object):
+	def __init__(self, *args, **kwargs):
+		super(WordList, self).__init__(*args, **kwargs)
 
-class Item(object):
-	def __init__(self):
+		self.words = []
+		self.tests = []
+
+class Word(object):
+	def __init__(self, *args, **kwargs):
+		super(Word, self).__init__(*args, **kwargs)
+
 		self.questions = []
 		self.answers = []
+
+class Test(list):
+	pass
+
+class Result(str):
+	pass
 
 class OpenTeacherFileModule(object):
 	def __init__(self, moduleManager):
@@ -59,39 +75,111 @@ class OpenTeacherFileModule(object):
 			return "words"
 
 	def load(self, path):
-		list = List()
-
+		#Create the new word list
+		wordList = WordList()
+		#Feed the xml parser
 		root = ElementTree.parse(open(path)).getroot()
 
-		list.title = root.findtext("title")
-		list.questionSubject = root.findtext("question_language")
-		list.answerSubject = root.findtext("answer_language")
+		#Stores the title, question language and answer language
+		wordList.title = root.findtext("title")
+		wordList.questionLanguage = root.findtext("question_language")
+		wordList.answerLanguage = root.findtext("answer_language")
 
-		for treeItem in root.findall("word"):
-			listItem = Item()
+		#create one test, which is used for all results, because .ot
+		#doesn't support multiple tests.
+		test = Test()
 
-			known = treeItem.findtext("known")
-			if known.find(",") != -1:
-				listItem.questions = known.split(",")
-			else:
-				listItem.questions = known.split(";")
+		#because .ot doesn't give words an id, we use a counter.
+		counter = 0
+		for treeWord in root.findall("word"):
+			#Creates the word and sets its id (which is the current
+			#value of the counter)
+			listWord = Word()
+			listWord.id = counter
 
-			listItem.answers.append(treeItem.findtext("foreign"))
-			second = treeItem.findtext("second")
+			#Parses the question
+			known = treeWord.findtext("known")
+			#FIXME: choose one
+			for module in self._mm.activeMods.supporting("wordsStringParser"):
+				listWord.questions = module.parse(known)
+
+			#Parses the answers
+			second = treeWord.findtext("second")
 			if second is not None:
-				if second.find(",") != -1:
-					listItem.answers += second.split(",")
+				foreign = treeWord.findtext("foreign") + ", " + second
+			else:
+				foreign = treeWord.findtext("foreign")
+			#remove so the test is also reliable the next time
+			del second
+			for module in self._mm.activeMods.supporting("wordsStringParser"):
+				listWord.answers = module.parse(foreign)
+
+			#Parses the results, all are saved in the test made above.
+			wrong, total = treeWord.findtext("results").split("/")
+			wrong = int(wrong)
+			total = int(total)
+			right = total - wrong
+			for i in range(right):
+				result = Result("right")
+				result.itemId = listWord.id
+				test.append(result)
+			for i in range(wrong):
+				result = Result("wrong")
+				result.itemId = listWord.id
+				test.append(result)
+
+			#Adds the generated word to the list
+			wordList.words.append(listWord)
+			#Increment the counter (= the next word id)
+			counter += 1
+
+		#Adds all results to the list
+		wordList.tests.append(test)
+
+		return wordList
+
+	def save(self, type, wordList, path):
+		#Copy, because we're going to modify it
+		import copy
+		wordList = copy.deepcopy(wordList) # the words have to be unaltered
+		try:
+			wordList.title
+		except AttributeError:
+			wordList.title = u""
+		try:
+			wordList.questionLanguage
+		except AttributeError:
+			wordList.questionLanguage = u""
+		try:
+			wordList.answerLanguage
+		except AttributeError:
+			wordList.answerLanguage = u""
+
+		for word in wordList.words:
+			#results
+			word.results = {"right": 0, "wrong": 0}
+			for test in wordList.tests:
+				for result in test:
+					if result.itemId == word.id:
+						try:
+							word.results[result] += 1
+						except KeyError:
+							pass
+			#known, foreign and second
+			#FIXME: choose one
+			for module in self._mm.activeMods.supporting("wordsStringComposer"):
+				word.known = module.compose(word.questions)
+				if len(word.answers) == 1 and len(word.answers[0]) > 1:
+					word.foreign = word.answers[0][0]
+					word.second = module.compose([word.answers[0][1:]])
 				else:
-					listItem.answers += second.split(";")
+					word.foreign = module.compose(word.answers)
+					word.second = None
 
-			list.append(listItem)
-		return list
-
-	def save(self, type, list, path):
 		templatePath = self._mm.resourcePath(__file__, "template.txt")
 		t = self._pyratemp.Template(open(templatePath).read())
 		data = {
-			"list": list
+			"wordList": wordList
 		}
 		content = t(**data)
 		open(path, "w").write(content.encode("UTF-8"))

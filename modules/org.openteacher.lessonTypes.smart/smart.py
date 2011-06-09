@@ -19,53 +19,80 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+class Test(list):
+	pass
+
 class SmartLessonType(object):
-	def __init__(self, moduleManager, list, *args, **kwargs):
+	def __init__(self, moduleManager, list, indexes, *args, **kwargs):
 		super(SmartLessonType, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.newItem = self._mm.createEvent()
 		self.lessonDone = self._mm.createEvent()
 
-		self._list = list[:] #copy
-		self.askedQuestions = 0
+		self._list = list
+		self._indexes = indexes
+		self._test = Test()
+		self.askedItems = 0
 
 	@property
-	def totalQuestions(self):
-		return len(self._list)
+	def totalItems(self):
+		return len(self._indexes) + self.askedItems
 
 	def start(self):
 		self._emitNext()
 
 	def setResult(self, result):
-		self.askedQuestions += 1
+		self.askedItems += 1
 
-		#FIXME: Process results
+		self._test.append(result)
 		if result == "wrong":
-			if self._list[-1] != self._currentItem:
-				self._list.append(self._currentItem)
-			if self._currentItem not in (self._list[1], self._list[2]):
-				self._list.insert(2, self._currentItem)
+			try:
+				if self._indexes[-1] != self._currentIndex:
+					self._indexes.append(self._currentIndex)
+			except IndexError:
+				pass
+			try:
+				if self._currentIndex not in (self._indexes[1], self._indexes[2]):
+					self._indexes.insert(2, self._currentIndex)
+			except IndexError:
+				pass
+
 		self._emitNext()
 
-	def correctLastAnswer(self):
-		#FIXME: Reverse the results
+	def correctLastAnswer(self, result):
+		self._test[-1] = result
 
-		if self._list[-1] == self._previousItem:
-			del self._list[-1]
-		if self._list[1] == self._previousItem: #2 became 1 because of the new word
-			del self._list[1]
+		try:
+			if self._indexes[-1] == self._previousIndex:
+				del self._indexes[-1]
+		except IndexError:
+			pass
+
+		try:
+			if self._indexes[1] == self._previousIndex: #2 became 1 because of the new word
+				del self._indexes[1]
+		except IndexError:
+			pass
 
 	def _emitNext(self):
 		try:
-			self._previousItem = self._currentItem
+			self._previousIndex = self._currentIndex
 		except AttributeError:
-			self._previousItem = None
+			pass
 		try:
-			self._currentItem = self._list.pop(0)
-			self.newItem.emit(self._currentItem)
+			self._currentIndex = self._indexes.pop(0)
 		except IndexError:
+			#end of lesson
+			if len(self._test) != 0:
+				try:
+					self._list.tests
+				except AttributeError:
+					self._list.tests = []
+				self._list.tests.append(self._test)
 			self.lessonDone.emit()
+		else:
+			self.newItem.emit(self._list.words[self._currentIndex])
 
 class SmartModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -83,8 +110,8 @@ class SmartModule(object):
 		self.active = False
 		del self.name
 
-	def createLessonType(self, list):
-		return SmartLessonType(self._mm, list)
+	def createLessonType(self, list, indexes):
+		return SmartLessonType(self._mm, list, indexes)
 
 def init(moduleManager):
 	return SmartModule(moduleManager)

@@ -18,7 +18,11 @@
 <!--Wrts, http://www.wrts.nl/-->
 <wrts>
 	<lijst id="00000000">
+		<!--(if hasattr(list, "title"))-->
 		<titel>@!list.title!@</titel>
+		<!--(else)-->
+		<titel />
+		<!--(end)-->
 		<datum>
 			<downloaded>@!date!@</downloaded>
 			<created>@!date!@</created>
@@ -26,13 +30,21 @@
 		</datum>
 		<author id="000000">Created by: OpenTeacher</author>
 		<taal>
-			<a>@!list.questionSubject!@</a>
-			<b>@!list.answerSubject!@</b>
+			<!--(if hasattr(list, "questionLanguage"))-->
+			<a>@!list.questionLanguage!@</a>
+			<!--(else)-->
+			<a />
+			<!--(end)-->
+			<!--(if hasattr(list, "questionLanguage"))-->
+			<b>@!list.answerLanguage!@</b>
+			<!--(else)-->
+			<b />
+			<!--(end)-->
 		</taal>
-		<!--(for word in list)-->
+		<!--(for word in list.words)-->
 		<woord>
-			<a>@!u", ".join(word.questions)!@</a>
-			<b>@!u", ".join(word.answers)!@</b>
+			<a>@!compose(word.questions)!@</a>
+			<b>@!compose(word.answers)!@</b>
 		</woord>
 		<!--(end)-->
 	</lijst>

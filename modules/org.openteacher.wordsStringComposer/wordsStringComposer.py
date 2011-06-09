@@ -18,30 +18,38 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import __builtin__
-
-class ReverseModule(object):
+class WordsStringComposerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(ReverseModule, self).__init__(*args, **kwargs)
+		super(WordsStringComposerModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("listModifier",)
+		self.supports = ("wordsStringComposer",)
 		self.requires = (1, 0)
 		self.active = False
 
-	def modifyList(self, indexes, list):
-		#always work on the indexes, and return a list object
-		return __builtin__.list(reversed(indexes))
-
 	def enable(self):
-		self.type = "all"
-		self.name = "Reverse"
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self.type
-		del self.name
+
+	def compose(self, item):
+		if len(item) == 0:
+			return u""
+		elif len(item) == 1:
+			return u", ".join(item[0])
+		else:
+			text = u""
+			counter = 1
+			for obligatorySet in item:
+				text += u"".join([
+					unicode(counter),
+					u". ",
+					u", ".join(obligatorySet),
+					u" "
+				])
+				counter += 1
+			return text.strip()
 
 def init(moduleManager):
-	return ReverseModule(moduleManager)
+	return WordsStringComposerModule(moduleManager)

@@ -21,6 +21,9 @@
 
 from PyQt4 import QtGui, QtCore
 
+class Result(str):
+	pass
+
 class TypingTeachWidget(QtGui.QWidget):
 	def __init__(self, *args, **kwargs):
 		super(TypingTeachWidget, self).__init__(*args, **kwargs)
@@ -43,18 +46,29 @@ class TypingTeachWidget(QtGui.QWidget):
 		self.lessonType.newItem.handle(self.newItem)
 
 		self.checkButton.clicked.connect(self.checkAnswer)
-		self.correctButton.clicked.connect(self.lessonType.correctLastAnswer)
+		self.correctButton.clicked.connect(self.correctLastAnswer)
 
 	def newItem(self, item):
+		try:
+			self.previousItem = self.item
+		except AttributeError:
+			pass
 		self.item = item
 		self.inputLineEdit.clear()
 		self.inputLineEdit.setFocus()
 
+	def correctLastAnswer(self):
+		result = Result("right")
+		result.itemId = self.previousItem.id
+		self.lessonType.correctLastAnswer(self, result)
+
 	def checkAnswer(self):
 		if self.inputLineEdit.text() in self.item.answers:
-			self.lessonType.setResult("right")
+			result = Result("right")
 		else:
-			self.lessonType.setResult("wrong")
+			result = Result("wrong")
+		result.itemId = self.item.id
+		self.lessonType.setResult(result)
 
 class TypingTeachTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

@@ -52,6 +52,9 @@ class AnswerWidget(QtGui.QWidget):
 		
 		self.setLayout(mainLayout)
 
+class Result(str):
+	pass
+
 class InMindTeachWidget(QtGui.QStackedWidget):
 	def __init__(self, *args, **kwargs):
 		super(InMindTeachWidget, self).__init__(*args, **kwargs)
@@ -67,15 +70,22 @@ class InMindTeachWidget(QtGui.QStackedWidget):
 
 		self.lessonType.newItem.handle(self.newItem)
 		self.thinkWidget.button.clicked.connect(self.startAnswering)
-		self.answerWidget.rightButton.clicked.connect(
-			lambda: self.lessonType.setResult("right")
-		)
-		self.answerWidget.wrongButton.clicked.connect(
-			lambda: self.lessonType.setResult("wrong")
-		)
+		self.answerWidget.rightButton.clicked.connect(self.setRight)
+		self.answerWidget.wrongButton.clicked.connect(self.setWrong)
 
-	def newItem(self, item):
-		answers = u", ".join(item.answers)
+	def setRight(self):
+		result = Result("right")
+		result.itemId = self._currentWord.id
+		self.lessonType.setResult(result)
+
+	def setWrong(self):
+		result = Result("wrong")
+		result.itemId = self._currentWord.id
+		self.lessonType.setResult(result)
+
+	def newItem(self, word):
+		self._currentWord = word
+		answers = u", ".join(word.answers)
 		self.answerWidget.label.setText(
 			_("Translation: ") + answers
 		)
