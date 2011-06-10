@@ -36,7 +36,7 @@ class WordsStringParserModule(object):
 		for segment in obligatorySegments:
 			words = segment.split(",")
 			words = [word.strip() for word in words]
-			words = filter(lambda x: x.strip() != u"", words)
+			words = filter(lambda word: word != u"", words)
 			item.append(tuple(words))
 		return item
 

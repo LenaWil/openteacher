@@ -25,9 +25,10 @@ class Result(str):
 	pass
 
 class TypingTeachWidget(QtGui.QWidget):
-	def __init__(self, *args, **kwargs):
+	def __init__(self, moduleManager, *args, **kwargs):
 		super(TypingTeachWidget, self).__init__(*args, **kwargs)
 
+		self._mm = moduleManager
 		self.inputLineEdit = QtGui.QLineEdit()
 
 		self.checkButton = QtGui.QPushButton(u"Check!")
@@ -63,11 +64,41 @@ class TypingTeachWidget(QtGui.QWidget):
 		self.lessonType.correctLastAnswer(self, result)
 
 	def checkAnswer(self):
-		if self.inputLineEdit.text() in self.item.answers:
+		givenStringAnswer = unicode(self.inputLineEdit.text())
+
+		#FIXME: only one
+		for module in self._mm.activeMods.supporting("wordsStringParser"):
+			givenAnswer = module.parse(givenStringAnswer)
+
+		right = False
+		compulsoryAnswerCount = 0
+
+		if len(givenAnswer) == 1:
+			difference = set(givenAnswer[0])
+			for compulsoryAnswer in self.item.answers:
+				difference -= set(compulsoryAnswer)
+			if len(difference) == 0:
+				right = True
+
+		elif len(givenAnswer) > 1:
+			for compulsoryGivenAnswer in givenAnswer:
+				for compulsoryAnswer in self.item.answers:
+					difference = set(compulsoryGivenAnswer) - set(compulsoryAnswer)
+					if len(difference) == 0:
+						compulsoryAnswerCount += 1
+
+			if compulsoryAnswerCount == len(self.item.answers):
+				right = True
+
+		if right:
 			result = Result("right")
 		else:
 			result = Result("wrong")
+
 		result.itemId = self.item.id
+		result.givenAnswer = givenStringAnswer
+		print result
+		print ""
 		self.lessonType.setResult(result)
 
 class TypingTeachTypeModule(object):
@@ -88,7 +119,7 @@ class TypingTeachTypeModule(object):
 		del self.name
 
 	def createWidget(self):
-		return TypingTeachWidget()
+		return TypingTeachWidget(self._mm)
 
 def init(moduleManager):
 	return TypingTeachTypeModule(moduleManager)

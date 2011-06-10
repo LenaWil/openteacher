@@ -56,8 +56,10 @@ class Result(str):
 	pass
 
 class InMindTeachWidget(QtGui.QStackedWidget):
-	def __init__(self, *args, **kwargs):
+	def __init__(self, moduleManager, *args, **kwargs):
 		super(InMindTeachWidget, self).__init__(*args, **kwargs)
+
+		self._mm = moduleManager
 
 		self.thinkWidget = ThinkWidget()
 		self.answerWidget = AnswerWidget()
@@ -85,10 +87,12 @@ class InMindTeachWidget(QtGui.QStackedWidget):
 
 	def newItem(self, word):
 		self._currentWord = word
-		answers = u", ".join(word.answers)
-		self.answerWidget.label.setText(
-			_("Translation: ") + answers
-		)
+		#FIXME: only one
+		for module in self._mm.activeMods.supporting("wordsStringComposer"):
+			self.answerWidget.label.setText("".join([
+				_("Translation: "),
+				module.compose(word.answers)
+			]))
 		self.setCurrentWidget(self.thinkWidget)
 
 	def startAnswering(self):
@@ -112,7 +116,7 @@ class InMindTeachTypeModule(object):
 		del self.name
 
 	def createWidget(self):
-		return InMindTeachWidget()
+		return InMindTeachWidget(self._mm)
 
 def init(moduleManager):
 	return InMindTeachTypeModule(moduleManager)
