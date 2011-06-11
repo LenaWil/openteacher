@@ -22,6 +22,7 @@ __version__ = (1,0)
 
 import sys
 import os
+import imp
 
 class ModuleFilterer(object):
 	#Cache used to speed up module lookups, is class member so all
@@ -121,13 +122,13 @@ class ModuleManager(object):
 			#so path can be __file__
 			path = os.path.dirname(path)
 		sys.path.insert(0, path)
+		fp, pathname, description = imp.find_module(moduleName)
 		try:
-			del sys.modules[moduleName]
-		except KeyError:
-			pass
-		module = __import__(moduleName)
-		sys.path.remove(path)
-		return module
+			return imp.load_module(moduleName, fp, pathname, description)
+		finally:
+			sys.path.remove(path)
+			if fp:
+				fp.close()
 
 	def _loadModules(self):
 		self._modules = set()

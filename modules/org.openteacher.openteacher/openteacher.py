@@ -19,6 +19,8 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import optparse
+import unittest
 import sys
 
 class Saver(object):
@@ -226,6 +228,27 @@ class OpenTeacherModule(object):
 		self.uiModule.interrupt()
 
 	def run(self):
+		parser = optparse.OptionParser()
+		parser.add_option("-m", "--mode", dest="mode", help="set OpenTeacher in a certain MODE.", default="execute")
+		options, args = parser.parse_args()
+		if options.mode == "execute":
+			try:
+				self.execute(args[0])
+			except IndexError:
+				self.execute()
+		elif options.mode == "test":
+			self.test()
+
+	def test(self):
+		testSuite = unittest.TestSuite()
+		for module in self._mm.mods.supporting("test"):
+			module.enable()
+			newTests = unittest.TestLoader().loadTestsFromTestCase(module.TestCase)
+			testSuite.addTests(newTests)
+			module.disable()
+		unittest.TextTestRunner(verbosity=2).run(testSuite)
+
+	def execute(self, path=None):
 		self.enable()
 
 		#FIXME: use one ui module by user's choice. Make the choice with command line args
@@ -254,6 +277,13 @@ class OpenTeacherModule(object):
 
 		self.uiModule = uiModules.items.pop()
 		self._updateMenuItems()
+
+		if path:
+			try:
+				self.load(path)
+			except (NotImplementedError, IOError):
+				pass
+			
 		self.uiModule.run()
 
 		self._disconnectEvents(uiModules)
