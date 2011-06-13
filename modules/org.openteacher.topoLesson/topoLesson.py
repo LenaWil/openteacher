@@ -157,6 +157,7 @@ class TeachPictureBox(QtGui.QGraphicsView):
 		self.interactive = False
 		self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff )
 		self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+		self.setViewportUpdateMode(0)
 		
 		mapsPath = base.api.resourcePath(__file__, "resources/maps")
 		picturePath = os.path.join(mapsPath, unicode(map + ".gif"))
