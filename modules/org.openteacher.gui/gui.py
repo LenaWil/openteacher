@@ -50,10 +50,15 @@ class LessonFileTab(FileTab):
 
 		self.tabChanged = self._mm.createEvent()
 		self._widget.currentChanged.connect(lambda: self.tabChanged.emit())
-
-	@property
-	def currentTab(self):
-		return self._widget.currentWidget()
+	
+	def _setCurrentTab(self, value):
+		print "a"
+		self._widget.setCurrentWidget(value)
+	
+	def _getCurrentTab(self):
+		self._widget.currentWidget()
+	
+	currentTab = property(_getCurrentTab, _setCurrentTab)
 
 class GuiModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

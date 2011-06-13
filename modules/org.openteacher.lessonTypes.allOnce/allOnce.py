@@ -22,6 +22,11 @@
 class Test(list):
 	pass
 
+'''
+Events:
+newItem
+lessonDone
+'''
 class AllOnceLessonType(object):
 	def __init__(self, moduleManager, list, indexes, *args, **kwargs):
 		super(AllOnceLessonType, self).__init__(*args, **kwargs)
@@ -38,7 +43,8 @@ class AllOnceLessonType(object):
 
 	def start(self):
 		self._emitNext()
-
+	
+	# result is a Result-type object saying whether the question was answered right or wrong
 	def setResult(self, result):
 		self._test.append(result)
 
