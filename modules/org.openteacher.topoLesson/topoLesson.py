@@ -357,7 +357,7 @@ class TopoLesson(object):
 
 class TeachWidget(QtGui.QWidget):
 	def __init__(self,*args, **kwargs):
-		super(TeachWidget, self).__init__(*args, **kwargs)				
+		super(TeachWidget, self).__init__(*args, **kwargs)
 		#draw the GUI
 		#top
 		top = QtGui.QHBoxLayout()
@@ -396,6 +396,7 @@ class TeachWidget(QtGui.QWidget):
 	
 	def initiateLesson(self):
 		self.lesson = TopoLesson(base.enterWidget.places)
+		self.answerfield.setFocus()
 	
 	def stopLesson(self):
 		self.lesson.endLesson(False)
@@ -438,7 +439,6 @@ class TopoLessonModule(object):
 
 	def disable(self):
 		del self.type
-		
 		self.active = False
 
 	def close(self):
@@ -452,7 +452,7 @@ class TopoLessonModule(object):
 			self.teachWidget = TeachWidget()
 			
 			self.fileTab = module.addFileTab(
-				"Word lesson %s" % self.counter,
+				"Topo lesson %s" % self.counter,
 				self.enterWidget,
 				self.teachWidget
 			)
@@ -469,6 +469,12 @@ class Lesson(object):
 		super(Lesson, self).__init__(*args, **kwargs)
 		self.fileTab = fileTab
 		self.stopped = base.api.createEvent()
+		
+		fileTab.closeRequested.handle(self.stop)
+	
+	def stop(self):
+		self.fileTab.close()
+		self.stopped.emit()
 
 def init(moduleManager):
 	return TopoLessonModule(moduleManager)
