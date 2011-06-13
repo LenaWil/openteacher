@@ -246,7 +246,7 @@ class OpenTeacherModule(object):
 			newTests = unittest.TestLoader().loadTestsFromTestCase(module.TestCase)
 			testSuite.addTests(newTests)
 			module.disable()
-		unittest.TextTestRunner(verbosity=2).run(testSuite)
+		unittest.TextTestRunner().run(testSuite)
 
 	def execute(self, path=None):
 		self.enable()

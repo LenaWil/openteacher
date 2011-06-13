@@ -28,9 +28,13 @@ class OpenTeacher(object):
 	def run(self):
 		mm = moduleManager.ModuleManager(MODULES_PATH)
 
-		for module in mm.mods.supporting("openteacher-core"):
-			#FIXME: execute only one!  Command line arguments? Crash?
-			module.run()
+		mods = mm.mods.supporting("openteacher-core").items
+		if len(mods) == 1:
+			mods.pop().run()
+		elif len(mods) == 0:
+			raise NotImplementedError("OpenTeacher core module doesn't have an implementation! Please install one.")
+		elif len(mods) > 1:
+			raise ValueError("There are %s OpenTeacher core module implementations! Please make sure there is only one." % len(mods))
 		return 0
 
 if __name__ == "__main__":

@@ -96,6 +96,7 @@ class TeachLessonWidget(QtGui.QSplitter):
 		)
 		wordLabel = QtGui.QLabel(_("Word:"))
 		self.questionLabel = QtGui.QLabel()
+		self.questionLabel.setWordWrap(True)
 		self.keyboardWidget = keyboardWidget
 		self.teachTabWidget = QtGui.QTabWidget()
 		self.progressBar = QtGui.QProgressBar()

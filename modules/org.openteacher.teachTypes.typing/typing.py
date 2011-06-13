@@ -44,59 +44,33 @@ class TypingTeachWidget(QtGui.QWidget):
 	def updateLessonType(self, lessonType):
 		self.lessonType = lessonType
 
-		self.lessonType.newItem.handle(self.newItem)
+		self.lessonType.newItem.handle(self.newWord)
 
 		self.checkButton.clicked.connect(self.checkAnswer)
 		self.correctButton.clicked.connect(self.correctLastAnswer)
 
-	def newItem(self, item):
+	def newWord(self, word):
 		try:
-			self.previousItem = self.item
+			self.previousWord = self.word
 		except AttributeError:
 			pass
-		self.item = item
+		self.word = word
 		self.inputLineEdit.clear()
 		self.inputLineEdit.setFocus()
 
 	def correctLastAnswer(self):
 		result = Result("right")
-		result.itemId = self.previousItem.id
+		result.wordId = self.previousWord.id
+		result.givenAnswer = _(u"Correct anyway") #FIXME: own translation
 		self.lessonType.correctLastAnswer(self, result)
 
 	def checkAnswer(self):
 		givenStringAnswer = unicode(self.inputLineEdit.text())
 
 		#FIXME: only one
-		for module in self._mm.activeMods.supporting("wordsStringParser"):
-			givenAnswer = module.parse(givenStringAnswer)
+		for module in self._mm.activeMods.supporting("wordsStringChecker"):
+			result = module.check(givenStringAnswer, self.word)
 
-		right = False
-		compulsoryAnswerCount = 0
-
-		if len(givenAnswer) == 1:
-			difference = set(givenAnswer[0])
-			for compulsoryAnswer in self.item.answers:
-				difference -= set(compulsoryAnswer)
-			if len(difference) == 0:
-				right = True
-
-		elif len(givenAnswer) > 1:
-			for compulsoryGivenAnswer in givenAnswer:
-				for compulsoryAnswer in self.item.answers:
-					difference = set(compulsoryGivenAnswer) - set(compulsoryAnswer)
-					if len(difference) == 0:
-						compulsoryAnswerCount += 1
-
-			if compulsoryAnswerCount == len(self.item.answers):
-				right = True
-
-		if right:
-			result = Result("right")
-		else:
-			result = Result("wrong")
-
-		result.itemId = self.item.id
-		result.givenAnswer = givenStringAnswer
 		print result
 		print ""
 		self.lessonType.setResult(result)

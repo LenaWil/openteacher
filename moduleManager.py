@@ -121,12 +121,10 @@ class ModuleManager(object):
 		if os.path.isfile(path):
 			#so path can be __file__
 			path = os.path.dirname(path)
-		sys.path.insert(0, path)
-		fp, pathname, description = imp.find_module(moduleName)
+		fp, pathname, description = imp.find_module(moduleName, [path])
 		try:
 			return imp.load_module(moduleName, fp, pathname, description)
 		finally:
-			sys.path.remove(path)
 			if fp:
 				fp.close()
 

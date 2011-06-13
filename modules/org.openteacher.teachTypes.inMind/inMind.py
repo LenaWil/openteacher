@@ -77,12 +77,12 @@ class InMindTeachWidget(QtGui.QStackedWidget):
 
 	def setRight(self):
 		result = Result("right")
-		result.itemId = self._currentWord.id
+		result.wordId = self._currentWord.id
 		self.lessonType.setResult(result)
 
 	def setWrong(self):
 		result = Result("wrong")
-		result.itemId = self._currentWord.id
+		result.wordId = self._currentWord.id
 		self.lessonType.setResult(result)
 
 	def newItem(self, word):
