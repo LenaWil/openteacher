@@ -46,9 +46,10 @@ class Test(list):
 class Result(str):
 	pass
 
-class OpenTeacherFileModule(object):
-	def __init__(self, moduleManager):
-		self.supports = ("load", "save", "initializing")
+class OpenTeacherLoaderModule(object):
+	def __init__(self, moduleManager, *args, **kwargs):
+		super(OpenTeacherLoaderModule, self).__init__(*args, **kwargs)
+		self.supports = ("load", "initializing")
 		self.requires = (1, 0)
 		self.active = False
 
@@ -56,19 +57,15 @@ class OpenTeacherFileModule(object):
 
 	def initialize(self):
 		for module in self._mm.activeMods.supporting("settings"):
-			module.registerModule("OpenTeacher file type", self)
+			module.registerModule("OpenTeacher (.ot) loader", self)
 
 	def enable(self):
-		self._pyratemp = self._mm.import_(__file__, "pyratemp")
 		self.loads = {"ot": ["words"]}
-		self.saves = {"words": ["ot"]}
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self._pyratemp
 		del self.loads
-		del self.saves
 
 	def getFileTypeOf(self, path):
 		if path.endswith(".ot"):
@@ -138,51 +135,5 @@ class OpenTeacherFileModule(object):
 
 		return wordList
 
-	def save(self, type, wordList, path):
-		#Copy, because we're going to modify it
-		import copy
-		wordList = copy.deepcopy(wordList) # the words have to be unaltered
-		try:
-			wordList.title
-		except AttributeError:
-			wordList.title = u""
-		try:
-			wordList.questionLanguage
-		except AttributeError:
-			wordList.questionLanguage = u""
-		try:
-			wordList.answerLanguage
-		except AttributeError:
-			wordList.answerLanguage = u""
-
-		for word in wordList.words:
-			#results
-			word.results = {"right": 0, "wrong": 0}
-			for test in wordList.tests:
-				for result in test:
-					if result.itemId == word.id:
-						try:
-							word.results[result] += 1
-						except KeyError:
-							pass
-			#known, foreign and second
-			#FIXME: choose one
-			for module in self._mm.activeMods.supporting("wordsStringComposer"):
-				word.known = module.compose(word.questions)
-				if len(word.answers) == 1 and len(word.answers[0]) > 1:
-					word.foreign = word.answers[0][0]
-					word.second = module.compose([word.answers[0][1:]])
-				else:
-					word.foreign = module.compose(word.answers)
-					word.second = None
-
-		templatePath = self._mm.resourcePath(__file__, "template.txt")
-		t = self._pyratemp.Template(open(templatePath).read())
-		data = {
-			"wordList": wordList
-		}
-		content = t(**data)
-		open(path, "w").write(content.encode("UTF-8"))
-
 def init(moduleManager):
-	return OpenTeacherFileModule(moduleManager)
+	return OpenTeacherLoaderModule(moduleManager)

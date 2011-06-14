@@ -40,7 +40,7 @@ class DocumentationModule(object):
 			tab.closeRequested.handle(tab.close)
 
 	def enable(self):
-		self._ui = self._mm.import_(__file__, "ui")
+		self._ui = self._mm.import_("ui")
 		self.active = True
 
 	def disable(self):

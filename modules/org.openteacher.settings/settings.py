@@ -11,7 +11,7 @@ class SettingsModule(object):
 	def enable(self):
 		self._modules = {}
 		self._settings = {}
-		self._ui = self._mm.import_(__file__, "ui")
+		self._ui = self._mm.import_("ui")
 		self.modulesUpdated = self._mm.createEvent()
 		self.active = True
 

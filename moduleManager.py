@@ -23,6 +23,7 @@ __version__ = (1,0)
 import sys
 import os
 import imp
+import inspect
 
 class ModuleFilterer(object):
 	#Cache used to speed up module lookups, is class member so all
@@ -102,8 +103,13 @@ class ModuleManager(object):
 		self._loadModules()
 
 	@staticmethod
-	def resourcePath(filePath, resource):
-		return os.path.join(os.path.dirname(filePath), resource)
+	def _callerOfCallerPath():
+		callerFile = inspect.getouterframes(inspect.currentframe())[2][1]
+		return os.path.dirname(callerFile)
+
+	@classmethod
+	def resourcePath(cls, resource):
+		return os.path.join(cls._callerOfCallerPath(), resource)
 
 	@staticmethod
 	def createEvent():
@@ -117,16 +123,16 @@ class ModuleManager(object):
 	def activeMods(self):
 		return ActiveModuleFilterer(self._modules)
 
-	def import_(self, path, moduleName):
-		if os.path.isfile(path):
-			#so path can be __file__
-			path = os.path.dirname(path)
+	def importFrom(self, path, moduleName):
 		fp, pathname, description = imp.find_module(moduleName, [path])
 		try:
 			return imp.load_module(moduleName, fp, pathname, description)
 		finally:
 			if fp:
 				fp.close()
+
+	def import_(self, moduleName):
+		return self.importFrom(self._callerOfCallerPath(), moduleName)
 
 	def _loadModules(self):
 		self._modules = set()
@@ -139,7 +145,7 @@ class ModuleManager(object):
 				os.path.isdir(location)
 			)
 			if valid:
-				container = self.import_(location, fileName)
+				container = self.importFrom(location, fileName)
 				module = container.init(self)
 				if module.requires[0] == __version__[0] and module.requires[1] <= __version__[1]:
 					self._modules.add(module)

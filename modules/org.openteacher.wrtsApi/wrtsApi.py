@@ -32,8 +32,8 @@ class WrtsApiModule(object):
 			module.registerModule(_("Wrts API connection"), self)
 
 	def enable(self):
-		self._ui = self._mm.import_(__file__, "ui")
-		self._api = self._mm.import_(__file__, "api")
+		self._ui = self._mm.import_("ui")
+		self._api = self._mm.import_("api")
 		self._references = set()
 
 		self.wrtsConnection = self._api.WrtsConnection(self._mm)

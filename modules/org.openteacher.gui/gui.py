@@ -81,8 +81,8 @@ class GuiModule(object):
 
 		self.tabChanged = self._mm.createEvent()
 
-		self._ui = self._mm.import_(__file__, "ui")
-		self._ui.ICON_PATH = self._mm.resourcePath(__file__, "icons/") #FIXME: something less hard to debug?
+		self._ui = self._mm.import_("ui")
+		self._ui.ICON_PATH = self._mm.resourcePath("icons/") #FIXME: something less hard to debug?
 
 		self._app = QtGui.QApplication(sys.argv)
 		gettext.install("OpenTeacher")#FIXME

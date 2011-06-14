@@ -20,28 +20,18 @@
 
 import unittest
 
-class FileTypesTestCase(unittest.TestCase):
+class SaversTestCase(unittest.TestCase):
 	def setUp(self):
-		for module in self._mm.mods.supporting("load"):
-			module.enable()
-		for module in self._mm.mods.supporting("save").exclude("load"):
+		for module in self._mm.mods.supporting("save"):
 			module.enable()
 
-	def testLoadAttributes(self):
-		for module in self._mm.activeMods.supporting("load"):
-			self.assertTrue(hasattr(module, "getFileTypeOf"))
-			self.assertTrue(hasattr(module, "load"))
-			self.assertTrue(hasattr(module, "loads"))
-
-	def testSaveAttributes(self):
+	def testAttributes(self):
 		for module in self._mm.activeMods.supporting("save"):
 			self.assertTrue(hasattr(module, "save"))
 			self.assertTrue(hasattr(module, "saves"))
 
 	def tearDown(self):
-		for module in self._mm.activeMods.supporting("load"):
-			module.enable()
-		for module in self._mm.activeMods.supporting("save").exclude("load"):
+		for module in self._mm.activeMods.supporting("save"):
 			module.disable()
 
 class TestModule(object):
@@ -54,7 +44,7 @@ class TestModule(object):
 		self.active = False
 
 	def enable(self):
-		self.TestCase = FileTypesTestCase
+		self.TestCase = SaversTestCase
 		self.TestCase._mm = self._mm
 		self.active = True
 

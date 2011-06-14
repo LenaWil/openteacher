@@ -43,36 +43,30 @@ class Word(object):
 class Test(object): pass #FIXME: stub
 class Result(str): pass #FIXME: stub
 
-class Teach2000FileModule(object):
+class Teach2000LoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(Teach2000FileModule, self).__init__(*args, **kwargs)
+		super(Teach2000LoaderModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("load", "save", "initializing")
+		self.supports = ("load", "initializing")
 		self.requires = (1, 0)
 		self.active = False
 
 	def initialize(self):
 		for module in self._mm.activeMods.supporting("settings"):
-			module.registerModule("Teach2000 file type", self)
+			module.registerModule("Teach2000 (.t2k) loader", self)
 
 	def enable(self):
-		self._pyratemp = self._mm.import_(__file__, "pyratemp")
-
-		self.saves = {"words": ["t2k"]}
 		self.loads = {"t2k": ["words"]}
 		self.active = True
 
 	def disable(self):
-		del self._pyratemp
-
-		del self.saves
 		del self.loads
 		self.active = False
 
 	def getFileTypeOf(self, path):
 		if path.endswith(".t2k"):
-			return "words"
+			return "words" #FIXME: .t2k can contain more types
 
 	def load(self, path):
 		root = ElementTree.parse(open(path)).getroot()
@@ -91,14 +85,5 @@ class Teach2000FileModule(object):
 			#FIXME: load tests, also results in the words!
 		return wordList
 
-	def save(self, type, list, path):
-		templatePath = self._mm.resourcePath(__file__, "template.txt")
-		t = self._pyratemp.Template(open(templatePath).read())
-		data = {
-			"wordList": list
-		}
-		content = t(**data)
-		open(path, "w").write(content.encode("UTF-8"))
-
 def init(manager):
-	return Teach2000FileModule(manager)
+	return Teach2000LoaderModule(manager)

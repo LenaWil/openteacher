@@ -129,7 +129,7 @@ class EnterMapChooser(QtGui.QComboBox):
 		self.otherMap()
 
 	def fillBox(self):
-		mapPaths = base.api.resourcePath(__file__, "resources/maps")
+		mapPaths = base.api.resourcePath("resources/maps")
 		for name in os.listdir(mapPaths):
 			self.addItem(os.path.splitext(name)[0], name)
 	
@@ -151,7 +151,7 @@ class EnterMapChooser(QtGui.QComboBox):
 				self.setCurrentIndex(self.prevIndex)
 				return
 		self.parent.map = self.currentText()
-		mapsPath = base.api.resourcePath(__file__, "resources/maps")
+		mapsPath = base.api.resourcePath("resources/maps")
 		picturePath = os.path.join(mapsPath, unicode(self.parent.map + ".gif"))
 		self.mapwidget.setPicture(picturePath)
 		self.prevIndex = self.currentIndex()
@@ -302,7 +302,7 @@ class TeachPictureBox(QtGui.QGraphicsView):
 		self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 		self.setViewportUpdateMode(0)
 		
-		mapsPath = base.api.resourcePath(__file__, "resources/maps")
+		mapsPath = base.api.resourcePath("resources/maps")
 		picturePath = os.path.join(mapsPath, unicode(map + ".gif"))
 		self.setPicture(picturePath)
 	
@@ -316,7 +316,7 @@ class TeachPictureBox(QtGui.QGraphicsView):
 		self.scene = QtGui.QGraphicsScene()
 		self.pixmap = QtGui.QPixmap(picture)
 		
-		crosshairPixmap = QtGui.QPixmap(base.api.resourcePath(__file__, "resources/crosshair.png"))
+		crosshairPixmap = QtGui.QPixmap(base.api.resourcePath("resources/crosshair.png"))
 		self.crosshair = QtGui.QGraphicsPixmapItem(crosshairPixmap)
 		
 		self.scene.addPixmap(self.pixmap)

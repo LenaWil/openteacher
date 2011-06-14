@@ -18,43 +18,37 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class AboutModule(object):
+class OpenTeachingWordsSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(AboutModule, self).__init__(*args, **kwargs)
+		super(OpenTeachingWordsSaverModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
+		self.supports = ("save", "initializing")
 		self.requires = (1, 0)
-		self.supports = ("about", "initializing")
 		self.active = False
 
 	def initialize(self):
 		for module in self._mm.activeMods.supporting("settings"):
-			module.registerModule("About module", self)
-
-	def show(self):
-		for module in self._mm.activeMods.supporting("ui"):
-			dialog = self._ui.AboutDialog(self._authors, self._mm)
-			tab = module.addCustomTab(dialog.windowTitle(), dialog)
-			tab.closeRequested.handle(tab.close)
+			module.registerModule("Open Teaching Words (.otwd) saver", self)
 
 	def enable(self):
-		self._ui = self._mm.import_("ui")
-		self._authors = []
+		self.saves = {"words": ["otwd"]}
+		self._pyratemp = self._mm.import_("pyratemp")
 		self.active = True
-
-		##########DEMO DATA
-		self.registerAuthor("Core developer", "Milan Boers")
-		self.registerAuthor("Core developer", "Cas Widdershoven")
-		self.registerAuthor("Core developer", "Marten de Vries")
-		##########END DEMO DATA
 
 	def disable(self):
 		self.active = False
-		del self._ui
-		del self._authors
+		del self.saves
+		del self._pyratemp
 
-	def registerAuthor(self, category, name):
-		self._authors.append((category, name))
+	def save(self, type, list, path):
+		templatePath = self._mm.resourcePath("index.xml")
+		t = self._pyratemp.Template(open(templatePath).read())
+		data = {
+			"list": list
+		}
+		content = t(**data)
+		print content.encode("UTF-8")
 
 def init(moduleManager):
-	return AboutModule(moduleManager)
+	return OpenTeachingWordsSaverModule(moduleManager)

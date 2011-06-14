@@ -28,8 +28,8 @@ class AboutTextLabel(QtGui.QLabel):
 		
 		self._mm = moduleManager
 
-		textPath = self._mm.resourcePath(__file__, "about.html")
-		pyratemp = self._mm.import_(__file__, "pyratemp")
+		textPath = self._mm.resourcePath("about.html")
+		pyratemp = self._mm.import_("pyratemp")
 
 		slogan = _("OpenTeacher helps you learn a foreign language vocabulary.")
 		firstLine, secondLine = self._splitLineCloseToMiddle(unicode(slogan))
@@ -81,7 +81,7 @@ class AboutImageLabel(QtGui.QLabel):
 		super(AboutImageLabel, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 		
-		path = self._mm.resourcePath(__file__, "OTcomic.png")
+		path = self._mm.resourcePath("OTcomic.png")
 		self.setPixmap(QtGui.QPixmap(path))
 
 		self.setAlignment(QtCore.Qt.AlignCenter)
@@ -106,7 +106,7 @@ class ShortLicenseWidget(QtGui.QWidget):
 		super(ShortLicenseWidget, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		shortLicensePath = self._mm.resourcePath(__file__, "short_license.txt")
+		shortLicensePath = self._mm.resourcePath("short_license.txt")
 
 		label = QtGui.QLabel()
 		label.setText(open(shortLicensePath).read())
@@ -127,7 +127,7 @@ class LongLicenseWidget(QtGui.QTextEdit):
 		super(LongLicenseWidget, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		longLicensePath = self._mm.resourcePath(__file__, "long_license.txt")
+		longLicensePath = self._mm.resourcePath("long_license.txt")
 
 		self.setReadOnly(True)
 		self.setText(open(longLicensePath).read())

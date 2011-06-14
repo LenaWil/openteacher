@@ -420,8 +420,8 @@ class WordsLessonModule(object):
 			module.registerModule("Words Lesson", self)
 
 	def enable(self):
-		self._enterUi = self._mm.import_(__file__, "enterUi")
-		self._teachUi = self._mm.import_(__file__, "teachUi")
+		self._enterUi = self._mm.import_("enterUi")
+		self._teachUi = self._mm.import_("teachUi")
 
 		self.lessonCreated = self._mm.createEvent()
 		self.type = "words"

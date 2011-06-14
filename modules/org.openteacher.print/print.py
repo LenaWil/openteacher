@@ -33,7 +33,7 @@ class PrintModule(object):
 			module.registerModule("Printing module", self)
 
 	def enable(self):
-		self._pyratemp = self._mm.import_(__file__, "pyratemp")
+		self._pyratemp = self._mm.import_("pyratemp")
 		self.prints = ["words"]
 		self.active = True
 
@@ -42,7 +42,7 @@ class PrintModule(object):
 		del self._pyratemp
 
 	def print_(self, type, list, printer):
-		templatePath = self._mm.resourcePath(__file__, "template.html")
+		templatePath = self._mm.resourcePath("template.html")
 		t = self._pyratemp.Template(open(templatePath).read())
 		html = t(**{"list": list})
 

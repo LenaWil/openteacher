@@ -18,9 +18,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class TxtFileModule(object):
+class TxtSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(TxtFileModule, self).__init__(*args, **kwargs)
+		super(TxtSaverModule, self).__init__(*args, **kwargs)
 
 		self.supports = ("save", "initializing")
 		self.requires = (1, 0)
@@ -29,7 +29,7 @@ class TxtFileModule(object):
 
 	def initialize(self):
 		for module in self._mm.activeMods.supporting("settings"):
-			module.registerModule("Plain text file type", self)
+			module.registerModule("Plain text (.txt) saver", self)
 
 	def enable(self):
 		self.saves = {"words": ["txt"]}
@@ -72,4 +72,4 @@ class TxtFileModule(object):
 		open(path, "w").write(text.encode("UTF-8"))
 
 def init(moduleManager):
-	return TxtFileModule(moduleManager)
+	return TxtSaverModule(moduleManager)

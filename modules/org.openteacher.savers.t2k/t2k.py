@@ -18,43 +18,37 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class AboutModule(object):
+class Teach2000SaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(AboutModule, self).__init__(*args, **kwargs)
+		super(Teach2000SaverModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
+		self.supports = ("save", "initializing")
 		self.requires = (1, 0)
-		self.supports = ("about", "initializing")
 		self.active = False
 
 	def initialize(self):
 		for module in self._mm.activeMods.supporting("settings"):
-			module.registerModule("About module", self)
-
-	def show(self):
-		for module in self._mm.activeMods.supporting("ui"):
-			dialog = self._ui.AboutDialog(self._authors, self._mm)
-			tab = module.addCustomTab(dialog.windowTitle(), dialog)
-			tab.closeRequested.handle(tab.close)
+			module.registerModule("Teach2000 (.t2k) saver", self)
 
 	def enable(self):
-		self._ui = self._mm.import_("ui")
-		self._authors = []
+		self._pyratemp = self._mm.import_("pyratemp")
+		self.saves = {"words": ["t2k"]}
 		self.active = True
 
-		##########DEMO DATA
-		self.registerAuthor("Core developer", "Milan Boers")
-		self.registerAuthor("Core developer", "Cas Widdershoven")
-		self.registerAuthor("Core developer", "Marten de Vries")
-		##########END DEMO DATA
-
 	def disable(self):
+		del self._pyratemp
+		del self.saves
 		self.active = False
-		del self._ui
-		del self._authors
 
-	def registerAuthor(self, category, name):
-		self._authors.append((category, name))
+	def save(self, type, list, path):
+		templatePath = self._mm.resourcePath("template.txt")
+		t = self._pyratemp.Template(open(templatePath).read())
+		data = {
+			"wordList": list
+		}
+		content = t(**data)
+		open(path, "w").write(content.encode("UTF-8"))
 
-def init(moduleManager):
-	return AboutModule(moduleManager)
+def init(manager):
+	return Teach2000SaverModule(manager)

@@ -34,18 +34,18 @@ class Item(object):
 		self.questions = []
 		self.answers = []
 
-class OpenTeachingWordsFileModule(object):
+class OpenTeachingWordsLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(OpenTeachingWordsFileModule, self).__init__(*args, **kwargs)
+		super(OpenTeachingWordsLoaderModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("load", "save", "initializing")
+		self.supports = ("load", "initializing")
 		self.requires = (1, 0)
 		self.active = False
 
 	def initialize(self):
 		for module in self._mm.activeMods.supporting("settings"):
-			module.registerModule("Open Teaching Words file type", self)
+			module.registerModule("Open Teaching Words (.otwd) loader", self)
 
 	def getFileTypeOf(self, path):
 		if path.endswith(".otwd"):
@@ -53,21 +53,11 @@ class OpenTeachingWordsFileModule(object):
 
 	def enable(self):
 		self.loads = {"otwd": ["words"]}
-		self.saves = {"words": ["otwd"]}
-		self._pyratemp = self._mm.import_(__file__, "pyratemp")
-
 		self.active = True
 
 	def disable(self):
 		self.active = False
-
 		del self.loads
-		del self.saves
-		del self._pyratemp
-
-	def getFileTypeOf(self, path):
-		if path.endswith(".otwd"):
-			return "words"
 
 	def load(self, path):
 		list = List()
@@ -98,14 +88,5 @@ class OpenTeachingWordsFileModule(object):
 			list.append(listItem)
 		return list
 
-	def save(self, type, list, path):
-		templatePath = self._mm.resourcePath(__file__, "index.xml")
-		t = self._pyratemp.Template(open(templatePath).read())
-		data = {
-			"list": list
-		}
-		content = t(**data)
-		print content.encode("UTF-8")
-
 def init(moduleManager):
-	return OpenTeachingWordsFileModule(moduleManager)
+	return OpenTeachingWordsLoaderModule(moduleManager)
