@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Marten de Vries
+#	Copyright 2011, Cas Widdershoven
 #
 #	This file is part of OpenTeacher.
 #

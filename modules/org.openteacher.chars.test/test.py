@@ -18,40 +18,39 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class WordsNeverAnsweredCorrectlyModule(object):
+import unittest
+
+class CharsTestCase(unittest.TestCase):
+	def setUp(self):
+		for module in self._mm.mods.supporting("chars"):
+			module.enable()
+
+	def testAttributes(self):
+		for module in self._mm.mods.supporting("chars"):
+			self.assertTrue(hasattr(module, "name"))
+			self.assertTrue(hasattr(module, "data"))
+
+	def tearDown(self):
+		for module in self._mm.activeMods.supporting("chars"):
+			module.disable()
+
+class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(WordsNeverAnsweredCorrectlyModule, self).__init__(*args, **kwargs)
+		super(TestModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("wordsNeverAnsweredCorrectly", "listModifier")
+		self.supports = ("test",)
 		self.requires = (1, 0)
 		self.active = False
 
-	def modifyList(self, indexes, list):
-		self._list = list
-		newIndexes = filter(self._isNeverAnsweredCorrectly, indexes)
-		del self._list
-		return newIndexes
-
-	def _isNeverAnsweredCorrectly(self, index):
-		results = self._resultsFor(self._list.words[index])
-		return "right" not in results
-
-	def _resultsFor(self, word):
-		results = []
-		for test in self._list.tests:
-			results.extend(test)
-		return filter(lambda result: result.wordId == word.id, results)
-
 	def enable(self):
-		self.type = "words"
-		self.name = "Only words you never answered correctly"
+		self.TestCase = CharsTestCase
+		self.TestCase._mm = self._mm
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self.type
-		del self.name
+		del self.TestCase
 
 def init(moduleManager):
-	return WordsNeverAnsweredCorrectlyModule(moduleManager)
+	return TestModule(moduleManager)
