@@ -92,7 +92,7 @@ class SmartLessonType(object):
 				self._list.tests.append(self._test)
 			self.lessonDone.emit()
 		else:
-			self.newItem.emit(self._list.words[self._currentIndex])
+			self.newItem.emit(self._list.items[self._currentIndex])
 
 class SmartModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

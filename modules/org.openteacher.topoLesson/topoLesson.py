@@ -29,7 +29,7 @@ from PyQt4 import QtCore
 import os
 import time
 
-class Place():
+class Place(object):
 	def __init__(self, name = "None", x = 0, y = 0):
 		self.name = name
 		if x > 0 and y > 0:
@@ -45,13 +45,20 @@ class Result(str):
 		#optional
 		self.active = list()
 
+class List(object):
+	def __init__(self, *args, **kwargs):
+		super(List, self).__init__(*args, **kwargs)
+		
+		self.items = []
+		self.tests = []
+
 class EnterPlacesWidget(QtGui.QListWidget):
 	def __init__(self):
 		QtGui.QListWidget.__init__(self)
 	
 	def update(self):
 		self.clear()
-		for place in base.enterWidget.places.words:
+		for place in base.enterWidget.places.items:
 			self.addItem(place.name + " (" + str(place.x) + "," + str(place.y) + ")")
 
 class EnterMapScene(QtGui.QGraphicsScene):
@@ -97,7 +104,7 @@ class EnterMap(QtGui.QGraphicsView):
 		
 		placeslist = []
 		
-		for place in base.enterWidget.places.words:
+		for place in base.enterWidget.places.items:
 			rect = QtGui.QGraphicsRectItem(place.x,place.y,6,6)
 			rect.setBrush(QtGui.QBrush(QtGui.QColor("red")))
 			
@@ -130,7 +137,7 @@ class EnterMapChooser(QtGui.QComboBox):
 	
 	def otherMap(self):
 		if self.ask:
-			if len(self.parent.places.words) > 0:
+			if len(self.parent.places.items) > 0:
 				warningD = QtGui.QMessageBox()
 				warningD.setIcon(QtGui.QMessageBox.Warning)
 				warningD.setWindowTitle("Warning")
@@ -150,42 +157,6 @@ class EnterMapChooser(QtGui.QComboBox):
 			self.mapwidget.setPicture(picturePath)
 			self.prevIndex = self.currentIndex()
 		self.ask = True
-
-class TeachPictureBox(QtGui.QGraphicsView):
-	def __init__(self,map,*args, **kwargs):
-		super(TeachPictureBox, self).__init__(*args, **kwargs)
-		self.interactive = False
-		self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff )
-		self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-		self.setViewportUpdateMode(0)
-		
-		mapsPath = base.api.resourcePath(__file__, "resources/maps")
-		picturePath = os.path.join(mapsPath, unicode(map + ".gif"))
-		self.setPicture(picturePath)
-	
-	def wheelEvent(self,wheelevent):
-		if wheelevent.delta() > 0:
-			self.scale(1.1,1.1)
-		else:
-			self.scale(0.9,0.9)
-	
-	def setPicture(self,picture):
-		self.scene = QtGui.QGraphicsScene()
-		self.pixmap = QtGui.QPixmap(picture)
-		
-		crosshairPixmap = QtGui.QPixmap(base.api.resourcePath(__file__, "resources/crosshair.png"))
-		self.crosshair = QtGui.QGraphicsPixmapItem(crosshairPixmap)
-		
-		self.scene.addPixmap(self.pixmap)
-		self.scene.addItem(self.crosshair)
-		self.setScene(self.scene)
-
-class List(object):
-	def __init__(self, *args, **kwargs):
-		super(List, self).__init__(*args, **kwargs)
-		
-		self.words = []
-		self.tests = []
 
 class EnterWidget(QtGui.QSplitter):
 	def __init__(self,*args, **kwargs):
@@ -261,19 +232,28 @@ class EnterWidget(QtGui.QSplitter):
 		self.addWidget(leftSideWidget)
 		self.addWidget(rightSideWidget)
 	
+	"""
+	Add a place to the list
+	"""
 	def addPlace(self,place):
-		self.places.words.append(place)
+		self.places.items.append(place)
 		self.pictureBox.update()
 		self.currentPlaces.update()
 	
+	"""
+	Remove a place from the list
+	"""
 	def removePlace(self):
 		for placeItem in self.currentPlaces.selectedItems():
-			for place in self.places.words:
+			for place in self.places.items:
 				if placeItem.text() == str(place.name + " (" + str(place.x) + "," + str(place.y) + ")"):
-					self.places.words.remove(place)
+					self.places.items.remove(place)
 		self.pictureBox.update()
 		self.currentPlaces.update()
 	
+	"""
+	What happens when you click the Enter tab
+	"""
 	def showEvent(self, event):
 		if base.inlesson:
 			warningD = QtGui.QMessageBox()
@@ -285,8 +265,7 @@ class EnterWidget(QtGui.QSplitter):
 			if feedback == QtGui.QMessageBox.Ok:
 				base.teachWidget.stopLesson()
 			else:
-				base.api.setCurrentTab(self.parent.teachWidget)
-				return
+				base.fileTab.currentTab = base.teachWidget
 
 class LessonTypeChooser(QtGui.QComboBox):
 	def __init__(self):
@@ -301,65 +280,57 @@ class LessonTypeChooser(QtGui.QComboBox):
 		for lessontype in self._lessonTypeModules:
 			self.addItem(lessontype.name, lessontype)
 	
+	"""
+	What happens when you change the lesson type
+	"""
+	def changeLessonType(self, index):
+		if base.inlesson:
+			base.teachWidget.initiateLesson()
+	
+	"""
+	Get the current lesson type
+	"""
+	@property
 	def currentLessonType(self):
 		for lessontype in self._lessonTypeModules:
 			if lessontype.name == self.currentText():
 				return lessontype
-		
-	def changeLessonType(self, index):
-		try:
-			base.teachWidget.initiateLesson()
-		except AttributeError:
-			pass
 
-class TopoLesson(object):
-	def __init__(self,items):
-		self.lessonType = base.teachWidget.lessonTypeChooser.currentLessonType().createLessonType(items,range(len(items.words)))
+class TeachPictureBox(QtGui.QGraphicsView):
+	def __init__(self,map,*args, **kwargs):
+		super(TeachPictureBox, self).__init__(*args, **kwargs)
+		self.interactive = False
+		self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff )
+		self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+		self.setViewportUpdateMode(0)
 		
-		self.lessonType.newItem.handle(self.nextQuestion)
-		self.lessonType.lessonDone.handle(self.endLesson)
-		
-		self.lessonType.start()
-		
-		#set the progress bar
-		base.teachWidget.progress.setMinimum(0)
-		base.teachWidget.progress.setMaximum(self.lessonType.totalItems)
-		base.teachWidget.progress.setValue(0)
+		mapsPath = base.api.resourcePath(__file__, "resources/maps")
+		picturePath = os.path.join(mapsPath, unicode(map + ".gif"))
+		self.setPicture(picturePath)
 	
-	def checkAnswer(self):
-		if self.currentItem.name == base.teachWidget.answerfield.text():
-			# Answer was right
-			self.lessonType.setResult(Result("right"))
-			# Progress bar
-			base.teachWidget.progress.setValue(self.lessonType.askedItems)
+	def wheelEvent(self,wheelevent):
+		if wheelevent.delta() > 0:
+			self.scale(1.1,1.1)
 		else:
-			# Answer was wrong
-			self.lessonType.setResult(Result("wrong"))
-			
+			self.scale(0.9,0.9)
 	
-	def nextQuestion(self, item):
-		#set the next question
-		self.currentItem = item
-		#set the arrow to the right position
-		self.setArrow(self.currentItem.x,self.currentItem.y)
-	
-	"""
-	Sets the arrow on the map to the right position
-	"""
-	def setArrow(self, x, y):
-		base.teachWidget.mapbox.centerOn(x-15,y-50)
-		base.teachWidget.mapbox.crosshair.setPos(x-15,y-50)
-	
-	def endLesson(self):
-		# FIXME : message with results
-		# return to enter tab
-		base.fileTab.currentTab = base.enterWidget
+	def setPicture(self,picture):
+		self.scene = QtGui.QGraphicsScene()
+		self.pixmap = QtGui.QPixmap(picture)
+		
+		crosshairPixmap = QtGui.QPixmap(base.api.resourcePath(__file__, "resources/crosshair.png"))
+		self.crosshair = QtGui.QGraphicsPixmapItem(crosshairPixmap)
+		
+		self.scene.addPixmap(self.pixmap)
+		self.scene.addItem(self.crosshair)
+		self.setScene(self.scene)
 
 class TeachWidget(QtGui.QWidget):
 	def __init__(self,*args, **kwargs):
 		super(TeachWidget, self).__init__(*args, **kwargs)
-		#draw the GUI
-		#top
+		
+		## GUI Drawing
+		# Top
 		top = QtGui.QHBoxLayout()
 		
 		label = QtGui.QLabel("Lesson type:")
@@ -368,10 +339,10 @@ class TeachWidget(QtGui.QWidget):
 		top.addWidget(label)
 		top.addWidget(self.lessonTypeChooser)
 		
-		#middle
+		# Middle
 		self.mapbox = TeachPictureBox(base.enterWidget.map)
 		
-		#bottom
+		# Bottom
 		bottom = QtGui.QHBoxLayout()
 		
 		label = QtGui.QLabel("Which place is here?")
@@ -386,7 +357,7 @@ class TeachWidget(QtGui.QWidget):
 		bottom.addWidget(checkanswerbutton)
 		bottom.addWidget(self.progress)
 		
-		#total
+		# Total
 		layout = QtGui.QVBoxLayout()
 		layout.addLayout(top)
 		layout.addWidget(self.mapbox)
@@ -394,21 +365,100 @@ class TeachWidget(QtGui.QWidget):
 		
 		self.setLayout(layout)
 	
+	"""
+	Starts the lesson
+	"""
 	def initiateLesson(self):
 		self.lesson = TopoLesson(base.enterWidget.places)
 		self.answerfield.setFocus()
 	
+	"""
+	Stops the lesson
+	"""
 	def stopLesson(self):
-		self.lesson.endLesson(False)
+		self.lesson.endLesson()
 		del self.lesson
 	
+	"""
+	What happens when you click the check answer button
+	"""
 	def checkAnswerButtonClick(self):
+		# Check the answer
 		self.lesson.checkAnswer()
+		# Clear the answer field
 		self.answerfield.clear()
+		# Focus the answer field
 		self.answerfield.setFocus()
 	
+	"""
+	What happens when you click the Teach tab
+	"""
 	def showEvent(self,event):
-		self.initiateLesson()
+		# If there are no words
+		if len(base.enterWidget.places.items) == 0:
+			QtGui.QMessageBox.critical(self, "Not enough items", "You need to add items to your test first")
+			base.fileTab.currentTab = base.enterWidget
+		# If not in a lesson (so it doesn't start a lesson if you go back from a mistakingly click on the Enter tab)
+		elif not base.inlesson:
+			self.initiateLesson()
+
+class TopoLesson(object):
+	def __init__(self,itemList):
+		self.lessonType = base.teachWidget.lessonTypeChooser.currentLessonType.createLessonType(itemList,range(len(itemList.items)))
+		
+		self.lessonType.newItem.handle(self.nextQuestion)
+		self.lessonType.lessonDone.handle(base.teachWidget.stopLesson)
+		
+		self.lessonType.start()
+		
+		base.inlesson = True
+		
+		# Reset the progress bar
+		base.teachWidget.progress.setValue(0)
+	
+	"""
+	Check whether the given answer was right or wrong
+	"""
+	def checkAnswer(self):
+		if self.currentItem.name == base.teachWidget.answerfield.text():
+			# Answer was right
+			self.lessonType.setResult(Result("right"))
+			# Progress bar
+			self._updateProgressBar()
+		else:
+			# Answer was wrong
+			self.lessonType.setResult(Result("wrong"))
+			
+	"""
+	What happens when the next question should be asked
+	"""
+	def nextQuestion(self, item):
+		#set the next question
+		self.currentItem = item
+		#set the arrow to the right position
+		self._setArrow(self.currentItem.x,self.currentItem.y)
+	
+	"""
+	Ends the lesson
+	"""
+	def endLesson(self):
+		base.inlesson = False
+		# return to enter tab
+		base.fileTab.currentTab = base.enterWidget
+	
+	"""
+	Updates the progress bar
+	"""
+	def _updateProgressBar(self):
+		base.teachWidget.progress.setMaximum(self.lessonType.totalItems+1)
+		base.teachWidget.progress.setValue(self.lessonType.askedItems)
+	
+	"""
+	Sets the arrow on the map to the right position
+	"""
+	def _setArrow(self, x, y):
+		base.teachWidget.mapbox.centerOn(x-15,y-50)
+		base.teachWidget.mapbox.crosshair.setPos(x-15,y-50)
 
 class TopoLessonModule(object):
 	def __init__(self, api):
@@ -416,7 +466,6 @@ class TopoLessonModule(object):
 		base = self
 		self.api = api
 		self.counter = 1
-		# is the lesson going on?
 		self.inlesson = False
 		
 		self.supports = ("lesson", "list", "loadList", "initializing")

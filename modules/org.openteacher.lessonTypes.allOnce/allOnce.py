@@ -67,7 +67,7 @@ class AllOnceLessonType(object):
 				self._list.tests.append(self._test)
 			self.lessonDone.emit()
 		else:
-			self.newItem.emit(self._list.words[i])
+			self.newItem.emit(self._list.items[i])
 
 
 class AllOnceModule(object):
