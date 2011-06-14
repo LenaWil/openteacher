@@ -26,6 +26,7 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4 import QtWebKit
+from PyQt4.phonon import Phonon
 
 import os
 import time
@@ -54,10 +55,17 @@ class Item(object):
 		self.hints = hints
 		self.desc = desc
 
-class MediaDisplay(QtWebKit.QWebView):
+class MediaDisplay(QtGui.QStackedWidget):
 	def __init__(self,autoplay,*args, **kwargs):
 		super(MediaDisplay, self).__init__(*args, **kwargs)
+		
 		self.autoplay = autoplay
+		
+		self.videoplayer = Phonon.VideoPlayer(Phonon.VideoCategory, self)
+		self.webviewer = QtWebKit.QWebView()
+		
+		self.addWidget(self.webviewer)
+		self.addWidget(self.videoplayer)
 		
 	def showMedia(self, path):
 		type = mimetypes.guess_type(str(path))[0].split('/')[0]
@@ -66,64 +74,40 @@ class MediaDisplay(QtWebKit.QWebView):
 		if type == 'video':
 			self._showVideo(path)
 		elif type == 'image':
-			self._showItem(path)
+			self._showImage(path)
 		elif type == 'audio':
 			self._showAudio(path)
 	
-	def _showItem(self, path):
-		self.setUrl(QtCore.QUrl(path))
-		
+	def _showImage(self, path):
+		# Stop any media playing
+		self.videoplayer.stop()
+		# Set the widget to the web view
+		self.setCurrentWidget(self.webviewer)
+		# Go to the right URL
+		self.webviewer.setUrl(QtCore.QUrl(path))
+	
 	def _showVideo(self, path):
-		addition = ''
-		if self.autoplay:
-			addition = ' autoplay="autoplay"'
-		self.setHtml('''
-		<html>
-		<head>
-		<title>OpenTeacher Video Preview</title>
-		</head>
-		<body style="margin: 0">
-		<video id="videoTag" src="''' + path + '''" controls="controls" ''' + addition + ''' />
-		<script type="text/javascript">
-		var elem = document.getElementById("videoTag");
-		function setVideoDimensions() {
-			elem.style.width = window.innerWidth;
-			elem.style.height = window.innerHeight;
-		}
-		window.onresize = setVideoDimensions;
-		setVideoDimensions()
-		</script>
-		</body>
-		</html>
-		''')
+		# Set the widget to video player
+		self.setCurrentWidget(self.videoplayer)
+		# Play the video
+		self.videoplayer.play(Phonon.MediaSource(path))
 	
 	def _showAudio(self, path):
-		addition = ''
-		if self.autoplay:
-			addition = ' autoplay="autoplay"'
-		self.setHtml('''
-		<html>
-		<head>
-		<title>OpenTeacher Audio Preview</title>
-		</head>
-		<body style="margin: 0">
-		<audio id="videoTag" src="''' + path + '''" controls="controls" ''' + addition + ''' />
-		<script type="text/javascript">
-		var elem = document.getElementById("videoTag");
-		function setVideoDimensions() {
-			elem.style.width = window.innerWidth;
-		}
-		window.onresize = setVideoDimensions;
-		setVideoDimensions()
-		</script>
-		</body>
-		</html>
+		# Set widget to web viewer
+		self.setCurrentWidget(self.webviewer)
+		# Set some nice html
+		self.webviewer.setHtml('''
+		<html><head><title>Audio</title></head><body>Playing ''' + path + '''</body></html>
 		''')
+		# Play the audio
+		self.videoplayer.play(Phonon.MediaSource(path))
 	
 	def clear(self):
-		self.setHtml('''
+		self.webviewer.setHtml('''
 		<html><head><title>Nothing</title></head><body></body></html>
 		''')
+		self.videoplayer.stop()
+	
 
 class EnterItemListModel(QtCore.QAbstractListModel):
 	def __init__(self,items,parent=None,*args):

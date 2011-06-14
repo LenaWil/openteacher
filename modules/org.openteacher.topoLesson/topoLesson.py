@@ -124,8 +124,6 @@ class EnterMapChooser(QtGui.QComboBox):
 		self.mapwidget = mapwidget
 		self.parent = parent
 		self.currentIndexChanged.connect(self.otherMap)
-		#ask the user if they really want to use another map?
-		self.ask = True
 		
 		self.fillBox()
 		self.otherMap()
@@ -136,27 +134,27 @@ class EnterMapChooser(QtGui.QComboBox):
 			self.addItem(os.path.splitext(name)[0], name)
 	
 	def otherMap(self):
-		if self.ask:
-			if len(self.parent.places.items) > 0:
-				warningD = QtGui.QMessageBox()
-				warningD.setIcon(QtGui.QMessageBox.Warning)
-				warningD.setWindowTitle("Warning")
-				warningD.setStandardButtons(QtGui.QMessageBox.Cancel | QtGui.QMessageBox.Ok)
-				warningD.setText("Are you sure you want to use another map? This will remove all your places!")
-				feedback = warningD.exec_()
-				if feedback == QtGui.QMessageBox.Ok:
-					self.parent.places = []
-					self.parent.currentPlaces.update()
-				else:
-					self.ask = False
-					self.setCurrentIndex(self.prevIndex)
-					return
-			self.parent.map = self.currentText()
-			mapsPath = base.api.resourcePath(__file__, "resources/maps")
-			picturePath = os.path.join(mapsPath, unicode(self.parent.map + ".gif"))
-			self.mapwidget.setPicture(picturePath)
-			self.prevIndex = self.currentIndex()
-		self.ask = True
+		if len(self.parent.places.items) > 0:
+			warningD = QtGui.QMessageBox()
+			warningD.setIcon(QtGui.QMessageBox.Warning)
+			warningD.setWindowTitle("Warning")
+			warningD.setStandardButtons(QtGui.QMessageBox.Cancel | QtGui.QMessageBox.Ok)
+			warningD.setText("Are you sure you want to use another map? This will remove all your places!")
+			feedback = warningD.exec_()
+			if feedback == QtGui.QMessageBox.Ok:
+				# Clear the entered items
+				self.parent.places = List()
+				# Update the list
+				self.parent.currentPlaces.update()
+			else:
+				self.ask = False
+				self.setCurrentIndex(self.prevIndex)
+				return
+		self.parent.map = self.currentText()
+		mapsPath = base.api.resourcePath(__file__, "resources/maps")
+		picturePath = os.path.join(mapsPath, unicode(self.parent.map + ".gif"))
+		self.mapwidget.setPicture(picturePath)
+		self.prevIndex = self.currentIndex()
 
 class EnterWidget(QtGui.QSplitter):
 	def __init__(self,*args, **kwargs):
