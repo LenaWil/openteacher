@@ -87,8 +87,6 @@ class EnterMap(QtGui.QGraphicsView):
 		
 		self.scene.addPixmap(self.pixmap)
 		self.setScene(self.scene)
-		
-		#self.show()
 	
 	def wheelEvent(self,wheelevent):
 		if wheelevent.delta() > 0:
@@ -107,6 +105,14 @@ class EnterMap(QtGui.QGraphicsView):
 		for place in base.enterWidget.places.items:
 			rect = QtGui.QGraphicsRectItem(place.x,place.y,6,6)
 			rect.setBrush(QtGui.QBrush(QtGui.QColor("red")))
+			
+			shadow = QtGui.QGraphicsTextItem(place.name)
+			shadow.setFont(QtGui.QFont("sans-serif",15,75))
+			shadow.setPos(place.x+2,place.y+2)
+			shadow.setDefaultTextColor(QtGui.QColor("black"))
+			shadow.setOpacity(0.5)
+			
+			placeslist.append(shadow)
 			
 			item = QtGui.QGraphicsTextItem(place.name)
 			item.setFont(QtGui.QFont("sans-serif",15,75))

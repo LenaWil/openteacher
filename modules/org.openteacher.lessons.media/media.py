@@ -55,11 +55,73 @@ class Item(object):
 		self.hints = hints
 		self.desc = desc
 
-class MediaDisplay(QtGui.QStackedWidget):
-	def __init__(self,autoplay,*args, **kwargs):
-		super(MediaDisplay, self).__init__(*args, **kwargs)
+class MediaControlDisplay(QtGui.QWidget):
+	def __init__(self,autoplay=True,*args, **kwargs):
+		super(MediaControlDisplay, self).__init__(*args, **kwargs)
 		
-		self.autoplay = autoplay
+		self.mediadisplay = MediaDisplay()
+		self.mediadisplay.videoplayer.mediaObject().stateChanged.connect(self._playPauseButtonUpdate)
+		
+		layout = QtGui.QVBoxLayout()
+		
+		buttonsLayout = QtGui.QHBoxLayout()
+		
+		self.pausebutton = QtGui.QPushButton()
+		self.pausebutton.setIcon(QtGui.QIcon.fromTheme("media-playback-pause",QtGui.QIcon(base.api.resourcePath("icons/player_pause.png"))))
+		self.pausebutton.clicked.connect(self.playPause)
+		buttonsLayout.addWidget(self.pausebutton)
+		
+		self.seekslider = Phonon.SeekSlider(self.mediadisplay.videoplayer.mediaObject())
+		buttonsLayout.addWidget(self.seekslider)
+		
+		self.volumeslider = Phonon.VolumeSlider(self.mediadisplay.videoplayer.audioOutput())
+		self.volumeslider.setMaximumWidth(100)
+		buttonsLayout.addWidget(self.volumeslider)
+		
+		layout.addWidget(self.mediadisplay)
+		layout.addLayout(buttonsLayout)
+		
+		self.setLayout(layout)
+	
+	def showMedia(self, path):
+		self.mediadisplay.showMedia(path)
+		
+		if self.mediadisplay.activeType == 2 or self.mediadisplay.activeType == 0:
+			self.setControlsEnabled(False)
+		else:
+			self.setControlsEnabled(True)
+	
+	def _playPauseButtonUpdate(self, newstate, oldstate):
+		if self.mediadisplay.videoplayer.isPaused():
+			self.pausebutton.setIcon(QtGui.QIcon.fromTheme("media-playback-play",QtGui.QIcon(base.api.resourcePath("icons/player_play.png"))))
+		else:
+			self.pausebutton.setIcon(QtGui.QIcon.fromTheme("media-playback-pause",QtGui.QIcon(base.api.resourcePath("icons/player_pause.png"))))
+	
+	def setControlsEnabled(self, enabled):
+		self.pausebutton.setEnabled(enabled)
+		self.volumeslider.setEnabled(enabled)
+		self.seekslider.setEnabled(enabled)
+	
+	def playPause(self, event):
+		if self.mediadisplay.videoplayer.isPaused():
+			self.mediadisplay.videoplayer.play()
+		else:
+			self.mediadisplay.videoplayer.pause()
+	
+	def clear(self):
+		self.mediadisplay.clear()
+		
+class MediaDisplay(QtGui.QStackedWidget):
+	def __init__(self,*args, **kwargs):
+		super(MediaDisplay, self).__init__(*args, **kwargs)
+				
+		"""
+		0: No active media
+		1: Video
+		2: Image
+		3: Audio
+		"""
+		self.activeType = 0
 		
 		self.videoplayer = Phonon.VideoPlayer(Phonon.VideoCategory, self)
 		self.webviewer = QtWebKit.QWebView()
@@ -85,28 +147,36 @@ class MediaDisplay(QtGui.QStackedWidget):
 		self.setCurrentWidget(self.webviewer)
 		# Go to the right URL
 		self.webviewer.setUrl(QtCore.QUrl(path))
+		# Set the active type
+		self.activeType = 2
 	
 	def _showVideo(self, path):
 		# Set the widget to video player
 		self.setCurrentWidget(self.videoplayer)
 		# Play the video
 		self.videoplayer.play(Phonon.MediaSource(path))
+		# Set the active type
+		self.activeType = 1
 	
 	def _showAudio(self, path):
 		# Set widget to web viewer
 		self.setCurrentWidget(self.webviewer)
 		# Set some nice html
 		self.webviewer.setHtml('''
-		<html><head><title>Audio</title></head><body>Playing ''' + path + '''</body></html>
+		<html><head><title>Audio</title></head><body>Playing audio</body></html>
 		''')
 		# Play the audio
 		self.videoplayer.play(Phonon.MediaSource(path))
+		# Set the active type
+		self.activeType = 3
 	
 	def clear(self):
 		self.webviewer.setHtml('''
 		<html><head><title>Nothing</title></head><body></body></html>
 		''')
 		self.videoplayer.stop()
+		# Set the active type
+		self.activeType = 0
 	
 
 class EnterItemListModel(QtCore.QAbstractListModel):
@@ -180,7 +250,7 @@ class EnterWidget(QtGui.QSplitter):
 		leftW = QtGui.QWidget()
 		leftW.setLayout(left)
 		
-		self.enterpreview = MediaDisplay(False)
+		self.enterpreview = MediaControlDisplay(False)
 		
 		self.entername = QtGui.QLineEdit()
 		self.entername.textChanged.connect(self.changeName)
@@ -226,7 +296,7 @@ class EnterWidget(QtGui.QSplitter):
 	Add items to the list
 	"""
 	def addItems(self):
-		filenames = QtGui.QFileDialog.getOpenFileNames(self,"Select file(s)",QtCore.QDir.homePath(),"Media (*.bmp *.jpg *.jpeg *.png *.wmv *.mp3)")
+		filenames = QtGui.QFileDialog.getOpenFileNames(self,"Select file(s)",QtCore.QDir.homePath(),"Media (*.bmp *.jpg *.jpeg *.png *.wmv *.mp3 *.avi)")
 		for filename in filenames:
 			self.addItem(filename)
 	
@@ -334,7 +404,7 @@ class TeachWidget(QtGui.QWidget):
 		top.addWidget(label)
 		top.addWidget(self.lessonTypeChooser)
 		
-		self.mediaDisplay = MediaDisplay(True)
+		self.mediaDisplay = MediaControlDisplay()
 		
 		self.answerfield = QtGui.QLineEdit()
 		self.answerfield.returnPressed.connect(self.checkAnswerButtonClick)
