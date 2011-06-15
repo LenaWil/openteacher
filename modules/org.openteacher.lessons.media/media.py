@@ -26,11 +26,13 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4 import QtWebKit
+from PyQt4 import QtNetwork
 from PyQt4.phonon import Phonon
 
 import os
 import time
 import mimetypes
+import fnmatch
 
 class Result(str):
 	def __init__(self, *args, **kwargs):
@@ -49,9 +51,13 @@ class List(object):
 		self.tests = []
 
 class Item(object):
-	def __init__(self,filename,hints = "",desc = ""):
-		self.name = os.path.splitext(os.path.basename(str(filename)))[0]
+	def __init__(self,filename,remote,hints = "",desc = ""):
+		if remote == False:
+			self.name = os.path.splitext(os.path.basename(str(filename)))[0]
+		else:
+			self.name = filename
 		self.filename = filename
+		self.remote = remote
 		self.hints = hints
 		self.desc = desc
 
@@ -83,19 +89,25 @@ class MediaControlDisplay(QtGui.QWidget):
 		
 		self.setLayout(layout)
 	
-	def showMedia(self, path):
-		self.mediadisplay.showMedia(path)
-		
-		if self.mediadisplay.activeType == 2 or self.mediadisplay.activeType == 0:
-			self.setControlsEnabled(False)
-		else:
-			self.setControlsEnabled(True)
+	def showLocalMedia(self, path):
+		self.mediadisplay.showLocalMedia(path)
+		self.setControls()
+	
+	def showRemoteMedia(self, path):
+		self.mediadisplay.showRemoteMedia(path)
+		self.setControls()
 	
 	def _playPauseButtonUpdate(self, newstate, oldstate):
 		if self.mediadisplay.videoplayer.isPaused():
 			self.pausebutton.setIcon(QtGui.QIcon.fromTheme("media-playback-play",QtGui.QIcon(base.api.resourcePath("icons/player_play.png"))))
 		else:
 			self.pausebutton.setIcon(QtGui.QIcon.fromTheme("media-playback-pause",QtGui.QIcon(base.api.resourcePath("icons/player_pause.png"))))
+	
+	def setControls(self):
+		if self.mediadisplay.activeType == 2 or self.mediadisplay.activeType == 0 or self.mediadisplay.activeType == 4:
+			self.setControlsEnabled(False)
+		else:
+			self.setControlsEnabled(True)
 	
 	def setControlsEnabled(self, enabled):
 		self.pausebutton.setEnabled(enabled)
@@ -120,16 +132,18 @@ class MediaDisplay(QtGui.QStackedWidget):
 		1: Video
 		2: Image
 		3: Audio
+		4: Web site
 		"""
 		self.activeType = 0
 		
 		self.videoplayer = Phonon.VideoPlayer(Phonon.VideoCategory, self)
 		self.webviewer = QtWebKit.QWebView()
+		self.webviewer.settings().setAttribute(QtWebKit.QWebSettings.PluginsEnabled, True)
 		
 		self.addWidget(self.webviewer)
 		self.addWidget(self.videoplayer)
 		
-	def showMedia(self, path):
+	def showLocalMedia(self, path):
 		type = mimetypes.guess_type(str(path))[0].split('/')[0]
 		
 		# Check MIME-type and go to the right code
@@ -139,6 +153,26 @@ class MediaDisplay(QtGui.QStackedWidget):
 			self._showImage(path)
 		elif type == 'audio':
 			self._showAudio(path)
+	
+	def showRemoteMedia(self, path):
+		# Check if this is a youtube video
+		if fnmatch.fnmatch(str(path), "*youtube.*/watch?v=*"):
+			# Youtube URL
+			path = path.split("/watch?v=")[1]
+			path = path.split("&")[0]
+			path = "http://www.youtube.com/embed/" + path
+		# Check if this is a vimeo video
+		if fnmatch.fnmatch(str(path), "*vimeo.com/*"):
+			# Vimeo URL
+			path = path.split("vimeo.com/")[1]
+			path = "http://player.vimeo.com/video/" + path + "?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff"
+		# Check if this is a dailymotion video
+		if fnmatch.fnmatch(str(path), "*dailymotion.com/video/*"):
+			# Dailymotion URL
+			path = path.split("dailymotion.com/video/")[1]
+			path = path.split("_")[0]
+			path = "http://www.dailymotion.com/embed/video/" + path
+		self._showUrl(path)
 	
 	def _showImage(self, path):
 		# Stop any media playing
@@ -170,6 +204,14 @@ class MediaDisplay(QtGui.QStackedWidget):
 		# Set the active type
 		self.activeType = 3
 	
+	def _showUrl(self, url):
+		# Set widget to web viewer
+		self.setCurrentWidget(self.webviewer)
+		# Set the URL
+		self.webviewer.setUrl(QtCore.QUrl(url))
+		# Set the active type
+		self.activeType = 4
+	
 	def clear(self):
 		self.webviewer.setHtml('''
 		<html><head><title>Nothing</title></head><body></body></html>
@@ -177,7 +219,6 @@ class MediaDisplay(QtGui.QStackedWidget):
 		self.videoplayer.stop()
 		# Set the active type
 		self.activeType = 0
-	
 
 class EnterItemListModel(QtCore.QAbstractListModel):
 	def __init__(self,items,parent=None,*args):
@@ -237,12 +278,15 @@ class EnterWidget(QtGui.QSplitter):
 		
 		removeButton = QtGui.QPushButton("Remove")
 		removeButton.clicked.connect(self.removeItem)
-		addButton = QtGui.QPushButton("Add")
-		addButton.clicked.connect(self.addItems)
+		addLocalButton = QtGui.QPushButton("Add local media")
+		addLocalButton.clicked.connect(self.addLocalItems)
+		addRemoteButton = QtGui.QPushButton("Add remote media")
+		addRemoteButton.clicked.connect(self.addRemoteItems)
 		
 		leftBottom = QtGui.QHBoxLayout()
 		leftBottom.addWidget(removeButton)
-		leftBottom.addWidget(addButton)
+		leftBottom.addWidget(addLocalButton)
+		leftBottom.addWidget(addRemoteButton)
 		
 		left = QtGui.QVBoxLayout()
 		left.addWidget(self.enterItemsList)
@@ -293,18 +337,26 @@ class EnterWidget(QtGui.QSplitter):
 		self.setLayout(layout)
 	
 	"""
-	Add items to the list
+	Add items from the local disk to the list
 	"""
-	def addItems(self):
+	def addLocalItems(self):
 		filenames = QtGui.QFileDialog.getOpenFileNames(self,"Select file(s)",QtCore.QDir.homePath(),"Media (*.bmp *.jpg *.jpeg *.png *.wmv *.mp3 *.avi)")
 		for filename in filenames:
-			self.addItem(filename)
+			self.addItem(filename, False)
+	
+	"""
+	Add items from the internet to the list
+	"""
+	def addRemoteItems(self):
+		url, dialog = QtGui.QInputDialog.getText(self, "File URL", "Enter the URL of your website or media item.\nSupported video sites: YouTube, Dailymotion, Vimeo.")
+		if dialog:
+			self.addItem(url, True)
 	
 	"""
 	Add an item to the list
 	"""
-	def addItem(self,filename):
-		item = Item(filename)
+	def addItem(self,filename,remote=False):
+		item = Item(filename,remote)
 		self.itemList.items.append(item)
 		self.enterItemsList.update()
 	
@@ -329,7 +381,10 @@ class EnterWidget(QtGui.QSplitter):
 		self.entername.setText(item.name)
 		self.enterdesc.setEnabled(True)
 		self.enterdesc.setText(item.desc)
-		self.enterpreview.showMedia(item.filename)
+		if item.remote:
+			self.enterpreview.showRemoteMedia(item.filename)
+		else:
+			self.enterpreview.showLocalMedia(item.filename)
 	
 	"""
 	Change the name of the active item
@@ -493,7 +548,10 @@ class MediaLesson(object):
 		#set the next question
 		self.currentItem = item
 		#set the mediawidget to the right location
-		base.teachWidget.mediaDisplay.showMedia(self.currentItem.filename)
+		if self.currentItem.remote:
+			base.teachWidget.mediaDisplay.showRemoteMedia(self.currentItem.filename)
+		else:
+			base.teachWidget.mediaDisplay.showLocalMedia(self.currentItem.filename)
 	
 	"""
 	Ends the lesson
