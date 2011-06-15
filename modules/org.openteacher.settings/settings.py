@@ -1,52 +1,43 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
+#	Copyright 2011, Marten de Vries
+#
+#	This file is part of OpenTeacher.
+#
+#	OpenTeacher is free software: you can redistribute it and/or modify
+#	it under the terms of the GNU General Public License as published by
+#	the Free Software Foundation, either version 3 of the License, or
+#	(at your option) any later version.
+#
+#	OpenTeacher is distributed in the hope that it will be useful,
+#	but WITHOUT ANY WARRANTY; without even the implied warranty of
+#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#	GNU General Public License for more details.
+#
+#	You should have received a copy of the GNU General Public License
+#	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
+
 class SettingsModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(SettingsModule, self).__init__(*args, **kwargs)
+		self._mm = moduleManager
 
 		self.supports = ("settings",)
 		self.requires = (1, 0)
 		self.active = False
 
-		self._mm = moduleManager
-
 	def enable(self):
 		self._modules = {}
 		self._settings = {}
-		self._ui = self._mm.import_("ui")
 		self.modulesUpdated = self._mm.createEvent()
 		self.active = True
-
-########## DEMO CONTENT
-		self.registerSetting(
-			"org.openteacher.settings.test",
-			"Test setting",
-		)
-		self.registerSetting(
-			"org.openteacher.settings.test2",
-			"Test setting 2",
-			"number"
-		)
-		self.registerSetting(
-			"org.openteacher.settings.test3",
-			"Test setting 3",
-			"long_text",
-			"Words lesson",
-			"Test"
-		)
-		self.registerSetting(
-			"org.openteacher.settings.test4",
-			"Test setting 4",
-			"options",
-			"Topo lesson",
-			"Test category 2"
-		)
-########## END DEMO CONTENT
 
 	def disable(self):
 		self.active = False
 		del self.modulesUpdated
 		del self._modules
 		del self._settings
-		del self._ui
 
 	def registerModule(self, name, module):
 		self._modules[name] = module
@@ -73,19 +64,16 @@ class SettingsModule(object):
 				except KeyError:
 					pass
 
-	def show(self):
-		for module in self._mm.activeMods.supporting("ui"):
-			dialog = self._ui.SettingsDialog(self._modules, self._settings)
-			tab = module.addCustomTab(dialog.windowTitle(), dialog)
-			tab.closeRequested.handle(self.modulesUpdated.emit)
-			tab.closeRequested.handle(tab.close)
+	@property
+	def registeredModules(self):
+		return self._modules.copy()
 
-########## DEMO CONTENT
-		print self.value("org.openteacher.settings.test")
-		print self.value("org.openteacher.settings.test2")
-		print self.value("org.openteacher.settings.test3")
-		print self.value("org.openteacher.settings.test4")
-########## END DEMO CONTENT
+	def registeredSettings(self, lessonType=None, category=None):
+		if lessonType:
+			if category:
+				return self._settings[lessonType][category].copy()
+			return self._settings[lessonType].copy()
+		return self._settings.copy()
 
 def init(moduleManager):
 	return SettingsModule(moduleManager)

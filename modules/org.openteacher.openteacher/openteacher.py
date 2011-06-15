@@ -213,7 +213,7 @@ class OpenTeacherModule(object):
 		#FIXME: inform the user everything went OK.
 
 	def settings(self):
-		for module in self._mm.activeMods.supporting("settings"):
+		for module in self._mm.activeMods.supporting("settingsDialog"):
 			module.show()
 
 	def about(self):

@@ -28,11 +28,11 @@ class ModulesTab(QtGui.QWidget):
 			module.disable()
 
 class LessonTypeTab(QtGui.QWidget):
-	def __init__(self, name, lessonType, *args, **kwargs):
+	def __init__(self, moduleManager, name, lessonType, *args, **kwargs):
 		super(LessonTypeTab, self).__init__(*args, **kwargs)
 		
+		self._mm = moduleManager
 		self.setWindowTitle(name)
-
 		vbox = QtGui.QVBoxLayout()
 
 		for name, category in lessonType.iteritems():
@@ -88,19 +88,21 @@ class LessonTypeTab(QtGui.QWidget):
 		w.setting["value"] = int(w.currentIndex())
 
 class SettingsDialog(QtGui.QTabWidget):
-	def __init__(self, modules, settings, *args, **kwargs):
+	def __init__(self, moduleManager, *args, **kwargs):
 		super(SettingsDialog, self).__init__(*args, **kwargs)
+		self._mm = moduleManager
 
 		#Setup widget
 		self.setTabPosition(QtGui.QTabWidget.South)
 		self.setDocumentMode(True)
 
-		self.modulesTab = ModulesTab(modules)
+		for module in self._mm.activeMods.supporting("settings"):
+			self.modulesTab = ModulesTab(module.registeredModules)
 
-		for name, lessonType in settings.iteritems():
-			if name is None:
-				name = "Miscellaneous"
-			self.createLessonTypeTab(name, lessonType)
+			for name, lessonType in module.registeredSettings().iteritems():
+				if name is None:
+					name = "Miscellaneous"
+				self.createLessonTypeTab(name, lessonType)
 
 		self.advancedButton = QtGui.QPushButton("Advanced mode") #FIXME: translate!
 		self.advancedButton.clicked.connect(self.advanced)
@@ -113,7 +115,7 @@ class SettingsDialog(QtGui.QTabWidget):
 		self.simple()
 
 	def createLessonTypeTab(self, name, lessonType):
-		tab = LessonTypeTab(name, lessonType)
+		tab = LessonTypeTab(self._mm, name, lessonType)
 		self.addTab(tab, tab.windowTitle())
 
 	def advanced(self):
