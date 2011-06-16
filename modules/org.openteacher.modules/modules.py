@@ -18,37 +18,31 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class OpenTeachingWordsSaverModule(object):
+class ModulesModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(OpenTeachingWordsSaverModule, self).__init__(*args, **kwargs)
+		super(ModulesModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("save", "initializing")
+		self.supports = ("modules",)
 		self.requires = (1, 0)
 		self.active = False
 
-	def initialize(self):
-		for module in self._mm.activeMods.supporting("modules"):
-			module.registerModule("Open Teaching Words (.otwd) saver", self)
+	def registerModule(self, name, module):
+		self._modules[name] = module
+
+	@property
+	def registeredModules(self):
+		return self._modules.copy()
 
 	def enable(self):
-		self.saves = {"words": ["otwd"]}
-		self._pyratemp = self._mm.import_("pyratemp")
+		self._modules = {}
+		self.modulesUpdated = self._mm.createEvent()
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self.saves
-		del self._pyratemp
-
-	def save(self, type, list, path):
-		templatePath = self._mm.resourcePath("index.xml")
-		t = self._pyratemp.Template(open(templatePath).read())
-		data = {
-			"list": list
-		}
-		content = t(**data)
-		print content.encode("UTF-8")
+		del self._modules
+		del self.modulesUpdated
 
 def init(moduleManager):
-	return OpenTeachingWordsSaverModule(moduleManager)
+	return ModulesModule(moduleManager)

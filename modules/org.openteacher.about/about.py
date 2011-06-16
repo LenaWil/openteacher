@@ -28,7 +28,7 @@ class AboutModule(object):
 		self.active = False
 
 	def initialize(self):
-		for module in self._mm.activeMods.supporting("settings"):
+		for module in self._mm.activeMods.supporting("modules"):
 			module.registerModule("About module", self)
 
 	def show(self):

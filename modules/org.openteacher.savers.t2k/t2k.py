@@ -28,7 +28,7 @@ class Teach2000SaverModule(object):
 		self.active = False
 
 	def initialize(self):
-		for module in self._mm.activeMods.supporting("settings"):
+		for module in self._mm.activeMods.supporting("modules"):
 			module.registerModule("Teach2000 (.t2k) saver", self)
 
 	def enable(self):

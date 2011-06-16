@@ -258,7 +258,7 @@ class OpenTeacherModule(object):
 		uiModules = self._mm.activeMods.supporting("ui")
 		self._connectEvents(uiModules)
 
-		for module in self._mm.mods.supporting("settings"):
+		for module in self._mm.mods.supporting("modules"):
 			module.enable()
 			module.modulesUpdated.handle(self._modulesUpdated)
 
@@ -271,7 +271,7 @@ class OpenTeacherModule(object):
 		#enabled, because otherwise debugging takes too much time.
 		#(You would have to enable every module you need every time by
 		#hand)
-		for module in self._mm.mods.exclude("ui").exclude("settings").exclude("openteacher-core"):
+		for module in self._mm.mods.exclude("ui").exclude("modules").exclude("openteacher-core"):
 			module.enable()
 		self._modulesUpdated()
 
@@ -361,7 +361,7 @@ class OpenTeacherModule(object):
 			module.enablePrint(printSupport)
 
 			#settings
-			settingsSupport = len(self._mm.activeMods.supporting("settings").items) != 0
+			settingsSupport = len(self._mm.activeMods.supporting("settingsDialog").items) != 0
 			module.enableSettings(settingsSupport)
 
 			#about

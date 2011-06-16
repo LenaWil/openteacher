@@ -49,7 +49,7 @@ class WrtsLoaderModule(object):
 		self.requires = (1, 0)
 
 	def initialize(self):
-		for module in self._mm.activeMods.supporting("settings"):
+		for module in self._mm.activeMods.supporting("modules"):
 			module.registerModule("WRTS (.wrts) loader", self)
 
 	def enable(self):

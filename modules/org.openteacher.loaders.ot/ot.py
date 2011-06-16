@@ -56,7 +56,7 @@ class OpenTeacherLoaderModule(object):
 		self._mm = moduleManager
 
 	def initialize(self):
-		for module in self._mm.activeMods.supporting("settings"):
+		for module in self._mm.activeMods.supporting("modules"):
 			module.registerModule("OpenTeacher (.ot) loader", self)
 
 	def enable(self):

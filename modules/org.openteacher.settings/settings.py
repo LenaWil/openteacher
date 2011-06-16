@@ -27,21 +27,6 @@ class SettingsModule(object):
 		self.requires = (1, 0)
 		self.active = False
 
-	def enable(self):
-		self._modules = {}
-		self._settings = {}
-		self.modulesUpdated = self._mm.createEvent()
-		self.active = True
-
-	def disable(self):
-		self.active = False
-		del self.modulesUpdated
-		del self._modules
-		del self._settings
-
-	def registerModule(self, name, module):
-		self._modules[name] = module
-
 	def registerSetting(self, internal_name, name, type="short_text", lessonType=None, category=None):
 		try:
 			self._settings[lessonType]
@@ -56,6 +41,13 @@ class SettingsModule(object):
 		setting["name"] = name
 		setting["type"] = type
 
+	def registeredSettings(self, lessonType=None, category=None):
+		if lessonType:
+			if category:
+				return self._settings[lessonType][category].copy()
+			return self._settings[lessonType].copy()
+		return self._settings.copy()
+
 	def value(self, internal_name):
 		for lessonType in self._settings.values():
 			for category in lessonType.values():
@@ -64,16 +56,13 @@ class SettingsModule(object):
 				except KeyError:
 					pass
 
-	@property
-	def registeredModules(self):
-		return self._modules.copy()
+	def enable(self):
+		self._settings = {}
+		self.active = True
 
-	def registeredSettings(self, lessonType=None, category=None):
-		if lessonType:
-			if category:
-				return self._settings[lessonType][category].copy()
-			return self._settings[lessonType].copy()
-		return self._settings.copy()
+	def disable(self):
+		self.active = False
+		del self._settings
 
 def init(moduleManager):
 	return SettingsModule(moduleManager)

@@ -583,7 +583,7 @@ class MediaLessonModule(object):
 		self.requires = (1, 0)
 	
 	def initialize(self):
-		for module in self.api.activeMods.supporting("settings"):
+		for module in self.api.activeMods.supporting("modules"):
 			module.registerModule("Media Lesson", self)
 	
 	def enable(self):

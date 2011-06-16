@@ -45,11 +45,11 @@ class SettingsDialogModule(object):
 
 	def show(self):
 		for umod in self._mm.activeMods.supporting("ui"):
-			for smod in self._mm.activeMods.supporting("settings"):
-				dialog = self._ui.SettingsDialog(self._mm)
-				tab = umod.addCustomTab(dialog.windowTitle(), dialog)
-				tab.closeRequested.handle(smod.modulesUpdated.emit)
-				tab.closeRequested.handle(tab.close)
+			dialog = self._ui.SettingsDialog(self._mm)
+			tab = umod.addCustomTab(dialog.windowTitle(), dialog)
+			for mmod in self._mm.activeMods.supporting("modules"):
+				tab.closeRequested.handle(mmod.modulesUpdated.emit)
+			tab.closeRequested.handle(tab.close)
 
 ########## DEMO CONTENT
 		for module in self._mm.activeMods.supporting("settings"):

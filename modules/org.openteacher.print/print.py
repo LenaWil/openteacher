@@ -29,7 +29,7 @@ class PrintModule(object):
 		self.active = False
 		
 	def initialize(self):
-		for module in self._mm.activeMods.supporting("settings"):
+		for module in self._mm.activeMods.supporting("modules"):
 			module.registerModule("Printing module", self)
 
 	def enable(self):

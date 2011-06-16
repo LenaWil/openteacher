@@ -44,7 +44,7 @@ class OpenTeachingWordsLoaderModule(object):
 		self.active = False
 
 	def initialize(self):
-		for module in self._mm.activeMods.supporting("settings"):
+		for module in self._mm.activeMods.supporting("modules"):
 			module.registerModule("Open Teaching Words (.otwd) loader", self)
 
 	def getFileTypeOf(self, path):

@@ -28,7 +28,7 @@ class TxtSaverModule(object):
 		self._mm = moduleManager
 
 	def initialize(self):
-		for module in self._mm.activeMods.supporting("settings"):
+		for module in self._mm.activeMods.supporting("modules"):
 			module.registerModule("Plain text (.txt) saver", self)
 
 	def enable(self):
