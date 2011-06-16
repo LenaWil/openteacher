@@ -31,17 +31,27 @@ class AboutTextLabel(QtGui.QLabel):
 		textPath = self._mm.resourcePath("about.html")
 		pyratemp = self._mm.import_("pyratemp")
 
-		slogan = _("OpenTeacher helps you learn a foreign language vocabulary.")
-		firstLine, secondLine = self._splitLineCloseToMiddle(unicode(slogan))
+		for module in self._mm.activeMods.supporting("name"):
+			name = module.name
+
+		for module in self._mm.activeMods.supporting("slogan"):
+			firstLine, secondLine = self._splitLineCloseToMiddle(module.slogan)
+
+		for module in self._mm.activeMods.supporting("version"):
+			version = module.version
+
+		for module in self._mm.activeMods.supporting("website"):
+			website = module.website
 
 		t = pyratemp.Template(open(textPath).read())
 		data = {
-			"version": "3.x",
+			"name": name,
+			"version": version,
 			"first_line": firstLine,
 			"second_line": secondLine,
-			"copyright_years": "2008-2011",
-			"openteacher_authors": _("OpenTeacher authors"),
-			"project_website_link": "http://openteacher.org/",
+			"copyright_years": "2008-2011", #FIXME: get from authors? Or from metadata?
+			"openteacher_authors": _("OpenTeacher authors"), #FIXME: see above
+			"project_website_link": website,
 			"project_website": _("Project website")	
 		}
 		self.setText(t(**data))
@@ -81,8 +91,8 @@ class AboutImageLabel(QtGui.QLabel):
 		super(AboutImageLabel, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 		
-		path = self._mm.resourcePath("OTcomic.png")
-		self.setPixmap(QtGui.QPixmap(path))
+		for module in self._mm.activeMods.supporting("comicPath"):
+			self.setPixmap(QtGui.QPixmap(module.comicPath))
 
 		self.setAlignment(QtCore.Qt.AlignCenter)
 
@@ -106,10 +116,11 @@ class ShortLicenseWidget(QtGui.QWidget):
 		super(ShortLicenseWidget, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		shortLicensePath = self._mm.resourcePath("short_license.txt")
+		for module in self._mm.activeMods.supporting("licenseIntro"):
+			shortLicense = module.licenseIntro
 
 		label = QtGui.QLabel()
-		label.setText(open(shortLicensePath).read())
+		label.setText(shortLicense)
 		self.fullLicenseButton = QtGui.QPushButton(_("Full license text"))
 
 		vbox = QtGui.QVBoxLayout()
@@ -127,10 +138,11 @@ class LongLicenseWidget(QtGui.QTextEdit):
 		super(LongLicenseWidget, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		longLicensePath = self._mm.resourcePath("long_license.txt")
+		for module in self._mm.activeMods.supporting("license"):
+			longLicense = module.license
 
 		self.setReadOnly(True)
-		self.setText(open(longLicensePath).read())
+		self.setText(longLicense)
 
 class LicenseWidget(QtGui.QStackedWidget):
 	def __init__(self, moduleManager, *args, **kwargs):

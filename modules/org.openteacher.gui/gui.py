@@ -88,6 +88,16 @@ class GuiModule(object):
 		gettext.install("OpenTeacher")#FIXME
 
 		self._widget = self._ui.OpenTeacherWidget()
+
+		for module in self._mm.activeMods.supporting("name"): #FIXME
+			name = module.name
+		for module in self._mm.activeMods.supporting("version"): #FIXME
+			version = module.version
+		for module in self._mm.activeMods.supporting("iconPath"): #FIXME
+			iconPath = module.iconPath
+		self._widget.setWindowTitle(" ".join([name, version]))
+		self._widget.setWindowIcon(QtGui.QIcon(iconPath))
+
 		self._fileTabs = {}
 
 		#Lambda's because otherwise Qt's argument checked is passed ->

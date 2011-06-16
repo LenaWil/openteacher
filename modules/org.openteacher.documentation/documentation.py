@@ -18,8 +18,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-DOCS_URL = "http://openteacher.org/documentation.html"
-
 class DocumentationModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(DocumentationModule, self).__init__(*args, **kwargs)
@@ -34,8 +32,12 @@ class DocumentationModule(object):
 			module.registerModule("Documentation module", self)
 
 	def show(self):
+		for module in self._mm.activeMods.supporting("documentationUrl"):
+			documentationUrl = module.documentationUrl
+		for module in self._mm.activeMods.supporting("userAgent"):
+			userAgent = module.userAgent
 		for module in self._mm.activeMods.supporting("ui"):
-			dialog = self._ui.DocumentationDialog(DOCS_URL)
+			dialog = self._ui.DocumentationDialog(documentationUrl, userAgent, "en") #FIXME: language should be dynamic
 			tab = module.addCustomTab(dialog.windowTitle(), dialog)
 			tab.closeRequested.handle(tab.close)
 

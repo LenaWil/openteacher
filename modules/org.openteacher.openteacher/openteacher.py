@@ -251,6 +251,9 @@ class OpenTeacherModule(object):
 	def execute(self, path=None):
 		self.enable()
 
+		for module in self._mm.mods.supporting("metadata"):
+			module.enable()
+
 		#FIXME: use one ui module by user's choice. Make the choice with command line args
 		for module in self._mm.mods.supporting("ui"):
 			module.enable()
@@ -271,7 +274,7 @@ class OpenTeacherModule(object):
 		#enabled, because otherwise debugging takes too much time.
 		#(You would have to enable every module you need every time by
 		#hand)
-		for module in self._mm.mods.exclude("ui").exclude("modules").exclude("openteacher-core"):
+		for module in self._mm.mods.exclude("metadata").exclude("ui").exclude("modules").exclude("openteacher-core"):
 			module.enable()
 		self._modulesUpdated()
 

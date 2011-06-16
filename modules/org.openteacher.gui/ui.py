@@ -298,8 +298,6 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 
 		toolBar.setToolButtonStyle(QtCore.Qt.ToolButtonFollowStyle)
 
-		self.setWindowTitle(_("OpenTeacher 3.x"))
-		self.setWindowIcon(QtGui.QIcon(ICON_PATH + "openteacher.png"))
 		#activate statusBar
 		self.statusBar()
 
