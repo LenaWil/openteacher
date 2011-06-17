@@ -38,9 +38,13 @@ class TextToSpeechProviderWords(object):
 	
 	def itemEmitted(self, item):
 		for module in self._mm.mods.supporting("wordsStringComposer"):
-			text = module.compose(item.questions)
-			for module in self._mm.mods.supporting("textToSpeech"):
-				module.say.emit(text)
+			try:
+				text = module.compose(item.questions)
+				for module in self._mm.mods.supporting("textToSpeech"):
+					module.say.emit(text)
+			except AttributeError:
+				# No questions
+				pass
 
 def init(moduleManager):
 	return TextToSpeechProviderWords(moduleManager)
