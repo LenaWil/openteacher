@@ -2,10 +2,6 @@
 # -*- coding: utf-8 -*-
 
 #    Copyright 2008-2011, Milan Boers
-#    Copyright 2009-2011, Marten de Vries
-#    Copyright 2008, Roel Huybrechts
-#    Copyright 2010-2011, Cas Widdershoven
-#    Copyright 2010, David D. Lowe
 #
 #    This file is part of OpenTeacher.
 #
@@ -65,7 +61,7 @@ class MediaControlDisplay(QtGui.QWidget):
 	def __init__(self,autoplay=True,*args, **kwargs):
 		super(MediaControlDisplay, self).__init__(*args, **kwargs)
 		
-		self.mediadisplay = MediaDisplay()
+		self.mediadisplay = MediaDisplay(autoplay)
 		self.mediadisplay.videoplayer.mediaObject().stateChanged.connect(self._playPauseButtonUpdate)
 		
 		layout = QtGui.QVBoxLayout()
@@ -124,9 +120,9 @@ class MediaControlDisplay(QtGui.QWidget):
 		self.mediadisplay.clear()
 		
 class MediaDisplay(QtGui.QStackedWidget):
-	def __init__(self,*args, **kwargs):
+	def __init__(self,autoplay,*args, **kwargs):
 		super(MediaDisplay, self).__init__(*args, **kwargs)
-				
+		
 		"""
 		0: No active media
 		1: Video
@@ -135,6 +131,7 @@ class MediaDisplay(QtGui.QStackedWidget):
 		4: Web site
 		"""
 		self.activeType = 0
+		self.autoplay = autoplay
 		
 		self.videoplayer = Phonon.VideoPlayer(Phonon.VideoCategory, self)
 		self.webviewer = QtWebKit.QWebView()
@@ -161,6 +158,9 @@ class MediaDisplay(QtGui.QStackedWidget):
 			path = path.split("/watch?v=")[1]
 			path = path.split("&")[0]
 			path = "http://www.youtube.com/embed/" + path
+			if self.autoplay:
+				print "autoplay"
+				path += "?autoplay=1"
 		# Check if this is a vimeo video
 		if fnmatch.fnmatch(str(path), "*vimeo.com/*"):
 			# Vimeo URL
@@ -459,7 +459,7 @@ class TeachWidget(QtGui.QWidget):
 		top.addWidget(label)
 		top.addWidget(self.lessonTypeChooser)
 		
-		self.mediaDisplay = MediaControlDisplay()
+		self.mediaDisplay = MediaControlDisplay(True)
 		
 		self.answerfield = QtGui.QLineEdit()
 		self.answerfield.returnPressed.connect(self.checkAnswerButtonClick)

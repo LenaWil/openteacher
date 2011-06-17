@@ -3,6 +3,7 @@
 
 #	Copyright 2011, Marten de Vries
 #	Copyright 2011, Cas Widdershoven
+#	Copyright 2008-2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -77,6 +78,8 @@ class AllOnceModule(object):
 		self._mm = moduleManager
 		self.supports = ("lessonType",)
 		self.requires = (1, 0)
+		
+		self.newItem = self._mm.createEvent()
 
 	def enable(self):
 		self.name = _("All once") #FIXME: own '_'
@@ -87,7 +90,9 @@ class AllOnceModule(object):
 		del self.name
 
 	def createLessonType(self, list, indexes):
-		return AllOnceLessonType(self._mm, list, indexes)
+		lessonType = AllOnceLessonType(self._mm, list, indexes)
+		lessonType.newItem.handle(self.newItem.emit)
+		return lessonType
 
 def init(moduleManager):
 	return AllOnceModule(moduleManager)

@@ -2,10 +2,6 @@
 # -*- coding: utf-8 -*-
 
 #    Copyright 2008-2011, Milan Boers
-#    Copyright 2009-2011, Marten de Vries
-#    Copyright 2008, Roel Huybrechts
-#    Copyright 2010-2011, Cas Widdershoven
-#    Copyright 2010, David D. Lowe
 #
 #    This file is part of OpenTeacher.
 #

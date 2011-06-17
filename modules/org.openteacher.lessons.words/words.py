@@ -26,7 +26,7 @@ class WordList(object):
 	def __init__(self, *args, **kwargs):
 		super(WordList, self).__init__(*args, **kwargs)
 
-		self.words = []
+		self.items = []
 		self.tests = []
 
 class Word(object): pass
@@ -41,22 +41,22 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 	def updateList(self, list):
 		self.beginResetModel()
 		self.list = list
-		self.indexes = range(len(self.list.words))
+		self.indexes = range(len(self.list.items))
 		self.endResetModel()
 
 	def sort(self, column, order):
 		if column == 0:
-			items = sorted(self.list.words, key=lambda word: word.questions[0])
+			items = sorted(self.list.items, key=lambda word: word.questions[0])
 		elif column == 1:
-			items = sorted(self.list.words, key=lambda word: word.answers[0])
+			items = sorted(self.list.items, key=lambda word: word.answers[0])
 		elif column == 2:
-			items = self.list.words[:]
+			items = self.list.items[:]
 
 		if order == QtCore.Qt.DescendingOrder:
 			items.reverse()
 
 		self.layoutAboutToBeChanged.emit()
-		self.indexes = [self.list.words.index(item) for item in items]
+		self.indexes = [self.list.items.index(item) for item in items]
 		self.layoutChanged.emit()
 
 	def updateTitle(self, title):
@@ -77,7 +77,7 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 			return section +1
 
 	def rowCount(self, parent=None):
-		return len(self.list.words) +1
+		return len(self.list.items) +1
 
 	def columnCount(self, parent=None):
 		return 3
@@ -91,7 +91,7 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 		except IndexError:
 			return u"" #last (empty) row
 		else:
-			word = self.list.words[listIndex]
+			word = self.list.items[listIndex]
 
 			if index.column() == 0:
 				#FIXME: choose one
@@ -133,7 +133,7 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 					return False
 				word = Word()
 				try:
-					word.id = self.list.words[-1].id +1
+					word.id = self.list.items[-1].id +1
 				except IndexError:
 					word.id = 0
 				self.beginInsertRows(
@@ -141,11 +141,11 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 					self.rowCount(),
 					self.rowCount()
 				)
-				self.list.words.append(word)
-				self.indexes.append(self.list.words.index(word))
+				self.list.items.append(word)
+				self.indexes.append(self.list.items.index(word))
 				self.endInsertRows()
 			else:
-				word = self.list.words[listIndex]
+				word = self.list.items[listIndex]
 
 				if index.column() == 0:
 					#FIXME: choose one
@@ -170,7 +170,7 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 		for i in xrange(len(self.indexes)):
 			if self.indexes[i] > listIndex:
 				self.indexes[i] -= 1
-		del self.list.words[listIndex]
+		del self.list.items[listIndex]
 		self.endRemoveRows()
 
 class ModifiersListModel(QtCore.QAbstractListModel):
@@ -366,7 +366,7 @@ class Lesson(object):
 		i = sw.lessonTypeComboBox.currentIndex()
 		lessonTypeModule = self._lessonTypeModules[i]
 
-		indexes = range(len(self.list.words))
+		indexes = range(len(self.list.items))
 
 		for listModifier in self._listModifiersModel.modifiers:
 			if listModifier["active"]:
