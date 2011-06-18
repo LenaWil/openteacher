@@ -18,38 +18,31 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class ModulesModule(object):
+import unittest
+
+class TestRunnerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(ModulesModule, self).__init__(*args, **kwargs)
+		super(TestRunnerModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("modules",)
+		self.supports = ("testRunner",)
 		self.requires = (1, 0)
 		self.active = False
 
-	def registerModule(self, name, module):
-		self._modules[name] = module
-
-	@property
-	def registeredModules(self):
-		return self._modules.copy()
-
-	def activateModules(self):
-		#FIXME: leave modules that the user wants to be disabled disabled...
-		modules = self._mm.mods.items - self._mm.activeMods.items
-		for module in modules:
+	def run(self):
+		testSuite = unittest.TestSuite()
+		for module in self._mm.mods.supporting("test"):
 			module.enable()
-		self.modulesUpdated.emit()
+			newTests = unittest.TestLoader().loadTestsFromTestCase(module.TestCase)
+			testSuite.addTests(newTests)
+			module.disable()
+		unittest.TextTestRunner().run(testSuite)
 
 	def enable(self):
-		self._modules = {}
-		self.modulesUpdated = self._mm.createEvent()
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self._modules
-		del self.modulesUpdated
 
 def init(moduleManager):
-	return ModulesModule(moduleManager)
+	return TestRunnerModule(moduleManager)

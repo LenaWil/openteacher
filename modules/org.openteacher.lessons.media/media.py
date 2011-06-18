@@ -590,6 +590,7 @@ class MediaLessonModule(object):
 		self.type = "Items"
 		
 		self.lessonCreated = self.api.createEvent()
+		self.lessonCreationFinished = self.api.createEvent()
 		
 		for module in self.api.mods.supporting("ui"):
 			event = module.addLessonCreateButton("Create media lesson")
@@ -598,8 +599,11 @@ class MediaLessonModule(object):
 		self.active = True
 
 	def disable(self):
-		del self.type
 		self.active = False
+
+		del self.type
+		del self.lessonCreated
+		del self.lessonCreationFinished
 
 	def close(self):
 		print "Closed!"
@@ -622,6 +626,7 @@ class MediaLessonModule(object):
 			
 			lessons.add(lesson)
 		self.counter += 1
+		self.lessonCreationFinished.emit()
 		return lessons
 
 class Lesson(object):

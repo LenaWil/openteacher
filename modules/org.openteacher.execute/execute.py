@@ -18,38 +18,35 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class ModulesModule(object):
+class ExecuteModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(ModulesModule, self).__init__(*args, **kwargs)
+		super(ExecuteModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("modules",)
+		self.supports = ("execute",)
 		self.requires = (1, 0)
 		self.active = False
 
-	def registerModule(self, name, module):
-		self._modules[name] = module
-
-	@property
-	def registeredModules(self):
-		return self._modules.copy()
-
-	def activateModules(self):
-		#FIXME: leave modules that the user wants to be disabled disabled...
-		modules = self._mm.mods.items - self._mm.activeMods.items
-		for module in modules:
+	def execute(self, ui, path=None):
+		#FIXME: one
+		for module in self._mm.mods.supporting("uiController"):
 			module.enable()
-		self.modulesUpdated.emit()
+			module.initialize(ui)
+
+		#FIXME: one
+		for module in self._mm.mods.supporting("modules"):
+			module.enable()
+			module.activateModules()
+
+		#FIXME: (the) one
+		for module in self._mm.activeMods.supporting("uiController"):
+			module.run(path)
 
 	def enable(self):
-		self._modules = {}
-		self.modulesUpdated = self._mm.createEvent()
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self._modules
-		del self.modulesUpdated
 
 def init(moduleManager):
-	return ModulesModule(moduleManager)
+	return ExecuteModule(moduleManager)

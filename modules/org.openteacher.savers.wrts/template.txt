@@ -41,7 +41,7 @@
 			<b />
 			<!--(end)-->
 		</taal>
-		<!--(for word in list.words)-->
+		<!--(for word in list.items)-->
 		<woord>
 			<a>@!compose(word.questions)!@</a>
 			<b>@!compose(word.answers)!@</b>

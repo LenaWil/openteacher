@@ -30,7 +30,7 @@ class WordList(object):
 	def __init__(self, *args, **kwargs):
 		super(WordList, self).__init__(*args, **kwargs)
 
-		self.words = []
+		self.items = []
 		self.tests = []
 
 class Word(object):
@@ -81,7 +81,7 @@ class Teach2000LoaderModule(object):
 			for answer in item.findall("answers/answer"):
 				word.answers[0].append(answer.text)
 
-			wordList.words.append(word)
+			wordList.items.append(word)
 			#FIXME: load tests, also results in the words!
 		return wordList
 

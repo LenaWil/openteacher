@@ -58,7 +58,7 @@ class TxtSaverModule(object):
 			if maxLen < 8:
 				maxLen = 8
 
-			for word in list.words:
+			for word in list.items:
 				#FIXME: choose one
 				for module in self._mm.activeMods.supporting("wordsStringComposer"):
 					questions = module.compose(word.questions)

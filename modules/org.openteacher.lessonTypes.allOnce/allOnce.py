@@ -70,7 +70,6 @@ class AllOnceLessonType(object):
 		else:
 			self.newItem.emit(self._list.items[i])
 
-
 class AllOnceModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(AllOnceModule, self).__init__(*args, **kwargs)

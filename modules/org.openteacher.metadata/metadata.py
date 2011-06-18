@@ -41,7 +41,7 @@ class MetadataModule(object):
 
 	def enable(self):
 		self.name = "OpenTeacher" #FIXME: translate
-		self.slogan = "OpenTeacher helps you learn a foreign language vocabulary." #FIXME: translate
+		self.slogan = "The easiest way to learn a new language" #FIXME: translate
 		self.version = "3.x"
 		self.website = "http://openteacher.org/"
 		self.userAgent = "%s/%s (+%s)" % (self.name, self.version, self.website)

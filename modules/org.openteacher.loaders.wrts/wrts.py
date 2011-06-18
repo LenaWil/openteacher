@@ -30,7 +30,7 @@ class WordList(object):
 	def __init__(self, *args, **kwargs):
 		super(WordList, self).__init__(*args, **kwargs)
 
-		self.words = []
+		self.items = []
 		self.tests = []
 
 class Word(object):
@@ -89,7 +89,7 @@ class WrtsLoaderModule(object):
 				word.questions = module.parse(wordTree.findtext("a"))
 				word.answers = module.parse(wordTree.findtext("b"))
 
-			wordList.words.append(word)
+			wordList.items.append(word)
 			
 			counter += 1
 

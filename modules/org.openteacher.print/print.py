@@ -42,8 +42,22 @@ class PrintModule(object):
 		del self._pyratemp
 
 	def print_(self, type, list, printer):
+		#FIXME: Choose one!
+		for module in self._mm.activeMods.supporting("wordsStringComposer"):
+			compose = module.compose
+
+		class EvalPseudoSandbox(self._pyratemp.EvalPseudoSandbox):
+			def __init__(self2, *args, **kwargs):
+				self._pyratemp.EvalPseudoSandbox.__init__(self2, *args, **kwargs)
+
+				self2.register("compose", compose)
+				self2.register("hasattr", hasattr)
+
 		templatePath = self._mm.resourcePath("template.html")
-		t = self._pyratemp.Template(open(templatePath).read())
+		t = self._pyratemp.Template(
+			open(templatePath).read(),
+			eval_class=EvalPseudoSandbox
+		)
 		html = t(**{"list": list})
 
 		doc = QtWebKit.QWebView()

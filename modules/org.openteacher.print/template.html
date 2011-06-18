@@ -65,21 +65,39 @@
 		</style>
 	</head>
 	<body>
+		<!--(if hasattr(list, "title"))-->
 		<h1>@!list.title!@</h1>
+		<!--(end)-->
 		<table>
 			<thead>
 				<tr>
 					<th></th>
-					<th>@!list.questionSubject!@</th>
-					<th>@!list.answerSubject!@</th>
+					<!--(if hasattr(list, "questionLanguage"))-->
+					<th>@!list.questionLanguage!@</th>
+					<!--(else)-->
+					<th></th>
+					<!--(end)-->
+					<!--(if hasattr(list, "answerLanguage"))-->
+					<th>@!list.answerLanguage!@</th>
+					<!--(else)-->
+					<th></th>
+					<!--(end)-->
 				</tr>
 			</thead>
 			<tbody>
-				<!--(for question in list)-->
+				<!--(for word in list.items)-->
 				<tr>
-					<td>@!list.index(question) +1!@</td>
-					<td>@!", ".join(question.questions)!@</td>
-					<td>@!", ".join(question.answers)!@</td>
+					<td>@!list.items.index(word) +1!@</td>
+					<!--(if hasattr(word, "questions"))-->
+					<td>@!compose(word.questions)!@</td>
+					<!--(else)-->
+					<td></td>
+					<!--(end)-->
+					<!--(if hasattr(word, "answers"))-->
+					<td>@!compose(word.answers)!@</td>
+					<!--(else)-->
+					<td></td>
+					<!--(end)-->
 				</tr>
 				<!--(end)-->
 			</tbody>

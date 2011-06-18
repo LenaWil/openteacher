@@ -19,7 +19,7 @@
 	<title>@!wordList.title!@</title>
 	<question_language>@!wordList.questionLanguage!@</question_language>
 	<answer_language>@!wordList.answerLanguage!@</answer_language>
-	<!--(for word in wordList.words)-->
+	<!--(for word in wordList.items)-->
 	<word>
 		<known>@!word.known!@</known>
 		<!--(if len(word.foreign) == 0)-->

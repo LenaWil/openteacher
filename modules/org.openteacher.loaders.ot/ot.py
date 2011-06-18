@@ -30,7 +30,7 @@ class WordList(object):
 	def __init__(self, *args, **kwargs):
 		super(WordList, self).__init__(*args, **kwargs)
 
-		self.words = []
+		self.items = []
 		self.tests = []
 
 class Word(object):
@@ -126,7 +126,7 @@ class OpenTeacherLoaderModule(object):
 				test.append(result)
 
 			#Adds the generated word to the list
-			wordList.words.append(listWord)
+			wordList.items.append(listWord)
 			#Increment the counter (= the next word id)
 			counter += 1
 

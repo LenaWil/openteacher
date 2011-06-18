@@ -23,7 +23,7 @@
 		<font_question>Arial</font_question>
 		<font_answer>Lucida Sans Unicode</font_answer>
 		<items>
-			<!--(for word in wordList.words)-->
+			<!--(for word in wordList.items)-->
 			<item id="@!word.id!@">
 				<questions>
 					<!--(if len(word.questions) == 1)-->

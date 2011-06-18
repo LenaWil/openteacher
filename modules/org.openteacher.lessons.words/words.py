@@ -424,6 +424,7 @@ class WordsLessonModule(object):
 		self._teachUi = self._mm.import_("teachUi")
 
 		self.lessonCreated = self._mm.createEvent()
+		self.lessonCreationFinished = self._mm.createEvent()
 		self.type = "words"
 
 		self._counter = 1
@@ -441,6 +442,7 @@ class WordsLessonModule(object):
 		del self._enterUi
 		del self._teachUi
 		del self.lessonCreated
+		del self.lessonCreationFinished
 		del self.type
 		del self._counter
 		del self._references
@@ -463,6 +465,7 @@ class WordsLessonModule(object):
 
 			lessons.add(lesson)
 		self._counter += 1
+		self.lessonCreationFinished.emit()
 		return lessons
 
 	@property

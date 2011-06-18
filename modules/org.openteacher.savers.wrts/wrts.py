@@ -43,7 +43,7 @@ class WrtsSaverModule(object):
 		del self.saves
 
 	def save(self, type, list, path):
-		#Choose one!
+		#FIXME: Choose one!
 		for module in self._mm.activeMods.supporting("wordsStringComposer"):
 			compose = module.compose
 
