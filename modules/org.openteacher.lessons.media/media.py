@@ -46,6 +46,9 @@ class List(object):
 		self.items = []
 		self.tests = []
 
+"""
+Media item
+"""
 class Item(object):
 	def __init__(self,filename,remote,hints = "",desc = ""):
 		if remote == False:
@@ -57,88 +60,101 @@ class Item(object):
 		self.hints = hints
 		self.desc = desc
 
+"""
+"enum" for the types of media
+"""
+class MediaType:
+	Video, Image, Audio, Website = xrange(4)
+
+"""
+The video player and web viewer combination widget with controls
+"""
 class MediaControlDisplay(QtGui.QWidget):
 	def __init__(self,autoplay=True,*args, **kwargs):
 		super(MediaControlDisplay, self).__init__(*args, **kwargs)
 		
-		self.mediadisplay = MediaDisplay(autoplay)
-		self.mediadisplay.videoplayer.mediaObject().stateChanged.connect(self._playPauseButtonUpdate)
+		self.mediaDisplay = MediaDisplay(autoplay)
+		self.mediaDisplay.videoPlayer.mediaObject().stateChanged.connect(self._playPauseButtonUpdate)
 		
 		layout = QtGui.QVBoxLayout()
 		
 		buttonsLayout = QtGui.QHBoxLayout()
 		
-		self.pausebutton = QtGui.QPushButton()
-		self.pausebutton.setIcon(QtGui.QIcon.fromTheme("media-playback-pause",QtGui.QIcon(base.api.resourcePath("icons/player_pause.png"))))
-		self.pausebutton.clicked.connect(self.playPause)
-		buttonsLayout.addWidget(self.pausebutton)
+		self.pauseButton = QtGui.QPushButton()
+		self.pauseButton.setIcon(QtGui.QIcon.fromTheme("media-playback-pause",QtGui.QIcon(base.mm.resourcePath("icons/player_pause.png"))))
+		self.pauseButton.clicked.connect(self.playPause)
+		buttonsLayout.addWidget(self.pauseButton)
 		
-		self.seekslider = Phonon.SeekSlider(self.mediadisplay.videoplayer.mediaObject())
-		buttonsLayout.addWidget(self.seekslider)
+		self.seekSlider = Phonon.SeekSlider(self.mediaDisplay.videoPlayer.mediaObject())
+		buttonsLayout.addWidget(self.seekSlider)
 		
-		self.volumeslider = Phonon.VolumeSlider(self.mediadisplay.videoplayer.audioOutput())
-		self.volumeslider.setMaximumWidth(100)
-		buttonsLayout.addWidget(self.volumeslider)
+		self.volumeSlider = Phonon.VolumeSlider(self.mediaDisplay.videoPlayer.audioOutput())
+		self.volumeSlider.setMaximumWidth(100)
+		buttonsLayout.addWidget(self.volumeSlider)
 		
-		layout.addWidget(self.mediadisplay)
+		layout.addWidget(self.mediaDisplay)
 		layout.addLayout(buttonsLayout)
 		
 		self.setLayout(layout)
+		
+		self.setControls()
 	
 	def showLocalMedia(self, path):
-		self.mediadisplay.showLocalMedia(path)
+		self.mediaDisplay.showLocalMedia(path)
 		self.setControls()
 	
 	def showRemoteMedia(self, path):
-		self.mediadisplay.showRemoteMedia(path)
+		self.mediaDisplay.showRemoteMedia(path)
 		self.setControls()
 	
 	def _playPauseButtonUpdate(self, newstate, oldstate):
-		if self.mediadisplay.videoplayer.isPaused():
-			self.pausebutton.setIcon(QtGui.QIcon.fromTheme("media-playback-play",QtGui.QIcon(base.api.resourcePath("icons/player_play.png"))))
+		if self.mediaDisplay.videoPlayer.isPaused():
+			self.pauseButton.setIcon(QtGui.QIcon.fromTheme("media-playback-play",QtGui.QIcon(base.mm.resourcePath("icons/player_play.png"))))
 		else:
-			self.pausebutton.setIcon(QtGui.QIcon.fromTheme("media-playback-pause",QtGui.QIcon(base.api.resourcePath("icons/player_pause.png"))))
+			self.pauseButton.setIcon(QtGui.QIcon.fromTheme("media-playback-pause",QtGui.QIcon(base.mm.resourcePath("icons/player_pause.png"))))
 	
 	def setControls(self):
-		if self.mediadisplay.activeType == 2 or self.mediadisplay.activeType == 0 or self.mediadisplay.activeType == 4:
+		if self.mediaDisplay.activeType == MediaType.Image or self.mediaDisplay.activeType == None or self.mediaDisplay.activeType == MediaType.Website:
 			self.setControlsEnabled(False)
 		else:
 			self.setControlsEnabled(True)
+		
+		if self.mediaDisplay.activeType == MediaType.Image or self.mediaDisplay.activeType == None or self.mediaDisplay.activeType == MediaType.Website:
+			self.stop()
 	
 	def setControlsEnabled(self, enabled):
-		self.pausebutton.setEnabled(enabled)
-		self.volumeslider.setEnabled(enabled)
-		self.seekslider.setEnabled(enabled)
+		self.pauseButton.setEnabled(enabled)
+		self.volumeSlider.setEnabled(enabled)
+		self.seekSlider.setEnabled(enabled)
 	
 	def playPause(self, event):
-		if self.mediadisplay.videoplayer.isPaused():
-			self.mediadisplay.videoplayer.play()
+		if self.mediaDisplay.videoPlayer.isPaused():
+			self.mediaDisplay.videoPlayer.play()
 		else:
-			self.mediadisplay.videoplayer.pause()
+			self.mediaDisplay.videoPlayer.pause()
+	
+	def stop(self):
+		self.mediaDisplay.videoPlayer.stop()
 	
 	def clear(self):
-		self.mediadisplay.clear()
-		
+		self.mediaDisplay.clear()
+
+"""
+The video player and web viewer combination widget
+"""
 class MediaDisplay(QtGui.QStackedWidget):
 	def __init__(self,autoplay,*args, **kwargs):
 		super(MediaDisplay, self).__init__(*args, **kwargs)
 		
-		"""
-		0: No active media
-		1: Video
-		2: Image
-		3: Audio
-		4: Web site
-		"""
-		self.activeType = 0
+		self.activeType = None
 		self.autoplay = autoplay
 		
-		self.videoplayer = Phonon.VideoPlayer(Phonon.VideoCategory, self)
+		self.videoPlayer = Phonon.VideoPlayer(Phonon.VideoCategory, self)
 		self.webviewer = QtWebKit.QWebView()
 		self.webviewer.settings().setAttribute(QtWebKit.QWebSettings.PluginsEnabled, True)
 		
 		self.addWidget(self.webviewer)
-		self.addWidget(self.videoplayer)
+		self.addWidget(self.videoPlayer)
 		
 	def showLocalMedia(self, path):
 		type = mimetypes.guess_type(str(path))[0].split('/')[0]
@@ -176,21 +192,21 @@ class MediaDisplay(QtGui.QStackedWidget):
 	
 	def _showImage(self, path):
 		# Stop any media playing
-		self.videoplayer.stop()
+		self.videoPlayer.stop()
 		# Set the widget to the web view
 		self.setCurrentWidget(self.webviewer)
 		# Go to the right URL
 		self.webviewer.setUrl(QtCore.QUrl(path))
 		# Set the active type
-		self.activeType = 2
+		self.activeType = MediaType.Image
 	
 	def _showVideo(self, path):
 		# Set the widget to video player
-		self.setCurrentWidget(self.videoplayer)
+		self.setCurrentWidget(self.videoPlayer)
 		# Play the video
-		self.videoplayer.play(Phonon.MediaSource(path))
+		self.videoPlayer.play(Phonon.MediaSource(path))
 		# Set the active type
-		self.activeType = 1
+		self.activeType = MediaType.Video
 	
 	def _showAudio(self, path):
 		# Set widget to web viewer
@@ -200,9 +216,9 @@ class MediaDisplay(QtGui.QStackedWidget):
 		<html><head><title>Audio</title></head><body>Playing audio</body></html>
 		''')
 		# Play the audio
-		self.videoplayer.play(Phonon.MediaSource(path))
+		self.videoPlayer.play(Phonon.MediaSource(path))
 		# Set the active type
-		self.activeType = 3
+		self.activeType = MediaType.Audio
 	
 	def _showUrl(self, url):
 		# Set widget to web viewer
@@ -210,47 +226,53 @@ class MediaDisplay(QtGui.QStackedWidget):
 		# Set the URL
 		self.webviewer.setUrl(QtCore.QUrl(url))
 		# Set the active type
-		self.activeType = 4
+		self.activeType = MediaType.Website
 	
 	def clear(self):
 		self.webviewer.setHtml('''
 		<html><head><title>Nothing</title></head><body></body></html>
 		''')
-		self.videoplayer.stop()
+		self.videoPlayer.stop()
 		# Set the active type
-		self.activeType = 0
+		self.activeType = None
 
+"""
+The model for the list widget with media items (this construction because without model Qt produces a bug)
+"""
 class EnterItemListModel(QtCore.QAbstractListModel):
 	def __init__(self,items,parent=None,*args):
 		QtCore.QAbstractListModel.__init__(self,parent,*args)
 		
-		self.listdata = []
+		self.listData = []
 		
 		for item in items.items:
-			self.listdata.append(item.name)
+			self.listData.append(item.name)
 	
 	def update(self,items):
 		self.beginInsertRows(QtCore.QModelIndex(), self.rowCount(), self.rowCount())
 		
-		self.listdata = []
+		self.listData = []
 		
 		for item in items.items:
-			self.listdata.append(item.name)
+			self.listData.append(item.name)
 		
 		self.endInsertRows()
 	
 	def rowCount(self,parent=QtCore.QModelIndex()):
-		return len(self.listdata)
+		return len(self.listData)
 
 	def data(self,index,role):
 		if index.isValid() and role == QtCore.Qt.DisplayRole:
-			return QtCore.QVariant(self.listdata[index.row()])
+			return QtCore.QVariant(self.listData[index.row()])
 		else:
 			return QtCore.QVariant()
 	
 	def textAtIndex(self,index):
-		return self.listdata[index]
+		return self.listData[index]
 
+"""
+The list widget with media items
+"""
 class EnterItemList(QtGui.QListView):
 	def __init__(self,parent):
 		QtGui.QListView.__init__(self,parent)
@@ -269,6 +291,9 @@ class EnterItemList(QtGui.QListView):
 			if item.name == current:
 				self.parent.setActiveItem(item)
 
+"""
+The enter tab
+"""
 class EnterWidget(QtGui.QSplitter):
 	def __init__(self,*args, **kwargs):
 		super(EnterWidget, self).__init__(*args, **kwargs)
@@ -294,7 +319,7 @@ class EnterWidget(QtGui.QSplitter):
 		leftW = QtGui.QWidget()
 		leftW.setLayout(left)
 		
-		self.enterpreview = MediaControlDisplay(False)
+		self.mediaDisplay = MediaControlDisplay(False)
 		
 		self.entername = QtGui.QLineEdit()
 		self.entername.textChanged.connect(self.changeName)
@@ -319,7 +344,7 @@ class EnterWidget(QtGui.QSplitter):
 		desceditW.setLayout(desceditL)
 		
 		rightSplitter = QtGui.QSplitter(2)
-		rightSplitter.addWidget(self.enterpreview)
+		rightSplitter.addWidget(self.mediaDisplay)
 		rightSplitter.addWidget(desceditW)
 		
 		right = QtGui.QVBoxLayout()
@@ -366,7 +391,7 @@ class EnterWidget(QtGui.QSplitter):
 	def removeItem(self):
 		self.itemList.items.remove(self.activeitem)
 		self.enterItemsList.update()
-		self.enterpreview.clear()
+		self.mediaDisplay.clear()
 		self.entername.setText("")
 		self.entername.setEnabled(False)
 		self.enterdesc.setText("")
@@ -382,9 +407,9 @@ class EnterWidget(QtGui.QSplitter):
 		self.enterdesc.setEnabled(True)
 		self.enterdesc.setText(item.desc)
 		if item.remote:
-			self.enterpreview.showRemoteMedia(item.filename)
+			self.mediaDisplay.showRemoteMedia(item.filename)
 		else:
-			self.enterpreview.showLocalMedia(item.filename)
+			self.mediaDisplay.showLocalMedia(item.filename)
 	
 	"""
 	Change the name of the active item
@@ -403,18 +428,21 @@ class EnterWidget(QtGui.QSplitter):
 	What happens when you click the Enter tab
 	"""
 	def showEvent(self, event):
-		if base.inlesson:
+		if base.inLesson:
 			warningD = QtGui.QMessageBox()
 			warningD.setIcon(QtGui.QMessageBox.Warning)
 			warningD.setWindowTitle("Warning")
 			warningD.setStandardButtons(QtGui.QMessageBox.Cancel | QtGui.QMessageBox.Ok)
-			warningD.setText("Are you sure you want to go back to the teach tab? This will end your lesson!")
+			warningD.setText("Are you sure you want to go back to the enter tab? This will end your lesson!")
 			feedback = warningD.exec_()
 			if feedback == QtGui.QMessageBox.Ok:
 				base.teachWidget.stopLesson()
 			else:
 				base.fileTab.currentTab = base.teachWidget
 
+"""
+The dropdown menu to choose lesson type
+"""
 class LessonTypeChooser(QtGui.QComboBox):
 	def __init__(self):
 		QtGui.QComboBox.__init__(self)
@@ -422,7 +450,7 @@ class LessonTypeChooser(QtGui.QComboBox):
 		self.currentIndexChanged.connect(self.changeLessonType)
 		
 		self._lessonTypeModules = list(
-			base.api.mods.supporting("lessonType")
+			base.mm.mods.supporting("lessonType")
 		)
 		
 		for lessontype in self._lessonTypeModules:
@@ -432,10 +460,8 @@ class LessonTypeChooser(QtGui.QComboBox):
 	What happens when you change the lesson type
 	"""
 	def changeLessonType(self, index):
-		try:
+		if base.inLesson:
 			base.teachWidget.initiateLesson()
-		except AttributeError:
-			pass
 	
 	"""
 	Get the current lesson type
@@ -446,6 +472,9 @@ class LessonTypeChooser(QtGui.QComboBox):
 			if lessontype.name == self.currentText():
 				return lessontype
 
+"""
+The teach tab
+"""
 class TeachWidget(QtGui.QWidget):
 	def __init__(self,*args, **kwargs):
 		super(TeachWidget, self).__init__(*args, **kwargs)
@@ -461,14 +490,14 @@ class TeachWidget(QtGui.QWidget):
 		
 		self.mediaDisplay = MediaControlDisplay(True)
 		
-		self.answerfield = QtGui.QLineEdit()
-		self.answerfield.returnPressed.connect(self.checkAnswerButtonClick)
+		self.answerField = QtGui.QLineEdit()
+		self.answerField.returnPressed.connect(self.checkAnswerButtonClick)
 		checkButton = QtGui.QPushButton("Check")
 		checkButton.clicked.connect(self.checkAnswerButtonClick)
 		self.progress = QtGui.QProgressBar()
 		
 		bottomL = QtGui.QHBoxLayout()
-		bottomL.addWidget(self.answerfield)
+		bottomL.addWidget(self.answerField)
 		bottomL.addWidget(checkButton)
 		bottomL.addWidget(self.progress)
 		
@@ -484,7 +513,7 @@ class TeachWidget(QtGui.QWidget):
 	"""
 	def initiateLesson(self):
 		self.lesson = MediaLesson(base.enterWidget.itemList)
-		self.answerfield.setFocus()
+		self.answerField.setFocus()
 	
 	"""
 	Stops the lesson
@@ -498,8 +527,8 @@ class TeachWidget(QtGui.QWidget):
 	"""
 	def checkAnswerButtonClick(self):
 		self.lesson.checkAnswer()
-		self.answerfield.clear()
-		self.answerfield.setFocus()
+		self.answerField.clear()
+		self.answerField.setFocus()
 	
 	"""
 	What happens when you click the Teach tab
@@ -508,13 +537,16 @@ class TeachWidget(QtGui.QWidget):
 		if len(base.enterWidget.itemList.items) == 0:
 			QtGui.QMessageBox.critical(self, "Not enough items", "You need to add items to your test first")
 			base.fileTab.currentTab = base.enterWidget
-		elif not base.inlesson:
+		elif not base.inLesson:
 			self.initiateLesson()
 
+"""
+The lesson itself
+"""
 class MediaLesson(object):
 	def __init__(self,itemList):
 		#stop media playing in the enter widget
-		base.enterWidget.enterpreview.clear()
+		base.enterWidget.mediaDisplay.clear()
 		
 		self.lessonType = base.teachWidget.lessonTypeChooser.currentLessonType.createLessonType(itemList,range(len(itemList.items)))
 		
@@ -523,7 +555,7 @@ class MediaLesson(object):
 		
 		self.lessonType.start()
 		
-		base.inlesson = True
+		base.inLesson = True
 		
 		# Reset the progress bar
 		base.teachWidget.progress.setValue(0)
@@ -532,7 +564,7 @@ class MediaLesson(object):
 	Check whether the given answer was right or wrong
 	"""
 	def checkAnswer(self):
-		if self.currentItem.name == base.teachWidget.answerfield.text():
+		if self.currentItem.name == base.teachWidget.answerField.text():
 			# Answer was right
 			self.lessonType.setResult(Result("right"))
 			# Progress bar
@@ -557,7 +589,7 @@ class MediaLesson(object):
 	Ends the lesson
 	"""
 	def endLesson(self):
-		base.inlesson = False
+		base.inLesson = False
 		# FIXME : message with results
 		# stop media
 		base.teachWidget.mediaDisplay.clear()
@@ -571,28 +603,31 @@ class MediaLesson(object):
 		base.teachWidget.progress.setMaximum(self.lessonType.totalItems+1)
 		base.teachWidget.progress.setValue(self.lessonType.askedItems)
 
+"""
+The module
+"""
 class MediaLessonModule(object):
-	def __init__(self, api):
+	def __init__(self, mm):
 		global base
 		base = self
-		self.api = api
+		self.mm = mm
 		self.counter = 1
-		self.inlesson = False
+		self.inLesson = False
 		
 		self.supports = ("lesson", "list", "loadList", "initializing")
 		self.requires = (1, 0)
 	
 	def initialize(self):
-		for module in self.api.activeMods.supporting("modules"):
+		for module in self.mm.activeMods.supporting("modules"):
 			module.registerModule("Media Lesson", self)
 	
 	def enable(self):
 		self.type = "Items"
 		
-		self.lessonCreated = self.api.createEvent()
-		self.lessonCreationFinished = self.api.createEvent()
+		self.lessonCreated = self.mm.createEvent()
+		self.lessonCreationFinished = self.mm.createEvent()
 		
-		for module in self.api.mods.supporting("ui"):
+		for module in self.mm.mods.supporting("ui"):
 			event = module.addLessonCreateButton("Create media lesson")
 			event.handle(self.createLesson)
 		
@@ -604,14 +639,11 @@ class MediaLessonModule(object):
 		del self.type
 		del self.lessonCreated
 		del self.lessonCreationFinished
-
-	def close(self):
-		print "Closed!"
 	
 	def createLesson(self):		
 		lessons = set()
 		
-		for module in self.api.activeMods.supporting("ui"):
+		for module in self.mm.activeMods.supporting("ui"):
 			self.enterWidget = EnterWidget()
 			self.teachWidget = TeachWidget()
 			
@@ -633,12 +665,15 @@ class Lesson(object):
 	def __init__(self, moduleManager, fileTab, enterWidget, teachWidget, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
 		self.fileTab = fileTab
-		self.stopped = base.api.createEvent()
+		self.stopped = base.mm.createEvent()
 		
 		fileTab.closeRequested.handle(self.stop)
 	
 	def stop(self):
 		self.fileTab.close()
+		# Stop media playing
+		base.enterWidget.mediaDisplay.stop()
+		base.teachWidget.mediaDisplay.stop()
 		self.stopped.emit()
 
 def init(moduleManager):

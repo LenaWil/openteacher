@@ -25,13 +25,6 @@ from PyQt4 import QtCore
 import os
 import time
 
-class Place(object):
-	def __init__(self, name = "None", x = 0, y = 0):
-		self.name = name
-		if x > 0 and y > 0:
-			self.x = int(x)
-			self.y = int(y)
-
 class Result(str):
 	def __init__(self, *args, **kwargs):
 		super(Result, self).__init__(*args, **kwargs)
@@ -48,95 +41,161 @@ class List(object):
 		self.items = []
 		self.tests = []
 
+"""
+Place in the test
+"""
+class Place(object):
+	def __init__(self, name = "None", x = 0, y = 0, *args, **kwargs):
+		super(Place, self).__init__(*args, **kwargs)
+		
+		self.name = name
+		
+		# Position on the map
+		if x > 0 and y > 0:
+			self.x = int(x)
+			self.y = int(y)
+
+"""
+List widget of all the places
+"""
 class EnterPlacesWidget(QtGui.QListWidget):
-	def __init__(self):
-		QtGui.QListWidget.__init__(self)
+	def __init__(self, *args, **kwargs):
+		super(EnterPlacesWidget, self).__init__(*args, **kwargs)
 	
 	def update(self):
 		self.clear()
+		
+		# Add all the places to the list
 		for place in base.enterWidget.places.items:
 			self.addItem(place.name + " (" + str(place.x) + "," + str(place.y) + ")")
 
+"""
+The graphics scene of the map where you enter
+"""
 class EnterMapScene(QtGui.QGraphicsScene):
-	def __init__(self,parent):
-		QtGui.QGraphicsScene.__init__(self,parent)
-		self.parent = parent
+	def __init__(self, parent, *args, **kwargs):
+		super(EnterMapScene, self).__init__(*args, **kwargs)
+		self.widget = parent
 	
 	def mouseDoubleClickEvent(self,gsme):
+		# Get coordinates
 		x = gsme.lastScenePos().x()
 		y = gsme.lastScenePos().y()
+		# If its in the map
 		if x > 0 and y > 0:
-			self.controlPressed = False
-			name = QtGui.QInputDialog.getText(self.parent, "Name for this place", "What's this place's name?")
+			# Ask for the name
+			name = QtGui.QInputDialog.getText(self.widget, "Name for this place", "What's this place's name?")
 			if name[1] and str(name[0]).strip() != "":
+				# Make the place
 				place = Place(name[0], x, y)
+				# And add the place
 				base.enterWidget.addPlace(place)
 
-class EnterMap(QtGui.QGraphicsView):
-	def __init__(self):
-		QtGui.QWidget.__init__(self)
-		self.setDragMode(QtGui.QGraphicsView.ScrollHandDrag)
+"""
+Abstract class for the map widgets
+"""
+class Map(QtGui.QGraphicsView):
+	def __init__(self,*args, **kwargs):
+		super(Map, self).__init__(*args, **kwargs)
 	
-	def setPicture(self,picture):
-		self.scene = EnterMapScene(self)
+	def setMap(self, map):
+		mapsPath = base.api.resourcePath("resources/maps")
+		picturePath = os.path.join(mapsPath, unicode(map + ".gif"))
+		self._setPicture(picturePath)
+	
+	def _setPicture(self,picture):
+		# Create a new scene
+		self.scene = QtGui.QGraphicsScene()
+		# Set the pixmap of the scene
 		self.pixmap = QtGui.QPixmap(picture)
-		
 		self.scene.addPixmap(self.pixmap)
+		# Set the scene
 		self.setScene(self.scene)
 	
 	def wheelEvent(self,wheelevent):
+		# Scrolling makes it zoom
 		if wheelevent.delta() > 0:
 			self.scale(1.1,1.1)
 		else:
 			self.scale(0.9,0.9)
+
+"""
+The map on the enter tab
+"""
+class EnterMap(Map):
+	def __init__(self, *args, **kwargs):
+		super(EnterMap, self).__init__(*args, **kwargs)
+		# Make it scrollable and draggable
+		self.setDragMode(QtGui.QGraphicsView.ScrollHandDrag)
+		
+		self.placesGroup = QtGui.QGraphicsItemGroup()
 	
-	def update(self):
-		try:
-			self.scene.removeItem(self.placesGroup)
-		except AttributeError:
-			pass
+	"""
+	Override base class _setPicture with one that uses an EnterMapScene instead of QGraphicsScene
+	"""
+	def _setPicture(self, picture):
+		# Create a new scene
+		self.scene = EnterMapScene(self)
+		# Set the pixmap of the scene
+		self.pixmap = QtGui.QPixmap(picture)
+		self.scene.addPixmap(self.pixmap)
+		# Set the scene
+		self.setScene(self.scene)
+	
+	def update(self):		
+		placesList = []
 		
-		placeslist = []
-		
+		# Add all the places
 		for place in base.enterWidget.places.items:
+			# Make the little rectangle
 			rect = QtGui.QGraphicsRectItem(place.x,place.y,6,6)
 			rect.setBrush(QtGui.QBrush(QtGui.QColor("red")))
+			# Place the rectangle in the list of items
+			placesList.append(rect)
 			
+			# Make the shadow of the text
 			shadow = QtGui.QGraphicsTextItem(place.name)
 			shadow.setFont(QtGui.QFont("sans-serif",15,75))
 			shadow.setPos(place.x+2,place.y+2)
 			shadow.setDefaultTextColor(QtGui.QColor("black"))
 			shadow.setOpacity(0.5)
-			
-			placeslist.append(shadow)
+			# Place the shadow in the list of items
+			placesList.append(shadow)
 			
 			item = QtGui.QGraphicsTextItem(place.name)
 			item.setFont(QtGui.QFont("sans-serif",15,75))
 			item.setPos(place.x,place.y)
 			item.setDefaultTextColor(QtGui.QColor("red"))
-			
-			placeslist.append(item)
-			placeslist.append(rect)
+			# Place the text in the list of items
+			placesList.append(item)
 		
-		self.placesGroup = self.scene.createItemGroup(placeslist)
+		# Place the list of items on the map
+		self.placesGroup = self.scene.createItemGroup(placesList)
 
+"""
+The dropdown menu for choosing the map
+"""
 class EnterMapChooser(QtGui.QComboBox):
-	def __init__(self,parent,mapwidget):
-		QtGui.QComboBox.__init__(self,parent)
-		self.mapwidget = mapwidget
-		self.parent = parent
-		self.currentIndexChanged.connect(self.otherMap)
+	def __init__(self, parent, mapWidget, *args, **kwargs):
+		super(EnterMapChooser, self).__init__(*args, **kwargs)
 		
-		self.fillBox()
-		self.otherMap()
+		self.mapWidget = mapWidget
+		self.enterWidget = parent
+		
+		# Fill the MapChooser with the maps
+		self._fillBox()
+		# Change the map
+		self._otherMap()
+		
+		self.currentIndexChanged.connect(self._otherMap)
 
-	def fillBox(self):
+	def _fillBox(self):
 		mapPaths = base.api.resourcePath("resources/maps")
 		for name in os.listdir(mapPaths):
 			self.addItem(os.path.splitext(name)[0], name)
 	
-	def otherMap(self):
-		if len(self.parent.places.items) > 0:
+	def _otherMap(self):
+		if len(self.enterWidget.places.items) > 0:
 			warningD = QtGui.QMessageBox()
 			warningD.setIcon(QtGui.QMessageBox.Warning)
 			warningD.setWindowTitle("Warning")
@@ -145,24 +204,23 @@ class EnterMapChooser(QtGui.QComboBox):
 			feedback = warningD.exec_()
 			if feedback == QtGui.QMessageBox.Ok:
 				# Clear the entered items
-				self.parent.places = List()
+				self.enterWidget.places = List()
 				# Update the list
-				self.parent.currentPlaces.update()
+				self.enterWidget.currentPlaces.update()
 			else:
 				self.ask = False
 				self.setCurrentIndex(self.prevIndex)
 				return
-		self.parent.map = self.currentText()
-		mapsPath = base.api.resourcePath("resources/maps")
-		picturePath = os.path.join(mapsPath, unicode(self.parent.map + ".gif"))
-		self.mapwidget.setPicture(picturePath)
+		self.mapWidget.setMap(self.currentText())
 		self.prevIndex = self.currentIndex()
 
+"""
+The enter tab
+"""
 class EnterWidget(QtGui.QSplitter):
-	def __init__(self,*args, **kwargs):
+	def __init__(self, *args, **kwargs):
 		super(EnterWidget, self).__init__(*args, **kwargs)
 		self.places = List()
-		self.map = "World"
 		
 		#create the GUI
 		
@@ -176,11 +234,11 @@ class EnterWidget(QtGui.QSplitter):
 		self.pictureBox = EnterMap()
 		
 		#left side - top
-		comboBox = EnterMapChooser(self, self.pictureBox)
+		self.mapChooser = EnterMapChooser(self, self.pictureBox)
 		
 		chooseMap = QtGui.QHBoxLayout()
 		chooseMap.addWidget(mapLabel)
-		chooseMap.addWidget(comboBox)
+		chooseMap.addWidget(self.mapChooser)
 		
 		#left side - bottom
 		explanationLabel = QtGui.QLabel("Add a place by doubleclicking it on the map")
@@ -255,7 +313,7 @@ class EnterWidget(QtGui.QSplitter):
 	What happens when you click the Enter tab
 	"""
 	def showEvent(self, event):
-		if base.inlesson:
+		if base.inLesson:
 			warningD = QtGui.QMessageBox()
 			warningD.setIcon(QtGui.QMessageBox.Warning)
 			warningD.setWindowTitle("Warning")
@@ -267,9 +325,12 @@ class EnterWidget(QtGui.QSplitter):
 			else:
 				base.fileTab.currentTab = base.teachWidget
 
+"""
+The dropdown menu to choose lesson type
+"""
 class LessonTypeChooser(QtGui.QComboBox):
-	def __init__(self):
-		QtGui.QComboBox.__init__(self)
+	def __init__(self, *args, **kwargs):
+		super(LessonTypeChooser, self).__init__(*args, **kwargs)
 		
 		self.currentIndexChanged.connect(self.changeLessonType)
 		
@@ -284,7 +345,7 @@ class LessonTypeChooser(QtGui.QComboBox):
 	What happens when you change the lesson type
 	"""
 	def changeLessonType(self, index):
-		if base.inlesson:
+		if base.inLesson:
 			base.teachWidget.initiateLesson()
 	
 	"""
@@ -296,37 +357,43 @@ class LessonTypeChooser(QtGui.QComboBox):
 			if lessontype.name == self.currentText():
 				return lessontype
 
-class TeachPictureBox(QtGui.QGraphicsView):
-	def __init__(self,map,*args, **kwargs):
+"""
+The map on the teach tab
+"""
+class TeachPictureBox(Map):
+	def __init__(self, map, *args, **kwargs):
 		super(TeachPictureBox, self).__init__(*args, **kwargs)
+		# Not interactive
 		self.interactive = False
-		self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff )
+		# No scrollbars here
+		self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 		self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+		# Make sure everything is redrawn every time
 		self.setViewportUpdateMode(0)
-		
-		mapsPath = base.api.resourcePath("resources/maps")
-		picturePath = os.path.join(mapsPath, unicode(map + ".gif"))
-		self.setPicture(picturePath)
 	
-	def wheelEvent(self,wheelevent):
-		if wheelevent.delta() > 0:
-			self.scale(1.1,1.1)
-		else:
-			self.scale(0.9,0.9)
+	"""
+	Sets the arrow on the map to the right position
+	"""
+	def setArrow(self, x, y):
+		base.teachWidget.mapBox.centerOn(x-15,y-50)
+		base.teachWidget.mapBox.crosshair.setPos(x-15,y-50)
 	
-	def setPicture(self,picture):
-		self.scene = QtGui.QGraphicsScene()
-		self.pixmap = QtGui.QPixmap(picture)
+	"""
+	Overriding the base class _setPicture method with one adding the arrow
+	"""
+	def _setPicture(self,picture):
+		Map._setPicture(self, picture)
 		
 		crosshairPixmap = QtGui.QPixmap(base.api.resourcePath("resources/crosshair.png"))
 		self.crosshair = QtGui.QGraphicsPixmapItem(crosshairPixmap)
 		
-		self.scene.addPixmap(self.pixmap)
 		self.scene.addItem(self.crosshair)
-		self.setScene(self.scene)
 
+"""
+The teach tab
+"""
 class TeachWidget(QtGui.QWidget):
-	def __init__(self,*args, **kwargs):
+	def __init__(self, *args, **kwargs):
 		super(TeachWidget, self).__init__(*args, **kwargs)
 		
 		## GUI Drawing
@@ -340,7 +407,7 @@ class TeachWidget(QtGui.QWidget):
 		top.addWidget(self.lessonTypeChooser)
 		
 		# Middle
-		self.mapbox = TeachPictureBox(base.enterWidget.map)
+		self.mapBox = TeachPictureBox(base.enterWidget.mapChooser.currentText())
 		
 		# Bottom
 		bottom = QtGui.QHBoxLayout()
@@ -360,7 +427,7 @@ class TeachWidget(QtGui.QWidget):
 		# Total
 		layout = QtGui.QVBoxLayout()
 		layout.addLayout(top)
-		layout.addWidget(self.mapbox)
+		layout.addWidget(self.mapBox)
 		layout.addLayout(bottom)
 		
 		self.setLayout(layout)
@@ -399,11 +466,18 @@ class TeachWidget(QtGui.QWidget):
 			QtGui.QMessageBox.critical(self, "Not enough items", "You need to add items to your test first")
 			base.fileTab.currentTab = base.enterWidget
 		# If not in a lesson (so it doesn't start a lesson if you go back from a mistakingly click on the Enter tab)
-		elif not base.inlesson:
+		elif not base.inLesson:
 			self.initiateLesson()
 
+"""
+The lesson itself
+"""
 class TopoLesson(object):
-	def __init__(self,itemList):
+	def __init__(self, itemList, *args, **kwargs):
+		super(TopoLesson, self).__init__(*args, **kwargs)
+		# Set the map
+		base.teachWidget.mapBox.setMap(base.enterWidget.mapChooser.currentText())
+		
 		self.lessonType = base.teachWidget.lessonTypeChooser.currentLessonType.createLessonType(itemList,range(len(itemList.items)))
 		
 		self.lessonType.newItem.handle(self.nextQuestion)
@@ -411,7 +485,7 @@ class TopoLesson(object):
 		
 		self.lessonType.start()
 		
-		base.inlesson = True
+		base.inLesson = True
 		
 		# Reset the progress bar
 		base.teachWidget.progress.setValue(0)
@@ -436,13 +510,13 @@ class TopoLesson(object):
 		#set the next question
 		self.currentItem = item
 		#set the arrow to the right position
-		self._setArrow(self.currentItem.x,self.currentItem.y)
+		base.teachWidget.mapBox.setArrow(self.currentItem.x,self.currentItem.y)
 	
 	"""
 	Ends the lesson
 	"""
 	def endLesson(self):
-		base.inlesson = False
+		base.inLesson = False
 		# return to enter tab
 		base.fileTab.currentTab = base.enterWidget
 	
@@ -452,21 +526,18 @@ class TopoLesson(object):
 	def _updateProgressBar(self):
 		base.teachWidget.progress.setMaximum(self.lessonType.totalItems+1)
 		base.teachWidget.progress.setValue(self.lessonType.askedItems)
-	
-	"""
-	Sets the arrow on the map to the right position
-	"""
-	def _setArrow(self, x, y):
-		base.teachWidget.mapbox.centerOn(x-15,y-50)
-		base.teachWidget.mapbox.crosshair.setPos(x-15,y-50)
 
+"""
+The module
+"""
 class TopoLessonModule(object):
-	def __init__(self, api):
+	def __init__(self, api, *args, **kwargs):
+		super(TopoLessonModule, self).__init__(*args, **kwargs)
 		global base
 		base = self
 		self.api = api
 		self.counter = 1
-		self.inlesson = False
+		self.inLesson = False
 		
 		self.supports = ("lesson", "list", "loadList", "initializing")
 		self.requires = (1, 0)
@@ -492,9 +563,6 @@ class TopoLessonModule(object):
 		del self.lessonCreated
 		del self.lessonCreationFinished
 		self.active = False
-
-	def close(self):
-		print "Closed!"
 	
 	def createLesson(self):		
 		lessons = set()
