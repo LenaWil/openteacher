@@ -25,6 +25,9 @@ from PyQt4 import QtCore
 import os
 import time
 
+class Order:
+	Normal, Inversed = xrange(2)
+
 class Result(str):
 	def __init__(self, *args, **kwargs):
 		super(Result, self).__init__(*args, **kwargs)
@@ -358,16 +361,59 @@ class LessonTypeChooser(QtGui.QComboBox):
 				return lessontype
 
 """
+The dropdown menu to choose lesson order
+"""
+class LessonOrderChooser(QtGui.QComboBox):
+	def __init__(self, *args, **kwargs):
+		super(LessonOrderChooser, self).__init__(*args, **kwargs)
+		
+		self.currentIndexChanged.connect(self.changeLessonOrder)
+		
+		self.addItem("Place - Name", 0)
+		self.addItem("Name - Place", 1)
+	
+	"""
+	What happens when you change the lesson order
+	"""
+	def changeLessonOrder(self, index):
+		if base.inLesson:
+			base.teachWidget.initiateLesson()
+
+"""
+A place on the map for the inverted order
+"""
+class PlaceOnMap(QtGui.QGraphicsRectItem):
+	def __init__(self, place, *args, **kwargs):
+		super(PlaceOnMap, self).__init__(*args, **kwargs)
+		
+		width = 10
+		height = 10
+		
+		self.setRect(place.x - width / 2, place.y - height / 2, width, height)
+		self.setBrush(QtGui.QBrush(QtGui.QColor("red")))
+		
+		self.place = place
+
+"""
+Scene for the TeachPictureMap
+"""
+class TeachPictureScene(QtGui.QGraphicsScene):
+	def __init__(self, *args, **kwargs):
+		super(TeachPictureScene, self).__init__(*args, **kwargs)
+	
+	def mouseReleaseEvent(self, event):
+		clickedObject = self.itemAt(event.lastScenePos().x(), event.lastScenePos().y())
+		if clickedObject.__class__ == PlaceOnMap:
+			base.teachWidget.lesson.checkAnswer(clickedObject.place)
+
+"""
 The map on the teach tab
 """
-class TeachPictureBox(Map):
+class TeachPictureMap(Map):
 	def __init__(self, map, *args, **kwargs):
-		super(TeachPictureBox, self).__init__(*args, **kwargs)
+		super(TeachPictureMap, self).__init__(*args, **kwargs)
 		# Not interactive
 		self.interactive = False
-		# No scrollbars here
-		self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-		self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 		# Make sure everything is redrawn every time
 		self.setViewportUpdateMode(0)
 	
@@ -375,19 +421,70 @@ class TeachPictureBox(Map):
 	Sets the arrow on the map to the right position
 	"""
 	def setArrow(self, x, y):
-		base.teachWidget.mapBox.centerOn(x-15,y-50)
-		base.teachWidget.mapBox.crosshair.setPos(x-15,y-50)
+		self.centerOn(x-15,y-50)
+		self.crosshair.setPos(x-15,y-50)
 	
 	"""
-	Overriding the base class _setPicture method with one adding the arrow
+	Removes the arrow
+	"""
+	def removeArrow(self):
+		self.scene.removeItem(self.crosshair)
+	
+	"""
+	Overriding the base class _setPicture method with one using the TeachPictureScene
 	"""
 	def _setPicture(self,picture):
-		Map._setPicture(self, picture)
+		# Create a new scene
+		self.scene = TeachPictureScene()
+		# Set the pixmap of the scene
+		self.pixmap = QtGui.QPixmap(picture)
+		self.scene.addPixmap(self.pixmap)
+		# Set the scene
+		self.setScene(self.scene)
+	
+	"""
+	Shows all the places without names
+	"""
+	def showPlaceRects(self):
+		placesList = []
 		
-		crosshairPixmap = QtGui.QPixmap(base.api.resourcePath("resources/crosshair.png"))
-		self.crosshair = QtGui.QGraphicsPixmapItem(crosshairPixmap)
+		for place in base.enterWidget.places.items:
+			# Make the little rectangle
+			rect = PlaceOnMap(place)
+			# Place the rectangle in the list of items
+			placesList.append(rect)
 		
-		self.scene.addItem(self.crosshair)
+		self.placesGroup = self.scene.createItemGroup(placesList)
+	
+	def hidePlaceRects(self):
+		try:
+			for item in self.placesList:
+				self.removeItem(item)
+		except AttributeError:
+			pass
+	
+	def setInteractive(self, val):
+		if val:
+			self.showPlaceRects()
+			# Interactive
+			self.interactive = True
+			# Scrollbars
+			self.setDragMode(QtGui.QGraphicsView.ScrollHandDrag)
+			self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+			self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+		else:
+			self.hidePlaceRects()
+			# Not interactive
+			self.interactive = False
+			# No scrollbars
+			self.setDragMode(QtGui.QGraphicsView.NoDrag)
+			self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+			self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+			# Arrow
+			crosshairPixmap = QtGui.QPixmap(base.api.resourcePath("resources/crosshair.png"))
+			self.crosshair = QtGui.QGraphicsPixmapItem(crosshairPixmap)
+			
+			self.scene.addItem(self.crosshair)
 
 """
 The teach tab
@@ -406,22 +503,32 @@ class TeachWidget(QtGui.QWidget):
 		top.addWidget(label)
 		top.addWidget(self.lessonTypeChooser)
 		
+		label = QtGui.QLabel("Lesson order:")
+		self.lessonOrderChooser = LessonOrderChooser()
+		
+		top.addWidget(label)
+		top.addWidget(self.lessonOrderChooser)
+		
 		# Middle
-		self.mapBox = TeachPictureBox(base.enterWidget.mapChooser.currentText())
+		self.mapBox = TeachPictureMap(base.enterWidget.mapChooser.currentText())
 		
 		# Bottom
 		bottom = QtGui.QHBoxLayout()
 		
-		label = QtGui.QLabel("Which place is here?")
+		self.label = QtGui.QLabel("Which place is here?")
 		self.answerfield = QtGui.QLineEdit()
-		checkanswerbutton = QtGui.QPushButton("Check")
+		self.checkanswerbutton = QtGui.QPushButton("Check")
 		self.answerfield.returnPressed.connect(self.checkAnswerButtonClick)
-		checkanswerbutton.clicked.connect(self.checkAnswerButtonClick)
+		self.checkanswerbutton.clicked.connect(self.checkAnswerButtonClick)
+		
+		self.questionLabel = QtGui.QLabel("Please click this place:")
+		
 		self.progress = QtGui.QProgressBar()
 		
-		bottom.addWidget(label)
+		bottom.addWidget(self.label)
 		bottom.addWidget(self.answerfield)
-		bottom.addWidget(checkanswerbutton)
+		bottom.addWidget(self.checkanswerbutton)
+		bottom.addWidget(self.questionLabel)
 		bottom.addWidget(self.progress)
 		
 		# Total
@@ -468,6 +575,21 @@ class TeachWidget(QtGui.QWidget):
 		# If not in a lesson (so it doesn't start a lesson if you go back from a mistakingly click on the Enter tab)
 		elif not base.inLesson:
 			self.initiateLesson()
+	
+	"""
+	Sets the bottom widgets to either the in-order version (False) or the inversed-order (True)
+	"""
+	def setWidgets(self, order):
+		if order == Order.Inversed:
+			self.label.setVisible(False)
+			self.answerfield.setVisible(False)
+			self.checkanswerbutton.setVisible(False)
+			self.questionLabel.setVisible(True)
+		else:
+			self.label.setVisible(True)
+			self.answerfield.setVisible(True)
+			self.checkanswerbutton.setVisible(True)
+			self.questionLabel.setVisible(False)
 
 """
 The lesson itself
@@ -477,6 +599,7 @@ class TopoLesson(object):
 		super(TopoLesson, self).__init__(*args, **kwargs)
 		# Set the map
 		base.teachWidget.mapBox.setMap(base.enterWidget.mapChooser.currentText())
+		base.teachWidget.mapBox.setInteractive(self.order)
 		
 		self.lessonType = base.teachWidget.lessonTypeChooser.currentLessonType.createLessonType(itemList,range(len(itemList.items)))
 		
@@ -489,19 +612,31 @@ class TopoLesson(object):
 		
 		# Reset the progress bar
 		base.teachWidget.progress.setValue(0)
+		
+		base.teachWidget.setWidgets(self.order)
 	
 	"""
 	Check whether the given answer was right or wrong
 	"""
-	def checkAnswer(self):
-		if self.currentItem.name == base.teachWidget.answerfield.text():
-			# Answer was right
-			self.lessonType.setResult(Result("right"))
-			# Progress bar
-			self._updateProgressBar()
+	def checkAnswer(self, answer=None):
+		if self.order == Order.Inversed:
+			if self.currentItem == answer:
+				# Answer was right
+				self.lessonType.setResult(Result("right"))
+				# Progress bar
+				self._updateProgressBar()
+			else:
+				# Answer was wrong
+				self.lessonType.setResult(Result("wrong"))
 		else:
-			# Answer was wrong
-			self.lessonType.setResult(Result("wrong"))
+			if self.currentItem.name == base.teachWidget.answerfield.text():
+				# Answer was right
+				self.lessonType.setResult(Result("right"))
+				# Progress bar
+				self._updateProgressBar()
+			else:
+				# Answer was wrong
+				self.lessonType.setResult(Result("wrong"))
 			
 	"""
 	What happens when the next question should be asked
@@ -509,8 +644,12 @@ class TopoLesson(object):
 	def nextQuestion(self, item):
 		#set the next question
 		self.currentItem = item
-		#set the arrow to the right position
-		base.teachWidget.mapBox.setArrow(self.currentItem.x,self.currentItem.y)
+		if self.order == Order.Inversed:
+			#set the question
+			base.teachWidget.questionLabel.setText("Please click this place: " + self.currentItem.name)
+		else:
+			#set the arrow to the right position
+			base.teachWidget.mapBox.setArrow(self.currentItem.x,self.currentItem.y)
 	
 	"""
 	Ends the lesson
@@ -526,6 +665,10 @@ class TopoLesson(object):
 	def _updateProgressBar(self):
 		base.teachWidget.progress.setMaximum(self.lessonType.totalItems+1)
 		base.teachWidget.progress.setValue(self.lessonType.askedItems)
+	
+	@property
+	def order(self):
+		return base.teachWidget.lessonOrderChooser.currentIndex()
 
 """
 The module
