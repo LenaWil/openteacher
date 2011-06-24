@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#    Copyright 2008-2011, Milan Boers
+#    Copyright 2011, Milan Boers
+#    Copyright 2011, Marten de Vries
 #
 #    This file is part of OpenTeacher.
 #
@@ -27,11 +28,7 @@ import threading
 
 import sys
 
-class DependencyError(Exception):
-	def __init__(self,value):
-		self.value = value
-	def __str__(self):
-		return repr(self.value)
+class DependencyError(Exception): pass
 
 class SpeakThread(threading.Thread):
 	def __init__(self,engine,voiceid,text):
@@ -98,30 +95,26 @@ class TextToSpeech():
 class TextToSpeechModule(object):
 	voiceid = None
 	def __init__(self, mm):
-		self.mm = mm
-		self.supports = ("initializing", "textToSpeech")
-		self.requires = (1,0)
-		
+		self._mm = mm
+
+		self.type = "textToSpeech"
+
 		# Create the say word event
-		self.say = self.mm.createEvent()
-	
-	def initialize(self):
-		for module in self.mm.activeMods.supporting("modules"):
-			module.registerModule("Text to speech", self)
+		self.say = self._mm.createEvent()
 	
 	def enable(self):
+		for module in self._mm.mods("active", type="modules"):
+			module.registerModule("Text to speech", self)
+
 		#For Windows and Mac
-		tts = self.mm.import_("tts")
-		from tts import pyttsx
-		
-		print "pyttsx" in sys.modules
-		print "tts" in sys.modules
+		pyttsx = self._mm.importFrom(self._mm.resourcePath("tts"), "pyttsx")
+#		from tts import pyttsx
 		
 		#text to speech engine maken
 		try:
 			self.tts = TextToSpeech(pyttsx)
 		except DependencyError as e:
-			QtGui.QMessageBox.critical(None, "Error", QtCore.QString(e))
+			QtGui.QMessageBox.critical(None, "Error", unicode(e))
 		
 		self.voiceid = self.tts.getVoices()[1][0]
 		
@@ -135,9 +128,9 @@ class TextToSpeechModule(object):
 	
 	def close(self):
 		print "Closed!"
-	
+
 	def newWord(self, word, thread=True):
-		if self.voiceid <> None:
+		if self.voiceid is not None:
 			self.tts.speak(word,120,self.voiceid,thread)
 		else:
 			self.setVoice()

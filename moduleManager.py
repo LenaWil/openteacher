@@ -18,78 +18,45 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-__version__ = (1,0)
-
 import sys
 import os
 import imp
 import inspect
 
 class ModuleFilterer(object):
-	#Cache used to speed up module lookups, is class member so all
-	#instances can use it.
-	_cache = {}
-
 	def __init__(self, modules, *args, **kwargs):
 		super(ModuleFilterer, self).__init__(*args, **kwargs)
 		self._modules = modules
-		self._includes = set()
-		self._excludes = set()
 
-	@property
-	def items(self):
-		#Freeze sets so they are hashable
-		self._includes = frozenset(self._includes)
-		self._excludes = frozenset(self._excludes)
+		self._where = {}
+		self._whereTrue = set()
 
-		#do a cache look up, maybe it speeds everything a little up - i
-		#couldn't measure the difference, but it was nice to code ;)
-		try:
-			return self._cache[(self._includes, self._excludes)].copy()
-		except KeyError:
-			pass
-		#Look up the modules manually
-		selectedModules = self._modules.copy()
-		for include in self._includes:
-			group = set()
-			for module in selectedModules:
-				if include in module.supports:
-					group.add(module)
-			selectedModules = selectedModules.intersection(group)
-		selectedModules = set(filter(self._moduleNotExcluded, selectedModules))
-		#store the result in the cache for later use
-		self._cache[(self._includes, self._excludes)] = selectedModules.copy()
-		return selectedModules
+	def __call__(self, *args, **kwargs):
+		self._whereTrue = self._whereTrue.union(args)
+		self._where.update(kwargs)
+		return self
 
-	def _moduleNotExcluded(self, module):
-		for interface in module.supports:
-			if interface in self._excludes:
+	def __iter__(self):
+		return iter(filter(self._filterModule, self._modules))
+
+	def _filterModule(self, module):
+		for attribute, value in self._where.iteritems():
+			if not self._equals(module, attribute, value):
+				return False
+		for attribute in self._whereTrue:
+			if not self._isTrue(module, attribute):
 				return False
 		return True
 
-	def __iter__(self):
-		return iter(self.items)
-
-	def __len__(self):
-		return len(self.items)
-
-	def supporting(self, *features):
-		self._includes = self._includes.union(features)
-		return self
-
-	def exclude(self, *features):
-		self._excludes = self._excludes.union(features)
-		return self
-
-class ActiveModuleFilterer(ModuleFilterer):
-	@property
-	def items(self):
-		modules = super(ActiveModuleFilterer, self).items
-		return set(filter(self._isActive, modules))
-
-	def _isActive(self, module):
+	def _equals(self, module, attribute, value):
 		try:
-			return module.active
+			return getattr(module, attribute) == value
+		except AttributeError:
+			return False
+
+	def _isTrue(self, module, attribute):
+		try:
+			return bool(getattr(module, attribute))
 		except AttributeError:
 			return False
 
@@ -99,6 +66,7 @@ class ModuleManager(object):
 
 		self.modulesPath = modulesPath
 		self._events = {}
+		self._references = []
 
 		self._loadModules()
 
@@ -119,14 +87,18 @@ class ModuleManager(object):
 	def mods(self):
 		return ModuleFilterer(self._modules)
 
-	@property
-	def activeMods(self):
-		return ActiveModuleFilterer(self._modules)
-
 	def importFrom(self, path, moduleName):
 		fp, pathname, description = imp.find_module(moduleName, [path])
 		try:
-			return imp.load_module(moduleName, fp, pathname, description)
+			#import the module
+			module = imp.load_module(moduleName, fp, pathname, description)
+			#remove the module from the python cache, to avoid
+			#namespace clashes
+			del sys.modules[moduleName]
+			#but keep our own reference, otherwise the module namespace
+			#will probably be garbage collected.
+			self._references.append(module)
+			return module
 		finally:
 			if fp:
 				fp.close()
@@ -147,8 +119,7 @@ class ModuleManager(object):
 			if valid:
 				container = self.importFrom(location, fileName)
 				module = container.init(self)
-				if module.requires[0] == __version__[0] and module.requires[1] <= __version__[1]:
-					self._modules.add(module)
+				self._modules.add(module)
 
 class Event(object):
 	def __init__(self, *args, **kwargs):

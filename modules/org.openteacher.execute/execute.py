@@ -23,30 +23,19 @@ class ExecuteModule(object):
 		super(ExecuteModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("execute",)
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "execute"
 
 	def execute(self, ui, path=None):
-		#FIXME: one
-		for module in self._mm.mods.supporting("uiController"):
+		for module in self._mm.mods(type="uiController"): #FIXME: choose a uiController. Maybe obligatory one like openteacher-core? Or command line setting?
 			module.enable()
 			module.initialize(ui)
 
-		#FIXME: one
-		for module in self._mm.mods.supporting("modules"):
+		for module in self._mm.mods(type="modules"): #FIXME: choose a 'modules'. Maybe obligatory one like openteacher-core? Or command line setting?
 			module.enable()
 			module.activateModules()
 
-		#FIXME: (the) one
-		for module in self._mm.activeMods.supporting("uiController"):
+		for module in self._mm.mods("active", type="uiController"):
 			module.run(path)
-
-	def enable(self):
-		self.active = True
-
-	def disable(self):
-		self.active = False
 
 def init(moduleManager):
 	return ExecuteModule(moduleManager)

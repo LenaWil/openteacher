@@ -1,19 +1,16 @@
 class SettingsDialogModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(SettingsDialogModule, self).__init__(*args, **kwargs)
-
-		self.supports = ("settingsDialog",)
-		self.requires = (1, 0)
-		self.active = False
-
 		self._mm = moduleManager
+
+		self.type = "settingsDialog"
 
 	def enable(self):
 		self._ui = self._mm.import_("ui")
 		self.active = True
 
 ########## DEMO CONTENT
-		for module in self._mm.activeMods.supporting("settings"):
+		for module in self._mm.mods("active", type="settings"):
 			module.registerSetting(
 				"org.openteacher.settings.test",
 				"Test setting",
@@ -44,15 +41,15 @@ class SettingsDialogModule(object):
 		del self._ui
 
 	def show(self):
-		for umod in self._mm.activeMods.supporting("ui"):
+		for umod in self._mm.mods("active", type="ui"):
 			dialog = self._ui.SettingsDialog(self._mm)
 			tab = umod.addCustomTab(dialog.windowTitle(), dialog)
-			for mmod in self._mm.activeMods.supporting("modules"):
+			for mmod in self._mm.mods("active", type="modules"):
 				tab.closeRequested.handle(mmod.modulesUpdated.emit)
 			tab.closeRequested.handle(tab.close)
 
 ########## DEMO CONTENT
-		for module in self._mm.activeMods.supporting("settings"):
+		for module in self._mm.mods("active", type="settings"):
 			print module.value("org.openteacher.settings.test")
 			print module.value("org.openteacher.settings.test2")
 			print module.value("org.openteacher.settings.test3")

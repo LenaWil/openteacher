@@ -37,10 +37,11 @@ class WordsStringCheckerTestCase(unittest.TestCase):
 		self.word2.comment = u"+acc"
 		self.word2.answers = [(u"naar(binnen)", u"in"), (u"tot", u"jegens")]
 
-		#FIXME: should we activate wordsStringParser here? (and deactivate it in tearDown()?)
-		for module in self._mm.mods.supporting("wordsStringChecker"):
+		for module in self._mm.mods(type="wordsStringChecker"):
 			module.enable()
-		for module in self._mm.mods.supporting("wordsStringParser"):
+		for module in self._mm.mods(type="wordsStringParser"):
+			module.enable()
+		for module in self._mm.mods(type="modules"):
 			module.enable()
 
 	def testSingleRightAnswer(self):
@@ -73,16 +74,16 @@ class WordsStringCheckerTestCase(unittest.TestCase):
 		self._test(u"1. in, naar(binnen) 2. jegens", self.word2, "right")
 
 	def _test(self, givenAnswer, word, output):
-		for module in self._mm.activeMods.supporting("wordsStringChecker"):
+		for module in self._mm.mods("active", type="wordsStringChecker"):
 			result = module.check(givenAnswer, word)
 			self.assertEqual(result, output)
 
 	def tearDown(self):
 		del self.word1
 		del self.word2
-		for module in self._mm.activeMods.supporting("wordsStringChecker"):
+		for module in self._mm.mods("active", type="wordsStringChecker"):
 			module.disable()
-		for module in self._mm.activeMods.supporting("wordsStringParser"):
+		for module in self._mm.mods("active", type="wordsStringParser"):
 			module.disable()
 
 class TestModule(object):
@@ -90,9 +91,7 @@ class TestModule(object):
 		super(TestModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("test",)
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "test"
 
 	def enable(self):
 		self.TestCase = WordsStringCheckerTestCase

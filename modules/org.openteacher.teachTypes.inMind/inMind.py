@@ -60,6 +60,7 @@ class InMindTeachWidget(QtGui.QStackedWidget):
 		super(InMindTeachWidget, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
 		self.thinkWidget = ThinkWidget()
 		self.answerWidget = AnswerWidget()
@@ -87,12 +88,16 @@ class InMindTeachWidget(QtGui.QStackedWidget):
 
 	def newItem(self, word):
 		self._currentWord = word
-		#FIXME: only one
-		for module in self._mm.activeMods.supporting("wordsStringComposer"):
-			self.answerWidget.label.setText("".join([
-				_("Translation: "),
-				module.compose(word.answers)
-			]))
+		composers = set(self._mm.mods("active", type="wordsStringComposer"))
+		try:
+			compose = self._modules.chooseItem(composers).compose
+		except IndexError, e:
+			#FIXME: show a nice error message? Make it impossible to use
+			#inMind in another way?
+			raise e
+		self.answerWidget.label.setText(
+			_("Translation: ") + compose(word.answers)
+		)
 		self.setCurrentWidget(self.thinkWidget)
 
 	def startAnswering(self):
@@ -101,18 +106,18 @@ class InMindTeachWidget(QtGui.QStackedWidget):
 class InMindTeachTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(InMindTeachTypeModule, self).__init__(*args, **kwargs)
-		self.supports = ("teachType",)
-		self.requires = (1, 0)
 		self._mm = moduleManager
 
+		self.type = "teachType"
+
 	def enable(self):
-		self.type = "words"
+		self.dataType = "words"
 		self.name = "Think answers"
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self.type
+		del self.dataType
 		del self.name
 
 	def createWidget(self):

@@ -39,9 +39,7 @@ class OpenTeachingWordsLoaderModule(object):
 		super(OpenTeachingWordsLoaderModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("load", "initializing")
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "load"
 
 	def initialize(self):
 		for module in self._mm.activeMods.supporting("modules"):

@@ -18,33 +18,35 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+import copy
+
 class OpenTeacherSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(OpenTeacherSaverModule, self).__init__(*args, **kwargs)
-
-		self.supports = ("save", "initializing")
-		self.requires = (1, 0)
-		self.active = False
-
 		self._mm = moduleManager
 
-	def initialize(self):
-		for module in self._mm.activeMods.supporting("modules"):
-			module.registerModule("OpenTeacher (.ot) saver", self)
+		self.type = "save"
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules.registerModule("OpenTeacher (.ot) saver", self)
 		self._pyratemp = self._mm.import_("pyratemp")
 		self.saves = {"words": ["ot"]}
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
 		del self._pyratemp
 		del self.saves
 
 	def save(self, type, wordList, path):
+		composers = set(self._mm.mods("active", type="wordsStringComposer"))
+		composer = self._modules.chooseItem(composers)
+
 		#Copy, because we're going to modify it
-		import copy
 		wordList = copy.deepcopy(wordList) # the words have to be unaltered
 		try:
 			wordList.title
@@ -59,7 +61,7 @@ class OpenTeacherSaverModule(object):
 		except AttributeError:
 			wordList.answerLanguage = u""
 
-		for word in wordList.words:
+		for word in wordList.items:
 			#results
 			word.results = {"right": 0, "wrong": 0}
 			for test in wordList.tests:
@@ -70,15 +72,13 @@ class OpenTeacherSaverModule(object):
 						except KeyError:
 							pass
 			#known, foreign and second
-			#FIXME: choose one
-			for module in self._mm.activeMods.supporting("wordsStringComposer"):
-				word.known = module.compose(word.questions)
-				if len(word.answers) == 1 and len(word.answers[0]) > 1:
-					word.foreign = word.answers[0][0]
-					word.second = module.compose([word.answers[0][1:]])
-				else:
-					word.foreign = module.compose(word.answers)
-					word.second = None
+			word.known = compose(word.questions)
+			if len(word.answers) == 1 and len(word.answers[0]) > 1:
+				word.foreign = word.answers[0][0]
+				word.second = compose([word.answers[0][1:]])
+			else:
+				word.foreign = compose(word.answers)
+				word.second = None
 
 		templatePath = self._mm.resourcePath("template.txt")
 		t = self._pyratemp.Template(open(templatePath).read())

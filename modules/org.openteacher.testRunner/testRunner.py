@@ -25,24 +25,16 @@ class TestRunnerModule(object):
 		super(TestRunnerModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("testRunner",)
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "testRunner"
 
 	def run(self):
 		testSuite = unittest.TestSuite()
-		for module in self._mm.mods.supporting("test"):
+		for module in self._mm.mods(type="test"):
 			module.enable()
 			newTests = unittest.TestLoader().loadTestsFromTestCase(module.TestCase)
 			testSuite.addTests(newTests)
 			module.disable()
 		unittest.TextTestRunner().run(testSuite)
-
-	def enable(self):
-		self.active = True
-
-	def disable(self):
-		self.active = False
 
 def init(moduleManager):
 	return TestRunnerModule(moduleManager)

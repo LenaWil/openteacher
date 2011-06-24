@@ -22,16 +22,16 @@ import unittest
 
 class CharsTestCase(unittest.TestCase):
 	def setUp(self):
-		for module in self._mm.mods.supporting("chars"):
+		for module in self._mm.mods(type="chars"):
 			module.enable()
 
 	def testAttributes(self):
-		for module in self._mm.mods.supporting("chars"):
+		for module in self._mm.mods("active", type="chars"):
 			self.assertTrue(hasattr(module, "name"))
 			self.assertTrue(hasattr(module, "data"))
 
 	def tearDown(self):
-		for module in self._mm.activeMods.supporting("chars"):
+		for module in self._mm.mods("active", type="chars"):
 			module.disable()
 
 class TestModule(object):
@@ -39,9 +39,7 @@ class TestModule(object):
 		super(TestModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("test",)
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "test"
 
 	def enable(self):
 		self.TestCase = CharsTestCase

@@ -25,9 +25,7 @@ class WordsStringParserModule(object):
 		super(WordsStringParserModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("wordsStringParser",)
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "wordsStringParser"
 
 	def parse(self, text):
 		obligatorySegments = self._regex.split(text)

@@ -23,9 +23,8 @@ class ModulesModule(object):
 		super(ModulesModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("modules",)
+		self.type = "modules"
 		self.requires = (1, 0)
-		self.active = False
 
 	def registerModule(self, name, module):
 		self._modules[name] = module
@@ -36,10 +35,20 @@ class ModulesModule(object):
 
 	def activateModules(self):
 		#FIXME: leave modules that the user wants to be disabled disabled...
-		modules = self._mm.mods.items - self._mm.activeMods.items
+		modules = set(self._mm.mods) - set(self._mm.mods("active"))
 		for module in modules:
-			module.enable()
+			#try/except catches too much here
+			if hasattr(module, "enable"):
+				module.enable()
 		self.modulesUpdated.emit()
+
+	def chooseItem(self, items):
+		if len(items) == 0:
+			raise IndexError("No items to choose from.")
+		elif len(items) == 1:
+			return items.pop()
+		for module in self._mm.mods("active", type="ui"):
+			module.chooseItem(items)
 
 	def enable(self):
 		self._modules = {}

@@ -22,17 +22,17 @@ import unittest
 
 class LoadersTestCase(unittest.TestCase):
 	def setUp(self):
-		for module in self._mm.mods.supporting("load"):
+		for module in self._mm.mods(type="load"):
 			module.enable()
 
 	def testAttributes(self):
-		for module in self._mm.activeMods.supporting("load"):
+		for module in self._mm.mods("active", type="load"):
 			self.assertTrue(hasattr(module, "getFileTypeOf"))
 			self.assertTrue(hasattr(module, "load"))
 			self.assertTrue(hasattr(module, "loads"))
 
 	def tearDown(self):
-		for module in self._mm.activeMods.supporting("load"):
+		for module in self._mm.mods("active", type="load"):
 			module.enable()
 
 class TestModule(object):
@@ -40,9 +40,7 @@ class TestModule(object):
 		super(TestModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("test",)
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "test"
 
 	def enable(self):
 		self.TestCase = LoadersTestCase

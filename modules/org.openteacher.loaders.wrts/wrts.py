@@ -43,16 +43,14 @@ class Word(object):
 class WrtsLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(WrtsLoaderModule, self).__init__(*args, **kwargs)
-
 		self._mm = moduleManager
-		self.supports = ("load", "initializing")
-		self.requires = (1, 0)
 
-	def initialize(self):
-		for module in self._mm.activeMods.supporting("modules"):
-			module.registerModule("WRTS (.wrts) loader", self)
+		self.type = "load"
 
 	def enable(self):
+		for module in self._mm.mods("active", type="modules"):
+			module.registerModule("WRTS (.wrts) loader", self)
+
 		self.loads = {"wrts": ["words"]}
 		self.active = True
 
@@ -85,7 +83,7 @@ class WrtsLoaderModule(object):
 			word = Word()
 			word.id = counter
 
-			for module in self._mm.activeMods.supporting("wordsStringParser"):
+			for module in self._mm.mods("active", type="wordsStringParser"):
 				word.questions = module.parse(wordTree.findtext("a"))
 				word.answers = module.parse(wordTree.findtext("b"))
 

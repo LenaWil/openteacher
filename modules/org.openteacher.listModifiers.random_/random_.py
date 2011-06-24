@@ -25,9 +25,7 @@ class RandomModule(object):
 		super(RandomModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("listModifier",)
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "listModifier"
 
 	def modifyList(self, indexes, list):
 		#always work on the indexes
@@ -35,13 +33,13 @@ class RandomModule(object):
 		return indexes
 
 	def enable(self):
-		self.type = "all"
+		self.dataType = "all"
 		self.name = "Random"
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self.type
+		del self.dataType
 		del self.name
 
 def init(moduleManager):

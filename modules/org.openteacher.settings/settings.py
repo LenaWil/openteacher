@@ -23,9 +23,7 @@ class SettingsModule(object):
 		super(SettingsModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("settings",)
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "settings"
 
 	def registerSetting(self, internal_name, name, type="short_text", lessonType=None, category=None):
 		try:

@@ -22,11 +22,9 @@
 class GreekModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(GreekModule, self).__init__(*args, **kwargs)
-
 		self._mm = moduleManager
-		self.requires = (1, 0)
-		self.supports = ("onscreenKeyboardData",)
-		self.active = False
+
+		self.type = "onscreenKeyboardData"
 
 	def enable(self):
 		self.name = _("Greek")

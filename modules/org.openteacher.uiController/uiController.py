@@ -25,24 +25,21 @@ class UiControllerModule(object):
 		super(UiControllerModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("uiController",)
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "uiController"
 
 	def initialize(self, ui):
-		#FIXME: use ui
-		for module in self._mm.mods.supporting("metadata"):
+		#FIXME: use one ui module by user's choice. Make the choice with command line args?
+		for module in self._mm.mods(type="metadata"):
 			module.enable()
-		#FIXME: use one ui module by user's choice. Make the choice with command line args
-		for module in self._mm.mods.supporting("ui"):
+		#FIXME: use one ui module by user's choice. Make the choice with command line args?
+		for module in self._mm.mods(type="ui"):
 			module.enable()
 
 	def run(self, path=None):
-		#FIXME: only one is activated...
-		uiModules = self._mm.activeMods.supporting("ui")
-		self._connectEvents(uiModules)
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._uiModule = set(self._mm.mods("active", type="ui")).pop()
 
-		self.uiModule = uiModules.items.pop()
+		self._connectEvents()
 		self._updateMenuItems()
 
 		if path:
@@ -51,25 +48,24 @@ class UiControllerModule(object):
 			except (NotImplementedError, IOError):
 				pass
 
-		for module in self._mm.activeMods.supporting("ui"):
+		for module in self._mm.mods("active", type="ui"):
 			module.run()
-		self._disconnectEvents(uiModules)
+		self._disconnectEvents()
 
 	def new(self):
-		self.uiModule.showStartTab()
+		self._uiModule.showStartTab()
 
 	def open_(self):
-		#FIXME: only one
-		for module in self._mm.activeMods.supporting("loader"):
-			usableExtensions = module.usableExtensions
-		path = self.uiModule.getLoadPath(
+		loaders = set(self._mm.mods("active", type="loader"))
+		loader = self._modules.chooseItem(loaders)
+
+		usableExtensions = loader.usableExtensions
+		path = self._uiModule.getLoadPath(
 			os.path.expanduser("~"), #FIXME: path should be saved & restored
 			usableExtensions
 		)
 		if path:
-			#FIXME: choose one
-			for module in self._mm.activeMods.supporting("loader"):
-				module.load(path)
+			loader.load(path)
 		#FIXME: inform the user of succes...
 
 	def save(self):
@@ -78,109 +74,132 @@ class UiControllerModule(object):
 		#FIXME: inform the user of succes...
 
 	def saveAs(self):
-		for module in self._mm.activeMods.supporting("saver"): #FIXME: only one
-			usableExtensions = module.usableExtensions
-		path = self.uiModule.getSavePath(
+		savers = set(self._mm.mods("active", type="saver"))
+		saver = self._modules.chooseItem(savers)
+
+		usableExtensions = saver.usableExtensions
+		path = self._uiModule.getSavePath(
 			os.path.expanduser("~"), #FIXME: path should be saved & restored
 			usableExtensions
 		)
 		if path:
-			#FIXME: choose one
-			for module in self._mm.activeMods.supporting("saver"):
-				module.save(path)
+			saver.save(path)
+		#FIXME: inform the user of succes...
 
 	def print_(self):
 		#Setup printer
-		printer = self.uiModule.getConfiguredPrinter()
-		if printer is None:
+		qtPrinter = self._uiModule.getConfiguredPrinter()
+		if qtPrinter is None:
 			return
-		#FIXME: choose one
-		for module in self._mm.activeMods.supporting("printer"):
-			module.print_(printer)
+		
+		printers = set(self._mm.mods("active", type="printer"))
+		printer = self._modules.chooseItem(printers)
+		printer.print_(qtPrinter)
 
 	def _updateMenuItemsWrapper(self, *args, **kwargs):
 		self._updateMenuItems()
 
-	def _connectEvents(self, uiModules):
-		for module in self._mm.activeMods.supporting("lesson"):
+	def _connectEvents(self):
+		for module in self._mm.mods("active", type="lesson"):
 			module.lessonCreationFinished.handle(self._updateMenuItemsWrapper)
 
-		for module in uiModules:
-			module.newEvent.handle(self.new)
-			module.openEvent.handle(self.open_)
-			module.saveEvent.handle(self.save)
-			module.saveAsEvent.handle(self.saveAs)
-			module.printEvent.handle(self.print_)
-			module.settingsEvent.handle(self.settings)
-			module.aboutEvent.handle(self.about)
-			module.documentationEvent.handle(self.documentation)
-			module.quitEvent.handle(self.quit_)
+		self._uiModule.newEvent.handle(self.new)
+		self._uiModule.openEvent.handle(self.open_)
+		self._uiModule.saveEvent.handle(self.save)
+		self._uiModule.saveAsEvent.handle(self.saveAs)
+		self._uiModule.printEvent.handle(self.print_)
+		self._uiModule.settingsEvent.handle(self.settings)
+		self._uiModule.aboutEvent.handle(self.about)
+		self._uiModule.documentationEvent.handle(self.documentation)
+		self._uiModule.quitEvent.handle(self.quit_)
 
-			module.tabChanged.handle(self._updateMenuItems)
+		self._uiModule.tabChanged.handle(self._updateMenuItems)
 
-	def _disconnectEvents(self, uiModules):
-		for module in self._mm.activeMods.supporting("lesson"):
+	def _disconnectEvents(self):
+		for module in self._mm.mods("active", type="lesson"):
 			module.lessonCreationFinished.unhandle(self._updateMenuItemsWrapper)
-		for module in uiModules:
-			module.newEvent.unhandle(self.new)
-			module.openEvent.unhandle(self.open_)
-			module.saveEvent.unhandle(self.save)
-			module.saveAsEvent.unhandle(self.saveAs)
-			module.printEvent.unhandle(self.print_)
-			module.settingsEvent.unhandle(self.settings)
-			module.aboutEvent.unhandle(self.about)
-			module.documentationEvent.unhandle(self.documentation)
-			module.quitEvent.unhandle(self.quit_)
 
-			module.tabChanged.unhandle(self._updateMenuItems)
+		self._uiModule.newEvent.unhandle(self.new)
+		self._uiModule.openEvent.unhandle(self.open_)
+		self._uiModule.saveEvent.unhandle(self.save)
+		self._uiModule.saveAsEvent.unhandle(self.saveAs)
+		self._uiModule.printEvent.unhandle(self.print_)
+		self._uiModule.settingsEvent.unhandle(self.settings)
+		self._uiModule.aboutEvent.unhandle(self.about)
+		self._uiModule.documentationEvent.unhandle(self.documentation)
+		self._uiModule.quitEvent.unhandle(self.quit_)
+
+		self._uiModule.tabChanged.unhandle(self._updateMenuItems)
 
 	def _updateMenuItems(self):
-		for module in self._mm.activeMods.supporting("ui"):
-			#new, hide when already on the +-tab
-			hideNew = module.startTabActive
-			module.enableNew(not hideNew)
+		#new, hide when already on the +-tab
+		hideNew = self._uiModule.startTabActive
+		self._uiModule.enableNew(not hideNew)
 
-			#open
-			#FIXME: choose one
-			for loader in self._mm.activeMods.supporting("loader"):
-				openSupport = loader.openSupport
-			module.enableOpen(openSupport)
+		#open
+		loaders = set(self._mm.mods("active", type="loader"))
+		try:
+			loader = self._modules.chooseItem(loaders)
+		except IndexError:
+			openSupport = False
+		else:
+			openSupport = loader.openSupport
+		self._uiModule.enableOpen(openSupport)
 
-			#save
-			#FIXME: choose one
-			for saver in self._mm.activeMods.supporting("saver"):
-				saveSupport = saver.saveSupport
-			module.enableSave(saveSupport)
-			module.enableSaveAs(saveSupport)
+		#save
+		savers = set(self._mm.mods("active", type="saver"))
+		try:
+			saver = self._modules.chooseItem(savers)
+		except IndexError:
+			saveSupport = False
+		else:
+			saveSupport = saver.saveSupport
+		self._uiModule.enableSave(saveSupport)
+		self._uiModule.enableSaveAs(saveSupport)
 
-			#print
-			#FIXME: choose one
-			for printer in self._mm.activeMods.supporting("printer"):
-				printSupport = printer.printSupport
-			module.enablePrint(printSupport)
+		#print
+		printers = set(self._mm.mods("active", type="printer"))
+		try:
+			printer = self._modules.chooseItem(printers)
+		except IndexError:
+			printSupport = False
+		else:
+			printSupport = printer.printSupport
+		self._uiModule.enablePrint(printSupport)
 
-			#settings
-			settingsSupport = len(self._mm.activeMods.supporting("settingsDialog").items) != 0
-			module.enableSettings(settingsSupport)
+		#settings
+		settingsSupport = len(set(self._mm.mods("active", type="settingsDialog"))) != 0
+		self._uiModule.enableSettings(settingsSupport)
 
-			#about
-			aboutSupport = len(self._mm.activeMods.supporting("about").items) != 0
-			module.enableAbout(aboutSupport)
+		#about
+		aboutSupport = len(set(self._mm.mods("active", type="about"))) != 0
+		self._uiModule.enableAbout(aboutSupport)
+
+		#documentation
+		docSupport = len(set(self._mm.mods("active", type="documentation"))) != 0
+		self._uiModule.enableDocumentation(docSupport)
 
 	def settings(self):
-		for module in self._mm.activeMods.supporting("settingsDialog"):
-			module.show()
+		module = self._modules.chooseItem(
+			set(self._mm.mods("active", type="settingsDialog"))
+		)
+		module.show()
 
 	def about(self):
-		for module in self._mm.activeMods.supporting("about"):
-			module.show()
+		module = self._modules.chooseItem(
+			set(self._mm.mods("active", type="about"))
+		)
+		module.show()
 
 	def documentation(self):
-		for module in self._mm.activeMods.supporting("documentation"):
-			module.show()
+		module = self._modules.chooseItem(
+			set(self._mm.mods("active", type="documentation"))
+		)
+		module.show()
 
 	def quit_(self):
-		self.uiModule.interrupt()
+		for ui in self._mm.mods("active", type="ui"):
+			ui.interrupt()
 
 	def enable(self):
 		self.active = True

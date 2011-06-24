@@ -25,36 +25,35 @@ class WrtsSaverModule(object):
 		super(WrtsSaverModule, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
-		self.supports = ("save", "initializing")
-		self.requires = (1, 0)
-
-	def initialize(self):
-		for module in self._mm.activeMods.supporting("modules"):
-			module.registerModule("WRTS (.wrts) saver", self)
+		self.type = "save"
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules.registerModule("WRTS (.wrts) saver", self)
 		self._pyratemp = self._mm.import_("pyratemp")
 		self.saves = {"words": ["wrts"]}
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
 		del self._pyratemp
 		del self.saves
 
 	def save(self, type, list, path):
-		#FIXME: Choose one!
-		for module in self._mm.activeMods.supporting("wordsStringComposer"):
-			compose = module.compose
+		composers = set(self._mm.mods("active", type="wordsStringComposer"))
+		composer = self._modules.chooseItem(composers)
 
 		class EvalPseudoSandbox(self._pyratemp.EvalPseudoSandbox):
 			def __init__(self2, *args, **kwargs):
 				self._pyratemp.EvalPseudoSandbox.__init__(self2, *args, **kwargs)
 
-				self2.register("compose", compose)
+				self2.register("compose", composer.compose)
 				self2.register("hasattr", hasattr)
 
-		templatePath = self._mm.resourcePath(__file__, "template.txt")
+		templatePath = self._mm.resourcePath("template.txt")
 		t = self._pyratemp.Template(
 			open(templatePath).read(),
 			eval_class=EvalPseudoSandbox

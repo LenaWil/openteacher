@@ -22,11 +22,11 @@ import unittest
 
 class WordsStringParserTestCase(unittest.TestCase):
 	def setUp(self):
-		for module in self._mm.mods.supporting("wordsStringParser"):
+		for module in self._mm.mods(type="wordsStringParser"):
 			module.enable()
 
 	def _test(self, input, output):
-		for module in self._mm.activeMods.supporting("wordsStringParser"):
+		for module in self._mm.mods("active", type="wordsStringParser"):
 			data = module.parse(input)
 			self.assertEqual(data, output)
 
@@ -61,7 +61,7 @@ class WordsStringParserTestCase(unittest.TestCase):
 		)
 
 	def tearDown(self):
-		for module in self._mm.activeMods.supporting("wordsStringParser"):
+		for module in self._mm.mods("active", type="wordsStringParser"):
 			module.disable()
 
 class TestModule(object):
@@ -69,9 +69,7 @@ class TestModule(object):
 		super(TestModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("test",)
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "test"
 
 	def enable(self):
 		self.TestCase = WordsStringParserTestCase

@@ -48,15 +48,12 @@ class Teach2000LoaderModule(object):
 		super(Teach2000LoaderModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("load", "initializing")
-		self.requires = (1, 0)
-		self.active = False
-
-	def initialize(self):
-		for module in self._mm.activeMods.supporting("modules"):
-			module.registerModule("Teach2000 (.t2k) loader", self)
+		self.type = "load"
 
 	def enable(self):
+		for module in self._mm.mods("active", type="modules"):
+			module.registerModule("Teach2000 (.t2k) loader", self)
+
 		self.loads = {"t2k": ["words"]}
 		self.active = True
 

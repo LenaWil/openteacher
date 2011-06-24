@@ -21,27 +21,29 @@
 class TxtSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TxtSaverModule, self).__init__(*args, **kwargs)
-
-		self.supports = ("save", "initializing")
-		self.requires = (1, 0)
-		self.active = False
 		self._mm = moduleManager
 
-	def initialize(self):
-		for module in self._mm.activeMods.supporting("modules"):
-			module.registerModule("Plain text (.txt) saver", self)
+		self.type = "save"
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules.registerModule("Plain text (.txt) saver", self)
 		self.saves = {"words": ["txt"]}
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
 		del self.saves
 
 	def save(self, type, list, path):
 		def exists(obj, attr):
 			return hasattr(obj, attr) and getattr(obj, attr)
+
+		composers = set(self._mm.mods("active", type="wordsStringComposer"))
+		compose = self._modules.chooseItem(composers).compose
 
 		text = u""
 
@@ -50,24 +52,21 @@ class TxtSaverModule(object):
 		if exists(list, "questionLanguage") and exists(list, "answerLanguage"):
 			text += list.questionLanguage + " - " + list.answerLanguage + "\n\n"
 
-		if len(list.words) != 0:
-			#FIXME: choose one
-			for module in self._mm.activeMods.supporting("wordsStringComposer"):
-				lengths = map(lambda x: len(module.compose(x.questions)) +1, list.words)
-				maxLen = max(lengths) +1
+		if len(list.items) != 0:
+			lengths = map(lambda word: len(compose(word.questions)), list.items)
+			maxLen = max(lengths) +1
+			#FIXME: should 8 be an advanced setting?
 			if maxLen < 8:
 				maxLen = 8
 
 			for word in list.items:
-				#FIXME: choose one
-				for module in self._mm.activeMods.supporting("wordsStringComposer"):
-					questions = module.compose(word.questions)
-					answers = module.compose(word.answers)
-				text += "%s%s %s\n" % (
-					questions,
+				questions = compose(word.questions)
+				text += u"".join([
+					compose(word.questions),
 					(maxLen - len(questions)) * " ",
-					answers
-				)
+					compose(word.answers),
+					u"\n"
+				])
 
 		open(path, "w").write(text.encode("UTF-8"))
 

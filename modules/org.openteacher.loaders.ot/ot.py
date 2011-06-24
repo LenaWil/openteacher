@@ -49,17 +49,14 @@ class Result(str):
 class OpenTeacherLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(OpenTeacherLoaderModule, self).__init__(*args, **kwargs)
-		self.supports = ("load", "initializing")
-		self.requires = (1, 0)
-		self.active = False
 
+		self.type = "load"
 		self._mm = moduleManager
 
-	def initialize(self):
-		for module in self._mm.activeMods.supporting("modules"):
+	def enable(self):
+		for module in self._mm.mods("active", type="modules"):
 			module.registerModule("OpenTeacher (.ot) loader", self)
 
-	def enable(self):
 		self.loads = {"ot": ["words"]}
 		self.active = True
 
@@ -97,7 +94,7 @@ class OpenTeacherLoaderModule(object):
 			#Parses the question
 			known = treeWord.findtext("known")
 			#FIXME: choose one
-			for module in self._mm.activeMods.supporting("wordsStringParser"):
+			for module in self._mm.mods("active", type="wordsStringParser"):
 				listWord.questions = module.parse(known)
 
 			#Parses the answers
@@ -108,7 +105,7 @@ class OpenTeacherLoaderModule(object):
 				foreign = treeWord.findtext("foreign")
 			#remove so the test is also reliable the next time
 			del second
-			for module in self._mm.activeMods.supporting("wordsStringParser"):
+			for module in self._mm.mods("active", type="wordsStringParser"):
 				listWord.answers = module.parse(foreign)
 
 			#Parses the results, all are saved in the test made above.

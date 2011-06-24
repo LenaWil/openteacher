@@ -23,12 +23,9 @@ class Teach2000SaverModule(object):
 		super(Teach2000SaverModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("save", "initializing")
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "save"
 
-	def initialize(self):
-		for module in self._mm.activeMods.supporting("modules"):
+		for module in self._mm.mods("active", type="modules"):
 			module.registerModule("Teach2000 (.t2k) saver", self)
 
 	def enable(self):

@@ -32,10 +32,14 @@ class WordList(object):
 class Word(object): pass
 
 class WordsTableModel(QtCore.QAbstractTableModel):
-	def __init__(self, moduleManager, *args, **kwargs):
+	QUESTIONS, ANSWERS, COMMENT = xrange(3)
+
+	def __init__(self, composer, parser, *args, **kwargs):
 		super(WordsTableModel, self).__init__(*args, **kwargs)
 
-		self._mm = moduleManager
+		self._compose = composer
+		self._parse = parser
+
 		self.updateList(WordList())
 
 	def updateList(self, list):
@@ -45,12 +49,12 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 		self.endResetModel()
 
 	def sort(self, column, order):
-		if column == 0:
+		if column == self.QUESTIONS:
 			items = sorted(self.list.items, key=lambda word: word.questions[0])
-		elif column == 1:
+		elif column == self.ANSWERS:
 			items = sorted(self.list.items, key=lambda word: word.answers[0])
-		elif column == 2:
-			items = self.list.items[:]
+		elif column == self.COMMENT:
+			items = sorted(self.list.items, key=lambda word: word.comment)
 
 		if order == QtCore.Qt.DescendingOrder:
 			items.reverse()
@@ -93,21 +97,17 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 		else:
 			word = self.list.items[listIndex]
 
-			if index.column() == 0:
-				#FIXME: choose one
-				for module in self._mm.activeMods.supporting("wordsStringComposer"):
-					try:
-						return module.compose(word.questions)
-					except AttributeError:
-						return u""
-			elif index.column() == 1:
-				#FIXME: choose one
-				for module in self._mm.activeMods.supporting("wordsStringComposer"):
-					try:
-						return module.compose(word.answers)
-					except AttributeError:
-						return u""
-			elif index.column() == 2:
+			if index.column() == self.QUESTIONS:
+				try:
+					return self._compose(word.questions)
+				except AttributeError:
+					return u""
+			elif index.column() == self.ANSWERS:
+				try:
+					return self._compose(word.answers)
+				except AttributeError:
+					return u""
+			elif index.column() == self.COMMENT:
 				try:
 					return word.comment
 				except AttributeError:
@@ -147,15 +147,11 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 			else:
 				word = self.list.items[listIndex]
 
-				if index.column() == 0:
-					#FIXME: choose one
-					for module in self._mm.activeMods.supporting("wordsStringParser"):
-						word.questions = module.parse(unicode(value.toString()))
-				elif index.column() == 1:
-					#FIXME: choose one
-					for module in self._mm.activeMods.supporting("wordsStringParser"):
-						word.answers = module.parse(unicode(value.toString()))
-				elif index.column() == 2:
+				if index.column() == self.QUESTIONS:
+					word.questions = self._parse(unicode(value.toString()))
+				elif index.column() == self.ANSWERS:
+					word.answers = self._parse(unicode(value.toString()))
+				elif index.column() == self.COMMENT:
 					word.comment = unicode(value.toString()).strip()
 					if len(word.comment) == 0:
 						del word.comment
@@ -216,6 +212,7 @@ class Lesson(object):
 		
 		self.module = module
 		self._mm = moduleManager
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self.fileTab = fileTab
 
 		self.fileTab.closeRequested.handle(self.stop)
@@ -243,9 +240,21 @@ class Lesson(object):
 		ew.removeSelectedRowsButton.clicked.connect(
 			self._removeSelectedRows
 		)
-		ew.keyboardWidget.letterChosen.handle(self._addLetter)
+		try:
+			ew.keyboardWidget.letterChosen.handle(self._addLetter)
+		except AttributeError:
+			pass
 
-		self._wordsTableModel = WordsTableModel(self._mm)
+		composers = set(self._mm.mods("active", type="wordsStringComposer"))
+		parsers = set(self._mm.mods("active", type="wordsStringParser"))
+		try:
+			composer = self._modules.chooseItem(composers).compose
+			parser = self._modules.chooseItem(parsers).parse
+		except IndexError, e:
+			#FIXME: nice error
+			raise e
+
+		self._wordsTableModel = WordsTableModel(composer, parser)
 		ew.wordsTableView.setModel(self._wordsTableModel)
 
 		ew.titleTextBox.textChanged.connect(
@@ -304,17 +313,14 @@ class Lesson(object):
 		lw = self._teachWidget.lessonWidget
 
 		#lessonType
-		self._lessonTypeModules = list(
-			self._mm.mods.supporting("lessonType") #FIXME: activeMods?
-		)
+		self._lessonTypeModules = list(self._mm.mods("active", type="lessonType"))
 
 		for module in self._lessonTypeModules:
-			module.enable()
 			sw.lessonTypeComboBox.addItem(module.name)
 
 		#item modifiers
 		itemModifiers = []
-		for module in self._mm.mods.supporting("itemModifier"): #FIXME: activeMods?
+		for module in self._mm.mods("active", type="itemModifier"):
 			module.enable()
 			itemModifiers.append({
 				"name": module.name,
@@ -326,10 +332,9 @@ class Lesson(object):
 
 		#list modifiers
 		listModifiers = []
-		for module in self._mm.mods.supporting("listModifier"): #FIXME: activeMods?:
-			if not module.type in ("all", "words"):
+		for module in self._mm.mods("active", type="listModifier"):
+			if not module.dataType in ("all", "words"):
 				continue
-			module.enable()
 			listModifiers.append({
 				"name": module.name,
 				"active": False,
@@ -346,9 +351,8 @@ class Lesson(object):
 
 		#teachType
 		self._teachTypeWidgets = []
-		for module in self._mm.mods.supporting("teachType"): #FIXME: activeMods?
-			module.enable()
-			if module.type == "words":
+		for module in self._mm.mods("active", type="teachType"): 
+			if module.dataType in ("all", "words"):
 				widget = module.createWidget()
 				self._teachTypeWidgets.append(widget)
 				lw.teachTabWidget.addTab(widget, module.name)
@@ -364,7 +368,11 @@ class Lesson(object):
 		self._teachWidget.setCurrentWidget(lw)
 
 		i = sw.lessonTypeComboBox.currentIndex()
-		lessonTypeModule = self._lessonTypeModules[i]
+		try:
+			lessonTypeModule = self._lessonTypeModules[i]
+		except IndexError, e:
+			#Show nicer error
+			raise e
 
 		indexes = range(len(self.list.items))
 
@@ -393,7 +401,9 @@ class Lesson(object):
 			if itemModifier["active"]:
 				item = itemModifier["module"].modifyItem(item)
 
-		lw.questionLabel.setText(u", ".join(item.questions[0])) #FIXME: this is bound to crash, parsing should be done by a module...
+		composers = set(self._mm.mods("active", type="wordsStringComposer"))
+		compose = self._modules.chooseItem(composers).compose
+		lw.questionLabel.setText(compose(item.questions))
 		self._updateProgress()
 
 	def _lessonDone(self):
@@ -411,26 +421,23 @@ class WordsLessonModule(object):
 		super(WordsLessonModule, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
-		self.supports = ("lesson", "list", "loadList", "initializing")
-		self.requires = (1, 0)
-		self.active = False
-
-	def initialize(self):
-		for module in self._mm.activeMods.supporting("modules"):
-			module.registerModule("Words Lesson", self)
+		self.type = "lesson"
 
 	def enable(self):
+		for module in self._mm.mods("active", type="modules"):
+			module.registerModule("Words Lesson", self)
+
 		self._enterUi = self._mm.import_("enterUi")
 		self._teachUi = self._mm.import_("teachUi")
 
 		self.lessonCreated = self._mm.createEvent()
 		self.lessonCreationFinished = self._mm.createEvent()
-		self.type = "words"
+		self.dataType = "words"
 
 		self._counter = 1
 		self._references = set()
 
-		for module in self._mm.mods.supporting("ui"):
+		for module in self._mm.mods("active", type="ui"):
 			event = module.addLessonCreateButton("Create words lesson")
 			event.handle(self.createLesson)
 			self._references.add(event)
@@ -443,13 +450,13 @@ class WordsLessonModule(object):
 		del self._teachUi
 		del self.lessonCreated
 		del self.lessonCreationFinished
-		del self.type
+		del self.dataType
 		del self._counter
 		del self._references
 
 	def createLesson(self):
 		lessons = set()
-		for module in self._mm.activeMods.supporting("ui"):
+		for module in self._mm.mods("active", type="ui"):
 			enterWidget = self._enterUi.EnterWidget(self._onscreenKeyboard)
 			teachWidget = self._teachUi.TeachWidget(self._onscreenKeyboard)
 
@@ -470,13 +477,14 @@ class WordsLessonModule(object):
 
 	@property
 	def _onscreenKeyboard(self):
-		keyboards = self._mm.mods.supporting("onscreenKeyboard").items
-		for module in keyboards:
-			module.enable()
-		for module in self._mm.activeMods.supporting("ui"):
-			keyboard = module.chooseItem(keyboards)
+		keyboards = set(self._mm.mods("active", type="onscreenKeyboard"))
+		for module in self._mm.mods("active", type="modules"):
+			try:
+				keyboard = module.chooseItem(keyboards)
+			except IndexError:
+				return
 
-		return keyboard.getWidget()
+		return keyboard.createWidget()
 
 	def loadFromList(self, list):
 		for lesson in self.createLesson():

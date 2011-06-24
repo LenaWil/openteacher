@@ -82,23 +82,22 @@ class OnscreenKeyboardModule(object):
 		super(OnscreenKeyboardModule, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
-		self.supports = ("onscreenKeyboard",)
-		self.requires = (1, 0)
+		self.type = "onscreenKeyboard"
 
-	def enable(self): pass
-	def disable(self): pass
+	def enable(self):
+		self.active = True
 
-	def getWidget(self):
+	def disable(self):
+		self.active = False
+
+	def createWidget(self):
 		widget = QtGui.QTabWidget()
 		widget.letterChosen = self._mm.createEvent()
-		for module in self._mm.activeMods.supporting("onscreenKeyboardData"):
+		for module in self._mm.mods("active", type="onscreenKeyboardData"):
 			tab = OnscreenKeyboardWidget(self._mm, module.data)
 			widget.addTab(tab, module.name)
 			tab.letterChosen.handle(widget.letterChosen.emit)
 		return widget
-
-	def showLetter(self, letter):
-		print letter
 
 def init(moduleManager):
 	return OnscreenKeyboardModule(moduleManager)

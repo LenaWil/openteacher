@@ -167,7 +167,7 @@ class WordList(object):
 	def __init__(self, *args, **kwargs):
 		super(WordList, self).__init__(*args, **kwargs)
 
-		self.words = []
+		self.items = []
 		self.tests = []
 
 class Word(object):
@@ -206,7 +206,7 @@ class WordListParser(object):
 			#by a wordsStringParser module.
 
 			#FIXME: only one
-			for module in self._mm.activeMods.supporting("wordsStringParser"):
+			for module in self._mm.mods("active", type="wordsStringParser"):
 				text = wordTree.findtext("word-a", u"")
 				word.questions = module.parse(text)
 
@@ -215,12 +215,12 @@ class WordListParser(object):
 			#by a wordsStringParser module.
 
 			#FIXME: only one
-			for module in self._mm.activeMods.supporting("wordsStringParser"):
+			for module in self._mm.mods("active", type="wordsStringParser"):
 				text = wordTree.findtext("word-b", u"")
 				word.answers = module.parse(text)
 
 			# Add the current edited word to the wordList instance
-			wordList.words.append(word)
+			wordList.items.append(word)
 
 			counter += 1
 

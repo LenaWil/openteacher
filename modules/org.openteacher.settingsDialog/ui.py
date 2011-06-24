@@ -96,10 +96,10 @@ class SettingsDialog(QtGui.QTabWidget):
 		self.setTabPosition(QtGui.QTabWidget.South)
 		self.setDocumentMode(True)
 
-		for module in self._mm.activeMods.supporting("modules"):
+		for module in self._mm.mods("active", type="modules"):
 			self.modulesTab = ModulesTab(module.registeredModules)
 
-		for module in self._mm.activeMods.supporting("settings"):
+		for module in self._mm.mods("active", type="settings"):
 			for name, lessonType in module.registeredSettings().iteritems():
 				if name is None:
 					name = "Miscellaneous"

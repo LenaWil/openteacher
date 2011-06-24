@@ -19,7 +19,7 @@
 <!doctype html>
 <html>
 	<head>
-		<title>@!list.title!@</title>
+		<title><!--(if hasattr(list, "title"))-->@!list.title!@<!--(end)--></title>
 		<style type="text/css">
 			body {
 				font-family:Verdana, Helvetica, Arial, sans-serif;

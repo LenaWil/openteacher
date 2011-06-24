@@ -25,15 +25,7 @@ class OpenTeacherModule(object):
 		super(OpenTeacherModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("openteacher-core",)
-		self.requires = (1, 0)
-		self.active = False
-
-	def enable(self):
-		self.active = True
-
-	def disable(self):
-		self.active = False
+		self.type = "openteacher-core"
 
 	def run(self): #FIXME: should options and modes be added dynamically? If so, how?
 		parser = optparse.OptionParser()
@@ -56,13 +48,13 @@ class OpenTeacherModule(object):
 			try:
 				args[0]
 			except IndexError:
-				for module in self._mm.mods.supporting("execute"):
+				for module in self._mm.mods(type="execute"): #FIXME: choose an executor. Maybe obligatory one like openteacher-core? Or command line setting?
 					module.execute(options.ui)
 			else:
-				for module in self._mm.mods.supporting("execute"):
+				for module in self._mm.mods(type="execute"): #FIXME: choose an executor. Maybe obligatory one like openteacher-core? Or command line setting?
 					module.execute(options.ui, args[0])
 		elif options.mode == "test":
-			for module in self._mm.mods.supporting("testRunner"): #FIXME: choose an UI-controller. Maybe obligatory one like openteacher-core? Or command line setting?
+			for module in self._mm.mods(type="testRunner"): #FIXME: choose a test runner. Maybe obligatory one like openteacher-core? Or command line setting?
 				module.run()
 
 def init(moduleManager):

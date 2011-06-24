@@ -28,7 +28,7 @@ class OpenTeacher(object):
 	def run(self):
 		mm = moduleManager.ModuleManager(MODULES_PATH)
 
-		mods = mm.mods.supporting("openteacher-core").items
+		mods = set(mm.mods(type="openteacher-core"))
 		if len(mods) == 1:
 			mods.pop().run()
 		elif len(mods) == 0:

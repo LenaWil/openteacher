@@ -25,22 +25,20 @@ class ReverseModule(object):
 		super(ReverseModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("listModifier",)
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "listModifier"
 
 	def modifyList(self, indexes, list):
 		#always work on the indexes, and return a list object
 		return __builtin__.list(reversed(indexes))
 
 	def enable(self):
-		self.type = "all"
-		self.name = "Reverse"
+		self.dataType = "all"
+		self.name = "Reverse" #FIXME: translate
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self.type
+		del self.dataType
 		del self.name
 
 def init(moduleManager):

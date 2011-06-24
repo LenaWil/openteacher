@@ -22,11 +22,11 @@ import unittest
 
 class WordsStringComposerTestCase(unittest.TestCase):
 	def setUp(self):
-		for module in self._mm.mods.supporting("wordsStringComposer"):
+		for module in self._mm.mods(type="wordsStringComposer"):
 			module.enable()
 
 	def _test(self, input, output):
-		for module in self._mm.activeMods.supporting("wordsStringComposer"):
+		for module in self._mm.mods("active", type="wordsStringComposer"):
 			string = module.compose(input)
 			self.assertEqual(string, output)
 
@@ -61,7 +61,7 @@ class WordsStringComposerTestCase(unittest.TestCase):
 		)
 
 	def tearDown(self):
-		for module in self._mm.activeMods.supporting("wordsStringComposer"):
+		for module in self._mm.mods("active", type="wordsStringComposer"):
 			module.disable()
 
 class TestModule(object):
@@ -69,9 +69,7 @@ class TestModule(object):
 		super(TestModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("test",)
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "test"
 
 	def enable(self):
 		self.TestCase = WordsStringComposerTestCase

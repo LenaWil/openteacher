@@ -23,21 +23,7 @@ class MetadataModule(object):
 		super(MetadataModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = (
-			"metadata",
-			"name",
-			"slogan",
-			"version",
-			"website",
-			"userAgent",
-			"documentationUrl",
-			"iconPath",
-			"licenseIntro",
-			"license",
-			"comicPath"
-		)
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "metadata"
 
 	def enable(self):
 		self.name = "OpenTeacher" #FIXME: translate

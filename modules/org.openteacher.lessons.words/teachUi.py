@@ -97,7 +97,8 @@ class TeachLessonWidget(QtGui.QSplitter):
 		wordLabel = QtGui.QLabel(_("Word:"))
 		self.questionLabel = QtGui.QLabel()
 		self.questionLabel.setWordWrap(True)
-		self.keyboardWidget = keyboardWidget
+		if keyboardWidget is not None:
+			self.keyboardWidget = keyboardWidget
 		self.teachTabWidget = QtGui.QTabWidget()
 		self.progressBar = QtGui.QProgressBar()
 
@@ -112,7 +113,10 @@ class TeachLessonWidget(QtGui.QSplitter):
 		leftWidget.setLayout(leftLayout)
 		
 		rightLayout = QtGui.QVBoxLayout()
-		rightLayout.addWidget(keyboardWidget)
+		try:
+			rightLayout.addWidget(self.keyboardWidget)
+		except AttributeError:
+			pass
 		rightLayout.addWidget(self.changeSettingsButton)
 		
 		rightWidget = QtGui.QWidget()

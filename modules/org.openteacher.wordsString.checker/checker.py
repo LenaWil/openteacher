@@ -27,17 +27,19 @@ class WordsStringCheckerModule(object):
 		super(WordsStringCheckerModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("wordsStringChecker",)
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "wordsStringChecker"
 
 	def enable(self):
 		self.active = True
 
 	def check(self, givenAnswerString, word):
-		#FIXME: only one
-		for module in self._mm.activeMods.supporting("wordsStringParser"):
-			givenAnswer = module.parse(givenAnswerString)
+		parsers = set(self._mm.mods("active", type="wordsStringParser"))
+		for module in self._mm.mods("active", type="modules"):
+			try:
+				parse = module.chooseItem(parsers).parse
+			except IndexError:
+				raise NotImplementedError("No parser modules installed/activated.")
+		givenAnswer = parse(givenAnswerString)
 
 		result = Result("wrong")
 		compulsoryAnswerCount = 0

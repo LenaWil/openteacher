@@ -23,9 +23,7 @@ class SortModule(object):
 		super(SortModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("listModifier",)
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "listModifier"
 
 	def modifyList(self, indexes, list):
 		def getFirstQuestion(word):
@@ -39,13 +37,13 @@ class SortModule(object):
 		return [list.words.index(word) for word in newList]
 
 	def enable(self):
-		self.type = "words"
+		self.dataType = "words"
 		self.name = "Sort"
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self.type
+		del self.dataType
 		del self.name
 
 def init(moduleManager):

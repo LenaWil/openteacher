@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2008-2011, Milan Boers
+#	Copyright 2011, Milan Boers
+#	Copyright 2011, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -23,28 +24,40 @@ class TextToSpeechProviderWords(object):
 		super(TextToSpeechProviderWords, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ()
-		self.requires = (1, 0)
-		self.active = False
-
 	def enable(self):
-		for module in self._mm.mods.supporting("lessonType"):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		for module in self._mm.mods("active", type="lessonType"):
 			module.newItem.handle(self.itemEmitted)
-	
+
 		self.active = True
 
 	def disable(self):
+		self._modules
+		for module in self._mm.mods("active", type="lessonType"):
+			module.newItem.unhandle(self.itemEmitted)
+
 		self.active = False
 	
 	def itemEmitted(self, item):
-		for module in self._mm.mods.supporting("wordsStringComposer"):
-			try:
-				text = module.compose(item.questions)
-				for module in self._mm.mods.supporting("textToSpeech"):
-					module.say.emit(text)
-			except AttributeError:
-				# No questions
-				pass
+		composers = set(self._mm.mods("active", type="wordsStringComposer"))
+		ttss = set(self._mm.mods("active", type="textToSpeech"))
+		try:
+			compose = self._modules.chooseItem(composers).compose
+		except IndexError, e:
+			#FIXME: nice error handling
+			raise e
+		try:
+			tts = self._modules.chooseItem(ttss)
+		except IndexError, e:
+			#FIXME: nice error handling
+			raise e
+		try:
+			text = compose(item.questions)
+		except AttributeError:
+			# No questions
+			pass
+		else:
+			tts.say.emit(text)
 
 def init(moduleManager):
 	return TextToSpeechProviderWords(moduleManager)

@@ -23,9 +23,7 @@ class HardWordsModule(object):
 		super(HardWordsModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("listModifier", "hardWords")
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "listModifier"
 
 	def modifyList(self, indexes, list):
 		self._list = list
@@ -34,7 +32,7 @@ class HardWordsModule(object):
 		return newIndexes
 
 	def _isHardWord(self, index):
-		results = self._resultsFor(self._list.words[index])
+		results = self._resultsFor(self._list.items[index])
 
 		if len(results) == 0:
 			return True
@@ -50,14 +48,16 @@ class HardWordsModule(object):
 		return filter(lambda result: result.wordId == word.id, results)
 
 	def enable(self):
-		self.name = "Only hard words (<50% right)"
-		self.type = "words"
+		self.name = "Only hard words (<50% right)" #FIXME: translate
+		self.dataType = "words"
+		self.testName = "hardWords"
 		self.active = True
 
 	def disable(self):
 		self.active = False
 		del self.name
-		del self.type
+		del self.testName
+		del self.dataType
 
 def init(moduleManager):
 	return HardWordsModule(moduleManager)

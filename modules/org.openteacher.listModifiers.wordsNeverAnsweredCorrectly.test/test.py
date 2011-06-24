@@ -24,7 +24,7 @@ class WordList(object):
 	def __init__(self, *args, **kwargs):
 		super(WordList, self).__init__(*args, **kwargs)
 
-		self.words = []
+		self.items = []
 		self.tests = []
 
 class Word(object):
@@ -35,18 +35,15 @@ class Result(str):
 
 class WordsNeverAnsweredCorrectlyTestCase(unittest.TestCase):
 	def setUp(self):
-		for module in self._mm.mods.supporting("wordsNeverAnsweredCorrectly"):
-			module.enable()
-
-	def testListModifier(self):
-		for module in self._mm.activeMods.supporting("wordsNeverAnsweredCorrectly"):
-			self.assertTrue("listModifier" in module.supports)
+		for module in self._mm.mods("testName", type="listModifier"):
+			if testName == "wordsNeverAnsweredCorrectly":
+				module.enable()
 
 	def testWrongWord(self):
 		wordList = WordList()
 		word = Word()
 		word.id = 0
-		wordList.words.append(word)
+		wordList.items.append(word)
 
 		result = Result("wrong")
 		result.wordId = 0
@@ -58,7 +55,7 @@ class WordsNeverAnsweredCorrectlyTestCase(unittest.TestCase):
 		wordList = WordList()
 		word = Word()
 		word.id = 0
-		wordList.words.append(word)
+		wordList.items.append(word)
 
 		result = Result("right")
 		result.wordId = 0
@@ -70,7 +67,7 @@ class WordsNeverAnsweredCorrectlyTestCase(unittest.TestCase):
 		wordList = WordList()
 		word = Word()
 		word.id = 0
-		wordList.words.append(word)
+		wordList.items.append(word)
 
 		self._test(wordList, [0])
 
@@ -80,8 +77,8 @@ class WordsNeverAnsweredCorrectlyTestCase(unittest.TestCase):
 		word1.id = 0
 		word2 = Word()
 		word2.id = 1
-		wordList.words.append(word1)
-		wordList.words.append(word2)
+		wordList.items.append(word1)
+		wordList.items.append(word2)
 
 		result1 = Result("right")
 		result1.wordId = 0
@@ -100,22 +97,22 @@ class WordsNeverAnsweredCorrectlyTestCase(unittest.TestCase):
 		self._test(wordList, [1])
 
 	def _test(self, input, output):
-		for module in self._mm.mods.supporting("wordsNeverAnsweredCorrectly"):
-			indexes = module.modifyList(range(len(input.words)), input)
-			self.assertEqual(indexes, output)
+		for module in self._mm.mods("active", "testName", type="listModifier"):
+			if testName == "wordsNeverAnsweredCorrectly":
+				indexes = module.modifyList(range(len(input.items)), input)
+				self.assertEqual(indexes, output)
 
 	def tearDown(self):
-		for module in self._mm.activeMods.supporting("wordsNeverAnsweredCorrectly"):
-			module.disable()
+		for module in self._mm.mods("active", "testName", type="listModifier"):
+			if testName == "wordsNeverAnsweredCorrectly":
+				module.disable()
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("test",)
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "test"
 
 	def enable(self):
 		self.TestCase = WordsNeverAnsweredCorrectlyTestCase

@@ -23,25 +23,22 @@ class DocumentationModule(object):
 		super(DocumentationModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.requires = (1, 0)
-		self.supports = ("documentation", "initializing")
-		self.active = False
-
-	def initialize(self):
-		for module in self._mm.activeMods.supporting("modules"):
-			module.registerModule("Documentation module", self)
+		self.type = "documentation"
 
 	def show(self):
-		for module in self._mm.activeMods.supporting("documentationUrl"):
+		for module in self._mm.mods("active", "documentationUrl", type="metadata"):
 			documentationUrl = module.documentationUrl
-		for module in self._mm.activeMods.supporting("userAgent"):
+		for module in self._mm.mods("active", "userAgent", type="metadata"):
 			userAgent = module.userAgent
-		for module in self._mm.activeMods.supporting("ui"):
+		for module in self._mm.mods("active", type="ui"):
 			dialog = self._ui.DocumentationDialog(documentationUrl, userAgent, "en") #FIXME: language should be dynamic
 			tab = module.addCustomTab(dialog.windowTitle(), dialog)
 			tab.closeRequested.handle(tab.close)
 
 	def enable(self):
+		for module in self._mm.mods("active", type="modules"):
+			module.registerModule("Documentation module", self)
+
 		self._ui = self._mm.import_("ui")
 		self.active = True
 

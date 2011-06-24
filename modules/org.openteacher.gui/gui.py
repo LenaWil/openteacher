@@ -52,7 +52,6 @@ class LessonFileTab(FileTab):
 		self._widget.currentChanged.connect(lambda: self.tabChanged.emit())
 	
 	def _setCurrentTab(self, value):
-		print "a"
 		self._widget.setCurrentWidget(value)
 	
 	def _getCurrentTab(self):
@@ -64,9 +63,8 @@ class GuiModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(GuiModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
-		self.supports = ("ui",)
-		self.requires = (1,0)
-		self.active = False
+
+		self.type = "ui"
 
 	def enable(self):
 		self.newEvent = self._mm.createEvent()
@@ -89,11 +87,11 @@ class GuiModule(object):
 
 		self._widget = self._ui.OpenTeacherWidget()
 
-		for module in self._mm.activeMods.supporting("name"): #FIXME
+		for module in self._mm.mods("active", "name", type="metadata"):
 			name = module.name
-		for module in self._mm.activeMods.supporting("version"): #FIXME
+		for module in self._mm.mods("active", "version", type="metadata"):
 			version = module.version
-		for module in self._mm.activeMods.supporting("iconPath"): #FIXME
+		for module in self._mm.mods("active", "iconPath", type="metadata"):
 			iconPath = module.iconPath
 		self._widget.setWindowTitle(" ".join([name, version]))
 		self._widget.setWindowIcon(QtGui.QIcon(iconPath))
@@ -307,9 +305,7 @@ class GuiModule(object):
 	def startTabActive(self):
 		return self._widget.tabWidget.startWidget == self._widget.tabWidget.currentWidget()
 
-	def chooseItem(self, items): #FIXME
-		if len(items) == 1:
-			return items.pop()
+	def chooseItem(self, items):
 		d = self._ui.ItemChooser(items)
 		d.exec_()
 		return d.item

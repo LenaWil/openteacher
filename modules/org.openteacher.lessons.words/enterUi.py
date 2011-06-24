@@ -111,7 +111,8 @@ class EnterWidget(QtGui.QSplitter):
 		leftLayoutWidget = QtGui.QWidget()
 		leftLayoutWidget.setLayout(leftLayout)
 
-		self.keyboardWidget = keyboardWidget
+		if keyboardWidget is not None:
+			self.keyboardWidget = keyboardWidget
 		self.removeSelectedRowsButton = QtGui.QPushButton(
 			_("Remove selected row(s)")
 		)
@@ -120,7 +121,10 @@ class EnterWidget(QtGui.QSplitter):
 		)
 
 		rightLayout = QtGui.QVBoxLayout()
-		rightLayout.addWidget(self.keyboardWidget)
+		try:
+			rightLayout.addWidget(self.keyboardWidget)
+		except AttributeError:
+			pass
 		rightLayout.addWidget(self.removeSelectedRowsButton)
 		
 		rightLayoutWidget = QtGui.QWidget()

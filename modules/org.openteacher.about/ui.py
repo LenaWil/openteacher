@@ -31,16 +31,16 @@ class AboutTextLabel(QtGui.QLabel):
 		textPath = self._mm.resourcePath("about.html")
 		pyratemp = self._mm.import_("pyratemp")
 
-		for module in self._mm.activeMods.supporting("name"):
+		for module in self._mm.mods("active", "name", type="metadata"):
 			name = module.name
 
-		for module in self._mm.activeMods.supporting("slogan"):
+		for module in self._mm.mods("active", "slogan", type="metadata"):
 			firstLine, secondLine = self._splitLineCloseToMiddle(module.slogan)
 
-		for module in self._mm.activeMods.supporting("version"):
+		for module in self._mm.mods("active", "version", type="metadata"):
 			version = module.version
 
-		for module in self._mm.activeMods.supporting("website"):
+		for module in self._mm.mods("active", "website", type="metadata"):
 			website = module.website
 
 		t = pyratemp.Template(open(textPath).read())
@@ -91,7 +91,7 @@ class AboutImageLabel(QtGui.QLabel):
 		super(AboutImageLabel, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 		
-		for module in self._mm.activeMods.supporting("comicPath"):
+		for module in self._mm.mods("active", "comicPath", type="metadata"):
 			self.setPixmap(QtGui.QPixmap(module.comicPath))
 
 		self.setAlignment(QtCore.Qt.AlignCenter)
@@ -116,7 +116,7 @@ class ShortLicenseWidget(QtGui.QWidget):
 		super(ShortLicenseWidget, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		for module in self._mm.activeMods.supporting("licenseIntro"):
+		for module in self._mm.mods("active", "licenseIntro", type="metadata"):
 			shortLicense = module.licenseIntro
 
 		label = QtGui.QLabel()
@@ -138,7 +138,7 @@ class LongLicenseWidget(QtGui.QTextEdit):
 		super(LongLicenseWidget, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		for module in self._mm.activeMods.supporting("license"):
+		for module in self._mm.mods("active", "license", type="metadata"):
 			longLicense = module.license
 
 		self.setReadOnly(True)
@@ -212,9 +212,8 @@ class AuthorsWidget(QtGui.QWidget):
 		if len(authors) == 0:
 			self.authors = None
 		else:
-			self.backupAuthors = authors[:]
-			self.authors = authors[:]
-			random.shuffle(self.authors)
+			self.backupAuthors = list(authors)
+			self.authors = []
 
 		self.personWidget = PersonWidget()
 		launchpadLabel = QtGui.QLabel(_("Thanks to all Launchpad contributors!"))

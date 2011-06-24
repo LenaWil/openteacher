@@ -29,6 +29,7 @@ class TypingTeachWidget(QtGui.QWidget):
 		super(TypingTeachWidget, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self.inputLineEdit = QtGui.QLineEdit()
 
 		self.checkButton = QtGui.QPushButton(u"Check!")
@@ -67,29 +68,31 @@ class TypingTeachWidget(QtGui.QWidget):
 	def checkAnswer(self):
 		givenStringAnswer = unicode(self.inputLineEdit.text())
 
-		#FIXME: only one
-		for module in self._mm.activeMods.supporting("wordsStringChecker"):
-			result = module.check(givenStringAnswer, self.word)
+		checkers = set(self._mm.mods("active", type="wordsStringChecker"))
+		try:
+			check = self._modules.chooseItem(checkers).check
+		except IndexError, e:
+			#FIXME: show nice error? Make typing unusable?
+			raise e
+		result = check(givenStringAnswer, self.word)
 
-		print result
-		print ""
 		self.lessonType.setResult(result)
 
 class TypingTeachTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TypingTeachTypeModule, self).__init__(*args, **kwargs)
-		self.supports = ("teachType",)
-		self.requires = (1, 0)
 		self._mm = moduleManager
 
+		self.type = "teachType"
+
 	def enable(self):
-		self.type = "words"
+		self.dataType = "words"
 		self.name = "Type Answer"
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self.type
+		del self.dataType
 		del self.name
 
 	def createWidget(self):

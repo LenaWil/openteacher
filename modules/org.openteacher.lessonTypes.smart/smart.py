@@ -98,19 +98,18 @@ class SmartLessonType(object):
 class SmartModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(SmartModule, self).__init__(*args, **kwargs)
-
 		self._mm = moduleManager
-		self.supports = ("lessonType",)
-		self.requires = (1, 0)
-		
-		self.newItem = self._mm.createEvent()
+
+		self.type = "lessonType"
 
 	def enable(self):
+		self.newItem = self._mm.createEvent()
 		self.name = _("Smart") #FIXME: own '_'
 		self.active = True
 
 	def disable(self):
 		self.active = False
+		del self.newItem
 		del self.name
 
 	def createLessonType(self, list, indexes):

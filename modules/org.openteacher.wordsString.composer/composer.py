@@ -23,9 +23,7 @@ class WordsStringComposerModule(object):
 		super(WordsStringComposerModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("wordsStringComposer",)
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "wordsStringComposer"
 
 	def enable(self):
 		self.active = True

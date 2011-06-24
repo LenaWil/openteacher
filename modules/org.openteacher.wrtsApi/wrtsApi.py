@@ -21,24 +21,19 @@
 class WrtsApiModule(object):
 	def __init__(self, moduleManager):
 		super(self.__class__, self).__init__()
-
 		self._mm = moduleManager
-		self.supports = ("initializing")
-		self.requires = (1, 0)
-		self.active = False
-
-	def initialize(self):
-		for module in self._mm.activeMods.supporting("modules"):
-			module.registerModule(_("Wrts API connection"), self)
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules.registerModule(_("Wrts API connection"), self)
+
 		self._ui = self._mm.import_("ui")
 		self._api = self._mm.import_("api")
 		self._references = set()
 
 		self.wrtsConnection = self._api.WrtsConnection(self._mm)
 		
-		for module in self._mm.activeMods.supporting("ui"):
+		for module in self._mm.mods("active", type="ui"):
 			event = module.addLessonLoadButton(_("Import from WRTS")) #FIXME: private gettext!
 			event.handle(self.importFromWrts)
 			self._references.add(event)
@@ -46,13 +41,14 @@ class WrtsApiModule(object):
 
 	def disable(self):
 		self.active = False
+		del self._modules
 		del self._ui
 		del self._api
 		del self._references
 		del self.wrtsConnection
 
 	def importFromWrts(self):
-		for module in self._mm.mods.supporting("ui"):
+		for module in self._mm.mods("active", type="ui"):
 			ld = self._ui.LoginDialog(module.qtParent)		
 
 			tab = module.addCustomTab(ld.windowTitle(), ld)
@@ -82,8 +78,13 @@ class WrtsApiModule(object):
 			listUrl = listsParser.getWordListUrl(ldc.selectedRowIndex)
 			list = self.wrtsConnection.importWordList(listUrl)
 
-			for module in self._mm.activeMods.supporting("openteacher-core"):
-				module.loadList("words", list)
+			loaders = set(self._mm.mods("active", type="loader"))
+			try:
+				loader = self._modules.chooseItem(loaders)
+			except IndexError, e:
+				#show nice error and return
+				raise e
+			loader.loadFromList("words", list)
 
 def init(moduleManager):
 	return WrtsApiModule(moduleManager)

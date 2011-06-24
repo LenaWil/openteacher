@@ -23,7 +23,7 @@ import sys
 class Loader(object):
 	def __init__(self, loadModule, guiModule, path, *args, **kwargs):
 		super(Loader, self).__init__(*args, **kwargs)
-		
+
 		self.loadModule = loadModule
 		self.guiModule = guiModule
 		self.path = path
@@ -39,13 +39,17 @@ class LoaderModule(object):
 		super(LoaderModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("loader",)
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "loader"
 
 	@property
 	def _supportedFileTypes(self):
-		return (module.type for module in self._mm.activeMods.supporting("lesson"))
+		types = set()
+		for lesson in self._mm.mods("active", type="lesson"):
+			try:
+				types.add(lesson.dataType)
+			except AttributeError:
+				pass
+		return types
 
 	@property
 	def usableExtensions(self):
@@ -53,7 +57,7 @@ class LoaderModule(object):
 
 		#Collect exts the loader modules support, if there is a gui
 		#module for the type(s) they can provide
-		for module in self._mm.activeMods.supporting("load"):
+		for module in self._mm.mods("active", type="load"):
 			for ext, fileTypes in module.loads.iteritems():
 				for fileType in fileTypes:
 					if fileType in self._supportedFileTypes:
@@ -65,39 +69,48 @@ class LoaderModule(object):
 		return len(self.usableExtensions) != 0
 
 	def load(self, path):
-		uiModule = self._mm.activeMods.supporting("ui").items.pop()
 		loaders = set()
 
 		#Checks if loader modules can open it, and which type they would
 		#return if they would load it only adds it as a possibility if
 		#there also is a gui module for that type
-		for loadModule in self._mm.activeMods.supporting("load"):
+		for loadModule in self._mm.mods("active", type="load"):
 			fileType = loadModule.getFileTypeOf(path)
-			for guiModule in self._mm.activeMods.supporting("lesson", "loadList"):
-				if guiModule.type == fileType:
+			for guiModule in self._mm.mods("active", type="lesson"):
+				try:
+					guiModule.loadFromList
+				except AttributeError:
+					continue
+				if guiModule.dataType == fileType:
 					loaders.add(Loader(loadModule, guiModule, path))
 
 		if len(loaders) == 0:
 			raise NotImplementedError()
 		#Choose item
-		loader = uiModule.chooseItem(loaders)
+		loader = self._modules.chooseItem(loaders)
 
 		loader.load()
 
-	def loadList(self, type, list):
-		uiModule = self._mm.activeMods.supporting("ui").items.pop()
+	def loadFromList(self, dataType, list):
 		loaders = set()
-		for module in self._mm.activeMods.supporting("loadList"):
-			if module.type == type:
-				loaders.add(module)
-		loader = uiModule.chooseItem(loaders)
+		for lesson in self._mm.mods(type="lesson"):
+			if lesson.dataType == dataType:
+				try:
+					lesson.loadFromList
+				except AttributeError:
+					continue
+				loaders.add(lesson)
+		loader = self._modules.chooseItem(loaders)
 		loader.loadFromList(list)
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self.active = True
 
 	def disable(self):
 		self.active = False
+		del self._modules
 
 def init(moduleManager):
 	return LoaderModule(moduleManager)
+

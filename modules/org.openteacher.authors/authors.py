@@ -18,28 +18,33 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class ForeignKnownModule(object):
+class AuthorsModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(ForeignKnownModule, self).__init__(*args, **kwargs)
+		super(AuthorsModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "itemModifier"
+		self.type = "authors"
 
-	def modifyItem(self, item):
-		#modify in place, because the caller is responsable for passing
-		#a copy of item.
-		item.questions, item.answers = item.answers, item.questions
-		return item
+	def registerAuthor(self, category, name):
+		self._authors.add((category, name))
+
+	@property
+	def registeredAuthors(self):
+		return self._authors.copy()
 
 	def enable(self):
-		self.dataType = "words"
-		self.name = "Foreign - Known"
+		self._authors = set()
 		self.active = True
+
+		##########FIXME: DEMO DATA
+		self.registerAuthor("Core developer", "Milan Boers")
+		self.registerAuthor("Core developer", "Cas Widdershoven")
+		self.registerAuthor("Core developer", "Marten de Vries")
+		##########END DEMO DATA
 
 	def disable(self):
 		self.active = False
-		del self.dataType
-		del self.name
+		del self._authors
 
 def init(moduleManager):
-	return ForeignKnownModule(moduleManager)
+	return AuthorsModule(moduleManager)

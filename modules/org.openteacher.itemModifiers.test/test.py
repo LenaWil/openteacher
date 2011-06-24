@@ -29,24 +29,24 @@ class Word(object):
 
 class ItemModifiersTestCase(unittest.TestCase):
 	def setUp(self):
-		for module in self._mm.mods.supporting("itemModifier"):
+		for module in self._mm.mods(type="itemModifier"):
 			module.enable()
 
 	def testAttributes(self):
-		for module in self._mm.activeMods.supporting("itemModifiers"):
+		for module in self._mm.mods("active", type="itemModifiers"):
 			self.assertTrue(hasattr(module, "modifyItem"))
 			self.assertTrue(hasattr(module, "type"))
 			self.assertTrue(hasattr(module, "name"))
 
 	def testFunctionCall(self):
-		for module in self._mm.activeMods.supporting("itemModifiers"):
+		for module in self._mm.mods("active", type="itemModifiers"):
 			word = Word()
 			word.id = 0
 			output = module.modifyItem(word)
 			self.assertTrue(hasattr(output, "id"))
 
 	def tearDown(self):
-		for module in self._mm.activeMods.supporting("itemModifier"):
+		for module in self._mm.mods("active", type="itemModifier"):
 			module.disable()
 
 class TestModule(object):
@@ -54,9 +54,7 @@ class TestModule(object):
 		super(TestModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("test",)
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "test"
 
 	def enable(self):
 		self.TestCase = ItemModifiersTestCase

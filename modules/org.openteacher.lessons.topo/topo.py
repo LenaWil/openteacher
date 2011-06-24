@@ -338,7 +338,7 @@ class LessonTypeChooser(QtGui.QComboBox):
 		self.currentIndexChanged.connect(self.changeLessonType)
 		
 		self._lessonTypeModules = list(
-			base.api.mods.supporting("lessonType")
+			base.api.mods("active", type="lessonType")
 		)
 		
 		for lessontype in self._lessonTypeModules:
@@ -682,27 +682,25 @@ class TopoLessonModule(object):
 		self.counter = 1
 		self.inLesson = False
 		
-		self.supports = ("lesson", "list", "loadList", "initializing")
-		self.requires = (1, 0)
-	
-	def initialize(self):
-		for module in self.api.activeMods.supporting("modules"):
-			module.registerModule("Topo Lesson", self)
-	
+		self.type = "lesson"
+
 	def enable(self):
-		self.type = "Places"
+		for module in self.api.mods("active", type="modules"):
+			module.registerModule("Topo Lesson", self)
+
+		self.dataType = "places"
 		
 		self.lessonCreated = self.api.createEvent()
 		self.lessonCreationFinished = self.api.createEvent()
 		
-		for module in self.api.mods.supporting("ui"):
+		for module in self.api.mods("active", type="ui"):
 			event = module.addLessonCreateButton("Create topography lesson")
 			event.handle(self.createLesson)
 		
 		self.active = True
 
 	def disable(self):
-		del self.type
+		del self.dataType
 		del self.lessonCreated
 		del self.lessonCreationFinished
 		self.active = False
@@ -710,7 +708,7 @@ class TopoLessonModule(object):
 	def createLesson(self):		
 		lessons = set()
 		
-		for module in self.api.activeMods.supporting("ui"):
+		for module in self.api.mods("active", type="ui"):
 			self.enterWidget = EnterWidget()
 			self.teachWidget = TeachWidget()
 			

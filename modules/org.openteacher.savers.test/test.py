@@ -22,16 +22,16 @@ import unittest
 
 class SaversTestCase(unittest.TestCase):
 	def setUp(self):
-		for module in self._mm.mods.supporting("save"):
+		for module in self._mm.mods(type="save"):
 			module.enable()
 
 	def testAttributes(self):
-		for module in self._mm.activeMods.supporting("save"):
+		for module in self._mm.mods("active", type="save"):
 			self.assertTrue(hasattr(module, "save"))
 			self.assertTrue(hasattr(module, "saves"))
 
 	def tearDown(self):
-		for module in self._mm.activeMods.supporting("save"):
+		for module in self._mm.mods("active", type="save"):
 			module.disable()
 
 class TestModule(object):
@@ -39,9 +39,7 @@ class TestModule(object):
 		super(TestModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("test",)
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "test"
 
 	def enable(self):
 		self.TestCase = SaversTestCase

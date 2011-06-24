@@ -21,40 +21,34 @@
 class AboutModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(AboutModule, self).__init__(*args, **kwargs)
+
 		self._mm = moduleManager
-
-		self.requires = (1, 0)
-		self.supports = ("about", "initializing")
-		self.active = False
-
-	def initialize(self):
-		for module in self._mm.activeMods.supporting("modules"):
-			module.registerModule("About module", self)
+		self.type = "about"
 
 	def show(self):
-		for module in self._mm.activeMods.supporting("ui"):
-			dialog = self._ui.AboutDialog(self._authors, self._mm)
+		authorModules = set(self._mm.mods("active", type="authors"))
+		try:
+			authorModule = self._modules.chooseItem(authorModules)
+		except IndexError:
+			authors = set()
+		else:
+			authors = authorModule.registeredAuthors
+		for module in self._mm.mods("active", type="ui"):
+			dialog = self._ui.AboutDialog(authors, self._mm)
 			tab = module.addCustomTab(dialog.windowTitle(), dialog)
 			tab.closeRequested.handle(tab.close)
 
 	def enable(self):
-		self._ui = self._mm.import_("ui")
-		self._authors = []
-		self.active = True
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules.registerModule("About module", self)
 
-		##########DEMO DATA
-		self.registerAuthor("Core developer", "Milan Boers")
-		self.registerAuthor("Core developer", "Cas Widdershoven")
-		self.registerAuthor("Core developer", "Marten de Vries")
-		##########END DEMO DATA
+		self._ui = self._mm.import_("ui")
+		self.active = True
 
 	def disable(self):
 		self.active = False
+		del self._modules
 		del self._ui
-		del self._authors
-
-	def registerAuthor(self, category, name):
-		self._authors.append((category, name))
 
 def init(moduleManager):
 	return AboutModule(moduleManager)

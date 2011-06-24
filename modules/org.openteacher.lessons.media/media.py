@@ -81,7 +81,7 @@ class MediaControlDisplay(QtGui.QWidget):
 		buttonsLayout = QtGui.QHBoxLayout()
 		
 		self.pauseButton = QtGui.QPushButton()
-		self.pauseButton.setIcon(QtGui.QIcon.fromTheme("media-playback-pause",QtGui.QIcon(base.mm.resourcePath("icons/player_pause.png"))))
+		self.pauseButton.setIcon(QtGui.QIcon.fromTheme("media-playback-pause",QtGui.QIcon(base._mm.resourcePath("icons/player_pause.png"))))
 		self.pauseButton.clicked.connect(self.playPause)
 		buttonsLayout.addWidget(self.pauseButton)
 		
@@ -109,9 +109,9 @@ class MediaControlDisplay(QtGui.QWidget):
 	
 	def _playPauseButtonUpdate(self, newstate, oldstate):
 		if self.mediaDisplay.videoPlayer.isPaused():
-			self.pauseButton.setIcon(QtGui.QIcon.fromTheme("media-playback-play",QtGui.QIcon(base.mm.resourcePath("icons/player_play.png"))))
+			self.pauseButton.setIcon(QtGui.QIcon.fromTheme("media-playback-play",QtGui.QIcon(base._mm.resourcePath("icons/player_play.png"))))
 		else:
-			self.pauseButton.setIcon(QtGui.QIcon.fromTheme("media-playback-pause",QtGui.QIcon(base.mm.resourcePath("icons/player_pause.png"))))
+			self.pauseButton.setIcon(QtGui.QIcon.fromTheme("media-playback-pause",QtGui.QIcon(base._mm.resourcePath("icons/player_pause.png"))))
 	
 	def setControls(self):
 		if self.mediaDisplay.activeType == MediaType.Image or self.mediaDisplay.activeType == None or self.mediaDisplay.activeType == MediaType.Website:
@@ -450,7 +450,7 @@ class LessonTypeChooser(QtGui.QComboBox):
 		self.currentIndexChanged.connect(self.changeLessonType)
 		
 		self._lessonTypeModules = list(
-			base.mm.mods.supporting("lessonType")
+			base._mm.mods("active", type="lessonType")
 		)
 		
 		for lessontype in self._lessonTypeModules:
@@ -610,24 +610,22 @@ class MediaLessonModule(object):
 	def __init__(self, mm):
 		global base
 		base = self
-		self.mm = mm
+		self._mm = mm
 		self.counter = 1
 		self.inLesson = False
-		
-		self.supports = ("lesson", "list", "loadList", "initializing")
-		self.requires = (1, 0)
-	
-	def initialize(self):
-		for module in self.mm.activeMods.supporting("modules"):
-			module.registerModule("Media Lesson", self)
-	
+
+		self.type = "lesson"
+
 	def enable(self):
-		self.type = "Items"
+		for module in self._mm.mods("active", type="modules"):
+			module.registerModule("Media Lesson", self)
+
+		self.dataType = "items"
 		
-		self.lessonCreated = self.mm.createEvent()
-		self.lessonCreationFinished = self.mm.createEvent()
+		self.lessonCreated = self._mm.createEvent()
+		self.lessonCreationFinished = self._mm.createEvent()
 		
-		for module in self.mm.mods.supporting("ui"):
+		for module in self._mm.mods("active", type="ui"):
 			event = module.addLessonCreateButton("Create media lesson")
 			event.handle(self.createLesson)
 		
@@ -636,14 +634,14 @@ class MediaLessonModule(object):
 	def disable(self):
 		self.active = False
 
-		del self.type
+		del self.dataType
 		del self.lessonCreated
 		del self.lessonCreationFinished
 	
 	def createLesson(self):		
 		lessons = set()
 		
-		for module in self.mm.activeMods.supporting("ui"):
+		for module in self._mm.mods("active", type="ui"):
 			self.enterWidget = EnterWidget()
 			self.teachWidget = TeachWidget()
 			
@@ -665,7 +663,7 @@ class Lesson(object):
 	def __init__(self, moduleManager, fileTab, enterWidget, teachWidget, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
 		self.fileTab = fileTab
-		self.stopped = base.mm.createEvent()
+		self.stopped = base._mm.createEvent()
 		
 		fileTab.closeRequested.handle(self.stop)
 	

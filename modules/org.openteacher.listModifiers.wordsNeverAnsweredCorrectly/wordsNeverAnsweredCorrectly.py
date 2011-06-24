@@ -23,9 +23,7 @@ class WordsNeverAnsweredCorrectlyModule(object):
 		super(WordsNeverAnsweredCorrectlyModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("wordsNeverAnsweredCorrectly", "listModifier")
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "listModifier"
 
 	def modifyList(self, indexes, list):
 		self._list = list
@@ -34,7 +32,7 @@ class WordsNeverAnsweredCorrectlyModule(object):
 		return newIndexes
 
 	def _isNeverAnsweredCorrectly(self, index):
-		results = self._resultsFor(self._list.words[index])
+		results = self._resultsFor(self._list.items[index])
 		return "right" not in results
 
 	def _resultsFor(self, word):
@@ -44,13 +42,15 @@ class WordsNeverAnsweredCorrectlyModule(object):
 		return filter(lambda result: result.wordId == word.id, results)
 
 	def enable(self):
-		self.type = "words"
-		self.name = "Only words you never answered correctly"
+		self.testName = "wordsNeverAnsweredCorrectly"
+		self.dataType = "words"
+		self.name = "Only words you never answered correctly" #FIXME: translate
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self.type
+		del self.testName
+		del self.dataType
 		del self.name
 
 def init(moduleManager):
