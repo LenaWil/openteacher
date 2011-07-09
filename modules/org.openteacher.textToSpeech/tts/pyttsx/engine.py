@@ -32,7 +32,7 @@ class Engine(object):
     @ivar _debug: Print exceptions or not
     @type _debug: bool 
     '''
-    def __init__(self, driverName=None, debug=False):
+    def __init__(self, moduleManager, driverName=None, debug=False):
         '''
         Constructs a new TTS engine instance.
         
@@ -42,7 +42,7 @@ class Engine(object):
         @param debug: Debugging output enabled or not
         @type debug: bool
         '''
-        self.proxy = driver.DriverProxy(weakref.proxy(self), driverName, debug)
+        self.proxy = driver.DriverProxy(moduleManager, weakref.proxy(self), driverName, debug)
         # initialize other vars
         self._connects = {}
         self._inLoop = False

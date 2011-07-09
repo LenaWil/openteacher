@@ -49,7 +49,7 @@ class TextToSpeech():
 	autoPlay = True
 	def __init__(self, pyttsx):
 		if os.name == 'nt' or os.name == 'mac':
-			self.engine = pyttsx.init()
+			self.engine = pyttsx.init(base._mm)
 		elif os.name == 'posix':
 			#check if espeak was installed
 			try:
@@ -96,6 +96,8 @@ class TextToSpeechModule(object):
 	voiceid = None
 	def __init__(self, mm):
 		self._mm = mm
+		global base
+		base = self
 
 		self.type = "textToSpeech"
 

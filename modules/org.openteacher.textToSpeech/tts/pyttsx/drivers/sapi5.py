@@ -21,7 +21,7 @@ import pythoncom
 import time
 import math
 import weakref
-from ..voice import Voice
+#from ..voice import Voice
 
 # common voices
 MSSAM = 'HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Speech\\Voices\\Tokens\\MSSam'
@@ -33,7 +33,10 @@ E_REG = {MSSAM : (137.89, 1.11),
          MSMARY : (156.63, 1.11),
          MSMIKE : (154.37, 1.11)}
 
-def buildDriver(proxy):
+def buildDriver(moduleManager, proxy):
+    print moduleManager.resourcePath("tts/pyttsx")
+    global voice
+    voice = moduleManager.importFrom(moduleManager.resourcePath(".."), "voice");
     return SAPI5Driver(proxy)
 
 class SAPI5Driver(object):
@@ -72,7 +75,7 @@ class SAPI5Driver(object):
         self._tts.Speak('', 3)
 
     def _toVoice(self, attr):
-        return Voice(attr.Id, attr.GetDescription())
+        return voice.Voice(attr.Id, attr.GetDescription())
     
     def _tokenFromId(self, id):
         tokens = self._tts.GetVoices()

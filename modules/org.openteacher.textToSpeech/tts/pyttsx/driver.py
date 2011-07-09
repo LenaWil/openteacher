@@ -39,7 +39,7 @@ class DriverProxy(object):
     @ivar _iterator: Driver iterator to invoke when in an external run loop
     @type _iterator: iterator
     '''
-    def __init__(self, engine, driverName, debug):
+    def __init__(self, moduleManager, engine, driverName, debug):
         '''
         Constructor.
         
@@ -61,9 +61,10 @@ class DriverProxy(object):
                 driverName = 'espeak'
         # import driver module
         name = 'drivers.%s' % driverName
-        self._module = __import__(name, globals(), locals(), [driverName])
+        #self._module = __import__(name, globals(), locals(), [driverName])
+        self._module = moduleManager.importFrom(moduleManager.resourcePath("drivers"), driverName);
         # build driver instance
-        self._driver = self._module.buildDriver(weakref.proxy(self))
+        self._driver = self._module.buildDriver(moduleManager, weakref.proxy(self))
         # initialize refs
         self._engine = engine
         self._queue = []
