@@ -88,7 +88,7 @@ class EnterMapScene(QtGui.QGraphicsScene):
 		if x > 0 and y > 0:
 			# Ask for the name
 			name = QtGui.QInputDialog.getText(self.widget, "Name for this place", "What's this place's name?")
-			if name[1] and str(name[0]).strip() != "":
+			if unicode(name[1]) and unicode(name[0]).strip() != u"":
 				# Make the place
 				place = Place(name[0], x, y)
 				# And add the place
