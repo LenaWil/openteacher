@@ -32,7 +32,13 @@ class TypingTeachWidget(QtGui.QWidget):
 		self._mm = moduleManager
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		
-		self.inputWidget = set(self._mm.mods("active", type="typingInput")).pop().createWidget()
+		typingInputs = set(self._mm.mods("active", type="typingInput"))
+		try:
+			typingInput = self._modules.chooseItem(typingInputs)
+		except IndexError:
+			print "IndexError" #FIXME: show a nice error
+		else:
+			self.inputWidget = typingInput.createWidget()
 		
 		vbox = QtGui.QVBoxLayout()
 		self.hintLabel = QtGui.QLabel()
