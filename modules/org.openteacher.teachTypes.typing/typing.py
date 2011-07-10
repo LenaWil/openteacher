@@ -30,25 +30,22 @@ class TypingTeachWidget(QtGui.QWidget):
 
 		self._mm = moduleManager
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self.inputLineEdit = QtGui.QLineEdit()
-
-		self.checkButton = QtGui.QPushButton(u"Check!")
-		self.checkButton.setShortcut(QtCore.Qt.Key_Return) #FIXME: translatable?
-		self.correctButton = QtGui.QPushButton(u"Correct anyway")
-
-		mainLayout = QtGui.QGridLayout()
-		mainLayout.addWidget(self.inputLineEdit, 0, 0)
-		mainLayout.addWidget(self.checkButton, 0, 1)
-		mainLayout.addWidget(self.correctButton, 1, 1)
-		self.setLayout(mainLayout)
+		
+		self.inputWidget = set(self._mm.mods("active", type="typingInput")).pop().createWidget()
+		
+		hbox = QtGui.QHBoxLayout()
+		hbox.addWidget(self.inputWidget)
+		self.setLayout(hbox)
+		
+		self.inputWidget.checkAnswer.handle(self.checkAnswer)
 
 	def updateLessonType(self, lessonType):
 		self.lessonType = lessonType
 
 		self.lessonType.newItem.handle(self.newWord)
 
-		self.checkButton.clicked.connect(self.checkAnswer)
-		self.correctButton.clicked.connect(self.correctLastAnswer)
+		self.inputWidget.checkButton.clicked.connect(self.checkAnswer)
+		self.inputWidget.correctButton.clicked.connect(self.correctLastAnswer)
 
 	def newWord(self, word):
 		try:
@@ -56,17 +53,17 @@ class TypingTeachWidget(QtGui.QWidget):
 		except AttributeError:
 			pass
 		self.word = word
-		self.inputLineEdit.clear()
-		self.inputLineEdit.setFocus()
+		self.inputWidget.inputLineEdit.clear()
+		self.inputWidget.inputLineEdit.setFocus()
 
 	def correctLastAnswer(self):
 		result = Result("right")
 		result.wordId = self.previousWord.id
 		result.givenAnswer = _(u"Correct anyway") #FIXME: own translation
-		self.lessonType.correctLastAnswer(self, result)
-
+		self.lessonType.correctLastAnswer(result)
+		
 	def checkAnswer(self):
-		givenStringAnswer = unicode(self.inputLineEdit.text())
+		givenStringAnswer = unicode(self.inputWidget.inputLineEdit.text())
 
 		checkers = set(self._mm.mods("active", type="wordsStringChecker"))
 		try:
