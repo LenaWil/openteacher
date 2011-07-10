@@ -22,6 +22,7 @@ import unittest
 
 class SaversTestCase(unittest.TestCase):
 	def setUp(self):
+		set(self._mm.mods(type="modules")).pop().enable()
 		for module in self._mm.mods(type="save"):
 			module.enable()
 
@@ -31,6 +32,8 @@ class SaversTestCase(unittest.TestCase):
 			self.assertTrue(hasattr(module, "saves"))
 
 	def tearDown(self):
+		for module in self._mm.mods("active", type="modules"):
+			module.disable()
 		for module in self._mm.mods("active", type="save"):
 			module.disable()
 

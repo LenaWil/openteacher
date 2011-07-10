@@ -18,7 +18,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import optparse
+import sys
 
 class OpenTeacherModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -27,35 +27,22 @@ class OpenTeacherModule(object):
 
 		self.type = "openteacher-core"
 
-	def run(self): #FIXME: should options and modes be added dynamically? If so, how?
-		parser = optparse.OptionParser()
-		parser.add_option(
-			"-m",
-			"--mode",
-			dest="mode",
-			help="teels OpenTeacher to operate in the specified MODE.",
-			default="execute"
-		)
-		parser.add_option(
-			"-u",
-			"--ui",
-			dest="ui",
-			help="tells OpenTeacher to load the specified UI",
-			default="qt" #FIXME: should Qt be fixed?
-		)
-		options, args = parser.parse_args()
-		if options.mode == "execute":
-			try:
-				args[0]
-			except IndexError:
-				for module in self._mm.mods(type="execute"): #FIXME: choose an executor. Maybe obligatory one like openteacher-core? Or command line setting?
-					module.execute(options.ui)
-			else:
-				for module in self._mm.mods(type="execute"): #FIXME: choose an executor. Maybe obligatory one like openteacher-core? Or command line setting?
-					module.execute(options.ui, args[0])
-		elif options.mode == "test":
+	def run(self):
+		try:
+			mode = sys.argv[1]
+		except IndexError:
+			mode = "execute"
+		else:
+			if mode in ("execute", "test"):
+				del sys.argv[1]
+
+		if mode == "test":
 			for module in self._mm.mods(type="testRunner"): #FIXME: choose a test runner. Maybe obligatory one like openteacher-core? Or command line setting?
 				module.run()
+		else:
+			#execute
+			for module in self._mm.mods(type="execute"): #FIXME: choose an executor. Maybe obligatory one like openteacher-core? Or command line setting?
+				module.execute()
 
 def init(moduleManager):
 	return OpenTeacherModule(moduleManager)

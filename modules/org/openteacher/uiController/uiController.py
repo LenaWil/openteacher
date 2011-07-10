@@ -44,7 +44,7 @@ class UiControllerModule(object):
 
 		if path:
 			try:
-				self.load(path)
+				self.open_(path)
 			except (NotImplementedError, IOError):
 				pass
 
@@ -55,15 +55,16 @@ class UiControllerModule(object):
 	def new(self):
 		self._uiModule.showStartTab()
 
-	def open_(self):
+	def open_(self, path=None):
 		loaders = set(self._mm.mods("active", type="loader"))
 		loader = self._modules.chooseItem(loaders)
 
 		usableExtensions = loader.usableExtensions
-		path = self._uiModule.getLoadPath(
-			os.path.expanduser("~"), #FIXME: path should be saved & restored
-			usableExtensions
-		)
+		if not path:
+			path = self._uiModule.getLoadPath(
+				os.path.expanduser("~"), #FIXME: path should be saved & restored
+				usableExtensions
+			)
 		if path:
 			loader.load(path)
 		#FIXME: inform the user of succes...
