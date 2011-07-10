@@ -109,15 +109,14 @@ class ModuleManager(object):
 	def _loadModules(self):
 		self._modules = set()
 
-		for moduleName in os.listdir(self.modulesPath):
-			location = os.path.join(self.modulesPath, moduleName)
-			fileName = moduleName.split(".")[-1]
+		for root, dirs, files in os.walk(self.modulesPath):
+			name = os.path.split(root)[1]
 			valid = (
-				not moduleName.startswith("_") and
-				os.path.isdir(location)
+				name + ".py" in files and
+				not "_" in root
 			)
 			if valid:
-				container = self.importFrom(location, fileName)
+				container = self.importFrom(root, name)
 				module = container.init(self)
 				self._modules.add(module)
 
