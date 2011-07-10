@@ -38,12 +38,13 @@ class SpeakThread(threading.Thread):
 		elif os.name == 'posix':
 			self.voiceid = voiceid
 			self.text = text
-			
+
 	def run(self):
 		if os.name == 'nt' or os.name == 'mac':
 			self.engine.runAndWait()
 		elif os.name == 'posix':
-			ret = subprocess.call(["espeak", self.text, "-v" + self.voiceid])
+			nullDevice = open(os.devnull, "w")
+			ret = subprocess.call(["espeak", self.text, "-v" + self.voiceid], stdout=nullDevice, stderr=nullDevice)
 
 class TextToSpeech():
 	autoPlay = True
@@ -51,12 +52,13 @@ class TextToSpeech():
 		if os.name == 'nt' or os.name == 'mac':
 			self.engine = pyttsx.init(base._mm)
 		elif os.name == 'posix':
+			self.nullDevice = open(os.devnull, "w")
 			#check if espeak was installed
 			try:
-				subprocess.call(["espeak","--help"])
+				subprocess.call(["espeak","--help"], stdout=self.nullDevice, stderr=self.nullDevice)
 			except OSError:
 				raise DependencyError("Can't initiate text-to-speech. Espeak was not installed.")
-	
+
 	def getVoices(self):
 		feedback = []
 		voiceids = []
@@ -90,7 +92,7 @@ class TextToSpeech():
 				st = SpeakThread(None,voiceid,text)
 				st.start()
 			else:
-				ret = subprocess.call(["espeak", text, "-v" + voiceid])
+				ret = subprocess.call(["espeak", text, "-v" + voiceid], stdout=self.nullDevice, stderr=self.nullDevice)
 
 class TextToSpeechModule(object):
 	voiceid = None
