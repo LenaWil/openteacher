@@ -1,0 +1,164 @@
+
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
+#	Copyright 2011, Cas Widdershoven
+#	Copyright 2011, Marten de Vries
+#
+#	This file is part of OpenTeacher.
+#
+#	OpenTeacher is free software: you can redistribute it and/or modify
+#	it under the terms of the GNU General Public License as published by
+#	the Free Software Foundation, either version 3 of the License, or
+#	(at your option) any later version.
+#
+#	OpenTeacher is distributed in the hope that it will be useful,
+#	but WITHOUT ANY WARRANTY; without even the implied warranty of
+#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#	GNU General Public License for more details.
+#
+#	You should have received a copy of the GNU General Public License
+#	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
+
+from PyQt4 import QtGui, QtCore
+
+class Result(str):
+	pass
+		
+class RepeatScreenWidget(QtGui.QWidget):
+	def __init__(self, parent, *args, **kwargs):
+		super(RepeatScreenWidget, self).__init__(*args, **kwargs)
+		
+		self.parent = parent
+		
+		self.showAnswerScreen = QtGui.QVBoxLayout()
+		self.answerLabel = QtGui.QLabel()
+		self.showAnswerScreen.addWidget(self.answerLabel)
+		self.setLayout(self.showAnswerScreen)
+		
+	def fade(self):
+		self.answerLabel.setText(self.parent.word.answers[0][0])
+		timer = QtCore.QTimeLine(2000, self)
+		timer.setFrameRange(0, 255)
+		timer.frameChanged.connect(self.fadeAction)
+		timer.finished.connect(self.finish)
+		timer.start()
+		
+	def fadeAction(self, frame):
+		palette = QtGui.QPalette()
+		color = palette.windowText().color()
+		color.setAlpha(255 - frame)
+		palette.setColor(QtGui.QPalette.WindowText, color)
+		
+		self.answerLabel.setPalette(palette)
+		
+	def finish(self):
+		self.parent.setCurrentWidget(self.parent.inputWidget)
+		self.parent.inputWidget.inputLineEdit.setFocus()
+		
+class StartScreenWidget(QtGui.QWidget):
+	def __init__(self, parent, *args, **kwargs):
+		super(StartScreenWidget, self).__init__(*args, **kwargs)
+		
+		self.parent = parent
+		
+		self.startScreen = QtGui.QVBoxLayout()
+		self.startScreen.addWidget(QtGui.QLabel(u"Click the button to start"))
+		self.startButton = QtGui.QPushButton(u"Start!")
+		self.startScreen.addWidget(self.startButton)
+		self.setLayout(self.startScreen)
+		
+		self.startButton.clicked.connect(self.parent.startRepeat)
+		
+
+class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
+	def __init__(self, moduleManager, tabChanged, *args, **kwargs):
+		super(RepeatAnswerTeachWidget, self).__init__(*args, **kwargs)
+
+		self._mm = moduleManager
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		
+			
+		#make start screen
+		self.startScreen = StartScreenWidget(self)
+		self.addWidget(self.startScreen)
+		
+		#make "show answer" screen
+		self.repeatScreen = RepeatScreenWidget(self)
+		self.addWidget(self.repeatScreen)
+		
+		#make input screen
+		typingInputs = set(self._mm.mods("active", type="typingInput"))
+		try:
+			typingInput = self._modules.chooseItem(typingInputs)
+		except IndexError, e:
+			print "IndexError" #FIXME: show a nice error
+			raise e
+		else:
+			self.inputWidget = typingInput.createWidget()
+			self.addWidget(self.inputWidget)
+		
+		tabChanged.handle(lambda: self.setCurrentWidget(self.startScreen))
+		
+	def startRepeat(self):
+		self.setCurrentWidget(self.repeatScreen)
+		self.repeatScreen.fade()
+
+	def updateLessonType(self, lessonType):
+		self.lessonType = lessonType
+
+		self.lessonType.newItem.handle(self.newWord)
+
+		self.inputWidget.checkButton.clicked.connect(self.checkAnswer)
+		self.inputWidget.correctButton.clicked.connect(self.correctLastAnswer)
+
+	def newWord(self, word):
+		try:
+			self.previousWord = self.word
+		except AttributeError:
+			pass
+		self.word = word
+		self.inputWidget.inputLineEdit.clear()
+		self.startRepeat()
+
+	def correctLastAnswer(self):
+		result = Result("right")
+		result.wordId = self.previousWord.id
+		result.givenAnswer = _(u"Correct anyway") #FIXME: own translation
+		self.lessonType.correctLastAnswer(result)
+		
+	def checkAnswer(self):
+		givenStringAnswer = unicode(self.inputWidget.inputLineEdit.text())
+
+		checkers = set(self._mm.mods("active", type="wordsStringChecker"))
+		try:
+			check = self._modules.chooseItem(checkers).check
+		except IndexError, e:
+			#FIXME: show nice error? Make typing unusable?
+			raise e
+		result = check(givenStringAnswer, self.word)
+
+		self.lessonType.setResult(result)
+
+class RepeatAnswerTeachTypeModule(object):
+	def __init__(self, moduleManager, *args, **kwargs):
+		super(RepeatAnswerTeachTypeModule, self).__init__(*args, **kwargs)
+		self._mm = moduleManager
+
+		self.type = "teachType"
+
+	def enable(self):
+		self.dataType = "words"
+		self.name = "Repeat Answer"
+		self.active = True
+
+	def disable(self):
+		self.active = False
+		del self.dataType
+		del self.name
+
+	def createWidget(self, tabChanged):
+		return RepeatAnswerTeachWidget(self._mm, tabChanged)
+
+def init(moduleManager):
+	return RepeatAnswerTeachTypeModule(moduleManager)
