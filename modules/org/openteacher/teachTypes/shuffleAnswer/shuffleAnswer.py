@@ -25,9 +25,9 @@ import random
 class Result(str):
 	pass
 
-class TypingTeachWidget(QtGui.QWidget):
+class ShuffleAnswerTeachWidget(QtGui.QWidget):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(TypingTeachWidget, self).__init__(*args, **kwargs)
+		super(ShuffleAnswerTeachWidget, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
@@ -35,8 +35,9 @@ class TypingTeachWidget(QtGui.QWidget):
 		typingInputs = set(self._mm.mods("active", type="typingInput"))
 		try:
 			typingInput = self._modules.chooseItem(typingInputs)
-		except IndexError:
+		except IndexError, e:
 			print "IndexError" #FIXME: show a nice error
+			raise e
 		else:
 			self.inputWidget = typingInput.createWidget()
 		
@@ -46,12 +47,9 @@ class TypingTeachWidget(QtGui.QWidget):
 		vbox.addWidget(self.inputWidget)
 		self.setLayout(vbox)
 		
-		self.inputWidget.checkAnswer.handle(self.checkAnswer)
-		
 	def setHint(self):
 		hint = QtCore.QCoreApplication.translate("OpenTeacher", "Hint:") + u" "
-		answer = self.word.answers.pop()[0]
-		print answer
+		answer = self.word.answers[0][0]
 		if len(answer) != 1:
 			while True:
 				hintList = list(answer)
@@ -102,9 +100,9 @@ class TypingTeachWidget(QtGui.QWidget):
 
 		self.lessonType.setResult(result)
 
-class TypingTeachTypeModule(object):
+class ShuffleAnswerTeachTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(TypingTeachTypeModule, self).__init__(*args, **kwargs)
+		super(ShuffleAnswerTeachTypeModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "teachType"
@@ -119,9 +117,9 @@ class TypingTeachTypeModule(object):
 		del self.dataType
 		del self.name
 
-	def createWidget(self):
-		return TypingTeachWidget(self._mm)
+	def createWidget(self, tabChanged):
+		return ShuffleAnswerTeachWidget(self._mm)
 
 def init(moduleManager):
-	return TypingTeachTypeModule(moduleManager)
+	return ShuffleAnswerTeachTypeModule(moduleManager)
 

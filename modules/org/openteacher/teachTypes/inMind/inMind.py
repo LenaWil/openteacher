@@ -120,7 +120,7 @@ class InMindTeachTypeModule(object):
 		del self.dataType
 		del self.name
 
-	def createWidget(self):
+	def createWidget(self, tabChanged):
 		return InMindTeachWidget(self._mm)
 
 def init(moduleManager):

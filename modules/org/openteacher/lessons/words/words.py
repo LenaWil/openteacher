@@ -307,10 +307,15 @@ class Lesson(object):
 		self._wordsTableModel.setData(i, data)
 		ew.wordsTableView.edit(i)
 		ew.wordsTableView.itemDelegate().currentEditor.deselect()
+		
+	def emit(self):
+		self.tabChanged.emit()
 
 	def _initTeachUi(self):
 		sw = self._teachWidget.settingsWidget
 		lw = self._teachWidget.lessonWidget
+		self.tabChanged = self._mm.createEvent()
+		lw.teachTabWidget.currentChanged.connect(lambda: self.tabChanged.emit())
 
 		#lessonType
 		self._lessonTypeModules = list(self._mm.mods("active", type="lessonType"))
@@ -353,7 +358,7 @@ class Lesson(object):
 		self._teachTypeWidgets = []
 		for module in self._mm.mods("active", type="teachType"): 
 			if module.dataType in ("all", "words"):
-				widget = module.createWidget()
+				widget = module.createWidget(self.tabChanged)
 				self._teachTypeWidgets.append(widget)
 				lw.teachTabWidget.addTab(widget, module.name)
 

@@ -33,7 +33,6 @@ class InputTyping(QtGui.QWidget):
 
 		self._mm = moduleManager
 		
-		self.checkAnswer = self._mm.createEvent()
 		self.inputLineEdit = QtGui.QLineEdit()
 
 		self.checkButton = QtGui.QPushButton(u"Check!")

@@ -34,16 +34,15 @@ class TypingTeachWidget(QtGui.QWidget):
 		typingInputs = set(self._mm.mods("active", type="typingInput"))
 		try:
 			typingInput = self._modules.chooseItem(typingInputs)
-		except IndexError:
+		except IndexError, e:
 			print "IndexError" #FIXME: show a nice error
+			raise e
 		else:
 			self.inputWidget = typingInput.createWidget()
 		
 		hbox = QtGui.QHBoxLayout()
 		hbox.addWidget(self.inputWidget)
 		self.setLayout(hbox)
-		
-		self.inputWidget.checkAnswer.handle(self.checkAnswer)
 
 	def updateLessonType(self, lessonType):
 		self.lessonType = lessonType
@@ -98,7 +97,7 @@ class TypingTeachTypeModule(object):
 		del self.dataType
 		del self.name
 
-	def createWidget(self):
+	def createWidget(self, tabChanged):
 		return TypingTeachWidget(self._mm)
 
 def init(moduleManager):
