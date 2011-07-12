@@ -37,8 +37,13 @@ class SortModule(object):
 		return [list.words.index(word) for word in newList]
 
 	def enable(self):
+		#Translations
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		_, ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
 		self.dataType = "words"
-		self.name = "Sort"
+		self.name = _("Sort")
 		self.active = True
 
 	def disable(self):

@@ -1,0 +1,99 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-07-11 19:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: enterUi.py:98
+msgid "Title:"
+msgstr ""
+
+#: enterUi.py:101
+msgid "Question language:"
+msgstr ""
+
+#: enterUi.py:104
+msgid "Answer language:"
+msgstr ""
+
+#: enterUi.py:117
+msgid "Remove selected row(s)"
+msgstr ""
+
+#: teachUi.py:42 teachUi.py:56
+msgid "Up"
+msgstr ""
+
+#: teachUi.py:43 teachUi.py:57
+msgid "Down"
+msgstr ""
+
+#: teachUi.py:69
+msgid "Don't show this screen again when I start a lesson."
+msgstr ""
+
+#: teachUi.py:72
+msgid "I'm ready, start the lesson!"
+msgstr ""
+
+#: teachUi.py:76
+msgid "Lesson settings"
+msgstr ""
+
+#: teachUi.py:78
+msgid "Lesson type"
+msgstr ""
+
+#: teachUi.py:79
+msgid "Modify word"
+msgstr ""
+
+#: teachUi.py:80
+msgid "Modify word list"
+msgstr ""
+
+#: teachUi.py:95
+msgid "Change lesson settings"
+msgstr ""
+
+#: teachUi.py:97
+msgid "Word:"
+msgstr ""
+
+#: words.py:79
+msgid "Questions"
+msgstr ""
+
+#: words.py:79
+msgid "Answers"
+msgstr ""
+
+#: words.py:79
+msgid "Comment"
+msgstr ""
+
+#: words.py:440
+msgid "Words Lesson"
+msgstr ""
+
+#: words.py:456
+msgid "Create words lesson"
+msgstr ""
+
+#: words.py:479
+#, python-format
+msgid "Word lesson %s"
+msgstr ""

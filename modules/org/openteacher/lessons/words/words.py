@@ -76,7 +76,7 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 		if role != QtCore.Qt.DisplayRole:
 			return
 		if orientation == QtCore.Qt.Horizontal:
-			return ["Questions", "Answers", "Comment"][section]
+			return [_("Questions"), _("Answers"), _("Comment")][section]
 		elif orientation == QtCore.Qt.Vertical:
 			return section +1
 
@@ -429,11 +429,24 @@ class WordsLessonModule(object):
 		self.type = "lesson"
 
 	def enable(self):
+		#Translations
+		translator = set(self._mm.mods("active", type="translator")).pop()
+
+		global _
+		global ngettext
+
+		_, ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
+		
 		for module in self._mm.mods("active", type="modules"):
-			module.registerModule("Words Lesson", self)
+			module.registerModule(_("Words Lesson"), self)
 
 		self._enterUi = self._mm.import_("enterUi")
 		self._teachUi = self._mm.import_("teachUi")
+
+		self._enterUi._ = self._teachUi._ = _
+		self._enterUi.ngettext = self._teachUi.ngettext = ngettext
 
 		self.lessonCreated = self._mm.createEvent()
 		self.lessonCreationFinished = self._mm.createEvent()
@@ -443,7 +456,7 @@ class WordsLessonModule(object):
 		self._references = set()
 
 		for module in self._mm.mods("active", type="ui"):
-			event = module.addLessonCreateButton("Create words lesson")
+			event = module.addLessonCreateButton(_("Create words lesson"))
 			event.handle(self.createLesson)
 			self._references.add(event)
 		self.active = True
@@ -466,7 +479,7 @@ class WordsLessonModule(object):
 			teachWidget = self._teachUi.TeachWidget(self._onscreenKeyboard)
 
 			fileTab = module.addFileTab(
-				"Word lesson %s" % self._counter,
+				_("Word lesson %s") % self._counter,
 				enterWidget,
 				teachWidget
 			)

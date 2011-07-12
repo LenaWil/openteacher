@@ -28,7 +28,13 @@ class UiControllerModule(object):
 		self.type = "uiController"
 
 	def initialize(self, ui):
-		#FIXME: use one ui module by user's choice. Make the choice with command line args?
+		#FIXME: use one translator module by user's choice. Make the choice with command line args?
+		for module in self._mm.mods(type="translator"):
+			module.enable()
+		#FIXME: use one settings module by user's choice. Make the choice with command line args?
+		for module in self._mm.mods(type="settings"):
+			module.enable()
+		#FIXME: use one metadata module by user's choice. Make the choice with command line args?
 		for module in self._mm.mods(type="metadata"):
 			module.enable()
 		#FIXME: use one ui module by user's choice. Make the choice with command line args?

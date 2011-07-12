@@ -1,4 +1,3 @@
-
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
@@ -63,13 +62,12 @@ class StartScreenWidget(QtGui.QWidget):
 		self.parent = parent
 		
 		self.startScreen = QtGui.QVBoxLayout()
-		self.startScreen.addWidget(QtGui.QLabel(u"Click the button to start"))
-		self.startButton = QtGui.QPushButton(u"Start!")
+		self.startScreen.addWidget(QtGui.QLabel(_("Click the button to start")))
+		self.startButton = QtGui.QPushButton(_("Start!"))
 		self.startScreen.addWidget(self.startButton)
 		self.setLayout(self.startScreen)
 		
 		self.startButton.clicked.connect(self.parent.startRepeat)
-		
 
 class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
 	def __init__(self, moduleManager, tabChanged, *args, **kwargs):
@@ -77,8 +75,7 @@ class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
 
 		self._mm = moduleManager
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		
-			
+
 		#make start screen
 		self.startScreen = StartScreenWidget(self)
 		self.addWidget(self.startScreen)
@@ -92,8 +89,7 @@ class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
 		try:
 			typingInput = self._modules.chooseItem(typingInputs)
 		except IndexError, e:
-			print "IndexError" #FIXME: show a nice error
-			raise e
+			raise e #FIXME: show a nice error
 		else:
 			self.inputWidget = typingInput.createWidget()
 			self.addWidget(self.inputWidget)
@@ -124,7 +120,7 @@ class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
 	def correctLastAnswer(self):
 		result = Result("right")
 		result.wordId = self.previousWord.id
-		result.givenAnswer = _(u"Correct anyway") #FIXME: own translation
+		result.givenAnswer = _(u"Correct anyway")
 		self.lessonType.correctLastAnswer(result)
 		
 	def checkAnswer(self):
@@ -148,8 +144,16 @@ class RepeatAnswerTeachTypeModule(object):
 		self.type = "teachType"
 
 	def enable(self):
+		global _
+		global ngettext
+
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		_, ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
+
 		self.dataType = "words"
-		self.name = "Repeat Answer"
+		self.name = _("Repeat Answer")
 		self.active = True
 
 	def disable(self):

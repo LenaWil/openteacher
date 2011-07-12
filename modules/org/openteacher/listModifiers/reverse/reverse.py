@@ -32,8 +32,13 @@ class ReverseModule(object):
 		return __builtin__.list(reversed(indexes))
 
 	def enable(self):
+		#Translations
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		_, ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
 		self.dataType = "all"
-		self.name = "Reverse" #FIXME: translate
+		self.name = _("Reverse")
 		self.active = True
 
 	def disable(self):

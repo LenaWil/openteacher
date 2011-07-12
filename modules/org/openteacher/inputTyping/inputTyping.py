@@ -29,15 +29,13 @@ class InputTyping(QtGui.QWidget):
 		super(InputTyping, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "typingInput"
-
 		self._mm = moduleManager
 		
 		self.inputLineEdit = QtGui.QLineEdit()
 
-		self.checkButton = QtGui.QPushButton(u"Check!")
+		self.checkButton = QtGui.QPushButton(_(u"Check!"))
 		self.checkButton.setShortcut(QtCore.Qt.Key_Return) #FIXME: translatable?
-		self.correctButton = QtGui.QPushButton(u"Correct anyway")
+		self.correctButton = QtGui.QPushButton(_(u"Correct anyway"))
 
 		mainLayout = QtGui.QGridLayout()
 		mainLayout.addWidget(self.inputLineEdit, 0, 0)
@@ -60,6 +58,14 @@ class InputTypingModule(object):
 
 	def enable(self):
 		self.active = True
+
+		global _
+		global ngettext
+		#Translations
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		_, ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
 
 	def disable(self):
 		self.active = False

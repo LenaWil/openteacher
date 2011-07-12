@@ -36,8 +36,7 @@ class ShuffleAnswerTeachWidget(QtGui.QWidget):
 		try:
 			typingInput = self._modules.chooseItem(typingInputs)
 		except IndexError, e:
-			print "IndexError" #FIXME: show a nice error
-			raise e
+			raise e #FIXME: show a nice error
 		else:
 			self.inputWidget = typingInput.createWidget()
 		
@@ -48,7 +47,7 @@ class ShuffleAnswerTeachWidget(QtGui.QWidget):
 		self.setLayout(vbox)
 		
 	def setHint(self):
-		hint = QtCore.QCoreApplication.translate("OpenTeacher", "Hint:") + u" "
+		hint = _("Hint:") + u" "
 		answer = self.word.answers[0][0]
 		if len(answer) != 1:
 			while True:
@@ -84,7 +83,7 @@ class ShuffleAnswerTeachWidget(QtGui.QWidget):
 	def correctLastAnswer(self):
 		result = Result("right")
 		result.wordId = self.previousWord.id
-		result.givenAnswer = _(u"Correct anyway") #FIXME: own translation
+		result.givenAnswer = _("Correct anyway")
 		self.lessonType.correctLastAnswer(result)
 		
 	def checkAnswer(self):
@@ -108,8 +107,16 @@ class ShuffleAnswerTeachTypeModule(object):
 		self.type = "teachType"
 
 	def enable(self):
+		global _
+		global ngettext
+
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		_, ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
+
 		self.dataType = "words"
-		self.name = "Shuffle Answer"
+		self.name = _("Shuffle Answer")
 		self.active = True
 
 	def disable(self):

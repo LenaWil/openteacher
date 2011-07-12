@@ -301,11 +301,11 @@ class EnterWidget(QtGui.QSplitter):
 		
 		self.enterItemsList = EnterItemList(self)
 		
-		removeButton = QtGui.QPushButton("Remove")
+		removeButton = QtGui.QPushButton(_("Remove"))
 		removeButton.clicked.connect(self.removeItem)
-		addLocalButton = QtGui.QPushButton("Add local media")
+		addLocalButton = QtGui.QPushButton(_("Add local media"))
 		addLocalButton.clicked.connect(self.addLocalItems)
-		addRemoteButton = QtGui.QPushButton("Add remote media")
+		addRemoteButton = QtGui.QPushButton(_("Add remote media"))
 		addRemoteButton.clicked.connect(self.addRemoteItems)
 		
 		leftBottom = QtGui.QHBoxLayout()
@@ -326,10 +326,10 @@ class EnterWidget(QtGui.QSplitter):
 		self.entername.setEnabled(False)
 		
 		nameL = QtGui.QHBoxLayout()
-		nameL.addWidget(QtGui.QLabel("Name:"))
+		nameL.addWidget(QtGui.QLabel(_("Name:")))
 		nameL.addWidget(self.entername)
 		
-		descl = QtGui.QLabel("Description:")
+		descl = QtGui.QLabel(_("Description:"))
 		
 		self.enterdesc = QtGui.QTextEdit()
 		self.enterdesc.textChanged.connect(self.changeDesc)
@@ -365,7 +365,7 @@ class EnterWidget(QtGui.QSplitter):
 	Add items from the local disk to the list
 	"""
 	def addLocalItems(self):
-		filenames = QtGui.QFileDialog.getOpenFileNames(self,"Select file(s)",QtCore.QDir.homePath(),"Media (*.bmp *.jpg *.jpeg *.png *.wmv *.mp3 *.avi)")
+		filenames = QtGui.QFileDialog.getOpenFileNames(self,_("Select file(s)"),QtCore.QDir.homePath(),_("Media") + " (*.bmp *.jpg *.jpeg *.png *.wmv *.mp3 *.avi)")
 		for filename in filenames:
 			self.addItem(filename, False)
 	
@@ -373,7 +373,7 @@ class EnterWidget(QtGui.QSplitter):
 	Add items from the internet to the list
 	"""
 	def addRemoteItems(self):
-		url, dialog = QtGui.QInputDialog.getText(self, "File URL", "Enter the URL of your website or media item.\nSupported video sites: YouTube, Dailymotion, Vimeo.")
+		url, dialog = QtGui.QInputDialog.getText(self, _("File URL"), _("Enter the URL of your website or media item.\nSupported video sites: YouTube, Dailymotion, Vimeo."))
 		if dialog:
 			self.addItem(url, True)
 	
@@ -431,9 +431,9 @@ class EnterWidget(QtGui.QSplitter):
 		if base.inLesson:
 			warningD = QtGui.QMessageBox()
 			warningD.setIcon(QtGui.QMessageBox.Warning)
-			warningD.setWindowTitle("Warning")
+			warningD.setWindowTitle(_("Warning"))
 			warningD.setStandardButtons(QtGui.QMessageBox.Cancel | QtGui.QMessageBox.Ok)
-			warningD.setText("Are you sure you want to go back to the enter tab? This will end your lesson!")
+			warningD.setText(_("Are you sure you want to go back to the enter tab? This will end your lesson!"))
 			feedback = warningD.exec_()
 			if feedback == QtGui.QMessageBox.Ok:
 				base.teachWidget.stopLesson()
@@ -482,7 +482,7 @@ class TeachWidget(QtGui.QWidget):
 		
 		top = QtGui.QHBoxLayout()
 		
-		label = QtGui.QLabel("Lesson type:")
+		label = QtGui.QLabel(_("Lesson type:"))
 		self.lessonTypeChooser = LessonTypeChooser()
 		
 		top.addWidget(label)
@@ -492,7 +492,7 @@ class TeachWidget(QtGui.QWidget):
 		
 		self.answerField = QtGui.QLineEdit()
 		self.answerField.returnPressed.connect(self.checkAnswerButtonClick)
-		checkButton = QtGui.QPushButton("Check")
+		checkButton = QtGui.QPushButton(_("Check"))
 		checkButton.clicked.connect(self.checkAnswerButtonClick)
 		self.progress = QtGui.QProgressBar()
 		
@@ -535,7 +535,7 @@ class TeachWidget(QtGui.QWidget):
 	"""
 	def showEvent(self,event):
 		if len(base.enterWidget.itemList.items) == 0:
-			QtGui.QMessageBox.critical(self, "Not enough items", "You need to add items to your test first")
+			QtGui.QMessageBox.critical(self, _("Not enough items"), _("You need to add items to your test first"))
 			base.fileTab.currentTab = base.enterWidget
 		elif not base.inLesson:
 			self.initiateLesson()
@@ -617,8 +617,17 @@ class MediaLessonModule(object):
 		self.type = "lesson"
 
 	def enable(self):
+		#setup translation
+		global _
+		global ngettext
+
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		_, ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
+
 		for module in self._mm.mods("active", type="modules"):
-			module.registerModule("Media Lesson", self)
+			module.registerModule(_("Media Lesson"), self)
 
 		self.dataType = "items"
 		
@@ -626,7 +635,7 @@ class MediaLessonModule(object):
 		self.lessonCreationFinished = self._mm.createEvent()
 		
 		for module in self._mm.mods("active", type="ui"):
-			event = module.addLessonCreateButton("Create media lesson")
+			event = module.addLessonCreateButton(_("Create media lesson"))
 			event.handle(self.createLesson)
 		
 		self.active = True
@@ -646,7 +655,7 @@ class MediaLessonModule(object):
 			self.teachWidget = TeachWidget()
 			
 			self.fileTab = module.addFileTab(
-				"Media lesson %s" % self.counter,
+				_("Media lesson %s") % self.counter,
 				self.enterWidget,
 				self.teachWidget
 			)

@@ -26,7 +26,7 @@ class ThinkWidget(QtGui.QWidget):
 		
 		self.label = QtGui.QLabel(_("Think about the answer, and press the 'View answer' button when you're done."))
 		self.label.setWordWrap(True)
-		self.button = QtGui.QPushButton("View answer")
+		self.button = QtGui.QPushButton(_("View answer"))
 		
 		mainLayout = QtGui.QVBoxLayout()
 		mainLayout.addWidget(self.label)
@@ -111,8 +111,15 @@ class InMindTeachTypeModule(object):
 		self.type = "teachType"
 
 	def enable(self):
+		global _
+		global ngettext
+
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		_, ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
 		self.dataType = "words"
-		self.name = "Think answers"
+		self.name = _("Think answers")
 		self.active = True
 
 	def disable(self):

@@ -107,8 +107,12 @@ class TextToSpeechModule(object):
 		self.say = self._mm.createEvent()
 	
 	def enable(self):
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		_, ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
 		for module in self._mm.mods("active", type="modules"):
-			module.registerModule("Text to speech", self)
+			module.registerModule(_("Text to speech"), self)
 
 		#For Windows and Mac
 		pyttsx = self._mm.importFrom(self._mm.resourcePath("tts"), "pyttsx")
@@ -125,22 +129,19 @@ class TextToSpeechModule(object):
 		self.say.handle(self.newWord)
 		
 		self.active = True
-		self.newWord("Text to speech enabled")
+#		self.newWord("Text to speech enabled")
 	
 	def disable(self):
 		self.active = False
-	
-	def close(self):
-		print "Closed!"
 
 	def newWord(self, word, thread=True):
 		if self.voiceid is not None:
 			self.tts.speak(word,120,self.voiceid,thread)
 		else:
 			self.setVoice()
-	
-	def newWordNewThread(self,word):
-		SpeakThread("lol").start()
+
+#	def newWordNewThread(self,word):
+#		SpeakThread("lol").start()
 	
 	def setVoice(self, parent):
 		voices = self.tts.getVoices()

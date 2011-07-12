@@ -21,6 +21,7 @@
 
 from PyQt4 import QtCore, QtGui
 import random
+import gettext
 
 class AboutTextLabel(QtGui.QLabel):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -52,7 +53,7 @@ class AboutTextLabel(QtGui.QLabel):
 			"copyright_years": "2008-2011", #FIXME: get from authors? Or from metadata?
 			"openteacher_authors": _("OpenTeacher authors"), #FIXME: see above
 			"project_website_link": website,
-			"project_website": _("Project website")	
+			"project_website": _("Project website")
 		}
 		self.setText(t(**data))
 		
@@ -248,11 +249,13 @@ class AboutDialog(QtGui.QTabWidget):
 	def __init__(self, authors, moduleManager, *args, **kwargs):
 		super(AboutDialog, self).__init__(*args, **kwargs)
 
+		self._mm = moduleManager
+
 		self.setTabPosition(QtGui.QTabWidget.South)
 		self.setDocumentMode(True)
 
-		self.aboutWidget = AboutWidget(moduleManager)
-		self.licenseWidget = LicenseWidget(moduleManager)
+		self.aboutWidget = AboutWidget(self._mm)
+		self.licenseWidget = LicenseWidget(self._mm)
 		self.authorsWidget = AuthorsWidget(authors)
 
 		self.addTab(self.aboutWidget, _("About")) #FIXME: own translation (also the others down here)

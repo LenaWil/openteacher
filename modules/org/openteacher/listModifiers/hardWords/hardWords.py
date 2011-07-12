@@ -48,7 +48,12 @@ class HardWordsModule(object):
 		return filter(lambda result: result.wordId == word.id, results)
 
 	def enable(self):
-		self.name = "Only hard words (<50% right)" #FIXME: translate
+		#Translations
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		_, ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
+		self.name = _("Only hard words (<50% right)")
 		self.dataType = "words"
 		self.testName = "hardWords"
 		self.active = True

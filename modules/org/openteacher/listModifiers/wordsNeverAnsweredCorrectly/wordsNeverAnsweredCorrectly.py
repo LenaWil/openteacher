@@ -42,9 +42,14 @@ class WordsNeverAnsweredCorrectlyModule(object):
 		return filter(lambda result: result.wordId == word.id, results)
 
 	def enable(self):
+		#Translations
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		_, ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
 		self.testName = "wordsNeverAnsweredCorrectly"
 		self.dataType = "words"
-		self.name = "Only words you never answered correctly" #FIXME: translate
+		self.name = _("Only words you never answered correctly")
 		self.active = True
 
 	def disable(self):

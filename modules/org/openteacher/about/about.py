@@ -39,10 +39,16 @@ class AboutModule(object):
 			tab.closeRequested.handle(tab.close)
 
 	def enable(self):
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		_, ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
+
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._modules.registerModule("About module", self)
+		self._modules.registerModule(_("About module"), self)
 
 		self._ui = self._mm.import_("ui")
+		self._ui._, self._ui._ngettext = _, ngettext
 		self.active = True
 
 	def disable(self):

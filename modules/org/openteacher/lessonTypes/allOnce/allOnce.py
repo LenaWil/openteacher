@@ -78,8 +78,14 @@ class AllOnceModule(object):
 		self.type = "lessonType"
 
 	def enable(self):
+		#Translations
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		_, ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
+
 		self.newItem = self._mm.createEvent()
-		self.name = _("All once") #FIXME: own '_'
+		self.name = _("All once")
 		self.active = True
 
 	def disable(self):

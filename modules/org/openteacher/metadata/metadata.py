@@ -26,12 +26,17 @@ class MetadataModule(object):
 		self.type = "metadata"
 
 	def enable(self):
-		self.name = "OpenTeacher" #FIXME: translate
-		self.slogan = "The easiest way to learn a new language" #FIXME: translate
-		self.version = "3.x"
-		self.website = "http://openteacher.org/"
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		_, ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
+
+		self.name = _("OpenTeacher")
+		self.slogan = _("The easiest way to learn a new language")
+		self.version = _("3.x")
+		self.website = _("http://openteacher.org/")
 		self.userAgent = "%s/%s (+%s)" % (self.name, self.version, self.website)
-		self.documentationUrl = "http://openteacher.org/documentation.html"
+		self.documentationUrl = _("http://openteacher.org/documentation.html")
 		self.iconPath = self._mm.resourcePath("openteacher.png")
 		self.licenseIntro = open(self._mm.resourcePath("license_intro.txt")).read()
 		self.license = open(self._mm.resourcePath("license.txt")).read()

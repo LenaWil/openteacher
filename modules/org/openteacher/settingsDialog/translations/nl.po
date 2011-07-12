@@ -1,0 +1,39 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-07-12 10:19+0200\n"
+"PO-Revision-Date: 2011-07-12 10:20+0100\n"
+"Last-Translator: Marten de Vries <marten94@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ui.py:20
+msgid "Modules"
+msgstr "Modules"
+
+#: ui.py:40
+#: ui.py:105
+msgid "Miscellaneous"
+msgstr "Overig"
+
+#: ui.py:108
+msgid "Advanced mode"
+msgstr "Uitgebreide modus"
+
+#: ui.py:111
+msgid "Simple mode"
+msgstr "Simpele modus"
+
+#: ui.py:114
+msgid "Settings"
+msgstr "Instellingen"
+

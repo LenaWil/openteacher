@@ -33,8 +33,13 @@ class RandomModule(object):
 		return indexes
 
 	def enable(self):
+		#Translations
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		_, ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
 		self.dataType = "all"
-		self.name = "Random"
+		self.name = _("Random")
 		self.active = True
 
 	def disable(self):

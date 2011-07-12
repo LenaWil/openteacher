@@ -17,7 +17,7 @@ class ModulesTab(QtGui.QWidget):
 			vbox.addWidget(checkBox)
 		self.setLayout(vbox)
 		
-		self.setWindowTitle("Modules") #FIXME: translate!
+		self.setWindowTitle(_("Modules"))
 
 	def updateModuleState(self, state):
 		module = self.modules[self.sender()]
@@ -37,7 +37,7 @@ class LessonTypeTab(QtGui.QWidget):
 
 		for name, category in lessonType.iteritems():
 			if name is None:
-				name = "Miscellaneous" #FIXME: translate!
+				name = _("Miscellaneous")
 
 			w = self.createCategoryGroupBox(name, category)
 			vbox.addWidget(w)
@@ -102,16 +102,16 @@ class SettingsDialog(QtGui.QTabWidget):
 		for module in self._mm.mods("active", type="settings"):
 			for name, lessonType in module.registeredSettings().iteritems():
 				if name is None:
-					name = "Miscellaneous"
+					name = _("Miscellaneous")
 				self.createLessonTypeTab(name, lessonType)
 
-		self.advancedButton = QtGui.QPushButton("Advanced mode") #FIXME: translate!
+		self.advancedButton = QtGui.QPushButton(_("Advanced mode"))
 		self.advancedButton.clicked.connect(self.advanced)
 
-		self.simpleButton = QtGui.QPushButton("Simple mode") #FIXME: translate!
+		self.simpleButton = QtGui.QPushButton(_("Simple mode"))
 		self.simpleButton.clicked.connect(self.simple)
 
-		self.setWindowTitle("Settings")
+		self.setWindowTitle(_("Settings"))
 
 		self.simple()
 

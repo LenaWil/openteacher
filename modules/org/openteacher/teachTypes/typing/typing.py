@@ -35,11 +35,10 @@ class TypingTeachWidget(QtGui.QWidget):
 		try:
 			typingInput = self._modules.chooseItem(typingInputs)
 		except IndexError, e:
-			print "IndexError" #FIXME: show a nice error
-			raise e
+			raise e #FIXME: show a nice error
 		else:
 			self.inputWidget = typingInput.createWidget()
-		
+
 		hbox = QtGui.QHBoxLayout()
 		hbox.addWidget(self.inputWidget)
 		self.setLayout(hbox)
@@ -64,7 +63,7 @@ class TypingTeachWidget(QtGui.QWidget):
 	def correctLastAnswer(self):
 		result = Result("right")
 		result.wordId = self.previousWord.id
-		result.givenAnswer = _(u"Correct anyway") #FIXME: own translation
+		result.givenAnswer = _("Correct anyway")
 		self.lessonType.correctLastAnswer(result)
 		
 	def checkAnswer(self):
@@ -88,8 +87,16 @@ class TypingTeachTypeModule(object):
 		self.type = "teachType"
 
 	def enable(self):
+		global _
+		global ngettext
+
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		_, ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
+
 		self.dataType = "words"
-		self.name = "Type Answer"
+		self.name = _("Type Answer")
 		self.active = True
 
 	def disable(self):

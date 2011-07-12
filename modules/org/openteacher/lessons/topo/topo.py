@@ -87,7 +87,7 @@ class EnterMapScene(QtGui.QGraphicsScene):
 		# If its in the map
 		if x > 0 and y > 0:
 			# Ask for the name
-			name = QtGui.QInputDialog.getText(self.widget, "Name for this place", "What's this place's name?")
+			name = QtGui.QInputDialog.getText(self.widget, _("Name for this place"), _("What's this place's name?"))
 			if unicode(name[1]) and unicode(name[0]).strip() != u"":
 				# Make the place
 				place = Place(name[0], x, y)
@@ -201,9 +201,9 @@ class EnterMapChooser(QtGui.QComboBox):
 		if len(self.enterWidget.places.items) > 0:
 			warningD = QtGui.QMessageBox()
 			warningD.setIcon(QtGui.QMessageBox.Warning)
-			warningD.setWindowTitle("Warning")
+			warningD.setWindowTitle(_("Warning"))
 			warningD.setStandardButtons(QtGui.QMessageBox.Cancel | QtGui.QMessageBox.Ok)
-			warningD.setText("Are you sure you want to use another map? This will remove all your places!")
+			warningD.setText(_("Are you sure you want to use another map? This will remove all your places!"))
 			feedback = warningD.exec_()
 			if feedback == QtGui.QMessageBox.Ok:
 				# Clear the entered items
@@ -231,7 +231,7 @@ class EnterWidget(QtGui.QSplitter):
 		leftSide = QtGui.QVBoxLayout()
 		
 		#left side - top
-		mapLabel = QtGui.QLabel("Map:")
+		mapLabel = QtGui.QLabel(_("Map:"))
 		
 		#left side - middle
 		self.pictureBox = EnterMap()
@@ -244,7 +244,7 @@ class EnterWidget(QtGui.QSplitter):
 		chooseMap.addWidget(self.mapChooser)
 		
 		#left side - bottom
-		explanationLabel = QtGui.QLabel("Add a place by doubleclicking it on the map")
+		explanationLabel = QtGui.QLabel(_("Add a place by doubleclicking it on the map"))
 		
 		#left side
 		leftSide.addLayout(chooseMap)
@@ -255,9 +255,9 @@ class EnterWidget(QtGui.QSplitter):
 		rightSide = QtGui.QVBoxLayout()
 		
 		#right side - top
-		placesLabel = QtGui.QLabel("Places in your test")
+		placesLabel = QtGui.QLabel(_("Places in your test"))
 		
-		removePlace = QtGui.QPushButton("Remove selected place")
+		removePlace = QtGui.QPushButton(_("Remove selected place"))
 		removePlace.clicked.connect(self.removePlace)
 		
 		rightTop = QtGui.QHBoxLayout()
@@ -270,10 +270,10 @@ class EnterWidget(QtGui.QSplitter):
 		#right side - bottom
 		addPlace = QtGui.QHBoxLayout()
 		
-		addPlaceName = QtGui.QLabel("Add a place by name:")
+		addPlaceName = QtGui.QLabel(_("Add a place by name:"))
 		
 		addPlaceEdit = QtGui.QLineEdit()
-		addPlaceButton = QtGui.QPushButton("Add")
+		addPlaceButton = QtGui.QPushButton(_("Add"))
 		
 		addPlace.addWidget(addPlaceEdit)
 		addPlace.addWidget(addPlaceButton)
@@ -319,9 +319,9 @@ class EnterWidget(QtGui.QSplitter):
 		if base.inLesson:
 			warningD = QtGui.QMessageBox()
 			warningD.setIcon(QtGui.QMessageBox.Warning)
-			warningD.setWindowTitle("Warning")
+			warningD.setWindowTitle(_("Warning"))
 			warningD.setStandardButtons(QtGui.QMessageBox.Cancel | QtGui.QMessageBox.Ok)
-			warningD.setText("Are you sure you want to go back to the teach tab? This will end your lesson!")
+			warningD.setText(_("Are you sure you want to go back to the teach tab? This will end your lesson!"))
 			feedback = warningD.exec_()
 			if feedback == QtGui.QMessageBox.Ok:
 				base.teachWidget.stopLesson()
@@ -369,8 +369,8 @@ class LessonOrderChooser(QtGui.QComboBox):
 		
 		self.currentIndexChanged.connect(self.changeLessonOrder)
 		
-		self.addItem("Place - Name", 0)
-		self.addItem("Name - Place", 1)
+		self.addItem(_("Place - Name"), 0)
+		self.addItem(_("Name - Place"), 1)
 	
 	"""
 	What happens when you change the lesson order
@@ -497,13 +497,13 @@ class TeachWidget(QtGui.QWidget):
 		# Top
 		top = QtGui.QHBoxLayout()
 		
-		label = QtGui.QLabel("Lesson type:")
+		label = QtGui.QLabel(_("Lesson type:"))
 		self.lessonTypeChooser = LessonTypeChooser()
 		
 		top.addWidget(label)
 		top.addWidget(self.lessonTypeChooser)
 		
-		label = QtGui.QLabel("Lesson order:")
+		label = QtGui.QLabel(_("Lesson order:"))
 		self.lessonOrderChooser = LessonOrderChooser()
 		
 		top.addWidget(label)
@@ -515,13 +515,13 @@ class TeachWidget(QtGui.QWidget):
 		# Bottom
 		bottom = QtGui.QHBoxLayout()
 		
-		self.label = QtGui.QLabel("Which place is here?")
+		self.label = QtGui.QLabel(_("Which place is here?"))
 		self.answerfield = QtGui.QLineEdit()
-		self.checkanswerbutton = QtGui.QPushButton("Check")
+		self.checkanswerbutton = QtGui.QPushButton(_("Check"))
 		self.answerfield.returnPressed.connect(self.checkAnswerButtonClick)
 		self.checkanswerbutton.clicked.connect(self.checkAnswerButtonClick)
 		
-		self.questionLabel = QtGui.QLabel("Please click this place:")
+		self.questionLabel = QtGui.QLabel(_("Please click this place:"))
 		
 		self.progress = QtGui.QProgressBar()
 		
@@ -570,7 +570,7 @@ class TeachWidget(QtGui.QWidget):
 	def showEvent(self,event):
 		# If there are no words
 		if len(base.enterWidget.places.items) == 0:
-			QtGui.QMessageBox.critical(self, "Not enough items", "You need to add items to your test first")
+			QtGui.QMessageBox.critical(self, _("Not enough items"), _("You need to add items to your test first"))
 			base.fileTab.currentTab = base.enterWidget
 		# If not in a lesson (so it doesn't start a lesson if you go back from a mistakingly click on the Enter tab)
 		elif not base.inLesson:
@@ -646,7 +646,7 @@ class TopoLesson(object):
 		self.currentItem = item
 		if self.order == Order.Inversed:
 			#set the question
-			base.teachWidget.questionLabel.setText("Please click this place: " + self.currentItem.name)
+			base.teachWidget.questionLabel.setText(_("Please click this place: ") + self.currentItem.name)
 		else:
 			#set the arrow to the right position
 			base.teachWidget.mapBox.setArrow(self.currentItem.x,self.currentItem.y)
@@ -685,8 +685,17 @@ class TopoLessonModule(object):
 		self.type = "lesson"
 
 	def enable(self):
+		#setup translation
+		global _
+		global ngettext
+
+		translator = set(self.api.mods("active", type="translator")).pop()
+		_, ngettext = translator.gettextFunctions(
+			self.api.resourcePath("translations")
+		)
+
 		for module in self.api.mods("active", type="modules"):
-			module.registerModule("Topo Lesson", self)
+			module.registerModule(_("Topo Lesson"), self)
 
 		self.dataType = "places"
 		
@@ -694,7 +703,7 @@ class TopoLessonModule(object):
 		self.lessonCreationFinished = self.api.createEvent()
 		
 		for module in self.api.mods("active", type="ui"):
-			event = module.addLessonCreateButton("Create topography lesson")
+			event = module.addLessonCreateButton(_("Create topography lesson"))
 			event.handle(self.createLesson)
 		
 		self.active = True
@@ -713,7 +722,7 @@ class TopoLessonModule(object):
 			self.teachWidget = TeachWidget()
 			
 			self.fileTab = module.addFileTab(
-				"Topo lesson %s" % self.counter,
+				_("Topo lesson %s") % self.counter,
 				self.enterWidget,
 				self.teachWidget
 			)

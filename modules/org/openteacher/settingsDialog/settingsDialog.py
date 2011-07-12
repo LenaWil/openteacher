@@ -7,6 +7,12 @@ class SettingsDialogModule(object):
 
 	def enable(self):
 		self._ui = self._mm.import_("ui")
+		#install translator
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		self._ui._, self._ui.ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
+
 		self.active = True
 
 ########## DEMO CONTENT

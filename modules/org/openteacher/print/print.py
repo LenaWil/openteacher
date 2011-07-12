@@ -27,8 +27,15 @@ class PrintModule(object):
 		self.type = "print"
 		
 	def enable(self):
+		global _
+		global ngettext
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		_, ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
+
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._modules.registerModule("Printing module", self)
+		self._modules.registerModule(_("Printing module"), self)
 
 		self._pyratemp = self._mm.import_("pyratemp")
 		self.prints = ["words"]
@@ -66,7 +73,7 @@ class PrintModule(object):
 		try:
 			printer.setDocName(list.title)
 		except AttributeError:
-			printer.setDocName(_("Untitled word list")) #FIXME: own translator
+			printer.setDocName(_("Untitled word list"))
 		doc.print_(printer)
 
 def init(moduleManager):

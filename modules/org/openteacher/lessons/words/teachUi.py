@@ -39,8 +39,8 @@ class TeachSettingsWidget(QtGui.QWidget):
 
 		#Word modifiers
 		self.modifyWordListView = QtGui.QListView()
-		self.modifyWordUpButton = QtGui.QPushButton("Up")
-		self.modifyWordDownButton = QtGui.QPushButton("Down")
+		self.modifyWordUpButton = QtGui.QPushButton(_("Up"))
+		self.modifyWordDownButton = QtGui.QPushButton(_("Down"))
 
 		modifyWordButtonsLayout = QtGui.QVBoxLayout()
 		modifyWordButtonsLayout.addStretch()
@@ -53,8 +53,8 @@ class TeachSettingsWidget(QtGui.QWidget):
 
 		#Word list modifiers
 		self.modifyWordListListView = QtGui.QListView()
-		self.modifyWordListUpButton = QtGui.QPushButton("Up")
-		self.modifyWordListDownButton = QtGui.QPushButton("Down")
+		self.modifyWordListUpButton = QtGui.QPushButton(_("Up"))
+		self.modifyWordListDownButton = QtGui.QPushButton(_("Down"))
 
 		modifyWordListButtonsLayout = QtGui.QVBoxLayout()
 		modifyWordListButtonsLayout.addStretch()
@@ -75,9 +75,9 @@ class TeachSettingsWidget(QtGui.QWidget):
 		gb = QtGui.QGroupBox()
 		gb.setTitle(_("Lesson settings"))
 		formLayout = QtGui.QFormLayout()
-		formLayout.addRow("Lesson type", self.lessonTypeComboBox)
-		formLayout.addRow("Modify word", modifyWordLayout)
-		formLayout.addRow("Modify word list", modifyWordListLayout)
+		formLayout.addRow(_("Lesson type"), self.lessonTypeComboBox)
+		formLayout.addRow(_("Modify word"), modifyWordLayout)
+		formLayout.addRow(_("Modify word list"), modifyWordListLayout)
 		formLayout.addRow("", self.dontShowAgainCheckBox)
 		formLayout.addRow("", self.startLessonButton)
 

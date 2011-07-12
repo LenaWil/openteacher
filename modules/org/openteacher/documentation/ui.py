@@ -46,4 +46,4 @@ class DocumentationDialog(QtWebKit.QWebView):
 		super(DocumentationDialog, self).__init__(*args, **kwargs)
 
 		self.setPage(OpenTeacherWebPage(url, userAgent, language, self))
-		self.setWindowTitle(_("OpenTeacher Documentation"))
+		self.setWindowTitle(_("Documentation"))

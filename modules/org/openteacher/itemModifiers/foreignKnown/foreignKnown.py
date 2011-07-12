@@ -33,7 +33,13 @@ class ForeignKnownModule(object):
 
 	def enable(self):
 		self.dataType = "words"
-		self.name = "Foreign - Known"
+
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		_, ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
+
+		self.name = _("Foreign - Known")
 		self.active = True
 
 	def disable(self):

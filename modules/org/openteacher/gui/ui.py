@@ -281,7 +281,7 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 		)
 		self.aboutAction = helpMenu.addAction(
 			QtGui.QIcon(ICON_PATH + "about.png"),
-			_("&About OpenTeacher")
+			_("&About")
 		)
 
 		#Toolbar

@@ -24,17 +24,23 @@ class WrtsApiModule(object):
 		self._mm = moduleManager
 
 	def enable(self):
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		_, ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
+
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self._modules.registerModule(_("Wrts API connection"), self)
 
 		self._ui = self._mm.import_("ui")
+		self._ui._, self._ui.ngettext = _, ngettext
 		self._api = self._mm.import_("api")
 		self._references = set()
 
 		self.wrtsConnection = self._api.WrtsConnection(self._mm)
 		
 		for module in self._mm.mods("active", type="ui"):
-			event = module.addLessonLoadButton(_("Import from WRTS")) #FIXME: private gettext!
+			event = module.addLessonLoadButton(_("Import from WRTS"))
 			event.handle(self.importFromWrts)
 			self._references.add(event)
 		self.active = True

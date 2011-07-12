@@ -82,6 +82,15 @@ class GuiModule(object):
 		self._ui = self._mm.import_("ui")
 		self._ui.ICON_PATH = self._mm.resourcePath("icons/") #FIXME: something less hard to debug?
 
+		#Translations
+		global _
+		global ngettext
+
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		_, ngettext = self._ui._, self._ui.ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
+
 		self._app = QtGui.QApplication(sys.argv)
 		gettext.install("OpenTeacher")#FIXME
 

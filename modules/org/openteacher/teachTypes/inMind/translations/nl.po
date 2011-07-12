@@ -1,0 +1,42 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-07-12 10:32+0200\n"
+"PO-Revision-Date: 2011-07-12 10:35+0100\n"
+"Last-Translator: Marten de Vries <marten94@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: inMind.py:27
+msgid "Think about the answer, and press the 'View answer' button when you're done."
+msgstr "Denk na over het antwoord en druk op de 'Toon antwoord'-knop wanneer je klaar bent."
+
+#: inMind.py:29
+msgid "View answer"
+msgstr "Toon antwoord"
+
+#: inMind.py:42
+msgid "I was right"
+msgstr "Ik had het goed"
+
+#: inMind.py:43
+msgid "I was wrong"
+msgstr "Ik had het fout"
+
+#: inMind.py:99
+msgid "Translation: "
+msgstr "Vertaling:"
+
+#: inMind.py:115
+msgid "Think answers"
+msgstr "Antwoorden denken"
+
