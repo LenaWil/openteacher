@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-12 10:32+0200\n"
+"POT-Creation-Date: 2011-07-18 14:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,18 +17,14 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: repeatAnswer.py:65
+#: repeatAnswer.py:64
 msgid "Click the button to start"
 msgstr ""
 
-#: repeatAnswer.py:66
+#: repeatAnswer.py:65
 msgid "Start!"
 msgstr ""
 
-#: repeatAnswer.py:123
-msgid "Correct anyway"
-msgstr ""
-
-#: repeatAnswer.py:148
+#: repeatAnswer.py:127
 msgid "Repeat Answer"
 msgstr ""

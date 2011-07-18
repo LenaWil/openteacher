@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-12 10:32+0200\n"
-"PO-Revision-Date: 2011-07-12 10:33+0100\n"
+"POT-Creation-Date: 2011-07-18 14:17+0200\n"
+"PO-Revision-Date: 2011-07-18 14:17+0100\n"
 "Last-Translator: Marten de Vries <marten94@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -16,11 +16,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: typing.py:66
-msgid "Correct anyway"
-msgstr "Toch goed"
-
-#: typing.py:91
+#: typing.py:40
 msgid "Type Answer"
 msgstr "Antwoord typen"
 
+#~ msgid "Correct anyway"
+#~ msgstr "Toch goed"

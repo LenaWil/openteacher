@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-11 17:39+0200\n"
-"PO-Revision-Date: 2011-07-11 17:40+0100\n"
+"POT-Creation-Date: 2011-07-18 13:58+0200\n"
+"PO-Revision-Date: 2011-07-18 13:58+0100\n"
 "Last-Translator: Marten de Vries <marten94@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -21,6 +21,7 @@ msgid "Check!"
 msgstr "Controleer!"
 
 #: inputTyping.py:39
+#: inputTyping.py:67
 msgid "Correct anyway"
 msgstr "Toch goed"
 

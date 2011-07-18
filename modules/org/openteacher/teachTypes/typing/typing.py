@@ -21,69 +21,10 @@
 
 from PyQt4 import QtGui, QtCore
 
-class Result(str):
-	pass
-
-class TypingTeachWidget(QtGui.QWidget):
-	def __init__(self, moduleManager, *args, **kwargs):
-		super(TypingTeachWidget, self).__init__(*args, **kwargs)
-
-		self._mm = moduleManager
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		
-		typingInputs = set(self._mm.mods("active", type="typingInput"))
-		try:
-			typingInput = self._modules.chooseItem(typingInputs)
-		except IndexError, e:
-			raise e #FIXME: show a nice error
-		else:
-			self.inputWidget = typingInput.createWidget()
-
-		hbox = QtGui.QHBoxLayout()
-		hbox.addWidget(self.inputWidget)
-		self.setLayout(hbox)
-
-	def updateLessonType(self, lessonType):
-		self.lessonType = lessonType
-
-		self.lessonType.newItem.handle(self.newWord)
-
-		self.inputWidget.checkButton.clicked.connect(self.checkAnswer)
-		self.inputWidget.correctButton.clicked.connect(self.correctLastAnswer)
-
-	def newWord(self, word):
-		try:
-			self.previousWord = self.word
-		except AttributeError:
-			pass
-		self.word = word
-		self.inputWidget.inputLineEdit.clear()
-		self.inputWidget.inputLineEdit.setFocus()
-
-	def correctLastAnswer(self):
-		result = Result("right")
-		result.wordId = self.previousWord.id
-		result.givenAnswer = _("Correct anyway")
-		self.lessonType.correctLastAnswer(result)
-		
-	def checkAnswer(self):
-		givenStringAnswer = unicode(self.inputWidget.inputLineEdit.text())
-
-		checkers = set(self._mm.mods("active", type="wordsStringChecker"))
-		try:
-			check = self._modules.chooseItem(checkers).check
-		except IndexError, e:
-			#FIXME: show nice error? Make typing unusable?
-			raise e
-		result = check(givenStringAnswer, self.word)
-
-		self.lessonType.setResult(result)
-
 class TypingTeachTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TypingTeachTypeModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
-
 		self.type = "teachType"
 
 	def enable(self):
@@ -97,15 +38,23 @@ class TypingTeachTypeModule(object):
 
 		self.dataType = "words"
 		self.name = _("Type Answer")
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self.active = True
 
 	def disable(self):
 		self.active = False
 		del self.dataType
 		del self.name
+		del self._modules
 
 	def createWidget(self, tabChanged):
-		return TypingTeachWidget(self._mm)
+		typingInputs = set(self._mm.mods("active", type="typingInput"))
+		try:
+			typingInput = self._modules.chooseItem(typingInputs)
+		except IndexError, e:
+			raise e #FIXME: show a nice error
+		else:
+			return typingInput.createWidget()
 
 def init(moduleManager):
 	return TypingTeachTypeModule(moduleManager)

@@ -21,20 +21,19 @@
 
 from PyQt4 import QtGui, QtCore
 
-class Result(str):
-	pass
-		
+#FIXME: should parent be replaced with signals & slots? Nicer style.
+
 class RepeatScreenWidget(QtGui.QWidget):
 	def __init__(self, parent, *args, **kwargs):
 		super(RepeatScreenWidget, self).__init__(*args, **kwargs)
-		
+
 		self.parent = parent
-		
+
 		self.showAnswerScreen = QtGui.QVBoxLayout()
 		self.answerLabel = QtGui.QLabel()
 		self.showAnswerScreen.addWidget(self.answerLabel)
 		self.setLayout(self.showAnswerScreen)
-		
+
 	def fade(self):
 		self.answerLabel.setText(self.parent.word.answers[0][0])
 		timer = QtCore.QTimeLine(2000, self)
@@ -42,31 +41,31 @@ class RepeatScreenWidget(QtGui.QWidget):
 		timer.frameChanged.connect(self.fadeAction)
 		timer.finished.connect(self.finish)
 		timer.start()
-		
+
 	def fadeAction(self, frame):
 		palette = QtGui.QPalette()
 		color = palette.windowText().color()
 		color.setAlpha(255 - frame)
 		palette.setColor(QtGui.QPalette.WindowText, color)
-		
+
 		self.answerLabel.setPalette(palette)
-		
+
 	def finish(self):
 		self.parent.setCurrentWidget(self.parent.inputWidget)
 		self.parent.inputWidget.inputLineEdit.setFocus()
-		
+
 class StartScreenWidget(QtGui.QWidget):
 	def __init__(self, parent, *args, **kwargs):
 		super(StartScreenWidget, self).__init__(*args, **kwargs)
-		
+
 		self.parent = parent
-		
+
 		self.startScreen = QtGui.QVBoxLayout()
 		self.startScreen.addWidget(QtGui.QLabel(_("Click the button to start")))
 		self.startButton = QtGui.QPushButton(_("Start!"))
 		self.startScreen.addWidget(self.startButton)
 		self.setLayout(self.startScreen)
-		
+
 		self.startButton.clicked.connect(self.parent.startRepeat)
 
 class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
@@ -79,11 +78,11 @@ class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
 		#make start screen
 		self.startScreen = StartScreenWidget(self)
 		self.addWidget(self.startScreen)
-		
+
 		#make "show answer" screen
 		self.repeatScreen = RepeatScreenWidget(self)
 		self.addWidget(self.repeatScreen)
-		
+
 		#make input screen
 		typingInputs = set(self._mm.mods("active", type="typingInput"))
 		try:
@@ -93,48 +92,20 @@ class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
 		else:
 			self.inputWidget = typingInput.createWidget()
 			self.addWidget(self.inputWidget)
-		
+
 		tabChanged.handle(lambda: self.setCurrentWidget(self.startScreen))
-		
+
 	def startRepeat(self):
 		self.setCurrentWidget(self.repeatScreen)
 		self.repeatScreen.fade()
 
-	def updateLessonType(self, lessonType):
-		self.lessonType = lessonType
-
-		self.lessonType.newItem.handle(self.newWord)
-
-		self.inputWidget.checkButton.clicked.connect(self.checkAnswer)
-		self.inputWidget.correctButton.clicked.connect(self.correctLastAnswer)
+	def updateLessonType(self, lessonType, *args, **kwargs):
+		self.inputWidget.updateLessonType(lessonType, *args, **kwargs)
+		lessonType.newItem.handle(self.newWord)
 
 	def newWord(self, word):
-		try:
-			self.previousWord = self.word
-		except AttributeError:
-			pass
 		self.word = word
-		self.inputWidget.inputLineEdit.clear()
 		self.startRepeat()
-
-	def correctLastAnswer(self):
-		result = Result("right")
-		result.wordId = self.previousWord.id
-		result.givenAnswer = _(u"Correct anyway")
-		self.lessonType.correctLastAnswer(result)
-		
-	def checkAnswer(self):
-		givenStringAnswer = unicode(self.inputWidget.inputLineEdit.text())
-
-		checkers = set(self._mm.mods("active", type="wordsStringChecker"))
-		try:
-			check = self._modules.chooseItem(checkers).check
-		except IndexError, e:
-			#FIXME: show nice error? Make typing unusable?
-			raise e
-		result = check(givenStringAnswer, self.word)
-
-		self.lessonType.setResult(result)
 
 class RepeatAnswerTeachTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

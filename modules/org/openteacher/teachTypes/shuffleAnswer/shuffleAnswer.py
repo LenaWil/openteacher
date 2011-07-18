@@ -62,42 +62,14 @@ class ShuffleAnswerTeachWidget(QtGui.QWidget):
 			hint += u"."
 		self.hintLabel.setText(hint)
 
-	def updateLessonType(self, lessonType):
-		self.lessonType = lessonType
+	def updateLessonType(self, lessonType, *args, **kwargs):
+		self.inputWidget.updateLessonType(lessonType, *args, **kwargs)
 
-		self.lessonType.newItem.handle(self.newWord)
-
-		self.inputWidget.checkButton.clicked.connect(self.checkAnswer)
-		self.inputWidget.correctButton.clicked.connect(self.correctLastAnswer)
+		lessonType.newItem.handle(self.newWord)
 
 	def newWord(self, word):
-		try:
-			self.previousWord = self.word
-		except AttributeError:
-			pass
 		self.word = word
 		self.setHint()
-		self.inputWidget.inputLineEdit.clear()
-		self.inputWidget.inputLineEdit.setFocus()
-
-	def correctLastAnswer(self):
-		result = Result("right")
-		result.wordId = self.previousWord.id
-		result.givenAnswer = _("Correct anyway")
-		self.lessonType.correctLastAnswer(result)
-		
-	def checkAnswer(self):
-		givenStringAnswer = unicode(self.inputWidget.inputLineEdit.text())
-
-		checkers = set(self._mm.mods("active", type="wordsStringChecker"))
-		try:
-			check = self._modules.chooseItem(checkers).check
-		except IndexError, e:
-			#FIXME: show nice error? Make typing unusable?
-			raise e
-		result = check(givenStringAnswer, self.word)
-
-		self.lessonType.setResult(result)
 
 class ShuffleAnswerTeachTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -129,4 +101,3 @@ class ShuffleAnswerTeachTypeModule(object):
 
 def init(moduleManager):
 	return ShuffleAnswerTeachTypeModule(moduleManager)
-

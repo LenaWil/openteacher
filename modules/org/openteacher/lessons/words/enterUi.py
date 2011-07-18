@@ -116,9 +116,7 @@ class EnterWidget(QtGui.QSplitter):
 		self.removeSelectedRowsButton = QtGui.QPushButton(
 			_("Remove selected row(s)")
 		)
-		self.removeSelectedRowsButton.setShortcut(
-			QtGui.QKeySequence(QtCore.Qt.Key_Delete) #FIXME: translatable?
-		)
+		self.removeSelectedRowsButton.setShortcut("Del")
 
 		rightLayout = QtGui.QVBoxLayout()
 		try:
@@ -132,3 +130,6 @@ class EnterWidget(QtGui.QSplitter):
 
 		self.addWidget(leftLayoutWidget)
 		self.addWidget(rightLayoutWidget)
+
+		self.setStretchFactor(0, 255)
+		self.setStretchFactor(1, 1)

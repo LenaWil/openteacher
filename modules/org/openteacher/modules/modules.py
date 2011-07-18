@@ -48,7 +48,7 @@ class ModulesModule(object):
 		elif len(items) == 1:
 			return items.pop()
 		for module in self._mm.mods("active", type="ui"):
-			module.chooseItem(items)
+			return module.chooseItem(items)
 
 	def enable(self):
 		self._modules = {}

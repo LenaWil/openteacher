@@ -30,11 +30,12 @@ class InputTyping(QtGui.QWidget):
 		self._mm = moduleManager
 
 		self._mm = moduleManager
-		
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
 		self.inputLineEdit = QtGui.QLineEdit()
 
 		self.checkButton = QtGui.QPushButton(_(u"Check!"))
-		self.checkButton.setShortcut(QtCore.Qt.Key_Return) #FIXME: translatable?
+		self.checkButton.setShortcut("Return") #FIXME: translatable?
 		self.correctButton = QtGui.QPushButton(_(u"Correct anyway"))
 
 		mainLayout = QtGui.QGridLayout()
@@ -43,12 +44,42 @@ class InputTyping(QtGui.QWidget):
 		mainLayout.addWidget(self.correctButton, 1, 1)
 		self.setLayout(mainLayout)
 
-	def enable(self):
-		self.active = True
+	def updateLessonType(self, lessonType):
+		self.lessonType = lessonType
 
-	def disable(self):
-		self.active = False
-		
+		self.lessonType.newItem.handle(self.newWord)
+
+		self.checkButton.clicked.connect(self.checkAnswer)
+		self.correctButton.clicked.connect(self.correctLastAnswer)
+
+	def newWord(self, word):
+		try:
+			self.previousWord = self.word
+		except AttributeError:
+			pass
+		self.word = word
+		self.inputLineEdit.clear()
+		self.inputLineEdit.setFocus()
+
+	def correctLastAnswer(self):
+		result = Result("right")
+		result.wordId = self.previousWord.id
+		result.givenAnswer = _("Correct anyway")
+		self.lessonType.correctLastAnswer(result)
+
+	def checkAnswer(self):
+		givenStringAnswer = unicode(self.inputLineEdit.text())
+
+		checkers = set(self._mm.mods("active", type="wordsStringChecker"))
+		try:
+			check = self._modules.chooseItem(checkers).check
+		except IndexError, e:
+			#FIXME: show nice error? Make typing unusable?
+			raise e
+		result = check(givenStringAnswer, self.word)
+
+		self.lessonType.setResult(result)
+
 class InputTypingModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(InputTypingModule, self).__init__(*args, **kwargs)

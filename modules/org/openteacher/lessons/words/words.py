@@ -439,8 +439,8 @@ class WordsLessonModule(object):
 			self._mm.resourcePath("translations")
 		)
 		
-		for module in self._mm.mods("active", type="modules"):
-			module.registerModule(_("Words Lesson"), self)
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules.registerModule(_("Words Lesson"), self)
 
 		self._enterUi = self._mm.import_("enterUi")
 		self._teachUi = self._mm.import_("teachUi")
@@ -464,6 +464,7 @@ class WordsLessonModule(object):
 	def disable(self):
 		self.active = False
 		#remove create button
+		del self._modules
 		del self._enterUi
 		del self._teachUi
 		del self.lessonCreated
@@ -496,12 +497,10 @@ class WordsLessonModule(object):
 	@property
 	def _onscreenKeyboard(self):
 		keyboards = set(self._mm.mods("active", type="onscreenKeyboard"))
-		for module in self._mm.mods("active", type="modules"):
-			try:
-				keyboard = module.chooseItem(keyboards)
-			except IndexError:
-				return
-
+		try:
+			keyboard = self._modules.chooseItem(keyboards)
+		except IndexError:
+			return
 		return keyboard.createWidget()
 
 	def loadFromList(self, list):

@@ -124,3 +124,6 @@ class TeachLessonWidget(QtGui.QSplitter):
 
 		self.addWidget(leftWidget)
 		self.addWidget(rightWidget)
+
+		self.setStretchFactor(0, 255)
+		self.setStretchFactor(1, 1)
