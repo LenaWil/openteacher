@@ -24,6 +24,10 @@ from PyQt4 import QtCore
 
 import os
 import time
+try:
+	import json
+except:
+	import simplejson
 
 class Order:
 	Normal, Inversed = xrange(2)
@@ -102,9 +106,7 @@ class Map(QtGui.QGraphicsView):
 		super(Map, self).__init__(*args, **kwargs)
 	
 	def setMap(self, map):
-		mapsPath = base.api.resourcePath("resources/maps")
-		picturePath = os.path.join(mapsPath, unicode(map + ".gif"))
-		self._setPicture(picturePath)
+		self._setPicture(map)
 	
 	def _setPicture(self,picture):
 		# Create a new scene
@@ -145,7 +147,8 @@ class EnterMap(Map):
 		# Set the scene
 		self.setScene(self.scene)
 	
-	def update(self):		
+	def update(self):
+		# Remove all previous items
 		placesList = []
 		
 		# Add all the places
@@ -193,9 +196,8 @@ class EnterMapChooser(QtGui.QComboBox):
 		self.currentIndexChanged.connect(self._otherMap)
 
 	def _fillBox(self):
-		mapPaths = base.api.resourcePath("resources/maps")
-		for name in os.listdir(mapPaths):
-			self.addItem(os.path.splitext(name)[0], name)
+		for module in base.api.mods("active", type="map"):
+			self.addItem(module.mapName, str({'mapPath': module.mapPath, 'knownPlaces': module.knownPlaces}))
 	
 	def _otherMap(self):
 		if len(self.enterWidget.places.items) > 0:
@@ -214,8 +216,12 @@ class EnterMapChooser(QtGui.QComboBox):
 				self.ask = False
 				self.setCurrentIndex(self.prevIndex)
 				return
-		self.mapWidget.setMap(self.currentText())
+		self.mapWidget.setMap(self.currentMap["mapPath"])
 		self.prevIndex = self.currentIndex()
+	
+	@property
+	def currentMap(self):
+		return eval(str(self.itemData(self.currentIndex()).toString()))
 
 """
 The enter tab
@@ -234,10 +240,10 @@ class EnterWidget(QtGui.QSplitter):
 		mapLabel = QtGui.QLabel(_("Map:"))
 		
 		#left side - middle
-		self.pictureBox = EnterMap()
+		self.enterMap = EnterMap()
 		
 		#left side - top
-		self.mapChooser = EnterMapChooser(self, self.pictureBox)
+		self.mapChooser = EnterMapChooser(self, self.enterMap)
 		
 		chooseMap = QtGui.QHBoxLayout()
 		chooseMap.addWidget(mapLabel)
@@ -248,7 +254,7 @@ class EnterWidget(QtGui.QSplitter):
 		
 		#left side
 		leftSide.addLayout(chooseMap)
-		leftSide.addWidget(self.pictureBox)
+		leftSide.addWidget(self.enterMap)
 		leftSide.addWidget(explanationLabel)
 		
 		#right side
@@ -272,10 +278,13 @@ class EnterWidget(QtGui.QSplitter):
 		
 		addPlaceName = QtGui.QLabel(_("Add a place by name:"))
 		
-		addPlaceEdit = QtGui.QLineEdit()
+		self.addPlaceEdit = QtGui.QLineEdit()
 		addPlaceButton = QtGui.QPushButton(_("Add"))
 		
-		addPlace.addWidget(addPlaceEdit)
+		addPlaceButton.clicked.connect(lambda: self.addPlaceByName(self.addPlaceEdit.text()))
+		self.addPlaceEdit.returnPressed.connect(lambda: self.addPlaceByName(self.addPlaceEdit.text()))
+		
+		addPlace.addWidget(self.addPlaceEdit)
 		addPlace.addWidget(addPlaceButton)
 		
 		#right side
@@ -298,9 +307,24 @@ class EnterWidget(QtGui.QSplitter):
 	"""
 	def addPlace(self,place):
 		self.places.items.append(place)
-		self.pictureBox.update()
+		self.enterMap.update()
 		self.currentPlaces.update()
 	
+	"""
+	Add a place by looking at the list of known places
+	"""
+	def addPlaceByName(self, name):
+		self.addPlaceEdit.setText("")
+		self.addPlaceEdit.setFocus()
+		for placeDict in self.mapChooser.currentMap["knownPlaces"]:
+			if placeDict["name"] == name:
+				place = Place(placeDict["name"], placeDict["x"], placeDict["y"])
+				self.places.items.append(place)
+				self.enterMap.update()
+				self.currentPlaces.update()
+				return
+		else:
+			QtGui.QMessageBox(QtGui.QMessageBox.Warning, "Place not found", "Sorry, this place is not in the list of known places. Please add it manually by doubleclicking on the right location in the map.").exec_()
 	"""
 	Remove a place from the list
 	"""
@@ -309,7 +333,7 @@ class EnterWidget(QtGui.QSplitter):
 			for place in self.places.items:
 				if placeItem.text() == str(place.name + " (" + str(place.x) + "," + str(place.y) + ")"):
 					self.places.items.remove(place)
-		self.pictureBox.update()
+		self.enterMap.update()
 		self.currentPlaces.update()
 	
 	"""
@@ -598,7 +622,7 @@ class TopoLesson(object):
 	def __init__(self, itemList, *args, **kwargs):
 		super(TopoLesson, self).__init__(*args, **kwargs)
 		# Set the map
-		base.teachWidget.mapBox.setMap(base.enterWidget.mapChooser.currentText())
+		base.teachWidget.mapBox.setMap(base.enterWidget.mapChooser.currentMap["mapPath"])
 		base.teachWidget.mapBox.setInteractive(self.order)
 		
 		self.lessonType = base.teachWidget.lessonTypeChooser.currentLessonType.createLessonType(itemList,range(len(itemList.items)))
