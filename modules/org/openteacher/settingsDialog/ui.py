@@ -59,15 +59,29 @@ class LessonTypeTab(QtGui.QWidget):
 		if setting["type"] == "short_text":
 			w = QtGui.QLineEdit()
 			w.textChanged.connect(self.shortTextChanged)
+			if setting["value"] != None:
+				w.setText(setting["value"])
 		elif setting["type"] == "options":
 			w = QtGui.QComboBox()
 			w.currentIndexChanged.connect(self.optionsChanged)
+			if setting["value"] != None:
+				w.setCurrentIndex(setting["value"])
 		elif setting["type"] == "long_text":
 			w = QtGui.QTextEdit()
 			w.textChanged.connect(self.longTextChanged)
+			if setting["value"] != None:
+				w.setText(setting["value"])
 		elif setting["type"] == "number":
 			w = QtGui.QSpinBox()
 			w.valueChanged.connect(self.numberChanged)
+			if setting["value"] != None:
+				w.setValue(setting["value"])
+		elif setting["type"] == "boolean":
+			w = QtGui.QCheckBox()
+			w.stateChanged.connect(self.booleanChanged)
+			if setting["value"] != None:
+				# *2 because 2 is checked and 0 is unchecked
+				w.setCheckState(setting["value"] * 2)
 		w.setting = setting
 		return w
 
@@ -82,6 +96,11 @@ class LessonTypeTab(QtGui.QWidget):
 	def numberChanged(self):
 		w = self.sender()
 		w.setting["value"] = int(w.value())
+	
+	def booleanChanged(self, state):
+		w = self.sender()
+		# /2 because 2 is checked and 0 is unchecked
+		w.setting["value"] = state / 2
 
 	def optionsChanged(self):
 		w = self.sender()

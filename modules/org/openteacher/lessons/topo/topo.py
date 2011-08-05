@@ -21,6 +21,7 @@
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from PyQt4 import QtOpenGL
 
 import os
 import time
@@ -104,6 +105,10 @@ Abstract class for the map widgets
 class Map(QtGui.QGraphicsView):
 	def __init__(self,*args, **kwargs):
 		super(Map, self).__init__(*args, **kwargs)
+		
+		for module in base.api.mods("active", type="settings"):
+			if module.value("org.openteacher.lessons.topo.opengl"):
+				self.setViewport(QtOpenGL.QGLWidget())
 	
 	def setMap(self, map):
 		self._setPicture(map)
@@ -198,26 +203,36 @@ class EnterMapChooser(QtGui.QComboBox):
 	def _fillBox(self):
 		for module in base.api.mods("active", type="map"):
 			self.addItem(module.mapName, str({'mapPath': module.mapPath, 'knownPlaces': module.knownPlaces}))
-	
+		
+		self.addItem("From hard disk...", str({}))
+		
 	def _otherMap(self):
-		if len(self.enterWidget.places.items) > 0:
-			warningD = QtGui.QMessageBox()
-			warningD.setIcon(QtGui.QMessageBox.Warning)
-			warningD.setWindowTitle(_("Warning"))
-			warningD.setStandardButtons(QtGui.QMessageBox.Cancel | QtGui.QMessageBox.Ok)
-			warningD.setText(_("Are you sure you want to use another map? This will remove all your places!"))
-			feedback = warningD.exec_()
-			if feedback == QtGui.QMessageBox.Ok:
-				# Clear the entered items
-				self.enterWidget.places = List()
-				# Update the list
-				self.enterWidget.currentPlaces.update()
-			else:
-				self.ask = False
-				self.setCurrentIndex(self.prevIndex)
-				return
-		self.mapWidget.setMap(self.currentMap["mapPath"])
-		self.prevIndex = self.currentIndex()
+		if self.currentMap == {}:
+			path = str(QtGui.QFileDialog.getOpenFileName(self, _("Select file..."), QtCore.QDir.homePath(), _("Images") + " (*.gif)"))
+			name = os.path.splitext(os.path.basename(path))[0]
+			
+			self.setCurrentIndex(0)
+			self.insertItem(0, name, str({'mapPath': path, 'knownPlaces': ''}))
+			self.setCurrentIndex(0)
+		else:
+			if len(self.enterWidget.places.items) > 0:
+				warningD = QtGui.QMessageBox()
+				warningD.setIcon(QtGui.QMessageBox.Warning)
+				warningD.setWindowTitle(_("Warning"))
+				warningD.setStandardButtons(QtGui.QMessageBox.Cancel | QtGui.QMessageBox.Ok)
+				warningD.setText(_("Are you sure you want to use another map? This will remove all your places!"))
+				feedback = warningD.exec_()
+				if feedback == QtGui.QMessageBox.Ok:
+					# Clear the entered items
+					self.enterWidget.places = List()
+					# Update the list
+					self.enterWidget.currentPlaces.update()
+				else:
+					self.ask = False
+					self.setCurrentIndex(self.prevIndex)
+					return
+			self.mapWidget.setMap(self.currentMap["mapPath"])
+			self.prevIndex = self.currentIndex()
 	
 	@property
 	def currentMap(self):
@@ -712,23 +727,37 @@ class TopoLessonModule(object):
 		#setup translation
 		global _
 		global ngettext
-
+		
 		translator = set(self.api.mods("active", type="translator")).pop()
 		_, ngettext = translator.gettextFunctions(
 			self.api.resourcePath("translations")
 		)
-
+		
+		# Register the module
 		for module in self.api.mods("active", type="modules"):
 			module.registerModule(_("Topo Lesson"), self)
-
+		
+		# Data type
 		self.dataType = "places"
 		
+		# Signals
 		self.lessonCreated = self.api.createEvent()
 		self.lessonCreationFinished = self.api.createEvent()
 		
+		# Add the button to start
 		for module in self.api.mods("active", type="ui"):
 			event = module.addLessonCreateButton(_("Create topography lesson"))
 			event.handle(self.createLesson)
+		
+		# Add settings
+		for module in self.api.mods("active", type="settings"):
+			module.registerSetting(
+				"org.openteacher.lessons.topo.opengl",
+				"OpenGL Rendering",
+				"boolean",
+				"Topo lesson",
+				"Rendering"
+			)
 		
 		self.active = True
 
