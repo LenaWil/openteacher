@@ -73,39 +73,50 @@ class MediaControlDisplay(QtGui.QWidget):
 	def __init__(self,autoplay=True,*args, **kwargs):
 		super(MediaControlDisplay, self).__init__(*args, **kwargs)
 		
-		self.mediaDisplay = MediaDisplay(autoplay)
-		self.mediaDisplay.videoPlayer.mediaObject().stateChanged.connect(self._playPauseButtonUpdate)
+		self.noPhonon = False
+		for module in base._mm.mods("active", type="settings"):
+			if module.value("org.openteacher.lessons.media.videohtml5") and module.value("org.openteacher.lessons.media.audiohtml5"):
+				self.noPhonon = True
+		
+		self.mediaDisplay = MediaDisplay(autoplay, self.noPhonon)
+		if not self.noPhonon:
+			self.mediaDisplay.videoPlayer.mediaObject().stateChanged.connect(self._playPauseButtonUpdate)
 		
 		layout = QtGui.QVBoxLayout()
 		
-		buttonsLayout = QtGui.QHBoxLayout()
-		
-		self.pauseButton = QtGui.QPushButton()
-		self.pauseButton.setIcon(QtGui.QIcon.fromTheme("media-playback-pause",QtGui.QIcon(base._mm.resourcePath("icons/player_pause.png"))))
-		self.pauseButton.clicked.connect(self.playPause)
-		buttonsLayout.addWidget(self.pauseButton)
-		
-		self.seekSlider = Phonon.SeekSlider(self.mediaDisplay.videoPlayer.mediaObject())
-		buttonsLayout.addWidget(self.seekSlider)
-		
-		self.volumeSlider = Phonon.VolumeSlider(self.mediaDisplay.videoPlayer.audioOutput())
-		self.volumeSlider.setMaximumWidth(100)
-		buttonsLayout.addWidget(self.volumeSlider)
+		if not self.noPhonon:
+			buttonsLayout = QtGui.QHBoxLayout()
+			
+			self.pauseButton = QtGui.QPushButton()
+			self.pauseButton.setIcon(QtGui.QIcon.fromTheme("media-playback-pause",QtGui.QIcon(base._mm.resourcePath("icons/player_pause.png"))))
+			self.pauseButton.clicked.connect(self.playPause)
+			buttonsLayout.addWidget(self.pauseButton)
+			
+			self.seekSlider = Phonon.SeekSlider(self.mediaDisplay.videoPlayer.mediaObject())
+			buttonsLayout.addWidget(self.seekSlider)
+			
+			self.volumeSlider = Phonon.VolumeSlider(self.mediaDisplay.videoPlayer.audioOutput())
+			self.volumeSlider.setMaximumWidth(100)
+			buttonsLayout.addWidget(self.volumeSlider)
 		
 		layout.addWidget(self.mediaDisplay)
-		layout.addLayout(buttonsLayout)
+		if not self.noPhonon:
+			layout.addLayout(buttonsLayout)
 		
 		self.setLayout(layout)
 		
-		self.setControls()
+		if not self.noPhonon:
+			self.setControls()
 	
 	def showLocalMedia(self, path):
 		self.mediaDisplay.showLocalMedia(path)
-		self.setControls()
+		if not self.noPhonon:
+			self.setControls()
 	
 	def showRemoteMedia(self, path):
 		self.mediaDisplay.showRemoteMedia(path)
-		self.setControls()
+		if not self.noPhonon:
+			self.setControls()
 	
 	def _playPauseButtonUpdate(self, newstate, oldstate):
 		if self.mediaDisplay.videoPlayer.isPaused():
@@ -134,7 +145,8 @@ class MediaControlDisplay(QtGui.QWidget):
 			self.mediaDisplay.videoPlayer.pause()
 	
 	def stop(self):
-		self.mediaDisplay.videoPlayer.stop()
+		if not self.noPhonon:
+			self.mediaDisplay.videoPlayer.stop()
 	
 	def clear(self):
 		self.mediaDisplay.clear()
@@ -143,18 +155,24 @@ class MediaControlDisplay(QtGui.QWidget):
 The video player and web viewer combination widget
 """
 class MediaDisplay(QtGui.QStackedWidget):
-	def __init__(self,autoplay,*args, **kwargs):
+	def __init__(self,autoplay,noPhonon,*args, **kwargs):
 		super(MediaDisplay, self).__init__(*args, **kwargs)
 		
 		self.activeType = None
 		self.autoplay = autoplay
 		
-		self.videoPlayer = Phonon.VideoPlayer(Phonon.VideoCategory, self)
+		self.noPhonon = noPhonon
+		
+		if not self.noPhonon:
+			self.videoPlayer = Phonon.VideoPlayer(Phonon.VideoCategory, self)
+		
 		self.webviewer = QtWebKit.QWebView()
 		self.webviewer.settings().setAttribute(QtWebKit.QWebSettings.PluginsEnabled, True)
 		
 		self.addWidget(self.webviewer)
-		self.addWidget(self.videoPlayer)
+		
+		if not self.noPhonon:
+			self.addWidget(self.videoPlayer)
 		
 	def showLocalMedia(self, path):
 		type = mimetypes.guess_type(str(path))[0].split('/')[0]
@@ -191,8 +209,9 @@ class MediaDisplay(QtGui.QStackedWidget):
 		self._showUrl(path)
 	
 	def _showImage(self, path):
-		# Stop any media playing
-		self.videoPlayer.stop()
+		if not self.noPhonon:
+			# Stop any media playing
+			self.videoPlayer.stop()
 		# Set the widget to the web view
 		self.setCurrentWidget(self.webviewer)
 		# Go to the right URL
@@ -201,24 +220,94 @@ class MediaDisplay(QtGui.QStackedWidget):
 		self.activeType = MediaType.Image
 	
 	def _showVideo(self, path):
-		# Set the widget to video player
-		self.setCurrentWidget(self.videoPlayer)
-		# Play the video
-		self.videoPlayer.play(Phonon.MediaSource(path))
-		# Set the active type
-		self.activeType = MediaType.Video
+		html5 = False
+		
+		for module in base._mm.mods("active", type="settings"):
+			if module.value("org.openteacher.lessons.media.videohtml5"):
+				html5 = True
+		
+		if html5 or self.noPhonon:
+			if not self.noPhonon:
+				# Stop any media playing
+				self.videoPlayer.stop()
+			# Set the widget to the web view
+			self.setCurrentWidget(self.webviewer)
+			# Set the right html
+			self.webviewer.setHtml('''
+			<html><head>
+			<title>Video</title>
+			<style type="text/css">
+			body
+			{
+			margin: 0px;
+			}
+			</style>
+			</head><body onresize="size()"><video id="player" src="''' + path + '''" autoplay="autoplay" controls="controls" />
+			<script>
+			function size()
+			{
+				document.getElementById('player').style.width = window.innerWidth;
+				document.getElementById('player').style.height = window.innerHeight;
+			}
+			size()
+			</script>
+			</body></html>
+			''')
+			self.activeType = MediaType.Website
+		else:
+			# Set the widget to video player
+			self.setCurrentWidget(self.videoPlayer)
+			# Play the video
+			self.videoPlayer.play(Phonon.MediaSource(path))
+			# Set the active type
+			self.activeType = MediaType.Video
 	
 	def _showAudio(self, path):
-		# Set widget to web viewer
-		self.setCurrentWidget(self.webviewer)
-		# Set some nice html
-		self.webviewer.setHtml('''
-		<html><head><title>Audio</title></head><body>Playing audio</body></html>
-		''')
-		# Play the audio
-		self.videoPlayer.play(Phonon.MediaSource(path))
-		# Set the active type
-		self.activeType = MediaType.Audio
+		html5 = False
+		
+		for module in base._mm.mods("active", type="settings"):
+			if module.value("org.openteacher.lessons.media.audiohtml5"):
+				html5 = True
+		
+		if html5 or self.noPhonon:
+			if not self.noPhonon:
+				# Stop any media playing
+				self.videoPlayer.stop()
+			# Set the widget to the web view
+			self.setCurrentWidget(self.webviewer)
+			# Set the right html
+			self.webviewer.setHtml('''
+			<html><head>
+			<title>Audio</title>
+			<style type="text/css">
+			body
+			{
+			margin: 0px;
+			}
+			</style>
+			</head><body onresize="size()"><audio id="player" src="''' + path + '''" autoplay="autoplay" controls="controls" />
+			<script>
+			function size()
+			{
+				document.getElementById('player').style.width = window.innerWidth;
+				document.getElementById('player').style.height = window.innerHeight;
+			}
+			size()
+			</script>
+			</body></html>
+			''')
+			self.activeType = MediaType.Website
+		else:
+			# Set widget to web viewer
+			self.setCurrentWidget(self.webviewer)
+			# Set some nice html
+			self.webviewer.setHtml('''
+			<html><head><title>Audio</title></head><body>Playing audio</body></html>
+			''')
+			# Play the audio
+			self.videoPlayer.play(Phonon.MediaSource(path))
+			# Set the active type
+			self.activeType = MediaType.Audio
 	
 	def _showUrl(self, url):
 		# Set widget to web viewer
@@ -232,7 +321,8 @@ class MediaDisplay(QtGui.QStackedWidget):
 		self.webviewer.setHtml('''
 		<html><head><title>Nothing</title></head><body></body></html>
 		''')
-		self.videoPlayer.stop()
+		if not self.noPhonon:
+			self.videoPlayer.stop()
 		# Set the active type
 		self.activeType = None
 
@@ -637,6 +727,25 @@ class MediaLessonModule(object):
 		for module in self._mm.mods("active", type="ui"):
 			event = module.addLessonCreateButton(_("Create media lesson"))
 			event.handle(self.createLesson)
+		
+		# Add settings
+		for module in self._mm.mods("active", type="settings"):
+			module.registerSetting(
+				"org.openteacher.lessons.media.videohtml5",
+				"Use HTML5 for video",
+				"boolean",
+				"Media Lesson",
+				"Output"
+			)
+			
+		for module in self._mm.mods("active", type="settings"):
+			module.registerSetting(
+				"org.openteacher.lessons.media.audiohtml5",
+				"Use HTML5 for audio",
+				"boolean",
+				"Media Lesson",
+				"Output"
+			)
 		
 		self.active = True
 
