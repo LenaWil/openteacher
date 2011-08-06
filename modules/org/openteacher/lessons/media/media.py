@@ -252,7 +252,7 @@ class EnterWidget(QtGui.QSplitter):
 		super(EnterWidget, self).__init__(*args, **kwargs)
 		self.itemList = List()
 		
-		self.enterItemsList = EnterItemList(self)
+		self.enterItemList = EnterItemList(self)
 		
 		removeButton = QtGui.QPushButton(_("Remove"))
 		removeButton.clicked.connect(self.removeItem)
@@ -267,7 +267,7 @@ class EnterWidget(QtGui.QSplitter):
 		leftBottom.addWidget(addRemoteButton)
 		
 		left = QtGui.QVBoxLayout()
-		left.addWidget(self.enterItemsList)
+		left.addWidget(self.enterItemList)
 		left.addLayout(leftBottom)
 		leftW = QtGui.QWidget()
 		leftW.setLayout(left)
@@ -336,20 +336,20 @@ class EnterWidget(QtGui.QSplitter):
 	def addItem(self,filename,remote=False):
 		item = Item(filename,remote)
 		self.itemList.items.append(item)
-		self.enterItemsList.update()
+		self.enterItemList.update()
 	
 	"""
 	Remove an item from the list
 	"""
 	def removeItem(self):
 		self.itemList.items.remove(self.activeitem)
-		self.enterItemsList.update()
+		self.enterItemList.update()
 		self.mediaDisplay.clear()
 		self.entername.setText("")
 		self.entername.setEnabled(False)
 		self.enterdesc.setText("")
 		self.enterdesc.setEnabled(False)
-		self.enterItemsList.setRightActiveItem()
+		self.enterItemList.setRightActiveItem()
 	
 	"""
 	Change the active item
@@ -367,7 +367,7 @@ class EnterWidget(QtGui.QSplitter):
 	"""
 	def changeName(self):
 		self.activeitem.name = self.entername.text()
-		self.enterItemsList.update()
+		self.enterItemList.update()
 	
 	"""
 	Change the description of the active item
@@ -530,13 +530,10 @@ class MediaLesson(object):
 	What happens when the next question should be asked
 	"""
 	def nextQuestion(self, item):
-		#set the next question
+		# set the next question
 		self.currentItem = item
-		#set the mediawidget to the right location
-		if self.currentItem.remote:
-			base.teachWidget.mediaDisplay.showRemoteMedia(self.currentItem.filename)
-		else:
-			base.teachWidget.mediaDisplay.showLocalMedia(self.currentItem.filename)
+		# set the mediawidget to the right location
+		base.teachWidget.mediaDisplay.showMedia(self.currentItem.filename, self.currentItem.remote)
 	
 	"""
 	Ends the lesson
@@ -548,6 +545,8 @@ class MediaLesson(object):
 		base.teachWidget.mediaDisplay.clear()
 		# return to enter tab
 		base.fileTab.currentTab = base.enterWidget
+		# Set right active item
+		base.enterWidget.enterItemList.setRightActiveItem()
 	
 	"""
 	Updates the progress bar
