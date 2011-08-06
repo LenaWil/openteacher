@@ -50,7 +50,9 @@ class List(object):
 Media item
 """
 class Item(object):
-	def __init__(self,filename,remote,hints = "",desc = ""):
+	def __init__(self,filename,remote,hints = "",desc = "",*args,**kwargs):
+		super(Item, self).__init__(*args, **kwargs)
+		
 		if remote == False:
 			self.name = os.path.splitext(os.path.basename(str(filename)))[0]
 		else:
@@ -61,29 +63,29 @@ class Item(object):
 		self.desc = desc
 
 """
-"enum" for the types of media
-"""
-class MediaType:
-	Video, Image, Audio, Website = xrange(4)
-
-"""
 The video player and web viewer combination widget with controls
 """
 class MediaControlDisplay(QtGui.QWidget):
 	def __init__(self,autoplay=True,*args, **kwargs):
 		super(MediaControlDisplay, self).__init__(*args, **kwargs)
 		
-		self.noPhonon = False
-		for module in base._mm.mods("active", type="settings"):
-			if module.value("org.openteacher.lessons.media.videohtml5") and module.value("org.openteacher.lessons.media.audiohtml5"):
-				self.noPhonon = True
+		self.autoplay = autoplay
+		self.activeModule = None
 		
-		self.mediaDisplay = MediaDisplay(autoplay, self.noPhonon)
+		self.noPhonon = True
+		
+		for module in base._mm.mods("active", type="mediaType"):
+			if module.phononControls == True:
+				self.noPhonon = False
+		
+		self.mediaDisplay = MediaDisplay(self.autoplay, self.noPhonon)
+		# Do not add the Phonon widget if it is not necessary
 		if not self.noPhonon:
 			self.mediaDisplay.videoPlayer.mediaObject().stateChanged.connect(self._playPauseButtonUpdate)
 		
 		layout = QtGui.QVBoxLayout()
 		
+		# Do not add the controls if there is not going to be any Phonon
 		if not self.noPhonon:
 			buttonsLayout = QtGui.QHBoxLayout()
 			
@@ -99,50 +101,40 @@ class MediaControlDisplay(QtGui.QWidget):
 			self.volumeSlider.setMaximumWidth(100)
 			buttonsLayout.addWidget(self.volumeSlider)
 		
+		# Add the stacked widget
 		layout.addWidget(self.mediaDisplay)
+		
 		if not self.noPhonon:
 			layout.addLayout(buttonsLayout)
 		
 		self.setLayout(layout)
 		
-		if not self.noPhonon:
-			self.setControls()
+		# Disable the controls
+		self.setControls()
 	
-	def showLocalMedia(self, path):
-		self.mediaDisplay.showLocalMedia(path)
-		if not self.noPhonon:
-			self.setControls()
-	
-	def showRemoteMedia(self, path):
-		self.mediaDisplay.showRemoteMedia(path)
-		if not self.noPhonon:
-			self.setControls()
-	
-	def _playPauseButtonUpdate(self, newstate, oldstate):
-		if self.mediaDisplay.videoPlayer.isPaused():
-			self.pauseButton.setIcon(QtGui.QIcon.fromTheme("media-playback-play",QtGui.QIcon(base._mm.resourcePath("icons/player_play.png"))))
-		else:
-			self.pauseButton.setIcon(QtGui.QIcon.fromTheme("media-playback-pause",QtGui.QIcon(base._mm.resourcePath("icons/player_pause.png"))))
+	def showMedia(self, path, remote):
+		for module in base._mm.mods("active", type="mediaType"):
+			if module.supports(path):
+				module.showMedia(module.path(path, self.autoplay), self.mediaDisplay)
+				self.activeModule = module
+				break
+		
+		self.setControls()
 	
 	def setControls(self):
-		if self.mediaDisplay.activeType == MediaType.Image or self.mediaDisplay.activeType == None or self.mediaDisplay.activeType == MediaType.Website:
-			self.setControlsEnabled(False)
-		else:
-			self.setControlsEnabled(True)
-		
-		if self.mediaDisplay.activeType == MediaType.Image or self.mediaDisplay.activeType == None or self.mediaDisplay.activeType == MediaType.Website:
-			self.stop()
-	
-	def setControlsEnabled(self, enabled):
-		self.pauseButton.setEnabled(enabled)
-		self.volumeSlider.setEnabled(enabled)
-		self.seekSlider.setEnabled(enabled)
+		# Only if there are controls
+		if not self.noPhonon:
+			if self.activeModule == None or not self.activeModule.phononControls:
+				self._setControlsEnabled(False)
+			else:
+				self._setControlsEnabled(True)
 	
 	def playPause(self, event):
-		if self.mediaDisplay.videoPlayer.isPaused():
-			self.mediaDisplay.videoPlayer.play()
-		else:
-			self.mediaDisplay.videoPlayer.pause()
+		if not self.noPhonon:
+			if self.mediaDisplay.videoPlayer.isPaused():
+				self.mediaDisplay.videoPlayer.play()
+			else:
+				self.mediaDisplay.videoPlayer.pause()
 	
 	def stop(self):
 		if not self.noPhonon:
@@ -150,6 +142,18 @@ class MediaControlDisplay(QtGui.QWidget):
 	
 	def clear(self):
 		self.mediaDisplay.clear()
+	
+	def _playPauseButtonUpdate(self, newstate, oldstate):
+		if self.mediaDisplay.videoPlayer.isPaused():
+			self.pauseButton.setIcon(QtGui.QIcon.fromTheme("media-playback-play",QtGui.QIcon(base._mm.resourcePath("icons/player_play.png"))))
+		else:
+			self.pauseButton.setIcon(QtGui.QIcon.fromTheme("media-playback-pause",QtGui.QIcon(base._mm.resourcePath("icons/player_pause.png"))))
+	
+	def _setControlsEnabled(self, enabled):
+		self.pauseButton.setEnabled(enabled)
+		self.volumeSlider.setEnabled(enabled)
+		self.seekSlider.setEnabled(enabled)
+
 
 """
 The video player and web viewer combination widget
@@ -158,7 +162,7 @@ class MediaDisplay(QtGui.QStackedWidget):
 	def __init__(self,autoplay,noPhonon,*args, **kwargs):
 		super(MediaDisplay, self).__init__(*args, **kwargs)
 		
-		self.activeType = None
+		#self.activeType = None
 		self.autoplay = autoplay
 		
 		self.noPhonon = noPhonon
@@ -173,149 +177,6 @@ class MediaDisplay(QtGui.QStackedWidget):
 		
 		if not self.noPhonon:
 			self.addWidget(self.videoPlayer)
-		
-	def showLocalMedia(self, path):
-		type = mimetypes.guess_type(str(path))[0].split('/')[0]
-		
-		# Check MIME-type and go to the right code
-		if type == 'video':
-			self._showVideo(path)
-		elif type == 'image':
-			self._showImage(path)
-		elif type == 'audio':
-			self._showAudio(path)
-	
-	def showRemoteMedia(self, path):
-		# Check if this is a youtube video
-		if fnmatch.fnmatch(str(path), "*youtube.*/watch?v=*"):
-			# Youtube URL
-			path = path.split("/watch?v=")[1]
-			path = path.split("&")[0]
-			path = "http://www.youtube.com/embed/" + path
-			if self.autoplay:
-				print "autoplay"
-				path += "?autoplay=1"
-		# Check if this is a vimeo video
-		if fnmatch.fnmatch(str(path), "*vimeo.com/*"):
-			# Vimeo URL
-			path = path.split("vimeo.com/")[1]
-			path = "http://player.vimeo.com/video/" + path + "?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff"
-		# Check if this is a dailymotion video
-		if fnmatch.fnmatch(str(path), "*dailymotion.com/video/*"):
-			# Dailymotion URL
-			path = path.split("dailymotion.com/video/")[1]
-			path = path.split("_")[0]
-			path = "http://www.dailymotion.com/embed/video/" + path
-		self._showUrl(path)
-	
-	def _showImage(self, path):
-		if not self.noPhonon:
-			# Stop any media playing
-			self.videoPlayer.stop()
-		# Set the widget to the web view
-		self.setCurrentWidget(self.webviewer)
-		# Go to the right URL
-		self.webviewer.setUrl(QtCore.QUrl(path))
-		# Set the active type
-		self.activeType = MediaType.Image
-	
-	def _showVideo(self, path):
-		html5 = False
-		
-		for module in base._mm.mods("active", type="settings"):
-			if module.value("org.openteacher.lessons.media.videohtml5"):
-				html5 = True
-		
-		if html5 or self.noPhonon:
-			if not self.noPhonon:
-				# Stop any media playing
-				self.videoPlayer.stop()
-			# Set the widget to the web view
-			self.setCurrentWidget(self.webviewer)
-			# Set the right html
-			self.webviewer.setHtml('''
-			<html><head>
-			<title>Video</title>
-			<style type="text/css">
-			body
-			{
-			margin: 0px;
-			}
-			</style>
-			</head><body onresize="size()"><video id="player" src="''' + path + '''" autoplay="autoplay" controls="controls" />
-			<script>
-			function size()
-			{
-				document.getElementById('player').style.width = window.innerWidth;
-				document.getElementById('player').style.height = window.innerHeight;
-			}
-			size()
-			</script>
-			</body></html>
-			''')
-			self.activeType = MediaType.Website
-		else:
-			# Set the widget to video player
-			self.setCurrentWidget(self.videoPlayer)
-			# Play the video
-			self.videoPlayer.play(Phonon.MediaSource(path))
-			# Set the active type
-			self.activeType = MediaType.Video
-	
-	def _showAudio(self, path):
-		html5 = False
-		
-		for module in base._mm.mods("active", type="settings"):
-			if module.value("org.openteacher.lessons.media.audiohtml5"):
-				html5 = True
-		
-		if html5 or self.noPhonon:
-			if not self.noPhonon:
-				# Stop any media playing
-				self.videoPlayer.stop()
-			# Set the widget to the web view
-			self.setCurrentWidget(self.webviewer)
-			# Set the right html
-			self.webviewer.setHtml('''
-			<html><head>
-			<title>Audio</title>
-			<style type="text/css">
-			body
-			{
-			margin: 0px;
-			}
-			</style>
-			</head><body onresize="size()"><audio id="player" src="''' + path + '''" autoplay="autoplay" controls="controls" />
-			<script>
-			function size()
-			{
-				document.getElementById('player').style.width = window.innerWidth;
-				document.getElementById('player').style.height = window.innerHeight;
-			}
-			size()
-			</script>
-			</body></html>
-			''')
-			self.activeType = MediaType.Website
-		else:
-			# Set widget to web viewer
-			self.setCurrentWidget(self.webviewer)
-			# Set some nice html
-			self.webviewer.setHtml('''
-			<html><head><title>Audio</title></head><body>Playing audio</body></html>
-			''')
-			# Play the audio
-			self.videoPlayer.play(Phonon.MediaSource(path))
-			# Set the active type
-			self.activeType = MediaType.Audio
-	
-	def _showUrl(self, url):
-		# Set widget to web viewer
-		self.setCurrentWidget(self.webviewer)
-		# Set the URL
-		self.webviewer.setUrl(QtCore.QUrl(url))
-		# Set the active type
-		self.activeType = MediaType.Website
 	
 	def clear(self):
 		self.webviewer.setHtml('''
@@ -324,14 +185,14 @@ class MediaDisplay(QtGui.QStackedWidget):
 		if not self.noPhonon:
 			self.videoPlayer.stop()
 		# Set the active type
-		self.activeType = None
+		self.activeModule = None
 
 """
 The model for the list widget with media items (this construction because without model Qt produces a bug)
 """
 class EnterItemListModel(QtCore.QAbstractListModel):
-	def __init__(self,items,parent=None,*args):
-		QtCore.QAbstractListModel.__init__(self,parent,*args)
+	def __init__(self,items,*args,**kwargs):
+		super(EnterItemListModel, self).__init__(*args, **kwargs)
 		
 		self.listData = []
 		
@@ -364,22 +225,24 @@ class EnterItemListModel(QtCore.QAbstractListModel):
 The list widget with media items
 """
 class EnterItemList(QtGui.QListView):
-	def __init__(self,parent):
-		QtGui.QListView.__init__(self,parent)
+	def __init__(self,parent,*args,**kwargs):
+		super(EnterItemList, self).__init__(*args, **kwargs)
+		
 		self.parent = parent
 		
 		self.lm = EnterItemListModel(parent.itemList,self)
 		self.setModel(self.lm)
+		self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
 	
 	def update(self):
 		self.lm.update(base.enterWidget.itemList)
 	
 	def selectionChanged(self,current,previous):
-		current = self.lm.textAtIndex(self.selectedIndexes()[0].row())
-		
-		for item in base.enterWidget.itemList.items:
-			if item.name == current:
-				self.parent.setActiveItem(item)
+		self.setRightActiveItem()
+	
+	def setRightActiveItem(self):
+		if len(base.enterWidget.itemList.items) > 0:
+			self.parent.setActiveItem(base.enterWidget.itemList.items[self.currentIndex().row()])
 
 """
 The enter tab
@@ -486,6 +349,7 @@ class EnterWidget(QtGui.QSplitter):
 		self.entername.setEnabled(False)
 		self.enterdesc.setText("")
 		self.enterdesc.setEnabled(False)
+		self.enterItemsList.setRightActiveItem()
 	
 	"""
 	Change the active item
@@ -496,10 +360,7 @@ class EnterWidget(QtGui.QSplitter):
 		self.entername.setText(item.name)
 		self.enterdesc.setEnabled(True)
 		self.enterdesc.setText(item.desc)
-		if item.remote:
-			self.mediaDisplay.showRemoteMedia(item.filename)
-		else:
-			self.mediaDisplay.showLocalMedia(item.filename)
+		self.mediaDisplay.showMedia(item.filename, item.remote)
 	
 	"""
 	Change the name of the active item
@@ -534,8 +395,8 @@ class EnterWidget(QtGui.QSplitter):
 The dropdown menu to choose lesson type
 """
 class LessonTypeChooser(QtGui.QComboBox):
-	def __init__(self):
-		QtGui.QComboBox.__init__(self)
+	def __init__(self,*args,**kwargs):
+		super(LessonTypeChooser, self).__init__(*args, **kwargs)
 		
 		self.currentIndexChanged.connect(self.changeLessonType)
 		
@@ -634,7 +495,9 @@ class TeachWidget(QtGui.QWidget):
 The lesson itself
 """
 class MediaLesson(object):
-	def __init__(self,itemList):
+	def __init__(self,itemList,*args,**kwargs):
+		super(MediaLesson, self).__init__(*args, **kwargs)
+		
 		#stop media playing in the enter widget
 		base.enterWidget.mediaDisplay.clear()
 		
@@ -697,7 +560,9 @@ class MediaLesson(object):
 The module
 """
 class MediaLessonModule(object):
-	def __init__(self, mm):
+	def __init__(self, mm,*args,**kwargs):
+		super(MediaLessonModule, self).__init__(*args, **kwargs)
+		
 		global base
 		base = self
 		self._mm = mm
@@ -780,6 +645,7 @@ class MediaLessonModule(object):
 class Lesson(object):
 	def __init__(self, moduleManager, fileTab, enterWidget, teachWidget, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
+		
 		self.fileTab = fileTab
 		self.stopped = base._mm.createEvent()
 		
