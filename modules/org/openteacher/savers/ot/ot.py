@@ -44,43 +44,38 @@ class OpenTeacherSaverModule(object):
 
 	def save(self, type, wordList, path):
 		composers = set(self._mm.mods("active", type="wordsStringComposer"))
-		composer = self._modules.chooseItem(composers)
+		compose = self._modules.chooseItem(composers).compose
 
 		#Copy, because we're going to modify it
 		wordList = copy.deepcopy(wordList) # the words have to be unaltered
-		try:
-			wordList.title
-		except AttributeError:
-			wordList.title = u""
-		try:
-			wordList.questionLanguage
-		except AttributeError:
-			wordList.questionLanguage = u""
-		try:
-			wordList.answerLanguage
-		except AttributeError:
-			wordList.answerLanguage = u""
 
-		for word in wordList.items:
+		for word in wordList["items"]:
 			#results
-			word.results = {"right": 0, "wrong": 0}
-			for test in wordList.tests:
+			word["results"] = {"right": 0, "wrong": 0}
+			for test in wordList["tests"]:
 				for result in test:
-					if result.itemId == word.id:
+					if result["itemId"] == word["id"]:
 						try:
-							word.results[result] += 1
+							word["results"][result] += 1
 						except KeyError:
 							pass
 			#known, foreign and second
-			word.known = compose(word.questions)
-			if len(word.answers) == 1 and len(word.answers[0]) > 1:
-				word.foreign = word.answers[0][0]
-				word.second = compose([word.answers[0][1:]])
-			else:
-				word.foreign = compose(word.answers)
-				word.second = None
+			try:
+				word["known"] = compose(word["questions"])
+			except KeyError:
+				word["known"] = u""
+			try:
+				if len(word["answers"]) == 1 and len(word["answers"][0]) > 1:
+					word["foreign"] = word["answers"][0][0]
+					word["second"] = compose([word["answers"][0][1:]])
+				else:
+					word["foreign"] = compose(word["answers"])
+					word["second"] = u""
+			except KeyError:
+				word["foreign"] = u""
+				word["second"] = u""
 
-		templatePath = self._mm.resourcePath("template.txt")
+		templatePath = self._mm.resourcePath("template.xml")
 		t = self._pyratemp.Template(open(templatePath).read())
 		data = {
 			"wordList": wordList

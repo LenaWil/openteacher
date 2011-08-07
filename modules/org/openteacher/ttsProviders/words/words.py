@@ -52,7 +52,7 @@ class TextToSpeechProviderWords(object):
 			#FIXME: nice error handling
 			raise e
 		try:
-			text = compose(item.questions)
+			text = compose(item["questions"])
 		except AttributeError:
 			# No questions
 			pass

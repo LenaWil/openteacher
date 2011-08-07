@@ -20,92 +20,114 @@
 
 import unittest
 
-class WordList(object):
-	def __init__(self, *args, **kwargs):
-		super(WordList, self).__init__(*args, **kwargs)
-
-		self.items = []
-		self.tests = []
-
-class Word(object):
-	pass
-
-class Result(str):
-	pass
-
 class WordsNeverAnsweredCorrectlyTestCase(unittest.TestCase):
 	def setUp(self):
+		for module in self._mm.mods(type="translator"):
+			module.enable()
 		for module in self._mm.mods("testName", type="listModifier"):
-			if testName == "wordsNeverAnsweredCorrectly":
+			if module.testName == "wordsNeverAnsweredCorrectly":
 				module.enable()
 
 	def testWrongWord(self):
-		wordList = WordList()
-		word = Word()
-		word.id = 0
-		wordList.items.append(word)
-
-		result = Result("wrong")
-		result.wordId = 0
-		wordList.tests.append([result])
+		wordList = {
+			"items": [
+				{
+					"id": 0,
+				},
+			],
+			"tests": [
+				[
+					{
+						"result": "wrong",
+						"itemId": 0,
+						
+					},
+				],
+			],
+		}
 
 		self._test(wordList, [0])
 
 	def testRightWord(self):
-		wordList = WordList()
-		word = Word()
-		word.id = 0
-		wordList.items.append(word)
+		wordList = {
+			"items": [
+				{
+					"id": 0,
+				},
+			],
+			"tests": [
+				[
+					{
+						"result": "right",
+						"itemId": 0,
+					},
+				],
+			],
+		}
 
-		result = Result("right")
-		result.wordId = 0
-		wordList.tests.append([result])
-		
 		self._test(wordList, [])
 
 	def testWordWithoutResults(self):
-		wordList = WordList()
-		word = Word()
-		word.id = 0
-		wordList.items.append(word)
+		wordList = {
+			"items": [
+				{
+					"id": 0,
+				},
+			],
+		}
 
 		self._test(wordList, [0])
 
 	def testMultipleTestsAndWords(self):
-		wordList = WordList()
-		word1 = Word()
-		word1.id = 0
-		word2 = Word()
-		word2.id = 1
-		wordList.items.append(word1)
-		wordList.items.append(word2)
-
-		result1 = Result("right")
-		result1.wordId = 0
-		result2 = Result("wrong")
-		result2.wordId = 0
-		result3 = Result("wrong")
-		result3.wordId = 1
-		result4 = Result("right")
-		result4.wordId = 0
-		result5 = Result("wrong")
-		result5.wordId = 1
-
-		wordList.tests.append([result1, result2, result3])
-		wordList.tests.append([result4, result5])
+		wordList = {
+			"items": [
+				{
+					"id": 0,
+				},
+				{
+					"id": 1,
+				},
+			],
+			"tests": [
+				[
+					{
+						"result": "right",
+						"itemId": 0,
+					},
+					{
+						"result": "wrong",
+						"itemId": 0,
+					},
+					{
+						"result": "wrong",
+						"itemId": 1,
+					},
+				],
+				[
+					{
+						"result": "right",
+						"itemId": 0,
+					},
+					{
+						"result": "wrong",
+						"itemId": 1,
+					},
+				],
+			],
+		}
 
 		self._test(wordList, [1])
 
 	def _test(self, input, output):
-		for module in self._mm.mods("active", "testName", type="listModifier"):
-			if testName == "wordsNeverAnsweredCorrectly":
-				indexes = module.modifyList(range(len(input.items)), input)
-				self.assertEqual(indexes, output)
+		for module in self._mm.mods("active", type="listModifier"):
+			indexes = module.modifyList(range(len(input["items"])), input)
+			self.assertEqual(indexes, output)
 
 	def tearDown(self):
-		for module in self._mm.mods("active", "testName", type="listModifier"):
-			if testName == "wordsNeverAnsweredCorrectly":
-				module.disable()
+		for module in self._mm.mods("active", type="translator"):
+			module.disable()
+		for module in self._mm.mods("active", type="listModifier"):
+			module.disable()
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

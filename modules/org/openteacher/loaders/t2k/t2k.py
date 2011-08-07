@@ -26,23 +26,6 @@ except ImportError:
 	except ImportError:
 		from elementTree import ElementTree
 
-class WordList(object):
-	def __init__(self, *args, **kwargs):
-		super(WordList, self).__init__(*args, **kwargs)
-
-		self.items = []
-		self.tests = []
-
-class Word(object):
-	def __init__(self, *args, **kwargs):
-		super(Word, self).__init__(*args, **kwargs)
-
-		self.questions = [[]]
-		self.answers = [[]]
-
-class Test(object): pass #FIXME: stub
-class Result(str): pass #FIXME: stub
-
 class Teach2000LoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(Teach2000LoaderModule, self).__init__(*args, **kwargs)
@@ -67,18 +50,27 @@ class Teach2000LoaderModule(object):
 
 	def load(self, path):
 		root = ElementTree.parse(open(path)).getroot()
-		wordList = WordList()
+		wordList = {
+			"items": [],
+		}
 
 		for item in root.findall("message_data/items/item"):
-			word = Word()
-			word.id = int(item.get("id"))
+			word = {
+				"questions": [
+					[],
+				],
+				"answers": [
+					[],
+				],
+			}
+			word["id"] = int(item.get("id"))
 			for question in item.findall("questions/question"):
-				word.questions[0].append(question.text)
+				word["questions"][0].append(question.text)
 
 			for answer in item.findall("answers/answer"):
-				word.answers[0].append(answer.text)
+				word["answers"][0].append(answer.text)
 
-			wordList.items.append(word)
+			wordList["items"].append(word)
 			#FIXME: load tests, also results in the words!
 		return wordList
 

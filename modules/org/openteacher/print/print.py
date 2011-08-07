@@ -56,7 +56,6 @@ class PrintModule(object):
 				self._pyratemp.EvalPseudoSandbox.__init__(self2, *args, **kwargs)
 
 				self2.register("compose", composer.compose)
-				self2.register("hasattr", hasattr)
 
 		templatePath = self._mm.resourcePath("template.html")
 		t = self._pyratemp.Template(
@@ -71,8 +70,8 @@ class PrintModule(object):
 		for module in self._mm.mods("active", "name", type="metadata"):
 			printer.setCreator(module.name)
 		try:
-			printer.setDocName(list.title)
-		except AttributeError:
+			printer.setDocName(list["title"])
+		except KeyError:
 			printer.setDocName(_("Untitled word list"))
 		doc.print_(printer)
 

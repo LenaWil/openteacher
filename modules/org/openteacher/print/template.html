@@ -19,7 +19,7 @@
 <!doctype html>
 <html>
 	<head>
-		<title><!--(if hasattr(list, "title"))-->@!list.title!@<!--(end)--></title>
+		<title>@!list.get("title", u"")!@</title>
 		<style type="text/css">
 			body {
 				font-family:Verdana, Helvetica, Arial, sans-serif;
@@ -65,39 +65,21 @@
 		</style>
 	</head>
 	<body>
-		<!--(if hasattr(list, "title"))-->
-		<h1>@!list.title!@</h1>
-		<!--(end)-->
+		<h1>@!list.get("title", u"")!@</h1>
 		<table>
 			<thead>
 				<tr>
 					<th></th>
-					<!--(if hasattr(list, "questionLanguage"))-->
-					<th>@!list.questionLanguage!@</th>
-					<!--(else)-->
-					<th></th>
-					<!--(end)-->
-					<!--(if hasattr(list, "answerLanguage"))-->
-					<th>@!list.answerLanguage!@</th>
-					<!--(else)-->
-					<th></th>
-					<!--(end)-->
+					<th>@!list.get("questionLanguage", u"")!@</th>
+					<th>@!list.get("answerLanguage", U"")!@</th>
 				</tr>
 			</thead>
 			<tbody>
-				<!--(for word in list.items)-->
+				<!--(for word in list["items"])-->
 				<tr>
-					<td>@!list.items.index(word) +1!@</td>
-					<!--(if hasattr(word, "questions"))-->
-					<td>@!compose(word.questions)!@</td>
-					<!--(else)-->
-					<td></td>
-					<!--(end)-->
-					<!--(if hasattr(word, "answers"))-->
-					<td>@!compose(word.answers)!@</td>
-					<!--(else)-->
-					<td></td>
-					<!--(end)-->
+					<td>@!list["items"].index(word) +1!@</td>
+					<td>@!compose(word.get("questions", []))!@</td>
+					<td>@!compose(word.get("answers", []))!@</td>
 				</tr>
 				<!--(end)-->
 			</tbody>

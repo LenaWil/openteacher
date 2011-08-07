@@ -21,9 +21,6 @@
 
 from PyQt4 import QtGui, QtCore
 
-class Result(str):
-	pass
-
 class InputTyping(QtGui.QWidget):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(InputTyping, self).__init__(*args, **kwargs)
@@ -62,9 +59,11 @@ class InputTyping(QtGui.QWidget):
 		self.inputLineEdit.setFocus()
 
 	def correctLastAnswer(self):
-		result = Result("right")
-		result.wordId = self.previousWord.id
-		result.givenAnswer = _("Correct anyway")
+		result = {
+			"result": "right",
+			"wordId": self.previousWord.id,
+			"givenAnswer": _("Correct anyway")
+		}
 		self.lessonType.correctLastAnswer(result)
 
 	def checkAnswer(self):

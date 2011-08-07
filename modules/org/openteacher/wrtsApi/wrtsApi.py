@@ -38,7 +38,7 @@ class WrtsApiModule(object):
 		self._references = set()
 
 		self.wrtsConnection = self._api.WrtsConnection(self._mm)
-		
+
 		for module in self._mm.mods("active", type="ui"):
 			event = module.addLessonLoadButton(_("Import from WRTS"))
 			event.handle(self.importFromWrts)

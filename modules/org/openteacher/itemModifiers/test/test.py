@@ -29,6 +29,8 @@ class Word(object):
 
 class ItemModifiersTestCase(unittest.TestCase):
 	def setUp(self):
+		for module in self._mm.mods(type="translator"):
+			module.enable()
 		for module in self._mm.mods(type="itemModifier"):
 			module.enable()
 
@@ -46,6 +48,8 @@ class ItemModifiersTestCase(unittest.TestCase):
 			self.assertTrue(hasattr(output, "id"))
 
 	def tearDown(self):
+		for module in self._mm.mods("active", type="translator"):
+			module.disable()
 		for module in self._mm.mods("active", type="itemModifier"):
 			module.disable()
 

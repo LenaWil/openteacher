@@ -26,26 +26,6 @@ except ImportError:
 	except ImportError:
 		from elementTree import ElementTree
 
-class WordList(object):
-	def __init__(self, *args, **kwargs):
-		super(WordList, self).__init__(*args, **kwargs)
-
-		self.items = []
-		self.tests = []
-
-class Word(object):
-	def __init__(self, *args, **kwargs):
-		super(Word, self).__init__(*args, **kwargs)
-
-		self.questions = []
-		self.answers = []
-
-class Test(list):
-	pass
-
-class Result(str):
-	pass
-
 class OpenTeacherLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(OpenTeacherLoaderModule, self).__init__(*args, **kwargs)
@@ -70,32 +50,35 @@ class OpenTeacherLoaderModule(object):
 
 	def load(self, path):
 		#Create the new word list
-		wordList = WordList()
+		wordList = {
+			"items": [],
+			"tests": [],
+		}
 		#Feed the xml parser
 		root = ElementTree.parse(open(path)).getroot()
 
 		#Stores the title, question language and answer language
-		wordList.title = root.findtext("title")
-		wordList.questionLanguage = root.findtext("question_language")
-		wordList.answerLanguage = root.findtext("answer_language")
+		wordList["title"] = root.findtext("title")
+		wordList["questionLanguage"] = root.findtext("question_language")
+		wordList["answerLanguage"] = root.findtext("answer_language")
 
 		#create one test, which is used for all results, because .ot
 		#doesn't support multiple tests.
-		test = Test()
+		test = []
 
 		#because .ot doesn't give words an id, we use a counter.
 		counter = 0
 		for treeWord in root.findall("word"):
 			#Creates the word and sets its id (which is the current
 			#value of the counter)
-			listWord = Word()
-			listWord.id = counter
+			listWord = {}
+			listWord["id"] = counter
 
 			#Parses the question
 			known = treeWord.findtext("known")
 			#FIXME: choose one
 			for module in self._mm.mods("active", type="wordsStringParser"):
-				listWord.questions = module.parse(known)
+				listWord["questions"] = module.parse(known)
 
 			#Parses the answers
 			second = treeWord.findtext("second")
@@ -106,7 +89,7 @@ class OpenTeacherLoaderModule(object):
 			#remove so the test is also reliable the next time
 			del second
 			for module in self._mm.mods("active", type="wordsStringParser"):
-				listWord.answers = module.parse(foreign)
+				listWord["answers"] = module.parse(foreign)
 
 			#Parses the results, all are saved in the test made above.
 			wrong, total = treeWord.findtext("results").split("/")
@@ -114,21 +97,25 @@ class OpenTeacherLoaderModule(object):
 			total = int(total)
 			right = total - wrong
 			for i in range(right):
-				result = Result("right")
-				result.itemId = listWord.id
+				result = {
+					"result": "right",
+					"itemId": listWord["id"],
+				}
 				test.append(result)
 			for i in range(wrong):
-				result = Result("wrong")
-				result.itemId = listWord.id
+				result = {
+					"result": "wrong",
+					"itemId": listWord["id"],
+				}
 				test.append(result)
 
 			#Adds the generated word to the list
-			wordList.items.append(listWord)
+			wordList["items"].append(listWord)
 			#Increment the counter (= the next word id)
 			counter += 1
 
 		#Adds all results to the list
-		wordList.tests.append(test)
+		wordList["tests"].append(test)
 
 		return wordList
 

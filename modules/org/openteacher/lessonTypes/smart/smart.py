@@ -3,7 +3,7 @@
 
 #	Copyright 2011, Marten de Vries
 #	Copyright 2011, Cas Widdershoven
-#	Copyright 2008-2011, Milan Boers
+#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -20,9 +20,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class Test(list):
-	pass
-
 class SmartLessonType(object):
 	def __init__(self, moduleManager, list, indexes, *args, **kwargs):
 		super(SmartLessonType, self).__init__(*args, **kwargs)
@@ -33,7 +30,7 @@ class SmartLessonType(object):
 
 		self._list = list
 		self._indexes = indexes
-		self._test = Test()
+		self._test = []
 		self.askedItems = 0
 
 	@property
@@ -47,7 +44,7 @@ class SmartLessonType(object):
 		self.askedItems += 1
 
 		self._test.append(result)
-		if result == "wrong":
+		if result["result"] == "wrong":
 			try:
 				if self._indexes[-1] != self._currentIndex:
 					self._indexes.append(self._currentIndex)
@@ -87,13 +84,13 @@ class SmartLessonType(object):
 			#end of lesson
 			if len(self._test) != 0:
 				try:
-					self._list.tests
-				except AttributeError:
-					self._list.tests = []
-				self._list.tests.append(self._test)
+					self._list["tests"]
+				except KeyError:
+					self._list["tests"] = []
+				self._list["tests"].append(self._test)
 			self.lessonDone.emit()
 		else:
-			self.newItem.emit(self._list.items[self._currentIndex])
+			self.newItem.emit(self._list["items"][self._currentIndex])
 
 class SmartModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

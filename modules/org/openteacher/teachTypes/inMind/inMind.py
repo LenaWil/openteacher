@@ -23,15 +23,15 @@ from PyQt4 import QtGui, QtCore
 class ThinkWidget(QtGui.QWidget):
 	def __init__(self, *args, **kwargs):
 		super(ThinkWidget, self).__init__(*args, **kwargs)
-		
+
 		self.label = QtGui.QLabel(_("Think about the answer, and press the 'View answer' button when you're done."))
 		self.label.setWordWrap(True)
 		self.button = QtGui.QPushButton(_("View answer"))
-		
+
 		mainLayout = QtGui.QVBoxLayout()
 		mainLayout.addWidget(self.label)
 		mainLayout.addWidget(self.button)
-		
+
 		self.setLayout(mainLayout)
 
 class AnswerWidget(QtGui.QWidget):
@@ -51,9 +51,6 @@ class AnswerWidget(QtGui.QWidget):
 		mainLayout.addLayout(bottomLayout)
 		
 		self.setLayout(mainLayout)
-
-class Result(str):
-	pass
 
 class InMindTeachWidget(QtGui.QStackedWidget):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -77,13 +74,17 @@ class InMindTeachWidget(QtGui.QStackedWidget):
 		self.answerWidget.wrongButton.clicked.connect(self.setWrong)
 
 	def setRight(self):
-		result = Result("right")
-		result.wordId = self._currentWord.id
+		result = {
+			"result": "right",
+			"itemId": self._currentWord["id"],
+		}
 		self.lessonType.setResult(result)
 
 	def setWrong(self):
-		result = Result("wrong")
-		result.wordId = self._currentWord.id
+		result = {
+			"result": "wrong",
+			"itemId": self._currentWord["id"],
+		}
 		self.lessonType.setResult(result)
 
 	def newItem(self, word):
@@ -94,9 +95,12 @@ class InMindTeachWidget(QtGui.QStackedWidget):
 		except IndexError, e:
 			#FIXME: show a nice error message? Make it impossible to use
 			#inMind in another way?
+			#
+			#also check every file using 'self._modules.chooseItem', if
+			#the error is catched ánd handled.
 			raise e
 		self.answerWidget.label.setText(
-			_("Translation: ") + compose(word.answers)
+			_("Translation: ") + compose(word["answers"])
 		)
 		self.setCurrentWidget(self.thinkWidget)
 

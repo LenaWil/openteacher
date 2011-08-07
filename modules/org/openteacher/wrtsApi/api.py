@@ -163,16 +163,6 @@ class ListsParser(object):
 		   which is the needed url."""
 		return self.listsTree[index].attrib["href"]
 
-class WordList(object):
-	def __init__(self, *args, **kwargs):
-		super(WordList, self).__init__(*args, **kwargs)
-
-		self.items = []
-		self.tests = []
-
-class Word(object):
-	pass
-
 class WordListParser(object):
 	"""This class parses a wordlist from the WRTS-API into a WordList-instance."""
 	def __init__(self, moduleManager,xmlStream, *args, **kwargs):
@@ -184,13 +174,13 @@ class WordListParser(object):
 	@property
 	def list(self):
 		#Create a new WordList instance
-		wordList = WordList()
+		wordList = {"items": []}
 
 		#Read title, question subject and answer subject; sometimes the
 		#element is empty, so the fallback u"" is needed.
-		wordList.title = self.root.findtext("title", u"")
-		wordList.questionLanguage = self.root.findtext("lang-a", u"")
-		wordList.answerLanguage = self.root.findtext("lang-b", u"")
+		wordList["title"] = self.root.findtext("title", u"")
+		wordList["questionLanguage"] = self.root.findtext("lang-a", u"")
+		wordList["answerLanguage"] = self.root.findtext("lang-b", u"")
 
 		#This counter is used to give each word a unique id
 		counter = 0
@@ -198,8 +188,8 @@ class WordListParser(object):
 		#Loop through the words in the xml
 		for wordTree in self.root.findall("words/word"):
 			#Create a Word-instance
-			word = Word()
-			word.id = counter
+			word = {}
+			word["id"] = counter
 
 			#Read the question, again keep in mind that null values are
 			#possible, so again the u"" fallback. The question is parsed
@@ -208,7 +198,7 @@ class WordListParser(object):
 			#FIXME: only one
 			for module in self._mm.mods("active", type="wordsStringParser"):
 				text = wordTree.findtext("word-a", u"")
-				word.questions = module.parse(text)
+				word["questions"] = module.parse(text)
 
 			#Read the answer, again keep in mind that null values are
 			#possible, so again the u"" fallback. The answer is parsed
@@ -217,10 +207,10 @@ class WordListParser(object):
 			#FIXME: only one
 			for module in self._mm.mods("active", type="wordsStringParser"):
 				text = wordTree.findtext("word-b", u"")
-				word.answers = module.parse(text)
+				word["answers"] = module.parse(text)
 
 			# Add the current edited word to the wordList instance
-			wordList.items.append(word)
+			wordList["items"].append(word)
 
 			counter += 1
 

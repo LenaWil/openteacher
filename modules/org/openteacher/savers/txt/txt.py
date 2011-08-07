@@ -39,32 +39,38 @@ class TxtSaverModule(object):
 		del self.saves
 
 	def save(self, type, list, path):
-		def exists(obj, attr):
-			return hasattr(obj, attr) and getattr(obj, attr)
-
 		composers = set(self._mm.mods("active", type="wordsStringComposer"))
 		compose = self._modules.chooseItem(composers).compose
 
 		text = u""
 
-		if exists(list, "title"):
-			text += list.title + "\n\n"
-		if exists(list, "questionLanguage") and exists(list, "answerLanguage"):
-			text += list.questionLanguage + " - " + list.answerLanguage + "\n\n"
+		try:
+			text += list["title"] + "\n\n"
+		except KeyError:
+			pass
+		try:
+			text += list["questionLanguage"] + " - " + list["answerLanguage"] + "\n\n"
+		except KeyError:
+			pass
 
-		if len(list.items) != 0:
-			lengths = map(lambda word: len(compose(word.questions)), list.items)
+		if len(list["items"]) != 0:
+			#FIXME: questions -> not guaranteed to be there
+			lengths = map(lambda word: len(compose(word["questions"])), list["items"])
 			maxLen = max(lengths) +1
 			#FIXME: should 8 be an advanced setting?
 			if maxLen < 8:
 				maxLen = 8
 
-			for word in list.items:
-				questions = compose(word.questions)
+			for word in list["items"]:
+				try:
+					questions = compose(word["questions"])
+				except KeyError:
+					questions = u""
 				text += u"".join([
-					compose(word.questions),
+					questions,
 					(maxLen - len(questions)) * " ",
-					compose(word.answers),
+					#FIXME: answers -> not guaranteed to be there
+					compose(word["answers"]),
 					u"\n"
 				])
 

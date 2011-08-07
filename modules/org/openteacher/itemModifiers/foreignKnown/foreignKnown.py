@@ -28,7 +28,7 @@ class ForeignKnownModule(object):
 	def modifyItem(self, item):
 		#modify in place, because the caller is responsable for passing
 		#a copy of item.
-		item.questions, item.answers = item.answers, item.questions
+		item["questions"], item["answers"] = item["answers"], item["questions"]
 		return item
 
 	def enable(self):
