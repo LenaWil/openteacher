@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Marten de Vries
+#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -78,12 +79,12 @@ class InMindTeachWidget(QtGui.QStackedWidget):
 
 	def setRight(self):
 		result = Result("right")
-		result.wordId = self._currentWord.id
+		result.wordId = self._currentWord["id"]
 		self.lessonType.setResult(result)
 
 	def setWrong(self):
 		result = Result("wrong")
-		result.wordId = self._currentWord.id
+		result.wordId = self._currentWord["id"]
 		self.lessonType.setResult(result)
 
 	def newItem(self, word):
@@ -96,7 +97,7 @@ class InMindTeachWidget(QtGui.QStackedWidget):
 			#inMind in another way?
 			raise e
 		self.answerWidget.label.setText(
-			_("Translation: ") + compose(word.answers)
+			_("Translation: ") + compose(word["answers"])
 		)
 		self.setCurrentWidget(self.thinkWidget)
 

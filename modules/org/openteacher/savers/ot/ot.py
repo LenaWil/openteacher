@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Marten de Vries
+#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -42,43 +43,43 @@ class OpenTeacherSaverModule(object):
 		del self._pyratemp
 		del self.saves
 
-	def save(self, type, wordList, path):
+	def save(self, type, wordList, path, resources):
 		composers = set(self._mm.mods("active", type="wordsStringComposer"))
 		composer = self._modules.chooseItem(composers)
 
 		#Copy, because we're going to modify it
-		wordList = copy.deepcopy(wordList) # the words have to be unaltered
+		wordList = copy.deepcopy(wordList)
 		try:
-			wordList.title
+			wordList["title"]
 		except AttributeError:
-			wordList.title = u""
+			wordList["title"] = u""
 		try:
-			wordList.questionLanguage
+			wordList["questionLanguage"]
 		except AttributeError:
-			wordList.questionLanguage = u""
+			wordList["questionLanguage"] = u""
 		try:
-			wordList.answerLanguage
+			wordList["answerLanguage"]
 		except AttributeError:
-			wordList.answerLanguage = u""
+			wordList["answerLanguage"] = u""
 
-		for word in wordList.items:
+		for word in wordList["items"]:
 			#results
-			word.results = {"right": 0, "wrong": 0}
-			for test in wordList.tests:
+			word["results"] = {"right": 0, "wrong": 0}
+			for test in wordList["tests"]:
 				for result in test:
-					if result.itemId == word.id:
+					if result["itemId"] == word["id"]:
 						try:
-							word.results[result] += 1
+							word["results"][result] += 1
 						except KeyError:
 							pass
 			#known, foreign and second
-			word.known = compose(word.questions)
-			if len(word.answers) == 1 and len(word.answers[0]) > 1:
-				word.foreign = word.answers[0][0]
-				word.second = compose([word.answers[0][1:]])
+			word["known"] = composer.compose(word["questions"])
+			if len(word["answers"]) == 1 and len(word["answers"][0]) > 1:
+				word["foreign"] = word["answers"][0][0]
+				word["second"] = composer.compose([word["answers"][0][1:]])
 			else:
-				word.foreign = compose(word.answers)
-				word.second = None
+				word["foreign"] = composer.compose(word["answers"])
+				word["second"] = None
 
 		templatePath = self._mm.resourcePath("template.txt")
 		t = self._pyratemp.Template(open(templatePath).read())

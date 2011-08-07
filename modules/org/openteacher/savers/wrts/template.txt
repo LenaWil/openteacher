@@ -1,4 +1,5 @@
 #!	Copyright 2011, Marten de Vries
+#!	Copyright 2011, Milan Boers
 #!
 #!	This file is part of OpenTeacher.
 #!
@@ -18,8 +19,8 @@
 <!--Wrts, http://www.wrts.nl/-->
 <wrts>
 	<lijst id="00000000">
-		<!--(if hasattr(list, "title"))-->
-		<titel>@!list.title!@</titel>
+		<!--(if "title" in list)-->
+		<titel>@!list['title']!@</titel>
 		<!--(else)-->
 		<titel />
 		<!--(end)-->
@@ -30,21 +31,21 @@
 		</datum>
 		<author id="000000">Created by: OpenTeacher</author>
 		<taal>
-			<!--(if hasattr(list, "questionLanguage"))-->
-			<a>@!list.questionLanguage!@</a>
+			<!--(if "questionLanguage" in list)-->
+			<a>@!list['questionLanguage']!@</a>
 			<!--(else)-->
 			<a />
 			<!--(end)-->
-			<!--(if hasattr(list, "questionLanguage"))-->
-			<b>@!list.answerLanguage!@</b>
+			<!--(if "questionLanguage" in list)-->
+			<b>@!list['answerLanguage']!@</b>
 			<!--(else)-->
 			<b />
 			<!--(end)-->
 		</taal>
-		<!--(for word in list.items)-->
+		<!--(for word in list['items'])-->
 		<woord>
-			<a>@!compose(word.questions)!@</a>
-			<b>@!compose(word.answers)!@</b>
+			<a>@!compose(word['questions'])!@</a>
+			<b>@!compose(word['answers'])!@</b>
 		</woord>
 		<!--(end)-->
 	</lijst>

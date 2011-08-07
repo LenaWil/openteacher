@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Marten de Vries
+#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -42,7 +43,7 @@ class WrtsSaverModule(object):
 		del self._pyratemp
 		del self.saves
 
-	def save(self, type, list, path):
+	def save(self, type, list, path, resources):
 		composers = set(self._mm.mods("active", type="wordsStringComposer"))
 		composer = self._modules.chooseItem(composers)
 

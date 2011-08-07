@@ -33,35 +33,6 @@ except:
 class Order:
 	Normal, Inversed = xrange(2)
 
-class Result(str):
-	def __init__(self, *args, **kwargs):
-		super(Result, self).__init__(*args, **kwargs)
-		
-		self.itemId = int()
-		
-		#optional
-		self.active = list()
-
-class List(object):
-	def __init__(self, *args, **kwargs):
-		super(List, self).__init__(*args, **kwargs)
-		
-		self.items = []
-		self.tests = []
-
-"""
-Place in the test
-"""
-class Place(object):
-	def __init__(self, name = "None", x = 0, y = 0, *args, **kwargs):
-		super(Place, self).__init__(*args, **kwargs)
-		
-		self.name = name
-		
-		# Position on the map
-		if x > 0 and y > 0:
-			self.x = int(x)
-			self.y = int(y)
 
 """
 List widget of all the places
@@ -74,8 +45,8 @@ class EnterPlacesWidget(QtGui.QListWidget):
 		self.clear()
 		
 		# Add all the places to the list
-		for place in base.enterWidget.places.items:
-			self.addItem(place.name + " (" + str(place.x) + "," + str(place.y) + ")")
+		for place in base.enterWidget.places["items"]:
+			self.addItem(place["name"] + " (" + str(place["x"]) + "," + str(place["y"]) + ")")
 
 """
 The graphics scene of the map where you enter
@@ -95,7 +66,11 @@ class EnterMapScene(QtGui.QGraphicsScene):
 			name = QtGui.QInputDialog.getText(self.widget, _("Name for this place"), _("What's this place's name?"))
 			if unicode(name[1]) and unicode(name[0]).strip() != u"":
 				# Make the place
-				place = Place(name[0], x, y)
+				place = {
+					"name": unicode(name[0]),
+					"x": int(x),
+					"y": int(y)
+				}
 				# And add the place
 				base.enterWidget.addPlace(place)
 
@@ -157,25 +132,25 @@ class EnterMap(Map):
 		placesList = []
 		
 		# Add all the places
-		for place in base.enterWidget.places.items:
+		for place in base.enterWidget.places["items"]:
 			# Make the little rectangle
-			rect = QtGui.QGraphicsRectItem(place.x,place.y,6,6)
+			rect = QtGui.QGraphicsRectItem(place["x"],place["y"],6,6)
 			rect.setBrush(QtGui.QBrush(QtGui.QColor("red")))
 			# Place the rectangle in the list of items
 			placesList.append(rect)
 			
 			# Make the shadow of the text
-			shadow = QtGui.QGraphicsTextItem(place.name)
+			shadow = QtGui.QGraphicsTextItem(place["name"])
 			shadow.setFont(QtGui.QFont("sans-serif",15,75))
-			shadow.setPos(place.x+2,place.y+2)
+			shadow.setPos(place["x"]+2,place["y"]+2)
 			shadow.setDefaultTextColor(QtGui.QColor("black"))
 			shadow.setOpacity(0.5)
 			# Place the shadow in the list of items
 			placesList.append(shadow)
 			
-			item = QtGui.QGraphicsTextItem(place.name)
+			item = QtGui.QGraphicsTextItem(place["name"])
 			item.setFont(QtGui.QFont("sans-serif",15,75))
-			item.setPos(place.x,place.y)
+			item.setPos(place["x"],place["y"])
 			item.setDefaultTextColor(QtGui.QColor("red"))
 			# Place the text in the list of items
 			placesList.append(item)
@@ -215,7 +190,7 @@ class EnterMapChooser(QtGui.QComboBox):
 			self.insertItem(0, name, str({'mapPath': path, 'knownPlaces': ''}))
 			self.setCurrentIndex(0)
 		else:
-			if len(self.enterWidget.places.items) > 0:
+			if len(self.enterWidget.places["items"]) > 0:
 				warningD = QtGui.QMessageBox()
 				warningD.setIcon(QtGui.QMessageBox.Warning)
 				warningD.setWindowTitle(_("Warning"))
@@ -224,7 +199,10 @@ class EnterMapChooser(QtGui.QComboBox):
 				feedback = warningD.exec_()
 				if feedback == QtGui.QMessageBox.Ok:
 					# Clear the entered items
-					self.enterWidget.places = List()
+					self.enterWidget.places = {
+						"items": list(),
+						"tests": list()
+					}
 					# Update the list
 					self.enterWidget.currentPlaces.update()
 				else:
@@ -244,7 +222,11 @@ The enter tab
 class EnterWidget(QtGui.QSplitter):
 	def __init__(self, *args, **kwargs):
 		super(EnterWidget, self).__init__(*args, **kwargs)
-		self.places = List()
+		#self.places = List()
+		self.places = {
+			"items": list(),
+			"tests": list()
+		}
 		
 		#create the GUI
 		
@@ -321,7 +303,7 @@ class EnterWidget(QtGui.QSplitter):
 	Add a place to the list
 	"""
 	def addPlace(self,place):
-		self.places.items.append(place)
+		self.places["items"].append(place)
 		self.enterMap.update()
 		self.currentPlaces.update()
 	
@@ -334,7 +316,7 @@ class EnterWidget(QtGui.QSplitter):
 		for placeDict in self.mapChooser.currentMap["knownPlaces"]:
 			if placeDict["name"] == name:
 				place = Place(placeDict["name"], placeDict["x"], placeDict["y"])
-				self.places.items.append(place)
+				self.places["items"].append(place)
 				self.enterMap.update()
 				self.currentPlaces.update()
 				return
@@ -345,9 +327,9 @@ class EnterWidget(QtGui.QSplitter):
 	"""
 	def removePlace(self):
 		for placeItem in self.currentPlaces.selectedItems():
-			for place in self.places.items:
-				if placeItem.text() == str(place.name + " (" + str(place.x) + "," + str(place.y) + ")"):
-					self.places.items.remove(place)
+			for place in self.places["items"]:
+				if placeItem.text() == str(place["name"] + " (" + str(place["x"]) + "," + str(place["y"]) + ")"):
+					self.places["items"].remove(place)
 		self.enterMap.update()
 		self.currentPlaces.update()
 	
@@ -428,7 +410,7 @@ class PlaceOnMap(QtGui.QGraphicsRectItem):
 		width = 10
 		height = 10
 		
-		self.setRect(place.x - width / 2, place.y - height / 2, width, height)
+		self.setRect(place["x"] - width / 2, place["y"] - height / 2, width, height)
 		self.setBrush(QtGui.QBrush(QtGui.QColor("red")))
 		
 		self.place = place
@@ -487,7 +469,7 @@ class TeachPictureMap(Map):
 	def showPlaceRects(self):
 		placesList = []
 		
-		for place in base.enterWidget.places.items:
+		for place in base.enterWidget.places["items"]:
 			# Make the little rectangle
 			rect = PlaceOnMap(place)
 			# Place the rectangle in the list of items
@@ -608,7 +590,7 @@ class TeachWidget(QtGui.QWidget):
 	"""
 	def showEvent(self,event):
 		# If there are no words
-		if len(base.enterWidget.places.items) == 0:
+		if len(base.enterWidget.places["items"]) == 0:
 			QtGui.QMessageBox.critical(self, _("Not enough items"), _("You need to add items to your test first"))
 			base.fileTab.currentTab = base.enterWidget
 		# If not in a lesson (so it doesn't start a lesson if you go back from a mistakingly click on the Enter tab)
@@ -640,7 +622,7 @@ class TopoLesson(object):
 		base.teachWidget.mapBox.setMap(base.enterWidget.mapChooser.currentMap["mapPath"])
 		base.teachWidget.mapBox.setInteractive(self.order)
 		
-		self.lessonType = base.teachWidget.lessonTypeChooser.currentLessonType.createLessonType(itemList,range(len(itemList.items)))
+		self.lessonType = base.teachWidget.lessonTypeChooser.currentLessonType.createLessonType(itemList,range(len(itemList["items"])))
 		
 		self.lessonType.newItem.handle(self.nextQuestion)
 		self.lessonType.lessonDone.handle(base.teachWidget.stopLesson)
@@ -661,21 +643,21 @@ class TopoLesson(object):
 		if self.order == Order.Inversed:
 			if self.currentItem == answer:
 				# Answer was right
-				self.lessonType.setResult(Result("right"))
+				self.lessonType.setResult("right")
 				# Progress bar
 				self._updateProgressBar()
 			else:
 				# Answer was wrong
-				self.lessonType.setResult(Result("wrong"))
+				self.lessonType.setResult("wrong")
 		else:
-			if self.currentItem.name == base.teachWidget.answerfield.text():
+			if self.currentItem["name"] == base.teachWidget.answerfield.text():
 				# Answer was right
-				self.lessonType.setResult(Result("right"))
+				self.lessonType.setResult("right")
 				# Progress bar
 				self._updateProgressBar()
 			else:
 				# Answer was wrong
-				self.lessonType.setResult(Result("wrong"))
+				self.lessonType.setResult("wrong")
 			
 	"""
 	What happens when the next question should be asked
@@ -685,10 +667,10 @@ class TopoLesson(object):
 		self.currentItem = item
 		if self.order == Order.Inversed:
 			#set the question
-			base.teachWidget.questionLabel.setText(_("Please click this place: ") + self.currentItem.name)
+			base.teachWidget.questionLabel.setText(_("Please click this place: ") + self.currentItem["name"])
 		else:
 			#set the arrow to the right position
-			base.teachWidget.mapBox.setArrow(self.currentItem.x,self.currentItem.y)
+			base.teachWidget.mapBox.setArrow(self.currentItem["x"],self.currentItem["y"])
 	
 	"""
 	Ends the lesson
@@ -793,6 +775,13 @@ class Lesson(object):
 		super(Lesson, self).__init__(*args, **kwargs)
 		self.fileTab = fileTab
 		self.stopped = base.api.createEvent()
+		
+		self.module = self
+		self.dataType = "topo"
+		self.list = base.enterWidget.places
+		self.resources = {
+			"mapPath": base.enterWidget.mapChooser.currentMap["mapPath"]
+		}
 		
 		fileTab.closeRequested.handle(self.stop)
 	

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Marten de Vries
+#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -21,6 +22,7 @@
 from PyQt4 import QtGui
 import sys
 import gettext
+import os
 
 class FileTab(object):
 	def __init__(self, moduleManager, tabWidget, widget, *args, **kwargs):
@@ -225,15 +227,16 @@ class GuiModule(object):
 
 	def getSavePath(self, startdir, exts):
 		stringExts = []
+		
+		filters = []
 		for ext in exts:
-			stringExts.append("*." + ext)
-		filter = u"Lessons (%s)" % u" ".join(stringExts)
+			filters.append(ext + " (*." + ext + ")")
 
 		lastWidget = self._widget.tabWidget.currentWidget()
 		fileDialog = QtGui.QFileDialog()
 		fileDialog.setAcceptMode(QtGui.QFileDialog.AcceptSave)
 		fileDialog.setWindowTitle(_("Choose file to save"))
-		fileDialog.setFilter(filter)
+		fileDialog.setNameFilters(filters)
 		fileDialog.setDirectory(startdir)
 
 		tab = self.addCustomTab(fileDialog.windowTitle(), fileDialog)
@@ -244,7 +247,11 @@ class GuiModule(object):
 
 		self._widget.tabWidget.setCurrentWidget(lastWidget)
 		if result:
-			return unicode(fileDialog.selectedFiles()[0])
+			ext = fileDialog.selectedNameFilter().split("(*")[1].split(")")[0]
+			filename = str(fileDialog.selectedFiles()[0])
+			if os.path.splitext(filename)[1] != ext:
+				filename += ext
+			return unicode(filename)
 		else:
 			return None
 

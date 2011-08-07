@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Marten de Vries
+#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -30,7 +31,7 @@ class Saver(object):
 		self.path = path
 
 	def save(self):
-		self.module.save(self.dataType, self.lesson.list, self.path)
+		self.module.save(self.dataType, self.lesson.list, self.path, self.lesson.resources)
 
 class SaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -42,13 +43,16 @@ class SaverModule(object):
 	@property
 	def usableExtensions(self):
 		extensions = set()
-
+		
+		dataType = self._currentLesson.module.dataType
+		
 		#Collect exts the loader modules support, if there is a gui
 		#module for the data type(s) they can provide
 		for module in self._mm.mods("active", type="save"):
-			for exts in module.saves.values():
-				for ext in exts:
+			if module.saves.get(dataType) != None:
+				for ext in module.saves.get(dataType):
 					extensions.add(ext)
+		
 		return extensions
 
 	def _modulesUpdated(self):
@@ -89,9 +93,10 @@ class SaverModule(object):
 
 		dataType = self._currentLesson.module.dataType
 		for module in self._mm.mods("active", type="save"):
-			for ext in module.saves[dataType]:
-				if path.endswith(ext):
-					savers.add(Saver(module, dataType, self._currentLesson, path))
+			if dataType in module.saves:
+				for ext in module.saves[dataType]:
+					if path.endswith(ext):
+						savers.add(Saver(module, dataType, self._currentLesson, path))
 
 		if len(savers) == 0:
 			raise NotImplementedError()

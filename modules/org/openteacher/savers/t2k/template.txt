@@ -1,4 +1,5 @@
 #!	Copyright 2011, Marten de Vries
+#!	Copyright 2011, Milan Boers
 #!
 #!	This file is part of OpenTeacher.
 #!
@@ -23,27 +24,27 @@
 		<font_question>Arial</font_question>
 		<font_answer>Lucida Sans Unicode</font_answer>
 		<items>
-			<!--(for word in wordList.items)-->
-			<item id="@!word.id!@">
+			<!--(for word in wordList["items"])-->
+			<item id="@!word['id']!@">
 				<questions>
-					<!--(if len(word.questions) == 1)-->
-						<!--(for q in word.questions[0])-->
-#!	!#					<question id="@!word.questions[0].index(q)!@">@!q!@</question>
+					<!--(if len(word["questions"]) == 1)-->
+						<!--(for q in word["questions"][0])-->
+#!	!#					<question id="@!word['questions'][0].index(q)!@">@!q!@</question>
 						<!--(end)-->
 					<!--(else)-->
-						<!--(for q in word.questions)-->
-#!	!#					<question id="@!word.questions.index(q)!@">@!u", ".join(q)!@</question>
+						<!--(for q in word["questions"])-->
+#!	!#					<question id="@!word['questions'].index(q)!@">@!u", ".join(q)!@</question>
 						<!--(end)-->
 					<!--(end)-->
 				</questions>
 				<answers type="0">
-					<!--(if len(word.answers) == 1)-->
-						<!--(for a in word.answers[0])-->
-#!	!#					<answer id="@!word.answers[0].index(a)!@">@!a!@</answer>
+					<!--(if len(word["answers"]) == 1)-->
+						<!--(for a in word["answers"][0])-->
+#!	!#					<answer id="@!word['answers'][0].index(a)!@">@!a!@</answer>
 						<!--(end)-->
 					<!--(else)-->
-						<!--(for a in word.answers)-->
-#!	!#					<answer id="@!word.answers.index(a)!@">@!u", ".join(a)!@</answer>
+						<!--(for a in word["answers"])-->
+#!	!#					<answer id="@!word['answers'].index(a)!@">@!u", ".join(a)!@</answer>
 						<!--(end)-->
 					<!--(end)-->
 				</answers>

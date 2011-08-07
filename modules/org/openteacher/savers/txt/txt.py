@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Marten de Vries
+#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -38,33 +39,30 @@ class TxtSaverModule(object):
 		del self._modules
 		del self.saves
 
-	def save(self, type, list, path):
-		def exists(obj, attr):
-			return hasattr(obj, attr) and getattr(obj, attr)
-
+	def save(self, type, list, path, resources):		
 		composers = set(self._mm.mods("active", type="wordsStringComposer"))
 		compose = self._modules.chooseItem(composers).compose
 
 		text = u""
 
-		if exists(list, "title"):
-			text += list.title + "\n\n"
-		if exists(list, "questionLanguage") and exists(list, "answerLanguage"):
-			text += list.questionLanguage + " - " + list.answerLanguage + "\n\n"
+		if "title" in list:
+			text += list["title"] + "\n\n"
+		if "questionLanguage" in list and "answerLanguage" in list:
+			text += list["questionLanguage"] + " - " + list["answerLanguage"] + "\n\n"
 
-		if len(list.items) != 0:
-			lengths = map(lambda word: len(compose(word.questions)), list.items)
+		if len(list["items"]) != 0:
+			lengths = map(lambda word: len(compose(word["questions"])), list["items"])
 			maxLen = max(lengths) +1
 			#FIXME: should 8 be an advanced setting?
 			if maxLen < 8:
 				maxLen = 8
 
-			for word in list.items:
-				questions = compose(word.questions)
+			for word in list["items"]:
+				questions = compose(word["questions"])
 				text += u"".join([
-					compose(word.questions),
+					compose(word["questions"]),
 					(maxLen - len(questions)) * " ",
-					compose(word.answers),
+					compose(word["answers"]),
 					u"\n"
 				])
 

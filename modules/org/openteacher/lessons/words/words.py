@@ -3,6 +3,7 @@
 
 #	Copyright 2011, Marten de Vries
 #	Copyright 2011, Cas Widdershoven
+#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -22,15 +23,6 @@
 from PyQt4 import QtCore
 import copy
 
-class WordList(object):
-	def __init__(self, *args, **kwargs):
-		super(WordList, self).__init__(*args, **kwargs)
-
-		self.items = []
-		self.tests = []
-
-class Word(object): pass
-
 class WordsTableModel(QtCore.QAbstractTableModel):
 	QUESTIONS, ANSWERS, COMMENT = xrange(3)
 
@@ -40,37 +32,40 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 		self._compose = composer
 		self._parse = parser
 
-		self.updateList(WordList())
+		self.updateList({
+			"items": list(),
+			"tests": list()
+		})
 
 	def updateList(self, list):
 		self.beginResetModel()
 		self.list = list
-		self.indexes = range(len(self.list.items))
+		self.indexes = range(len(self.list["items"]))
 		self.endResetModel()
 
 	def sort(self, column, order):
 		if column == self.QUESTIONS:
-			items = sorted(self.list.items, key=lambda word: word.questions[0])
+			items = sorted(self.list["items"], key=lambda word: word["questions"][0])
 		elif column == self.ANSWERS:
-			items = sorted(self.list.items, key=lambda word: word.answers[0])
+			items = sorted(self.list["items"], key=lambda word: word["answers"][0])
 		elif column == self.COMMENT:
-			items = sorted(self.list.items, key=lambda word: word.comment)
+			items = sorted(self.list["items"], key=lambda word: word["comment"])
 
 		if order == QtCore.Qt.DescendingOrder:
 			items.reverse()
 
 		self.layoutAboutToBeChanged.emit()
-		self.indexes = [self.list.items.index(item) for item in items]
+		self.indexes = [self.list["items"].index(item) for item in items]
 		self.layoutChanged.emit()
 
 	def updateTitle(self, title):
-		self.list.title = unicode(title)
+		self.list["title"] = unicode(title)
 
 	def updateQuestionLanguage(self, questionLanguage):
-		self.list.questionLanguage = unicode(questionLanguage)
+		self.list["questionLanguage"] = unicode(questionLanguage)
 
 	def updateAnswerLanguage(self, answerLanguage):
-		self.list.answerLanguage = unicode(answerLanguage)
+		self.list["answerLanguage"] = unicode(answerLanguage)
 
 	def headerData(self, section, orientation, role):
 		if role != QtCore.Qt.DisplayRole:
@@ -81,7 +76,7 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 			return section +1
 
 	def rowCount(self, parent=None):
-		return len(self.list.items) +1
+		return len(self.list["items"]) +1
 
 	def columnCount(self, parent=None):
 		return 3
@@ -95,21 +90,21 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 		except IndexError:
 			return u"" #last (empty) row
 		else:
-			word = self.list.items[listIndex]
+			word = self.list["items"][listIndex]
 
 			if index.column() == self.QUESTIONS:
 				try:
-					return self._compose(word.questions)
+					return self._compose(word["questions"])
 				except AttributeError:
 					return u""
 			elif index.column() == self.ANSWERS:
 				try:
-					return self._compose(word.answers)
+					return self._compose(word["answers"])
 				except AttributeError:
 					return u""
 			elif index.column() == self.COMMENT:
 				try:
-					return word.comment
+					return word["comment"]
 				except AttributeError:
 					return u""
 
@@ -131,30 +126,36 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 			except IndexError:
 				if not unicode(value.toString()):
 					return False
-				word = Word()
+				word = {
+					"id": int(),
+					"questions": list(),
+					"answers": list(),
+					"comment": unicode(),
+					"created": str()
+				}
 				try:
-					word.id = self.list.items[-1].id +1
+					word["id"] = self.list["items"][-1]["id"] +1
 				except IndexError:
-					word.id = 0
+					word["id"] = 0
 				self.beginInsertRows(
 					QtCore.QModelIndex(),
 					self.rowCount(),
 					self.rowCount()
 				)
-				self.list.items.append(word)
-				self.indexes.append(self.list.items.index(word))
+				self.list["items"].append(word)
+				self.indexes.append(self.list["items"].index(word))
 				self.endInsertRows()
 			else:
-				word = self.list.items[listIndex]
+				word = self.list["items"][listIndex]
 
 				if index.column() == self.QUESTIONS:
-					word.questions = self._parse(unicode(value.toString()))
+					word["questions"] = self._parse(unicode(value.toString()))
 				elif index.column() == self.ANSWERS:
-					word.answers = self._parse(unicode(value.toString()))
+					word["answers"] = self._parse(unicode(value.toString()))
 				elif index.column() == self.COMMENT:
-					word.comment = unicode(value.toString()).strip()
-					if len(word.comment) == 0:
-						del word.comment
+					word["comment"] = unicode(value.toString()).strip()
+					if len(word["comment"]) == 0:
+						del word["comment"]
 				break
 		return True
 
@@ -166,7 +167,7 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 		for i in xrange(len(self.indexes)):
 			if self.indexes[i] > listIndex:
 				self.indexes[i] -= 1
-		del self.list.items[listIndex]
+		del self.list["items"][listIndex]
 		self.endRemoveRows()
 
 class ModifiersListModel(QtCore.QAbstractListModel):
@@ -214,6 +215,8 @@ class Lesson(object):
 		self._mm = moduleManager
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self.fileTab = fileTab
+		
+		self.resources = {}
 
 		self.fileTab.closeRequested.handle(self.stop)
 		self.stopped = self._mm.createEvent()
@@ -379,7 +382,7 @@ class Lesson(object):
 			#Show nicer error
 			raise e
 
-		indexes = range(len(self.list.items))
+		indexes = range(len(self.list["items"]))
 
 		for listModifier in self._listModifiersModel.modifiers:
 			if listModifier["active"]:
@@ -408,7 +411,7 @@ class Lesson(object):
 
 		composers = set(self._mm.mods("active", type="wordsStringComposer"))
 		compose = self._modules.chooseItem(composers).compose
-		lw.questionLabel.setText(compose(item.questions))
+		lw.questionLabel.setText(compose(item["questions"]))
 		self._updateProgress()
 
 	def _lessonDone(self):

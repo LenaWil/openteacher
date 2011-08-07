@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -19,34 +18,45 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class Teach2000SaverModule(object):
+import tarfile
+import os
+import tempfile
+
+class OpenTeachingTopoSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(Teach2000SaverModule, self).__init__(*args, **kwargs)
+		super(OpenTeachingTopoSaverModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "save"
 
-		for module in self._mm.mods("active", type="modules"):
-			module.registerModule("Teach2000 (.t2k) saver", self)
-
-	def enable(self):
-		self._pyratemp = self._mm.import_("pyratemp")
-		self.saves = {"words": ["t2k"]}
+	def enable(self):		
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules.registerModule("Open Teaching Topo (.ottp) saver", self)
+		self.saves = {"topo": ["ottp"]}
+		
 		self.active = True
 
 	def disable(self):
-		del self._pyratemp
-		del self.saves
 		self.active = False
 
 	def save(self, type, list, path, resources):
-		templatePath = self._mm.resourcePath("template.txt")
-		t = self._pyratemp.Template(open(templatePath).read())
-		data = {
-			"wordList": list
-		}
-		content = t(**data)
-		open(path, "w").write(content.encode("UTF-8"))
+		# Create tarball
+		tarFile = tarfile.open(path, "w:bz2")
+		
+		# Create temp file
+		listFile = tempfile.NamedTemporaryFile(delete=False)
+		listFile.write(unicode(list))
+		listFile.close()
+		
+		# Add file to tar
+		tarFile.add(listFile.name, "list.json")
+		tarFile.add(resources["mapPath"], os.path.basename(resources["mapPath"]))
+		
+		# Close tar
+		tarFile.close()
+		
+		# Delete temp file
+		os.unlink(listFile.name)
 
-def init(manager):
-	return Teach2000SaverModule(manager)
+def init(moduleManager):
+	return OpenTeachingTopoSaverModule(moduleManager)

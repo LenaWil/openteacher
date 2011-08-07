@@ -3,6 +3,7 @@
 
 #	Copyright 2011, Cas Widdershoven
 #	Copyright 2011, Marten de Vries
+#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -48,7 +49,7 @@ class ShuffleAnswerTeachWidget(QtGui.QWidget):
 		
 	def setHint(self):
 		hint = _("Hint:") + u" "
-		answer = self.word.answers[0][0]
+		answer = self.word["answers"][0][0]
 		if len(answer) != 1:
 			while True:
 				hintList = list(answer)

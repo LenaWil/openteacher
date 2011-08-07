@@ -30,38 +30,6 @@ import time
 import mimetypes
 import fnmatch
 
-class Result(str):
-	def __init__(self, *args, **kwargs):
-		super(Result, self).__init__(*args, **kwargs)
-		
-		self.itemId = int()
-		
-		#optional
-		self.active = list()
-
-class List(object):
-	def __init__(self, *args, **kwargs):
-		super(List, self).__init__(*args, **kwargs)
-		
-		self.items = []
-		self.tests = []
-
-"""
-Media item
-"""
-class Item(object):
-	def __init__(self,filename,remote,hints = "",desc = "",*args,**kwargs):
-		super(Item, self).__init__(*args, **kwargs)
-		
-		if remote == False:
-			self.name = os.path.splitext(os.path.basename(str(filename)))[0]
-		else:
-			self.name = filename
-		self.filename = filename
-		self.remote = remote
-		self.hints = hints
-		self.desc = desc
-
 """
 The video player and web viewer combination widget with controls
 """
@@ -196,16 +164,16 @@ class EnterItemListModel(QtCore.QAbstractListModel):
 		
 		self.listData = []
 		
-		for item in items.items:
-			self.listData.append(item.name)
+		for item in items["items"]:
+			self.listData.append(item["name"])
 	
 	def update(self,items):
 		self.beginInsertRows(QtCore.QModelIndex(), self.rowCount(), self.rowCount())
 		
 		self.listData = []
 		
-		for item in items.items:
-			self.listData.append(item.name)
+		for item in items["items"]:
+			self.listData.append(item["name"])
 		
 		self.endInsertRows()
 	
@@ -241,8 +209,8 @@ class EnterItemList(QtGui.QListView):
 		self.setRightActiveItem()
 	
 	def setRightActiveItem(self):
-		if len(base.enterWidget.itemList.items) > 0:
-			self.parent.setActiveItem(base.enterWidget.itemList.items[self.currentIndex().row()])
+		if len(base.enterWidget.itemList["items"]) > 0:
+			self.parent.setActiveItem(base.enterWidget.itemList["items"][self.currentIndex().row()])
 
 """
 The enter tab
@@ -250,7 +218,10 @@ The enter tab
 class EnterWidget(QtGui.QSplitter):
 	def __init__(self,*args, **kwargs):
 		super(EnterWidget, self).__init__(*args, **kwargs)
-		self.itemList = List()
+		self.itemList = {
+			"items": list(),
+			"tests": list()
+		}
 		
 		self.enterItemList = EnterItemList(self)
 		
@@ -334,15 +305,25 @@ class EnterWidget(QtGui.QSplitter):
 	Add an item to the list
 	"""
 	def addItem(self,filename,remote=False):
-		item = Item(filename,remote)
-		self.itemList.items.append(item)
+		name = filename
+		if not remote:
+			name = os.path.splitext(os.path.basename(str(name)))[0]
+		
+		item = {
+			"remote": remote,
+			"filename": str(filename),
+			"name": str(name),
+			"hints": str(),
+			"desc": str()
+		}
+		self.itemList["items"].append(item)
 		self.enterItemList.update()
 	
 	"""
 	Remove an item from the list
 	"""
 	def removeItem(self):
-		self.itemList.items.remove(self.activeitem)
+		self.itemList["items"].remove(self.activeitem)
 		self.enterItemList.update()
 		self.mediaDisplay.clear()
 		self.entername.setText("")
@@ -357,23 +338,23 @@ class EnterWidget(QtGui.QSplitter):
 	def setActiveItem(self,item):
 		self.activeitem = item
 		self.entername.setEnabled(True)
-		self.entername.setText(item.name)
+		self.entername.setText(item["name"])
 		self.enterdesc.setEnabled(True)
-		self.enterdesc.setText(item.desc)
-		self.mediaDisplay.showMedia(item.filename, item.remote)
+		self.enterdesc.setText(item["desc"])
+		self.mediaDisplay.showMedia(item["filename"], item["remote"])
 	
 	"""
 	Change the name of the active item
 	"""
 	def changeName(self):
-		self.activeitem.name = self.entername.text()
+		self.activeitem["name"] = str(self.entername.text())
 		self.enterItemList.update()
 	
 	"""
 	Change the description of the active item
 	"""
 	def changeDesc(self):
-		self.activeitem.desc = self.enterdesc.toPlainText()
+		self.activeitem["desc"] = self.enterdesc.toPlainText()
 	
 	"""
 	What happens when you click the Enter tab
@@ -485,7 +466,7 @@ class TeachWidget(QtGui.QWidget):
 	What happens when you click the Teach tab
 	"""
 	def showEvent(self,event):
-		if len(base.enterWidget.itemList.items) == 0:
+		if len(base.enterWidget.itemList["items"]) == 0:
 			QtGui.QMessageBox.critical(self, _("Not enough items"), _("You need to add items to your test first"))
 			base.fileTab.currentTab = base.enterWidget
 		elif not base.inLesson:
@@ -501,7 +482,7 @@ class MediaLesson(object):
 		#stop media playing in the enter widget
 		base.enterWidget.mediaDisplay.clear()
 		
-		self.lessonType = base.teachWidget.lessonTypeChooser.currentLessonType.createLessonType(itemList,range(len(itemList.items)))
+		self.lessonType = base.teachWidget.lessonTypeChooser.currentLessonType.createLessonType(itemList,range(len(itemList["items"])))
 		
 		self.lessonType.newItem.handle(self.nextQuestion)
 		self.lessonType.lessonDone.handle(self.endLesson)
@@ -517,14 +498,14 @@ class MediaLesson(object):
 	Check whether the given answer was right or wrong
 	"""
 	def checkAnswer(self):
-		if self.currentItem.name == base.teachWidget.answerField.text():
+		if self.currentItem["name"] == base.teachWidget.answerField.text():
 			# Answer was right
-			self.lessonType.setResult(Result("right"))
+			self.lessonType.setResult("right")
 			# Progress bar
 			self._updateProgressBar()
 		else:
 			# Answer was wrong
-			self.lessonType.setResult(Result("wrong"))
+			self.lessonType.setResult("wrong")
 			
 	"""
 	What happens when the next question should be asked
@@ -533,7 +514,7 @@ class MediaLesson(object):
 		# set the next question
 		self.currentItem = item
 		# set the mediawidget to the right location
-		base.teachWidget.mediaDisplay.showMedia(self.currentItem.filename, self.currentItem.remote)
+		base.teachWidget.mediaDisplay.showMedia(self.currentItem["filename"], self.currentItem["remote"])
 	
 	"""
 	Ends the lesson
@@ -644,9 +625,13 @@ class MediaLessonModule(object):
 class Lesson(object):
 	def __init__(self, moduleManager, fileTab, enterWidget, teachWidget, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
-		
 		self.fileTab = fileTab
 		self.stopped = base._mm.createEvent()
+		
+		self.module = self
+		self.dataType = "media"
+		self.list = base.enterWidget.itemList
+		self.resources = {}
 		
 		fileTab.closeRequested.handle(self.stop)
 	

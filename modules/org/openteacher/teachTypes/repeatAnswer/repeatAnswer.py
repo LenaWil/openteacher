@@ -3,6 +3,7 @@
 
 #	Copyright 2011, Cas Widdershoven
 #	Copyright 2011, Marten de Vries
+#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -35,7 +36,7 @@ class RepeatScreenWidget(QtGui.QWidget):
 		self.setLayout(self.showAnswerScreen)
 
 	def fade(self):
-		self.answerLabel.setText(self.parent.word.answers[0][0])
+		self.answerLabel.setText(self.parent.word["answers"][0][0])
 		timer = QtCore.QTimeLine(2000, self)
 		timer.setFrameRange(0, 255)
 		timer.frameChanged.connect(self.fadeAction)

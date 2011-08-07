@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,37 +18,44 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class OpenTeachingWordsSaverModule(object):
+import tarfile
+import os
+import tempfile
+
+class OpenTeachingTopoSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(OpenTeachingWordsSaverModule, self).__init__(*args, **kwargs)
+		super(OpenTeachingTopoSaverModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.supports = ("save", "initializing")
-		self.requires = (1, 0)
-		self.active = False
+		self.type = "save"
 
-	def initialize(self):
-		for module in self._mm.activeMods.supporting("modules"):
-			module.registerModule("Open Teaching Words (.otwd) saver", self)
-
-	def enable(self):
+	def enable(self):		
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules.registerModule("Open Teaching Media (.otmd) saver", self)
 		self.saves = {"words": ["otwd"]}
-		self._pyratemp = self._mm.import_("pyratemp")
+		
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self.saves
-		del self._pyratemp
 
-	def save(self, type, list, path):
-		templatePath = self._mm.resourcePath("index.xml")
-		t = self._pyratemp.Template(open(templatePath).read())
-		data = {
-			"list": list
-		}
-		content = t(**data)
-		print content.encode("UTF-8")
+	def save(self, type, list, path, resources):
+		# Create tarball
+		tarFile = tarfile.open(path, "w:bz2")
+		
+		# Create temp file
+		listFile = tempfile.NamedTemporaryFile(delete=False)
+		listFile.write(unicode(list))
+		listFile.close()
+		
+		# Add file to tar
+		tarFile.add(listFile.name, "list.json")
+		
+		# Close tar
+		tarFile.close()
+		
+		# Delete temp file
+		os.unlink(listFile.name)
 
 def init(moduleManager):
-	return OpenTeachingWordsSaverModule(moduleManager)
+	return OpenTeachingTopoSaverModule(moduleManager)

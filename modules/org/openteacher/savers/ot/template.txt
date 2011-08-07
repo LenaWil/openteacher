@@ -1,4 +1,5 @@
 #!	Copyright 2011, Marten de Vries
+#!	Copyright 2011, Milan Boers
 #!
 #!	This file is part of OpenTeacher.
 #!
@@ -16,21 +17,21 @@
 #!	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-	<title>@!wordList.title!@</title>
-	<question_language>@!wordList.questionLanguage!@</question_language>
-	<answer_language>@!wordList.answerLanguage!@</answer_language>
-	<!--(for word in wordList.items)-->
+	<title>@!wordList['title']!@</title>
+	<question_language>@!wordList['questionLanguage']!@</question_language>
+	<answer_language>@!wordList['answerLanguage']!@</answer_language>
+	<!--(for word in wordList['items'])-->
 	<word>
-		<known>@!word.known!@</known>
-		<!--(if len(word.foreign) == 0)-->
+		<known>@!word['known']!@</known>
+		<!--(if len(word['foreign']) == 0)-->
 		<foreign>-</foreign>
 		<!--(else)-->
-		<foreign>@!word.foreign!@</foreign>
+		<foreign>@!word['foreign']!@</foreign>
 		<!--(end)-->
-		<!--(if word.second)-->
-		<second>@!word.second!@</second>
+		<!--(if word['second'])-->
+		<second>@!word['second']!@</second>
 		<!--(end)-->
-		<results>@!word.results["wrong"]!@/@!word.results["right"] + word.results["wrong"]!@</results>
+		<results>@!word['results']["wrong"]!@/@!word['results']["right"] + word['results']["wrong"]!@</results>
 	</word>
 	<!--(end)-->
 </root>

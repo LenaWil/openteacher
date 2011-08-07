@@ -62,13 +62,13 @@ class AllOnceLessonType(object):
 			#lesson end
 			if len(self._test) != 0:
 				try:
-					self._list.tests
+					self._list["tests"]
 				except AttributeError:
-					self._list.tests = []
-				self._list.tests.append(self._test)
+					self._list["tests"] = []
+				self._list["tests"].append(self._test)
 			self.lessonDone.emit()
 		else:
-			self.newItem.emit(self._list.items[i])
+			self.newItem.emit(self._list["items"][i])
 
 class AllOnceModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
