@@ -30,7 +30,7 @@ class Loader(object):
 		self.path = path
 
 	def load(self):
-		self.guiModule.loadFromList(self.loadModule.load(self.path))
+		self.guiModule.loadFromList(self.loadModule.load(self.path), self.path)
 
 class LoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

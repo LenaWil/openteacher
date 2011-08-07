@@ -512,7 +512,7 @@ class WordsLessonModule(object):
 			return
 		return keyboard.createWidget()
 
-	def loadFromList(self, list):
+	def loadFromList(self, list, path):
 		for lesson in self.createLesson():
 			lesson.loadFromList(list)
 

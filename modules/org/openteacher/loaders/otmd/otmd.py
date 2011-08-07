@@ -22,6 +22,7 @@ import tarfile
 import tempfile
 import os
 import uuid
+import copy
 try:
 	import json
 except:
@@ -68,20 +69,11 @@ class OpenTeachingMediaLoaderModule(object):
 				file.extract(name, tempFilePath)
 				# Search for same name
 				for item in list["items"]:
-					if item["name"] == name:
-						print os.path.abspath(os.path.join(tempFilePath, name))
-						item["filename"] == os.path.abspath(os.path.join(tempFilePath, name))
+					if item["filename"] == name:
+						item["filename"] = os.path.abspath(os.path.join(tempFilePath, name))
 						break
 		
-		
-		feedback = {
-			"list": list,
-			"resources": {
-				"uuid": id
-			}
-		}
-		
-		return feedback
+		return list
 
 def init(moduleManager):
 	return OpenTeachingMediaLoaderModule(moduleManager)

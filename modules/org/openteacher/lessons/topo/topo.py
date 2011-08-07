@@ -177,7 +177,7 @@ class EnterMapChooser(QtGui.QComboBox):
 
 	def _fillBox(self):
 		for module in base.api.mods("active", type="map"):
-			self.addItem(module.mapName, str({'mapPath': module.mapPath, 'knownPlaces': module.knownPlaces}))
+			self.addItem(module.mapName, str({'mapName': module.mapName, 'mapPath': module.mapPath, 'knownPlaces': module.knownPlaces}))
 		
 		self.addItem("From hard disk...", str({}))
 		
@@ -770,10 +770,10 @@ class TopoLessonModule(object):
 		self.lessonCreationFinished.emit()
 		return lessons
 	
-	def loadFromList(self, list):
+	def loadFromList(self, list, path):
 		for lesson in self.createLesson():
 			self.enterWidget.mapChooser.setCurrentIndex(0)
-			self.enterWidget.mapChooser.insertItem(0, "From file", str({'mapPath': list["resources"]["mapPath"], 'knownPlaces': ''}))
+			self.enterWidget.mapChooser.insertItem(0, os.path.basename(path), str({'mapPath': list["resources"]["mapPath"], 'knownPlaces': ''}))
 			self.enterWidget.mapChooser.setCurrentIndex(0)
 			
 			# Add all the items

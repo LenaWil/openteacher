@@ -54,7 +54,7 @@ class OpenTeachingTopoSaverModule(object):
 		
 		# Add file to tar
 		tarFile.add(listFile.name, "list.json")
-		tarFile.add(resources["mapPath"], os.path.basename(resources["mapPath"]))
+		tarFile.add(resources["mapPath"], "map.gif")
 		
 		# Close tar
 		tarFile.close()

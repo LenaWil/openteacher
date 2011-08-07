@@ -305,18 +305,19 @@ class EnterWidget(QtGui.QSplitter):
 	"""
 	Add an item to the list
 	"""
-	def addItem(self,filename,remote=False):
-		name = filename
-		if not remote:
-			name = os.path.splitext(os.path.basename(str(name)))[0]
-		
+	def addItem(self,filename,remote=False,name=None,desc=None):		
 		item = {
 			"remote": remote,
 			"filename": str(filename),
 			"name": str(name),
-			"hints": str(),
 			"desc": str()
 		}
+		
+		if name != None:
+			item["name"] = name
+		if desc != None:
+			item["desc"] = desc
+		
 		self.itemList["items"].append(item)
 		self.enterItemList.update()
 	
@@ -623,10 +624,10 @@ class MediaLessonModule(object):
 		self.lessonCreationFinished.emit()
 		return lessons
 	
-	def loadFromList(self, list):
+	def loadFromList(self, list, path):
 		for lesson in self.createLesson():
-			for item in list["list"]["items"]:
-				self.enterWidget.addItem(os.path.join(tempfile.gettempdir(), "openteacher\org\loaders\otmd\\" + list["resources"]["uuid"] + "\\" + item["filename"]), item["remote"])
+			for item in list["items"]:
+				self.enterWidget.addItem(item["filename"], item["remote"], item["name"], item["desc"])
 
 class Lesson(object):
 	def __init__(self, moduleManager, fileTab, enterWidget, teachWidget, *args, **kwargs):
