@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Marten de Vries
+#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -25,23 +26,6 @@ except ImportError:
 		from xml.etree import ElementTree
 	except ImportError:
 		from elementTree import ElementTree
-
-class WordList(object):
-	def __init__(self, *args, **kwargs):
-		super(WordList, self).__init__(*args, **kwargs)
-
-		self.items = []
-		self.tests = []
-
-class Word(object):
-	def __init__(self, *args, **kwargs):
-		super(Word, self).__init__(*args, **kwargs)
-
-		self.questions = [[]]
-		self.answers = [[]]
-
-class Test(object): pass #FIXME: stub
-class Result(str): pass #FIXME: stub
 
 class Teach2000LoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -67,18 +51,29 @@ class Teach2000LoaderModule(object):
 
 	def load(self, path):
 		root = ElementTree.parse(open(path)).getroot()
-		wordList = WordList()
+		wordList = {
+			"items": list(),
+			"tests": list(),
+			"title": unicode(),
+			"questionLanguage": unicode(),
+			"answerLanguage": unicode()
+		}
 
 		for item in root.findall("message_data/items/item"):
-			word = Word()
-			word.id = int(item.get("id"))
+			word = {
+				"id": int(),
+				"questions": list(),
+				"answers": list(),
+				"comment": unicode()
+			}
+			word["id"] = int(item.get("id"))
 			for question in item.findall("questions/question"):
-				word.questions[0].append(question.text)
+				word["questions"].append(question.text)
 
 			for answer in item.findall("answers/answer"):
-				word.answers[0].append(answer.text)
+				word["answers"].append(answer.text)
 
-			wordList.items.append(word)
+			wordList["items"].append(word)
 			#FIXME: load tests, also results in the words!
 		return wordList
 

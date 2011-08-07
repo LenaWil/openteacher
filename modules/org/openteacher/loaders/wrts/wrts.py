@@ -67,27 +67,38 @@ class WrtsLoaderModule(object):
 		#dutch: lijst = list
 		listTree = root.find("lijst")
 
-		wordList = WordList()
+		wordList = {
+			"items": list(),
+			"tests": list(),
+			"title": unicode(),
+			"questionLanguage": unicode(),
+			"answerLanguage": unicode()
+		}
 
 		#dutch: titel = title
-		wordList.title = listTree.findtext("titel")
+		wordList["title"] = listTree.findtext("titel")
 		#dutch: taal = language
-		wordList.questionLanguage = listTree.findtext("taal/a")
-		wordList.answerLanguage = listTree.findtext("taal/b")
+		wordList["questionLanguage"] = listTree.findtext("taal/a")
+		wordList["answerLanguage"] = listTree.findtext("taal/b")
 
 		#counter is used as word id
 		counter = 1
 
 		#dutch: woord = word
 		for wordTree in listTree.findall("woord"):
-			word = Word()
-			word.id = counter
+			word = {
+				"id": int(),
+				"questions": list(),
+				"answers": list(),
+				"comment": unicode()
+			}
+			word["id"] = counter
 
 			for module in self._mm.mods("active", type="wordsStringParser"):
-				word.questions = module.parse(wordTree.findtext("a"))
-				word.answers = module.parse(wordTree.findtext("b"))
+				word["questions"] = module.parse(wordTree.findtext("a"))
+				word["answers"] = module.parse(wordTree.findtext("b"))
 
-			wordList.items.append(word)
+			wordList["items"].append(word)
 			
 			counter += 1
 

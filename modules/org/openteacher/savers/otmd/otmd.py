@@ -22,6 +22,10 @@ import tarfile
 import os
 import tempfile
 import copy
+try:
+	import json
+except:
+	import simplejson
 
 class OpenTeachingTopoSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -54,7 +58,7 @@ class OpenTeachingTopoSaverModule(object):
 		
 		# Create temp file
 		listFile = tempfile.NamedTemporaryFile(delete=False)
-		listFile.write(unicode(itemsList))
+		listFile.write(json.dumps(itemsList))
 		listFile.close()
 		
 		# Add file to tar

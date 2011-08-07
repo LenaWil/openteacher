@@ -354,7 +354,7 @@ class EnterWidget(QtGui.QSplitter):
 	Change the description of the active item
 	"""
 	def changeDesc(self):
-		self.activeitem["desc"] = self.enterdesc.toPlainText()
+		self.activeitem["desc"] = unicode(self.enterdesc.toPlainText())
 	
 	"""
 	What happens when you click the Enter tab

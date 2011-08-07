@@ -228,7 +228,12 @@ class Lesson(object):
 		self._initTeachUi()
 
 	def loadFromList(self, list):
+		# Set the table
 		self._wordsTableModel.updateList(list)
+		# Set the fields
+		self._enterWidget.titleTextBox.setText(list["title"])
+		self._enterWidget.questionLanguageTextBox.setText(list["questionLanguage"])
+		self._enterWidget.answerLanguageTextBox.setText(list["answerLanguage"])
 
 	@property
 	def list(self):
