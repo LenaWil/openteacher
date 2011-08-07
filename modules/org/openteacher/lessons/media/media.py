@@ -29,6 +29,7 @@ import os
 import time
 import mimetypes
 import fnmatch
+import tempfile
 
 """
 The video player and web viewer combination widget with controls
@@ -564,7 +565,7 @@ class MediaLessonModule(object):
 		for module in self._mm.mods("active", type="modules"):
 			module.registerModule(_("Media Lesson"), self)
 
-		self.dataType = "items"
+		self.dataType = "media"
 		
 		self.lessonCreated = self._mm.createEvent()
 		self.lessonCreationFinished = self._mm.createEvent()
@@ -621,6 +622,11 @@ class MediaLessonModule(object):
 		self.counter += 1
 		self.lessonCreationFinished.emit()
 		return lessons
+	
+	def loadFromList(self, list):
+		for lesson in self.createLesson():
+			for item in list["list"]["items"]:
+				self.enterWidget.addItem(os.path.join(tempfile.gettempdir(), "openteacher\org\loaders\otmd\\" + list["resources"]["uuid"] + "\\" + item["filename"]), item["remote"])
 
 class Lesson(object):
 	def __init__(self, moduleManager, fileTab, enterWidget, teachWidget, *args, **kwargs):
@@ -629,9 +635,10 @@ class Lesson(object):
 		self.stopped = base._mm.createEvent()
 		
 		self.module = self
-		self.dataType = "media"
 		self.list = base.enterWidget.itemList
 		self.resources = {}
+		
+		self.dataType = "media"
 		
 		fileTab.closeRequested.handle(self.stop)
 	
