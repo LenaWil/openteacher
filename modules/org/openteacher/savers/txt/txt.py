@@ -51,6 +51,7 @@ class TxtSaverModule(object):
 			text += list["questionLanguage"] + " - " + list["answerLanguage"] + "\n\n"
 
 		if len(list["items"]) != 0:
+			#FIXME: questions -> not guaranteed to be there
 			lengths = map(lambda word: len(compose(word["questions"])), list["items"])
 			maxLen = max(lengths) +1
 			#FIXME: should 8 be an advanced setting?
@@ -58,10 +59,14 @@ class TxtSaverModule(object):
 				maxLen = 8
 
 			for word in list["items"]:
-				questions = compose(word["questions"])
+				try:
+					questions = compose(word["questions"])
+				except KeyError:
+					questions = u""
 				text += u"".join([
-					compose(word["questions"]),
+					questions,
 					(maxLen - len(questions)) * " ",
+					#FIXME: answers -> not guaranteed to be there
 					compose(word["answers"]),
 					u"\n"
 				])

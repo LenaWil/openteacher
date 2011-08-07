@@ -26,20 +26,6 @@ except ImportError:
 	except ImportError:
 		from elementTree import ElementTree
 
-class WordList(object):
-	def __init__(self, *args, **kwargs):
-		super(WordList, self).__init__(*args, **kwargs)
-
-		self.items = []
-		self.tests = []
-
-class Word(object):
-	def __init__(self, *args, **kwargs):
-		super(Word, self).__init__(*args, **kwargs)
-
-		self.questions = []
-		self.answers = []
-
 class WrtsLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(WrtsLoaderModule, self).__init__(*args, **kwargs)
@@ -94,6 +80,7 @@ class WrtsLoaderModule(object):
 			}
 			word["id"] = counter
 
+			#FIXME: choose one! Also check if other modules do this...
 			for module in self._mm.mods("active", type="wordsStringParser"):
 				word["questions"] = module.parse(wordTree.findtext("a"))
 				word["answers"] = module.parse(wordTree.findtext("b"))

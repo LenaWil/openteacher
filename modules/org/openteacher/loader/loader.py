@@ -32,9 +32,6 @@ class Loader(object):
 	def load(self):
 		self.guiModule.loadFromList(self.loadModule.load(self.path))
 
-	def __str__(self): #FIXME
-		return str(self.loadModule)
-
 class LoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(LoaderModule, self).__init__(*args, **kwargs)

@@ -55,10 +55,10 @@ class LessonFileTab(FileTab):
 	
 	def _setCurrentTab(self, value):
 		self._widget.setCurrentWidget(value)
-	
+
 	def _getCurrentTab(self):
 		self._widget.currentWidget()
-	
+
 	currentTab = property(_getCurrentTab, _setCurrentTab)
 
 class GuiModule(object):
@@ -168,7 +168,7 @@ class GuiModule(object):
 	def interrupt(self):
 		self._app.closeAllWindows()
 
-	def hide(self):
+	def hide(self): #FIXME: why AttributeError? Is it really needed?
 		"""Raises AttributeError"""
 		self._widget.hide()
 
@@ -221,11 +221,17 @@ class GuiModule(object):
 		except KeyError:
 			return
 
+	def addStyleSheetRules(self, rules):
+		self._app.setStyleSheet(self._app.styleSheet() + "\n\n" + rules)
+
+	def setStyle(self, style):
+		self._app.setStyle(style)
+
 	@property
-	def qtParent(self):
+	def qtParent(self): #FIXME: comments about valid uses.
 		return self._widget
 
-	def getSavePath(self, startdir, exts):
+	def getSavePath(self, startdir, exts): #FIXME: separate module
 		stringExts = []
 		
 		filters = []
@@ -255,7 +261,7 @@ class GuiModule(object):
 		else:
 			return None
 
-	def getLoadPath(self, startdir, exts):
+	def getLoadPath(self, startdir, exts): #FIXME: separate module
 		stringExts = set()
 		for ext in exts:
 			stringExts.add("*." + ext)
@@ -276,7 +282,7 @@ class GuiModule(object):
 		else:
 			return None
 
-	def getConfiguredPrinter(self):
+	def getConfiguredPrinter(self): #FIXME: separate module
 		#Setup printer
 		printer = QtGui.QPrinter()
 
@@ -321,7 +327,7 @@ class GuiModule(object):
 	def startTabActive(self):
 		return self._widget.tabWidget.startWidget == self._widget.tabWidget.currentWidget()
 
-	def chooseItem(self, items):
+	def chooseItem(self, items): #FIXME: in separate module
 		d = self._ui.ItemChooser(items)
 		d.exec_()
 		return d.item

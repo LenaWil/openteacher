@@ -22,6 +22,8 @@ import unittest
 
 class ListModifiersTestCase(unittest.TestCase):
 	def setUp(self):
+		for module in self._mm.mods(type="translator"):
+			module.enable()
 		for module in self._mm.mods(type="listModifier"):
 			module.enable()
 
@@ -32,6 +34,8 @@ class ListModifiersTestCase(unittest.TestCase):
 			self.assertTrue(hasattr(module, "modifyList"))
 
 	def tearDown(self):
+		for module in self._mm.mods("active", type="translator"):
+			module.disable()
 		for module in self._mm.mods("active", type="listModifier"):
 			module.disable()
 

@@ -28,13 +28,13 @@ class SortModule(object):
 	def modifyList(self, indexes, list):
 		def getFirstQuestion(word):
 			try:
-				return word.questions[0]
+				return word["questions"][0]
 			except IndexError:
 				return None
 		#always work on the indexes
-		currentList = [list.words[i] for i in indexes]
+		currentList = [list["items"][i] for i in indexes]
 		newList = sorted(currentList, key=getFirstQuestion)
-		return [list.words.index(word) for word in newList]
+		return [list["items"].index(word) for word in newList]
 
 	def enable(self):
 		#Translations

@@ -19,9 +19,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class Result(str):
-	pass
-
 class WordsStringCheckerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(WordsStringCheckerModule, self).__init__(*args, **kwargs)
@@ -41,33 +38,36 @@ class WordsStringCheckerModule(object):
 				raise NotImplementedError("No parser modules installed/activated.")
 		givenAnswer = parse(givenAnswerString)
 
-		result = Result("wrong")
+		result = {"result": "wrong"}
 		compulsoryAnswerCount = 0
 
 		if len(givenAnswer) == 1:
-			result = Result("right")
+			result = {"result": "right"}
 			difference = set(givenAnswer[0])
-			for compulsoryAnswer in word.answers:
+			for compulsoryAnswer in word["answers"]:
 				oldDifference = difference.copy()
 				difference -= set(compulsoryAnswer)
 				if oldDifference == difference:
-					result = Result("wrong")
-			if result == "right" and len(difference) != 0:
-				result = Result("wrong")
+					result = {"result": "wrong"}
+					break
+			if result["result"] == "right" and len(difference) != 0:
+				result = {"result": "wrong"}
 
 		elif len(givenAnswer) > 1:
 			for compulsoryGivenAnswer in givenAnswer:
-				for compulsoryAnswer in word.answers:
+				for compulsoryAnswer in word["answers"]:
 					difference = set(compulsoryGivenAnswer) - set(compulsoryAnswer)
 					if len(difference) == 0:
 						compulsoryAnswerCount += 1
 
-			if compulsoryAnswerCount == len(word.answers):
-				result = Result("right")
+			if compulsoryAnswerCount == len(word["answers"]):
+				result = {"result": "right"}
 
-		result.wordId = word.id
-		result.givenAnswer = givenAnswerString
-		
+		result.update({
+			"itemId": word["id"],
+			"givenAnswer": givenAnswerString,
+		})
+
 		return result
 
 	def disable(self):

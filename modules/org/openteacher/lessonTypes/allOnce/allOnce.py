@@ -3,7 +3,7 @@
 
 #	Copyright 2011, Marten de Vries
 #	Copyright 2011, Cas Widdershoven
-#	Copyright 2008-2011, Milan Boers
+#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -20,14 +20,11 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class Test(list):
-	pass
-
 '''
 Events:
 newItem
 lessonDone
-'''
+''' #FIXME: python style comment, or just remove?
 class AllOnceLessonType(object):
 	def __init__(self, moduleManager, list, indexes, *args, **kwargs):
 		super(AllOnceLessonType, self).__init__(*args, **kwargs)
@@ -37,7 +34,7 @@ class AllOnceLessonType(object):
 		self.lessonDone = self._mm.createEvent()
 		self._list = list
 		self._indexes = indexes
-		self._test = Test()
+		self._test = []
 
 		self.totalItems = len(self._indexes)
 		self.askedItems = 0
@@ -63,7 +60,7 @@ class AllOnceLessonType(object):
 			if len(self._test) != 0:
 				try:
 					self._list["tests"]
-				except AttributeError:
+				except KeyError:
 					self._list["tests"] = []
 				self._list["tests"].append(self._test)
 			self.lessonDone.emit()

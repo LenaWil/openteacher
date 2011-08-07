@@ -40,7 +40,7 @@ class Teach2000SaverModule(object):
 		self.active = False
 
 	def save(self, type, list, path, resources):
-		templatePath = self._mm.resourcePath("template.txt")
+		templatePath = self._mm.resourcePath("template.xml")
 		t = self._pyratemp.Template(open(templatePath).read())
 		data = {
 			"wordList": list

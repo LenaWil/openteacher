@@ -24,6 +24,7 @@ class WordsNeverAnsweredCorrectlyModule(object):
 		self._mm = moduleManager
 
 		self.type = "listModifier"
+		self.testName = "wordsNeverAnsweredCorrectly"
 
 	def modifyList(self, indexes, list):
 		self._list = list
@@ -32,14 +33,18 @@ class WordsNeverAnsweredCorrectlyModule(object):
 		return newIndexes
 
 	def _isNeverAnsweredCorrectly(self, index):
-		results = self._resultsFor(self._list.items[index])
+		results = self._resultsFor(self._list["items"][index])
 		return "right" not in results
 
 	def _resultsFor(self, word):
 		results = []
-		for test in self._list.tests:
-			results.extend(test)
-		return filter(lambda result: result.wordId == word.id, results)
+		try:
+			for test in self._list["tests"]:
+				results.extend(test)
+		except KeyError:
+			pass
+		filteredResults = filter(lambda result: result["itemId"] == word["id"], results)
+		return map(lambda result: result["result"], filteredResults)
 
 	def enable(self):
 		#Translations
@@ -47,14 +52,12 @@ class WordsNeverAnsweredCorrectlyModule(object):
 		_, ngettext = translator.gettextFunctions(
 			self._mm.resourcePath("translations")
 		)
-		self.testName = "wordsNeverAnsweredCorrectly"
 		self.dataType = "words"
 		self.name = _("Only words you never answered correctly")
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self.testName
 		del self.dataType
 		del self.name
 

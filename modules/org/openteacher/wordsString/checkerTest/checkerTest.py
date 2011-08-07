@@ -20,22 +20,21 @@
 
 import unittest
 
-class Word(object):
-	pass
-
 class WordsStringCheckerTestCase(unittest.TestCase):
 	def setUp(self):
-		self.word1 = Word()
-		self.word1.id = 0
-		self.word1.questions = [(u"in",)]
-		self.word1.comment = u"+abl"
-		self.word1.answers = [(u"in", u"op", u"bij"), (u"tijdens",)]
+		self.word1 = {
+			"id": 0,
+			"questions": [(u"in",)],
+			"comment": u"+abl",
+			"answers": [(u"in", u"op", u"bij"), (u"tijdens",)],
+		}
 
-		self.word2 = Word()
-		self.word2.id = 1
-		self.word2.questions = [(u"in",)]
-		self.word2.comment = u"+acc"
-		self.word2.answers = [(u"naar(binnen)", u"in"), (u"tot", u"jegens")]
+		self.word2 = {
+			"id": 1,
+			"questions": [(u"in",)],
+			"comment": u"+acc",
+			"answers": [(u"naar(binnen)", u"in"), (u"tot", u"jegens")],
+		}
 
 		for module in self._mm.mods(type="wordsStringChecker"):
 			module.enable()
@@ -73,10 +72,17 @@ class WordsStringCheckerTestCase(unittest.TestCase):
 	def testFullNotationAndDontIncludeAnNonObligatoryWord(self):
 		self._test(u"1. in, naar(binnen) 2. jegens", self.word2, "right")
 
+	def testResultProperties(self):
+		for module in self._mm.mods("active", type="wordsStringChecker"):
+			result = module.check("", self.word1)
+			self.assertTrue(result.has_key("result"))
+			self.assertEqual(result["itemId"], self.word1["id"])
+			self.assertEqual(result["givenAnswer"], "")
+
 	def _test(self, givenAnswer, word, output):
 		for module in self._mm.mods("active", type="wordsStringChecker"):
 			result = module.check(givenAnswer, word)
-			self.assertEqual(result, output)
+			self.assertEqual(result["result"], output)
 
 	def tearDown(self):
 		del self.word1

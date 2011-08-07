@@ -53,9 +53,6 @@ class AnswerWidget(QtGui.QWidget):
 		
 		self.setLayout(mainLayout)
 
-class Result(str):
-	pass
-
 class InMindTeachWidget(QtGui.QStackedWidget):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(InMindTeachWidget, self).__init__(*args, **kwargs)
@@ -78,13 +75,17 @@ class InMindTeachWidget(QtGui.QStackedWidget):
 		self.answerWidget.wrongButton.clicked.connect(self.setWrong)
 
 	def setRight(self):
-		result = Result("right")
-		result.wordId = self._currentWord["id"]
+		result = {
+			"result": "right",
+			"itemId": self._currentWord["id"],
+		}
 		self.lessonType.setResult(result)
 
 	def setWrong(self):
-		result = Result("wrong")
-		result.wordId = self._currentWord["id"]
+		result = {
+			"result": "wrong",
+			"itemId": self._currentWord["id"],
+		}
 		self.lessonType.setResult(result)
 
 	def newItem(self, word):
@@ -95,6 +96,9 @@ class InMindTeachWidget(QtGui.QStackedWidget):
 		except IndexError, e:
 			#FIXME: show a nice error message? Make it impossible to use
 			#inMind in another way?
+			#
+			#also check every file using 'self._modules.chooseItem', if
+			#the error is catched ánd handled.
 			raise e
 		self.answerWidget.label.setText(
 			_("Translation: ") + compose(word["answers"])

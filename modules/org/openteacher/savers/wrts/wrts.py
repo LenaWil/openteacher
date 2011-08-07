@@ -52,9 +52,8 @@ class WrtsSaverModule(object):
 				self._pyratemp.EvalPseudoSandbox.__init__(self2, *args, **kwargs)
 
 				self2.register("compose", composer.compose)
-				self2.register("hasattr", hasattr)
 
-		templatePath = self._mm.resourcePath("template.txt")
+		templatePath = self._mm.resourcePath("template.xml")
 		t = self._pyratemp.Template(
 			open(templatePath).read(),
 			eval_class=EvalPseudoSandbox

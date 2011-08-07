@@ -20,9 +20,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class Test(list):
-	pass
-
 class SmartLessonType(object):
 	def __init__(self, moduleManager, list, indexes, *args, **kwargs):
 		super(SmartLessonType, self).__init__(*args, **kwargs)
@@ -33,7 +30,7 @@ class SmartLessonType(object):
 
 		self._list = list
 		self._indexes = indexes
-		self._test = Test()
+		self._test = []
 		self.askedItems = 0
 
 	@property
@@ -47,7 +44,7 @@ class SmartLessonType(object):
 		self.askedItems += 1
 
 		self._test.append(result)
-		if result == "wrong":
+		if result["result"] == "wrong":
 			try:
 				if self._indexes[-1] != self._currentIndex:
 					self._indexes.append(self._currentIndex)
@@ -88,7 +85,7 @@ class SmartLessonType(object):
 			if len(self._test) != 0:
 				try:
 					self._list["tests"]
-				except AttributeError:
+				except KeyError:
 					self._list["tests"] = []
 				self._list["tests"].append(self._test)
 			self.lessonDone.emit()

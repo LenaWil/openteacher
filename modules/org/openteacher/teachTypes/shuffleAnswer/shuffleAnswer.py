@@ -23,9 +23,6 @@
 from PyQt4 import QtGui, QtCore
 import random
 
-class Result(str):
-	pass
-
 class ShuffleAnswerTeachWidget(QtGui.QWidget):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(ShuffleAnswerTeachWidget, self).__init__(*args, **kwargs)
@@ -49,7 +46,7 @@ class ShuffleAnswerTeachWidget(QtGui.QWidget):
 		
 	def setHint(self):
 		hint = _("Hint:") + u" "
-		answer = self.word["answers"][0][0]
+		answer = self.word["answers"][0][0]#FIXME: use composer
 		if len(answer) != 1:
 			while True:
 				hintList = list(answer)

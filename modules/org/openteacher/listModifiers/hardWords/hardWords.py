@@ -24,6 +24,7 @@ class HardWordsModule(object):
 		self._mm = moduleManager
 
 		self.type = "listModifier"
+		self.testName = "hardWords"
 
 	def modifyList(self, indexes, list):
 		self._list = list
@@ -32,20 +33,23 @@ class HardWordsModule(object):
 		return newIndexes
 
 	def _isHardWord(self, index):
-		results = self._resultsFor(self._list.items[index])
+		results = self._resultsFor(self._list["items"][index])
 
 		if len(results) == 0:
 			return True
 
-		wrongResults = filter(lambda x: x == "wrong", results)
+		wrongResults = filter(lambda x: x["result"] == "wrong", results)
 		amountWrong = len(wrongResults)
 		return amountWrong > len(results) / 2.0
 
 	def _resultsFor(self, word):
 		results = []
-		for test in self._list.tests:
-			results.extend(test)
-		return filter(lambda result: result.wordId == word.id, results)
+		try:
+			for test in self._list["tests"]:
+				results.extend(test)
+		except KeyError:
+			pass
+		return filter(lambda result: result["itemId"] == word["id"], results)
 
 	def enable(self):
 		#Translations
@@ -55,13 +59,11 @@ class HardWordsModule(object):
 		)
 		self.name = _("Only hard words (<50% right)")
 		self.dataType = "words"
-		self.testName = "hardWords"
 		self.active = True
 
 	def disable(self):
 		self.active = False
 		del self.name
-		del self.testName
 		del self.dataType
 
 def init(moduleManager):

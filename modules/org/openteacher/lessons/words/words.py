@@ -33,8 +33,8 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 		self._parse = parser
 
 		self.updateList({
-			"items": list(),
-			"tests": list()
+			"items": [],
+			"tests": [],
 		})
 
 	def updateList(self, list):
@@ -44,6 +44,7 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 		self.endResetModel()
 
 	def sort(self, column, order):
+		#FIXME: KeyErrors!
 		if column == self.QUESTIONS:
 			items = sorted(self.list["items"], key=lambda word: word["questions"][0])
 		elif column == self.ANSWERS:
@@ -95,17 +96,17 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 			if index.column() == self.QUESTIONS:
 				try:
 					return self._compose(word["questions"])
-				except AttributeError:
+				except KeyError:
 					return u""
 			elif index.column() == self.ANSWERS:
 				try:
 					return self._compose(word["answers"])
-				except AttributeError:
+				except KeyError:
 					return u""
 			elif index.column() == self.COMMENT:
 				try:
 					return word["comment"]
-				except AttributeError:
+				except KeyError:
 					return u""
 
 	def flags(self, index):
@@ -281,16 +282,16 @@ class Lesson(object):
 		ew = self._enterWidget
 
 		try:
-			ew.titleTextBox.setText(list.title)
-		except AttributeError:
+			ew.titleTextBox.setText(list["title"])
+		except KeyError:
 			pass
 		try:
-			ew.questionLanguageTextBox.setText(list.questionLanguage)
-		except AttributeError:
+			ew.questionLanguageTextBox.setText(list["questionLanguage"])
+		except KeyError:
 			pass
 		try:
-			ew.answerLanguageTextBox.setText(list.answerLanguage)
-		except AttributeError:
+			ew.answerLanguageTextBox.setText(list["answerLanguage"])
+		except KeyError:
 			pass
 
 	def _removeSelectedRows(self):
