@@ -720,7 +720,7 @@ class TopoLessonModule(object):
 			module.registerModule(_("Topo Lesson"), self)
 		
 		# Data type
-		self.dataType = "places"
+		self.dataType = "topo"
 		
 		# Signals
 		self.lessonCreated = self.api.createEvent()
@@ -769,6 +769,16 @@ class TopoLessonModule(object):
 		self.counter += 1
 		self.lessonCreationFinished.emit()
 		return lessons
+	
+	def loadFromList(self, list):
+		for lesson in self.createLesson():
+			self.enterWidget.mapChooser.setCurrentIndex(0)
+			self.enterWidget.mapChooser.insertItem(0, "From file", str({'mapPath': list["resources"]["mapPath"], 'knownPlaces': ''}))
+			self.enterWidget.mapChooser.setCurrentIndex(0)
+			
+			# Add all the items
+			for item in list["list"]["items"]:
+				self.enterWidget.addPlace(item)
 
 class Lesson(object):
 	def __init__(self, moduleManager, fileTab, enterWidget, teachWidget, *args, **kwargs):

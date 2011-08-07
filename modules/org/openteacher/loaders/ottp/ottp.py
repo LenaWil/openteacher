@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Milan Boers
+#	Copyright 2011, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -19,23 +19,26 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import tarfile
+import tempfile
+import os
+import uuid
 try:
 	import json
 except:
 	import simplejson
 
-class OpenTeachingWordsLoaderModule(object):
+class OpenTeachingTopoLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(OpenTeachingWordsLoaderModule, self).__init__(*args, **kwargs)
+		super(OpenTeachingTopoLoaderModule, self).__init__(*args, **kwargs)
 
 		self.type = "load"
 		self._mm = moduleManager
 
 	def enable(self):
 		for module in self._mm.mods("active", type="modules"):
-			module.registerModule("Open Teaching Words (.otwd) loader", self)
+			module.registerModule("Open Teaching Topo (.ottp) loader", self)
 
-		self.loads = {"otwd": ["words"]}
+		self.loads = {"ottp": ["topo"]}
 		self.active = True
 
 	def disable(self):
@@ -43,15 +46,33 @@ class OpenTeachingWordsLoaderModule(object):
 		del self.loads
 
 	def getFileTypeOf(self, path):
-		if path.endswith(".otwd"):
-			return "words"
+		if path.endswith(".ottp"):
+			return "topo"
 
 	def load(self, path):
+		# Open tarball
 		file = tarfile.open(path, "r:bz2")
+		
+		# Open json file with places
 		listFile = file.extractfile("list.json")
 		wordList = listFile.readlines()
 		listFile.close()
-		return json.loads(wordList[0])
+		
+		tempFilePath = os.path.join(tempfile.gettempdir(), "openteacher\org\loaders\ottp\\" + str(uuid.uuid1()))
+		
+		# Open map
+		file.extract("map.gif", tempFilePath)
+		
+		tempFilePath = os.path.join(tempFilePath, "map.gif")
+		
+		feedback = {
+			"list": json.loads(wordList[0]),
+			"resources": {
+				"mapPath": tempFilePath
+			}
+		}
+		
+		return feedback
 
 def init(moduleManager):
-	return OpenTeachingWordsLoaderModule(moduleManager)
+	return OpenTeachingTopoLoaderModule(moduleManager)

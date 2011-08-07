@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Marten de Vries
+#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -74,6 +75,7 @@ class LoaderModule(object):
 		#Checks if loader modules can open it, and which type they would
 		#return if they would load it only adds it as a possibility if
 		#there also is a gui module for that type
+		
 		for loadModule in self._mm.mods("active", type="load"):
 			fileType = loadModule.getFileTypeOf(path)
 			for guiModule in self._mm.mods("active", type="lesson"):
