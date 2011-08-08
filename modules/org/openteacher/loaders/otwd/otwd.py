@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
+#	Copyright 2011, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,11 +19,11 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import tarfile
+import zipfile
 try:
 	import json
 except:
-	import simplejson
+	import simplejson as json
 
 class OpenTeachingWordsLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -47,11 +48,9 @@ class OpenTeachingWordsLoaderModule(object):
 			return "words"
 
 	def load(self, path):
-		file = tarfile.open(path, "r:bz2")
-		listFile = file.extractfile("list.json")
-		wordList = listFile.readlines()
-		listFile.close()
-		return json.loads(wordList[0])
+		otwdzip = zipfile.ZipFile(path, "r")
+		listFile = otwdzip.open("list.json")
+		return json.load(listFile)
 
 def init(moduleManager):
 	return OpenTeachingWordsLoaderModule(moduleManager)

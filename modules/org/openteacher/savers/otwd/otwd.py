@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
+#	Copyright 2011, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,24 +19,22 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import tarfile
-import os
-import tempfile
+import zipfile
 try:
 	import json
 except:
-	import simplejson
+	import simplejson as json
 
-class OpenTeachingTopoSaverModule(object):
+class OpenTeachingWordsSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(OpenTeachingTopoSaverModule, self).__init__(*args, **kwargs)
+		super(OpenTeachingWordsSaverModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "save"
 
 	def enable(self):		
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._modules.registerModule("Open Teaching Media (.otmd) saver", self)
+		self._modules.registerModule("Open Teaching Words (.otwd) saver", self)
 		self.saves = {"words": ["otwd"]}
 		
 		self.active = True
@@ -44,22 +43,8 @@ class OpenTeachingTopoSaverModule(object):
 		self.active = False
 
 	def save(self, type, list, path, resources):
-		# Create tarball
-		tarFile = tarfile.open(path, "w:bz2")
-		
-		# Create temp file
-		listFile = tempfile.NamedTemporaryFile(delete=False)
-		listFile.write(json.dumps(list))
-		listFile.close()
-		
-		# Add file to tar
-		tarFile.add(listFile.name, "list.json")
-		
-		# Close tar
-		tarFile.close()
-		
-		# Delete temp file
-		os.unlink(listFile.name)
+		otwdzip = zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED)
+		otwdzip.writestr("list.json", json.dumps(list))
 
 def init(moduleManager):
-	return OpenTeachingTopoSaverModule(moduleManager)
+	return OpenTeachingWordsSaverModule(moduleManager)
