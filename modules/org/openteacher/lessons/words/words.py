@@ -422,7 +422,13 @@ class Lesson(object):
 
 	def _lessonDone(self):
 		self._updateProgress()
-		print "Done!" #FIXME: QMessageBox + back to enter tab etc.?
+		
+		for module in self._mm.mods("active", type="resultsdialog"):
+			if self.module.dataType in module.supports:
+				module.showResults(self.list["tests"], self.list["items"])
+		
+		# return to enter tab
+		self.fileTab.currentTab = self._enterWidget
 
 	def _updateProgress(self):
 		lw = self._teachWidget.lessonWidget

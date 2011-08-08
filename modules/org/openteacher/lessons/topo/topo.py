@@ -580,7 +580,8 @@ class TeachTopoLesson(object):
 		base.teachWidget.mapBox.setMap(base.enterWidget.mapChooser.currentMap["mapPath"])
 		base.teachWidget.mapBox.setInteractive(self.order)
 		
-		self.lessonType = base.teachWidget.lessonTypeChooser.currentLessonType.createLessonType(itemList,range(len(itemList["items"])))
+		self.itemList = itemList
+		self.lessonType = base.teachWidget.lessonTypeChooser.currentLessonType.createLessonType(self.itemList,range(len(itemList["items"])))
 		
 		self.lessonType.newItem.handle(self.nextQuestion)
 		self.lessonType.lessonDone.handle(base.teachWidget.stopLesson)
@@ -647,6 +648,11 @@ class TeachTopoLesson(object):
 	"""
 	def endLesson(self):
 		base.inLesson = False
+		
+		for module in base.api.mods("active", type="resultsdialog"):
+			if base.dataType in module.supports:
+				module.showResults(self.itemList["tests"], self.itemList["items"])
+		
 		# return to enter tab
 		base.fileTab.currentTab = base.enterWidget
 	

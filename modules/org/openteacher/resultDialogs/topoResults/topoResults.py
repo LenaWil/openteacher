@@ -20,9 +20,9 @@
 
 from PyQt4 import QtGui
 
-class WordsResultsWidget(QtGui.QWidget):
+class MediaResultsWidget(QtGui.QWidget):
 	def __init__(self, results, *args, **kwargs):
-		super(WordsResultsWidget, self).__init__(*args, **kwargs)
+		super(MediaResultsWidget, self).__init__(*args, **kwargs)
 		
 		self.results = results
 		
@@ -49,12 +49,14 @@ class WordsResultsWidget(QtGui.QWidget):
 				feedback += 1
 		return feedback
 
-class WordsResultsViewerModule(object):
+class MediaResultsViewerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(WordsResultsViewerModule, self).__init__(*args, **kwargs)
+		super(MediaResultsViewerModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "resultsviewer"
+		self.type = "resultsdialog"
+		
+		self.supports = ["topo"]
 
 	def enable(self):
 		self.active = True
@@ -63,7 +65,7 @@ class WordsResultsViewerModule(object):
 		self.active = False
 	
 	def showResults(self, results, list):
-		self.resultsWidget = WordsResultsWidget(results)
+		self.resultsWidget = MediaResultsWidget(results)
 		
 		for module in self._mm.mods("active", type="ui"):
 			self.tab = module.addCustomTab(
@@ -71,12 +73,6 @@ class WordsResultsViewerModule(object):
 				self.resultsWidget
 			)
 			self.tab.closeRequested.handle(self.tab.close)
-	
-	def supports(self, items):
-		for item in items:
-			if not (item.has_key("id") and item.has_key("questions") and item.has_key("answers")):
-				return False
-		return True
 
 def init(moduleManager):
-	return WordsResultsViewerModule(moduleManager)
+	return MediaResultsViewerModule(moduleManager)

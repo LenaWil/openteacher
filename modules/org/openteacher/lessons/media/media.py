@@ -492,7 +492,8 @@ class MediaLesson(object):
 		#stop media playing in the enter widget
 		base.enterWidget.mediaDisplay.clear()
 		
-		self.lessonType = base.teachWidget.lessonTypeChooser.currentLessonType.createLessonType(itemList,range(len(itemList["items"])))
+		self.itemList = itemList
+		self.lessonType = base.teachWidget.lessonTypeChooser.currentLessonType.createLessonType(self.itemList,range(len(itemList["items"])))
 		
 		self.lessonType.newItem.handle(self.nextQuestion)
 		self.lessonType.lessonDone.handle(self.endLesson)
@@ -537,7 +538,11 @@ class MediaLesson(object):
 	"""
 	def endLesson(self):
 		base.inLesson = False
-		# FIXME : message with results
+		
+		for module in base._mm.mods("active", type="resultsdialog"):
+			if base.dataType in module.supports:
+				module.showResults(self.itemList["tests"], self.itemList["items"])
+		
 		# stop media
 		base.teachWidget.mediaDisplay.clear()
 		# return to enter tab

@@ -54,7 +54,9 @@ class MediaResultsViewerModule(object):
 		super(MediaResultsViewerModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "resultsviewer"
+		self.type = "resultsdialog"
+		
+		self.supports = ["media"]
 
 	def enable(self):
 		self.active = True
@@ -71,12 +73,6 @@ class MediaResultsViewerModule(object):
 				self.resultsWidget
 			)
 			self.tab.closeRequested.handle(self.tab.close)
-	
-	def supports(self, items):
-		for item in items:
-			if not (item.has_key("id") and item.has_key("remote") and item.has_key("name") and item.has_key("filename") and item.has_key("desc")):
-				return False
-		return True
 
 def init(moduleManager):
 	return MediaResultsViewerModule(moduleManager)
