@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,7 +18,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import tarfile
+import zipfile
 import tempfile
 import os
 import uuid
@@ -51,29 +51,28 @@ class OpenTeachingMediaLoaderModule(object):
 			return "media"
 
 	def load(self, path):
-		# Open tarball
-		file = tarfile.open(path, "r:bz2")
+		# Open zipfile
+		with zipfile.ZipFile(path, "r") as zipFile:
+			# Open json file with places
+			listFile = zipFile.open("list.json")
+			wordList = listFile.readlines()
+			listFile.close()
+			
+			id = str(uuid.uuid1())
+			tempFilePath = os.path.join(tempfile.gettempdir(), "openteacher\org\loaders\otmd\\" + id)
+			
+			list = json.loads(wordList[0])
 		
-		# Open json file with places
-		listFile = file.extractfile("list.json")
-		wordList = listFile.readlines()
-		listFile.close()
-		
-		id = str(uuid.uuid1())
-		tempFilePath = os.path.join(tempfile.gettempdir(), "openteacher\org\loaders\otmd\\" + id)
-		
-		list = json.loads(wordList[0])
-		
-		for name in file.getnames():
-			if name != "list.json":
-				file.extract(name, tempFilePath)
-				# Search for same name
-				for item in list["items"]:
-					if item["filename"] == name:
-						item["filename"] = os.path.abspath(os.path.join(tempFilePath, name))
-						break
-		
-		return list
+			for name in zipFile.namelist():
+				if name != "list.json":
+					zipFile.extract(name, tempFilePath)
+					# Search for same name
+					for item in list["items"]:
+						if item["filename"] == name:
+							item["filename"] = os.path.abspath(os.path.join(tempFilePath, name))
+							break
+			
+			return list
 
 def init(moduleManager):
 	return OpenTeachingMediaLoaderModule(moduleManager)

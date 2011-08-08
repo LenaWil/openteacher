@@ -78,7 +78,7 @@ class EnterMapScene(QtGui.QGraphicsScene):
 				}
 				# Set id
 				try:
-					place["id"] = base.enterWidget.places["items"][-1]["id"] +1
+					place["id"] = base.enterWidget.places["items"][-1]["id"] + 1
 				except IndexError:
 					place["id"] = 0
 				# And add the place
@@ -123,6 +123,7 @@ class EnterMap(Map):
 		# Make it scrollable and draggable
 		self.setDragMode(QtGui.QGraphicsView.ScrollHandDrag)
 		
+		self.placesList = []
 		self.placesGroup = QtGui.QGraphicsItemGroup()
 	
 	"""
@@ -138,8 +139,15 @@ class EnterMap(Map):
 		self.setScene(self.scene)
 	
 	def update(self):
+		for item in self.placesList:
+			try:
+				self.scene.removeItem(item)
+			except RuntimeError:
+				# Object already removed
+				pass
+		
 		# Remove all previous items
-		placesList = []
+		self.placesList = []
 		
 		# Add all the places
 		for place in base.enterWidget.places["items"]:
@@ -147,7 +155,7 @@ class EnterMap(Map):
 			rect = QtGui.QGraphicsRectItem(place["x"],place["y"],6,6)
 			rect.setBrush(QtGui.QBrush(QtGui.QColor("red")))
 			# Place the rectangle in the list of items
-			placesList.append(rect)
+			self.placesList.append(rect)
 			
 			# Make the shadow of the text
 			shadow = QtGui.QGraphicsTextItem(place["name"])
@@ -156,17 +164,17 @@ class EnterMap(Map):
 			shadow.setDefaultTextColor(QtGui.QColor("black"))
 			shadow.setOpacity(0.5)
 			# Place the shadow in the list of items
-			placesList.append(shadow)
+			self.placesList.append(shadow)
 			
 			item = QtGui.QGraphicsTextItem(place["name"])
 			item.setFont(QtGui.QFont("sans-serif",15,75))
 			item.setPos(place["x"],place["y"])
 			item.setDefaultTextColor(QtGui.QColor("red"))
 			# Place the text in the list of items
-			placesList.append(item)
+			self.placesList.append(item)
 		
 		# Place the list of items on the map
-		self.placesGroup = self.scene.createItemGroup(placesList)
+		self.placesGroup = self.scene.createItemGroup(self.placesList)
 
 """
 The dropdown menu for choosing the map
@@ -254,7 +262,8 @@ class EnterPlaceByName(QtGui.QLineEdit):
 	def _getNames(self, list):
 		feedback = []
 		for item in list:
-			feedback.append(item["name"])
+			for name in item["names"]:
+				feedback.append(name)
 		return feedback
 	
 	"""
@@ -361,8 +370,17 @@ class EnterWidget(QtGui.QSplitter):
 	"""
 	def addPlaceByName(self, name):
 		for placeDict in self.mapChooser.currentMap["knownPlaces"]:
-			if placeDict["name"] == name:
-				self.places["items"].append(placeDict)
+			if name in placeDict["names"]:
+				try:
+					id = self.places["items"][-1]["id"] + 1
+				except IndexError:
+					id = 0
+				self.places["items"].append({
+					"name": name,
+					"x": placeDict["x"],
+					"y": placeDict["y"],
+					"id": id
+				})
 				self.enterMap.update()
 				self.currentPlaces.update()
 				return
@@ -649,6 +667,7 @@ class TeachTopoLesson(object):
 	def endLesson(self):
 		base.inLesson = False
 		
+		# Show results dialog
 		for module in base.api.mods("active", type="resultsdialog"):
 			if base.dataType in module.supports:
 				module.showResults(self.itemList["tests"], self.itemList["items"])

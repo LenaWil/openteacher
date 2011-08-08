@@ -1,0 +1,72 @@
+[
+	{
+		"x": 184,
+		"y": 271,
+		"names": ["Seattle"]
+	},
+	{
+		"x": 397,
+		"y": 438,
+		"names": ["Miami"]
+	},
+	{
+		"x": 141,
+		"y": 346,
+		"names": ["San Francisco"]
+	},
+	{
+		"x": 469,
+		"y": 322,
+		"names": ["New York City"]
+	},
+	{
+		"x": 497,
+		"y": 308,
+		"names": ["Boston"]
+	},
+	{
+		"x": 447,
+		"y": 337,
+		"names": ["Washington DC"]
+	},
+	{
+		"x": 337,
+		"y": 410,
+		"names": ["New Orleans"]
+	},
+	{
+		"x": 156,
+		"y": 378,
+		"names": ["Los Angeles"]
+	},
+	{
+		"x": 935,
+		"y": 324,
+		"names": ["Madrid"]
+	},
+	{
+		"x": 899,
+		"y": 340,
+		"names": ["Lisboa", "Lisbon"]
+	},
+	{
+		"x": 979,
+		"y": 258,
+		"names": ["Paris"]
+	},
+	{
+		"x": 990,
+		"y": 243,
+		"names": ["Bruxelles", "Brussel", "Brussels"]
+	},
+	{
+		"x": 995,
+		"y": 229,
+		"names": ["Amsterdam"]
+	},
+	{
+		"x": 1043,
+		"y": 230,
+		"names": ["Berlin"]
+	}
+]
