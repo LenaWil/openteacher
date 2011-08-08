@@ -19,21 +19,42 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt4 import QtGui
+from PyQt4 import QtCore
+import datetime
 
-class MediaResultsWidget(QtGui.QWidget):
-	def __init__(self, results, *args, **kwargs):
-		super(MediaResultsWidget, self).__init__(*args, **kwargs)
+class TopoResultsWidget(QtGui.QWidget):
+	def __init__(self, tests, list, *args, **kwargs):
+		super(TopoResultsWidget, self).__init__(*args, **kwargs)
 		
-		self.results = results
+		self.tests = tests
+		self.list = list
 		
-		labelInfo = QtGui.QLabel("Results of this test: \n" + 
-								 "Right: " + str(self.amountRight(self.results[0])) + "\n" +
-								 "Wrong: " + str(self.amountWrong(self.results[0])))
+		d = datetime.datetime.now()
+		
+		labelInfo = QtGui.QLabel("<h1>This test:</h1>" + 
+								 "<ul>" +
+								   "<li>Date: " + d.strftime("%d/%m/%y") + "</li>" +
+								 "</ul>" +
+								 "<h2>Results:</h2>" + 
+								 "<ul>" +
+								   "<li>Right: " + str(self.amountRight(self.tests[0])) + "</li>" +
+								   "<li>Wrong: " + str(self.amountWrong(self.tests[0])) + "</li>" + 
+								   "<li>%: " + str(self.percentage(self.amountRight(self.tests[0]), self.amountWrong(self.tests[0]))) + "</li>" +
+								 "</ul>" + 
+								 "Place most done wrong: " + str(self.getItem(self.mostWrong(self.tests[0]))["name"]))
+		labelInfo.setStyleSheet("""
+								font-size: 15px;
+								""")
 		
 		layout = QtGui.QVBoxLayout()
+		layout.setAlignment(QtCore.Qt.AlignTop)
 		layout.addWidget(labelInfo)
 		
 		self.setLayout(layout)
+	
+	def percentage(self, right, wrong):
+		total = right + wrong
+		return (float(total) - wrong) / float(total) * 100
 	
 	def amountRight(self, test):
 		feedback = 0
@@ -48,10 +69,30 @@ class MediaResultsWidget(QtGui.QWidget):
 			if result["result"] == "wrong":
 				feedback += 1
 		return feedback
+	
+	def mostWrong(self, test):
+		highestId = 0
+		highest = 0
+		
+		for result in test:
+			count = test.count({
+				"itemId": result["itemId"],
+				"result": "wrong"
+			})
+			if count > highest:
+				highest = count
+				highestId = result["itemId"]
+		
+		return highestId
+	
+	def getItem(self, id):
+		for item in self.list:
+			if item["id"] == id:
+				return item
 
-class MediaResultsViewerModule(object):
+class TopoResultsViewerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(MediaResultsViewerModule, self).__init__(*args, **kwargs)
+		super(TopoResultsViewerModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "resultsdialog"
@@ -64,15 +105,15 @@ class MediaResultsViewerModule(object):
 	def disable(self):
 		self.active = False
 	
-	def showResults(self, results, list):
-		self.resultsWidget = MediaResultsWidget(results)
+	def showResults(self, tests, list):
+		self.resultsWidget = TopoResultsWidget(tests, list)
 		
 		for module in self._mm.mods("active", type="ui"):
 			self.tab = module.addCustomTab(
-				_("Results"),
+				_("Topo results"),
 				self.resultsWidget
 			)
 			self.tab.closeRequested.handle(self.tab.close)
 
 def init(moduleManager):
-	return MediaResultsViewerModule(moduleManager)
+	return TopoResultsViewerModule(moduleManager)

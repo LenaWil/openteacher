@@ -44,7 +44,7 @@ class MapModule(object):
 		try:
 			feedback = ""
 			# Open the file
-			file = open(self._mm.resourcePath("resources/places.txt"))
+			file = open(self._mm.resourcePath("resources/places.json"))
 			# Read the whole file
 			for line in file:
 				feedback += line

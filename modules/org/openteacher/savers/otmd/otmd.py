@@ -18,7 +18,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import tarfile
+import zipfile
 import os
 import tempfile
 import copy
@@ -39,36 +39,47 @@ class OpenTeachingTopoSaverModule(object):
 		self._modules.registerModule("Open Teaching Media (.otmd) saver", self)
 		self.saves = {"media": ["otmd"]}
 		
+		for module in self._mm.mods("active", type="settings"):
+			module.registerSetting(
+				"org.openteacher.savers.otmd.compression",
+				"Enable compression",
+				"boolean",
+				".otmd saving",
+				"Saving"
+			)
+		
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
 	def save(self, type, list, path, resources):
-		# Create tarball
-		tarFile = tarfile.open(path, "w:bz2")
-				
-		# Copy list because we are going to modify it
-		itemsList = copy.deepcopy(list)
 		
-		for item in itemsList["items"]:
-			if not item["remote"]:
-				tarFile.add(item["filename"], os.path.basename(item["filename"]))
-				item["filename"] = os.path.basename(item["filename"])
+		compression = zipfile.ZIP_STORED
 		
-		# Create temp file
-		listFile = tempfile.NamedTemporaryFile(delete=False)
-		listFile.write(json.dumps(itemsList))
-		listFile.close()
+		for module in self._mm.mods("active", type="settings"):
+			if module.value("org.openteacher.savers.otmd.compression"):
+				compression = zipfile.ZIP_DEFLATED
 		
-		# Add file to tar
-		tarFile.add(listFile.name, "list.json")
-		
-		# Close tar
-		tarFile.close()
-		
-		# Delete temp file
-		os.unlink(listFile.name)
+		# Create zipfile
+		with zipfile.ZipFile(path, "w", compression) as zipFile:
+			itemsList = copy.deepcopy(list)
+			
+			for item in itemsList["items"]:
+				if not item["remote"]:
+					zipFile.write(item["filename"], os.path.basename(item["filename"]))
+					item["filename"] = os.path.basename(item["filename"])
+			
+			# Create temp file
+			listFile = tempfile.NamedTemporaryFile(delete=False)
+			listFile.write(json.dumps(itemsList))
+			listFile.close()
+			
+			# Add file to zip
+			zipFile.write(listFile.name, "list.json")
+			
+			# Delete temp file
+			os.unlink(listFile.name)
 
 def init(moduleManager):
 	return OpenTeachingTopoSaverModule(moduleManager)

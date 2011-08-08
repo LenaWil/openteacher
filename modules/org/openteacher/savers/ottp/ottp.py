@@ -18,7 +18,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import tarfile
+import zipfile
 import os
 import tempfile
 try:
@@ -44,23 +44,19 @@ class OpenTeachingTopoSaverModule(object):
 		self.active = False
 
 	def save(self, type, list, path, resources):
-		# Create tarball
-		tarFile = tarfile.open(path, "w:bz2")
-		
-		# Create temp file
-		listFile = tempfile.NamedTemporaryFile(delete=False)
-		listFile.write(json.dumps(list))
-		listFile.close()
-		
-		# Add file to tar
-		tarFile.add(listFile.name, "list.json")
-		tarFile.add(resources["mapPath"], "map.gif")
-		
-		# Close tar
-		tarFile.close()
-		
-		# Delete temp file
-		os.unlink(listFile.name)
+		# Create zipfile
+		with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as zipFile:
+			# Create temp file
+			listFile = tempfile.NamedTemporaryFile(delete=False)
+			listFile.write(json.dumps(list))
+			listFile.close()
+			
+			# Add file to tar
+			zipFile.write(listFile.name, "list.json")
+			zipFile.write(resources["mapPath"], "map.gif")
+			
+			# Delete temp file
+			os.unlink(listFile.name)
 
 def init(moduleManager):
 	return OpenTeachingTopoSaverModule(moduleManager)

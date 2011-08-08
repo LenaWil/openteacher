@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,7 +18,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import tarfile
+import zipfile
 import tempfile
 import os
 import uuid
@@ -50,29 +50,27 @@ class OpenTeachingTopoLoaderModule(object):
 			return "topo"
 
 	def load(self, path):
-		# Open tarball
-		file = tarfile.open(path, "r:bz2")
-		
-		# Open json file with places
-		listFile = file.extractfile("list.json")
-		wordList = listFile.readlines()
-		listFile.close()
-		
-		tempFilePath = os.path.join(tempfile.gettempdir(), "openteacher\org\loaders\ottp\\" + str(uuid.uuid1()))
-		
-		# Open map
-		file.extract("map.gif", tempFilePath)
-		
-		tempFilePath = os.path.join(tempFilePath, "map.gif")
-		
-		feedback = {
-			"list": json.loads(wordList[0]),
-			"resources": {
-				"mapPath": tempFilePath
+		# Open zipfile
+		with zipfile.ZipFile(path, "r") as zipFile:
+			listFile = zipFile.open("list.json")
+			wordList = listFile.readlines()
+			listFile.close()
+			
+			tempFilePath = os.path.join(tempfile.gettempdir(), "openteacher\org\loaders\ottp\\" + str(uuid.uuid1()))
+			
+			# Open map
+			zipFile.extract("map.gif", tempFilePath)
+			
+			tempFilePath = os.path.join(tempFilePath, "map.gif")
+			
+			feedback = {
+				"list": json.loads(wordList[0]),
+				"resources": {
+					"mapPath": tempFilePath
+				}
 			}
-		}
-		
-		return feedback
+			
+			return feedback
 
 def init(moduleManager):
 	return OpenTeachingTopoLoaderModule(moduleManager)

@@ -28,7 +28,7 @@ class MapModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(MapModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
-		self.mapName = "World"
+		self.mapName = "United States of America"
 		self.mapPath = self._mm.resourcePath("resources/map.gif")
 		self.knownPlaces = self._getKnownPlaces()
 
@@ -39,7 +39,7 @@ class MapModule(object):
 
 	def disable(self):
 		self.active = False
-		
+	
 	def _getKnownPlaces(self):
 		try:
 			feedback = ""
