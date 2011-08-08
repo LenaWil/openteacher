@@ -53,7 +53,7 @@ class TextToSpeechProviderWords(object):
 			raise e
 		try:
 			text = compose(item["questions"])
-		except AttributeError:
+		except KeyError:
 			# No questions
 			pass
 		else:
