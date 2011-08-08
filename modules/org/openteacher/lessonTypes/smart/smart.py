@@ -89,6 +89,9 @@ class SmartLessonType(object):
 					self._list["tests"] = []
 				self._list["tests"].append(self._test)
 			self.lessonDone.emit()
+			for module in self._mm.mods("active", type="resultsviewer"):
+				if module.supports(self._list["items"]):
+					module.showResults(self._list["tests"], self._list["items"])
 		else:
 			self.newItem.emit(self._list["items"][self._currentIndex])
 

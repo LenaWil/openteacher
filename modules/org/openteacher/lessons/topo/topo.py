@@ -71,10 +71,16 @@ class EnterMapScene(QtGui.QGraphicsScene):
 			if unicode(name[1]) and unicode(name[0]).strip() != u"":
 				# Make the place
 				place = {
+					"id": int(),
 					"name": unicode(name[0]),
 					"x": int(x),
 					"y": int(y)
 				}
+				# Set id
+				try:
+					place["id"] = base.enterWidget.places["items"][-1]["id"] +1
+				except IndexError:
+					place["id"] = 0
 				# And add the place
 				base.enterWidget.addPlace(place)
 
@@ -595,21 +601,33 @@ class TeachTopoLesson(object):
 		if self.order == Order.Inversed:
 			if self.currentItem == answer:
 				# Answer was right
-				self.lessonType.setResult("right")
+				self.lessonType.setResult({
+					"itemId": self.currentItem["id"],
+					"result": "right"
+				})
 				# Progress bar
 				self._updateProgressBar()
 			else:
 				# Answer was wrong
-				self.lessonType.setResult("wrong")
+				self.lessonType.setResult({
+					"itemId": self.currentItem["id"],
+					"result": "wrong"
+				})
 		else:
 			if self.currentItem["name"] == base.teachWidget.answerfield.text():
 				# Answer was right
-				self.lessonType.setResult("right")
+				self.lessonType.setResult({
+					"itemId": self.currentItem["id"],
+					"result": "right"
+				})
 				# Progress bar
 				self._updateProgressBar()
 			else:
 				# Answer was wrong
-				self.lessonType.setResult("wrong")
+				self.lessonType.setResult({
+					"itemId": self.currentItem["id"],
+					"result": "wrong"
+				})
 			
 	"""
 	What happens when the next question should be asked

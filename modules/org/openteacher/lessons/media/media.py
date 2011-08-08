@@ -292,7 +292,7 @@ class EnterWidget(QtGui.QSplitter):
 	def addLocalItems(self):
 		filenames = QtGui.QFileDialog.getOpenFileNames(self,_("Select file(s)"),QtCore.QDir.homePath(),_("Media") + " (*.bmp *.jpg *.jpeg *.png *.wmv *.mp3 *.avi)")
 		for filename in filenames:
-			self.addItem(filename, False)
+			self.addItem(str(filename), False)
 	
 	"""
 	Add items from the internet to the list
@@ -300,21 +300,29 @@ class EnterWidget(QtGui.QSplitter):
 	def addRemoteItems(self):
 		url, dialog = QtGui.QInputDialog.getText(self, _("File URL"), _("Enter the URL of your website or media item.\nSupported video sites: YouTube, Dailymotion, Vimeo."))
 		if dialog:
-			self.addItem(url, True)
+			self.addItem(str(url), True)
 	
 	"""
 	Add an item to the list
 	"""
-	def addItem(self,filename,remote=False,name=None,desc=None):		
+	def addItem(self,filename,remote=False,name=None,desc=None):
 		item = {
+			"id": int(),
 			"remote": remote,
 			"filename": str(filename),
 			"name": str(name),
 			"desc": str()
 		}
+		# Set id
+		try:
+			item["id"] = base.enterWidget.itemList["items"][-1]["id"] +1
+		except IndexError:
+			item["id"] = 0
 		
 		if name != None:
 			item["name"] = name
+		else:
+			item["name"] = os.path.basename(filename)
 		if desc != None:
 			item["desc"] = desc
 		
@@ -502,12 +510,18 @@ class MediaLesson(object):
 	def checkAnswer(self):
 		if self.currentItem["name"] == base.teachWidget.answerField.text():
 			# Answer was right
-			self.lessonType.setResult("right")
+			self.lessonType.setResult({
+					"itemId": self.currentItem["id"],
+					"result": "right"
+				})
 			# Progress bar
 			self._updateProgressBar()
 		else:
 			# Answer was wrong
-			self.lessonType.setResult("wrong")
+			self.lessonType.setResult({
+					"itemId": self.currentItem["id"],
+					"result": "wrong"
+				})
 			
 	"""
 	What happens when the next question should be asked
