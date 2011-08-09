@@ -65,8 +65,138 @@
 		"names": ["Amsterdam"]
 	},
 	{
-		"x": 1043,
-		"y": 230,
-		"names": ["Berlin"]
+		"x": 1723,
+		"y": 327,
+		"names": ["Beijing"]
+	},
+	{
+		"x": 426,
+		"y": 615,
+		"names": ["Bogotá"]
+	},
+	{
+		"x": 563,
+		"y": 935,
+		"names": ["Buenos Aires"]
+	},
+	{
+		"x": 1169,
+		"y": 413,
+		"names": ["Cairo"]
+	},
+	{
+		"x": 1484,
+		"y": 421,
+		"names": ["New Delhi"]
+	},
+	{
+		"x": 1748,
+		"y": 468,
+		"names": ["Guangzhou"]
+	},
+	{
+		"x": 1150,
+		"y": 320,
+		"names": ["Istanbul"]
+	},
+	{
+		"x": 1718,
+		"y": 703,
+		"names": ["Jakarta"]
+	},
+	{
+		"x": 1585,
+		"y": 460,
+		"names": ["Dhaka"]
+	},
+	{
+		"x": 1423,
+		"y": 451,
+		"names": ["Karachi"]
+	},
+	{
+		"x": 1063,
+		"y": 690,
+		"names": ["Kinshasa"]
+	},
+	{
+		"x": 408,
+		"y": 752,
+		"names": ["Lima"]
+	},
+	{
+		"x": 979,
+		"y": 601,
+		"names": ["Lagos"]
+	},
+	{
+		"x": 960,
+		"y": 236,
+		"names": ["London"]
+	},
+	{
+		"x": 1809,
+		"y": 533,
+		"names": ["Manila"]
+	},
+	{
+		"x": 253,
+		"y": 496,
+		"names": ["Mexico City"]
+	},
+	{
+		"x": 1179,
+		"y": 203,
+		"names": ["Moscow", "Moskva"]
+	},
+	{
+		"x": 1468,
+		"y": 499,
+		"names": ["Mumbai"]
+	},
+	{
+		"x": 1871,
+		"y": 373,
+		"names": ["Osaka"]
+	},
+	{
+		"x": 627,
+		"y": 849,
+		"names": ["São Paulo"]
+	},
+	{
+		"x": 1806,
+		"y": 351,
+		"names": ["Seoul"]
+	},
+	{
+		"x": 1789,
+		"y": 402,
+		"names": ["Shanghai"]
+	},
+	{
+		"x": 655,
+		"y": 838,
+		"names": ["Rio de Janeiro"]
+	},
+	{
+		"x": 1299,
+		"y": 367,
+		"names": ["Tehran", "Teheran"]
+	},
+	{
+		"x": 1896,
+		"y": 363,
+		"names": ["Tokyo"]
+	},
+	{
+		"x": 445,
+		"y": 296,
+		"names": ["Toronto"]
+	},
+	{
+		"x": 193,
+		"y": 253,
+		"names": ["Vancouver"]
 	}
 ]

@@ -28,7 +28,7 @@ class MapModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(MapModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
-		self.mapName = "Portugal and Spain"
+		self.mapName = "Latin America"
 		self.mapPath = self._mm.resourcePath("resources/map.gif")
 		self.knownPlaces = self._getKnownPlaces()
 

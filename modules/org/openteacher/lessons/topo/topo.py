@@ -50,7 +50,7 @@ class EnterPlacesWidget(QtGui.QListWidget):
 		
 		# Add all the places to the list
 		for place in base.enterWidget.places["items"]:
-			self.addItem(place["name"] + " (" + str(place["x"]) + "," + str(place["y"]) + ")")
+			self.addItem(place["name"] + " (" + unicode(place["x"]) + "," + unicode(place["y"]) + ")")
 
 """
 The graphics scene of the map where you enter
@@ -206,9 +206,9 @@ class EnterMapChooser(QtGui.QComboBox):
 
 	def _fillBox(self):
 		for module in base.api.mods("active", type="map"):
-			self.addItem(module.mapName, str({'mapName': module.mapName, 'mapPath': module.mapPath, 'knownPlaces': module.knownPlaces}))
+			self.addItem(module.mapName, unicode({'mapName': module.mapName, 'mapPath': module.mapPath, 'knownPlaces': module.knownPlaces}))
 		
-		self.addItem("From hard disk...", str({}))
+		self.addItem("From hard disk...", unicode({}))
 		
 	def _otherMap(self):
 		if self.ask:
@@ -227,13 +227,13 @@ class EnterMapChooser(QtGui.QComboBox):
 				_uiModule = set(base.api.mods("active", type="ui")).pop()
 				path = _uiModule.getLoadPath(
 					QtCore.QDir.homePath(),
-					["gif", "jpg", "png", "bmp"]
+					["gif", "jpg", "jpeg", "png", "bmp", "svg"]
 				)
 				if path:
 					name = os.path.splitext(os.path.basename(path))[0]
 					
 					self.setCurrentIndex(0)
-					self.insertItem(0, name, str({'mapPath': path, 'knownPlaces': ''}))
+					self.insertItem(0, name, unicode({'mapPath': path, 'knownPlaces': ''}))
 					self.setCurrentIndex(0)
 			elif len(self.enterWidget.places["items"]) > 0 and self.ask:
 				# Clear the entered items
@@ -255,7 +255,7 @@ class EnterMapChooser(QtGui.QComboBox):
 	
 	@property
 	def currentMap(self):
-		return eval(str(self.itemData(self.currentIndex()).toString()))
+		return eval(unicode(self.itemData(self.currentIndex()).toString()))
 
 """
 The add-place-by-name edit
@@ -384,7 +384,7 @@ class EnterWidget(QtGui.QSplitter):
 				except IndexError:
 					id = 0
 				self.places["items"].append({
-					"name": name,
+					"name": unicode(name),
 					"x": placeDict["x"],
 					"y": placeDict["y"],
 					"id": id
@@ -404,7 +404,7 @@ class EnterWidget(QtGui.QSplitter):
 	def removePlace(self):
 		for placeItem in self.currentPlaces.selectedItems():
 			for place in self.places["items"]:
-				if placeItem.text() == str(place["name"] + " (" + str(place["x"]) + "," + str(place["y"]) + ")"):
+				if placeItem.text() == unicode(place["name"] + " (" + unicode(place["x"]) + "," + unicode(place["y"]) + ")"):
 					self.places["items"].remove(place)
 		self.enterMap.update()
 		self.currentPlaces.update()
@@ -890,7 +890,7 @@ class TeachTopoLessonModule(object):
 	def loadFromList(self, list, path):
 		for lesson in self.createLesson():
 			self.enterWidget.mapChooser.setCurrentIndex(0)
-			self.enterWidget.mapChooser.insertItem(0, os.path.basename(path), str({'mapPath': list["resources"]["mapPath"], 'knownPlaces': ''}))
+			self.enterWidget.mapChooser.insertItem(0, os.path.basename(path), unicode({'mapPath': list["resources"]["mapPath"], 'knownPlaces': ''}))
 			self.enterWidget.mapChooser.setCurrentIndex(0)
 			
 			# Add all the items
