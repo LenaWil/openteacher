@@ -139,6 +139,7 @@ class EnterMap(Map):
 		self.setScene(self.scene)
 	
 	def update(self):
+		# Remove previous items
 		for item in self.placesList:
 			try:
 				self.scene.removeItem(item)
@@ -175,6 +176,13 @@ class EnterMap(Map):
 		
 		# Place the list of items on the map
 		self.placesGroup = self.scene.createItemGroup(self.placesList)
+	
+	def getScreenshot(self):
+		image = QtGui.QImage(self.scene.width(), self.scene.height(), QtGui.QImage.Format_RGB32)
+		painter = QtGui.QPainter(image)
+		self.scene.render(painter)
+		painter.end()
+		return image
 
 """
 The dropdown menu for choosing the map
@@ -219,7 +227,7 @@ class EnterMapChooser(QtGui.QComboBox):
 				_uiModule = set(base.api.mods("active", type="ui")).pop()
 				path = _uiModule.getLoadPath(
 					QtCore.QDir.homePath(),
-					["gif"]
+					["gif", "jpg", "png", "bmp"]
 				)
 				if path:
 					name = os.path.splitext(os.path.basename(path))[0]
@@ -898,15 +906,19 @@ class Lesson(object):
 		self.module = self
 		self.dataType = "topo"
 		self.list = base.enterWidget.places
-		self.resources = {
-			"mapPath": base.enterWidget.mapChooser.currentMap["mapPath"]
-		}
 		
 		fileTab.closeRequested.handle(self.stop)
 	
 	def stop(self):
 		self.fileTab.close()
 		self.stopped.emit()
+	
+	@property
+	def resources(self):
+		return {
+			"mapPath": base.enterWidget.mapChooser.currentMap["mapPath"],
+			"mapScreenshot": base.enterWidget.enterMap.getScreenshot()
+		}
 
 def init(moduleManager):
 	return TeachTopoLessonModule(moduleManager)

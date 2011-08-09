@@ -285,15 +285,18 @@ class GuiModule(object):
 	def getConfiguredPrinter(self): #FIXME: separate module
 		#Setup printer
 		printer = QtGui.QPrinter()
-
+		
 		printDialog = QtGui.QPrintDialog(printer)
-		lastWidget = self._widget.tabWidget.currentWidget()
-		tab = self.addCustomTab(printDialog.windowTitle(), printDialog)
-		tab.closeRequested.handle(tab.close)
-		printDialog.rejected.connect(tab.close)
-		printDialog.accepted.connect(tab.close)
+		
+		if os.name == 'posix':
+			lastWidget = self._widget.tabWidget.currentWidget()
+			tab = self.addCustomTab(printDialog.windowTitle(), printDialog)
+			tab.closeRequested.handle(tab.close)
+			printDialog.rejected.connect(tab.close)
+			printDialog.accepted.connect(tab.close)
+			self._widget.tabWidget.setCurrentWidget(lastWidget)
+		
 		result = printDialog.exec_()
-		self._widget.tabWidget.setCurrentWidget(lastWidget)
 		if not result:
 			return
 		return printer

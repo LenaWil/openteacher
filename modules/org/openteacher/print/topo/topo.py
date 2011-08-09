@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+#	Copyright 2011, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -18,45 +19,44 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import zipfile
-import os
-import tempfile
-try:
-	import json
-except:
-	import simplejson
+from PyQt4 import QtWebKit
+from PyQt4 import QtGui
 
-class OpenTeachingTopoSaverModule(object):
-	def __init__(self, moduleManager, *args, **kwargs):
-		super(OpenTeachingTopoSaverModule, self).__init__(*args, **kwargs)
+class PrintModule(object):
+	def __init__(self, moduleManager):
 		self._mm = moduleManager
 
-		self.type = "save"
-
-	def enable(self):		
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._modules.registerModule("Open Teaching Topo (.ottp) saver", self)
-		self.saves = {"topo": ["ottp"]}
+		self.type = "print"
 		
+	def enable(self):
+		global _
+		global ngettext
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		_, ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
+
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules.registerModule(_("Printing module"), self)
+
+		self._pyratemp = self._mm.import_("pyratemp")
+		self.prints = ["topo"]
 		self.active = True
 
 	def disable(self):
 		self.active = False
+		del self._modules
+		del self.prints
+		del self._pyratemp
 
-	def save(self, type, list, path, resources):
-		# Create zipfile
-		with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as zipFile:
-			# Create temp file
-			listFile = tempfile.NamedTemporaryFile(delete=False)
-			listFile.write(json.dumps(list))
-			listFile.close()
-			
-			# Add file to tar
-			zipFile.write(listFile.name, "list.json")
-			zipFile.write(resources["mapPath"], "map" + os.path.splitext(resources["mapPath"])[1])
-			
-			# Delete temp file
-			os.unlink(listFile.name)
+	def print_(self, type, list, resources, printer):
+		printer.setOutputFormat(QtGui.QPrinter.PdfFormat);
+		printer.setOutputFileName("B:\Desktop\hi.pdf");
+		
+		painter = QtGui.QPainter()
+		painter.begin(printer)
+		painter.drawImage(0,0,resources["mapScreenshot"])
+		painter.end()
 
 def init(moduleManager):
-	return OpenTeachingTopoSaverModule(moduleManager)
+	return PrintModule(moduleManager)

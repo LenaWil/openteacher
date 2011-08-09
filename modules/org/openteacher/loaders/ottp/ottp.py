@@ -59,9 +59,13 @@ class OpenTeachingTopoLoaderModule(object):
 			tempFilePath = os.path.join(tempfile.gettempdir(), "openteacher\org\loaders\ottp\\" + str(uuid.uuid1()))
 			
 			# Open map
-			zipFile.extract("map.gif", tempFilePath)
+			for name in zipFile.namelist():
+				if os.path.splitext(name)[0] == "map":
+					zipFile.extract(name, tempFilePath)
+					mapName = name
+					break
 			
-			tempFilePath = os.path.join(tempFilePath, "map.gif")
+			tempFilePath = os.path.join(tempFilePath, name)
 			
 			feedback = {
 				"list": json.loads(wordList[0]),

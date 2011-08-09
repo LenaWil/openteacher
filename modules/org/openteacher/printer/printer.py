@@ -28,7 +28,7 @@ class Printer(object):
 		self.printer = printer
 
 	def print_(self):
-		self.module.print_(self.dataType, self.lesson.list, self.printer)
+		self.module.print_(self.dataType, self.lesson.list, self.lesson.resources, self.printer)
 
 	def __str__(self): #FIXME
 		return str(self.module)

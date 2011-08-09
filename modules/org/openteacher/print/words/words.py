@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Marten de Vries
+#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -47,7 +48,7 @@ class PrintModule(object):
 		del self.prints
 		del self._pyratemp
 
-	def print_(self, type, list, printer):
+	def print_(self, type, list, resources, printer):
 		composers = set(self._mm.mods("active", type="wordsStringComposer"))
 		composer = self._modules.chooseItem(composers)
 
@@ -63,17 +64,25 @@ class PrintModule(object):
 			eval_class=EvalPseudoSandbox
 		)
 		html = t(**{"list": list})
-
-		doc = QtWebKit.QWebView()
-		doc.setHtml(html)
-
+		
 		for module in self._mm.mods("active", "name", type="metadata"):
 			printer.setCreator(module.name)
 		try:
 			printer.setDocName(list["title"])
 		except KeyError:
 			printer.setDocName(_("Untitled word list"))
-		doc.print_(printer)
+		
+		doc = QtWebKit.QWebView()
+		
+		self.printer = printer
+		self.doc = doc
+		doc.loadFinished.connect(self._loadFinished)
+		doc.setHtml(html)
+	
+	def _loadFinished(self, ok):
+		#self.printer.setOutputFormat(QtGui.QPrinter.PdfFormat);
+		#self.printer.setOutputFileName("B:\Desktop\hi.pdf");
+		self.doc.print_(self.printer)
 
 def init(moduleManager):
 	return PrintModule(moduleManager)
