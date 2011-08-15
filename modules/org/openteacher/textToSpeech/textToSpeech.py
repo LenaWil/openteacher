@@ -61,25 +61,19 @@ class TextToSpeech():
 
 	def getVoices(self):
 		feedback = []
-		voiceids = []
-		voicenames = []
-		if os.name == 'nt' or os.name == 'mac':
-			voices = self.engine.getProperty('voices')
+		if os.name == "nt" or os.name == "mac":
+			voices = self.engine.getProperty("voices")
 			for voice in voices:
-				 voicenames.append(voice.name)
-				 voiceids.append(voice.id)
-		elif os.name == 'posix':
-			voiceids.append("en")
-			voicenames.append("default")
-		feedback.append(voicenames)
-		feedback.append(voiceids)
+				feedback.append((voice.name, voice.id))
+		elif os.name == "posix":
+			feedback.append(("en", "default"))
 		return feedback
 	
 	def speak(self, text, rate, voiceid, thread=True):
 		if os.name == 'nt' or os.name == 'mac':
-			# set voice
+			# Set voice
 			self.engine.setProperty('voice', voiceid)
-			self.engine.setProperty('rate',rate)
+			self.engine.setProperty('rate', rate)
 			self.engine.say(text)
 			if thread:
 				st = SpeakThread(self.engine,None,None)
@@ -87,7 +81,7 @@ class TextToSpeech():
 			else:
 				self.engine.runAndWait()
 		elif os.name == 'posix':
-			#use espeak
+			# Use espeak
 			if thread:
 				st = SpeakThread(None,voiceid,text)
 				st.start()
@@ -113,40 +107,47 @@ class TextToSpeechModule(object):
 		)
 		for module in self._mm.mods("active", type="modules"):
 			module.registerModule(_("Text to speech"), self)
-
-		#For Windows and Mac
-		pyttsx = self._mm.importFrom(self._mm.resourcePath("tts"), "pyttsx")
-#		from tts import pyttsx
 		
-		#text to speech engine maken
+		# For Windows and Mac
+		pyttsx = self._mm.importFrom(self._mm.resourcePath("tts"), "pyttsx")
+		
+		# Create text to speech engine
 		try:
 			self.tts = TextToSpeech(pyttsx)
 		except DependencyError as e:
 			QtGui.QMessageBox.critical(None, "Error", unicode(e))
 		
-		self.voiceid = self.tts.getVoices()[1][0]
+		for module in self._mm.mods("active", type="settings"):
+			module.value("org.openteacher.textToSpeech.voice")
+		
+		# Add settings
+		for module in self._mm.mods("active", type="settings"):
+			module.registerSetting(
+				"org.openteacher.textToSpeech.voice",
+				"Voice",
+				"options",
+				"Pronounciation",
+				"Voice"
+			)
+			for voice in self.tts.getVoices():
+				module.addOption("org.openteacher.textToSpeech.voice", voice[0], voice[1])
 		
 		self.say.handle(self.newWord)
 		
 		self.active = True
-#		self.newWord("Text to speech enabled")
+		#self.newWord("Text to speech enabled")
 	
 	def disable(self):
 		self.active = False
 
 	def newWord(self, word, thread=True):
-		if self.voiceid is not None:
-			self.tts.speak(word,120,self.voiceid,thread)
-		else:
-			self.setVoice()
-
-#	def newWordNewThread(self,word):
-#		SpeakThread("lol").start()
-	
-	def setVoice(self, parent):
-		voices = self.tts.getVoices()
-		dialog = QtGui.QDialog(parent)
-		ret = dialog.show()
+		# First voice as default/if none is selected
+		voiceid = self.tts.getVoices()[0][1]
+		# Get the selected voice
+		for module in self._mm.mods("active", type="settings"):
+			voiceid = module.value("org.openteacher.textToSpeech.voice")
+		# Pronounce
+		self.tts.speak(word,120,voiceid,thread)
 
 def init(moduleManager):
 	return TextToSpeechModule(moduleManager)

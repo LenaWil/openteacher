@@ -38,6 +38,7 @@ class SettingsModule(object):
 		setting["value"] = None
 		setting["name"] = name
 		setting["type"] = type
+		setting["options"] = []
 
 	def registeredSettings(self, lessonType=None, category=None):
 		if lessonType:
@@ -45,7 +46,15 @@ class SettingsModule(object):
 				return self._settings[lessonType][category].copy()
 			return self._settings[lessonType].copy()
 		return self._settings.copy()
-
+	
+	def addOption(self, internal_name, value, data=None):
+		for lessonType in self._settings.values():
+			for category in lessonType.values():
+				try:
+					category[internal_name]["options"].append((value, data))
+				except KeyError:
+					pass
+	
 	def value(self, internal_name):
 		for lessonType in self._settings.values():
 			for category in lessonType.values():

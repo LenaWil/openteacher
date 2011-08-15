@@ -44,8 +44,8 @@ class OpenTeachingTopoSaverModule(object):
 				"org.openteacher.savers.otmd.compression",
 				"Enable compression",
 				"boolean",
-				".otmd saving",
-				"Saving"
+				"Media Lesson",
+				".otmd saving"
 			)
 		
 		self.active = True

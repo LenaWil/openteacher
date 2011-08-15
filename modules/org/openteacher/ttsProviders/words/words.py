@@ -28,7 +28,17 @@ class TextToSpeechProviderWords(object):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		for module in self._mm.mods("active", type="lessonType"):
 			module.newItem.handle(self.itemEmitted)
-
+		
+		# Add settings
+		for module in self._mm.mods("active", type="settings"):
+			module.registerSetting(
+				"org.openteacher.ttsProvicers.words.pronounce",
+				"Pronounce words",
+				"boolean",
+				"Pronounciation",
+				"Words"
+			)
+		
 		self.active = True
 
 	def disable(self):
@@ -39,25 +49,27 @@ class TextToSpeechProviderWords(object):
 		self.active = False
 	
 	def itemEmitted(self, item):
-		composers = set(self._mm.mods("active", type="wordsStringComposer"))
-		ttss = set(self._mm.mods("active", type="textToSpeech"))
-		try:
-			compose = self._modules.chooseItem(composers).compose
-		except IndexError, e:
-			#FIXME: nice error handling
-			raise e
-		try:
-			tts = self._modules.chooseItem(ttss)
-		except IndexError, e:
-			#FIXME: nice error handling
-			raise e
-		try:
-			text = compose(item["questions"])
-		except KeyError:
-			# No questions
-			pass
-		else:
-			tts.say.emit(text)
+		for module in self._mm.mods("active", type="settings"):
+			if(module.value("org.openteacher.ttsProvicers.words.pronounce")):
+				composers = set(self._mm.mods("active", type="wordsStringComposer"))
+				ttss = set(self._mm.mods("active", type="textToSpeech"))
+				try:
+					compose = self._modules.chooseItem(composers).compose
+				except IndexError, e:
+					#FIXME: nice error handling
+					raise e
+				try:
+					tts = self._modules.chooseItem(ttss)
+				except IndexError, e:
+					#FIXME: nice error handling
+					raise e
+				try:
+					text = compose(item["questions"])
+				except KeyError:
+					# No questions
+					pass
+				else:
+					tts.say.emit(text)
 
 def init(moduleManager):
 	return TextToSpeechProviderWords(moduleManager)
