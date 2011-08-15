@@ -25,6 +25,7 @@ from PyQt4 import QtGui
 import os
 import subprocess
 import threading
+import shlex
 
 import sys
 
@@ -66,7 +67,18 @@ class TextToSpeech():
 			for voice in voices:
 				feedback.append((voice.name, voice.id))
 		elif os.name == "posix":
-			feedback.append(("en", "default"))
+			voices = subprocess.check_output(["espeak", "--voices"]).split("\n")
+			for voice in voices:
+				voiceProps = shlex.split(voice)
+				try:
+					int(voiceProps[0])
+					feedback.append((voiceProps[3] + " (" + voiceProps[1] + ")", voiceProps[3]))
+				except IndexError:
+					# voiceProps[0] does not even exist
+					pass
+				except ValueError:
+					# voiceProps[0] is not an int, so this is not a language
+					pass
 		return feedback
 	
 	def speak(self, text, rate, voiceid, thread=True):
@@ -145,7 +157,9 @@ class TextToSpeechModule(object):
 		voiceid = self.tts.getVoices()[0][1]
 		# Get the selected voice
 		for module in self._mm.mods("active", type="settings"):
-			voiceid = module.value("org.openteacher.textToSpeech.voice")
+			if module.value("org.openteacher.textToSpeech.voice") != None:
+				voiceid = module.value("org.openteacher.textToSpeech.voice")
+				break
 		# Pronounce
 		self.tts.speak(word,120,voiceid,thread)
 

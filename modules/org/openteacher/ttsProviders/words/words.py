@@ -70,6 +70,7 @@ class TextToSpeechProviderWords(object):
 					pass
 				else:
 					tts.say.emit(text)
+				break
 
 def init(moduleManager):
 	return TextToSpeechProviderWords(moduleManager)
