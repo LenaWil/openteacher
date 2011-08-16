@@ -139,10 +139,19 @@ class TextToSpeechModule(object):
 				"Voice",
 				"options",
 				"Pronounciation",
-				"Voice"
+				"Voice",
+				self.tts.getVoices()[0][1]
 			)
 			for voice in self.tts.getVoices():
 				module.addOption("org.openteacher.textToSpeech.voice", voice[0], voice[1])
+			module.registerSetting(
+				"org.openteacher.textToSpeech.speed",
+				"Speed",
+				"number",
+				"Pronounciation",
+				"Voice",
+				120
+			)
 		
 		self.say.handle(self.newWord)
 		
@@ -151,7 +160,7 @@ class TextToSpeechModule(object):
 	
 	def disable(self):
 		self.active = False
-
+	
 	def newWord(self, word, thread=True):
 		# First voice as default/if none is selected
 		voiceid = self.tts.getVoices()[0][1]
@@ -160,8 +169,14 @@ class TextToSpeechModule(object):
 			if module.value("org.openteacher.textToSpeech.voice") != None:
 				voiceid = module.value("org.openteacher.textToSpeech.voice")
 				break
+		speed = 120
+		# Get the selected speed
+		for module in self._mm.mods("active", type="settings"):
+			if module.value("org.openteacher.textToSpeech.speed") != None:
+				speed = module.value("org.openteacher.textToSpeech.speed")
+				break
 		# Pronounce
-		self.tts.speak(word,120,voiceid,thread)
+		self.tts.speak(word,speed,voiceid,thread)
 
 def init(moduleManager):
 	return TextToSpeechModule(moduleManager)

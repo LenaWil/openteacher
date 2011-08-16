@@ -33,9 +33,52 @@ except:
 class Order:
 	Normal, Inversed = xrange(2)
 
+"""
+WIDGETS ON BOTH THE ENTER AND TEACH TAB
+"""
 
 """
-All things that have to do with the enter-part
+Abstract class for the map widgets
+"""
+class Map(QtGui.QGraphicsView):
+	def __init__(self,*args, **kwargs):
+		super(Map, self).__init__(*args, **kwargs)
+		
+		for module in base.api.mods("active", type="settings"):
+			if module.value("org.openteacher.lessons.topo.opengl"):
+				self.setViewport(QtOpenGL.QGLWidget())
+	
+	def setMap(self, map):
+		self._setPicture(map)
+	
+	def _setPicture(self,picture):
+		# Create a new scene
+		self.scene = QtGui.QGraphicsScene()
+		# Set the pixmap of the scene
+		self.pixmap = QtGui.QPixmap(picture)
+		self.scene.addPixmap(self.pixmap)
+		# Set the scene
+		self.setScene(self.scene)
+	
+	def wheelEvent(self,wheelevent):
+		# Scrolling makes it zoom
+		if wheelevent.delta() > 0:
+			self.scale(1.1,1.1)
+		else:
+			self.scale(0.9,0.9)
+
+			
+			
+			
+			
+			
+			
+			
+			
+
+	
+"""
+WIDGETS ON ENTER TAB
 """
 
 """
@@ -83,36 +126,6 @@ class EnterMapScene(QtGui.QGraphicsScene):
 					place["id"] = 0
 				# And add the place
 				base.enterWidget.addPlace(place)
-
-"""
-Abstract class for the map widgets
-"""
-class Map(QtGui.QGraphicsView):
-	def __init__(self,*args, **kwargs):
-		super(Map, self).__init__(*args, **kwargs)
-		
-		for module in base.api.mods("active", type="settings"):
-			if module.value("org.openteacher.lessons.topo.opengl"):
-				self.setViewport(QtOpenGL.QGLWidget())
-	
-	def setMap(self, map):
-		self._setPicture(map)
-	
-	def _setPicture(self,picture):
-		# Create a new scene
-		self.scene = QtGui.QGraphicsScene()
-		# Set the pixmap of the scene
-		self.pixmap = QtGui.QPixmap(picture)
-		self.scene.addPixmap(self.pixmap)
-		# Set the scene
-		self.setScene(self.scene)
-	
-	def wheelEvent(self,wheelevent):
-		# Scrolling makes it zoom
-		if wheelevent.delta() > 0:
-			self.scale(1.1,1.1)
-		else:
-			self.scale(0.9,0.9)
 
 """
 The map on the enter tab
@@ -282,149 +295,6 @@ class EnterPlaceByName(QtGui.QLineEdit):
 		self.completer.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
 		self.setCompleter(self.completer)
 
-"""
-The enter tab
-"""
-class EnterWidget(QtGui.QSplitter):
-	def __init__(self, *args, **kwargs):
-		super(EnterWidget, self).__init__(*args, **kwargs)
-		#self.places = List()
-		self.places = {
-			"items": list(),
-			"tests": list()
-		}
-		
-		#create the GUI
-		self.addPlaceEdit = EnterPlaceByName()
-		
-		#left side
-		leftSide = QtGui.QVBoxLayout()
-		
-		#left side - top
-		mapLabel = QtGui.QLabel(_("Map:"))
-		
-		#left side - middle
-		self.enterMap = EnterMap()
-		
-		#left side - top
-		self.mapChooser = EnterMapChooser(self, self.enterMap)
-		
-		chooseMap = QtGui.QHBoxLayout()
-		chooseMap.addWidget(mapLabel)
-		chooseMap.addWidget(self.mapChooser)
-		
-		#left side - bottom
-		explanationLabel = QtGui.QLabel(_("Add a place by doubleclicking it on the map"))
-		
-		#left side
-		leftSide.addLayout(chooseMap)
-		leftSide.addWidget(self.enterMap)
-		leftSide.addWidget(explanationLabel)
-		
-		#right side
-		rightSide = QtGui.QVBoxLayout()
-		
-		#right side - top
-		placesLabel = QtGui.QLabel(_("Places in your test"))
-		
-		removePlace = QtGui.QPushButton(_("Remove selected place"))
-		removePlace.clicked.connect(self.removePlace)
-		
-		rightTop = QtGui.QHBoxLayout()
-		rightTop.addWidget(placesLabel)
-		rightTop.addWidget(removePlace)
-		
-		#right side - middle
-		self.currentPlaces = EnterPlacesWidget()
-		
-		#right side - bottom
-		addPlace = QtGui.QHBoxLayout()
-		
-		addPlaceName = QtGui.QLabel(_("Add a place by name:"))
-		
-		addPlaceButton = QtGui.QPushButton(_("Add"))
-		
-		addPlaceButton.clicked.connect(lambda: self.addPlaceByName(self.addPlaceEdit.text()))
-		self.addPlaceEdit.returnPressed.connect(lambda: self.addPlaceByName(self.addPlaceEdit.text()))
-		
-		addPlace.addWidget(self.addPlaceEdit)
-		addPlace.addWidget(addPlaceButton)
-		
-		#right side
-		rightSide.addLayout(rightTop)
-		rightSide.addWidget(self.currentPlaces)
-		rightSide.addWidget(addPlaceName)
-		rightSide.addLayout(addPlace)
-		
-		#total layout
-		leftSideWidget = QtGui.QWidget()
-		leftSideWidget.setLayout(leftSide)
-		rightSideWidget = QtGui.QWidget()
-		rightSideWidget.setLayout(rightSide)
-		
-		self.addWidget(leftSideWidget)
-		self.addWidget(rightSideWidget)
-	
-	"""
-	Add a place to the list
-	"""
-	def addPlace(self,place):
-		self.places["items"].append(place)
-		self.enterMap.update()
-		self.currentPlaces.update()
-	
-	"""
-	Add a place by looking at the list of known places
-	"""
-	def addPlaceByName(self, name):
-		for placeDict in self.mapChooser.currentMap["knownPlaces"]:
-			if name in placeDict["names"]:
-				try:
-					id = self.places["items"][-1]["id"] + 1
-				except IndexError:
-					id = 0
-				self.places["items"].append({
-					"name": unicode(name),
-					"x": placeDict["x"],
-					"y": placeDict["y"],
-					"id": id
-				})
-				self.enterMap.update()
-				self.currentPlaces.update()
-				return
-		else:
-			QtGui.QMessageBox(QtGui.QMessageBox.Warning, "Place not found", "Sorry, this place is not in the list of known places. Please add it manually by doubleclicking on the right location in the map.").exec_()
-		
-		self.addPlaceEdit.setText("")
-		self.addPlaceEdit.setFocus()
-		
-	"""
-	Remove a place from the list
-	"""
-	def removePlace(self):
-		for placeItem in self.currentPlaces.selectedItems():
-			for place in self.places["items"]:
-				if placeItem.text() == unicode(place["name"] + " (" + unicode(place["x"]) + "," + unicode(place["y"]) + ")"):
-					self.places["items"].remove(place)
-		self.enterMap.update()
-		self.currentPlaces.update()
-	
-	"""
-	What happens when you click the Enter tab
-	"""
-	def showEvent(self, event):
-		if base.inLesson:
-			warningD = QtGui.QMessageBox()
-			warningD.setIcon(QtGui.QMessageBox.Warning)
-			warningD.setWindowTitle(_("Warning"))
-			warningD.setStandardButtons(QtGui.QMessageBox.Cancel | QtGui.QMessageBox.Ok)
-			warningD.setText(_("Are you sure you want to go back to the teach tab? This will end your lesson!"))
-			feedback = warningD.exec_()
-			if feedback == QtGui.QMessageBox.Ok:
-				base.teachWidget.stopLesson()
-			else:
-				base.fileTab.currentTab = base.teachWidget
-
 
 
 
@@ -435,7 +305,7 @@ class EnterWidget(QtGui.QSplitter):
 
 
 """
-All things that have to do with the teaching-part
+WIDGETS ON TEACH TAB
 """
 
 """
@@ -676,9 +546,9 @@ class TeachTopoLesson(object):
 		base.inLesson = False
 		
 		# Show results dialog
-		for module in base.api.mods("active", type="resultsdialog"):
-			if base.dataType in module.supports:
-				module.showResults(self.itemList["tests"], self.itemList["items"])
+		#for module in base.api.mods("active", type="resultsdialog"):
+		#	if base.dataType in module.supports:
+		#		module.showResults(self.itemList["tests"], self.itemList["items"])
 		
 		# return to enter tab
 		base.fileTab.currentTab = base.enterWidget
@@ -693,6 +563,19 @@ class TeachTopoLesson(object):
 	@property
 	def order(self):
 		return base.teachWidget.lessonOrderChooser.currentIndex()
+
+
+
+
+			
+			
+			
+			
+			
+			
+"""
+TABS
+"""
 
 """
 The teach tab
@@ -799,13 +682,160 @@ class TeachWidget(QtGui.QWidget):
 			self.checkanswerbutton.setVisible(True)
 			self.questionLabel.setVisible(False)
 
+"""
+The enter tab
+"""
+class EnterWidget(QtGui.QSplitter):
+	def __init__(self, *args, **kwargs):
+		super(EnterWidget, self).__init__(*args, **kwargs)
+		#self.places = List()
+		self.places = {
+			"items": list(),
+			"tests": list()
+		}
+		
+		#create the GUI
+		self.addPlaceEdit = EnterPlaceByName()
+		
+		#left side
+		leftSide = QtGui.QVBoxLayout()
+		
+		#left side - top
+		mapLabel = QtGui.QLabel(_("Map:"))
+		
+		#left side - middle
+		self.enterMap = EnterMap()
+		
+		#left side - top
+		self.mapChooser = EnterMapChooser(self, self.enterMap)
+		
+		chooseMap = QtGui.QHBoxLayout()
+		chooseMap.addWidget(mapLabel)
+		chooseMap.addWidget(self.mapChooser)
+		
+		#left side - bottom
+		explanationLabel = QtGui.QLabel(_("Add a place by doubleclicking it on the map"))
+		
+		#left side
+		leftSide.addLayout(chooseMap)
+		leftSide.addWidget(self.enterMap)
+		leftSide.addWidget(explanationLabel)
+		
+		#right side
+		rightSide = QtGui.QVBoxLayout()
+		
+		#right side - top
+		placesLabel = QtGui.QLabel(_("Places in your test"))
+		
+		removePlace = QtGui.QPushButton(_("Remove selected place"))
+		removePlace.clicked.connect(self.removePlace)
+		
+		rightTop = QtGui.QHBoxLayout()
+		rightTop.addWidget(placesLabel)
+		rightTop.addWidget(removePlace)
+		
+		#right side - middle
+		self.currentPlaces = EnterPlacesWidget()
+		
+		#right side - bottom
+		addPlace = QtGui.QHBoxLayout()
+		
+		addPlaceName = QtGui.QLabel(_("Add a place by name:"))
+		
+		addPlaceButton = QtGui.QPushButton(_("Add"))
+		
+		addPlaceButton.clicked.connect(lambda: self.addPlaceByName(self.addPlaceEdit.text()))
+		self.addPlaceEdit.returnPressed.connect(lambda: self.addPlaceByName(self.addPlaceEdit.text()))
+		
+		addPlace.addWidget(self.addPlaceEdit)
+		addPlace.addWidget(addPlaceButton)
+		
+		#right side
+		rightSide.addLayout(rightTop)
+		rightSide.addWidget(self.currentPlaces)
+		rightSide.addWidget(addPlaceName)
+		rightSide.addLayout(addPlace)
+		
+		#total layout
+		leftSideWidget = QtGui.QWidget()
+		leftSideWidget.setLayout(leftSide)
+		rightSideWidget = QtGui.QWidget()
+		rightSideWidget.setLayout(rightSide)
+		
+		self.addWidget(leftSideWidget)
+		self.addWidget(rightSideWidget)
+	
+	"""
+	Add a place to the list
+	"""
+	def addPlace(self,place):
+		self.places["items"].append(place)
+		self.enterMap.update()
+		self.currentPlaces.update()
+	
+	"""
+	Add a place by looking at the list of known places
+	"""
+	def addPlaceByName(self, name):
+		for placeDict in self.mapChooser.currentMap["knownPlaces"]:
+			if name in placeDict["names"]:
+				try:
+					id = self.places["items"][-1]["id"] + 1
+				except IndexError:
+					id = 0
+				self.places["items"].append({
+					"name": unicode(name),
+					"x": placeDict["x"],
+					"y": placeDict["y"],
+					"id": id
+				})
+				self.enterMap.update()
+				self.currentPlaces.update()
+				return
+		else:
+			QtGui.QMessageBox(QtGui.QMessageBox.Warning, "Place not found", "Sorry, this place is not in the list of known places. Please add it manually by doubleclicking on the right location in the map.").exec_()
+		
+		self.addPlaceEdit.setText("")
+		self.addPlaceEdit.setFocus()
+		
+	"""
+	Remove a place from the list
+	"""
+	def removePlace(self):
+		for placeItem in self.currentPlaces.selectedItems():
+			for place in self.places["items"]:
+				if placeItem.text() == unicode(place["name"] + " (" + unicode(place["x"]) + "," + unicode(place["y"]) + ")"):
+					self.places["items"].remove(place)
+		self.enterMap.update()
+		self.currentPlaces.update()
+	
+	"""
+	What happens when you click the Enter tab
+	"""
+	def showEvent(self, event):
+		if base.inLesson:
+			warningD = QtGui.QMessageBox()
+			warningD.setIcon(QtGui.QMessageBox.Warning)
+			warningD.setWindowTitle(_("Warning"))
+			warningD.setStandardButtons(QtGui.QMessageBox.Cancel | QtGui.QMessageBox.Ok)
+			warningD.setText(_("Are you sure you want to go back to the teach tab? This will end your lesson!"))
+			feedback = warningD.exec_()
+			if feedback == QtGui.QMessageBox.Ok:
+				base.teachWidget.stopLesson()
+			else:
+				base.fileTab.currentTab = base.teachWidget
+
+			
+		
 
 
 
+
+		
 			
 			
 """
-Other and abstract things
+GENERAL CLASSES
 """
 
 """
@@ -897,6 +927,9 @@ class TeachTopoLessonModule(object):
 			for item in list["list"]["items"]:
 				self.enterWidget.addPlace(item)
 
+"""
+Lesson object (that means: this techwidget+enterwidget)
+"""
 class Lesson(object):
 	def __init__(self, moduleManager, fileTab, enterWidget, teachWidget, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)

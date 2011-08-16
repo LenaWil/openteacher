@@ -1,4 +1,5 @@
 from PyQt4 import QtCore, QtGui
+import sys
 
 class ModulesTab(QtGui.QWidget):
 	def __init__(self, modules, *args, **kwargs):
@@ -63,6 +64,7 @@ class LessonTypeTab(QtGui.QWidget):
 			w.setting = setting
 			if setting["value"] != None:
 				w.setText(setting["value"])
+			
 		elif setting["type"] == "options":
 			w = QtGui.QComboBox()
 			# Add the options
@@ -73,6 +75,7 @@ class LessonTypeTab(QtGui.QWidget):
 			w.setting = setting
 			if setting["value"] != None:
 				w.setCurrentIndex(w.findData(setting["value"]))
+			
 		elif setting["type"] == "long_text":
 			w = QtGui.QTextEdit()
 			w.textChanged.connect(self.longTextChanged)
@@ -80,13 +83,16 @@ class LessonTypeTab(QtGui.QWidget):
 			w.setting = setting
 			if setting["value"] != None:
 				w.setText(setting["value"])
+			
 		elif setting["type"] == "number":
 			w = QtGui.QSpinBox()
+			w.setRange(0, sys.maxint)
 			w.valueChanged.connect(self.numberChanged)
 			
 			w.setting = setting
 			if setting["value"] != None:
 				w.setValue(setting["value"])
+			
 		elif setting["type"] == "boolean":
 			w = QtGui.QCheckBox()
 			w.stateChanged.connect(self.booleanChanged)
@@ -95,6 +101,7 @@ class LessonTypeTab(QtGui.QWidget):
 			if setting["value"] != None:
 				# *2 because 2 is checked and 0 is unchecked
 				w.setCheckState(setting["value"] * 2)
+			
 		return w
 
 	def shortTextChanged(self):

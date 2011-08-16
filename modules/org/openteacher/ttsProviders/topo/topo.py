@@ -19,9 +19,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class TextToSpeechProviderWords(object):
+class TextToSpeechProviderTopo(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(TextToSpeechProviderWords, self).__init__(*args, **kwargs)
+		super(TextToSpeechProviderTopo, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 	def enable(self):
@@ -32,8 +32,8 @@ class TextToSpeechProviderWords(object):
 		# Add settings
 		for module in self._mm.mods("active", type="settings"):
 			module.registerSetting(
-				"org.openteacher.ttsProviders.words.pronounce",
-				"Pronounce words",
+				"org.openteacher.ttsProviders.topo.pronounce",
+				"Pronounce places",
 				"boolean",
 				"Pronounciation",
 				"Pronounciation",
@@ -51,27 +51,15 @@ class TextToSpeechProviderWords(object):
 	
 	def itemEmitted(self, item):
 		for module in self._mm.mods("active", type="settings"):
-			if(module.value("org.openteacher.ttsProviders.words.pronounce")):
-				composers = set(self._mm.mods("active", type="wordsStringComposer"))
+			if(module.value("org.openteacher.ttsProviders.topo.pronounce")):
 				ttss = set(self._mm.mods("active", type="textToSpeech"))
-				try:
-					compose = self._modules.chooseItem(composers).compose
-				except IndexError, e:
-					#FIXME: nice error handling
-					raise e
 				try:
 					tts = self._modules.chooseItem(ttss)
 				except IndexError, e:
 					#FIXME: nice error handling
 					raise e
-				try:
-					text = compose(item["questions"])
-				except KeyError:
-					# No questions
-					pass
 				else:
-					tts.say.emit(text)
-				break
+					tts.say.emit(item["name"])
 
 def init(moduleManager):
-	return TextToSpeechProviderWords(moduleManager)
+	return TextToSpeechProviderTopo(moduleManager)

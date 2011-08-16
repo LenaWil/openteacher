@@ -32,6 +32,10 @@ import fnmatch
 import tempfile
 
 """
+WIDGETS ON BOTH ENTER AND TEACH TABS
+"""
+
+"""
 The video player and web viewer combination widget with controls
 """
 class MediaControlDisplay(QtGui.QWidget):
@@ -81,12 +85,16 @@ class MediaControlDisplay(QtGui.QWidget):
 		# Disable the controls
 		self.setControls()
 	
-	def showMedia(self, path, remote):
+	def showMedia(self, path, remote, autoplay):
+		priority = 0
+		
 		for module in base._mm.mods("active", type="mediaType"):
 			if module.supports(path):
-				module.showMedia(module.path(path, self.autoplay), self.mediaDisplay)
-				self.activeModule = module
-				break
+				if module.priority > priority:
+					chosenModule = module
+		
+		chosenModule.showMedia(chosenModule.path(path, self.autoplay), self.mediaDisplay, autoplay)
+		self.activeModule = chosenModule
 		
 		self.setControls()
 	
@@ -123,7 +131,6 @@ class MediaControlDisplay(QtGui.QWidget):
 		self.volumeSlider.setEnabled(enabled)
 		self.seekSlider.setEnabled(enabled)
 
-
 """
 The video player and web viewer combination widget
 """
@@ -155,6 +162,20 @@ class MediaDisplay(QtGui.QStackedWidget):
 			self.videoPlayer.stop()
 		# Set the active type
 		self.activeModule = None
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+"""
+WIDGETS ON ENTER TAB
+"""
 
 """
 The model for the list widget with media items (this construction because without model Qt produces a bug)
@@ -213,6 +234,58 @@ class EnterItemList(QtGui.QListView):
 		if len(base.enterWidget.itemList["items"]) > 0:
 			self.parent.setActiveItem(base.enterWidget.itemList["items"][self.currentIndex().row()])
 
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+"""
+WIDGETS ON TEACH TAB
+"""
+
+"""
+The dropdown menu to choose lesson type
+"""
+class TeachLessonTypeChooser(QtGui.QComboBox):
+	def __init__(self,*args,**kwargs):
+		super(TeachLessonTypeChooser, self).__init__(*args, **kwargs)
+		
+		self._lessonTypeModules = list(
+			base._mm.mods("active", type="lessonType")
+		)
+		
+		for lessontype in self._lessonTypeModules:
+			self.addItem(lessontype.name, lessontype)
+	
+	"""
+	Get the current lesson type
+	"""
+	@property
+	def currentLessonType(self):
+		for lessontype in self._lessonTypeModules:
+			if lessontype.name == self.currentText():
+				return lessontype
+
+				
+				
+				
+				
+				
+				
+				
+
+
+
+"""
+TABS
+"""
+
 """
 The enter tab
 """
@@ -246,24 +319,31 @@ class EnterWidget(QtGui.QSplitter):
 		
 		self.mediaDisplay = MediaControlDisplay(False)
 		
-		self.entername = QtGui.QLineEdit()
-		self.entername.textChanged.connect(self.changeName)
-		self.entername.setEnabled(False)
+		namel = QtGui.QLabel(_("Name:"))
 		
-		nameL = QtGui.QHBoxLayout()
-		nameL.addWidget(QtGui.QLabel(_("Name:")))
-		nameL.addWidget(self.entername)
+		self.enterName = QtGui.QLineEdit()
+		self.enterName.textChanged.connect(self.changeName)
+		self.enterName.setEnabled(False)
 		
-		descl = QtGui.QLabel(_("Description:"))
+		questionl = QtGui.QLabel(_("Question:"))
 		
-		self.enterdesc = QtGui.QTextEdit()
-		self.enterdesc.textChanged.connect(self.changeDesc)
-		self.enterdesc.setEnabled(False)
+		self.enterQuestion = QtGui.QLineEdit()
+		self.enterQuestion.textChanged.connect(self.changeQuestion)
+		self.enterQuestion.setEnabled(False)
+		
+		answerl = QtGui.QLabel(_("Answer:"))
+		
+		self.enterAnswer = QtGui.QLineEdit()
+		self.enterAnswer.textChanged.connect(self.changeAnswer)
+		self.enterAnswer.setEnabled(False)
 		
 		desceditL = QtGui.QVBoxLayout()
-		desceditL.addLayout(nameL)
-		desceditL.addWidget(descl)
-		desceditL.addWidget(self.enterdesc)
+		desceditL.addWidget(namel)
+		desceditL.addWidget(self.enterName)
+		desceditL.addWidget(questionl)
+		desceditL.addWidget(self.enterQuestion)
+		desceditL.addWidget(answerl)
+		desceditL.addWidget(self.enterAnswer)
 		
 		desceditW = QtGui.QWidget()
 		desceditW.setLayout(desceditL)
@@ -290,7 +370,20 @@ class EnterWidget(QtGui.QSplitter):
 	Add items from the local disk to the list
 	"""
 	def addLocalItems(self):
-		filenames = QtGui.QFileDialog.getOpenFileNames(self,_("Select file(s)"),QtCore.QDir.homePath(),_("Media") + " (*.bmp *.jpg *.jpeg *.png *.wmv *.mp3 *.avi)")
+		extensions = []
+		for module in base._mm.mods("active", type="mediaType"):
+			try:
+				extensions.extend(module.extensions)
+			except AttributeError:
+				# No extensions
+				pass
+		
+		extensionsStr = "("
+		for extension in extensions:
+			extensionsStr += "*" + extension + " "
+		extensionsStr += ")"
+		
+		filenames = QtGui.QFileDialog.getOpenFileNames(self,_("Select file(s)"),QtCore.QDir.homePath(),_("Media") + " " + extensionsStr)
 		for filename in filenames:
 			self.addItem(str(filename), False)
 	
@@ -298,36 +391,61 @@ class EnterWidget(QtGui.QSplitter):
 	Add items from the internet to the list
 	"""
 	def addRemoteItems(self):
-		url, dialog = QtGui.QInputDialog.getText(self, _("File URL"), _("Enter the URL of your website or media item.\nSupported video sites: YouTube, Dailymotion, Vimeo."))
+		sitenames = []
+		for module in base._mm.mods("active", type="mediaType"):
+			try:
+				sitenames.extend(module.remoteNames)
+			except AttributeError:
+				# No name
+				pass
+		
+		sitenamesStr = ""
+		for sitename in sitenames:
+			sitenamesStr += sitename + ", "
+		sitenamesStr = sitenamesStr[:-2]
+		
+		url, dialog = QtGui.QInputDialog.getText(self, _("File URL"), _("Enter the URL of your website or media item.\nSupported video sites: " + sitenamesStr + "."))
 		if dialog:
 			self.addItem(str(url), True)
 	
 	"""
 	Add an item to the list
 	"""
-	def addItem(self,filename,remote=False,name=None,desc=None):
-		item = {
-			"id": int(),
-			"remote": remote,
-			"filename": str(filename),
-			"name": str(name),
-			"desc": str()
-		}
-		# Set id
-		try:
-			item["id"] = base.enterWidget.itemList["items"][-1]["id"] +1
-		except IndexError:
-			item["id"] = 0
-		
-		if name != None:
-			item["name"] = name
+	def addItem(self,filename,remote=False,name=None,question=None,answer=None):
+		# Check if file is supported
+		for module in base._mm.mods("active", type="mediaType"):
+			if module.supports(filename):
+				item = {
+					"id": int(),
+					"remote": remote,
+					"filename": unicode(filename),
+					"name": unicode(name),
+					"question": unicode(),
+					"answer": unicode()
+				}
+				# Set id
+				try:
+					item["id"] = base.enterWidget.itemList["items"][-1]["id"] +1
+				except IndexError:
+					item["id"] = 0
+				
+				if name != None:
+					item["name"] = name
+				else:
+					if remote == False:
+						item["name"] = os.path.basename(filename)
+					else:
+						item["name"] = filename
+				if question != None:
+					item["question"] = question
+				if answer != None:
+					item["answer"] = answer
+				
+				self.itemList["items"].append(item)
+				self.enterItemList.update()
+				break
 		else:
-			item["name"] = os.path.basename(filename)
-		if desc != None:
-			item["desc"] = desc
-		
-		self.itemList["items"].append(item)
-		self.enterItemList.update()
+			QtGui.QMessageBox.critical(self, _("Unsupported file type"), _("This type of file is not supported:\n" + filename))
 	
 	"""
 	Remove an item from the list
@@ -336,10 +454,12 @@ class EnterWidget(QtGui.QSplitter):
 		self.itemList["items"].remove(self.activeitem)
 		self.enterItemList.update()
 		self.mediaDisplay.clear()
-		self.entername.setText("")
-		self.entername.setEnabled(False)
-		self.enterdesc.setText("")
-		self.enterdesc.setEnabled(False)
+		self.enterName.setText("")
+		self.enterName.setEnabled(False)
+		self.enterQuestion.setText("")
+		self.enterQuestion.setEnabled(False)
+		self.enterAnswer.setText("")
+		self.enterAnswer.setEnabled(False)
 		self.enterItemList.setRightActiveItem()
 	
 	"""
@@ -347,24 +467,33 @@ class EnterWidget(QtGui.QSplitter):
 	"""
 	def setActiveItem(self,item):
 		self.activeitem = item
-		self.entername.setEnabled(True)
-		self.entername.setText(item["name"])
-		self.enterdesc.setEnabled(True)
-		self.enterdesc.setText(item["desc"])
-		self.mediaDisplay.showMedia(item["filename"], item["remote"])
+		self.enterName.setEnabled(True)
+		self.enterName.setText(item["name"])
+		self.enterQuestion.setEnabled(True)
+		self.enterQuestion.setText(item["question"])
+		self.enterAnswer.setEnabled(True)
+		self.enterAnswer.setText(item["answer"])
+		self.mediaDisplay.showMedia(item["filename"], item["remote"], False)
 	
 	"""
 	Change the name of the active item
 	"""
 	def changeName(self):
-		self.activeitem["name"] = str(self.entername.text())
+		self.activeitem["name"] = unicode(self.enterName.text())
 		self.enterItemList.update()
+	
+	
+	"""
+	Change the question of the active item
+	"""
+	def changeQuestion(self):
+		self.activeitem["question"] = unicode(self.enterQuestion.text())
 	
 	"""
 	Change the description of the active item
 	"""
-	def changeDesc(self):
-		self.activeitem["desc"] = unicode(self.enterdesc.toPlainText())
+	def changeAnswer(self):
+		self.activeitem["answer"] = unicode(self.enterAnswer.text())
 	
 	"""
 	What happens when you click the Enter tab
@@ -381,39 +510,7 @@ class EnterWidget(QtGui.QSplitter):
 				base.teachWidget.stopLesson()
 			else:
 				base.fileTab.currentTab = base.teachWidget
-
-"""
-The dropdown menu to choose lesson type
-"""
-class LessonTypeChooser(QtGui.QComboBox):
-	def __init__(self,*args,**kwargs):
-		super(LessonTypeChooser, self).__init__(*args, **kwargs)
-		
-		self.currentIndexChanged.connect(self.changeLessonType)
-		
-		self._lessonTypeModules = list(
-			base._mm.mods("active", type="lessonType")
-		)
-		
-		for lessontype in self._lessonTypeModules:
-			self.addItem(lessontype.name, lessontype)
 	
-	"""
-	What happens when you change the lesson type
-	"""
-	def changeLessonType(self, index):
-		if base.inLesson:
-			base.teachWidget.initiateLesson()
-	
-	"""
-	Get the current lesson type
-	"""
-	@property
-	def currentLessonType(self):
-		for lessontype in self._lessonTypeModules:
-			if lessontype.name == self.currentText():
-				return lessontype
-
 """
 The teach tab
 """
@@ -425,17 +522,27 @@ class TeachWidget(QtGui.QWidget):
 		top = QtGui.QHBoxLayout()
 		
 		label = QtGui.QLabel(_("Lesson type:"))
-		self.lessonTypeChooser = LessonTypeChooser()
+		self.lessonTypeChooser = TeachLessonTypeChooser()
+		self.lessonTypeChooser.currentIndexChanged.connect(self.changeLessonType)
 		
 		top.addWidget(label)
 		top.addWidget(self.lessonTypeChooser)
 		
+		self.nameLabel = QtGui.QLabel()
+		font = QtGui.QFont()
+		font.setPointSize(14)
+		self.nameLabel.setFont(font)
+		
 		self.mediaDisplay = MediaControlDisplay(True)
+		
+		self.questionLabel = QtGui.QLabel()
 		
 		self.answerField = QtGui.QLineEdit()
 		self.answerField.returnPressed.connect(self.checkAnswerButtonClick)
+		
 		checkButton = QtGui.QPushButton(_("Check"))
 		checkButton.clicked.connect(self.checkAnswerButtonClick)
+		
 		self.progress = QtGui.QProgressBar()
 		
 		bottomL = QtGui.QHBoxLayout()
@@ -446,6 +553,8 @@ class TeachWidget(QtGui.QWidget):
 		layout = QtGui.QVBoxLayout()
 		layout.addLayout(top)
 		layout.addWidget(self.mediaDisplay)
+		layout.addWidget(self.nameLabel)
+		layout.addWidget(self.questionLabel)
 		layout.addLayout(bottomL)
 		
 		self.setLayout(layout)
@@ -456,6 +565,13 @@ class TeachWidget(QtGui.QWidget):
 	def initiateLesson(self):
 		self.lesson = MediaLesson(base.enterWidget.itemList)
 		self.answerField.setFocus()
+	
+	"""
+	What happens when you change the lesson type
+	"""
+	def changeLessonType(self, index):
+		if base.inLesson:
+			self.initiateLesson()
 	
 	"""
 	Stops the lesson
@@ -481,9 +597,24 @@ class TeachWidget(QtGui.QWidget):
 			base.fileTab.currentTab = base.enterWidget
 		elif not base.inLesson:
 			self.initiateLesson()
+				
+				
+			
+
+
+
+
+
+
+
+
+			
+"""
+GENERAL CLASSES
+"""
 
 """
-The lesson itself
+The lesson itself (being teached)
 """
 class MediaLesson(object):
 	def __init__(self,itemList,*args,**kwargs):
@@ -509,7 +640,7 @@ class MediaLesson(object):
 	Check whether the given answer was right or wrong
 	"""
 	def checkAnswer(self):
-		if self.currentItem["name"] == base.teachWidget.answerField.text():
+		if self.currentItem["answer"] == base.teachWidget.answerField.text():
 			# Answer was right
 			self.lessonType.setResult({
 					"itemId": self.currentItem["id"],
@@ -530,8 +661,12 @@ class MediaLesson(object):
 	def nextQuestion(self, item):
 		# set the next question
 		self.currentItem = item
+		# set the question field
+		base.teachWidget.questionLabel.setText(self.currentItem["question"])
+		# set the name field
+		base.teachWidget.nameLabel.setText(self.currentItem["name"])
 		# set the mediawidget to the right location
-		base.teachWidget.mediaDisplay.showMedia(self.currentItem["filename"], self.currentItem["remote"])
+		base.teachWidget.mediaDisplay.showMedia(self.currentItem["filename"], self.currentItem["remote"], True)
 	
 	"""
 	Ends the lesson
@@ -539,9 +674,9 @@ class MediaLesson(object):
 	def endLesson(self):
 		base.inLesson = False
 		
-		for module in base._mm.mods("active", type="resultsdialog"):
-			if base.dataType in module.supports:
-				module.showResults(self.itemList["tests"], self.itemList["items"])
+		#for module in base._mm.mods("active", type="resultsdialog"):
+		#	if base.dataType in module.supports:
+		#		module.showResults(self.itemList["tests"], self.itemList["items"])
 		
 		# stop media
 		base.teachWidget.mediaDisplay.clear()
@@ -571,6 +706,7 @@ class MediaLessonModule(object):
 		self.inLesson = False
 
 		self.type = "lesson"
+		self.dataType = "media"
 
 	def enable(self):
 		#setup translation
@@ -584,8 +720,6 @@ class MediaLessonModule(object):
 
 		for module in self._mm.mods("active", type="modules"):
 			module.registerModule(_("Media Lesson"), self)
-
-		self.dataType = "media"
 		
 		self.lessonCreated = self._mm.createEvent()
 		self.lessonCreationFinished = self._mm.createEvent()
@@ -646,8 +780,11 @@ class MediaLessonModule(object):
 	def loadFromList(self, list, path):
 		for lesson in self.createLesson():
 			for item in list["items"]:
-				self.enterWidget.addItem(item["filename"], item["remote"], item["name"], item["desc"])
+				self.enterWidget.addItem(item["filename"], item["remote"], item["name"], item["question"], item["answer"])
 
+"""
+Lesson object (that means: this techwidget+enterwidget)
+"""
 class Lesson(object):
 	def __init__(self, moduleManager, fileTab, enterWidget, teachWidget, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
@@ -657,7 +794,6 @@ class Lesson(object):
 		self.module = self
 		self.list = base.enterWidget.itemList
 		self.resources = {}
-		
 		self.dataType = "media"
 		
 		fileTab.closeRequested.handle(self.stop)

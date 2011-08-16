@@ -30,7 +30,7 @@ class MediaTypeModule(object):
 		self.phononControls = False
 		
 		self.type = "mediaType"
-		self.remoteNames = ["YouTube"]
+		self.remoteNames = ["MegaVideo"]
 		self.priority = 10
 
 	def enable(self):
@@ -40,18 +40,16 @@ class MediaTypeModule(object):
 		self.active = False
 	
 	def supports(self, path):
-		if fnmatch.fnmatch(str(path), "*youtube.*/watch?*"):
+		if fnmatch.fnmatch(str(path), "*megavideo.*/?v=*"):
 			return True
 		else:
 			return False
 	
 	def path(self, path, autoplay):
 		# Youtube URLpath
-		path = path.split("v=")[1]
+		path = path.split("/?v=")[1]
 		path = path.split("&")[0]
-		path = "http://www.youtube.com/embed/" + path
-		if autoplay:
-			path += "?autoplay=1"
+		path = "http://wwwstatic.megavideo.com/mv_player3.swf?v=" + path
 		return path
 	
 	def showMedia(self, path, mediaDisplay, autoplay):

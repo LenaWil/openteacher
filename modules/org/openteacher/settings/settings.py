@@ -25,7 +25,7 @@ class SettingsModule(object):
 
 		self.type = "settings"
 
-	def registerSetting(self, internal_name, name, type="short_text", lessonType=None, category=None):
+	def registerSetting(self, internal_name, name, type="short_text", lessonType=None, category=None, defaultValue=None):
 		try:
 			self._settings[lessonType]
 		except KeyError:
@@ -35,10 +35,26 @@ class SettingsModule(object):
 		except KeyError:
 			self._settings[lessonType][category] = {}
 		setting = self._settings[lessonType][category][internal_name] = {}
-		setting["value"] = None
+		
+		def get_value():
+			return setting["value"]
+		def set_value(value):
+			setting["value"] = value
+			self.valueChanged.emit()
+		setting["value"] = property(get_value, set_value)
+		
+		setting["value"] = defaultValue
 		setting["name"] = name
 		setting["type"] = type
 		setting["options"] = []
+	
+	def getSetting(self, internal_name):
+		for lessonType in self._settings.values():
+			for category in lessonType.values():
+				try:
+					return category[internal_name]
+				except KeyError:
+					pass
 
 	def registeredSettings(self, lessonType=None, category=None):
 		if lessonType:

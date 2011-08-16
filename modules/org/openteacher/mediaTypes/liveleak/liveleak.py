@@ -30,7 +30,7 @@ class MediaTypeModule(object):
 		self.phononControls = False
 		
 		self.type = "mediaType"
-		self.remoteNames = ["YouTube"]
+		self.remoteNames = ["LiveLeak"]
 		self.priority = 10
 
 	def enable(self):
@@ -40,18 +40,16 @@ class MediaTypeModule(object):
 		self.active = False
 	
 	def supports(self, path):
-		if fnmatch.fnmatch(str(path), "*youtube.*/watch?*"):
+		if fnmatch.fnmatch(str(path), "*liveleak.com/view?i=*"):
 			return True
 		else:
 			return False
 	
 	def path(self, path, autoplay):
 		# Youtube URLpath
-		path = path.split("v=")[1]
-		path = path.split("&")[0]
-		path = "http://www.youtube.com/embed/" + path
-		if autoplay:
-			path += "?autoplay=1"
+		path = path.split("/view?i=")[1]
+		path = path.split("?")[0]
+		path = "http://www.liveleak.com/e/" + path + "&p=1"
 		return path
 	
 	def showMedia(self, path, mediaDisplay, autoplay):
