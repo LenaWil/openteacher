@@ -70,11 +70,15 @@ class CloseButton(QtGui.QAbstractButton):
 		self.style().drawPrimitive(QtGui.QStyle.PE_IndicatorTabClose, opt, p, self)
 
 class LessonTabWidget(QtGui.QTabWidget):
-	def __init__(self, enterWidget, teachWidget, *args, **kwargs):
+	def __init__(self, enterWidget, teachWidget, resultsWidget, *args, **kwargs):
 		super(LessonTabWidget, self).__init__(*args, **kwargs)
 
-		self.addTab(enterWidget, _("Enter list"))
-		self.addTab(teachWidget, _("Teach me!"))
+		if enterWidget:
+			self.addTab(enterWidget, _("Enter list"))
+		if teachWidget:
+			self.addTab(teachWidget, _("Teach me!"))
+		if resultsWidget:
+			self.addTab(resultsWidget, _("Show results"))
 
 		self.setTabPosition(QtGui.QTabWidget.South)
 		self.setDocumentMode(True)
@@ -197,6 +201,7 @@ class FilesTabWidget(QtGui.QTabWidget):
 		return i
 
 class OpenTeacherWidget(QtGui.QMainWindow):
+	activityChanged = QtCore.pyqtSignal([object])
 	def __init__(self, *args, **kwargs):
 		super(OpenTeacherWidget, self).__init__(*args, **kwargs)
 
@@ -300,6 +305,10 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 
 		#activate statusBar
 		self.statusBar()
+
+	def changeEvent(self, event):
+		if event.type() == QtCore.QEvent.ActivationChange:
+			self.activityChanged.emit(self.isActiveWindow())
 
 class ItemChooser(QtGui.QDialog):#FIXME
 	def __init__(self, items, *args, **kwargs):

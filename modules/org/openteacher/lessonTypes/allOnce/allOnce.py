@@ -34,30 +34,37 @@ class AllOnceLessonType(object):
 		self.lessonDone = self._mm.createEvent()
 		self._list = list
 		self._indexes = indexes
-		self._test = []
+		self._test = {
+			"results": [],
+			"finished": False,
+			"pauses": [],
+		}
 
 		self.totalItems = len(self._indexes)
 		self.askedItems = 0
 
 	def start(self):
 		self._emitNext()
-	
-	# result is a Result-type object saying whether the question was answered right or wrong
+
 	def setResult(self, result):
-		self._test.append(result)
+		self._test["results"].append(result)
 
 		self.askedItems += 1
 		self._emitNext()
 
+	def addPause(self, pause):
+		self._test["pauses"].append(pause)
+
 	def correctLastAnswer(self, result):
-		self._test[-1] = result
+		self._test["results"][-1] = result
 
 	def _emitNext(self):
 		try:
 			i = self._indexes[self.askedItems]
 		except IndexError:
 			#lesson end
-			if len(self._test) != 0:
+			if len(self._test["results"]) != 0:
+				self._test["finished"] = True
 				try:
 					self._list["tests"]
 				except KeyError:

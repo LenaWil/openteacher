@@ -20,6 +20,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt4 import QtGui, QtCore
+import datetime
 
 class ThinkWidget(QtGui.QWidget):
 	def __init__(self, *args, **kwargs):
@@ -74,18 +75,23 @@ class InMindTeachWidget(QtGui.QStackedWidget):
 		self.answerWidget.rightButton.clicked.connect(self.setRight)
 		self.answerWidget.wrongButton.clicked.connect(self.setWrong)
 
-	def setRight(self):
-		result = {
-			"result": "right",
+	def _constructResult(self):
+		return {
 			"itemId": self._currentWord["id"],
+			"active": {
+				"start": self.start,
+				"end": self.end,
+			},
 		}
+
+	def setRight(self):
+		result = self._constructResult()
+		result["result"] = "right"
 		self.lessonType.setResult(result)
 
 	def setWrong(self):
-		result = {
-			"result": "wrong",
-			"itemId": self._currentWord["id"],
-		}
+		result = self._constructResult()
+		result["result"] = "wrong"
 		self.lessonType.setResult(result)
 
 	def newItem(self, word):
@@ -103,9 +109,11 @@ class InMindTeachWidget(QtGui.QStackedWidget):
 		self.answerWidget.label.setText(
 			_("Translation: ") + compose(word["answers"])
 		)
+		self.start = datetime.datetime.now()
 		self.setCurrentWidget(self.thinkWidget)
 
 	def startAnswering(self):
+		self.end = datetime.datetime.now()
 		self.setCurrentWidget(self.answerWidget)
 
 class InMindTeachTypeModule(object):

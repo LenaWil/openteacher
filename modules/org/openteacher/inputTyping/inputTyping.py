@@ -20,6 +20,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt4 import QtGui, QtCore
+import datetime
 
 class InputTyping(QtGui.QWidget):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -30,6 +31,7 @@ class InputTyping(QtGui.QWidget):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
 		self.inputLineEdit = QtGui.QLineEdit()
+		self.inputLineEdit.textEdited.connect(self._textEdited)
 
 		self.checkButton = QtGui.QPushButton(_(u"Check!"))
 		self.checkButton.setShortcut("Return") #FIXME: translatable?
@@ -41,6 +43,15 @@ class InputTyping(QtGui.QWidget):
 		mainLayout.addWidget(self.correctButton, 1, 1)
 		self.setLayout(mainLayout)
 
+	def _textEdited(self, text):
+		try:
+			self._end
+		except AttributeError:
+			self._end = datetime.datetime.now()
+		else:
+			if not unicode(text).strip():
+				del self._end
+
 	def updateLessonType(self, lessonType):
 		self.lessonType = lessonType
 
@@ -50,20 +61,15 @@ class InputTyping(QtGui.QWidget):
 		self.correctButton.clicked.connect(self.correctLastAnswer)
 
 	def newWord(self, word):
-		try:
-			self.previousWord = self.word
-		except AttributeError:
-			pass
+		self._start = datetime.datetime.now()
 		self.word = word
 		self.inputLineEdit.clear()
-		self.inputLineEdit.setFocus()
 
 	def correctLastAnswer(self):
-		result = {
+		result = self._previousResult.update({
 			"result": "right",
-			"wordId": self.previousWord.id,
 			"givenAnswer": _("Correct anyway")
-		}
+		})
 		self.lessonType.correctLastAnswer(result)
 
 	def checkAnswer(self):
@@ -75,7 +81,18 @@ class InputTyping(QtGui.QWidget):
 		except IndexError, e:
 			#FIXME: show nice error? Make typing unusable?
 			raise e
-		result = check(givenStringAnswer, self.word)
+		self._previousResult = result = check(givenStringAnswer, self.word)
+		try:
+			self._end
+		except AttributeError:
+			self._end = datetime.datetime.now()
+		result.update({
+			"active": {
+				"start": self._start,
+				"end": self._end,
+			},
+		})
+		del self._end
 
 		self.lessonType.setResult(result)
 

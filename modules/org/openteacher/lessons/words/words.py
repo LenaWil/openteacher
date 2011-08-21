@@ -22,6 +22,7 @@
 
 from PyQt4 import QtCore
 import copy
+import datetime
 
 class WordsTableModel(QtCore.QAbstractTableModel):
 	QUESTIONS, ANSWERS, COMMENT = xrange(3)
@@ -127,13 +128,7 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 			except IndexError:
 				if not unicode(value.toString()):
 					return False
-				word = {
-					"id": int(),
-					"questions": list(),
-					"answers": list(),
-					"comment": unicode(),
-					"created": str()
-				}
+				word = {"created": datetime.datetime.now()}
 				try:
 					word["id"] = self.list["items"][-1]["id"] +1
 				except IndexError:
@@ -209,32 +204,40 @@ class ModifiersListModel(QtCore.QAbstractListModel):
 		)
 
 class Lesson(object):
-	def __init__(self, module, moduleManager, fileTab, enterWidget, teachWidget, *args, **kwargs):
+	def __init__(self, module, moduleManager, fileTab, enterWidget, teachWidget, resultsWidget, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
 		
 		self.module = module
 		self._mm = moduleManager
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._gui = set(self._mm.mods("active", type="ui")).pop()
+
 		self.fileTab = fileTab
-		
+
 		self.resources = {}
 
+		self.fileTab.tabChanged.handle(self._tabChanged)
 		self.fileTab.closeRequested.handle(self.stop)
 		self.stopped = self._mm.createEvent()
-		
+
 		self._enterWidget = enterWidget
 		self._teachWidget = teachWidget
-		
+		self._resultsWidget = resultsWidget
+
 		self._initEnterUi()
 		self._initTeachUi()
+
+	def _tabChanged(self):
+		if self.fileTab.currentTab == self._resultsWidget:
+			self._resultsWidget.updateList(self.list)
 
 	def loadFromList(self, list):
 		# Set the table
 		self._wordsTableModel.updateList(list)
 		# Set the fields
-		self._enterWidget.titleTextBox.setText(list["title"])
-		self._enterWidget.questionLanguageTextBox.setText(list["questionLanguage"])
-		self._enterWidget.answerLanguageTextBox.setText(list["answerLanguage"])
+		self._enterWidget.titleTextBox.setText(list.get("title", u""))
+		self._enterWidget.questionLanguageTextBox.setText(list.get("questionLanguage", u""))
+		self._enterWidget.answerLanguageTextBox.setText(list.get("answerLanguage", u""))
 
 	@property
 	def list(self):
@@ -316,9 +319,6 @@ class Lesson(object):
 		self._wordsTableModel.setData(i, data)
 		ew.wordsTableView.edit(i)
 		ew.wordsTableView.itemDelegate().currentEditor.deselect()
-		
-	def emit(self):
-		self.tabChanged.emit()
 
 	def _initTeachUi(self):
 		sw = self._teachWidget.settingsWidget
@@ -381,6 +381,8 @@ class Lesson(object):
 
 		self._teachWidget.setCurrentWidget(lw)
 
+		self._gui.applicationActivityChanged.handle(self._activityChanged)
+
 		i = sw.lessonTypeComboBox.currentIndex()
 		try:
 			lessonTypeModule = self._lessonTypeModules[i]
@@ -403,7 +405,17 @@ class Lesson(object):
 
 		for widget in self._teachTypeWidgets:
 			widget.updateLessonType(self._lessonType)
+
 		self._lessonType.start()
+
+	def _activityChanged(self, activity):
+		if activity == "inactive":
+			self._pauseStart = datetime.datetime.now()
+		elif activity == "active":
+			self._lessonType.addPause({
+				"start": self._pauseStart,
+				"end": datetime.datetime.now()
+			})
 
 	def _newItem(self, item):
 		#FIXME!!!: item modifiers should be applied wider, not only for
@@ -422,11 +434,12 @@ class Lesson(object):
 
 	def _lessonDone(self):
 		self._updateProgress()
-		
+
+		self._gui.applicationActivityChanged.unhandle(self._activityChanged)
 		for module in self._mm.mods("active", type="resultsdialog"):
 			if self.module.dataType in module.supports:
 				module.showResults(self.list["tests"], self.list["items"])
-		
+
 		# return to enter tab
 		self.fileTab.currentTab = self._enterWidget
 
@@ -493,14 +506,18 @@ class WordsLessonModule(object):
 		for module in self._mm.mods("active", type="ui"):
 			enterWidget = self._enterUi.EnterWidget(self._onscreenKeyboard)
 			teachWidget = self._teachUi.TeachWidget(self._onscreenKeyboard)
+			resultsWidget = self._modules.chooseItem(set(
+				self._mm.mods("active", type="testsViewer")
+			)).createTestsViewer()
 
 			fileTab = module.addFileTab(
 				_("Word lesson %s") % self._counter,
 				enterWidget,
-				teachWidget
+				teachWidget,
+				resultsWidget
 			)
 
-			lesson = Lesson(self, self._mm, fileTab, enterWidget, teachWidget)
+			lesson = Lesson(self, self._mm, fileTab, enterWidget, teachWidget, resultsWidget)
 			self._references.add(lesson)
 			self.lessonCreated.emit(lesson)
 

@@ -42,9 +42,19 @@ class OpenTeachingWordsSaverModule(object):
 	def disable(self):
 		self.active = False
 
+	def _serialize(self, obj):
+		try:
+			return obj.strftime("%Y-%m-%dT%H:%M:%S.%f")
+		except AttributeError:
+			raise TypeError("The type '%s' isn't JSON serializable." % obj.__class__)
+
 	def save(self, type, list, path, resources):
 		otwdzip = zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED)
-		otwdzip.writestr("list.json", json.dumps(list))
+		otwdzip.writestr("list.json", json.dumps(
+			list, #the list to save
+			separators=(',',':'), #compact encoding
+			default=self._serialize
+		))
 
 def init(moduleManager):
 	return OpenTeachingWordsSaverModule(moduleManager)

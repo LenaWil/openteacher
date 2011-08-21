@@ -33,7 +33,7 @@ class FileTab(object):
 		self._mm = moduleManager
 		
 		self.closeRequested = self._mm.createEvent()
-		
+
 		i = self._tabWidget.indexOf(self._widget)
 		closeButton = self._tabWidget.tabBar().tabButton(
 			i,
@@ -57,7 +57,7 @@ class LessonFileTab(FileTab):
 		self._widget.setCurrentWidget(value)
 
 	def _getCurrentTab(self):
-		self._widget.currentWidget()
+		return self._widget.currentWidget()
 
 	currentTab = property(_getCurrentTab, _setCurrentTab)
 
@@ -80,6 +80,7 @@ class GuiModule(object):
 		self.documentationEvent = self._mm.createEvent()
 
 		self.tabChanged = self._mm.createEvent()
+		self.applicationActivityChanged = self._mm.createEvent()
 
 		self._ui = self._mm.import_("ui")
 		self._ui.ICON_PATH = self._mm.resourcePath("icons/") #FIXME: something less hard to debug?
@@ -141,6 +142,12 @@ class GuiModule(object):
 		self._widget.tabWidget.currentChanged.connect(
 			lambda: self.tabChanged.emit()
 		)
+		self._widget.activityChanged.connect(
+			lambda activity: self.applicationActivityChanged.emit(
+				"active" if activity else "inactive"
+			)
+		)
+#		self._app.focusChanged.connect(self._focusChanged)
 		self.active = True
 
 	def disable(self):
@@ -159,7 +166,17 @@ class GuiModule(object):
 		del self.aboutEvent
 		del self.documentationEvent
 		del self.tabChanged
+		del self.applicationActivityChanged
 		del self._widget
+
+#	def _focusChanged(self, old, new):
+#		activity = "active" if new else "inactive"
+#		try:
+#			if self._oldActivity == activity:
+#				return
+#		except AttributeError:
+#			pass
+#		self.applicationActivityChanged.emit(activity)
 
 	def run(self):
 		self._widget.show()
@@ -193,8 +210,8 @@ class GuiModule(object):
 		button.clicked.connect(lambda: event.emit())
 		return event
 
-	def addFileTab(self, text, enterWidget, teachWidget):
-		widget = self._ui.LessonTabWidget(enterWidget, teachWidget)
+	def addFileTab(self, text, enterWidget=None, teachWidget=None, resultsWidget=None):
+		widget = self._ui.LessonTabWidget(enterWidget, teachWidget, resultsWidget)
 		self._widget.tabWidget.addTab(widget, text)
 		
 		fileTab = self._fileTabs[widget] = LessonFileTab(

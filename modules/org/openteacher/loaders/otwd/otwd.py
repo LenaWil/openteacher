@@ -20,6 +20,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import zipfile
+import datetime
 try:
 	import json
 except:
@@ -47,10 +48,31 @@ class OpenTeachingWordsLoaderModule(object):
 		if path.endswith(".otwd"):
 			return "words"
 
+	def _parseDt(self, data):
+		return datetime.datetime.strptime(data, "%Y-%m-%dT%H:%M:%S.%f")
+
 	def load(self, path):
 		otwdzip = zipfile.ZipFile(path, "r")
 		listFile = otwdzip.open("list.json")
-		return json.load(listFile)
+		list = json.load(listFile)
+		for item in list["items"]:
+			try:
+				item["created"] = self._parseDt(item["created"])
+			except KeyError:
+				pass
+		for test in list["tests"]:
+			for pause in test["pauses"]:
+				pause["start"] = self._parseDt(pause["start"])
+				pause["end"] = self._parseDt(pause["end"])
+			for result in test["results"]:
+				try:
+					active = result["active"]
+				except AttributeError:
+					pass
+				else:
+					active["start"] = self._parseDt(active["start"])
+					active["end"] = self._parseDt(active["end"])
+		return list
 
 def init(moduleManager):
 	return OpenTeachingWordsLoaderModule(moduleManager)

@@ -3,7 +3,7 @@
 
 #	Copyright 2011, Marten de Vries
 #	Copyright 2011, Cas Widdershoven
-#	Copyright 2008-2011, Milan Boers
+#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -30,7 +30,11 @@ class SmartLessonType(object):
 
 		self._list = list
 		self._indexes = indexes
-		self._test = []
+		self._test = {
+			"results": [],
+			"finished": False,
+			"pauses": [],
+		}
 		self.askedItems = 0
 
 	@property
@@ -40,10 +44,13 @@ class SmartLessonType(object):
 	def start(self):
 		self._emitNext()
 
+	def addPause(self, pause):
+		self._test["pauses"].append(pause)
+
 	def setResult(self, result):
 		self.askedItems += 1
 
-		self._test.append(result)
+		self._test["results"].append(result)
 		if result["result"] == "wrong":
 			try:
 				if self._indexes[-1] != self._currentIndex:
@@ -59,7 +66,7 @@ class SmartLessonType(object):
 		self._emitNext()
 
 	def correctLastAnswer(self, result):
-		self._test[-1] = result
+		self._test["results"][-1] = result
 
 		try:
 			if self._indexes[-1] == self._previousIndex:
@@ -82,7 +89,8 @@ class SmartLessonType(object):
 			self._currentIndex = self._indexes.pop(0)
 		except IndexError:
 			#end of lesson
-			if len(self._test) != 0:
+			if len(self._test["results"]) != 0:
+				self._test["finished"] = True
 				try:
 					self._list["tests"]
 				except KeyError:
