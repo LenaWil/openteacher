@@ -29,7 +29,7 @@ class Graph(QtGui.QFrame):
 
 		self.setSizePolicy(
 			QtGui.QSizePolicy.Expanding,
-			QtGui.QSizePolicy.Expanding
+			QtGui.QSizePolicy.MinimumExpanding
 		)
 		
 		self.setFrameStyle(QtGui.QFrame.StyledPanel)
@@ -38,6 +38,13 @@ class Graph(QtGui.QFrame):
 		self.start = self._test["results"][0]["active"]["start"]
 		self.end = self._test["results"][-1]["active"]["end"]
 		self._totalSeconds = (self.end - self.start).total_seconds()
+
+	@property
+	def _amountOfUniqueItems(self):
+		ids = set()
+		for result in self._test["results"]:
+			ids.add(result["itemId"])
+		return len(ids)
 
 	def event(self, event, *args, **kwargs):
 		if event.type() == QtCore.QEvent.ToolTip:
@@ -70,10 +77,10 @@ class Graph(QtGui.QFrame):
 		p.drawRect(x, 0, width, self._h)
 
 	def paintEvent(self, event, *args, **kwargs):
-		#FIXME: get colors from system theme
-
 		p = QtGui.QPainter()
 		p.begin(self)
+		
+		p.setPen(QtCore.Qt.NoPen)
 		
 		w = self.width()
 		self._h = self.height()
@@ -81,17 +88,21 @@ class Graph(QtGui.QFrame):
 		self._secondsPerPixel = w / self._totalSeconds
 
 		colors = {}
-		color = QtGui.QColor(QtCore.Qt.yellow)
+		color = self.palette().highlight().color()
+		colorDifference = (255 - color.lightness()) / (self._amountOfUniqueItems +1)#+1 so it doesn't become 0
 		for result in self._test["results"]:
 			try:
 				p.setBrush(QtGui.QBrush(colors[result["itemId"]]))
 			except KeyError:
 				p.setBrush(QtGui.QBrush(color))
-				color = color.lighter()#FIXME (can become white)
+				color = QtGui.QColor(color)
+				hsl = list(color.getHsl())
+				hsl[2] = color.lightness() + colorDifference
+				color.setHsl(*hsl)
 
 			self._paintItem(p, result["active"])
 
-		p.setBrush(QtGui.QBrush(QtCore.Qt.gray))
+		p.setBrush(self.palette().dark())
 		for pause in self._test["pauses"]:
 			self._paintItem(p, pause)
 
@@ -101,7 +112,7 @@ class Graph(QtGui.QFrame):
 		super(Graph, self).paintEvent(event, *args, **kwargs)
 
 	def sizeHint(self):
-		return QtCore.QSize(200, 40)
+		return QtCore.QSize(200, 30)
 
 class ProgressViewer(QtGui.QWidget):
 	def __init__(self, test, *args, **kwargs):
