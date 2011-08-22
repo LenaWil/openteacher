@@ -24,9 +24,12 @@ import datetime
 class TestModel(QtCore.QAbstractTableModel):
 	QUESTION, ANSWER, GIVEN_ANSWER, CORRECT = xrange(4)#FIXME: QUESTION, ANSWER and GIVEN_ANSWER aren't guaranteed to exist?
 
-	def __init__(self, list, test, *args, **kwargs):
+	def __init__(self, moduleManager, list, test, *args, **kwargs):
 		super(TestModel, self).__init__(*args, **kwargs)
-		
+
+		self._mm = moduleManager
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
 		self._list = list
 		self._test = test
 
@@ -52,15 +55,36 @@ class TestModel(QtCore.QAbstractTableModel):
 		if not index.isValid():
 			return
 
+		try:
+			compose = self._modules.chooseItem(
+				set(self._mm.mods("active", type="wordsStringComposer"))
+			).compose
+		except IndexError:
+			#FIXME: nice error handling
+			pass
+		else:
+			if compose is None:
+				pass
+				#FIXME: nice error handling
+
 		result = self._test["results"][index.row()]
 		if role == QtCore.Qt.DisplayRole:
 			item = self._itemForResult(result)
 			if index.column() == self.QUESTION:
-				return unicode(item["questions"])#FIXME: itemDrawer
+				try:
+					return compose(item["questions"])
+				except KeyError:
+					return compose([])
 			elif index.column() == self.ANSWER:
-				return unicode(item["answers"])#FIXME: itemDrawer
+				try:
+					return compose(item["answers"])
+				except KeyError:
+					return compose([])
 			elif index.column() == self.GIVEN_ANSWER:
-				return result["givenAnswer"]#FIXME: itemDrawer
+				try:
+					return result["givenAnswer"]
+				except KeyError:
+					return _("-")
 		elif role == QtCore.Qt.CheckStateRole and index.column() == self.CORRECT:
 			return result["result"] == "right"
 
@@ -71,12 +95,15 @@ class TestModel(QtCore.QAbstractTableModel):
 		return 4
 
 class TestViewer(QtGui.QSplitter):
-	def __init__(self, list, test, *args, **kwargs):
+	def __init__(self, moduleManager, list, test, *args, **kwargs):
 		super(TestViewer, self).__init__(QtCore.Qt.Vertical, *args, **kwargs)
+
+		self._mm = moduleManager
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
 		#Vertical splitter
 		tableView = QtGui.QTableView()
-		testModel = TestModel(list, test)
+		testModel = TestModel(self._mm, list, test)
 		tableView.setModel(testModel)
 
 		completedText = _("yes") if test["finished"] else _("no") #FIXME: own translator
@@ -93,13 +120,19 @@ class TestViewer(QtGui.QSplitter):
 		vertSplitter.addWidget(tableView)
 
 		#Horizontal splitter
-		noteDrawer = QtGui.QLabel(_("Note: %s") % "10") #FIXME
+		calculateNote = self._modules.chooseItem(
+			set(self._mm.mods("active", type="noteCalculator"))
+		).calculateNote
+
+		noteDrawer = QtGui.QLabel(_("Note: %s") % calculateNote(test)) #FIXME: noteDrawer + vertical align top
 		horSplitter = QtGui.QSplitter()
 		horSplitter.addWidget(vertSplitter)
 		horSplitter.addWidget(noteDrawer)
 
 		#Main splitter
-		progressWidget = QtGui.QWidget() #FIXME
+		progressWidget = self._modules.chooseItem(
+			set(self._mm.mods("active", type="progressViewer"))
+		).createProgressViewer(test)
 
 		self.addWidget(horSplitter)
 		self.addWidget(progressWidget)
@@ -108,10 +141,11 @@ class TestViewerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestViewerModule, self).__init__(*args, **kwargs)
 
+		self._mm = moduleManager
 		self.type = "testViewer"
 
 	def createTestViewer(self, *args, **kwargs):
-		return TestViewer(*args, **kwargs)
+		return TestViewer(self._mm, *args, **kwargs)
 
 	def enable(self):
 		self.active = True

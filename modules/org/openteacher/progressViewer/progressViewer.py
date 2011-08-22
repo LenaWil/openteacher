@@ -1,0 +1,143 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
+#	Copyright 2011, Marten de Vries
+#
+#	This file is part of OpenTeacher.
+#
+#	OpenTeacher is free software: you can redistribute it and/or modify
+#	it under the terms of the GNU General Public License as published by
+#	the Free Software Foundation, either version 3 of the License, or
+#	(at your option) any later version.
+#
+#	OpenTeacher is distributed in the hope that it will be useful,
+#	but WITHOUT ANY WARRANTY; without even the implied warranty of
+#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#	GNU General Public License for more details.
+#
+#	You should have received a copy of the GNU General Public License
+#	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
+
+from PyQt4 import QtCore, QtGui
+import datetime
+
+class Graph(QtGui.QFrame):
+	def __init__(self, test, *args, **kwargs):
+		super(Graph, self).__init__(*args, **kwargs)
+		
+		self._test = test
+
+		self.setSizePolicy(
+			QtGui.QSizePolicy.Expanding,
+			QtGui.QSizePolicy.Expanding
+		)
+		
+		self.setFrameStyle(QtGui.QFrame.StyledPanel)
+		self.setFrameShadow(QtGui.QFrame.Sunken)
+
+		self.start = self._test["results"][0]["active"]["start"]
+		self.end = self._test["results"][-1]["active"]["end"]
+		self._totalSeconds = (self.end - self.start).total_seconds()
+
+	def event(self, event, *args, **kwargs):
+		if event.type() == QtCore.QEvent.ToolTip:
+			second = event.x() / self._secondsPerPixel
+			moment = self.start + datetime.timedelta(seconds=second)
+			for pause in self._test["pauses"]:
+				if pause["start"] < moment and pause["end"] > moment:
+					text = _("Pause")#FIXME: own translator
+					break
+			try:
+				text
+			except NameError:
+				for result in self._test["results"]:
+					if result["active"]["start"] < moment and result["active"]["end"] > moment:
+						text = _("Thinking")#FIXME: own translator
+			try:
+				text
+			except NameError:
+				text = _("Answering")#FIXME: own translator
+			QtGui.QToolTip.showText(
+				event.globalPos(),
+				text,
+			)
+			return True
+		return super(Graph, self).event(event, *args, **kwargs)
+
+	def _paintItem(self, p, item):
+		x = (item["start"] - self.start).total_seconds() * self._secondsPerPixel
+		width = (item["end"] - item["start"]).total_seconds() * self._secondsPerPixel
+		p.drawRect(x, 0, width, self._h)
+
+	def paintEvent(self, event, *args, **kwargs):
+		#FIXME: get colors from system theme
+
+		p = QtGui.QPainter()
+		p.begin(self)
+		
+		w = self.width()
+		self._h = self.height()
+
+		self._secondsPerPixel = w / self._totalSeconds
+
+		colors = {}
+		color = QtGui.QColor(QtCore.Qt.yellow)
+		for result in self._test["results"]:
+			try:
+				p.setBrush(QtGui.QBrush(colors[result["itemId"]]))
+			except KeyError:
+				p.setBrush(QtGui.QBrush(color))
+				color = color.lighter()#FIXME (can become white)
+
+			self._paintItem(p, result["active"])
+
+		p.setBrush(QtGui.QBrush(QtCore.Qt.gray))
+		for pause in self._test["pauses"]:
+			self._paintItem(p, pause)
+
+		p.setBrush(QtGui.QBrush())
+
+		p.end()
+		super(Graph, self).paintEvent(event, *args, **kwargs)
+
+	def sizeHint(self):
+		return QtCore.QSize(200, 40)
+
+class ProgressViewer(QtGui.QWidget):
+	def __init__(self, test, *args, **kwargs):
+		super(ProgressViewer, self).__init__(*args, **kwargs)
+
+		graph = Graph(test)
+		format = "%X"
+		firstTime = QtGui.QLabel(graph.start.strftime(format))
+		lastTime = QtGui.QLabel(graph.end.strftime(format))
+		
+		horLayout = QtGui.QHBoxLayout()
+		horLayout.addWidget(firstTime)
+		horLayout.addStretch()
+		horLayout.addWidget(lastTime)
+		
+		mainLayout = QtGui.QVBoxLayout()
+		mainLayout.addLayout(horLayout)
+		mainLayout.addWidget(graph)
+		
+		self.setLayout(mainLayout)
+
+class ProgressViewerModule(object):
+	def __init__(self, moduleManager, *args, **kwargs):
+		super(ProgressViewerModule, self).__init__(*args, **kwargs)
+		self._mm = moduleManager
+
+		self.type = "progressViewer"
+
+	def createProgressViewer(self, *args, **kwargs):
+		return ProgressViewer(*args, **kwargs)
+
+	def enable(self):
+		self.active = True
+
+	def disable(self):
+		self.active = False
+
+def init(moduleManager):
+	return ProgressViewerModule(moduleManager)

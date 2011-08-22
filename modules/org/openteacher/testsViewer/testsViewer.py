@@ -171,24 +171,45 @@ class TestsViewerWidget(QtGui.QSplitter):
 		self.notesWidget.updateList(list)
 		self.detailsWidget.updateList(list)
 
+class TestViewerWidget(QtGui.QWidget):
+	backActivated = QtCore.pyqtSignal()
+
+	def __init__(self, moduleManager, list, test, *args, **kwargs):
+		super(TestViewerWidget, self).__init__(*args, **kwargs)
+
+		self._mm = moduleManager
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
+		backButton = QtGui.QPushButton(_("Back")) #FIXME: own translator, nicer button?
+		backButton.clicked.connect(self.backActivated.emit)
+
+		testViewer = self._modules.chooseItem(
+			set(self._mm.mods("active", type="testViewer"))
+		).createTestViewer(list, test)
+
+		layout = QtGui.QVBoxLayout()
+		layout.addWidget(backButton)
+		layout.addWidget(testViewer)
+		self.setLayout(layout)
+
 class TestsViewer(QtGui.QStackedWidget):
 	def __init__(self, moduleManager,  *args, **kwargs):
 		super(TestsViewer, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
 		self.testsViewerWidget = TestsViewerWidget(self._mm)
 		self.testsViewerWidget.testActivated.connect(self.showList)
 		self.addWidget(self.testsViewerWidget)
 
 	def showList(self, list, test):
-		testViewer = self._modules.chooseItem(
-			set(self._mm.mods("active", type="testViewer"))
-		).createTestViewer(list, test)
-		
+		testViewer = TestViewerWidget(self._mm, list, test)
+		testViewer.backActivated.connect(self.showTests)
 		self.addWidget(testViewer)
 		self.setCurrentWidget(testViewer)
+
+	def showTests(self):
+		self.setCurrentWidget(self.testsViewerWidget)
 
 	def updateList(self, list):
 		self.testsViewerWidget.updateList(list)
