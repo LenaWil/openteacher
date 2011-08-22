@@ -36,17 +36,35 @@ class IntervalLessonType(object):
 		self.lessonDone = self._mm.createEvent()
 		self._list = list
 		self._indexes = indexes
-		self._test = []
-
-		self.totalItems = len(self._indexes)
-		self.askedItems = 0
+		self._test = {
+			"results": [],
+			"finished": False,
+			"pauses": [],
+		}
 		
-		# Items in the group
+		self.totalItems = len(self._indexes)
+		
+		# Ids of items in the group
 		self._group = []
+	
+	@property
+	def askedItems(self):
+		ids = []
+		for item in self._test["results"]:
+			if ids.count(item["itemId"]) == 0:
+				ids.append(item["itemId"])
+		
+		return len(ids)
 
 	def start(self):
+		size = 4
+		for module in self._mm.mods("active", type="settings"):
+			size = module.value("org.openteacher.lessonTypes.interval.groupSize")
+		if size < 2:
+			size = 2
+		
 		# Add items to the group
-		for i in xrange(4):
+		for i in xrange(size):
 			try:
 				self._list["items"][i]
 			except:
@@ -57,57 +75,88 @@ class IntervalLessonType(object):
 	
 	# result is a Result-type object saying whether the question was answered right or wrong
 	def setResult(self, result):
-		self._test.append(result)
+		self._test["results"].append(result)
 
-		self.askedItems += 1
 		self._emitNext()
+	
+	def addPause(self, pause):
+		self._test["pauses"].append(pause)
 
 	def correctLastAnswer(self, result):
-		self._test[-1] = result
-
+		self._test["results"][-1] = result
+	
 	def _emitNext(self):
+		minQuestions = 2
+		for module in self._mm.mods("active", type="settings"):
+			minQuestions = module.value("org.openteacher.lessonTypes.interval.minQuestions")
+		if minQuestions < 1:
+			minquestions = 2
+		
+		whenKnown = 80
+		for module in self._mm.mods("active", type="settings"):
+			whenKnown = module.value("org.openteacher.lessonTypes.interval.whenKnown")
+		if whenKnown < 0 or whenKnown > 99:
+			whenKnown = 80
+		
 		# Go through all the items in the group to see which can be removed
 		for i in self._group:
 			right = 0
 			wrong = 0
 			# Fill in right and wrong variables
-			for item in self._test:
+			for item in self._test["results"]:
 				if item["itemId"] == i:
 					if item["result"] == "right":
 						right += 1
 					elif item["result"] == "wrong":
 						wrong += 1
-			if right + wrong > 2 and \
-			   right / (right + wrong) > 0.8:
-				print "You know " + str(i)
+			
+			if right + wrong > minQuestions and \
+			   right / float(right + wrong) > whenKnown / 100.0:
 				# Add new one
 				try:
+					# Try if it exists
 					self._list["items"][self._group[-1] + 1]
 				except:
 					pass
 				else:
-					print "adding " + str(self._group[-1] + 1)
+					# Add it
 					self._group.append(self._group[-1] + 1)
 				# Remove this item from the group
 				self._group.remove(i)
 		
 		if len(self._group) == 0:
 			# index not in list, so end of lesson
-			if len(self._test) != 0:
+			if len(self._test["results"]) != 0:
 				try:
 					self._list["tests"]
 				except KeyError:
 					self._list["tests"] = []
 				self._list["tests"].append(self._test)
+			self._test["finished"] = True
 			self.lessonDone.emit()
 		else:
-			if len(self._group) > 1:
+			# Copy group, because we are going to modify it
+			randomGroup = self._group[:]
+			# We will take out the last id, so a question isn't asked twice
+			if len(self._test["results"]) > 0:
+				try:
+					randomGroup.remove(self._test["results"][-1]["itemId"])
+				except ValueError:
+					# Not in list anymore
+					pass
+			
+			if len(randomGroup) > 1:
 				# Get random number
-				r = random.randrange(0, len(self._group) - 1)
+				r = random.randrange(0, len(randomGroup) - 1)
 			else:
 				r = 0
-			self.newItem.emit(self._list["items"][self._group[r]])
 			
+			if len(randomGroup) > 0:
+				# There is more than one left, so ask another one than the last one
+				self.newItem.emit(self._list["items"][randomGroup[r]])
+			else:
+				# There is only one left, so ask that one
+				self.newItem.emit(self._list["items"][self._group[0]])
 
 class IntervalModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -122,6 +171,35 @@ class IntervalModule(object):
 		_, ngettext = translator.gettextFunctions(
 			self._mm.resourcePath("translations")
 		)
+		
+		# Settings
+		for module in self._mm.mods("active", type="settings"):
+			module.registerSetting(
+				"org.openteacher.lessonTypes.interval.groupSize",
+				"Max. size of group",
+				"number",
+				"Lessons",
+				"Interval",
+				defaultValue=4
+			)
+		for module in self._mm.mods("active", type="settings"):
+			module.registerSetting(
+				"org.openteacher.lessonTypes.interval.minQuestions",
+				"Min. questions asked",
+				"number",
+				"Lessons",
+				"Interval",
+				defaultValue=2
+			)
+		for module in self._mm.mods("active", type="settings"):
+			module.registerSetting(
+				"org.openteacher.lessonTypes.interval.whenKnown",
+				"% right before known",
+				"number",
+				"Lessons",
+				"Interval",
+				defaultValue=80
+			)
 
 		self.newItem = self._mm.createEvent()
 		self.name = _("Interval")
