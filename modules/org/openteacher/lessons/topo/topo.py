@@ -337,9 +337,7 @@ class TeachLessonTypeChooser(QtGui.QComboBox):
 	"""
 	@property
 	def currentLessonType(self):
-		for lessontype in self._lessonTypeModules:
-			if lessontype.name == self.currentText():
-				return lessontype
+		return self._lessonTypeModules[self.currentIndex()]
 
 """
 The dropdown menu to choose lesson order
