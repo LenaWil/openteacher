@@ -21,10 +21,11 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 class Lesson(object):
-	def __init__(self, moduleManager, fileTab, list, enterWidget, teachWidget, resultsWidget, *args, **kwargs):
+	def __init__(self, moduleManager, fileTab, module, list, enterWidget, teachWidget, resultsWidget, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
+		self.module = module
 
 		self.fileTab = fileTab
 		self.fileTab.closeRequested.handle(self.stop)
@@ -71,6 +72,7 @@ class WordsLessonModule(object):
 		self._modules.registerModule(_("Words Lesson"), self)
 
 		self.lessonCreated = self._mm.createEvent()
+		self.lessonCreationFinished = self._mm.createEvent()
 
 		self._counter = 1
 		self._references = set()
@@ -119,9 +121,10 @@ class WordsLessonModule(object):
 		)
 		self._counter += 1
 
-		lesson = Lesson(self._mm, fileTab, list, enterWidget, teachWidget, resultsWidget)
+		lesson = Lesson(self._mm, fileTab, self, list, enterWidget, teachWidget, resultsWidget)
 		self._references.add(lesson)
 		self.lessonCreated.emit(lesson)
+		self.lessonCreationFinished.emit()
 
 		return lesson
 
