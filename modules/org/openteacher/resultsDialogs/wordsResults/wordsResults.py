@@ -20,53 +20,27 @@
 
 from PyQt4 import QtGui
 
-class MediaResultsWidget(QtGui.QWidget):
-	def __init__(self, results, *args, **kwargs):
-		super(MediaResultsWidget, self).__init__(*args, **kwargs)
-		
-		self.results = results
-		
-		labelInfo = QtGui.QLabel("Results of this test: \n" + 
-								 "Right: " + str(self.amountRight(self.results[0])) + "\n" +
-								 "Wrong: " + str(self.amountWrong(self.results[0])))
-		
-		layout = QtGui.QVBoxLayout()
-		layout.addWidget(labelInfo)
-		
-		self.setLayout(layout)
-	
-	def amountRight(self, test):
-		feedback = 0
-		for result in test:
-			if result["result"] == "right":
-				feedback += 1
-		return feedback
-	
-	def amountWrong(self, test):
-		feedback = 0
-		for result in test:
-			if result["result"] == "wrong":
-				feedback += 1
-		return feedback
-
-class MediaResultsViewerModule(object):
+class WordsResultsViewerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(MediaResultsViewerModule, self).__init__(*args, **kwargs)
+		super(WordsResultsViewerModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "resultsdialog"
+		self.type = "resultsDialog"
 		
-		self.supports = ["media"]
+		self.supports = ["words"]
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self.active = True
 
 	def disable(self):
 		self.active = False
 	
-	def showResults(self, results, list):
-		self.resultsWidget = MediaResultsWidget(results)
-		
+	def showResults(self, list, test):
+		self.resultsWidget = self._modules.chooseItem(
+			set(self._mm.mods("active", type="testViewer"))
+		).createTestViewer(list, test)
+
 		for module in self._mm.mods("active", type="ui"):
 			self.tab = module.addCustomTab(
 				_("Results"),
@@ -75,4 +49,4 @@ class MediaResultsViewerModule(object):
 			self.tab.closeRequested.handle(self.tab.close)
 
 def init(moduleManager):
-	return MediaResultsViewerModule(moduleManager)
+	return WordsResultsViewerModule(moduleManager)

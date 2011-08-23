@@ -106,7 +106,10 @@ class TestViewer(QtGui.QSplitter):
 		testModel = TestModel(self._mm, list, test)
 		tableView.setModel(testModel)
 
-		completedText = _("yes") if test["finished"] else _("no") #FIXME: own translator
+		try:
+			completedText = _("yes") if test["finished"] else _("no") #FIXME: own translator
+		except KeyError:
+			completedText = _("no")
 		completedLabel = QtGui.QLabel(_("Completed: %s") % completedText)
 		try:
 			#end of last result - start of first result

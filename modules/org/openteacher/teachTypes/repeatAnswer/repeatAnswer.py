@@ -94,7 +94,7 @@ class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
 			self.inputWidget = typingInput.createWidget()
 			self.addWidget(self.inputWidget)
 
-		tabChanged.handle(lambda: self.setCurrentWidget(self.startScreen))
+		tabChanged.connect(lambda: self.setCurrentWidget(self.startScreen))
 
 	def startRepeat(self):
 		self.setCurrentWidget(self.repeatScreen)

@@ -1,23 +1,23 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#    Copyright 2008-2011, Milan Boers
+#	Copyright 2011, Milan Boers
+#	Copyright 2011, Marten de Vries
 #
-#    This file is part of OpenTeacher.
+#	This file is part of OpenTeacher.
 #
-#    OpenTeacher is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#	OpenTeacher is free software: you can redistribute it and/or modify
+#	it under the terms of the GNU General Public License as published by
+#	the Free Software Foundation, either version 3 of the License, or
+#	(at your option) any later version.
 #
-#    OpenTeacher is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#	OpenTeacher is distributed in the hope that it will be useful,
+#	but WITHOUT ANY WARRANTY; without even the implied warranty of
+#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#	GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
-
+#	You should have received a copy of the GNU General Public License
+#	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
@@ -546,9 +546,9 @@ class TeachTopoLesson(object):
 		base.inLesson = False
 		
 		# Show results dialog
-		#for module in base.api.mods("active", type="resultsdialog"):
-		#	if base.dataType in module.supports:
-		#		module.showResults(self.itemList["tests"], self.itemList["items"])
+		for module in base.api.mods("active", type="resultsDialog"): #FIXME: only one should remain
+			if base.dataType in module.supports:
+				module.showResults(self.itemList, self.itemList["tests"][-1])
 		
 		# return to enter tab
 		base.fileTab.currentTab = base.enterWidget

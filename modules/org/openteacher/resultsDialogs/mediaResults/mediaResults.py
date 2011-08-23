@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
+#	Copyright 2011, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -20,15 +21,15 @@
 
 from PyQt4 import QtGui
 
-class WordsResultsWidget(QtGui.QWidget):
-	def __init__(self, results, *args, **kwargs):
-		super(WordsResultsWidget, self).__init__(*args, **kwargs)
+class MediaResultsWidget(QtGui.QWidget):
+	def __init__(self, test, *args, **kwargs):
+		super(MediaResultsWidget, self).__init__(*args, **kwargs)
 		
-		self.results = results
+		self.test = test
 		
 		labelInfo = QtGui.QLabel("Results of this test: \n" + 
-								 "Right: " + str(self.amountRight(self.results[0])) + "\n" +
-								 "Wrong: " + str(self.amountWrong(self.results[0])))
+								 "Right: " + str(self.amountRight(self.test)) + "\n" +
+								 "Wrong: " + str(self.amountWrong(self.test)))
 		
 		layout = QtGui.QVBoxLayout()
 		layout.addWidget(labelInfo)
@@ -37,26 +38,26 @@ class WordsResultsWidget(QtGui.QWidget):
 	
 	def amountRight(self, test):
 		feedback = 0
-		for result in test:
+		for result in test["results"]:
 			if result["result"] == "right":
 				feedback += 1
 		return feedback
 	
 	def amountWrong(self, test):
 		feedback = 0
-		for result in test:
+		for result in test["results"]:
 			if result["result"] == "wrong":
 				feedback += 1
 		return feedback
 
-class WordsResultsViewerModule(object):
+class MediaResultsViewerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(WordsResultsViewerModule, self).__init__(*args, **kwargs)
+		super(MediaResultsViewerModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "resultsdialog"
+		self.type = "resultsDialog"
 		
-		self.supports = ["words"]
+		self.supports = ["media"]
 
 	def enable(self):
 		self.active = True
@@ -64,8 +65,8 @@ class WordsResultsViewerModule(object):
 	def disable(self):
 		self.active = False
 	
-	def showResults(self, results, list):
-		self.resultsWidget = WordsResultsWidget(results)
+	def showResults(self, list, test):
+		self.resultsWidget = MediaResultsWidget(test)
 		
 		for module in self._mm.mods("active", type="ui"):
 			self.tab = module.addCustomTab(
@@ -75,4 +76,4 @@ class WordsResultsViewerModule(object):
 			self.tab.closeRequested.handle(self.tab.close)
 
 def init(moduleManager):
-	return WordsResultsViewerModule(moduleManager)
+	return MediaResultsViewerModule(moduleManager)

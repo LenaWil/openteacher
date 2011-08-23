@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
+#	Copyright 2011, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -23,10 +24,10 @@ from PyQt4 import QtCore
 import datetime
 
 class TopoResultsWidget(QtGui.QWidget):
-	def __init__(self, tests, list, *args, **kwargs):
+	def __init__(self, test, list, *args, **kwargs):
 		super(TopoResultsWidget, self).__init__(*args, **kwargs)
 		
-		self.tests = tests
+		self.test = test
 		self.list = list
 		
 		d = datetime.datetime.now()
@@ -37,11 +38,11 @@ class TopoResultsWidget(QtGui.QWidget):
 								 "</ul>" +
 								 "<h2>Results:</h2>" + 
 								 "<ul>" +
-								   "<li>Right: " + str(self.amountRight(self.tests[0])) + "</li>" +
-								   "<li>Wrong: " + str(self.amountWrong(self.tests[0])) + "</li>" + 
-								   "<li>%: " + str(self.percentage(self.amountRight(self.tests[0]), self.amountWrong(self.tests[0]))) + "</li>" +
+								   "<li>Right: " + str(self.amountRight(self.test)) + "</li>" +
+								   "<li>Wrong: " + str(self.amountWrong(self.test)) + "</li>" + 
+								   "<li>%: " + str(self.percentage(self.amountRight(self.test), self.amountWrong(self.test))) + "</li>" +
 								 "</ul>" + 
-								 "Place most done wrong: " + str(self.getItem(self.mostWrong(self.tests[0]))["name"]))
+								 "Place most done wrong: " + str(self.getItem(self.mostWrong(self.test))["name"]))
 		labelInfo.setStyleSheet("""
 								font-size: 15px;
 								""")
@@ -58,14 +59,14 @@ class TopoResultsWidget(QtGui.QWidget):
 	
 	def amountRight(self, test):
 		feedback = 0
-		for result in test:
+		for result in test["results"]:
 			if result["result"] == "right":
 				feedback += 1
 		return feedback
 	
 	def amountWrong(self, test):
 		feedback = 0
-		for result in test:
+		for result in test["results"]:
 			if result["result"] == "wrong":
 				feedback += 1
 		return feedback
@@ -74,8 +75,8 @@ class TopoResultsWidget(QtGui.QWidget):
 		highestId = 0
 		highest = 0
 		
-		for result in test:
-			count = test.count({
+		for result in test["results"]:
+			count = test["results"].count({
 				"itemId": result["itemId"],
 				"result": "wrong"
 			})
@@ -86,7 +87,7 @@ class TopoResultsWidget(QtGui.QWidget):
 		return highestId
 	
 	def getItem(self, id):
-		for item in self.list:
+		for item in self.list["items"]:
 			if item["id"] == id:
 				return item
 
@@ -95,7 +96,7 @@ class TopoResultsViewerModule(object):
 		super(TopoResultsViewerModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "resultsdialog"
+		self.type = "resultsDialog"
 		
 		self.supports = ["topo"]
 
@@ -105,8 +106,8 @@ class TopoResultsViewerModule(object):
 	def disable(self):
 		self.active = False
 	
-	def showResults(self, tests, list):
-		self.resultsWidget = TopoResultsWidget(tests, list)
+	def showResults(self, list, test):
+		self.resultsWidget = TopoResultsWidget(test, list)
 		
 		for module in self._mm.mods("active", type="ui"):
 			self.tab = module.addCustomTab(

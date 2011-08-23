@@ -117,7 +117,7 @@ class NotesWidget(QtGui.QWidget):
 			self.lowestLabel.setText(_("-")) #FIXME: description + own translator
 		try:
 			average = noteCalculator.calculateAverageNote(list["tests"])
-		except TypeError:
+		except ZeroDivisionError:
 			average = _("-") #FIXME: description + own translator
 		self.averageLabel.setText(unicode(average))
 

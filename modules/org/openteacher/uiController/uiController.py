@@ -104,9 +104,6 @@ class UiControllerModule(object):
 		printer = self._modules.chooseItem(printers)
 		printer.print_(qtPrinter)
 
-	def _updateMenuItemsWrapper(self, *args, **kwargs):
-		self._updateMenuItems()
-
 	def _connectEvents(self):
 		for module in self._mm.mods("active", type="lesson"):
 			module.lessonCreationFinished.handle(self._updateMenuItemsWrapper)
@@ -151,7 +148,7 @@ class UiControllerModule(object):
 		except IndexError:
 			openSupport = False
 		else:
-			openSupport = loader.openSupport
+			openSupport = loader.openSupport #FIXME: if loader is None; also by other try/excepts here?
 		self._uiModule.enableOpen(openSupport)
 
 		#save
@@ -186,6 +183,9 @@ class UiControllerModule(object):
 		#documentation
 		docSupport = len(set(self._mm.mods("active", type="documentation"))) != 0
 		self._uiModule.enableDocumentation(docSupport)
+
+	def _updateMenuItemsWrapper(self, *args, **kwargs):
+		self._updateMenuItems()
 
 	def settings(self):
 		module = self._modules.chooseItem(
