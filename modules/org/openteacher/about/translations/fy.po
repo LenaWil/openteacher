@@ -8,13 +8,15 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-07-12 10:23+0200\n"
-"PO-Revision-Date: 2011-07-12 10:24+0100\n"
-"Last-Translator: Marten de Vries <marten94@gmail.com>\n"
+"PO-Revision-Date: 2011-07-19 02:58+0000\n"
+"Last-Translator: Marten de Vries <Unknown>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-07-20 05:32+0000\n"
+"X-Generator: Launchpad (build 13405)\n"
+"Language: \n"
 
 #: about.py:48
 msgid "About module"
@@ -36,8 +38,7 @@ msgstr "Folsleine lisinsjetekst"
 msgid "Thanks to all Launchpad contributors!"
 msgstr "Tank foar alle helpers op launchpad!"
 
-#: ui.py:261
-#: ui.py:265
+#: ui.py:261 ui.py:265
 msgid "About"
 msgstr "Oer"
 
@@ -48,4 +49,3 @@ msgstr "Lisinsje"
 #: ui.py:263
 msgid "Authors"
 msgstr "Auteurs"
-

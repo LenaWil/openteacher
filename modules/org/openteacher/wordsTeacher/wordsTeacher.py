@@ -325,6 +325,16 @@ class WordsTeacherModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
+		#Translations
+		translator = set(self._mm.mods("active", type="translator")).pop()
+		global _
+		global ngettext
+
+		_, ngettext = translator.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
+
 		self.active = True
 
 	def disable(self):

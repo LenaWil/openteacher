@@ -1,0 +1,38 @@
+# Slovak translation for openteacher
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-07-12 10:19+0200\n"
+"PO-Revision-Date: 2011-08-01 20:56+0000\n"
+"Last-Translator: Alexander Suchan <supersasho@gmail.com>\n"
+"Language-Team: Slovak <sk@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-08-02 05:18+0000\n"
+"X-Generator: Launchpad (build 13552)\n"
+
+#: ui.py:20
+msgid "Modules"
+msgstr "Moduly"
+
+#: ui.py:40 ui.py:105
+msgid "Miscellaneous"
+msgstr "Rôzne"
+
+#: ui.py:108
+msgid "Advanced mode"
+msgstr "Pokročilý mód"
+
+#: ui.py:111
+msgid "Simple mode"
+msgstr "Jednoduchý mód"
+
+#: ui.py:114
+msgid "Settings"
+msgstr "Nastavenia"
