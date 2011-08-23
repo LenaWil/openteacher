@@ -111,15 +111,13 @@ class TestViewer(QtGui.QSplitter):
 		except KeyError:
 			completedText = _("no")
 		completedLabel = QtGui.QLabel(_("Completed: %s") % completedText)
-		try:
-			#end of last result - start of first result
-			totalTime = test["results"][-1]["active"]["end"] - test["results"][0]["active"]["start"]
-		except IndexError:
-			totalTime = datetime.timedelta()
-		seconds = totalTime.total_seconds()
-		totalTimeLabel = QtGui.QLabel(_("Total time: %s seconds") % seconds)
+		totalThinkingTime = datetime.timedelta()
+		for result in test["results"]:
+			totalThinkingTime += result["active"]["end"] - result["active"]["start"]
+		seconds = totalThinkingTime.total_seconds()
+		totalThinkingTimeLabel = QtGui.QLabel(_("Total thinking time: %s seconds") % seconds)
 		vertSplitter = QtGui.QSplitter(QtCore.Qt.Vertical)
-		vertSplitter.addWidget(totalTimeLabel)
+		vertSplitter.addWidget(totalThinkingTimeLabel)
 		vertSplitter.addWidget(tableView)
 
 		#Horizontal splitter

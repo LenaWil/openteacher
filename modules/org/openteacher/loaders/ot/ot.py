@@ -67,7 +67,7 @@ class OpenTeacherLoaderModule(object):
 
 		#create one test, which is used for all results, because .ot
 		#doesn't support multiple tests.
-		test = []
+		test = {"results": []}
 
 		#because .ot doesn't give words an id, we use a counter.
 		counter = 0
@@ -109,13 +109,13 @@ class OpenTeacherLoaderModule(object):
 					"result": "right",
 					"itemId": listWord["id"]
 				}
-				test.append(result)
+				test["results"].append(result)
 			for i in range(wrong):
 				result = {
 					"result": "wrong",
 					"itemId": listWord["id"]
 				}
-				test.append(result)
+				test["results"].append(result)
 
 			#Adds the generated word to the list
 			wordList["items"].append(listWord)

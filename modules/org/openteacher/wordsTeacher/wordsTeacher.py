@@ -176,7 +176,7 @@ class TeachWidget(QtGui.QStackedWidget):
 		self.list = list
 
 	def _showSettings(self):
-		self._teachWidget.setCurrentWidget(self._settingsWidget)
+		self.setCurrentWidget(self._settingsWidget)
 
 	def _startLesson(self):
 		self.setCurrentWidget(self._lessonWidget)
