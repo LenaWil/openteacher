@@ -21,6 +21,7 @@
 import zipfile
 import os
 import tempfile
+import datetime
 try:
 	import json
 except:
@@ -48,7 +49,7 @@ class OpenTeachingTopoSaverModule(object):
 		with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as zipFile:
 			# Create temp file
 			listFile = tempfile.NamedTemporaryFile(delete=False)
-			listFile.write(json.dumps(list))
+			listFile.write(json.dumps(list, default=lambda obj: datetime.datetime.strftime(obj, "%Y-%m-%dT%H:%M:%S.%f")))
 			listFile.close()
 			
 			# Add file to tar

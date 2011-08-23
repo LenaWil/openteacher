@@ -27,6 +27,7 @@ from PyQt4.phonon import Phonon
 
 import os
 import time
+import datetime
 import mimetypes
 import fnmatch
 import tempfile
@@ -409,6 +410,12 @@ class EnterWidget(QtGui.QSplitter):
 			self.addItem(str(url), True)
 	
 	"""
+	Updates all the widgets if the list has changed
+	"""
+	def updateWidgets(self):
+		self.enterItemList.update()
+	
+	"""
 	Add an item to the list
 	"""
 	def addItem(self,filename,remote=False,name=None,question=None,answer=None):
@@ -425,7 +432,7 @@ class EnterWidget(QtGui.QSplitter):
 				}
 				# Set id
 				try:
-					item["id"] = base.enterWidget.itemList["items"][-1]["id"] +1
+					item["id"] = self.itemList["items"][-1]["id"] +1
 				except IndexError:
 					item["id"] = 0
 				
@@ -442,7 +449,7 @@ class EnterWidget(QtGui.QSplitter):
 					item["answer"] = answer
 				
 				self.itemList["items"].append(item)
-				self.enterItemList.update()
+				self.updateWidgets()
 				break
 		else:
 			QtGui.QMessageBox.critical(self, _("Unsupported file type"), _("This type of file is not supported:\n" + filename))
@@ -452,7 +459,7 @@ class EnterWidget(QtGui.QSplitter):
 	"""
 	def removeItem(self):
 		self.itemList["items"].remove(self.activeitem)
-		self.enterItemList.update()
+		self.updateWidgets()
 		self.mediaDisplay.clear()
 		self.enterName.setText("")
 		self.enterName.setEnabled(False)
@@ -480,7 +487,7 @@ class EnterWidget(QtGui.QSplitter):
 	"""
 	def changeName(self):
 		self.activeitem["name"] = unicode(self.enterName.text())
-		self.enterItemList.update()
+		self.updateWidgets()
 	
 	
 	"""
@@ -633,6 +640,9 @@ class MediaLesson(object):
 		
 		base.inLesson = True
 		
+		#self.startThinkingTime
+		#self.endThinkingTime
+		
 		# Reset the progress bar
 		base.teachWidget.progress.setValue(0)
 	
@@ -640,11 +650,20 @@ class MediaLesson(object):
 	Check whether the given answer was right or wrong
 	"""
 	def checkAnswer(self):
+		# Set the end of the thinking time
+		self.endThinkingTime = datetime.datetime.now()
+		
+		active = {
+			"start": self.startThinkingTime,
+			"end": self.endThinkingTime
+		}
+		
 		if self.currentItem["answer"] == base.teachWidget.answerField.text():
 			# Answer was right
 			self.lessonType.setResult({
 					"itemId": self.currentItem["id"],
-					"result": "right"
+					"result": "right",
+					"active": active
 				})
 			# Progress bar
 			self._updateProgressBar()
@@ -652,7 +671,8 @@ class MediaLesson(object):
 			# Answer was wrong
 			self.lessonType.setResult({
 					"itemId": self.currentItem["id"],
-					"result": "wrong"
+					"result": "wrong",
+					"active": active
 				})
 			
 	"""
@@ -667,6 +687,13 @@ class MediaLesson(object):
 		base.teachWidget.nameLabel.setText(self.currentItem["name"])
 		# set the mediawidget to the right location
 		base.teachWidget.mediaDisplay.showMedia(self.currentItem["filename"], self.currentItem["remote"], True)
+		# Set the start of the thinking time to now
+		self.startThinkingTime = datetime.datetime.now()
+		# Delete the end of the thinking time
+		try:
+			del self.endThinkingTime
+		except AttributeError:
+			pass
 	
 	"""
 	Ends the lesson
@@ -680,8 +707,10 @@ class MediaLesson(object):
 
 		# stop media
 		base.teachWidget.mediaDisplay.clear()
-		# return to enter tab
-		base.fileTab.currentTab = base.enterWidget
+		# Update results widget
+		base.resultsWidget.updateList(self.itemList)
+		# Go to results widget
+		base.fileTab.currentTab = base.resultsWidget
 		# Set right active item
 		base.enterWidget.enterItemList.setRightActiveItem()
 	
@@ -712,6 +741,8 @@ class MediaLessonModule(object):
 		#setup translation
 		global _
 		global ngettext
+		
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
 		translator = set(self._mm.mods("active", type="translator")).pop()
 		_, ngettext = translator.gettextFunctions(
@@ -762,11 +793,15 @@ class MediaLessonModule(object):
 		for module in self._mm.mods("active", type="ui"):
 			self.enterWidget = EnterWidget()
 			self.teachWidget = TeachWidget()
+			self.resultsWidget = self._modules.chooseItem(
+				set(self._mm.mods("active", type="testsViewer"))
+			).createTestsViewer()
 			
 			self.fileTab = module.addFileTab(
 				_("Media lesson %s") % self.counter,
 				self.enterWidget,
-				self.teachWidget
+				self.teachWidget,
+				self.resultsWidget
 			)
 			
 			lesson = Lesson(self, self.fileTab, self.enterWidget, self.teachWidget)
@@ -779,8 +814,12 @@ class MediaLessonModule(object):
 	
 	def loadFromList(self, list, path):
 		for lesson in self.createLesson():
-			for item in list["items"]:
-				self.enterWidget.addItem(item["filename"], item["remote"], item["name"], item["question"], item["answer"])
+			# Load the list
+			self.enterWidget.itemList = list
+			# Update the widgets
+			self.enterWidget.updateWidgets()
+			# Update the results widget
+			self.resultsWidget.updateList(list)
 
 """
 Lesson object (that means: this techwidget+enterwidget)

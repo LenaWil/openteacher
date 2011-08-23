@@ -75,6 +75,9 @@ class IntervalLessonType(object):
 	
 	# result is a Result-type object saying whether the question was answered right or wrong
 	def setResult(self, result):
+		# Add the test to the list (if it's not already there)
+		self._appendTest()
+		
 		self._test["results"].append(result)
 
 		self._emitNext()
@@ -85,7 +88,16 @@ class IntervalLessonType(object):
 	def correctLastAnswer(self, result):
 		self._test["results"][-1] = result
 	
-	def _emitNext(self):
+	def _appendTest(self):
+		try:
+			self._list["tests"][-1]
+		except IndexError:
+			self._list["tests"].append(self._test)
+		else:
+			if not self._list["tests"][-1] == self._test:
+				self._list["tests"].append(self._test)
+	
+	def _emitNext(self):		
 		minQuestions = 2
 		for module in self._mm.mods("active", type="settings"):
 			minQuestions = module.value("org.openteacher.lessonTypes.interval.minQuestions")
@@ -131,7 +143,6 @@ class IntervalLessonType(object):
 					self._list["tests"]
 				except KeyError:
 					self._list["tests"] = []
-				self._list["tests"].append(self._test)
 			self._test["finished"] = True
 			self.lessonDone.emit()
 		else:

@@ -39,7 +39,7 @@ class TranslatorModule(object):
 		if not os.path.isfile(path):
 			path = os.path.join(localeDir, language.split("_")[0] + ".mo")
 		if os.path.isfile(path):
-			t = gettext.GNUTranslations(open(path))
+			t = gettext.GNUTranslations(open(path, "rb"))
 			return t.ugettext, t.ungettext
 		return unicode, unicode
 

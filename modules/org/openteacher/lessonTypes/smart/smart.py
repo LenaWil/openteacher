@@ -35,6 +35,7 @@ class SmartLessonType(object):
 			"finished": False,
 			"pauses": [],
 		}
+		
 		self.askedItems = 0
 
 	@property
@@ -48,6 +49,9 @@ class SmartLessonType(object):
 		self._test["pauses"].append(pause)
 
 	def setResult(self, result):
+		# Add the test to the list (if it's not already there)
+		self._appendTest()
+		
 		self.askedItems += 1
 
 		self._test["results"].append(result)
@@ -79,8 +83,17 @@ class SmartLessonType(object):
 				del self._indexes[1]
 		except IndexError:
 			pass
+	
+	def _appendTest(self):
+		try:
+			self._list["tests"][-1]
+		except IndexError:
+			self._list["tests"].append(self._test)
+		else:
+			if not self._list["tests"][-1] == self._test:
+				self._list["tests"].append(self._test)
 
-	def _emitNext(self):
+	def _emitNext(self):		
 		try:
 			self._previousIndex = self._currentIndex
 		except AttributeError:
@@ -95,7 +108,6 @@ class SmartLessonType(object):
 					self._list["tests"]
 				except KeyError:
 					self._list["tests"] = []
-				self._list["tests"].append(self._test)
 			self.lessonDone.emit()
 		else:
 			self.newItem.emit(self._list["items"][self._currentIndex])

@@ -25,6 +25,7 @@ from PyQt4 import QtOpenGL
 
 import os
 import time
+import datetime
 try:
 	import json
 except:
@@ -382,6 +383,7 @@ class TeachPictureScene(QtGui.QGraphicsScene):
 		super(TeachPictureScene, self).__init__(*args, **kwargs)
 	
 	def mouseReleaseEvent(self, event):
+		# Clicked a place
 		clickedObject = self.itemAt(event.lastScenePos().x(), event.lastScenePos().y())
 		if clickedObject.__class__ == TeachPlaceOnMap:
 			base.teachWidget.lesson.checkAnswer(clickedObject.place)
@@ -486,6 +488,9 @@ class TeachTopoLesson(object):
 		
 		base.inLesson = True
 		
+		#self.startThinkingTime
+		#self.endThinkingTime
+		
 		# Reset the progress bar
 		base.teachWidget.progress.setValue(0)
 		
@@ -495,12 +500,24 @@ class TeachTopoLesson(object):
 	Check whether the given answer was right or wrong
 	"""
 	def checkAnswer(self, answer=None):
+		# Set endThinkingTime if it hasn't been set yet (this is in Name - Place mode)
+		try:
+			self.endThinkingTime
+		except AttributeError:
+			self.endThinkingTime = datetime.datetime.now()
+		
+		active = {
+			"start": self.startThinkingTime,
+			"end": self.endThinkingTime
+		}
+		
 		if self.order == Order.Inversed:
 			if self.currentItem == answer:
 				# Answer was right
 				self.lessonType.setResult({
 					"itemId": self.currentItem["id"],
-					"result": "right"
+					"result": "right",
+					"active": active
 				})
 				# Progress bar
 				self._updateProgressBar()
@@ -508,14 +525,16 @@ class TeachTopoLesson(object):
 				# Answer was wrong
 				self.lessonType.setResult({
 					"itemId": self.currentItem["id"],
-					"result": "wrong"
+					"result": "wrong",
+					"active": active
 				})
 		else:
 			if self.currentItem["name"] == base.teachWidget.answerfield.text():
 				# Answer was right
 				self.lessonType.setResult({
 					"itemId": self.currentItem["id"],
-					"result": "right"
+					"result": "right",
+					"active": active
 				})
 				# Progress bar
 				self._updateProgressBar()
@@ -523,7 +542,8 @@ class TeachTopoLesson(object):
 				# Answer was wrong
 				self.lessonType.setResult({
 					"itemId": self.currentItem["id"],
-					"result": "wrong"
+					"result": "wrong",
+					"active": active
 				})
 			
 	"""
@@ -538,6 +558,13 @@ class TeachTopoLesson(object):
 		else:
 			#set the arrow to the right position
 			base.teachWidget.mapBox.setArrow(self.currentItem["x"],self.currentItem["y"])
+		# Set the start of the thinking time to now
+		self.startThinkingTime = datetime.datetime.now()
+		# Delete the end of the thinking time
+		try:
+			del self.endThinkingTime
+		except AttributeError:
+			pass
 	
 	"""
 	Ends the lesson
@@ -545,13 +572,11 @@ class TeachTopoLesson(object):
 	def endLesson(self):
 		base.inLesson = False
 		
-		# Show results dialog
-		for module in base.api.mods("active", type="resultsDialog"): #FIXME: only one should remain
-			if base.dataType in module.supports:
-				module.showResults(self.itemList, self.itemList["tests"][-1])
+		# Pass results to results viewer
+		base.resultsWidget.updateList(base.teachWidget.lesson.itemList)
 		
-		# return to enter tab
-		base.fileTab.currentTab = base.enterWidget
+		# Go to results tab
+		base.fileTab.currentTab = base.resultsWidget
 	
 	"""
 	Updates the progress bar
@@ -609,8 +634,10 @@ class TeachWidget(QtGui.QWidget):
 		self.label = QtGui.QLabel(_("Which place is here?"))
 		self.answerfield = QtGui.QLineEdit()
 		self.checkanswerbutton = QtGui.QPushButton(_("Check"))
-		self.answerfield.returnPressed.connect(self.checkAnswerButtonClick)
-		self.checkanswerbutton.clicked.connect(self.checkAnswerButtonClick)
+		self.answerfield.returnPressed.connect(self._checkAnswerButtonClick)
+		self.answerfield.textEdited.connect(self._answerChanged)
+		
+		self.checkanswerbutton.clicked.connect(self._checkAnswerButtonClick)
 		
 		self.questionLabel = QtGui.QLabel(_("Please click this place:"))
 		
@@ -642,12 +669,25 @@ class TeachWidget(QtGui.QWidget):
 	"""
 	def stopLesson(self):
 		self.lesson.endLesson()
+		
 		del self.lesson
+	
+	"""
+	What happens when the answer in the textbox has changed
+	"""
+	def _answerChanged(self):
+		try:
+			self.lesson.endThinkingTime
+		except AttributeError:
+			self.lesson.endThinkingTime = datetime.datetime.now()
+		else:
+			if self.answerfield.text() == "":
+				del self.lesson.endThinkingTime
 	
 	"""
 	What happens when you click the check answer button
 	"""
-	def checkAnswerButtonClick(self):
+	def _checkAnswerButtonClick(self):
 		# Check the answer
 		self.lesson.checkAnswer()
 		# Clear the answer field
@@ -766,12 +806,18 @@ class EnterWidget(QtGui.QSplitter):
 		self.addWidget(rightSideWidget)
 	
 	"""
+	Updates the widgets on the EnterWidget after the list of places has changed
+	"""
+	def updateWidgets(self):
+		self.enterMap.update()
+		self.currentPlaces.update()
+	
+	"""
 	Add a place to the list
 	"""
 	def addPlace(self,place):
 		self.places["items"].append(place)
-		self.enterMap.update()
-		self.currentPlaces.update()
+		self.updateWidgets()
 	
 	"""
 	Add a place by looking at the list of known places
@@ -789,8 +835,7 @@ class EnterWidget(QtGui.QSplitter):
 					"y": placeDict["y"],
 					"id": id
 				})
-				self.enterMap.update()
-				self.currentPlaces.update()
+				self.updateWidgets()
 				return
 		else:
 			QtGui.QMessageBox(QtGui.QMessageBox.Warning, "Place not found", "Sorry, this place is not in the list of known places. Please add it manually by doubleclicking on the right location in the map.").exec_()
@@ -806,8 +851,7 @@ class EnterWidget(QtGui.QSplitter):
 			for place in self.places["items"]:
 				if placeItem.text() == unicode(place["name"] + " (" + unicode(place["x"]) + "," + unicode(place["y"]) + ")"):
 					self.places["items"].remove(place)
-		self.enterMap.update()
-		self.currentPlaces.update()
+		self.updateWidgets()
 	
 	"""
 	What happens when you click the Enter tab
@@ -862,6 +906,8 @@ class TeachTopoLessonModule(object):
 			self.api.resourcePath("translations")
 		)
 		
+		self._modules = set(self.api.mods("active", type="modules")).pop()
+		
 		# Register the module
 		for module in self.api.mods("active", type="modules"):
 			module.registerModule(_("Topo Lesson"), self)
@@ -902,11 +948,15 @@ class TeachTopoLessonModule(object):
 		for module in self.api.mods("active", type="ui"):
 			self.enterWidget = EnterWidget()
 			self.teachWidget = TeachWidget()
+			self.resultsWidget = self._modules.chooseItem(
+				set(self.api.mods("active", type="testsViewer"))
+			).createTestsViewer()
 			
 			self.fileTab = module.addFileTab(
 				_("Topo lesson %s") % self.counter,
 				self.enterWidget,
-				self.teachWidget
+				self.teachWidget,
+				self.resultsWidget
 			)
 			
 			lesson = Lesson(self, self.fileTab, self.enterWidget, self.teachWidget)
@@ -923,9 +973,12 @@ class TeachTopoLessonModule(object):
 			self.enterWidget.mapChooser.insertItem(0, os.path.basename(path), unicode({'mapPath': list["resources"]["mapPath"], 'knownPlaces': ''}))
 			self.enterWidget.mapChooser.setCurrentIndex(0)
 			
-			# Add all the items
-			for item in list["list"]["items"]:
-				self.enterWidget.addPlace(item)
+			# Load the list
+			self.enterWidget.places = list["list"]
+			# Update the widgets
+			self.enterWidget.updateWidgets()
+			# Update results widget
+			self.resultsWidget.updateList(list["list"])
 
 """
 Lesson object (that means: this techwidget+enterwidget)
