@@ -77,10 +77,10 @@ class WordsLessonModule(object):
 		self._counter = 1
 		self._references = set()
 
-		for module in self._mm.mods("active", type="ui"):
-			event = module.addLessonCreateButton(_("Create words lesson"))
-			event.handle(self.createLesson)
-			self._references.add(event)
+		event = self._uiModule.addLessonCreateButton(_("Create words lesson"))
+		event.handle(self.createLesson)
+		self._references.add(event)
+
 		self.active = True
 
 	def disable(self):

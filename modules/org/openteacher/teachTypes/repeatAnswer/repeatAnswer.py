@@ -53,7 +53,6 @@ class RepeatScreenWidget(QtGui.QWidget):
 
 	def finish(self):
 		self.parent.setCurrentWidget(self.parent.inputWidget)
-		self.parent.inputWidget.inputLineEdit.setFocus()
 
 class StartScreenWidget(QtGui.QWidget):
 	def __init__(self, parent, *args, **kwargs):

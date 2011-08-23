@@ -20,7 +20,7 @@
 
 class WrtsApiModule(object):
 	def __init__(self, moduleManager):
-		super(self.__class__, self).__init__()
+		super(WrtsApiModule, self).__init__()
 		self._mm = moduleManager
 
 	def enable(self):

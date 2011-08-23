@@ -271,8 +271,8 @@ class EnterWidget(QtGui.QSplitter):
 
 		data = self._wordsTableModel.data(i) + letter
 		self._wordsTableModel.setData(i, data)
-		ew.wordsTableView.edit(i)
-		ew.wordsTableView.itemDelegate().currentEditor.deselect()
+		self._wordsTableView.edit(i)
+		self._wordsTableView.itemDelegate().currentEditor.deselect()
 
 	def _buildUi(self, keyboardWidget):
 		self._titleTextBox = QtGui.QLineEdit(self)

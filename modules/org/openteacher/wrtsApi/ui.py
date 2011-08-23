@@ -22,7 +22,7 @@ from PyQt4 import QtCore, QtGui
 
 class LoginDialog(QtGui.QDialog):
 	def __init__(self, *args, **kwargs):
-		super(self.__class__, self).__init__(*args, **kwargs)
+		super(LoginDialog, self).__init__(*args, **kwargs)
 		
 		emailLabel = QtGui.QLabel(_("Email: "))
 		self.emailTextBox = QtGui.QLineEdit()
@@ -70,7 +70,7 @@ class ReadOnlyStringListModel(QtGui.QStringListModel):
 
 class ListChoiceDialog(QtGui.QDialog):
 	def __init__(self, list, parent=None):
-		super(self.__class__, self).__init__(parent)
+		super(ListChoiceDialog, self).__init__(parent)
 
 		self.listView = QtGui.QListView()
 		listModel = ReadOnlyStringListModel(list)
