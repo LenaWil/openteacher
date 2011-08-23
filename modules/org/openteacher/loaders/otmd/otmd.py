@@ -23,6 +23,7 @@ import tempfile
 import os
 import uuid
 import copy
+import datetime
 try:
 	import json
 except:
@@ -49,7 +50,15 @@ class OpenTeachingMediaLoaderModule(object):
 	def getFileTypeOf(self, path):
 		if path.endswith(".otmd"):
 			return "media"
-
+	
+	def _stringsToDatetimes(self, list):
+		for test in list["tests"]:
+			for result in test["results"]:
+				result["active"]["start"] = datetime.datetime.strptime(result["active"]["start"], "%Y-%m-%dT%H:%M:%S.%f")
+				result["active"]["end"] = datetime.datetime.strptime(result["active"]["end"], "%Y-%m-%dT%H:%M:%S.%f")
+		
+		return list
+	
 	def load(self, path):
 		# Open zipfile
 		with zipfile.ZipFile(path, "r") as zipFile:
@@ -61,7 +70,7 @@ class OpenTeachingMediaLoaderModule(object):
 			id = str(uuid.uuid1())
 			tempFilePath = os.path.join(tempfile.gettempdir(), "openteacher\org\loaders\otmd\\" + id)
 			
-			list = json.loads(wordList[0])
+			list = self._stringsToDatetimes(json.loads(wordList[0]))
 		
 			for name in zipFile.namelist():
 				if name != "list.json":

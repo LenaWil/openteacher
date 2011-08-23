@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
-#	Copyright 2011, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -21,53 +20,25 @@
 
 from PyQt4 import QtGui
 
-class MediaResultsWidget(QtGui.QWidget):
-	def __init__(self, test, *args, **kwargs):
-		super(MediaResultsWidget, self).__init__(*args, **kwargs)
-		
-		self.test = test
-		
-		labelInfo = QtGui.QLabel("Results of this test: \n" + 
-								 "Right: " + str(self.amountRight(self.test)) + "\n" +
-								 "Wrong: " + str(self.amountWrong(self.test)))
-		
-		layout = QtGui.QVBoxLayout()
-		layout.addWidget(labelInfo)
-		
-		self.setLayout(layout)
-	
-	def amountRight(self, test):
-		feedback = 0
-		for result in test["results"]:
-			if result["result"] == "right":
-				feedback += 1
-		return feedback
-	
-	def amountWrong(self, test):
-		feedback = 0
-		for result in test["results"]:
-			if result["result"] == "wrong":
-				feedback += 1
-		return feedback
-
-class MediaResultsViewerModule(object):
+class ResultsDialogModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(MediaResultsViewerModule, self).__init__(*args, **kwargs)
+		super(ResultsDialogModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "resultsDialog"
-		
-		self.supports = ["media"]
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self.active = True
 
 	def disable(self):
 		self.active = False
 	
 	def showResults(self, list, test):
-		self.resultsWidget = MediaResultsWidget(test)
-		
+		self.resultsWidget = self._modules.chooseItem(
+			set(self._mm.mods("active", type="testViewer"))
+		).createTestViewer(list, test)
+
 		for module in self._mm.mods("active", type="ui"):
 			self.tab = module.addCustomTab(
 				_("Results"),
@@ -76,4 +47,4 @@ class MediaResultsViewerModule(object):
 			self.tab.closeRequested.handle(self.tab.close)
 
 def init(moduleManager):
-	return MediaResultsViewerModule(moduleManager)
+	return ResultsDialogModule(moduleManager)

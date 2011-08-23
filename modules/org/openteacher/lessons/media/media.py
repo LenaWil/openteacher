@@ -216,24 +216,24 @@ class EnterItemListModel(QtCore.QAbstractListModel):
 The list widget with media items
 """
 class EnterItemList(QtGui.QListView):
-	def __init__(self,parent,*args,**kwargs):
+	def __init__(self,enterWidget,*args,**kwargs):
 		super(EnterItemList, self).__init__(*args, **kwargs)
 		
-		self.parent = parent
+		self.enterWidget = enterWidget
 		
-		self.lm = EnterItemListModel(parent.itemList,self)
+		self.lm = EnterItemListModel(enterWidget.itemList,self)
 		self.setModel(self.lm)
 		self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
 	
 	def update(self):
-		self.lm.update(base.enterWidget.itemList)
+		self.lm.update(self.enterWidget.itemList)
 	
 	def selectionChanged(self,current,previous):
 		self.setRightActiveItem()
 	
 	def setRightActiveItem(self):
-		if len(base.enterWidget.itemList["items"]) > 0:
-			self.parent.setActiveItem(base.enterWidget.itemList["items"][self.currentIndex().row()])
+		if len(self.enterWidget.itemList["items"]) > 0:
+			self.enterWidget.setActiveItem(self.enterWidget.itemList["items"][self.currentIndex().row()])
 
 				
 				
@@ -500,28 +500,16 @@ class EnterWidget(QtGui.QSplitter):
 	def changeAnswer(self):
 		self.activeitem["answer"] = unicode(self.enterAnswer.text())
 	
-	"""
-	What happens when you click the Enter tab
-	"""
-	def showEvent(self, event):
-		if base.inLesson:
-			warningD = QtGui.QMessageBox()
-			warningD.setIcon(QtGui.QMessageBox.Warning)
-			warningD.setWindowTitle(_("Warning"))
-			warningD.setStandardButtons(QtGui.QMessageBox.Cancel | QtGui.QMessageBox.Ok)
-			warningD.setText(_("Are you sure you want to go back to the enter tab? This will end your lesson!"))
-			feedback = warningD.exec_()
-			if feedback == QtGui.QMessageBox.Ok:
-				base.teachWidget.stopLesson()
-			else:
-				base.fileTab.currentTab = base.teachWidget
-	
 """
 The teach tab
 """
 class TeachWidget(QtGui.QWidget):
+	lessonDone = QtCore.pyqtSignal()
 	def __init__(self,*args, **kwargs):
 		super(TeachWidget, self).__init__(*args, **kwargs)
+		
+		self.inLesson = False
+		
 		#draw the GUI
 		
 		top = QtGui.QHBoxLayout()
@@ -567,16 +555,23 @@ class TeachWidget(QtGui.QWidget):
 	"""
 	Starts the lesson
 	"""
-	def initiateLesson(self):
-		self.lesson = MediaLesson(base.enterWidget.itemList)
+	def initiateLesson(self, items):
+		self.items = items
+		self.lesson = TeachMediaLesson(items, self)
 		self.answerField.setFocus()
+	
+	"""
+	Restarts the lesson
+	"""
+	def restartLesson(self):
+		self.initiateLesson(self.items)
 	
 	"""
 	What happens when you change the lesson type
 	"""
 	def changeLessonType(self, index):
-		if base.inLesson:
-			self.initiateLesson()
+		if self.inLesson:
+			self.restartLesson()
 	
 	"""
 	Stops the lesson
@@ -592,16 +587,6 @@ class TeachWidget(QtGui.QWidget):
 		self.lesson.checkAnswer()
 		self.answerField.clear()
 		self.answerField.setFocus()
-	
-	"""
-	What happens when you click the Teach tab
-	"""
-	def showEvent(self,event):
-		if len(base.enterWidget.itemList["items"]) == 0:
-			QtGui.QMessageBox.critical(self, _("Not enough items"), _("You need to add items to your test first"))
-			base.fileTab.currentTab = base.enterWidget
-		elif not base.inLesson:
-			self.initiateLesson()
 				
 				
 			
@@ -621,28 +606,27 @@ GENERAL CLASSES
 """
 The lesson itself (being teached)
 """
-class MediaLesson(object):
-	def __init__(self,itemList,*args,**kwargs):
-		super(MediaLesson, self).__init__(*args, **kwargs)
+class TeachMediaLesson(object):	
+	def __init__(self,itemList,teachWidget,*args,**kwargs):
+		super(TeachMediaLesson, self).__init__(*args, **kwargs)
 		
-		#stop media playing in the enter widget
-		base.enterWidget.mediaDisplay.clear()
+		self.teachWidget = teachWidget
 		
 		self.itemList = itemList
-		self.lessonType = base.teachWidget.lessonTypeChooser.currentLessonType.createLessonType(self.itemList,range(len(itemList["items"])))
+		self.lessonType = self.teachWidget.lessonTypeChooser.currentLessonType.createLessonType(self.itemList,range(len(itemList["items"])))
 		
 		self.lessonType.newItem.handle(self.nextQuestion)
 		self.lessonType.lessonDone.handle(self.endLesson)
 		
 		self.lessonType.start()
 		
-		base.inLesson = True
+		self.teachWidget.inLesson = True
 		
 		#self.startThinkingTime
 		#self.endThinkingTime
 		
 		# Reset the progress bar
-		base.teachWidget.progress.setValue(0)
+		self.teachWidget.progress.setValue(0)
 	
 	"""
 	Check whether the given answer was right or wrong
@@ -656,7 +640,7 @@ class MediaLesson(object):
 			"end": self.endThinkingTime
 		}
 		
-		if self.currentItem["answer"] == base.teachWidget.answerField.text():
+		if self.currentItem["answer"] == self.teachWidget.answerField.text():
 			# Answer was right
 			self.lessonType.setResult({
 					"itemId": self.currentItem["id"],
@@ -680,11 +664,11 @@ class MediaLesson(object):
 		# set the next question
 		self.currentItem = item
 		# set the question field
-		base.teachWidget.questionLabel.setText(self.currentItem["question"])
+		self.teachWidget.questionLabel.setText(self.currentItem["question"])
 		# set the name field
-		base.teachWidget.nameLabel.setText(self.currentItem["name"])
+		self.teachWidget.nameLabel.setText(self.currentItem["name"])
 		# set the mediawidget to the right location
-		base.teachWidget.mediaDisplay.showMedia(self.currentItem["filename"], self.currentItem["remote"], True)
+		self.teachWidget.mediaDisplay.showMedia(self.currentItem["filename"], self.currentItem["remote"], True)
 		# Set the start of the thinking time to now
 		self.startThinkingTime = datetime.datetime.now()
 		# Delete the end of the thinking time
@@ -697,27 +681,32 @@ class MediaLesson(object):
 	Ends the lesson
 	"""
 	def endLesson(self):
-		base.inLesson = False
-
-		for module in base._mm.mods("active", type="resultsDialog"): #FIXME: only one should remain
-			if base.dataType in module.supports:
-				module.showResults(self.itemList, self.itemList["tests"][-1])
+		self.teachWidget.inLesson = False
 
 		# stop media
-		base.teachWidget.mediaDisplay.clear()
-		# Update results widget
-		base.resultsWidget.updateList(self.itemList)
-		# Go to results widget
-		base.fileTab.currentTab = base.resultsWidget
-		# Set right active item
-		base.enterWidget.enterItemList.setRightActiveItem()
+		self.teachWidget.mediaDisplay.clear()
+		
+		# Update and go to results widget, only if the test is progressing
+		try:
+			self.itemList["tests"][-1]
+		except IndexError:
+			pass
+		else:
+			# Update results widget
+			base.resultsWidget.updateList(self.itemList)
+			# Go to results widget
+			for module in base._mm.mods("active", type="resultsDialog"):
+				module.showResults(self.itemList, self.itemList["tests"][-1])
+		
+		self.teachWidget.lessonDone.emit()
+	
 	
 	"""
 	Updates the progress bar
 	"""
 	def _updateProgressBar(self):
-		base.teachWidget.progress.setMaximum(self.lessonType.totalItems+1)
-		base.teachWidget.progress.setValue(self.lessonType.askedItems)
+		self.teachWidget.progress.setMaximum(self.lessonType.totalItems+1)
+		self.teachWidget.progress.setValue(self.lessonType.askedItems)
 
 """
 The module
@@ -730,7 +719,6 @@ class MediaLessonModule(object):
 		base = self
 		self._mm = mm
 		self.counter = 1
-		self.inLesson = False
 
 		self.type = "lesson"
 		self.dataType = "media"
@@ -825,22 +813,56 @@ Lesson object (that means: this techwidget+enterwidget)
 class Lesson(object):
 	def __init__(self, moduleManager, fileTab, enterWidget, teachWidget, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
+		
+		self.enterWidget = enterWidget
+		self.teachWidget = teachWidget
 		self.fileTab = fileTab
+		
 		self.stopped = base._mm.createEvent()
 		
 		self.module = self
-		self.list = base.enterWidget.itemList
+		self.list = self.enterWidget.itemList
 		self.resources = {}
 		self.dataType = "media"
 		
-		fileTab.closeRequested.handle(self.stop)
+		self.fileTab.closeRequested.handle(self.stop)
+		self.fileTab.tabChanged.handle(self.tabChanged)
+		self.teachWidget.lessonDone.connect(self.toEnterTab)
 	
 	def stop(self):
+		# Stop lesson if in one
+		if self.teachWidget.inLesson:
+			self.teachWidget.stopLesson()
 		self.fileTab.close()
 		# Stop media playing
-		base.enterWidget.mediaDisplay.stop()
-		base.teachWidget.mediaDisplay.stop()
+		self.enterWidget.mediaDisplay.stop()
+		self.teachWidget.mediaDisplay.stop()
 		self.stopped.emit()
+	
+	def toEnterTab(self):
+		self.fileTab.currentTab = self.enterWidget
+	
+	def tabChanged(self):
+		if self.fileTab.currentTab == self.enterWidget:
+			if self.teachWidget.inLesson:
+				warningD = QtGui.QMessageBox()
+				warningD.setIcon(QtGui.QMessageBox.Warning)
+				warningD.setWindowTitle(_("Warning"))
+				warningD.setStandardButtons(QtGui.QMessageBox.Cancel | QtGui.QMessageBox.Ok)
+				warningD.setText(_("Are you sure you want to go back to the enter tab? This will end your lesson!"))
+				feedback = warningD.exec_()
+				if feedback == QtGui.QMessageBox.Ok:
+					self.teachWidget.stopLesson()
+				else:
+					self.fileTab.currentTab = self.teachWidget
+		elif self.fileTab.currentTab == self.teachWidget:
+			#stop media playing in the enter widget
+			self.enterWidget.mediaDisplay.clear()
+			if len(self.enterWidget.itemList["items"]) == 0:
+				QtGui.QMessageBox.critical(self, _("Not enough items"), _("You need to add items to your test first"))
+				self.fileTab.currentTab = self.enterWidget
+			elif not self.teachWidget.inLesson:
+				self.teachWidget.initiateLesson(self.enterWidget.itemList)
 
 def init(moduleManager):
 	return MediaLessonModule(moduleManager)

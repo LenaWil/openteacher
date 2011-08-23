@@ -237,9 +237,8 @@ class TeachWidget(QtGui.QStackedWidget):
 		self._applicationActivityChanged.unhandle(self._activityChanged)
 		self._updateProgress()
 
-		for module in self._mm.mods("active", type="resultsDialog"): #FIXME: only one should remain
-			if "words" in module.supports:
-				module.showResults(self.list, self.list["tests"][-1])
+		for module in self._mm.mods("active", type="resultsDialog"):
+			module.showResults(self.list, self.list["tests"][-1])
 		self.lessonDone.emit()
 
 	def _buildUi(self, keyboardWidget):
