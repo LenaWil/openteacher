@@ -83,14 +83,60 @@ class LessonTabWidget(QtGui.QTabWidget):
 		self.setTabPosition(QtGui.QTabWidget.South)
 		self.setDocumentMode(True)
 
-class ExpandingButton(QtGui.QPushButton):
-	def __init__(self, *args, **kwargs):
-		super(ExpandingButton, self).__init__(*args, **kwargs)
+class StartTabButton(QtGui.QPushButton):
+	def __init__(self, icon=None, text=u"", *args, **kwargs):
+		super(StartTabButton, self).__init__(icon, u"", *args, **kwargs)
+		self.setText(text)
 
 		self.setSizePolicy(
-			QtGui.QSizePolicy.Expanding,
-			QtGui.QSizePolicy.Expanding
+			QtGui.QSizePolicy.MinimumExpanding,
+			QtGui.QSizePolicy.MinimumExpanding
 		)
+
+	def setText(self, text):
+		self._text = text
+		self._cache = {}
+
+	def sizeHint(self):
+		fm = self.fontMetrics()
+		width = max(map(fm.width, self._text.split(" "))) +20 #+20 to let it look nice
+		height = fm.height() * len(self._splitLines().split("\n")) +10 #+10 to let it look nice
+
+		return QtCore.QSize(width, height)
+
+	def _splitLines(self):
+		fm = self.fontMetrics()
+		result = u""
+		curLine = u""
+		words = unicode(self._text).split(u" ")
+		w = self.width()
+		try:
+			return self._cache[w]
+		except KeyError:
+			pass
+		i = 0
+		while True:
+			try:
+				word = words[i]
+			except IndexError:
+				break
+			if not curLine and fm.width(word) >= w:
+				result += u"\n" + word
+				i += 1
+			elif fm.width(curLine + " " + word) >= w:
+				result += u"\n" + curLine
+				curLine = u""
+			else:
+				curLine += u" " + word
+				i += 1
+		result += "\n" + curLine
+		result = result.strip()
+		self._cache[w] = result
+		return result
+
+	def resizeEvent(self, e):
+		result = self._splitLines()
+		super(StartTabButton, self).setText(result)
 
 class StartWidget(QtGui.QSplitter):
 	def __init__(self, *args, **kwargs):
@@ -136,7 +182,7 @@ class StartWidget(QtGui.QSplitter):
 		self.addWidget(recentlyOpenedGridBox)
 
 	def addLessonCreateButton(self, text, icon=QtGui.QIcon()):
-		button = ExpandingButton(icon, text, self)
+		button = StartTabButton(icon, text, self)
 
 		self.createLessonLayout.addWidget(
 			button,
@@ -152,7 +198,7 @@ class StartWidget(QtGui.QSplitter):
 		return button
 
 	def addLessonLoadButton(self, text, icon=QtGui.QIcon()):
-		button = ExpandingButton(icon, text, self)
+		button = StartTabButton(icon, text, self)
 
 		self.loadLessonLayout.addWidget(
 			button,

@@ -147,7 +147,6 @@ class GuiModule(object):
 				"active" if activity else "inactive"
 			)
 		)
-#		self._app.focusChanged.connect(self._focusChanged)
 		self.active = True
 
 	def disable(self):
@@ -168,15 +167,6 @@ class GuiModule(object):
 		del self.tabChanged
 		del self.applicationActivityChanged
 		del self._widget
-
-#	def _focusChanged(self, old, new):
-#		activity = "active" if new else "inactive"
-#		try:
-#			if self._oldActivity == activity:
-#				return
-#		except AttributeError:
-#			pass
-#		self.applicationActivityChanged.emit(activity)
 
 	def run(self):
 		self._widget.show()
