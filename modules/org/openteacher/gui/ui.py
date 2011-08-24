@@ -99,8 +99,8 @@ class StartTabButton(QtGui.QPushButton):
 
 	def sizeHint(self):
 		fm = self.fontMetrics()
-		width = max(map(fm.width, self._text.split(" "))) +20 #+20 to let it look nice
-		height = fm.height() * len(self._splitLines().split("\n")) +10 #+10 to let it look nice
+		width = max(map(fm.width, self._text.split(" "))) + 20 #+20 to keep margin
+		height = fm.height() * len(self._splitLines().split("\n")) +10 #+10 to keep margin
 
 		return QtCore.QSize(width, height)
 
@@ -109,7 +109,7 @@ class StartTabButton(QtGui.QPushButton):
 		result = u""
 		curLine = u""
 		words = unicode(self._text).split(u" ")
-		w = self.width()
+		w = self.width()# -20 #-20 to keep a margin
 		try:
 			return self._cache[w]
 		except KeyError:
@@ -120,7 +120,7 @@ class StartTabButton(QtGui.QPushButton):
 				word = words[i]
 			except IndexError:
 				break
-			if not curLine and fm.width(word) >= w:
+			if not curLine and fm.width(" " + word) >= w:
 				result += u"\n" + word
 				i += 1
 			elif fm.width(curLine + " " + word) >= w:
@@ -134,9 +134,10 @@ class StartTabButton(QtGui.QPushButton):
 		self._cache[w] = result
 		return result
 
-	def resizeEvent(self, e):
+	def resizeEvent(self, *args, **kwargs):
 		result = self._splitLines()
 		super(StartTabButton, self).setText(result)
+		super(StartTabButton, self).resizeEvent(*args, **kwargs)
 
 class StartWidget(QtGui.QSplitter):
 	def __init__(self, *args, **kwargs):

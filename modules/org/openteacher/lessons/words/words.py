@@ -24,6 +24,8 @@ class Lesson(object):
 	def __init__(self, moduleManager, fileTab, module, list, enterWidget, teachWidget, resultsWidget, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
 
+		self.resources = {} #To be removed...
+
 		self._mm = moduleManager
 		self.module = module
 

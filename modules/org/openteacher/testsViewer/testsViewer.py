@@ -146,7 +146,10 @@ class TestsViewerWidget(QtGui.QSplitter):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestsViewerWidget, self).__init__(QtCore.Qt.Vertical, *args, **kwargs)
 
-		self.testsModel = TestsModel(moduleManager)
+		self._mm = moduleManager
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
+		self.testsModel = TestsModel(self._mm)
 		testsView = QtGui.QTableView()
 		testsView.setModel(self.testsModel)
 		testsView.doubleClicked.connect(self.showTest)
@@ -170,6 +173,14 @@ class TestsViewerWidget(QtGui.QSplitter):
 		self.testsModel.list = list
 		self.notesWidget.updateList(list)
 		self.detailsWidget.updateList(list)
+		try:
+			self.percentsNotesViewer.hide()
+		except AttributeError:
+			pass
+		self.percentsNotesViewer = self._modules.chooseItem(
+			set(self._mm.mods("active", type="percentNotesViewer"))
+		).createPercentNotesViewer(list["tests"])
+		self.addWidget(self.percentsNotesViewer)
 
 class TestViewerWidget(QtGui.QWidget):
 	backActivated = QtCore.pyqtSignal()
