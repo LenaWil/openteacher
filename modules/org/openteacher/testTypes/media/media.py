@@ -1,0 +1,74 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
+#	Copyright 2008-2011, Milan Boers
+#	Copyright 2009-2011, Marten de Vries
+#
+#	This file is part of OpenTeacher.
+#
+#	OpenTeacher is free software: you can redistribute it and/or modify
+#	it under the terms of the GNU General Public License as published by
+#	the Free Software Foundation, either version 3 of the License, or
+#	(at your option) any later version.
+#
+#	OpenTeacher is distributed in the hope that it will be useful,
+#	but WITHOUT ANY WARRANTY; without even the implied warranty of
+#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#	GNU General Public License for more details.
+#
+#	You should have received a copy of the GNU General Public License
+#	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
+
+
+class MediaTestTypeModule(object):
+	NAME, QUESTION, ANSWER, GIVEN_ANSWER, CORRECT = xrange(5)
+	def __init__(self, moduleManager, *args, **kwargs):
+		super(MediaTestTypeModule, self).__init__(*args, **kwargs)
+
+		self._mm = moduleManager
+		
+		self.type = "testType"
+		self.dataType = "media"
+
+	def enable(self):
+		self.active = True
+
+	def disable(self):
+		self.active = False
+	
+	def updateList(self, list, test):
+		self._list = list
+		self._test = test
+	
+	@property
+	def header(self):
+		return [
+			_("Name"),#FIXME: own translator
+			_("Question"),
+			_("Answer"),
+			_("Given answer"),
+			_("Correct")
+		]
+	
+	def _itemForResult(self, result):
+		for item in self._list["items"]:
+			if result["itemId"] == item["id"]:
+				return item
+	
+	def data(self, row, column):
+		result = self._test["results"][row]
+		
+		item = self._itemForResult(result)
+		if column == self.NAME:
+			return item["name"]
+		if column == self.QUESTION:
+			return item["question"]
+		if column == self.ANSWER:
+			return item["answer"]
+		if column == self.GIVEN_ANSWER:
+			return result["givenAnswer"]
+		elif column == self.CORRECT:
+			return result["result"] == "right"
+
+def init(moduleManager):
+	return MediaTestTypeModule(moduleManager)

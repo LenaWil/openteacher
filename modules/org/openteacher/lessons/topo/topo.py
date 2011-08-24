@@ -559,6 +559,8 @@ class TeachTopoLesson(object):
 					"result": "wrong",
 					"active": active
 				})
+		
+		self.teachWidget.listChanged.emit(self.itemList)
 			
 	"""
 	What happens when the next question should be asked
@@ -594,7 +596,7 @@ class TeachTopoLesson(object):
 		else:
 			# Go to results widget
 			for module in base._mm.mods("active", type="resultsDialog"):
-				module.showResults(self.itemList, self.itemList["tests"][-1])
+				module.showResults(self.itemList, "topo", self.itemList["tests"][-1])
 		
 		self.teachWidget.lessonDone.emit()
 	
@@ -627,6 +629,7 @@ The teach tab
 """
 class TeachWidget(QtGui.QWidget):
 	lessonDone = QtCore.pyqtSignal()
+	listChanged = QtCore.pyqtSignal([object])
 	def __init__(self, *args, **kwargs):
 		super(TeachWidget, self).__init__(*args, **kwargs)
 		
@@ -964,7 +967,7 @@ class TeachTopoLessonModule(object):
 				resultsWidget
 			)
 			
-			lesson = Lesson(self, fileTab, enterWidget, teachWidget)
+			lesson = Lesson(self, fileTab, enterWidget, teachWidget, resultsWidget)
 			self.lessonCreated.emit(lesson)
 			
 			lessons.add(lesson)
@@ -974,26 +977,28 @@ class TeachTopoLessonModule(object):
 	
 	def loadFromList(self, list, path):
 		for lesson in self.createLesson():
-			self.enterWidget.mapChooser.setCurrentIndex(0)
-			self.enterWidget.mapChooser.insertItem(0, os.path.basename(path), unicode({'mapPath': list["resources"]["mapPath"], 'knownPlaces': ''}))
-			self.enterWidget.mapChooser.setCurrentIndex(0)
+			lesson.enterWidget.mapChooser.setCurrentIndex(0)
+			lesson.enterWidget.mapChooser.insertItem(0, os.path.basename(path), unicode({'mapPath': list["resources"]["mapPath"], 'knownPlaces': ''}))
+			lesson.enterWidget.mapChooser.setCurrentIndex(0)
 			
 			# Load the list
-			self.enterWidget.places = list["list"]
+			lesson.enterWidget.places = list["list"]
 			# Update the widgets
-			self.enterWidget.updateWidgets()
+			lesson.enterWidget.updateWidgets()
 			# Update results widget
-			self.resultsWidget.updateList(list["list"])
+			lesson.resultsWidget.updateList(list["list"], "topo")
 
 """
 Lesson object (that means: this techwidget+enterwidget)
 """
 class Lesson(object):
-	def __init__(self, moduleManager, fileTab, enterWidget, teachWidget, *args, **kwargs):
+	def __init__(self, moduleManager, fileTab, enterWidget, teachWidget, resultsWidget, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
 		
 		self.enterWidget = enterWidget
 		self.teachWidget = teachWidget
+		self.resultsWidget = resultsWidget
+		
 		self.fileTab = fileTab
 		
 		self.stopped = base._mm.createEvent()
@@ -1005,6 +1010,7 @@ class Lesson(object):
 		fileTab.closeRequested.handle(self.stop)
 		fileTab.tabChanged.handle(self.tabChanged)
 		self.teachWidget.lessonDone.connect(self.toEnterTab)
+		self.teachWidget.listChanged.connect(self.teachListChanged)
 	
 	def stop(self):
 		# Stop lesson if in one
@@ -1015,6 +1021,9 @@ class Lesson(object):
 	
 	def toEnterTab(self):
 		self.fileTab.currentTab = self.enterWidget
+	
+	def teachListChanged(self, list):
+		self.resultsWidget.updateList(list, "topo")
 	
 	def tabChanged(self):
 		if self.fileTab.currentTab == self.enterWidget:

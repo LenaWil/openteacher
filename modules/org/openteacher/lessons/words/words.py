@@ -40,9 +40,13 @@ class Lesson(object):
 		self._resultsWidget = resultsWidget
 
 		self._teachWidget.lessonDone.connect(self._lessonDone)
+		self._teachWidget.listChanged.connect(self._listChanged)
 
 	def _lessonDone(self):
 		self.fileTab.currentTab = self._enterWidget
+	
+	def _listChanged(self, list):
+		self._resultsWidget.updateList(list, "words")
 
 	def stop(self):
 		self.fileTab.close()
@@ -113,7 +117,7 @@ class WordsLessonModule(object):
 		resultsWidget = self._modules.chooseItem(
 			set(self._mm.mods("active", type="testsViewer"))
 		).createTestsViewer()
-		resultsWidget.updateList(list)
+		resultsWidget.updateList(list, "words")
 
 		fileTab = self._uiModule.addFileTab(
 			_("Word lesson %s") % self._counter,

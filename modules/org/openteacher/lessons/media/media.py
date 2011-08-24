@@ -505,6 +505,7 @@ The teach tab
 """
 class TeachWidget(QtGui.QWidget):
 	lessonDone = QtCore.pyqtSignal()
+	listChanged = QtCore.pyqtSignal([object])
 	def __init__(self,*args, **kwargs):
 		super(TeachWidget, self).__init__(*args, **kwargs)
 		
@@ -645,6 +646,7 @@ class TeachMediaLesson(object):
 			self.lessonType.setResult({
 					"itemId": self.currentItem["id"],
 					"result": "right",
+					"givenAnswer": unicode(self.teachWidget.answerField.text()),
 					"active": active
 				})
 			# Progress bar
@@ -654,8 +656,11 @@ class TeachMediaLesson(object):
 			self.lessonType.setResult({
 					"itemId": self.currentItem["id"],
 					"result": "wrong",
+					"givenAnswer": unicode(self.teachWidget.answerField.text()),
 					"active": active
 				})
+		
+		self.teachWidget.listChanged.emit(self.itemList)
 			
 	"""
 	What happens when the next question should be asked
@@ -692,11 +697,9 @@ class TeachMediaLesson(object):
 		except IndexError:
 			pass
 		else:
-			# Update results widget
-			base.resultsWidget.updateList(self.itemList)
 			# Go to results widget
 			for module in base._mm.mods("active", type="resultsDialog"):
-				module.showResults(self.itemList, self.itemList["tests"][-1])
+				module.showResults(self.itemList, "media", self.itemList["tests"][-1])
 		
 		self.teachWidget.lessonDone.emit()
 	
@@ -790,7 +793,7 @@ class MediaLessonModule(object):
 				self.resultsWidget
 			)
 			
-			lesson = Lesson(self, self.fileTab, self.enterWidget, self.teachWidget)
+			lesson = Lesson(self, self.fileTab, self.enterWidget, self.teachWidget, self.resultsWidget)
 			self.lessonCreated.emit(lesson)
 			
 			lessons.add(lesson)
@@ -805,17 +808,18 @@ class MediaLessonModule(object):
 			# Update the widgets
 			self.enterWidget.updateWidgets()
 			# Update the results widget
-			self.resultsWidget.updateList(list)
+			self.resultsWidget.updateList(list, "media")
 
 """
 Lesson object (that means: this techwidget+enterwidget)
 """
 class Lesson(object):
-	def __init__(self, moduleManager, fileTab, enterWidget, teachWidget, *args, **kwargs):
+	def __init__(self, moduleManager, fileTab, enterWidget, teachWidget, resultsWidget, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
 		
 		self.enterWidget = enterWidget
 		self.teachWidget = teachWidget
+		self.resultsWidget = resultsWidget
 		self.fileTab = fileTab
 		
 		self.stopped = base._mm.createEvent()
@@ -828,6 +832,7 @@ class Lesson(object):
 		self.fileTab.closeRequested.handle(self.stop)
 		self.fileTab.tabChanged.handle(self.tabChanged)
 		self.teachWidget.lessonDone.connect(self.toEnterTab)
+		self.teachWidget.listChanged.connect(self.teachListChanged)
 	
 	def stop(self):
 		# Stop lesson if in one
@@ -838,6 +843,10 @@ class Lesson(object):
 		self.enterWidget.mediaDisplay.stop()
 		self.teachWidget.mediaDisplay.stop()
 		self.stopped.emit()
+	
+	def teachListChanged(self, list):
+		# Update results widget
+		self.resultsWidget.updateList(list, "media")
 	
 	def toEnterTab(self):
 		self.fileTab.currentTab = self.enterWidget

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2009-2011, Marten de Vries
+#	Copyright 2008-2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -22,88 +23,59 @@ from PyQt4 import QtCore, QtGui
 import datetime
 
 class TestModel(QtCore.QAbstractTableModel):
-	QUESTION, ANSWER, GIVEN_ANSWER, CORRECT = xrange(4)#FIXME: QUESTION, ANSWER and GIVEN_ANSWER aren't guaranteed to exist?
-
-	def __init__(self, moduleManager, list, test, *args, **kwargs):
+	def __init__(self, moduleManager, list, dataType, test, *args, **kwargs):
 		super(TestModel, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
 		self._list = list
 		self._test = test
+		
+		for module in self._mm.mods("active", type="testType"):
+			if dataType == module.dataType:
+				self.testTable = module
+				self.testTable.updateList(self._list, self._test)
+				break
 
 	def headerData(self, section, orientation, role):
 		if role != QtCore.Qt.DisplayRole:
 			return
 		if orientation == QtCore.Qt.Horizontal:
-			return [
-				_("Question"),#FIXME: own translator
-				_("Answer"),
-				_("Given answer"),
-				_("Correct"),
-			][section]
+			return self.testTable.header[section]
 		else:
 			return section + 1
-
-	def _itemForResult(self, result):
-		for item in self._list["items"]:
-			if result["itemId"] == item["id"]:
-				return item
 
 	def data(self, index, role):
 		if not index.isValid():
 			return
-
-		try:
-			compose = self._modules.chooseItem(
-				set(self._mm.mods("active", type="wordsStringComposer"))
-			).compose
-		except IndexError:
-			#FIXME: nice error handling
-			pass
+		
+		if type(self.testTable.data(index.row(), index.column())) == type(True):
+			# Boolean
+			if role == QtCore.Qt.CheckStateRole:
+				return self.testTable.data(index.row(), index.column())
 		else:
-			if compose is None:
-				pass
-				#FIXME: nice error handling
-
-		result = self._test["results"][index.row()]
-		if role == QtCore.Qt.DisplayRole:
-			item = self._itemForResult(result)
-			if index.column() == self.QUESTION:
-				try:
-					return compose(item["questions"])
-				except KeyError:
-					return compose([])
-			elif index.column() == self.ANSWER:
-				try:
-					return compose(item["answers"])
-				except KeyError:
-					return compose([])
-			elif index.column() == self.GIVEN_ANSWER:
-				try:
-					return result["givenAnswer"]
-				except KeyError:
-					return _("-")
-		elif role == QtCore.Qt.CheckStateRole and index.column() == self.CORRECT:
-			return result["result"] == "right"
+			# Non-Boolean
+			if role == QtCore.Qt.DisplayRole:
+				return self.testTable.data(index.row(), index.column())
 
 	def rowCount(self, parent):
 		return len(self._test["results"])
 
 	def columnCount(self, parent):
-		return 4
+		return len(self.testTable.header)
 
 class TestViewer(QtGui.QSplitter):
-	def __init__(self, moduleManager, list, test, *args, **kwargs):
+	def __init__(self, moduleManager, list, dataType, test, *args, **kwargs):
 		super(TestViewer, self).__init__(QtCore.Qt.Vertical, *args, **kwargs)
+		
+		self.test = test
 
 		self._mm = moduleManager
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
 		#Vertical splitter
 		tableView = QtGui.QTableView()
-		testModel = TestModel(self._mm, list, test)
+		testModel = TestModel(self._mm, list, dataType, test)
 		tableView.setModel(testModel)
 
 		try:
@@ -111,11 +83,8 @@ class TestViewer(QtGui.QSplitter):
 		except KeyError:
 			completedText = _("no")
 		completedLabel = QtGui.QLabel(_("Completed: %s") % completedText)
-		totalThinkingTime = datetime.timedelta()
-		for result in test["results"]:
-			totalThinkingTime += result["active"]["end"] - result["active"]["start"]
-		seconds = totalThinkingTime.total_seconds()
-		totalThinkingTimeLabel = QtGui.QLabel(_("Total thinking time: %s seconds") % seconds)
+		
+		totalThinkingTimeLabel = QtGui.QLabel(_("Total thinking time: %s seconds") % self._totalThinkingTime)
 		vertSplitter = QtGui.QSplitter(QtCore.Qt.Vertical)
 		vertSplitter.addWidget(totalThinkingTimeLabel)
 		vertSplitter.addWidget(tableView)
@@ -125,10 +94,31 @@ class TestViewer(QtGui.QSplitter):
 			set(self._mm.mods("active", type="noteCalculator"))
 		).calculateNote
 
-		noteDrawer = QtGui.QLabel(_("Note: %s") % calculateNote(test)) #FIXME: noteDrawer + vertical align top
+		factsLayout = QtGui.QVBoxLayout()
+		noteDrawer = QtGui.QLabel(_("Note:") + "<br /><span style=\"font-size: 40px\">%s</span>" % calculateNote(test)) #FIXME: noteDrawer + vertical align top
+		factsLayout.addWidget(noteDrawer, 0, QtCore.Qt.AlignTop)
+		for module in self._mm.mods("active", type="testType"):
+			if module.dataType == dataType:
+				try:
+					module.funFacts
+				except AttributeError:
+					pass
+				else:
+					for fact in module.funFacts:
+						if fact[1] == None:
+							label = QtGui.QLabel("%s<br />-" % fact[0])
+						else:
+							label = QtGui.QLabel("%s<br /><span style=\"font-size: 14px\">%s</span>" % (fact[0], fact[1]))
+						factsLayout.addWidget(label, 0, QtCore.Qt.AlignTop)
+				break
+		factsLayout.addStretch()
+		
+		factsWidget = QtGui.QWidget()
+		factsWidget.setLayout(factsLayout)
+		
 		horSplitter = QtGui.QSplitter()
 		horSplitter.addWidget(vertSplitter)
-		horSplitter.addWidget(noteDrawer)
+		horSplitter.addWidget(factsWidget)
 
 		#Main splitter
 		progressWidget = self._modules.chooseItem(
@@ -137,6 +127,13 @@ class TestViewer(QtGui.QSplitter):
 
 		self.addWidget(horSplitter)
 		self.addWidget(progressWidget)
+	
+	@property
+	def _totalThinkingTime(self):
+		totalThinkingTime = datetime.timedelta()
+		for result in self.test["results"]:
+			totalThinkingTime += result["active"]["end"] - result["active"]["start"]
+		return totalThinkingTime.total_seconds()
 
 class TestViewerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

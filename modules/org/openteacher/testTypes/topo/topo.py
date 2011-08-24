@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Milan Boers
+#	Copyright 2008-2011, Milan Boers
+#	Copyright 2009-2011, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,33 +19,47 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui
 
-class ResultsDialogModule(object):
+class TopoTestTypeModule(object):
+	PLACE_NAME, CORRECT = xrange(2)
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(ResultsDialogModule, self).__init__(*args, **kwargs)
-		self._mm = moduleManager
+		super(TopoTestTypeModule, self).__init__(*args, **kwargs)
 
-		self.type = "resultsDialog"
+		self._mm = moduleManager
+		
+		self.type = "testType"
+		self.dataType = "topo"
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self.active = True
 
 	def disable(self):
 		self.active = False
 	
-	def showResults(self, list, dataType, test):
-		self.resultsWidget = self._modules.chooseItem(
-			set(self._mm.mods("active", type="testViewer"))
-		).createTestViewer(list, dataType, test)
-
-		for module in self._mm.mods("active", type="ui"):
-			self.tab = module.addCustomTab(
-				_("Results"),
-				self.resultsWidget
-			)
-			self.tab.closeRequested.handle(self.tab.close)
+	def updateList(self, list, test):
+		self._list = list
+		self._test = test
+	
+	@property
+	def header(self):
+		return [
+			_("Place name"),#FIXME: own translator
+			_("Correct")
+		]
+	
+	def _itemForResult(self, result):
+		for item in self._list["items"]:
+			if result["itemId"] == item["id"]:
+				return item
+	
+	def data(self, row, column):
+		result = self._test["results"][row]
+		
+		item = self._itemForResult(result)
+		if column == self.PLACE_NAME:
+			return item["name"]
+		elif column == self.CORRECT:
+			return result["result"] == "right"
 
 def init(moduleManager):
-	return ResultsDialogModule(moduleManager)
+	return TopoTestTypeModule(moduleManager)

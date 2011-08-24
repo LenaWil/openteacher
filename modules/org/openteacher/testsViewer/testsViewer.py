@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2009-2011, Marten de Vries
+#	Copyright 2008-2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -122,26 +123,42 @@ class NotesWidget(QtGui.QWidget):
 		self.averageLabel.setText(unicode(average))
 
 class DetailsWidget(QtGui.QWidget):
-	def __init__(self, *args, **kwargs):
+	def __init__(self, moduleManager, *args, **kwargs):
 		super(DetailsWidget, self).__init__(*args, **kwargs)
 		
-		self.titleLabel = QtGui.QLabel()
-		self.questionLanguageLabel = QtGui.QLabel()
-		self.answerLanguageLabel = QtGui.QLabel()
+		self._mm = moduleManager
+		self.labels = []
 		
-		layout = QtGui.QFormLayout()
-		layout.addRow(_("Title:"), self.titleLabel) #FIXME: own translator
-		layout.addRow(_("Question language:"), self.questionLanguageLabel) #FIXME: own translator
-		layout.addRow(_("Answer language:"), self.answerLanguageLabel) #FIXME: own translator
-		self.setLayout(layout)
+		self.layout = QtGui.QFormLayout()
+		
+		self.setLayout(self.layout)
 
-	def updateList(self, list):
-		self.titleLabel.setText(list.get("title", _("-"))) #FIXME: description + own translator
-		self.questionLanguageLabel.setText(list.get("questionLanguage", _("-"))) #FIXME: description + own translator
-		self.answerLanguageLabel.setText(list.get("answerLanguage", _("-"))) #FIXME: description + own translator
-
+	def updateList(self, list, dataType):
+		for module in self._mm.mods("active", type="testType"):
+			if module.dataType == dataType:
+				# Only if there are any properties in this module
+				try:
+					module.properties
+				except AttributeError:
+					pass
+				else:
+					# If the labels were not made yet, make them
+					if len(self.labels) == 0:
+						for property in module.properties:
+							label = QtGui.QLabel(property[0])
+							self.layout.addRow(property[0], label)
+							label.setText(list.get(property[1], _("-")))
+							self.labels.append(label)
+					# Else, update them
+					else:
+						i = 0
+						for property in module.properties:
+							self.labels[i].setText(list.get(property[1], _("-")))
+							i += 1
+					break
+		
 class TestsViewerWidget(QtGui.QSplitter):
-	testActivated = QtCore.pyqtSignal([object, object])
+	testActivated = QtCore.pyqtSignal([object, object, object])
 
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestsViewerWidget, self).__init__(QtCore.Qt.Vertical, *args, **kwargs)
@@ -154,7 +171,7 @@ class TestsViewerWidget(QtGui.QSplitter):
 		testsView.setModel(self.testsModel)
 		testsView.doubleClicked.connect(self.showTest)
 		self.notesWidget = NotesWidget(moduleManager)
-		self.detailsWidget = DetailsWidget()
+		self.detailsWidget = DetailsWidget(moduleManager)
 
 		horSplitter = QtGui.QSplitter()
 		horSplitter.addWidget(testsView)
@@ -165,14 +182,16 @@ class TestsViewerWidget(QtGui.QSplitter):
 
 	def showTest(self, index):
 		list = self.testsModel.list
+		dataType = self.testsModel.dataType
 		test = self.testsModel.testFor(index)
 		
-		self.testActivated.emit(list, test)
+		self.testActivated.emit(list, dataType, test)
 
-	def updateList(self, list):
+	def updateList(self, list, dataType):
 		self.testsModel.list = list
+		self.testsModel.dataType = dataType
 		self.notesWidget.updateList(list)
-		self.detailsWidget.updateList(list)
+		self.detailsWidget.updateList(list, dataType)
 		try:
 			self.percentsNotesViewer.hide()
 		except AttributeError:
@@ -185,7 +204,7 @@ class TestsViewerWidget(QtGui.QSplitter):
 class TestViewerWidget(QtGui.QWidget):
 	backActivated = QtCore.pyqtSignal()
 
-	def __init__(self, moduleManager, list, test, *args, **kwargs):
+	def __init__(self, moduleManager, list, dataType, test, *args, **kwargs):
 		super(TestViewerWidget, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
@@ -196,11 +215,11 @@ class TestViewerWidget(QtGui.QWidget):
 
 		testViewer = self._modules.chooseItem(
 			set(self._mm.mods("active", type="testViewer"))
-		).createTestViewer(list, test)
+		).createTestViewer(list, dataType, test)
 
 		layout = QtGui.QVBoxLayout()
-		layout.addWidget(backButton)
 		layout.addWidget(testViewer)
+		layout.addWidget(backButton)
 		self.setLayout(layout)
 
 class TestsViewer(QtGui.QStackedWidget):
@@ -213,8 +232,8 @@ class TestsViewer(QtGui.QStackedWidget):
 		self.testsViewerWidget.testActivated.connect(self.showList)
 		self.addWidget(self.testsViewerWidget)
 
-	def showList(self, list, test):
-		testViewer = TestViewerWidget(self._mm, list, test)
+	def showList(self, list, dataType, test):
+		testViewer = TestViewerWidget(self._mm, list, dataType, test)
 		testViewer.backActivated.connect(self.showTests)
 		self.addWidget(testViewer)
 		self.setCurrentWidget(testViewer)
@@ -222,8 +241,8 @@ class TestsViewer(QtGui.QStackedWidget):
 	def showTests(self):
 		self.setCurrentWidget(self.testsViewerWidget)
 
-	def updateList(self, list):
-		self.testsViewerWidget.updateList(list)
+	def updateList(self, list, dataType):
+		self.testsViewerWidget.updateList(list, dataType)
 
 class TestsViewerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

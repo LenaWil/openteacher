@@ -160,6 +160,7 @@ class ModifiersListModel(QtCore.QAbstractListModel):
 class TeachWidget(QtGui.QStackedWidget):
 	tabChanged = QtCore.pyqtSignal()
 	lessonDone = QtCore.pyqtSignal()
+	listChanged = QtCore.pyqtSignal([object])
 
 	def __init__(self, moduleManager, keyboardWidget, applicationActivityChanged, *args, **kwargs):
 		super(TeachWidget, self).__init__(*args, **kwargs)
@@ -223,6 +224,9 @@ class TeachWidget(QtGui.QStackedWidget):
 		for itemModifier in self._itemModifiersModel.modifiers:
 			if itemModifier["active"]:
 				item = itemModifier["module"].modifyItem(item)
+		
+		# Update the list
+		self.listChanged.emit(self.list)
 
 		composers = set(self._mm.mods("active", type="wordsStringComposer"))
 		compose = self._modules.chooseItem(composers).compose
@@ -238,7 +242,7 @@ class TeachWidget(QtGui.QStackedWidget):
 		self._updateProgress()
 
 		for module in self._mm.mods("active", type="resultsDialog"):
-			module.showResults(self.list, self.list["tests"][-1])
+			module.showResults(self.list, "words", self.list["tests"][-1])
 		self.lessonDone.emit()
 
 	def _buildUi(self, keyboardWidget):
