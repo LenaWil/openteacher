@@ -32,16 +32,31 @@ class WrtsLoaderModule(object):
 		self._mm = moduleManager
 
 		self.type = "load"
+		self.requires = (
+			(
+				("active",),
+				{"type": "wordsStringParser"},
+			),
+		)
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator"},
+			),
+		)
 
 	def enable(self):
-		for module in self._mm.mods("active", type="modules"):
-			module.registerModule("WRTS (.wrts) loader", self)
-
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self.name = "WRTS (.wrts) loader"
 		self.loads = {"wrts": ["words"]}
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
+		del self.name
 		del self.loads
 
 	def getFileTypeOf(self, path):
@@ -80,13 +95,12 @@ class WrtsLoaderModule(object):
 			}
 			word["id"] = counter
 
-			#FIXME: choose one! Also check if other modules do this...
-			for module in self._mm.mods("active", type="wordsStringParser"):
-				word["questions"] = module.parse(wordTree.findtext("a"))
-				word["answers"] = module.parse(wordTree.findtext("b"))
+			wsp = self._modules.default("active", type="wordsStringParser")
+			word["questions"] = wsp.parse(wordTree.findtext("a"))
+			word["answers"] = wsp.parse(wordTree.findtext("b"))
 
 			wordList["items"].append(word)
-			
+
 			counter += 1
 
 		return wordList

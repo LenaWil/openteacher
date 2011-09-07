@@ -18,22 +18,20 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import moduleManager
-import sys
-import os
+class ProfileModule(object):
+	def __init__(self, moduleManager, *args, **kwargs):
+		super(ProfileModule, self).__init__(*args, **kwargs)
+		self._mm = moduleManager
 
-MODULES_PATH = os.path.join(os.path.dirname(__file__), "modules")
+		self.type = "profile"
 
-class OpenTeacher(object):
-	def run(self):
-		mm = moduleManager.ModuleManager(MODULES_PATH)
+	def enable(self):
+		self.name = u"teacher"
+		self.active = True
 
-		mods = set(mm.mods(type="openteacher-core"))
-		if len(mods) != 1:
-			raise ValueError("There has to be exactly one openteacher-core module installed.")
-		mods.pop().run()
-		return 0
+	def disable(self):
+		self.active = False
+		del self.name
 
-if __name__ == "__main__":
-	openTeacher = OpenTeacher()
-	sys.exit(openTeacher.run())
+def init(moduleManager):
+	return ProfileModule(moduleManager)

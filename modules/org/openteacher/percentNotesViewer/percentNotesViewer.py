@@ -89,14 +89,22 @@ class PercentNotesViewerModule(object):
 		self._mm = moduleManager
 
 		self.type = "percentNotesViewer"
+		self.requires = (
+			(
+				("active",),
+				{"type": "percentsCalculator"},
+			),
+		)
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
 		self.active = True
 
 	def _percentNotesFor(self, tests):
-		calculatePercents = self._modules.chooseItem(
-			set(self._mm.mods("active", type="percentsCalculator"))
+		calculatePercents = self._modules.default(
+			"active",
+			type="percentsCalculator"
 		).calculatePercents
 		return map(calculatePercents, tests)
 
@@ -105,6 +113,7 @@ class PercentNotesViewerModule(object):
 
 	def disable(self):
 		self.active = False
+
 		del self._modules
 
 def init(moduleManager):

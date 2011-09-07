@@ -25,19 +25,26 @@ class Teach2000SaverModule(object):
 		self._mm = moduleManager
 
 		self.type = "save"
-
-		for module in self._mm.mods("active", type="modules"):
-			module.registerModule("Teach2000 (.t2k) saver", self)
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator"},
+			),
+		)
 
 	def enable(self):
 		self._pyratemp = self._mm.import_("pyratemp")
+		self.name = "Teach2000 (.t2k) saver"
 		self.saves = {"words": ["t2k"]}
+
 		self.active = True
 
 	def disable(self):
-		del self._pyratemp
-		del self.saves
 		self.active = False
+
+		del self._pyratemp
+		del self.name
+		del self.saves
 
 	def save(self, type, list, path, resources):
 		templatePath = self._mm.resourcePath("template.xml")
@@ -48,5 +55,5 @@ class Teach2000SaverModule(object):
 		content = t(**data)
 		open(path, "w").write(content.encode("UTF-8"))
 
-def init(manager):
-	return Teach2000SaverModule(manager)
+def init(moduleManager):
+	return Teach2000SaverModule(moduleManager)

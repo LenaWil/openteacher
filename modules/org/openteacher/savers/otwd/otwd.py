@@ -31,16 +31,26 @@ class OpenTeachingWordsSaverModule(object):
 		self._mm = moduleManager
 
 		self.type = "save"
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator"},
+			),
+		)
 
 	def enable(self):		
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._modules.registerModule("Open Teaching Words (.otwd) saver", self)
+		self.name = "Open Teaching Words (.otwd) saver"
 		self.saves = {"words": ["otwd"]}
 		
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
+		del self.name
+		del self.saves
 
 	def _serialize(self, obj):
 		try:

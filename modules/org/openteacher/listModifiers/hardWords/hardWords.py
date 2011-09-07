@@ -25,6 +25,12 @@ class HardWordsModule(object):
 
 		self.type = "listModifier"
 		self.testName = "hardWords"
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator",},
+			),
+		)
 
 	def modifyList(self, indexes, list):
 		self._list = list
@@ -52,17 +58,25 @@ class HardWordsModule(object):
 		return filter(lambda result: result["itemId"] == word["id"], results)
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
 		#Translations
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 		self.name = _("Only hard words (<50% right)")
 		self.dataType = "words"
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
 		del self.name
 		del self.dataType
 

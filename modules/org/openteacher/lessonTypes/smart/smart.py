@@ -21,12 +21,11 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 class SmartLessonType(object):
-	def __init__(self, moduleManager, list, indexes, *args, **kwargs):
+	def __init__(self, createEvent, list, indexes, *args, **kwargs):
 		super(SmartLessonType, self).__init__(*args, **kwargs)
-		self._mm = moduleManager
 
-		self.newItem = self._mm.createEvent()
-		self.lessonDone = self._mm.createEvent()
+		self.newItem = createEvent()
+		self.lessonDone = createEvent()
 
 		self._list = list
 		self._indexes = indexes
@@ -43,7 +42,7 @@ class SmartLessonType(object):
 		return len(self._indexes) + self.askedItems
 
 	def start(self):
-		self._emitNext()
+		self._sendNext()
 
 	def addPause(self, pause):
 		self._test["pauses"].append(pause)
@@ -67,7 +66,7 @@ class SmartLessonType(object):
 			except IndexError:
 				pass
 
-		self._emitNext()
+		self._sendNext()
 
 	def correctLastAnswer(self, result):
 		self._test["results"][-1] = result
@@ -93,7 +92,7 @@ class SmartLessonType(object):
 			if not self._list["tests"][-1] == self._test:
 				self._list["tests"].append(self._test)
 
-	def _emitNext(self):		
+	def _sendNext(self):		
 		try:
 			self._previousIndex = self._currentIndex
 		except AttributeError:
@@ -108,9 +107,9 @@ class SmartLessonType(object):
 					self._list["tests"]
 				except KeyError:
 					self._list["tests"] = []
-			self.lessonDone.emit()
+			self.lessonDone.send()
 		else:
-			self.newItem.emit(self._list["items"][self._currentIndex])
+			self.newItem.send(self._list["items"][self._currentIndex])
 
 class SmartModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -118,26 +117,50 @@ class SmartModule(object):
 		self._mm = moduleManager
 
 		self.type = "lessonType"
+		self.uses = (
+			(
+				{"type": "event"},
+			),
+
+		)
+		self.requires = (
+			(
+				("active",),
+				{"type": "translator"},
+			),
+		)
 
 	def enable(self):
 		#Translations
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 
-		self.newItem = self._mm.createEvent()
+		self.newItem = self._createEvent()
 		self.name = _("Smart")
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+
+		del self._modules
 		del self.newItem
 		del self.name
 
+	@property
+	def _createEvent(self):
+		return self._modules.default(type="event").createEvent
+
 	def createLessonType(self, list, indexes):
-		lessonType = SmartLessonType(self._mm, list, indexes)
-		lessonType.newItem.handle(self.newItem.emit)
+		lessonType = SmartLessonType(self._createEvent, list, indexes)
+		lessonType.newItem.handle(self.newItem.send)
 		return lessonType
 
 def init(moduleManager):

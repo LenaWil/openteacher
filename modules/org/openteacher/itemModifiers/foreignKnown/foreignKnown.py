@@ -24,6 +24,12 @@ class ForeignKnownModule(object):
 		self._mm = moduleManager
 
 		self.type = "itemModifier"
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator"},
+			),
+		)
 
 	def modifyItem(self, item):
 		#modify in place, because the caller is responsable for passing
@@ -34,17 +40,25 @@ class ForeignKnownModule(object):
 	def enable(self):
 		self.dataType = "words"
 
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 
 		self.name = _("Foreign - Known")
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+
 		del self.dataType
+		del self._modules
 		del self.name
 
 def init(moduleManager):

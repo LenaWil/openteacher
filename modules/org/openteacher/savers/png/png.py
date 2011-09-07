@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
+#	Copyright 2011, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -26,25 +27,34 @@ try:
 except:
 	import simplejson
 
-class OpenTeachingTopoSaverModule(object):
+class PngSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(OpenTeachingTopoSaverModule, self).__init__(*args, **kwargs)
+		super(PngSaverModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "save"
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator"},
+			),
+		)
 
 	def enable(self):		
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._modules.registerModule("Open Teaching Topo Image (.png) saver", self)
+		self.name = "Portable Network Graphics (.png) saver"
 		self.saves = {"topo": ["png"]}
-		
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
+		del self.name
+		del self.saves
+
 	def save(self, type, list, path, resources):
 		resources["mapScreenshot"].save(path, "PNG")
 
 def init(moduleManager):
-	return OpenTeachingTopoSaverModule(moduleManager)
+	return PngSaverModule(moduleManager)

@@ -29,12 +29,22 @@ class WordsTestTypeModule(object):
 		
 		self.type = "testType"
 		self.dataType = "words"
+		self.requires = (
+			(
+				("active",),
+				{"type": "wordsStringComposer"},
+			),
+		)
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
 	
 	def updateList(self, list, test):
 		self._list = list
@@ -64,11 +74,10 @@ class WordsTestTypeModule(object):
 		# Get the question of the item most done wrong
 		for item in self._list["items"]:
 			if item["id"] == mostWrongId:
-				composers = set(self._mm.mods("active", type="wordsStringComposer"))
-				_modules = set(self._mm.mods("active", type="modules")).pop()
-				compose = _modules.chooseItem(composers).compose
-				return compose(item["questions"])
-					
+				return self._modules.default(
+					"active",
+					type="wordsStringComposer"
+				).compose(item["questions"])
 	
 	@property
 	def properties(self):
@@ -91,23 +100,15 @@ class WordsTestTypeModule(object):
 		for item in self._list["items"]:
 			if result["itemId"] == item["id"]:
 				return item
-	
+
 	def data(self, row, column):
-		try:
-			_modules = set(self._mm.mods("active", type="modules")).pop()
-			compose = _modules.chooseItem(
-				set(self._mm.mods("active", type="wordsStringComposer"))
-			).compose
-		except IndexError:
-			#FIXME: nice error handling
-			pass
-		else:
-			if compose is None:
-				pass
-				#FIXME: nice error handling
-		
+		compose = self._modules.default(
+			"active",
+			type="wordsStringComposer"
+		).compose
+
 		result = self._test["results"][row]
-		
+
 		item = self._itemForResult(result)
 		if column == self.QUESTION:
 			try:

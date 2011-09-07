@@ -23,12 +23,10 @@ from PyQt4 import QtGui, QtCore
 import datetime
 
 class InputTyping(QtGui.QWidget):
-	def __init__(self, moduleManager, *args, **kwargs):
+	def __init__(self, check, *args, **kwargs):
 		super(InputTyping, self).__init__(*args, **kwargs)
-		self._mm = moduleManager
 
-		self._mm = moduleManager
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._check = check
 
 		self.inputLineEdit = QtGui.QLineEdit()
 		self.inputLineEdit.textEdited.connect(self._textEdited)
@@ -75,13 +73,7 @@ class InputTyping(QtGui.QWidget):
 	def checkAnswer(self):
 		givenStringAnswer = unicode(self.inputLineEdit.text())
 
-		checkers = set(self._mm.mods("active", type="wordsStringChecker"))
-		try:
-			check = self._modules.chooseItem(checkers).check
-		except IndexError, e:
-			#FIXME: show nice error? Make typing unusable?
-			raise e
-		self._previousResult = result = check(givenStringAnswer, self.word)
+		self._previousResult = result = self._check(givenStringAnswer, self.word)
 		try:
 			self._end
 		except AttributeError:
@@ -102,23 +94,48 @@ class InputTypingModule(object):
 		self._mm = moduleManager
 
 		self.type = "typingInput"
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator"},
+			),
+		)
+		self.requires = (
+			(
+				("active",),
+				{"type": "wordsStringChecker"},
+			),
+		)
 
 	def enable(self):
-		self.active = True
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
+		#Translations
 		global _
 		global ngettext
-		#Translations
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+
+		self.active = True
 
 	def disable(self):
 		self.active = False
 
+		del self._modules
+
+	@property
+	def _check(self):
+		return self._modules.default(type="wordsStringChecker").check
+
 	def createWidget(self):
-		return InputTyping(self._mm)
+		return InputTyping(self._check)
 
 def init(moduleManager):
 	return InputTypingModule(moduleManager)

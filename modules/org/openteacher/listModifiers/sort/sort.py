@@ -24,6 +24,12 @@ class SortModule(object):
 		self._mm = moduleManager
 
 		self.type = "listModifier"
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator",},
+			),
+		)
 
 	def modifyList(self, indexes, list):
 		def getFirstQuestion(word):
@@ -37,17 +43,26 @@ class SortModule(object):
 		return [list["items"].index(word) for word in newList]
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
 		#Translations
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+
 		self.dataType = "words"
 		self.name = _("Sort")
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
 		del self.dataType
 		del self.name
 

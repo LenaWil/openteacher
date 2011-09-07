@@ -26,6 +26,14 @@ class OpenTeacherModule(object):
 		self._mm = moduleManager
 
 		self.type = "openteacher-core"
+		self.requires = ( #FIXME: let modules registering themselves (so they're not longer dependencies)
+			(
+				{"type": "testRunner"},
+			),
+			(
+				{"type": "execute"},
+			),
+		)
 
 	def run(self):
 		try:
@@ -36,13 +44,17 @@ class OpenTeacherModule(object):
 			if mode in ("execute", "test"):
 				del sys.argv[1]
 
+		modulesMods = set(self._mm.mods(type="modules"))
+		if len(modulesMods) != 1:
+			raise ValueError("There has to be exactly one modules module installed.")
+		modules = modulesMods.pop()
+		modules.enable()
+
 		if mode == "test":
-			for module in self._mm.mods(type="testRunner"): #FIXME: choose a test runner. Maybe obligatory one like openteacher-core? Or command line setting?
-				module.run()
+			modules.default(type="testRunner").run()
 		else:
 			#execute
-			for module in self._mm.mods(type="execute"): #FIXME: choose an executor. Maybe obligatory one like openteacher-core? Or command line setting?
-				module.execute()
+			modules.default(type="execute").execute()
 
 def init(moduleManager):
 	return OpenTeacherModule(moduleManager)

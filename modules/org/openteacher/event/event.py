@@ -18,22 +18,32 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import moduleManager
-import sys
-import os
+class Event(object):
+	def __init__(self, *args, **kwargs):
+		super(Event, self).__init__(*args, **kwargs)
 
-MODULES_PATH = os.path.join(os.path.dirname(__file__), "modules")
+		self._handlers = set()
 
-class OpenTeacher(object):
-	def run(self):
-		mm = moduleManager.ModuleManager(MODULES_PATH)
+	def handle(self, handler):
+		self._handlers.add(handler)
 
-		mods = set(mm.mods(type="openteacher-core"))
-		if len(mods) != 1:
-			raise ValueError("There has to be exactly one openteacher-core module installed.")
-		mods.pop().run()
-		return 0
+	def unhandle(self, handler):
+		self._handlers.remove(handler)
 
-if __name__ == "__main__":
-	openTeacher = OpenTeacher()
-	sys.exit(openTeacher.run())
+	def send(self, *args, **kwargs):
+		for handler in self._handlers:
+			handler(*args, **kwargs)
+
+class EventModule(object):
+	def __init__(self, moduleManager, *args, **kwargs):
+		super(EventModule, self).__init__(*args, **kwargs)
+		self._mm = moduleManager
+
+		self.type = "event"
+
+	@staticmethod
+	def createEvent(*args, **kwargs):
+		return Event(*args, **kwargs)
+
+def init(moduleManager):
+	return EventModule(moduleManager)

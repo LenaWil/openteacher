@@ -24,11 +24,19 @@ class ThemeModule(object):
 
 		self._mm = moduleManager
 		self.type = "theme"
+		self.requires = (
+			(
+				("active",),
+				{"type": "ui"},
+			),
+		)
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._uiModule = self._modules.default("active", type="ui")
 		self.active = True
-		
-		self.installTheme()
+
+		self.installTheme() #FIXME
 
 	def installTheme(self):
 		stylesheet = u"""
@@ -44,12 +52,14 @@ class ThemeModule(object):
 			}
 		"""
 
-		for module in self._mm.mods(type="ui"):
-			module.addStyleSheetRules(stylesheet)
-			module.setStyle("plastique")
+		self._uiModule.addStyleSheetRules(stylesheet)
+		self._uiModule.setStyle("plastique")
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
+		del self._uiModule
 
 def init(moduleManager):
 	return ThemeModule(moduleManager)

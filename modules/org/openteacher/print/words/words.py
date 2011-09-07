@@ -26,37 +26,65 @@ class PrintModule(object):
 		self._mm = moduleManager
 
 		self.type = "print"
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator"},
+			),
+		)
+		self.requires = (
+			(
+				("active",),
+				{"type": "wordsStringComposer"},
+			),
+			(
+				("active",),
+				{"type": "metadata"},
+			),
+		)
 		
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
 		global _
 		global ngettext
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._modules.registerModule(_("Printing module"), self)
+		self.name = _("Printing module")
 
 		self._pyratemp = self._mm.import_("pyratemp")
 		self.prints = ["words"]
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
 		del self._modules
+		del self.name
 		del self.prints
 		del self._pyratemp
 
-	def print_(self, type, list, resources, printer):
-		composers = set(self._mm.mods("active", type="wordsStringComposer"))
-		composer = self._modules.chooseItem(composers)
+	@property
+	def compose(self):
+		return self._modules.default(
+			"active",
+			type="wordsStringComposer"
+		).compose
 
+	def print_(self, type, list, resources, printer):
 		class EvalPseudoSandbox(self._pyratemp.EvalPseudoSandbox):
 			def __init__(self2, *args, **kwargs):
 				self._pyratemp.EvalPseudoSandbox.__init__(self2, *args, **kwargs)
 
-				self2.register("compose", composer.compose)
+				self2.register("compose", self.compose)
 
 		templatePath = self._mm.resourcePath("template.html")
 		t = self._pyratemp.Template(
@@ -64,25 +92,21 @@ class PrintModule(object):
 			eval_class=EvalPseudoSandbox
 		)
 		html = t(**{"list": list})
-		
-		for module in self._mm.mods("active", "name", type="metadata"):
-			printer.setCreator(module.name)
+
+		name = self._modules.default("active", type="metadata").name
+		printer.setCreator(name)
 		try:
 			printer.setDocName(list["title"])
 		except KeyError:
 			printer.setDocName(_("Untitled word list"))
-		
-		doc = QtWebKit.QWebView()
-		
-		self.printer = printer
-		self.doc = doc
-		doc.loadFinished.connect(self._loadFinished)
-		doc.setHtml(html)
+
+		self._printer = printer
+		self._doc = QtWebKit.QWebView()
+		self._doc.loadFinished.connect(self._loadFinished)
+		self._doc.setHtml(html)
 	
 	def _loadFinished(self, ok):
-		#self.printer.setOutputFormat(QtGui.QPrinter.PdfFormat);
-		#self.printer.setOutputFileName("B:\Desktop\hi.pdf");
-		self.doc.print_(self.printer)
+		self._doc.print_(self._printer)
 
 def init(moduleManager):
 	return PrintModule(moduleManager)

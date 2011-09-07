@@ -24,13 +24,24 @@ class TextToSpeechProviderWords(object):
 		super(TextToSpeechProviderWords, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
+		self.requires = (
+			(
+				("active",),
+				{"type": "wordsStringComposer"},
+			),
+			(
+				("active",),
+				{"type": "textToSpeech"},
+			),
+		)
+
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		for module in self._mm.mods("active", type="lessonType"):
-			module.newItem.handle(self.itemEmitted)
+			module.newItem.handle(self.itemSent)
 		
 		# Add settings
-		for module in self._mm.mods("active", type="settings"):
+		for module in self._mm.mods("active", type="settings"):#FIXME
 			module.registerSetting(
 				"org.openteacher.ttsProviders.words.pronounce",
 				"Pronounce words",
@@ -43,34 +54,28 @@ class TextToSpeechProviderWords(object):
 		self.active = True
 
 	def disable(self):
-		self._modules
-		for module in self._mm.mods("active", type="lessonType"):
-			module.newItem.unhandle(self.itemEmitted)
+		del self._modules
+		for module in self._mm.mods("active", type="lessonType"):#FIXME
+			module.newItem.unhandle(self.itemSent)
 
 		self.active = False
-	
-	def itemEmitted(self, item):
-		for module in self._mm.mods("active", type="settings"):
-			if(module.value("org.openteacher.ttsProviders.words.pronounce")):
-				composers = set(self._mm.mods("active", type="wordsStringComposer"))
-				ttss = set(self._mm.mods("active", type="textToSpeech"))
+
+	def itemSent(self, item):
+		for module in self._mm.mods("active", type="settings"):#FIXME
+			if module.value("org.openteacher.ttsProviders.words.pronounce"):
 				try:
-					compose = self._modules.chooseItem(composers).compose
-				except IndexError, e:
-					#FIXME: nice error handling
-					raise e
-				try:
-					tts = self._modules.chooseItem(ttss)
-				except IndexError, e:
-					#FIXME: nice error handling
-					raise e
-				try:
-					text = compose(item["questions"])
+					text = self._modules.default(
+						"active",
+						type="wordsStringComposer"
+					).compose(item["questions"])
 				except KeyError:
 					# No questions
 					pass
 				else:
-					tts.say.emit(text)
+					self._modules.default(
+						"active",
+						type="textToSpeech"
+					).say.send(text)
 				break
 
 def init(moduleManager):

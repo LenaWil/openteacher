@@ -725,22 +725,32 @@ class MediaLessonModule(object):
 
 		self.type = "lesson"
 		self.dataType = "media"
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator"}
+			),
+		)
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
 		#setup translation
 		global _
 		global ngettext
-		
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
+		#load translator
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 
-		for module in self._mm.mods("active", type="modules"):
-			module.registerModule(_("Media Lesson"), self)
-		
+		self.name = _("Media Lesson")
+
 		self.lessonCreated = self._mm.createEvent()
 		self.lessonCreationFinished = self._mm.createEvent()
 		
@@ -773,6 +783,7 @@ class MediaLessonModule(object):
 		self.active = False
 
 		del self.dataType
+		del self.name
 		del self.lessonCreated
 		del self.lessonCreationFinished
 	

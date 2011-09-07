@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
+#	Copyright 2011, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -33,16 +34,26 @@ class OpenTeachingTopoSaverModule(object):
 		self._mm = moduleManager
 
 		self.type = "save"
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator"},
+			),
+		)
 
 	def enable(self):		
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._modules.registerModule("Open Teaching Topo (.ottp) saver", self)
+		self.name = "Open Teaching Topo (.ottp) saver"
 		self.saves = {"topo": ["ottp"]}
 		
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
+		del self.name
+		del self.saves
 
 	def save(self, type, list, path, resources):
 		# Create zipfile

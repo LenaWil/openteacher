@@ -31,6 +31,7 @@ class TranslatorModule(object):
 
 	def enable(self):
 		self.active = True
+		gettext.install("OpenTeacher")#FIXME
 
 	def gettextFunctions(self, localeDir):
 		#FIXME: use module which also gives the possibility to choose

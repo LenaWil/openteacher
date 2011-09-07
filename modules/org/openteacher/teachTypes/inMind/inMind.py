@@ -55,11 +55,10 @@ class AnswerWidget(QtGui.QWidget):
 		self.setLayout(mainLayout)
 
 class InMindTeachWidget(QtGui.QStackedWidget):
-	def __init__(self, moduleManager, *args, **kwargs):
+	def __init__(self, compose, *args, **kwargs):
 		super(InMindTeachWidget, self).__init__(*args, **kwargs)
 
-		self._mm = moduleManager
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._compose = compose
 
 		self.thinkWidget = ThinkWidget()
 		self.answerWidget = AnswerWidget()
@@ -96,18 +95,8 @@ class InMindTeachWidget(QtGui.QStackedWidget):
 
 	def newItem(self, word):
 		self._currentWord = word
-		composers = set(self._mm.mods("active", type="wordsStringComposer"))
-		try:
-			compose = self._modules.chooseItem(composers).compose
-		except IndexError, e:
-			#FIXME: show a nice error message? Make it impossible to use
-			#inMind in another way?
-			#
-			#also check every file using 'self._modules.chooseItem', if
-			#the error is catched ánd handled.
-			raise e
 		self.answerWidget.label.setText(
-			_("Translation: ") + compose(word["answers"])
+			_("Translation: ") + self._compose(word["answers"])
 		)
 		self.start = datetime.datetime.now()
 		self.setCurrentWidget(self.thinkWidget)
@@ -122,26 +111,54 @@ class InMindTeachTypeModule(object):
 		self._mm = moduleManager
 
 		self.type = "teachType"
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator"},
+			),
+		)
+		self.requires = (
+			(
+				("active",),
+				{"type": "wordsStringComposer"}
+			),
+		)
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
 		global _
 		global ngettext
 
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 		self.dataType = "words"
-		self.name = _("Think answers")
+		self.name = _("Think answer")
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+		del self.uses
+		del self._modules
 		del self.dataType
 		del self.name
 
+	@property
+	def _compose(self):
+		return self._modules.default(
+			"active",
+			type="wordsStringComposer"
+		).compose
+
 	def createWidget(self, tabChanged):
-		return InMindTeachWidget(self._mm)
+		return InMindTeachWidget(self._compose)
 
 def init(moduleManager):
 	return InMindTeachTypeModule(moduleManager)

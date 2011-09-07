@@ -346,33 +346,50 @@ class WordsEntererModule(object):
 		self._mm = moduleManager
 
 		self.type = "wordsEnterer"
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator",},
+			),
+			(
+				("active",),
+				{"type": "onscreenKeyboard"},
+			),
+		)
+		self.requires = (
+			(
+				("active",),
+				{"type": "wordsStringComposer"},
+			),
+			(
+				("active",),
+				{"type": "wordsStringParser"},
+			),
+		)
 
 	@property
 	def _onscreenKeyboard(self):
-		keyboards = set(self._mm.mods("active", type="onscreenKeyboard"))
 		try:
-			keyboard = self._modules.chooseItem(keyboards)
+			return self._modules.default(
+				"active",
+				type="onscreenKeyboard"
+			).createWidget()
 		except IndexError:
 			return
-		return keyboard.createWidget()
 
 	@property
 	def _compose(self):
-		composers = set(self._mm.mods("active", type="wordsStringComposer"))
-		try:
-			return self._modules.chooseItem(composers).compose
-		except IndexError, e:
-			#FIXME: nice error
-			raise e
+		return self._modules.default(
+			"active",
+			type="wordsStringComposer"
+		).compose
 
 	@property
 	def _parse(self):
-		parsers = set(self._mm.mods("active", type="wordsStringParser"))
-		try:
-			return self._modules.chooseItem(parsers).parse
-		except IndexError, e:
-			#FIXME: show nice error
-			raise e
+		return self._modules.default(
+			"active",
+			type="wordsStringParser"
+		).parse
 
 	def createWordsEnterer(self):
 		return EnterWidget(
@@ -384,19 +401,24 @@ class WordsEntererModule(object):
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
-		#Translations
-		translator = set(self._mm.mods("active", type="translator")).pop()
+		#load translator
 		global _
 		global ngettext
 
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 
 		self.active = True
 
 	def disable(self):
 		self.active = False
+		
 		del self._modules
 
 def init(moduleManager):

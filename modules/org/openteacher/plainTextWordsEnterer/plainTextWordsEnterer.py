@@ -79,24 +79,47 @@ class PlainTextWordsEntererModule(object):
 		self._mm = moduleManager
 
 		self.type = "plainTextWordsEnterer"
+		self.requires = (
+			(
+				("active",),
+				{"type": "ui"},
+			),
+			(
+				("active",),
+				{"type": "wordsStringParser"},
+			),
+			(
+				("active",),
+				{"type": "loader"},
+			),
+		)
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator"},
+			),
+		)
 
 	def enable(self):
 		self._references = set()
 
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._uiModule = set(self._mm.mods("active", type="ui")).pop()
+		self._uiModule = self._modules.default("active", type="ui")
 
-		#Translations
-		translator = set(self._mm.mods("active", type="translator")).pop()
-
+		#load translator
 		global _
 		global ngettext
 
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 
-		self._modules.registerModule(_("Plain text words enterer"), self)
+		self.name = _("Plain text words enterer")
 
 		event = self._uiModule.addLessonCreateButton(_("Create words lesson by entering plain text"))
 		event.handle(self.createLesson)
@@ -105,10 +128,11 @@ class PlainTextWordsEntererModule(object):
 		self.active = True
 
 	def createLesson(self):
-		parse = self._modules.chooseItem(
-			set(self._mm.mods("active", type="wordsStringParser"))
+		parse = self._modules.default(
+			"active",
+			type="wordsStringParser"
 		).parse
-		
+
 		eptd = EnterPlainTextDialog(parse)
 		tab = self._uiModule.addCustomTab(eptd.windowTitle(), eptd)
 		tab.closeRequested.handle(tab.close)
@@ -119,18 +143,18 @@ class PlainTextWordsEntererModule(object):
 		if not eptd.result():
 			return
 
-		#FIXME: rewrite: all sorts of things wrong...
-		self._modules.chooseItem(
-			set(self._mm.mods("active", type="lesson", dataType="words"))
-		).loadFromList(eptd.list, "")
+		self._modules.default(
+			"active",
+			type="loader"
+		).loadFromList("words", eptd.list)
 
 	def disable(self):
 		self.active = False
-		
+
 		del self._references
 		del self._modules
 		del self._uiModule
-		#de-register module
+		del self.name
 		#remove create lesson button
 
 def init(moduleManager):

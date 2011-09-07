@@ -162,8 +162,11 @@ class StartWidget(QtGui.QSplitter):
 		openLayout = QtGui.QVBoxLayout()
 		openLayout.addWidget(createLessonGroupBox)
 		openLayout.addWidget(loadLessonGroupBox)
+		
+		left = self.style().pixelMetric(QtGui.QStyle.PM_LayoutLeftMargin)
+		openLayout.setContentsMargins(left, 0, 0, 0)
 
-		openWidget= QtGui.QWidget(self)
+		openWidget = QtGui.QWidget(self)
 		openWidget.setLayout(openLayout)
 
 		recentlyOpenedListView = QtGui.QListView()

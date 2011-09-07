@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
+#	Copyright 2011, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -28,16 +29,22 @@ try:
 except:
 	import simplejson
 
-class OpenTeachingTopoSaverModule(object):
+class OpenTeachingMediaSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(OpenTeachingTopoSaverModule, self).__init__(*args, **kwargs)
+		super(OpenTeachingMediaSaverModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "save"
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator"},
+			),
+		)
 
 	def enable(self):		
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._modules.registerModule("Open Teaching Media (.otmd) saver", self)
+		self.name = "Open Teaching Media (.otmd) saver"
 		self.saves = {"media": ["otmd"]}
 		
 		for module in self._mm.mods("active", type="settings"):
@@ -54,8 +61,11 @@ class OpenTeachingTopoSaverModule(object):
 	def disable(self):
 		self.active = False
 
+		del self._modules
+		del self.name
+		del self.saves
+
 	def save(self, type, list, path, resources):
-		
 		compression = zipfile.ZIP_STORED
 		
 		for module in self._mm.mods("active", type="settings"):
@@ -83,4 +93,4 @@ class OpenTeachingTopoSaverModule(object):
 			os.unlink(listFile.name)
 
 def init(moduleManager):
-	return OpenTeachingTopoSaverModule(moduleManager)
+	return OpenTeachingMediaSaverModule(moduleManager)

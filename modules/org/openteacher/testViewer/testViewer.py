@@ -90,8 +90,9 @@ class TestViewer(QtGui.QSplitter):
 		vertSplitter.addWidget(tableView)
 
 		#Horizontal splitter
-		calculateNote = self._modules.chooseItem(
-			set(self._mm.mods("active", type="noteCalculator"))
+		calculateNote = self._modules.default(
+			"active",
+			type="noteCalculator"
 		).calculateNote
 
 		factsLayout = QtGui.QVBoxLayout()
@@ -121,13 +122,20 @@ class TestViewer(QtGui.QSplitter):
 		horSplitter.addWidget(factsWidget)
 
 		#Main splitter
-		progressWidget = self._modules.chooseItem(
-			set(self._mm.mods("active", type="progressViewer"))
-		).createProgressViewer(test)
+		try:
+			progressWidget = self._modules.default(
+				"active",
+				type="progressViewer"
+			).createProgressViewer(test)
+		except IndexError:
+			pass
 
 		self.addWidget(horSplitter)
-		self.addWidget(progressWidget)
-	
+		try:
+			self.addWidget(progressWidget)
+		except NameError:
+			pass
+
 	@property
 	def _totalThinkingTime(self):
 		totalThinkingTime = datetime.timedelta()
@@ -141,6 +149,26 @@ class TestViewerModule(object):
 
 		self._mm = moduleManager
 		self.type = "testViewer"
+		self.requires = ( #FIXME: check if all really required, and if so make sure some things aren't.
+			(
+				("active",),
+				{"type": "noteCalculator"},
+			),
+			(
+				("active",),
+				{"type": "testType"},
+			),
+			(
+				("active",),
+				{"type": "progressViewer"},
+			),
+		)
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator"},
+			),
+		)
 
 	def createTestViewer(self, *args, **kwargs):
 		return TestViewer(self._mm, *args, **kwargs)

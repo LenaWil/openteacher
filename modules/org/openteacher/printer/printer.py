@@ -30,25 +30,33 @@ class Printer(object):
 	def print_(self):
 		self.module.print_(self.dataType, self.lesson.list, self.lesson.resources, self.printer)
 
-	def __str__(self): #FIXME
-		return str(self.module)
-
 class PrinterModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(PrinterModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "printer"
+		self.uses = (
+			(
+				("active",),
+				{"type": "print"},
+			),
+			(
+				("active",),
+				{"type": "lesson"},
+			),
+		)
+		self.requires = (
+			(
+				("active",),
+				{"type": "ui"},
+			),
+		)
 
 ##################FIXME: DUPLICATE WITH SAVER.PY!
-	def _modulesUpdated(self):
-		#Keeps track of all created lessons
-		for module in self._mm.mods("active", type="lesson"):
-			module.lessonCreated.handle(self._lessonAdded)
-
 	@property
 	def _currentLesson(self):
-		uiModule = set(self._mm.mods("active", type="ui")).pop()
+		uiModule = self._modules.default("active", type="ui")
 		try:
 			return self._lessons[uiModule.currentFileTab]
 		except KeyError:
@@ -66,22 +74,18 @@ class PrinterModule(object):
 
 	def print_(self, printer):
 		#print
-		printers = set()
-		try:
-			self._currentLesson.list
-		except AttributeError:
-			raise NotImplementedError()
+		printers = []
 
 		dataType = self._currentLesson.module.dataType
-		for module in self._mm.mods("active", type="print"):
+		for module in self._modules.sort("active", type="print"):
 			if dataType in module.prints:
-				printers.add(Printer(module, dataType, self._currentLesson, printer))
+				printers.append(Printer(module, dataType, self._currentLesson, printer))
 
 		if len(printers) == 0:
 			raise NotImplementedError()
 
-		#Choose item
-		printer = self._modules.chooseItem(printers)
+		#FIXME: see loader.py
+		printer = printers[0]
 		#Save
 		printer.print_()
 
@@ -100,15 +104,23 @@ class PrinterModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._modules.modulesUpdated.handle(self._modulesUpdated) #FIXME: DUPLICATE WITH SAVER.PY
 		self._lessons = {}
+
+		#Keeps track of all created lessons
+		for module in self._mm.mods("active", type="lesson"):
+			module.lessonCreated.handle(self._lessonAdded)
+
 		self.active = True
 
 	def disable(self):
-		self._modules.modulesUpdated.unhandle(self._modulesUpdated) #FIXME: DUPLICATE WITH SAVER.PY
 		del self._modules
-		self.active = False
 		del self._lessons
+
+		#Keeps track of all created lessons
+		for module in self._mm.mods("active", type="lesson"):
+			module.lessonCreated.unhandle(self._lessonAdded)
+
+		self.active = False
 
 def init(moduleManager):
 	return PrinterModule(moduleManager)

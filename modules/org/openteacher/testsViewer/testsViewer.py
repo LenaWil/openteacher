@@ -57,9 +57,7 @@ class TestsModel(QtCore.QAbstractTableModel):
 				except (IndexError, KeyError):
 					return u""
 			elif index.column() == self.NOTE:
-				noteCalculator = self._modules.chooseItem(
-					set(self._mm.mods("active", type="noteCalculator"))
-				)
+				noteCalculator = self._modules.default("active", type="noteCalculator")
 				return noteCalculator.calculateNote(test)
 		elif role == QtCore.Qt.CheckStateRole and index.column() == self.COMPLETED:
 			return test["finished"]
@@ -103,9 +101,7 @@ class NotesWidget(QtGui.QWidget):
 		self.setLayout(layout)
 
 	def updateList(self, list):
-		noteCalculator = self._modules.chooseItem(
-			set(self._mm.mods("active", type="noteCalculator"))
-		)
+		noteCalculator = self._modules.default("active", type="noteCalculator")
 
 		notes = map(noteCalculator.calculateNote, list["tests"])
 		try:
@@ -196,10 +192,15 @@ class TestsViewerWidget(QtGui.QSplitter):
 			self.percentsNotesViewer.hide()
 		except AttributeError:
 			pass
-		self.percentsNotesViewer = self._modules.chooseItem(
-			set(self._mm.mods("active", type="percentNotesViewer"))
-		).createPercentNotesViewer(list["tests"])
-		self.addWidget(self.percentsNotesViewer)
+		try:
+			self.percentsNotesViewer = self._modules.default(
+				"active",
+				type="percentNotesViewer"
+			).createPercentNotesViewer(list["tests"])
+		except IndexError:
+			pass
+		else:
+			self.addWidget(self.percentsNotesViewer)
 
 class TestViewerWidget(QtGui.QWidget):
 	backActivated = QtCore.pyqtSignal()
@@ -213,8 +214,9 @@ class TestViewerWidget(QtGui.QWidget):
 		backButton = QtGui.QPushButton(_("Back")) #FIXME: own translator, nicer button?
 		backButton.clicked.connect(self.backActivated.emit)
 
-		testViewer = self._modules.chooseItem(
-			set(self._mm.mods("active", type="testViewer"))
+		testViewer = self._modules.default(
+			"active",
+			type="testViewer"
 		).createTestViewer(list, dataType, test)
 
 		layout = QtGui.QVBoxLayout()
@@ -250,6 +252,26 @@ class TestsViewerModule(object):
 		self._mm = moduleManager
 
 		self.type = "testsViewer"
+		self.requires = (#FIXME: make testViewer & noteCalculator unneeded?
+			(
+				("active",),
+				{"type": "noteCalculator"},
+			),
+			(
+				("active",),
+				{"type": "testViewer"},
+			),
+		)
+		self.uses = (
+			(
+				("active",),
+				{"type": "percentNotesViewer"},
+			),
+			(
+				("active",),
+				{"type": "translator"},
+			),
+		)
 
 	def createTestsViewer(self):
 		return TestsViewer(self._mm)#FIXME: moduleManager or pass what's needed? Also on other places...

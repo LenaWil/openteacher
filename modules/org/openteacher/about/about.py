@@ -25,35 +25,63 @@ class AboutModule(object):
 		self._mm = moduleManager
 		self.type = "about"
 
+
+		self.requires = (
+			(
+				("active",),
+				{"type": "ui"}
+			),
+		)
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator"}
+			),
+			(
+				("active",),
+				{"type": "authors"}
+			),
+		)
+
 	def show(self):
-		authorModules = set(self._mm.mods("active", type="authors"))
 		try:
-			authorModule = self._modules.chooseItem(authorModules)
+			module = self._modules.default("active", type="authors")
 		except IndexError:
 			authors = set()
 		else:
-			authors = authorModule.registeredAuthors
-		for module in self._mm.mods("active", type="ui"):
-			dialog = self._ui.AboutDialog(authors, self._mm)
-			tab = module.addCustomTab(dialog.windowTitle(), dialog)
-			tab.closeRequested.handle(tab.close)
+			authors = module.registeredAuthors
+		dialog = self._ui.AboutDialog(authors, self._mm)
+		tab = self._modules.default("active", type="ui").addCustomTab(
+			dialog.windowTitle(),
+			dialog
+		)
+		tab.closeRequested.handle(tab.close)
 
 	def enable(self):
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
-
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._modules.registerModule(_("About module"), self)
 
+		#load translator
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+
+		self.name = _("About module")
+	
 		self._ui = self._mm.import_("ui")
 		self._ui._, self._ui._ngettext = _, ngettext
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
 		del self._modules
+		del self._registry
+		del self.name
 		del self._ui
 
 def init(moduleManager):

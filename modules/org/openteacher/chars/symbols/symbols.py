@@ -25,6 +25,12 @@ class SymbolsModule(object):
 		self._mm = moduleManager
 
 		self.type = "onscreenKeyboardData"
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator"},
+			),
+		)
 
 	def enable(self):
 		self.name = _("Symbols")

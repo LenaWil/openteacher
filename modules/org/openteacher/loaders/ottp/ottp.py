@@ -34,16 +34,23 @@ class OpenTeachingTopoLoaderModule(object):
 
 		self.type = "load"
 		self._mm = moduleManager
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator"},
+			),
+		)
 
 	def enable(self):
-		for module in self._mm.mods("active", type="modules"):
-			module.registerModule("Open Teaching Topo (.ottp) loader", self)
-
+		self.name = "Open Teaching Topo (.ottp) loader"
 		self.loads = {"ottp": ["topo"]}
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+		del self.name
 		del self.loads
 
 	def getFileTypeOf(self, path):

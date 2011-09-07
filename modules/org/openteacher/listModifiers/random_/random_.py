@@ -26,6 +26,12 @@ class RandomModule(object):
 		self._mm = moduleManager
 
 		self.type = "listModifier"
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator",},
+			),
+		)
 
 	def modifyList(self, indexes, list):
 		#always work on the indexes
@@ -34,16 +40,25 @@ class RandomModule(object):
 
 	def enable(self):
 		#Translations
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+	
 		self.dataType = "all"
 		self.name = _("Random")
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
 		del self.dataType
 		del self.name
 

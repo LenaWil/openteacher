@@ -24,35 +24,55 @@ class DocumentationModule(object):
 		self._mm = moduleManager
 
 		self.type = "documentation"
+		self.requires = (
+			(
+				("active",),
+				{"type": "metadata"},
+			),
+			(
+				("active",),
+				{"type": "ui"},
+			),
+		)
 
 	def show(self):
-		for module in self._mm.mods("active", "documentationUrl", type="metadata"):
-			documentationUrl = module.documentationUrl
-		for module in self._mm.mods("active", "userAgent", type="metadata"):
-			userAgent = module.userAgent
-		for module in self._mm.mods("active", type="ui"):
-			dialog = self._ui.DocumentationDialog(documentationUrl, userAgent, "en") #FIXME: language should be dynamic
+		metadataMod = self._modules.default("active", type="metadata")
+		for module in self._mm.mods("active", type="ui"):#FIXME
+			dialog = self._ui.DocumentationDialog(
+				metadataMod.documentationUrl,
+				metadataMod.userAgent,
+				"en" #FIXME: language should be dynamic
+			)
 			tab = module.addCustomTab(dialog.windowTitle(), dialog)
 			tab.closeRequested.handle(tab.close)
 
 	def enable(self):
-		#Translations
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
-		for module in self._mm.mods("active", type="modules"):
-			module.registerModule(_("Documentation module"), self)
+		#load translator
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 
 		self._ui = self._mm.import_("ui")
 		self._ui._, self._ui.ngettext = _, ngettext
+
+		self.name = _("Documentation module")
 
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
+		del self._registry
 		del self._ui
+		del self.name
 
 def init(moduleManager):
 	return DocumentationModule(moduleManager)

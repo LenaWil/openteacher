@@ -228,8 +228,7 @@ class TeachWidget(QtGui.QStackedWidget):
 		# Update the list
 		self.listChanged.emit(self.list)
 
-		composers = set(self._mm.mods("active", type="wordsStringComposer"))
-		compose = self._modules.chooseItem(composers).compose
+		compose = self._modules.default("active", type="wordsStringComposer").compose
 		self._lessonWidget.questionLabel.setText(compose(item["questions"]))
 		self._updateProgress()
 
@@ -264,15 +263,14 @@ class TeachWidget(QtGui.QStackedWidget):
 
 	def _createModels(self):
 		#lessonType
-		self._lessonTypeModules = list(self._mm.mods("active", type="lessonType"))
+		self._lessonTypeModules = self._modules.sort("active", type="lessonType")
 
 		for module in self._lessonTypeModules:
 			self._settingsWidget.lessonTypeComboBox.addItem(module.name)
 
 		#item modifiers
 		itemModifiers = []
-		for module in self._mm.mods("active", type="itemModifier"):
-			module.enable()
+		for module in self._modules.sort("active", type="itemModifier"):
 			itemModifiers.append({
 				"name": module.name,
 				"active": False,
@@ -283,7 +281,7 @@ class TeachWidget(QtGui.QStackedWidget):
 
 		#list modifiers
 		listModifiers = []
-		for module in self._mm.mods("active", type="listModifier"):
+		for module in self._modules.sort("active", type="listModifier"):
 			if not module.dataType in ("all", "words"):
 				continue
 			listModifiers.append({
@@ -296,7 +294,7 @@ class TeachWidget(QtGui.QStackedWidget):
 
 		#teachType
 		self._teachTypeWidgets = []
-		for module in self._mm.mods("active", type="teachType"): 
+		for module in self._modules.sort("active", type="teachType"): 
 			if module.dataType in ("all", "words"):
 				widget = module.createWidget(self.tabChanged)
 				self._teachTypeWidgets.append(widget)
@@ -308,18 +306,49 @@ class WordsTeacherModule(object):
 		self._mm = moduleManager
 
 		self.type = "wordsTeacher"
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator",},
+			),
+			(#FIXME from here on: should these items be in the settings
+			#dialog (since they're already on the teach settings widget)
+				("active",),
+				{"type": "itemModifier",},
+			),
+			(
+				("active",),
+				{"type": "listModifier",},
+			),
+		)
+		self.requires = (
+			(
+				("active",),
+				{"type": "wordsStringComposer"},
+			),
+			(#FIXME from here on: should these items be in the settings
+			#dialog (since they're already on the teach settings widget)
+				("active",),
+				{"type": "lessonType",},
+			),
+			(
+				("active",),
+				{"type": "teachType",},
+			),
+		)
 
 	def createWordsTeacher(self):
 		return TeachWidget(self._mm, self._onscreenKeyboard, self._applicationActivityChanged)
 
 	@property
 	def _onscreenKeyboard(self):
-		keyboards = set(self._mm.mods("active", type="onscreenKeyboard"))
 		try:
-			keyboard = self._modules.chooseItem(keyboards)
+			return self._modules.default(
+				"active",
+				type="onscreenKeyboard"
+			).createWidget()
 		except IndexError:
 			return
-		return keyboard.createWidget()
 
 	@property
 	def _applicationActivityChanged(self):
@@ -329,19 +358,24 @@ class WordsTeacherModule(object):
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
-		#Translations
-		translator = set(self._mm.mods("active", type="translator")).pop()
+		#load translator
 		global _
 		global ngettext
 
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
 		del self._modules
 
 def init(moduleManager):

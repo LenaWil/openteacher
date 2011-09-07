@@ -28,12 +28,12 @@ newItem
 lessonDone
 """
 class IntervalLessonType(object):
-	def __init__(self, moduleManager, list, indexes, *args, **kwargs):
+	def __init__(self, moduleManager, createEvent, list, indexes, *args, **kwargs):#FIXME: get rid of the moduleManager here...
 		super(IntervalLessonType, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.newItem = self._mm.createEvent()
-		self.lessonDone = self._mm.createEvent()
+		self.newItem = createEvent()
+		self.lessonDone = createEvent()
 		self._list = list
 		self._indexes = indexes
 		self._test = {
@@ -71,7 +71,7 @@ class IntervalLessonType(object):
 				pass
 			else:
 				self._group.append(i)
-		self._emitNext()
+		self._sendNext()
 	
 	# result is a Result-type object saying whether the question was answered right or wrong
 	def setResult(self, result):
@@ -80,7 +80,7 @@ class IntervalLessonType(object):
 		
 		self._test["results"].append(result)
 
-		self._emitNext()
+		self._sendNext()
 	
 	def addPause(self, pause):
 		self._test["pauses"].append(pause)
@@ -97,7 +97,7 @@ class IntervalLessonType(object):
 			if not self._list["tests"][-1] == self._test:
 				self._list["tests"].append(self._test)
 	
-	def _emitNext(self):		
+	def _sendNext(self):		
 		minQuestions = 2
 		for module in self._mm.mods("active", type="settings"):
 			minQuestions = module.value("org.openteacher.lessonTypes.interval.minQuestions")
@@ -144,7 +144,7 @@ class IntervalLessonType(object):
 				except KeyError:
 					self._list["tests"] = []
 			self._test["finished"] = True
-			self.lessonDone.emit()
+			self.lessonDone.send()
 		else:
 			# Copy group, because we are going to modify it
 			randomGroup = self._group[:]
@@ -164,10 +164,10 @@ class IntervalLessonType(object):
 			
 			if len(randomGroup) > 0:
 				# There is more than one left, so ask another one than the last one
-				self.newItem.emit(self._list["items"][randomGroup[r]])
+				self.newItem.send(self._list["items"][randomGroup[r]])
 			else:
 				# There is only one left, so ask that one
-				self.newItem.emit(self._list["items"][self._group[0]])
+				self.newItem.send(self._list["items"][self._group[0]])
 
 class IntervalModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -175,16 +175,32 @@ class IntervalModule(object):
 		self._mm = moduleManager
 
 		self.type = "lessonType"
+		self.requires = (
+			(
+				{"type": "event"},
+			),
+		)
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator"},
+			),
+		)
 
 	def enable(self):
 		#Translations
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
-		
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+
 		# Settings
-		for module in self._mm.mods("active", type="settings"):
+		for module in self._mm.mods("active", type="settings"):#FIXME: choose one
 			module.registerSetting(
 				"org.openteacher.lessonTypes.interval.groupSize",
 				"Max. size of group",
@@ -212,18 +228,24 @@ class IntervalModule(object):
 				defaultValue=80
 			)
 
-		self.newItem = self._mm.createEvent()
+		self.newItem = self._createEvent()
 		self.name = _("Interval")
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
 		del self.newItem
 		del self.name
 
+	@property
+	def _createEvent(self):
+		return self._modules.default(type="event").createEvent
+
 	def createLessonType(self, list, indexes):
-		lessonType = IntervalLessonType(self._mm, list, indexes)
-		lessonType.newItem.handle(self.newItem.emit)
+		lessonType = IntervalLessonType(self._mm, self._createEvent, list, indexes)
+		lessonType.newItem.handle(self.newItem.send)
 		return lessonType
 
 def init(moduleManager):

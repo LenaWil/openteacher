@@ -903,23 +903,31 @@ class TeachTopoLessonModule(object):
 		self.counter = 1
 		
 		self.type = "lesson"
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator"}
+			),
+		)
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
 		#setup translation
 		global _
 		global ngettext
 		
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 		
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		
-		# Register the module
-		for module in self._mm.mods("active", type="modules"):
-			module.registerModule(_("Topo Lesson"), self)
-		
+		self.name = _("Topo Lesson")
+	
 		# Data type
 		self.dataType = "topo"
 		
@@ -945,12 +953,14 @@ class TeachTopoLessonModule(object):
 		self.active = True
 
 	def disable(self):
+		self.active = False
+
+		del self.name
 		del self.dataType
 		del self.lessonCreated
 		del self.lessonCreationFinished
-		self.active = False
 	
-	def createLesson(self):		
+	def createLesson(self):
 		lessons = set()
 		
 		for module in self._mm.mods("active", type="ui"):

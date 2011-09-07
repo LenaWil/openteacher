@@ -84,11 +84,10 @@ class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
 		self.addWidget(self.repeatScreen)
 
 		#make input screen
-		typingInputs = set(self._mm.mods("active", type="typingInput"))
 		try:
-			typingInput = self._modules.chooseItem(typingInputs)
+			typingInput = self._modules.default("active", type="typingInput")
 		except IndexError, e:
-			raise e #FIXME: show a nice error
+			raise e #FIXME: what to do?
 		else:
 			self.inputWidget = typingInput.createWidget()
 			self.addWidget(self.inputWidget)
@@ -113,22 +112,42 @@ class RepeatAnswerTeachTypeModule(object):
 		self._mm = moduleManager
 
 		self.type = "teachType"
+		self.requires = (
+			(
+				("active",),
+				{"type": "typingInput"},
+			),
+		)
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator"},
+			),
+		)
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
 		global _
 		global ngettext
 
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 
 		self.dataType = "words"
-		self.name = _("Repeat Answer")
+		self.name = _("Repeat answer")
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
 		del self.dataType
 		del self.name
 

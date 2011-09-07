@@ -24,12 +24,25 @@ class MetadataModule(object):
 		self._mm = moduleManager
 
 		self.type = "metadata"
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator"}
+			),
+		)
 
 	def enable(self):
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
+		#load translator
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 
 		self.name = _("OpenTeacher")
 		self.slogan = _("The easiest way to learn a new language")
@@ -47,6 +60,7 @@ class MetadataModule(object):
 	def disable(self):
 		self.active = False
 
+		del self._modules
 		del self.name
 		del self.slogan
 		del self.version

@@ -27,24 +27,78 @@ class UiControllerModule(object):
 		self._mm = moduleManager
 
 		self.type = "uiController"
+		self.requires = (
+			(
+				("active",),
+				{"type": "ui"},
+			),
+			( #FIXME: make loader, saver and printer into self.uses?
+				("active",),
+				{"type": "loader"},
+			),
+			(
+				("active",),
+				{"type": "saver"},
+			),
+			(
+				("active",),
+				{"type": "printer"},
+			),
+			(
+				("active",),
+				{"type": "metadata"},
+			),
+		)
+		self.uses = (
+			(
+				("active",),
+				{"type": "settingsDialog"},
+			),
+			(
+				("active",),
+				{"type": "about"},
+			),
+			(
+				("active",),
+				{"type": "documentation"},
+			),
+			(
+				("active",),
+				{"type": "translator"},
+			),
+		)
 
-	def initialize(self, ui):
-		#FIXME: use one translator module by user's choice. Make the choice with command line args?
-		for module in self._mm.mods(type="translator"):
-			module.enable()
-		#FIXME: use one settings module by user's choice. Make the choice with command line args?
-		for module in self._mm.mods(type="settings"):
-			module.enable()
-		#FIXME: use one metadata module by user's choice. Make the choice with command line args?
-		for module in self._mm.mods(type="metadata"):
-			module.enable()
-		#FIXME: use one ui module by user's choice. Make the choice with command line args?
-		for module in self._mm.mods(type="ui"):
-			module.enable()
+#	def initialize(self):
+#		try:
+#			self._modules.default(type="settings").enable()
+#		except IndexError:
+#			pass
+#		try:
+#			self._modules.default(type="translator").enable()
+#		except IndexError:
+#			pass
+#		try:
+#			self._modules.default(type="metadata").enable()
+#		except IndexError:
+#			pass
+#		try:
+#			self._modules.default(type="ui").enable()
+#		except IndexError:
+#			pass
+
+	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
+		self.active = True
+
+	def disable(self):
+		self.active = False
+
+		del self._modules
 
 	def run(self, path=None):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._uiModule = set(self._mm.mods("active", type="ui")).pop()
+		self._uiModule = self._modules.default("active", type="ui")
 
 		self._connectEvents()
 		self._updateMenuItems()
@@ -55,16 +109,14 @@ class UiControllerModule(object):
 			except (NotImplementedError, IOError):
 				pass
 
-		for module in self._mm.mods("active", type="ui"):
-			module.run()
+		self._uiModule.run()
 		self._disconnectEvents()
 
 	def new(self):
 		self._uiModule.showStartTab()
 
 	def open_(self, path=None):
-		loaders = set(self._mm.mods("active", type="loader"))
-		loader = self._modules.chooseItem(loaders)
+		loader = self._modules.default("active", type="loader")
 
 		usableExtensions = loader.usableExtensions
 		if not path:
@@ -82,8 +134,7 @@ class UiControllerModule(object):
 		#FIXME: inform the user of succes...
 
 	def saveAs(self):
-		savers = set(self._mm.mods("active", type="saver"))
-		saver = self._modules.chooseItem(savers)
+		saver = self._modules.default("active", type="saver")
 
 		usableExtensions = saver.usableExtensions
 		path = self._uiModule.getSavePath(
@@ -99,9 +150,8 @@ class UiControllerModule(object):
 		qtPrinter = self._uiModule.getConfiguredPrinter()
 		if qtPrinter is None:
 			return
-		
-		printers = set(self._mm.mods("active", type="printer"))
-		printer = self._modules.chooseItem(printers)
+
+		printer = self._modules.default("active", type="printer")
 		printer.print_(qtPrinter)
 
 	def _connectEvents(self):
@@ -142,19 +192,17 @@ class UiControllerModule(object):
 		self._uiModule.enableNew(not hideNew)
 
 		#open
-		loaders = set(self._mm.mods("active", type="loader"))
 		try:
-			loader = self._modules.chooseItem(loaders)
+			loader = self._modules.default("active", type="loader")
 		except IndexError:
 			openSupport = False
 		else:
-			openSupport = loader.openSupport #FIXME: if loader is None; also by other try/excepts here?
+			openSupport = loader.openSupport
 		self._uiModule.enableOpen(openSupport)
 
 		#save
-		savers = set(self._mm.mods("active", type="saver"))
 		try:
-			saver = self._modules.chooseItem(savers)
+			saver = self._modules.default("active", type="saver")
 		except IndexError:
 			saveSupport = False
 		else:
@@ -163,9 +211,8 @@ class UiControllerModule(object):
 		self._uiModule.enableSaveAs(saveSupport)
 
 		#print
-		printers = set(self._mm.mods("active", type="printer"))
 		try:
-			printer = self._modules.chooseItem(printers)
+			printer = self._modules.default("active", type="printer")
 		except IndexError:
 			printSupport = False
 		else:
@@ -188,32 +235,16 @@ class UiControllerModule(object):
 		self._updateMenuItems()
 
 	def settings(self):
-		module = self._modules.chooseItem(
-			set(self._mm.mods("active", type="settingsDialog"))
-		)
-		module.show()
+		self._modules.default("active", type="settingsDialog").show()
 
 	def about(self):
-		module = self._modules.chooseItem(
-			set(self._mm.mods("active", type="about"))
-		)
-		module.show()
+		self._modules.default("active", type="about").show()
 
 	def documentation(self):
-		module = self._modules.chooseItem(
-			set(self._mm.mods("active", type="documentation"))
-		)
-		module.show()
+		self._modules.default("active", type="documentation").show()
 
 	def quit_(self):
-		for ui in self._mm.mods("active", type="ui"):
-			ui.interrupt()
-
-	def enable(self):
-		self.active = True
-
-	def disable(self):
-		self.active = False
+		self._uiModule.interrupt()
 
 def init(moduleManager):
 	return UiControllerModule(moduleManager)

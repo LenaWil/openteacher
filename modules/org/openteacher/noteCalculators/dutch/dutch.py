@@ -24,6 +24,12 @@ class DutchNoteCalculatorModule(object):
 		self._mm = moduleManager
 
 		self.type = "noteCalculator"
+		self.uses = (
+			(
+				("active",),
+				{"type": "translator"},
+			),
+		)
 
 	def _formatNote(self, note):
 		if note == 10:
@@ -48,7 +54,7 @@ class DutchNoteCalculatorModule(object):
 		return self._formatNote(note)
 
 	def enable(self):
-		self.name = _("Dutch")
+		self.name = _("Dutch") #FIXME: own translator
 		self.active = True
 
 	def disable(self):
