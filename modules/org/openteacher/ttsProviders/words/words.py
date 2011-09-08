@@ -25,14 +25,8 @@ class TextToSpeechProviderWords(object):
 		self._mm = moduleManager
 
 		self.requires = (
-			(
-				("active",),
-				{"type": "wordsStringComposer"},
-			),
-			(
-				("active",),
-				{"type": "textToSpeech"},
-			),
+			self._mm.mods(type="wordsStringComposer"),
+			self._mm.mods(type="textToSpeech"),
 		)
 
 	def enable(self):

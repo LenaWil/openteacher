@@ -25,10 +25,7 @@ class DutchNoteCalculatorModule(object):
 
 		self.type = "noteCalculator"
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
 		)
 
 	def _formatNote(self, note):

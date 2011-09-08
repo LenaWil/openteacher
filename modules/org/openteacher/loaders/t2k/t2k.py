@@ -34,10 +34,7 @@ class Teach2000LoaderModule(object):
 
 		self.type = "load"
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
 		)
 
 	def enable(self):

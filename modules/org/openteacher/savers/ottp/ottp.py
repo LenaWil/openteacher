@@ -35,10 +35,7 @@ class OpenTeachingTopoSaverModule(object):
 
 		self.type = "save"
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
 		)
 
 	def enable(self):		

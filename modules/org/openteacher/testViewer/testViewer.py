@@ -150,24 +150,12 @@ class TestViewerModule(object):
 		self._mm = moduleManager
 		self.type = "testViewer"
 		self.requires = ( #FIXME: check if all really required, and if so make sure some things aren't.
-			(
-				("active",),
-				{"type": "noteCalculator"},
-			),
-			(
-				("active",),
-				{"type": "testType"},
-			),
-			(
-				("active",),
-				{"type": "progressViewer"},
-			),
+			self._mm.mods(type="noteCalculator"),
+			self._mm.mods(type="testType"),
+			self._mm.mods(type="progressViewer"),
 		)
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
 		)
 
 	def createTestViewer(self, *args, **kwargs):

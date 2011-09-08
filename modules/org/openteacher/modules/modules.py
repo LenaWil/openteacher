@@ -27,9 +27,7 @@ class ModulesModule(object):
 
 		self.type = "modules"
 		self.requires = (
-			(
-				{"type": "event"},
-			),
+			self._mm.mods(type="event"),
 		)
 
 	@property

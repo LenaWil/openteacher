@@ -166,20 +166,11 @@ class SettingsDialogModule(object):
 
 		self.type = "settingsDialog"
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
 		)
 		self.requires = (
-			(
-				("active",),
-				{"type": "ui"},
-			),
-			(
-				("active",),
-				{"type": "settings"}
-			),
+			self._mm.mods(type="ui"),
+			self._mm.mods(type="settings"),
 		)
 
 	def enable(self):

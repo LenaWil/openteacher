@@ -307,34 +307,18 @@ class WordsTeacherModule(object):
 
 		self.type = "wordsTeacher"
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator",},
-			),
-			(#FIXME from here on: should these items be in the settings
+			self._mm.mods(type="translator"),
+			#FIXME from here on: should these items be in the settings
 			#dialog (since they're already on the teach settings widget)
-				("active",),
-				{"type": "itemModifier",},
-			),
-			(
-				("active",),
-				{"type": "listModifier",},
-			),
+			self._mm.mods(type="itemModifier"),
+			self._mm.mods(type="listModifier"),
 		)
 		self.requires = (
-			(
-				("active",),
-				{"type": "wordsStringComposer"},
-			),
-			(#FIXME from here on: should these items be in the settings
+			self._mm.mods(type="wordsStringComposer"),
+			#FIXME from here on: should these items be in the settings
 			#dialog (since they're already on the teach settings widget)
-				("active",),
-				{"type": "lessonType",},
-			),
-			(
-				("active",),
-				{"type": "teachType",},
-			),
+			self._mm.mods(type="lessonType"),
+			self._mm.mods(type="teachType"),
 		)
 
 	def createWordsTeacher(self):

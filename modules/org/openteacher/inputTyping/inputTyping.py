@@ -95,16 +95,10 @@ class InputTypingModule(object):
 
 		self.type = "typingInput"
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
 		)
 		self.requires = (
-			(
-				("active",),
-				{"type": "wordsStringChecker"},
-			),
+			self._mm.mods(type="wordsStringChecker"),
 		)
 
 	def enable(self):

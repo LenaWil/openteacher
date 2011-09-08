@@ -31,20 +31,8 @@ class ModulesActivatorModule(object):
 		except AttributeError:
 			return True #If no priorities-stuff, just enable
 
-	def _modsFor(self, selector):
-		try:
-			return self._mm.mods(*selector[0], **selector[1])
-		except IndexError:
-			return self._mm.mods(**selector[0])
-
-	def _modsWithTypeOf(self, selector):#FIXME: better name
-		try:
-			return self._mm.mods(**selector[1])
-		except IndexError:
-			return self._mm.mods(**selector[0])
-
 	def _inactiveModsFor(self, selector):
-		mods = set(self._modsWithTypeOf(selector))
+		mods = set(selector)
 		activeMods = set(self._mm.mods("active"))
 		return mods - activeMods
 
@@ -74,7 +62,7 @@ class ModulesActivatorModule(object):
 					self._activateModule(requiredMod, fail)
 
 				#check if the requirements are satisfied now, if not, raise an error
-				if len(set(self._modsFor(selector))) == 0:
+				if len(set(selector)) == 0:
 					if fail:
 						raise NotImplementedError("Mod %s's requirements couldn't be satisfied." % mod)
 					else:

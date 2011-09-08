@@ -73,19 +73,11 @@ class GuiModule(object):
 
 		self.type = "ui"
 		self.requires = (
-			(
-				{"type": "event"},
-			),
-			(
-				("active",),
-				{"type": "metadata"},
-			),
+			self._mm.mods(type="event"),
+			self._mm.mods(type="metadata"),
 		)
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
 		)
 
 	def enable(self):

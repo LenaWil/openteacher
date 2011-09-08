@@ -80,24 +80,12 @@ class PlainTextWordsEntererModule(object):
 
 		self.type = "plainTextWordsEnterer"
 		self.requires = (
-			(
-				("active",),
-				{"type": "ui"},
-			),
-			(
-				("active",),
-				{"type": "wordsStringParser"},
-			),
-			(
-				("active",),
-				{"type": "loader"},
-			),
+			self._mm.mods(type="ui"),
+			self._mm.mods(type="wordsStringParser"),
+			self._mm.mods(type="loader"),
 		)
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
 		)
 
 	def enable(self):

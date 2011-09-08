@@ -65,31 +65,14 @@ class WordsLessonModule(object):
 		self._mm = moduleManager
 		self.type = "lesson"
 		self.requires = (
-			(
-				("active",),
-				{"type": "ui"},
-			),
-			(
-				{"type": "event"},
-			),
-			(
-				("active",),
-				{"type": "wordsEnterer"},
-			),
-			(
-				("active",),
-				{"type": "wordsTeacher"},
-			),
+			self._mm.mods(type="ui"),
+			self._mm.mods(type="event"),
+			self._mm.mods(type="wordsEnterer"),
+			self._mm.mods(type="wordsTeacher"),
 		)
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
-			(
-				("active",),
-				{"type": "testsViewer"},
-			),
+			self._mm.mods(type="translator"),
+			self._mm.mods(type="testsViewer"),
 		)
 
 	def enable(self):

@@ -27,12 +27,8 @@ class OpenTeacherModule(object):
 
 		self.type = "openteacher-core"
 		self.requires = ( #FIXME: let modules registering themselves (so they're not longer dependencies)
-			(
-				{"type": "testRunner"},
-			),
-			(
-				{"type": "execute"},
-			),
+			self._mm.mods(type="testRunner"),
+			self._mm.mods(type="execute"),
 		)
 
 	def run(self):

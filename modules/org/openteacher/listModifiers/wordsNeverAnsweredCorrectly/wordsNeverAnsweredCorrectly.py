@@ -26,10 +26,7 @@ class WordsNeverAnsweredCorrectlyModule(object):
 		self.type = "listModifier"
 		self.testName = "wordsNeverAnsweredCorrectly"
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator",},
-			),
+			self._mm.mods(type="translator"),
 		)
 
 	def modifyList(self, indexes, list):

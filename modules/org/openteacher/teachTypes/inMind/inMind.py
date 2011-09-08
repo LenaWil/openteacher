@@ -112,16 +112,10 @@ class InMindTeachTypeModule(object):
 
 		self.type = "teachType"
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
 		)
 		self.requires = (
-			(
-				("active",),
-				{"type": "wordsStringComposer"}
-			),
+			self._mm.mods(type="wordsStringComposer"),
 		)
 
 	def enable(self):

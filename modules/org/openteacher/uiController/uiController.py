@@ -28,63 +28,19 @@ class UiControllerModule(object):
 
 		self.type = "uiController"
 		self.requires = (
-			(
-				("active",),
-				{"type": "ui"},
-			),
-			( #FIXME: make loader, saver and printer into self.uses?
-				("active",),
-				{"type": "loader"},
-			),
-			(
-				("active",),
-				{"type": "saver"},
-			),
-			(
-				("active",),
-				{"type": "printer"},
-			),
-			(
-				("active",),
-				{"type": "metadata"},
-			),
+			self._mm.mods(type="ui"),
+			#FIXME: make loader, saver and printer into self.uses?
+			self._mm.mods(type="loader"),
+			self._mm.mods(type="saver"),
+			self._mm.mods(type="printer"),
+			self._mm.mods(type="metadata"),
 		)
 		self.uses = (
-			(
-				("active",),
-				{"type": "settingsDialog"},
-			),
-			(
-				("active",),
-				{"type": "about"},
-			),
-			(
-				("active",),
-				{"type": "documentation"},
-			),
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="settingsDialog"),
+			self._mm.mods(type="about"),
+			self._mm.mods(type="documentation"),
+			self._mm.mods(type="translator"),
 		)
-
-#	def initialize(self):
-#		try:
-#			self._modules.default(type="settings").enable()
-#		except IndexError:
-#			pass
-#		try:
-#			self._modules.default(type="translator").enable()
-#		except IndexError:
-#			pass
-#		try:
-#			self._modules.default(type="metadata").enable()
-#		except IndexError:
-#			pass
-#		try:
-#			self._modules.default(type="ui").enable()
-#		except IndexError:
-#			pass
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()

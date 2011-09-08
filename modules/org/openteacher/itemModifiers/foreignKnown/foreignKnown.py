@@ -25,10 +25,7 @@ class ForeignKnownModule(object):
 
 		self.type = "itemModifier"
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
 		)
 
 	def modifyItem(self, item):

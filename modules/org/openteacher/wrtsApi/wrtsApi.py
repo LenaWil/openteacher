@@ -24,20 +24,11 @@ class WrtsApiModule(object):
 		self._mm = moduleManager
 
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
 		)
 		self.requires = (
-			(
-				("active",),
-				{"type": "ui"}
-			),
-			(
-				("active",),
-				{"type": "loader"},
-			),
+			self._mm.mods(type="ui"),
+			self._mm.mods(type="loader"),
 		)
 
 	def enable(self):

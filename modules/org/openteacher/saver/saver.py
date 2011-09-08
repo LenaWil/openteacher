@@ -40,20 +40,11 @@ class SaverModule(object):
 
 		self.type = "saver"
 		self.uses = (
-			(
-				("active",),
-				{"type": "save"},
-			),
-			(
-				("active",),
-				{"type": "lesson"},
-			),
+			self._mm.mods(type="save"),
+			self._mm.mods(type="lesson"),
 		)
 		self.requires = (
-			(
-				("active",),
-				{"type": "ui"},
-			),
+			self._mm.mods(type="ui"),
 		)
 
 	@property

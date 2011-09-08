@@ -25,10 +25,7 @@ class ThemeModule(object):
 		self._mm = moduleManager
 		self.type = "theme"
 		self.requires = (
-			(
-				("active",),
-				{"type": "ui"},
-			),
+			self._mm.mods(type="ui"),
 		)
 
 	def enable(self):

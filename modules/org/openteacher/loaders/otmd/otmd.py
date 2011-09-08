@@ -36,10 +36,7 @@ class OpenTeachingMediaLoaderModule(object):
 		self.type = "load"
 		self._mm = moduleManager
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
 		)
 
 	def enable(self):

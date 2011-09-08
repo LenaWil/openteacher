@@ -28,16 +28,10 @@ class OpenTeacherSaverModule(object):
 
 		self.type = "save"
 		self.requires = (
-			(
-				("active",),
-				{"type": "wordsStringComposer"},
-			),
+			self._mm.mods(type="wordsStringComposer"),
 		)
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
 		)
 
 	def enable(self):

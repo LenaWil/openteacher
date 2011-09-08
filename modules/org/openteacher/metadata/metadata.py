@@ -25,10 +25,7 @@ class MetadataModule(object):
 
 		self.type = "metadata"
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"}
-			),
+			self._mm.mods(type="translator"),
 		)
 
 	def enable(self):

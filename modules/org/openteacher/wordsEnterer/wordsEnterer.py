@@ -347,24 +347,12 @@ class WordsEntererModule(object):
 
 		self.type = "wordsEnterer"
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator",},
-			),
-			(
-				("active",),
-				{"type": "onscreenKeyboard"},
-			),
+			self._mm.mods(type="translator"),
+			self._mm.mods(type="onscreenKeyboard"),
 		)
 		self.requires = (
-			(
-				("active",),
-				{"type": "wordsStringComposer"},
-			),
-			(
-				("active",),
-				{"type": "wordsStringParser"},
-			),
+			self._mm.mods(type="wordsStringComposer"),
+			self._mm.mods(type="wordsStringParser"),
 		)
 
 	@property

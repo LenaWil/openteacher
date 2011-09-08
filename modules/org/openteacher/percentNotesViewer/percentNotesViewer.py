@@ -90,10 +90,7 @@ class PercentNotesViewerModule(object):
 
 		self.type = "percentNotesViewer"
 		self.requires = (
-			(
-				("active",),
-				{"type": "percentsCalculator"},
-			),
+			self._mm.mods(type="percentsCalculator"),
 		)
 
 	def enable(self):

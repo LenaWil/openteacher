@@ -176,15 +176,10 @@ class IntervalModule(object):
 
 		self.type = "lessonType"
 		self.requires = (
-			(
-				{"type": "event"},
-			),
+			self._mm.mods(type="event"),
 		)
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
 		)
 
 	def enable(self):

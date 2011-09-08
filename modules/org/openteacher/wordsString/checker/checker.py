@@ -26,10 +26,7 @@ class WordsStringCheckerModule(object):
 
 		self.type = "wordsStringChecker"
 		self.requires = (
-			(
-				("active",),
-				{"type": "wordsStringParser"},
-			),
+			self._mm.mods(type="wordsStringParser"),
 		)
 
 	@property

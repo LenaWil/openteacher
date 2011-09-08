@@ -25,14 +25,8 @@ class DocumentationModule(object):
 
 		self.type = "documentation"
 		self.requires = (
-			(
-				("active",),
-				{"type": "metadata"},
-			),
-			(
-				("active",),
-				{"type": "ui"},
-			),
+			self._mm.mods(type="metadata"),
+			self._mm.mods(type="ui"),
 		)
 
 	def show(self):

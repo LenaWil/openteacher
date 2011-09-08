@@ -25,22 +25,12 @@ class AboutModule(object):
 		self._mm = moduleManager
 		self.type = "about"
 
-
 		self.requires = (
-			(
-				("active",),
-				{"type": "ui"}
-			),
+			self._mm.mods(type="ui"),
 		)
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"}
-			),
-			(
-				("active",),
-				{"type": "authors"}
-			),
+			self._mm.mods(type="translator"),
+			self._mm.mods(type="authors"),
 		)
 
 	def show(self):

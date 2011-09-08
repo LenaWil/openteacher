@@ -29,16 +29,10 @@ class TypingTeachTypeModule(object):
 
 	def enable(self):
 		self.requires = (
-			(
-				("active",),
-				{"type": "typingInput"},
-			),
+			self._mm.mods(type="typingInput"),
 		)
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
 		)
 
 		self._modules = set(self._mm.mods("active", type="modules")).pop()

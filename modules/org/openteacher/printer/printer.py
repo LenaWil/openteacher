@@ -37,20 +37,11 @@ class PrinterModule(object):
 
 		self.type = "printer"
 		self.uses = (
-			(
-				("active",),
-				{"type": "print"},
-			),
-			(
-				("active",),
-				{"type": "lesson"},
-			),
+			self._mm.mods(type="print"),
+			self._mm.mods(type="lesson"),
 		)
 		self.requires = (
-			(
-				("active",),
-				{"type": "ui"},
-			),
+			self._mm.mods(type="ui"),
 		)
 
 ##################FIXME: DUPLICATE WITH SAVER.PY!

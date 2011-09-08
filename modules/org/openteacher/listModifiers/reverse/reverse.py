@@ -27,10 +27,7 @@ class ReverseModule(object):
 
 		self.type = "listModifier"
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator",},
-			),
+			self._mm.mods(type="translator"),
 		)
 
 	def modifyList(self, indexes, list):

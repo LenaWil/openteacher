@@ -82,13 +82,8 @@ class OnscreenKeyboardModule(object):
 		self._mm = moduleManager
 		self.type = "onscreenKeyboard"
 		self.requires = (
-			(
-				{"type": "event"},
-			),
-			(
-				("active",),
-				{"type": "onscreenKeyboardData"},
-			),
+			self._mm.mods(type="event"),
+			self._mm.mods(type="onscreenKeyboardData"),
 		)
 
 	def enable(self):

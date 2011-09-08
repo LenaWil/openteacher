@@ -27,20 +27,11 @@ class PrintModule(object):
 
 		self.type = "print"
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
 		)
 		self.requires = (
-			(
-				("active",),
-				{"type": "wordsStringComposer"},
-			),
-			(
-				("active",),
-				{"type": "metadata"},
-			),
+			self._mm.mods(type="wordsStringComposer"),
+			self._mm.mods(type="metadata"),
 		)
 		
 	def enable(self):

@@ -33,16 +33,10 @@ class OpenTeacherLoaderModule(object):
 		self.type = "load"
 		self._mm = moduleManager
 		self.requires = (
-			(
-				("active",),
-				{"type": "wordsStringParser"},
-			),
+			self._mm.mods(type="wordsStringParser"),
 		)
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
 		)
 
 	def enable(self):

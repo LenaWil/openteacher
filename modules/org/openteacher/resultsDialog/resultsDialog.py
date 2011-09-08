@@ -27,20 +27,11 @@ class ResultsDialogModule(object):
 
 		self.type = "resultsDialog"
 		self.requires = (
-			(
-				("active",),
-				{"type": "testViewer"},
-			),
-			(
-				("active",),
-				{"type": "ui"},
-			),
+			self._mm.mods(type="testViewer"),
+			self._mm.mods(type="ui"),
 		)
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
 		)
 
 	def enable(self):

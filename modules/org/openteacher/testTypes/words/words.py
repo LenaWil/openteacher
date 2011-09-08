@@ -30,10 +30,7 @@ class WordsTestTypeModule(object):
 		self.type = "testType"
 		self.dataType = "words"
 		self.requires = (
-			(
-				("active",),
-				{"type": "wordsStringComposer"},
-			),
+			self._mm.mods(type="wordsStringComposer"),
 		)
 
 	def enable(self):

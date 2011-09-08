@@ -109,15 +109,10 @@ class TextToSpeechModule(object):
 
 		self.type = "textToSpeech"
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
 		)
 		self.requires = (
-			(
-				{"type": "event"},
-			),
+			self._mm.mods(type="event"),
 		)
 
 	def enable(self):

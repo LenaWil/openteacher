@@ -25,10 +25,7 @@ class CyrillicModule(object):
 
 		self.type = "onscreenKeyboardData"
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
 		)
 
 	def enable(self):

@@ -39,14 +39,8 @@ class LoaderModule(object):
 
 		self.type = "loader"
 		self.uses = (
-			(
-				("active",),
-				{"type": "lesson"},
-			),
-			(
-				("active",),
-				{"type": "load"},
-			),
+			self._mm.mods(type="lesson"),
+			self._mm.mods(type="load"),
 		)
 
 	@property

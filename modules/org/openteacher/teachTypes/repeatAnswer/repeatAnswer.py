@@ -113,16 +113,10 @@ class RepeatAnswerTeachTypeModule(object):
 
 		self.type = "teachType"
 		self.requires = (
-			(
-				("active",),
-				{"type": "typingInput"},
-			),
+			self._mm.mods(type="typingInput"),
 		)
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
 		)
 
 	def enable(self):

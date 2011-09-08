@@ -28,10 +28,10 @@ class WrtsSaverModule(object):
 		self._mm = moduleManager
 		self.type = "save"
 		self.uses = (
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="translator"),
+		)
+		self.requires = (
+			self._mm.mods(type="wordsStringComposer"),
 		)
 
 	def enable(self):

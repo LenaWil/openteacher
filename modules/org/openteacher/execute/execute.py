@@ -27,13 +27,8 @@ class ExecuteModule(object):
 
 		self.type = "execute"
 		self.requires = (
-			(
-				("active",),
-				{"type": "uiController"},
-			),
-			(
-				{"type": "modulesActivator"},
-			),
+			self._mm.mods(type="uiController"),
+			self._mm.mods(type="modulesActivator"),
 		)
 
 	def execute(self):

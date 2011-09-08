@@ -253,24 +253,12 @@ class TestsViewerModule(object):
 
 		self.type = "testsViewer"
 		self.requires = (#FIXME: make testViewer & noteCalculator unneeded?
-			(
-				("active",),
-				{"type": "noteCalculator"},
-			),
-			(
-				("active",),
-				{"type": "testViewer"},
-			),
+			self._mm.mods(type="noteCalculator"),
+			self._mm.mods(type="testViewer"),
 		)
 		self.uses = (
-			(
-				("active",),
-				{"type": "percentNotesViewer"},
-			),
-			(
-				("active",),
-				{"type": "translator"},
-			),
+			self._mm.mods(type="percentNoteViewer"),
+			self._mm.mods(type="translator"),
 		)
 
 	def createTestsViewer(self):
