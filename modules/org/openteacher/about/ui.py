@@ -190,24 +190,8 @@ class PersonWidget(QtGui.QWidget):
 		self.taskLabel.setText(task)
 		self.nameLabel.setText(name)
 
-	def fade(self, step):
-		if step <= 255:
-			alpha = step
-		elif step > 765:
-			alpha = 1020 - step
-		else:
-			return
-
-		palette = QtGui.QPalette()
-		color = palette.windowText().color()
-		color.setAlpha(alpha)
-		palette.setColor(QtGui.QPalette.WindowText, color)
-
-		self.taskLabel.setPalette(palette)
-		self.nameLabel.setPalette(palette)
-
 class AuthorsWidget(QtGui.QWidget):
-	def __init__(self, authors, *args, **kwargs):
+	def __init__(self, authors, fader, *args, **kwargs):
 		super(AuthorsWidget, self).__init__(*args, **kwargs)
 		
 		if len(authors) == 0:
@@ -215,6 +199,8 @@ class AuthorsWidget(QtGui.QWidget):
 		else:
 			self.backupAuthors = list(authors)
 			self.authors = []
+			
+		self.fader = fader
 
 		self.personWidget = PersonWidget()
 		launchpadLabel = QtGui.QLabel(_("Thanks to all Launchpad contributors!"))
@@ -231,7 +217,7 @@ class AuthorsWidget(QtGui.QWidget):
 		self.timeLine = QtCore.QTimeLine(8000)
 		#4x 255; 2x for the alpha gradients, 2x for a pause
 		self.timeLine.setFrameRange(0, 1020)
-		self.timeLine.frameChanged.connect(self.personWidget.fade)
+		self.timeLine.frameChanged.connect(lambda x: self.fader.fade(x, [self.personWidget.taskLabel, self.personWidget.nameLabel]))
 		self.timeLine.finished.connect(self.startAnimation)
 		self.timeLine.start()
 
@@ -253,10 +239,12 @@ class AboutDialog(QtGui.QTabWidget):
 
 		self.setTabPosition(QtGui.QTabWidget.South)
 		self.setDocumentMode(True)
+		
+		fader = set(self._mm.mods("active", type="modules")).pop().chooseItem(set(self._mm.mods("active", type="fader")))
 
 		self.aboutWidget = AboutWidget(self._mm)
 		self.licenseWidget = LicenseWidget(self._mm)
-		self.authorsWidget = AuthorsWidget(authors)
+		self.authorsWidget = AuthorsWidget(authors, fader)
 
 		self.addTab(self.aboutWidget, _("About")) #FIXME: own translation (also the others down here)
 		self.addTab(self.licenseWidget, _("License"))

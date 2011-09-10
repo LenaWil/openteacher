@@ -36,6 +36,8 @@ class InputTyping(QtGui.QWidget):
 		self.checkButton = QtGui.QPushButton(_(u"Check!"))
 		self.checkButton.setShortcut("Return") #FIXME: translatable?
 		self.correctButton = QtGui.QPushButton(_(u"Correct anyway"))
+		
+		self.fader = set(self._mm.mods("active", type="modules")).pop().chooseItem(set(self._mm.mods("active", type="fader")))
 
 		mainLayout = QtGui.QGridLayout()
 		mainLayout.addWidget(self.inputLineEdit, 0, 0)
@@ -98,6 +100,13 @@ class InputTyping(QtGui.QWidget):
 				"end": self._end,
 			},
 		})
+		self.timeLine = QtCore.QTimeLine(2000)
+		self.timeLine.setFrameRange(0, 1020)
+		if result["result"] == "right":
+			self.timeLine.frameChanged.connect(lambda x: self.fader.fade(x, [self.inputLineEdit], [0, 255, 0]))
+		else:
+			self.timeLine.frameChanged.connect(lambda x: self.fader.fade(x, [self.inputLineEdit], [255, 0, 0]))
+		self.timeLine.start()
 		del self._end
 
 		self.lessonType.setResult(result)
