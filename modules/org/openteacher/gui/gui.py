@@ -75,7 +75,7 @@ class GuiModule(object):
 		self.saveAsEvent = self._mm.createEvent()
 		self.printEvent = self._mm.createEvent()
 		self.quitEvent = self._mm.createEvent()
-		self.settingsEvent = self._mm.createEvent()		
+		self.settingsEvent = self._mm.createEvent()
 		self.aboutEvent = self._mm.createEvent()
 		self.documentationEvent = self._mm.createEvent()
 

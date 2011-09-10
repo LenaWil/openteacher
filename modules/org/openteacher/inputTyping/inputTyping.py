@@ -66,11 +66,17 @@ class InputTyping(QtGui.QWidget):
 		self.inputLineEdit.clear()
 
 	def correctLastAnswer(self):
-		result = self._previousResult.update({
-			"result": "right",
-			"givenAnswer": _("Correct anyway")
-		})
-		self.lessonType.correctLastAnswer(result)
+		try:
+			self._previousResult.update({
+				"result": "right",
+				"givenAnswer": _("Corrected: %s") % self._previousResult["givenAnswer"]
+			})
+		except KeyError:
+			self._previousResult.update({
+				"result": "right",
+				"givenAnswer": _("Corrected")
+			})
+		self.lessonType.correctLastAnswer(self._previousResult)
 
 	def checkAnswer(self):
 		givenStringAnswer = unicode(self.inputLineEdit.text())
