@@ -99,23 +99,17 @@ class GuiModule(object):
 		self._ui = self._mm.import_("ui")
 		self._ui.ICON_PATH = self._mm.resourcePath("icons/") #FIXME: something less hard to debug?
 
-		#Translations
-		global _
-		global ngettext
+		self._app = QtGui.QApplication(sys.argv)
+		self._widget = self._ui.OpenTeacherWidget()
 
 		#load translator
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
-			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+			pass
 		else:
-			_, ngettext = translator.gettextFunctions(
-				self._mm.resourcePath("translations")
-			)
-		self._ui._, self._ui.ngettext = _, ngettext
-
-		self._app = QtGui.QApplication(sys.argv)
-		self._widget = self._ui.OpenTeacherWidget()
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 
 		metadataMod = self._modules.default("active", type="metadata")
 		self._widget.setWindowTitle(" ".join([
@@ -183,6 +177,19 @@ class GuiModule(object):
 		del self.tabChanged
 		del self.applicationActivityChanged
 		del self._widget
+
+	def _retranslate(self):
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		
+		self._ui._, self._ui.ngettext = _, ngettext
+		self._widget.retranslate()
 
 	def run(self):
 		self._widget.show()
@@ -343,11 +350,6 @@ class GuiModule(object):
 	@property
 	def startTabActive(self):
 		return self._widget.tabWidget.startWidget == self._widget.tabWidget.currentWidget()
-
-	def chooseItem(self, items): #FIXME: in separate module
-		d = self._ui.ItemChooser(items)
-		d.exec_()
-		return d.item
 
 def init(moduleManager):
 	return GuiModule(moduleManager)

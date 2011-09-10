@@ -28,24 +28,44 @@ class TranslatorModule(object):
 		self._mm = moduleManager
 
 		self.type = "translator"
+		self.uses = (
+			self._mm.mods("event"),
+			self._mm.mods("languageChooser"),
+		)
 
 	def enable(self):
 		self.active = True
-		gettext.install("OpenTeacher")#FIXME
 
-	def gettextFunctions(self, localeDir):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self.languageChanged = self._modules.default(
+			type="event"
+		).createEvent()
+		#gettext.install("OpenTeacher")#FIXME
+
+	def gettextFunctions(self, localeDir, language=None):
 		#FIXME: use module which also gives the possibility to choose
-		language = locale.getdefaultlocale()[0]
+		if not language:
+			try:
+				lc = self._modules.default("active", type="languageChooser")
+			except IndexError:
+				pass
+			else:
+				language = lc.language
+		if not language:
+			language = locale.getdefaultlocale()[0]
 		path = os.path.join(localeDir, language + ".mo")
 		if not os.path.isfile(path):
 			path = os.path.join(localeDir, language.split("_")[0] + ".mo")
 		if os.path.isfile(path):
 			t = gettext.GNUTranslations(open(path, "rb"))
 			return t.ugettext, t.ungettext
-		return unicode, unicode
+		return unicode, lambda x, y, n: x if n == 1 else y
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
+		del self.languageChaned
 
 def init(moduleManager):
 	return TranslatorModule(moduleManager)

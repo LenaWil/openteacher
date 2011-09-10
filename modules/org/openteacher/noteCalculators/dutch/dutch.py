@@ -51,6 +51,17 @@ class DutchNoteCalculatorModule(object):
 		return self._formatNote(note)
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
+		#load translator
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 		self.name = _("Dutch") #FIXME: own translator
 		self.active = True
 

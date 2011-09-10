@@ -30,7 +30,15 @@ class SymbolsModule(object):
 		)
 
 	def enable(self):
-		self.name = _("Symbols")
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.data = (
 			(u"à", u"á", u"â", u"ä", u"ã", u"å"),
 			(u"À", u"Á", u"Â", u"Ä", u"Ã", u"Å"),
@@ -43,8 +51,21 @@ class SymbolsModule(object):
 		)
 		self.active = True
 
+	def _retranslate(self):
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("Symbols")
+
 	def disable(self):
 		self.active = False
+
+		del self._modules
 		del self.name
 		del self.data
 

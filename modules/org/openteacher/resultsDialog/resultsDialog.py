@@ -50,12 +50,12 @@ class ResultsDialogModule(object):
 			type="testViewer"
 		).createTestViewer(list, dataType, test)
 
-		for module in self._mm.mods("active", type="ui"): #FIXME
-			self.tab = module.addCustomTab(
-				_("Results"),
-				self.resultsWidget
-			)
-			self.tab.closeRequested.handle(self.tab.close)
+		uiModule = self._modules.default(type="ui")
+		self.tab = uiModule.addCustomTab(
+			self.resultsWidget.windowTitle(),
+			self.resultsWidget
+		)
+		self.tab.closeRequested.handle(self.tab.close)
 
 def init(moduleManager):
 	return ResultsDialogModule(moduleManager)

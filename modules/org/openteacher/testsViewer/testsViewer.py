@@ -38,13 +38,16 @@ class TestsModel(QtCore.QAbstractTableModel):
 		if role != QtCore.Qt.DisplayRole:
 			return
 		if orientation == QtCore.Qt.Horizontal:
-			return [
-				_("Date"),#FIXME: own translator
-				_("Note"),
-				_("Completed"),
-			][section]
+			return self._headers[section]
 		else:
 			return section + 1
+
+	def retranslate(self):
+		self._headers = [
+			_("Date"),#FIXME: own translator
+			_("Note"),
+			_("Completed"),
+		]
 
 	def data(self, index, role):
 		if not index.isValid():
@@ -93,12 +96,23 @@ class NotesWidget(QtGui.QWidget):
 		self.averageLabel = QtGui.QLabel()
 		self.lowestLabel = QtGui.QLabel()
 		
-		layout = QtGui.QFormLayout()
-		layout.addRow(_("Highest note:"), self.highestLabel)#FIXME: own translator
-		layout.addRow(_("Average note:"), self.averageLabel)
-		layout.addRow(_("Lowest note:"), self.lowestLabel)
+		self.layout = QtGui.QFormLayout()
+		self.layout.addRow("", self.highestLabel)#FIXME: own translator
+		self.layout.addRow("", self.averageLabel)
+		self.layout.addRow("", self.lowestLabel)
 		
-		self.setLayout(layout)
+		self.setLayout(self.layout)
+
+	def retranslate(self):
+		self.layout.itemAt(0, QtGui.QFormLayout.LabelRole).setText(
+			_("Highest note:")
+		)
+		self.layout.itemAt(1, QtGui.QFormLayout.LabelRole).setText(
+			_("Average note:")
+		)
+		self.layout.itemAt(2, QtGui.QFormLayout.LabelRole).setText(
+			_("Lowest note:")
+		)
 
 	def updateList(self, list):
 		noteCalculator = self._modules.default("active", type="noteCalculator")
@@ -202,6 +216,10 @@ class TestsViewerWidget(QtGui.QSplitter):
 		else:
 			self.addWidget(self.percentsNotesViewer)
 
+	def retranslate(self):
+		self.notesWidget.retranslate()
+		self.testsModel.retranslate()
+
 class TestViewerWidget(QtGui.QWidget):
 	backActivated = QtCore.pyqtSignal()
 
@@ -211,8 +229,8 @@ class TestViewerWidget(QtGui.QWidget):
 		self._mm = moduleManager
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
-		backButton = QtGui.QPushButton(_("Back")) #FIXME: own translator, nicer button?
-		backButton.clicked.connect(self.backActivated.emit)
+		self.backButton = QtGui.QPushButton("")
+		self.backButton.clicked.connect(self.backActivated.emit)
 
 		testViewer = self._modules.default(
 			"active",
@@ -221,8 +239,11 @@ class TestViewerWidget(QtGui.QWidget):
 
 		layout = QtGui.QVBoxLayout()
 		layout.addWidget(testViewer)
-		layout.addWidget(backButton)
+		layout.addWidget(self.backButton)
 		self.setLayout(layout)
+
+	def retranslate(self):
+		self.backButton.setText(_("Back"))
 
 class TestsViewer(QtGui.QStackedWidget):
 	def __init__(self, moduleManager,  *args, **kwargs):
@@ -246,6 +267,10 @@ class TestsViewer(QtGui.QStackedWidget):
 	def updateList(self, list, dataType):
 		self.testsViewerWidget.updateList(list, dataType)
 
+	def retranslate(self):
+		for i in range(self.count()):
+			self.widget(i).retranslate()
+
 class TestsViewerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestsViewerModule, self).__init__(*args, **kwargs)
@@ -261,14 +286,42 @@ class TestsViewerModule(object):
 			self._mm.mods(type="translator"),
 		)
 
-	def createTestsViewer(self):
-		return TestsViewer(self._mm)#FIXME: moduleManager or pass what's needed? Also on other places...
-
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
+		self._testsViewers = set() #FIXME: Should we remove a testsViewer when it's not used anymore? (memory usage)
+		try:
+			translator = self._modules.default(type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 		self.active = True
 
 	def disable(self):
 		self.active = False
+		
+		del self._modules
+		del self._testsViewers
+
+	def _retranslate(self):
+		global _, ngettext
+		try:
+			translator = self._modules.default(type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda x, y, n: x if n == 1 else y
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		for tv in self._testsViewers:
+			tv.retranslate()
+
+	def createTestsViewer(self):
+		tv = TestsViewer(self._mm)#FIXME: moduleManager or pass what's needed? Also on other places...
+		self._testsViewers.add(tv)
+		return tv
 
 def init(moduleManager):
 	return TestsViewerModule(moduleManager)

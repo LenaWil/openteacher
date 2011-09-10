@@ -18,6 +18,45 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+from PyQt4 import QtCore, QtGui, QtWebKit, QtNetwork
+
+class OpenTeacherWebPage(QtWebKit.QWebPage):
+	def __init__(self, url, userAgent, language, *args, **kwargs):
+		super(OpenTeacherWebPage, self).__init__(*args, **kwargs)
+
+		self.url = url
+		self.userAgent = userAgent
+
+	def userAgentForUrl(self, url):
+		return self.userAgent
+
+	def updateStatus(self, ok):
+		if not ok:
+			text = _("Couldn't reach %s, are you sure you're online?") % self.url
+			self.view().setHtml("<p>%s</p>" % text)
+
+	def updateLanguage(self, language):
+		request = QtNetwork.QNetworkRequest(QtCore.QUrl(self.url))
+		request.setRawHeader("Accept-Language", language)
+		self.mainFrame().load(request)
+
+		self.connect(self, QtCore.SIGNAL("loadFinished(bool)"), self.updateStatus)
+
+class DocumentationDialog(QtWebKit.QWebView):
+	def __init__(self, url, userAgent, *args, **kwargs):
+		super(DocumentationDialog, self).__init__(*args, **kwargs)
+
+		self.page = OpenTeacherWebPage(url, userAgent, self)
+		self.setPage(self.page)
+
+	def retranslate(self):
+		self.setWindowTitle(_("Documentation"))
+		#self.page is retranslated by the updateLanguage call done on a
+		#higher level
+
+	def updateLanguage(self, language):
+		self.page.updateLanguage(language)
+
 class DocumentationModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(DocumentationModule, self).__init__(*args, **kwargs)
@@ -32,18 +71,38 @@ class DocumentationModule(object):
 	def show(self):
 		metadataMod = self._modules.default("active", type="metadata")
 		for module in self._mm.mods("active", type="ui"):#FIXME
-			dialog = self._ui.DocumentationDialog(
+			dialog = DocumentationDialog(
 				metadataMod.documentationUrl,
-				metadataMod.userAgent,
-				"en" #FIXME: language should be dynamic
+				metadataMod.userAgent
 			)
 			tab = module.addCustomTab(dialog.windowTitle(), dialog)
 			tab.closeRequested.handle(tab.close)
+			
+			self._activeDialogs.add(dialog)
+			tab.closeRequested.handle(
+				lambda: self._activeDialogs.remove(dialog)
+			)
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._activeDialogs = set()
 
 		#load translator
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.active = True
+
+	def _retranslate(self):
+		#load translator
+		global _
+		global ngettext
+
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -53,20 +112,17 @@ class DocumentationModule(object):
 				self._mm.resourcePath("translations")
 			)
 
-		self._ui = self._mm.import_("ui")
-		self._ui._, self._ui.ngettext = _, ngettext
-
 		self.name = _("Documentation module")
-
-		self.active = True
+		for dialog in self._activeDialogs:
+			dialog.retranslate()
+			dialog.updateLanguage("en") #FIXME: update dynamically
 
 	def disable(self):
 		self.active = False
 
 		del self._modules
-		del self._registry
-		del self._ui
 		del self.name
+		del self._activeDialogs
 
 def init(moduleManager):
 	return DocumentationModule(moduleManager)
