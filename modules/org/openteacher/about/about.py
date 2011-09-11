@@ -22,6 +22,7 @@
 from PyQt4 import QtCore, QtGui
 import random
 import gettext
+import weakref
 
 class AboutTextLabel(QtGui.QLabel):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -323,10 +324,7 @@ class AboutModule(object):
 		tab.closeRequested.handle(tab.close)
 
 		dialog.retranslate()
-		self._activeDialogs.add(dialog)
-		tab.closeRequested.handle(
-			lambda: self._activeDialogs.remove(dialog)
-		)
+		self._activeDialogs.add(weakref.ref(dialog))
 
 	def _retranslate(self):
 		global _
@@ -341,7 +339,9 @@ class AboutModule(object):
 				self._mm.resourcePath("translations")
 			)
 		for dialog in self._activeDialogs:
-			dialog.retranslate()
+			r = dialog()
+			if r is not None:
+				r.retranslate()
 
 		self.name = _("About module")
 

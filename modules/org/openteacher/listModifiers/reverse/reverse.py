@@ -37,7 +37,22 @@ class ReverseModule(object):
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.dataType = "all"
+		self.active = True
+
+	def _retranslate(self):
 		#Translations
+		global _
+		global ngettext
+
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -46,10 +61,7 @@ class ReverseModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-
-		self.dataType = "all"
 		self.name = _("Reverse")
-		self.active = True
 
 	def disable(self):
 		self.active = False

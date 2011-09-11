@@ -21,6 +21,7 @@
 
 from PyQt4 import QtCore, QtGui
 import sys
+import weakref
 
 class LessonTypeTab(QtGui.QWidget):
 	def __init__(self, name, lessonType, *args, **kwargs):
@@ -31,7 +32,7 @@ class LessonTypeTab(QtGui.QWidget):
 
 		for name, category in lessonType.iteritems():
 			if name is None:
-				name = _("Miscellaneous")
+				name = _("Miscellaneous") #FIXME: translate live
 
 			w = self.createCategoryGroupBox(name, category)
 			vbox.addWidget(w)
@@ -128,18 +129,21 @@ class SettingsDialog(QtGui.QTabWidget):#FIXME: make sure the 'simple' and 'advan
 
 		for name, lessonType in settings.iteritems():
 			if name is None:
-				name = _("Miscellaneous")
+				name = _("Miscellaneous")#FIXME: translate live
 			self.createLessonTypeTab(name, lessonType)
 
-		self.advancedButton = QtGui.QPushButton(_("Advanced mode"))
+		self.advancedButton = QtGui.QPushButton()
 		self.advancedButton.clicked.connect(self.advanced)
 
-		self.simpleButton = QtGui.QPushButton(_("Simple mode"))
+		self.simpleButton = QtGui.QPushButton()
 		self.simpleButton.clicked.connect(self.simple)
 
-		self.setWindowTitle(_("Settings"))
-
 		self.simple()
+
+	def retranslate(self):
+		self.setWindowTitle(_("Settings"))
+		self.simpleButton.setText(_("Simple mode"))
+		self.advancedButton.setText(_("Advanced mode"))
 
 	def createLessonTypeTab(self, name, lessonType):
 		tab = LessonTypeTab(name, lessonType)
@@ -177,9 +181,24 @@ class SettingsDialogModule(object):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self._uiModule = self._modules.default("active", type="ui")
 
+		self._activeDialogs = set()
+
 		#install translator
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.active = True
+
+	def _retranslate(self):
+		#Translations
 		global _
 		global ngettext
+
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -188,15 +207,17 @@ class SettingsDialogModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-
-		self.active = True
+		for dialog in self._activeDialogs:
+			r = dialog()
+			if r is not None:
+				r.retranslate()
 
 	def disable(self):
 		self.active = False
 
 		del self._modules
 		del self._uiModule
-		del self._ui
+		del self._activeDialogs
 
 	@property
 	def _settings(self):
@@ -204,6 +225,7 @@ class SettingsDialogModule(object):
 
 	def show(self):
 		dialog = SettingsDialog(self._settings.registeredSettings())
+		self._activeDialogs.add(weakref.ref(dialog))
 		tab = self._uiModule.addCustomTab(dialog.windowTitle(), dialog)
 		tab.closeRequested.handle(self._modules.modulesUpdated.send) #FIXME: still needed?
 		tab.closeRequested.handle(tab.close)

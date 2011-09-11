@@ -20,6 +20,7 @@
 
 from PyQt4 import QtCore, QtGui
 import datetime
+import weakref
 
 class Graph(QtGui.QFrame):
 	def __init__(self, test, *args, **kwargs):
@@ -118,10 +119,10 @@ class ProgressViewer(QtGui.QWidget):
 	def __init__(self, test, *args, **kwargs):
 		super(ProgressViewer, self).__init__(*args, **kwargs)
 
-		graph = Graph(test)
+		self.graph = Graph(test)
 		format = "%X"
-		firstTime = QtGui.QLabel(graph.start.strftime(format))
-		lastTime = QtGui.QLabel(graph.end.strftime(format))
+		firstTime = QtGui.QLabel(self.graph.start.strftime(format))
+		lastTime = QtGui.QLabel(self.graph.end.strftime(format))
 		
 		horLayout = QtGui.QHBoxLayout()
 		horLayout.addWidget(firstTime)
@@ -130,7 +131,7 @@ class ProgressViewer(QtGui.QWidget):
 		
 		mainLayout = QtGui.QVBoxLayout()
 		mainLayout.addLayout(horLayout)
-		mainLayout.addWidget(graph)
+		mainLayout.addWidget(self.graph)
 		
 		self.setLayout(mainLayout)
 
@@ -142,13 +143,41 @@ class ProgressViewerModule(object):
 		self.type = "progressViewer"
 
 	def createProgressViewer(self, *args, **kwargs):
-		return ProgressViewer(*args, **kwargs)
+		pv = ProgressViewer(*args, **kwargs)
+		self._progressViewers.add(weakref.ref(pv))
+		return pv
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.active = True
+
+	def _retranslate(self):
+		#Translations
+		global _
+		global ngettext
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
 
 def init(moduleManager):
 	return ProgressViewerModule(moduleManager)

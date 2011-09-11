@@ -31,15 +31,19 @@ class InputTyping(QtGui.QWidget):
 		self.inputLineEdit = QtGui.QLineEdit()
 		self.inputLineEdit.textEdited.connect(self._textEdited)
 
-		self.checkButton = QtGui.QPushButton(_(u"Check!"))
-		self.checkButton.setShortcut("Return") #FIXME: translatable?
-		self.correctButton = QtGui.QPushButton(_(u"Correct anyway"))
+		self.checkButton = QtGui.QPushButton()
+		self.checkButton.setShortcut(QtCore.Qt.Key_Return)
+		self.correctButton = QtGui.QPushButton()
 
 		mainLayout = QtGui.QGridLayout()
 		mainLayout.addWidget(self.inputLineEdit, 0, 0)
 		mainLayout.addWidget(self.checkButton, 0, 1)
 		mainLayout.addWidget(self.correctButton, 1, 1)
 		self.setLayout(mainLayout)
+
+	def _retranslate(self):
+		self.checkButton.setText(_(u"Check!"))
+		self.correctButton.setText(_(u"Correct anyway"))
 
 	def _textEdited(self, text):
 		try:
@@ -64,11 +68,17 @@ class InputTyping(QtGui.QWidget):
 		self.inputLineEdit.clear()
 
 	def correctLastAnswer(self):
-		result = self._previousResult.update({
-			"result": "right",
-			"givenAnswer": _("Correct anyway")
-		})
-		self.lessonType.correctLastAnswer(result)
+		try:
+			self._previousResult.update({
+				"result": "right",
+				"givenAnswer": _("Corrected: %s") % self._previousResult["givenAnswer"]
+			})
+		except KeyError:
+			self._previousResult.update({
+				"result": "right",
+				"givenAnswer": _("Corrected")
+			})
+		self.lessonType.correctLastAnswer(self._previousResult)
 
 	def checkAnswer(self):
 		givenStringAnswer = unicode(self.inputLineEdit.text())
@@ -111,13 +121,26 @@ class InputTypingModule(object):
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.active = True
+
+	def _retranslate(self):
+		#Translations
+		global _
+		global ngettext
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
 			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
 		else:
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-
-		self.active = True
 
 	def disable(self):
 		self.active = False

@@ -21,6 +21,7 @@
 
 from PyQt4 import QtCore, QtGui
 import datetime
+import weakref
 
 class TestModel(QtCore.QAbstractTableModel):
 	def __init__(self, moduleManager, list, dataType, test, *args, **kwargs):
@@ -171,13 +172,13 @@ class TestViewerModule(object):
 
 	def createTestViewer(self, *args, **kwargs):
 		tv = TestViewer(self._mm, *args, **kwargs)
-		self._testViewers.add(tv)
+		self._testViewers.add(weakref.ref(tv))
 		return tv
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		
-		self._testViewers = set() #FIXME: Should we remove a testViewer when it's not used anymore? (memory usage)
+		self._testViewers = set()
 		try:
 			translator = self._modules.default(type="translator")
 		except IndexError:
@@ -198,7 +199,9 @@ class TestViewerModule(object):
 				self._mm.resourcePath("translations")
 			)
 		for tv in self._testViewers:
-			tv.retranslate()
+			r = tv()
+			if r is not None:
+				tv.retranslate()
 
 	def disable(self):
 		self.active = False

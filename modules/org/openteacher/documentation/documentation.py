@@ -19,6 +19,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt4 import QtCore, QtGui, QtWebKit, QtNetwork
+import weakref
 
 class OpenTeacherWebPage(QtWebKit.QWebPage):
 	def __init__(self, url, userAgent, language, *args, **kwargs):
@@ -78,10 +79,7 @@ class DocumentationModule(object):
 			tab = module.addCustomTab(dialog.windowTitle(), dialog)
 			tab.closeRequested.handle(tab.close)
 			
-			self._activeDialogs.add(dialog)
-			tab.closeRequested.handle(
-				lambda: self._activeDialogs.remove(dialog)
-			)
+			self._activeDialogs.add(weakref.ref(dialog))
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
@@ -114,8 +112,10 @@ class DocumentationModule(object):
 
 		self.name = _("Documentation module")
 		for dialog in self._activeDialogs:
-			dialog.retranslate()
-			dialog.updateLanguage("en") #FIXME: update dynamically
+			r = dialog()
+			if r is not None:
+				r.retranslate()
+				r.updateLanguage("en") #FIXME: update dynamically
 
 	def disable(self):
 		self.active = False

@@ -20,6 +20,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt4 import QtCore, QtGui
+import weakref
 
 class TestsModel(QtCore.QAbstractTableModel):
 	DATE, NOTE, COMPLETED = xrange(3)
@@ -33,6 +34,7 @@ class TestsModel(QtCore.QAbstractTableModel):
 			"tests": [],
 			"items": [],
 		}
+		self._headers = ["", "", ""]
 
 	def headerData(self, section, orientation, role):
 		if role != QtCore.Qt.DisplayRole:
@@ -97,20 +99,20 @@ class NotesWidget(QtGui.QWidget):
 		self.lowestLabel = QtGui.QLabel()
 		
 		self.layout = QtGui.QFormLayout()
-		self.layout.addRow("", self.highestLabel)#FIXME: own translator
-		self.layout.addRow("", self.averageLabel)
-		self.layout.addRow("", self.lowestLabel)
+		self.layout.addRow(QtGui.QLabel(), self.highestLabel)
+		self.layout.addRow(QtGui.QLabel(), self.averageLabel)
+		self.layout.addRow(QtGui.QLabel(), self.lowestLabel)
 		
 		self.setLayout(self.layout)
 
 	def retranslate(self):
-		self.layout.itemAt(0, QtGui.QFormLayout.LabelRole).setText(
+		self.layout.labelForField(self.highestLabel).setText(
 			_("Highest note:")
 		)
-		self.layout.itemAt(1, QtGui.QFormLayout.LabelRole).setText(
+		self.layout.labelForField(self.averageLabel).setText(
 			_("Average note:")
 		)
-		self.layout.itemAt(2, QtGui.QFormLayout.LabelRole).setText(
+		self.layout.labelForField(self.lowestLabel).setText(
 			_("Lowest note:")
 		)
 
@@ -289,7 +291,7 @@ class TestsViewerModule(object):
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
-		self._testsViewers = set() #FIXME: Should we remove a testsViewer when it's not used anymore? (memory usage)
+		self._testsViewers = set()
 		try:
 			translator = self._modules.default(type="translator")
 		except IndexError:
@@ -316,11 +318,13 @@ class TestsViewerModule(object):
 				self._mm.resourcePath("translations")
 			)
 		for tv in self._testsViewers:
-			tv.retranslate()
+			r = tv() #check weak reference
+			if r is not None:
+				r.retranslate()
 
 	def createTestsViewer(self):
 		tv = TestsViewer(self._mm)#FIXME: moduleManager or pass what's needed? Also on other places...
-		self._testsViewers.add(tv)
+		self._testsViewers.add(weakref.ref(tv)) #Weak reference so gc can still get into action
 		return tv
 
 def init(moduleManager):

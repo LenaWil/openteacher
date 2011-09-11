@@ -42,15 +42,25 @@ class RandomModule(object):
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+	
+		self.dataType = "all"
+		self.active = True
+
+	def _retranslate(self):
+		#Translations
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
 			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
 		else:
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-	
-		self.dataType = "all"
 		self.name = _("Random")
-		self.active = True
 
 	def disable(self):
 		self.active = False

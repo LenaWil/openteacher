@@ -122,12 +122,10 @@ class TextToSpeechModule(object):
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
-			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+			pass
 		else:
-			_, ngettext = translator.gettextFunctions(
-				self._mm.resourcePath("translations")
-			)
-		self.name = _("Text to speech")
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 	
 		# For Windows and Mac
 		pyttsx = self._mm.importFrom(self._mm.resourcePath("tts"), "pyttsx")
@@ -158,7 +156,7 @@ class TextToSpeechModule(object):
 				"Speed",
 				"number",
 				"Pronounciation",
-				"Voice",
+				"Voice",#FIXME: translate
 				120
 			)
 
@@ -169,7 +167,19 @@ class TextToSpeechModule(object):
 		
 		self.active = True
 		#self.newWord("Text to speech enabled")
-	
+
+	def _retranslate(self):
+		#Translations
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("Text to speech")
+
 	def disable(self):
 		del self._modules
 		del name

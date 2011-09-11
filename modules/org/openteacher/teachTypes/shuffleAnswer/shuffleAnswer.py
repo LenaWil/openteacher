@@ -22,6 +22,7 @@
 
 from PyQt4 import QtGui, QtCore
 import random
+import weakref
 
 class ShuffleAnswerTeachWidget(QtGui.QWidget):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -42,7 +43,13 @@ class ShuffleAnswerTeachWidget(QtGui.QWidget):
 		vbox.addWidget(self.hintLabel)
 		vbox.addWidget(self.inputWidget)
 		self.setLayout(vbox)
-		
+
+	def retranslate(self):
+		try:
+			self.setHint()
+		except AttributeError:
+			pass
+
 	def setHint(self):
 		hint = _("Hint:") + u" "
 		answer = self.word["answers"][0][0]#FIXME: use composer
@@ -83,7 +90,29 @@ class ShuffleAnswerTeachTypeModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._activeWidgets = set()
 
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.dataType = "words"
+		self.active = True
+
+	def disable(self):
+		self.active = False
+
+		del self._modules
+		del self._activeWidgets
+		del self.dataType
+		del self.name
+
+	def _retranslate(self):
+		#Translations
 		global _
 		global ngettext
 
@@ -95,20 +124,16 @@ class ShuffleAnswerTeachTypeModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-
-		self.dataType = "words"
 		self.name = _("Shuffle answer")
-		self.active = True
-
-	def disable(self):
-		self.active = False
-
-		del self._modules
-		del self.dataType
-		del self.name
+		for widget in self._activeWidgets:
+			r = widget()
+			if r is not None:
+				r.retranslate()
 
 	def createWidget(self, tabChanged):
-		return ShuffleAnswerTeachWidget(self._mm)
+		satw = ShuffleAnswerTeachWidget(self._mm)
+		self._activeWidgets.add(weakref.ref(satw))
+		return satw
 
 def init(moduleManager):
 	return ShuffleAnswerTeachTypeModule(moduleManager)

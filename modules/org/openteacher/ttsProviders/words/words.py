@@ -41,7 +41,7 @@ class TextToSpeechProviderWords(object):
 				"Pronounce words",
 				"boolean",
 				"Pronounciation",
-				"Pronounciation",
+				"Pronounciation", #FIXME: translate
 				False
 			)
 		

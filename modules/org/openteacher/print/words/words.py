@@ -37,6 +37,21 @@ class PrintModule(object):
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self._pyratemp = self._mm.import_("pyratemp")
+		self.prints = ["words"]
+
+		self.active = True
+
+	def _retranslate(self):
+		#Translations
 		global _
 		global ngettext
 		try:
@@ -47,13 +62,7 @@ class PrintModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-
 		self.name = _("Printing module")
-
-		self._pyratemp = self._mm.import_("pyratemp")
-		self.prints = ["words"]
-
-		self.active = True
 
 	def disable(self):
 		self.active = False

@@ -37,20 +37,15 @@ class TypingTeachTypeModule(object):
 
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
-		global _
-		global ngettext
-
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
-			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+			pass
 		else:
-			_, ngettext = translator.gettextFunctions(
-				self._mm.resourcePath("translations")
-			)
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 
 		self.dataType = "words"
-		self.name = _("Type answer")
 		self.active = True
 
 	def disable(self):
@@ -59,6 +54,18 @@ class TypingTeachTypeModule(object):
 		del self.dataType
 		del self.name
 		del self._modules
+
+	def _retranslate(self):
+		#Translations
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("Type answer")
 
 	def createWidget(self, tabChanged):
 		try:

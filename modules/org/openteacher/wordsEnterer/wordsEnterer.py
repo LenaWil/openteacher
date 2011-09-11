@@ -22,6 +22,7 @@
 
 from PyQt4 import QtCore, QtGui
 import datetime
+import weakref
 
 class WordsTableItemDelegate(QtGui.QStyledItemDelegate):
 	def eventFilter(self, object, event):
@@ -95,6 +96,10 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 		self.updateList({"items": [], "tests": []})
 		self._compose = compose
 		self._parse = parse
+		self._headers = ["", "", ""]
+
+	def retranslate(self):
+		self._headers = [_("Questions"), _("Answers"), _("Comment")]
 
 	def updateList(self, list):
 		self.beginResetModel()
@@ -131,7 +136,7 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 		if role != QtCore.Qt.DisplayRole:
 			return
 		if orientation == QtCore.Qt.Horizontal:
-			return [_("Questions"), _("Answers"), _("Comment")][section]
+			return self._headers[section]
 		elif orientation == QtCore.Qt.Vertical:
 			return section +1
 
@@ -275,20 +280,22 @@ class EnterWidget(QtGui.QSplitter):
 		self._wordsTableView.itemDelegate().currentEditor.deselect()
 
 	def _buildUi(self, keyboardWidget):
+		self._titleLabel = QtGui.QLabel()
 		self._titleTextBox = QtGui.QLineEdit(self)
 		self._questionLanguageTextBox = QtGui.QLineEdit(self)
+		self._questionLanguageLabel = QtGui.QLabel()
 		self._answerLanguageTextBox = QtGui.QLineEdit(self)
-
+		self._answerLanguageLabel = QtGui.QLabel()
 		self._wordsTableView = WordsTableView()
 
 		topLayout = QtGui.QGridLayout()
-		topLayout.addWidget(QtGui.QLabel(_("Title:")), 0, 0)
+		topLayout.addWidget(self._titleLabel, 0, 0)
 		topLayout.addWidget(self._titleTextBox, 0, 1)
 
-		topLayout.addWidget(QtGui.QLabel(_("Question language:")), 1, 0)
+		topLayout.addWidget(self._questionLanguageLabel, 1, 0)
 		topLayout.addWidget(self._questionLanguageTextBox, 1, 1)
 
-		topLayout.addWidget(QtGui.QLabel(_("Answer language:")), 2, 0)
+		topLayout.addWidget(self._answerLanguageLabel, 2, 0)
 		topLayout.addWidget(self._answerLanguageTextBox, 2, 1)
 
 		leftLayout = QtGui.QVBoxLayout()
@@ -300,10 +307,8 @@ class EnterWidget(QtGui.QSplitter):
 
 		if keyboardWidget is not None:
 			self._keyboardWidget = keyboardWidget
-		self._removeSelectedRowsButton = QtGui.QPushButton(
-			_("Remove selected row(s)")
-		)
-		self._removeSelectedRowsButton.setShortcut("Del")
+		self._removeSelectedRowsButton = QtGui.QPushButton()
+		self._removeSelectedRowsButton.setShortcut(QtGui.QKeySequence.Delete)
 
 		rightLayout = QtGui.QVBoxLayout()
 		try:
@@ -320,6 +325,14 @@ class EnterWidget(QtGui.QSplitter):
 
 		self.setStretchFactor(0, 255)
 		self.setStretchFactor(1, 1)
+
+	def retranslate(self):
+		self._titleLabel.setText(_("Title:"))
+		self._questionLanguageLabel.setText(_("Question language:"))
+		self._answerLanguageLabel.setText(_("Answer language:"))
+		self._removeSelectedRowsButton.setText(_("Remove selected row(s)"))
+		
+		self._wordsTableModel.retranslate()
 
 	def _connectSignals(self):
 		self._removeSelectedRowsButton.clicked.connect(
@@ -380,16 +393,30 @@ class WordsEntererModule(object):
 		).parse
 
 	def createWordsEnterer(self):
-		return EnterWidget(
+		ew = EnterWidget(
 			self._onscreenKeyboard,
 			self._compose,
 			self._parse
 		)
+		self._activeWidgets.add(weakref.ref(ew))
+		return ew
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._activeWidgets = set()
 
-		#load translator
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.active = True
+
+	def _retranslate(self):
+		#Translations
 		global _
 		global ngettext
 
@@ -402,12 +429,16 @@ class WordsEntererModule(object):
 				self._mm.resourcePath("translations")
 			)
 
-		self.active = True
+		for widget in self._activeWidgets:
+			r = widget()
+			if r is not None:
+				r.retranslate()
 
 	def disable(self):
 		self.active = False
 		
 		del self._modules
+		del self._activeWidgets
 
 def init(moduleManager):
 	return WordsEntererModule(moduleManager)

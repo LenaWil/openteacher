@@ -83,6 +83,7 @@ class GuiModule(object):
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		createEvent = self._modules.default(type="event").createEvent
+
 		self.newEvent = createEvent()
 		self.openEvent = createEvent()
 		self.saveEvent = createEvent()
@@ -179,6 +180,9 @@ class GuiModule(object):
 		del self._widget
 
 	def _retranslate(self):
+		global _
+		global ngettext
+
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:

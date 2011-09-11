@@ -31,7 +31,16 @@ class MetadataModule(object):
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
-		#load translator
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+	def _retranslate(self):
+		#Translations
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -40,7 +49,6 @@ class MetadataModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-
 		self.name = _("OpenTeacher")
 		self.slogan = _("The easiest way to learn a new language")
 		self.version = _("3.x")

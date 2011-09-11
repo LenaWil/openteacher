@@ -21,14 +21,15 @@
 
 from PyQt4 import QtGui, QtCore
 import datetime
+import weakref
 
 class ThinkWidget(QtGui.QWidget):
 	def __init__(self, *args, **kwargs):
 		super(ThinkWidget, self).__init__(*args, **kwargs)
 		
-		self.label = QtGui.QLabel(_("Think about the answer, and press the 'View answer' button when you're done."))
+		self.label = QtGui.QLabel()
 		self.label.setWordWrap(True)
-		self.button = QtGui.QPushButton(_("View answer"))
+		self.button = QtGui.QPushButton()
 		
 		mainLayout = QtGui.QVBoxLayout()
 		mainLayout.addWidget(self.label)
@@ -36,13 +37,17 @@ class ThinkWidget(QtGui.QWidget):
 		
 		self.setLayout(mainLayout)
 
+	def retranslate(self):
+		self.label.setText(_("Think about the answer, and press the 'View answer' button when you're done."))
+		self.button.setText(_("View answer"))
+
 class AnswerWidget(QtGui.QWidget):
 	def __init__(self, *args, **kwargs):
 		super(AnswerWidget, self).__init__(*args, **kwargs)
 
 		self.label = QtGui.QLabel()
-		self.rightButton = QtGui.QPushButton(_("I was right"))
-		self.wrongButton = QtGui.QPushButton(_("I was wrong"))
+		self.rightButton = QtGui.QPushButton()
+		self.wrongButton = QtGui.QPushButton()
 
 		bottomLayout = QtGui.QHBoxLayout()
 		bottomLayout.addWidget(self.rightButton)
@@ -54,6 +59,10 @@ class AnswerWidget(QtGui.QWidget):
 		
 		self.setLayout(mainLayout)
 
+	def retranslate(self):
+		self.rightButton.setText(_("I was right"))
+		self.wrongButton.setText(_("I was wrong"))
+
 class InMindTeachWidget(QtGui.QStackedWidget):
 	def __init__(self, compose, *args, **kwargs):
 		super(InMindTeachWidget, self).__init__(*args, **kwargs)
@@ -62,9 +71,20 @@ class InMindTeachWidget(QtGui.QStackedWidget):
 
 		self.thinkWidget = ThinkWidget()
 		self.answerWidget = AnswerWidget()
-		
+
 		self.addWidget(self.thinkWidget)
 		self.addWidget(self.answerWidget)
+
+	def retranslate(self):
+		self.thinkWidget.retranslate()
+		self.answerWidget.retranslate()
+		
+		curWid = self.currentWidget()
+		try:
+			self.newItem(self._currentWord)
+		except AttributeError:
+			pass
+		self.setCurrentWidget(curWid)
 
 	def updateLessonType(self, lessonType):
 		self.lessonType = lessonType
@@ -121,6 +141,21 @@ class InMindTeachTypeModule(object):
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
+		self._activeWidgets = set()
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.dataType = "words"
+		self.active = True
+
+	def _retranslate(self):
+		#Translations
 		global _
 		global ngettext
 
@@ -132,15 +167,17 @@ class InMindTeachTypeModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		self.dataType = "words"
 		self.name = _("Think answer")
-		self.active = True
+		for widget in self._activeWidgets:
+			r = widget()
+			if r is not None:
+				r.retranslate()
 
 	def disable(self):
 		self.active = False
 
-		del self.uses
 		del self._modules
+		del self._activeWidgets
 		del self.dataType
 		del self.name
 
@@ -152,7 +189,9 @@ class InMindTeachTypeModule(object):
 		).compose
 
 	def createWidget(self, tabChanged):
-		return InMindTeachWidget(self._compose)
+		imtw = InMindTeachWidget(self._compose)
+		self._activeWidgets.add(weakref.ref(imtw))
+		return imtw
 
 def init(moduleManager):
 	return InMindTeachTypeModule(moduleManager)

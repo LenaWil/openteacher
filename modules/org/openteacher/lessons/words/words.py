@@ -20,6 +20,8 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+import weakref
+
 class Lesson(object):
 	def __init__(self, moduleManager, fileTab, module, list, enterWidget, teachWidget, resultsWidget=None, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
@@ -81,11 +83,32 @@ class WordsLessonModule(object):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self._uiModule = self._modules.default("active", type="ui")
 
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+
+		self.lessonCreated = self._modules.default(type="event").createEvent()
+		self.lessonCreationFinished = self._modules.default(type="event").createEvent()
+
+		self._counter = 1
+		self._references = set()
+
+		event = self._uiModule.addLessonCreateButton(_("Create words lesson")) #FIXME: retranslatable?
+		event.handle(self.createLesson)
+		self._references.add(event)
+
+		self.active = True
+
+	def _retranslate(self):
 		#Translations
 		global _
 		global ngettext
 
-		#load translator
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -94,20 +117,7 @@ class WordsLessonModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-
 		self.name = _("Words Lesson")
-
-		self.lessonCreated = self._modules.default(type="event").createEvent()
-		self.lessonCreationFinished = self._modules.default(type="event").createEvent()
-
-		self._counter = 1
-		self._references = set()
-
-		event = self._uiModule.addLessonCreateButton(_("Create words lesson"))
-		event.handle(self.createLesson)
-		self._references.add(event)
-
-		self.active = True
 
 	def disable(self):
 		self.active = False
@@ -153,7 +163,7 @@ class WordsLessonModule(object):
 			widgets.append(resultsWidget)
 
 		fileTab = self._uiModule.addFileTab(
-			_("Word lesson %s") % self._counter,
+			_("Word lesson %s") % self._counter, #FIXME: retranslatable
 			*widgets
 		)
 		self._counter += 1

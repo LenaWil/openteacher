@@ -57,6 +57,17 @@ class HardWordsModule(object):
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+		self.dataType = "words"
+		self.active = True
+
+	def _retranslate(self):
 		#Translations
 		try:
 			translator = self._modules.default("active", type="translator")
@@ -67,8 +78,6 @@ class HardWordsModule(object):
 				self._mm.resourcePath("translations")
 			)
 		self.name = _("Only hard words (<50% right)")
-		self.dataType = "words"
-		self.active = True
 
 	def disable(self):
 		self.active = False

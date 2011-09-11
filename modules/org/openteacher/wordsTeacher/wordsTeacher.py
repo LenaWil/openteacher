@@ -22,6 +22,7 @@
 from PyQt4 import QtCore, QtGui
 import datetime
 import copy
+import weakref
 
 class TeachSettingsWidget(QtGui.QWidget):
 	def __init__(self, *args, **kwargs):
@@ -31,62 +32,81 @@ class TeachSettingsWidget(QtGui.QWidget):
 
 		#Word modifiers
 		self.modifyWordListView = QtGui.QListView()
-		self.modifyWordUpButton = QtGui.QPushButton(_("Up"))
-		self.modifyWordDownButton = QtGui.QPushButton(_("Down"))
+		self.modifyWordUpButton = QtGui.QPushButton()
+		self.modifyWordDownButton = QtGui.QPushButton()
 
 		modifyWordButtonsLayout = QtGui.QVBoxLayout()
 		modifyWordButtonsLayout.addStretch()
 		modifyWordButtonsLayout.addWidget(self.modifyWordUpButton)
 		modifyWordButtonsLayout.addWidget(self.modifyWordDownButton)
 		modifyWordButtonsLayout.addStretch()
-		modifyWordLayout = QtGui.QHBoxLayout()
-		modifyWordLayout.addWidget(self.modifyWordListView)
-		modifyWordLayout.addLayout(modifyWordButtonsLayout)
+		self.modifyWordLayout = QtGui.QHBoxLayout()
+		self.modifyWordLayout.addWidget(self.modifyWordListView)
+		self.modifyWordLayout.addLayout(modifyWordButtonsLayout)
 
 		#Word list modifiers
 		self.modifyWordListListView = QtGui.QListView()
-		self.modifyWordListUpButton = QtGui.QPushButton(_("Up"))
-		self.modifyWordListDownButton = QtGui.QPushButton(_("Down"))
+		self.modifyWordListUpButton = QtGui.QPushButton()
+		self.modifyWordListDownButton = QtGui.QPushButton()
 
 		modifyWordListButtonsLayout = QtGui.QVBoxLayout()
 		modifyWordListButtonsLayout.addStretch()
 		modifyWordListButtonsLayout.addWidget(self.modifyWordListUpButton)
 		modifyWordListButtonsLayout.addWidget(self.modifyWordListDownButton)
 		modifyWordListButtonsLayout.addStretch()
-		modifyWordListLayout = QtGui.QHBoxLayout()
-		modifyWordListLayout.addWidget(self.modifyWordListListView)
-		modifyWordListLayout.addLayout(modifyWordListButtonsLayout)
+		self.modifyWordListLayout = QtGui.QHBoxLayout()
+		self.modifyWordListLayout.addWidget(self.modifyWordListListView)
+		self.modifyWordListLayout.addLayout(modifyWordListButtonsLayout)
 		
-		self.dontShowAgainCheckBox = QtGui.QCheckBox(
+		self.dontShowAgainCheckBox = QtGui.QCheckBox()
+		self.startLessonButton = QtGui.QPushButton()
+
+		self.gb = QtGui.QGroupBox()
+		self.formLayout = QtGui.QFormLayout()
+		self.formLayout.addRow(QtGui.QLabel(), self.lessonTypeComboBox)
+		self.formLayout.addRow(QtGui.QLabel(), self.modifyWordLayout)
+		self.formLayout.addRow(QtGui.QLabel(), self.modifyWordListLayout)
+		self.formLayout.addRow(QtGui.QLabel(), self.dontShowAgainCheckBox)
+		self.formLayout.addRow(QtGui.QLabel(), self.startLessonButton)
+
+		self.gb.setLayout(self.formLayout)
+
+		mainLayout = QtGui.QVBoxLayout()
+		mainLayout.addWidget(self.gb)
+		self.setLayout(mainLayout)
+
+	def retranslate(self):
+		self.modifyWordUpButton.setText(_("Up"))
+		self.modifyWordDownButton.setText(_("Down"))
+
+		self.modifyWordListUpButton.setText(_("Up"))
+		self.modifyWordListDownButton.setText(_("Down"))
+
+		self.dontShowAgainCheckBox.setText(
 			_("Don't show this screen again when I start a lesson.")
 		)
-		self.startLessonButton = QtGui.QPushButton(
+		self.startLessonButton.setText(
 			_("I'm ready, start the lesson!")
 		)
 
-		gb = QtGui.QGroupBox()
-		gb.setTitle(_("Lesson settings"))
-		formLayout = QtGui.QFormLayout()
-		formLayout.addRow(_("Lesson type"), self.lessonTypeComboBox)
-		formLayout.addRow(_("Modify word"), modifyWordLayout)
-		formLayout.addRow(_("Modify word list"), modifyWordListLayout)
-		formLayout.addRow("", self.dontShowAgainCheckBox)
-		formLayout.addRow("", self.startLessonButton)
-
-		gb.setLayout(formLayout)
-
-		mainLayout = QtGui.QVBoxLayout()
-		mainLayout.addWidget(gb)
-		self.setLayout(mainLayout)
+		self.gb.setTitle(_("Lesson settings"))
+		
+		self.formLayout.labelForField(self.lessonTypeComboBox).setText(
+			_("Lesson type")
+		)
+		self.formLayout.labelForField(self.modifyWordLayout).setText(
+			_("Modify word")
+		)
+		self.formLayout.labelForField(self.modifyWordListLayout).setText(
+			_("Modify word list")
+		)
 
 class TeachLessonWidget(QtGui.QSplitter):
 	def __init__(self, keyboardWidget, *args, **kwargs):
 		super(TeachLessonWidget, self).__init__(*args, **kwargs)
 
-		self.changeSettingsButton = QtGui.QPushButton(
-			_("Change lesson settings")
-		)
-		wordLabel = QtGui.QLabel(_("Word:"))
+		self.changeSettingsButton = QtGui.QPushButton()
+		self.wordLabel = QtGui.QLabel()
 		self.questionLabel = QtGui.QLabel()
 		self.questionLabel.setWordWrap(True)
 		if keyboardWidget is not None:
@@ -95,7 +115,7 @@ class TeachLessonWidget(QtGui.QSplitter):
 		self.progressBar = QtGui.QProgressBar()
 
 		leftLayout = QtGui.QVBoxLayout()
-		leftLayout.addWidget(wordLabel)
+		leftLayout.addWidget(self.wordLabel)
 		leftLayout.addWidget(self.questionLabel)
 		leftLayout.addStretch()
 		leftLayout.addWidget(self.teachTabWidget)
@@ -119,6 +139,10 @@ class TeachLessonWidget(QtGui.QSplitter):
 
 		self.setStretchFactor(0, 255)
 		self.setStretchFactor(1, 1)
+
+	def retranslate(self):
+		self.changeSettingsButton.setText(_("Change lesson settings"))
+		self.wordLabel.setText(_("Word:"))
 
 class ModifiersListModel(QtCore.QAbstractListModel):
 	def __init__(self, modifiers, *args, **kwargs):
@@ -251,6 +275,10 @@ class TeachWidget(QtGui.QStackedWidget):
 		self.addWidget(self._settingsWidget)
 		self.addWidget(self._lessonWidget)
 
+	def retranslate(self):
+		self._settingsWidget.retranslate()
+		self._lessonWidget.retranslate()
+
 	def _connectSignals(self):
 		#tab changed
 		self._lessonWidget.teachTabWidget.currentChanged.connect(self.tabChanged.emit)
@@ -322,7 +350,9 @@ class WordsTeacherModule(object):
 		)
 
 	def createWordsTeacher(self):
-		return TeachWidget(self._mm, self._onscreenKeyboard, self._applicationActivityChanged)
+		tw = TeachWidget(self._mm, self._onscreenKeyboard, self._applicationActivityChanged)
+		self._activeWidgets.add(weakref.ref(tw))
+		return tw
 
 	@property
 	def _onscreenKeyboard(self):
@@ -341,8 +371,20 @@ class WordsTeacherModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._activeWidgets = set()
 
-		#load translator
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.active = True
+
+	def _retranslate(self):
+		#Translations
 		global _
 		global ngettext
 
@@ -355,12 +397,16 @@ class WordsTeacherModule(object):
 				self._mm.resourcePath("translations")
 			)
 
-		self.active = True
+		for widget in self._activeWidgets:
+			r = widget()
+			if r is not None:
+				r.retranslate()
 
 	def disable(self):
 		self.active = False
 
 		del self._modules
+		del self._activeWidgets
 
 def init(moduleManager):
 	return WordsTeacherModule(moduleManager)

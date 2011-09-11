@@ -33,7 +33,30 @@ class WrtsApiModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		#load translator
+		self._activeDialogs = set()
+
+		self._ui = self._mm.import_("ui")
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self._api = self._mm.import_("api")
+		self._references = set()
+
+		self._wrtsConnection = self._api.WrtsConnection(self._mm)
+
+		event = self._uiModule.addLessonLoadButton("Import from WRTS")#FIXME: (re)translate
+		event.handle(self.importFromWrts)
+		self._references.add(event)
+		self.active = True
+
+	def _retranslate(self):
+		#Translations
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -42,20 +65,11 @@ class WrtsApiModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
+		self._ui._, self._ui.ngettext = _, ngettext
 
 		self.name = _("Wrts API connection")
-
-		self._ui = self._mm.import_("ui")
-		self._ui._, self._ui.ngettext = _, ngettext
-		self._api = self._mm.import_("api")
-		self._references = set()
-
-		self._wrtsConnection = self._api.WrtsConnection(self._mm)
-
-		event = self._uiModule.addLessonLoadButton(_("Import from WRTS"))
-		event.handle(self.importFromWrts)
-		self._references.add(event)
-		self.active = True
+		for dialog in self._activeDialogs:
+			dialog.retranslate()
 
 	@property
 	def _uiModule(self):
@@ -65,6 +79,7 @@ class WrtsApiModule(object):
 		self.active = False
 
 		del self._modules
+		del self._activeDialogs
 		del self.name
 		del self._ui
 		del self._api
@@ -73,6 +88,7 @@ class WrtsApiModule(object):
 
 	def importFromWrts(self):
 		ld = self._ui.LoginDialog(self._uiModule.qtParent)
+		self._activeDialogs.add(ld)
 
 		tab = self._uiModule.addCustomTab(ld.windowTitle(), ld)
 		tab.closeRequested.handle(tab.close)
@@ -80,6 +96,7 @@ class WrtsApiModule(object):
 		ld.accepted.connect(tab.close)
 
 		ld.exec_()
+		self._activeDialogs.remove(ld)
 		if not ld.result():
 			return
 
@@ -88,6 +105,7 @@ class WrtsApiModule(object):
 		listsParser = self._wrtsConnection.listsParser
 
 		ldc = self._ui.ListChoiceDialog(listsParser.lists, self._uiModule.qtParent)
+		self._activeDialogs.add(ldc)
 
 		tab = self._uiModule.addCustomTab(ldc.windowTitle(), ldc)
 		tab.closeRequested.handle(tab.close)
@@ -95,6 +113,7 @@ class WrtsApiModule(object):
 		ldc.accepted.connect(tab.close)
 
 		ldc.exec_()
+		self._activeDialogs.remove(ldc)
 		if not ldc.result():
 			return
 
