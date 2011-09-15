@@ -23,7 +23,7 @@ from PyQt4 import QtGui, QtCore
 import datetime
 
 class InputTyping(QtGui.QWidget):
-	def __init__(self, check, *args, **kwargs):
+	def __init__(self, check, fade, *args, **kwargs):
 		super(InputTyping, self).__init__(*args, **kwargs)
 
 		self._check = check
@@ -34,6 +34,8 @@ class InputTyping(QtGui.QWidget):
 		self.checkButton = QtGui.QPushButton()
 		self.checkButton.setShortcut(QtCore.Qt.Key_Return)
 		self.correctButton = QtGui.QPushButton()
+
+		self._fade = fade
 
 		mainLayout = QtGui.QGridLayout()
 		mainLayout.addWidget(self.inputLineEdit, 0, 0)
@@ -94,6 +96,13 @@ class InputTyping(QtGui.QWidget):
 				"end": self._end,
 			},
 		})
+		self.timeLine = QtCore.QTimeLine(2000)
+		self.timeLine.setFrameRange(0, 1020)
+		if result["result"] == "right":
+			self.timeLine.frameChanged.connect(lambda x: self._fade(x, [self.inputLineEdit], [0, 255, 0]))
+		else:
+			self.timeLine.frameChanged.connect(lambda x: self._fade(x, [self.inputLineEdit], [255, 0, 0]))
+		self.timeLine.start()
 		del self._end
 
 		self.lessonType.setResult(result)
@@ -109,6 +118,7 @@ class InputTypingModule(object):
 		)
 		self.requires = (
 			self._mm.mods(type="wordsStringChecker"),
+			self._mm.mods(type="fader") #FIXME: requires?
 		)
 
 	def enable(self):
@@ -148,11 +158,15 @@ class InputTypingModule(object):
 		del self._modules
 
 	@property
+	def _fade(self):
+		return self._modules.default("active", type="fader").fade
+
+	@property
 	def _check(self):
 		return self._modules.default(type="wordsStringChecker").check
 
 	def createWidget(self):
-		return InputTyping(self._check)
+		return InputTyping(self._check, self._fade)
 
 def init(moduleManager):
 	return InputTypingModule(moduleManager)

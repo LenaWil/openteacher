@@ -218,7 +218,7 @@ class PersonWidget(QtGui.QWidget):
 		self.nameLabel.setPalette(palette)
 
 class AuthorsWidget(QtGui.QWidget):
-	def __init__(self, authors, *args, **kwargs):
+	def __init__(self, authors, fade, *args, **kwargs):
 		super(AuthorsWidget, self).__init__(*args, **kwargs)
 		
 		if len(authors) == 0:
@@ -226,6 +226,8 @@ class AuthorsWidget(QtGui.QWidget):
 		else:
 			self.backupAuthors = list(authors)
 			self.authors = []
+
+		self._fade = fade
 
 		self.personWidget = PersonWidget()
 		self.launchpadLabel = QtGui.QLabel()
@@ -247,7 +249,7 @@ class AuthorsWidget(QtGui.QWidget):
 		self.timeLine = QtCore.QTimeLine(8000)
 		#4x 255; 2x for the alpha gradients, 2x for a pause
 		self.timeLine.setFrameRange(0, 1020)
-		self.timeLine.frameChanged.connect(self.personWidget.fade)
+		self.timeLine.frameChanged.connect(lambda x: self._fade(x, [self.personWidget.taskLabel, self.personWidget.nameLabel]))
 		self.timeLine.finished.connect(self.startAnimation)
 		self.timeLine.start()
 
@@ -262,7 +264,7 @@ class AuthorsWidget(QtGui.QWidget):
 			self.nextAuthor()
 
 class AboutDialog(QtGui.QTabWidget):
-	def __init__(self, authors, moduleManager, *args, **kwargs):
+	def __init__(self, authors, fade, moduleManager, *args, **kwargs):
 		super(AboutDialog, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
@@ -272,7 +274,7 @@ class AboutDialog(QtGui.QTabWidget):
 
 		self.aboutWidget = AboutWidget(self._mm)
 		self.licenseWidget = LicenseWidget(self._mm)
-		self.authorsWidget = AuthorsWidget(authors)
+		self.authorsWidget = AuthorsWidget(authors, fade)
 
 		self.addTab(self.aboutWidget, "")
 		self.addTab(self.licenseWidget, "")
@@ -303,6 +305,7 @@ class AboutModule(object):
 
 		self.requires = (
 			self._mm.mods(type="ui"),
+			self._mm.mods(type="fader") #FIXME: required?
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -316,7 +319,8 @@ class AboutModule(object):
 			authors = set()
 		else:
 			authors = module.registeredAuthors
-		dialog = AboutDialog(authors, self._mm)
+		fade = self._modules.default("active", type="fader").fade
+		dialog = AboutDialog(authors, fade, self._mm)
 		tab = self._modules.default("active", type="ui").addCustomTab(
 			dialog.windowTitle(),
 			dialog
