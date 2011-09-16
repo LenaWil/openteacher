@@ -21,16 +21,18 @@
 
 from PyQt4 import QtGui, QtCore
 import datetime
+import weakref
 
-class InputTyping(QtGui.QWidget):
+class InputTypingWidget(QtGui.QWidget):
 	def __init__(self, check, fade, *args, **kwargs):
-		super(InputTyping, self).__init__(*args, **kwargs)
+		super(InputTypingWidget, self).__init__(*args, **kwargs)
 
 		self._check = check
 
 		self.inputLineEdit = QtGui.QLineEdit()
 		self.inputLineEdit.textEdited.connect(self._textEdited)
 
+		self.skipButton = QtGui.QPushButton()
 		self.checkButton = QtGui.QPushButton()
 		self.checkButton.setShortcut(QtCore.Qt.Key_Return)
 		self.correctButton = QtGui.QPushButton()
@@ -38,14 +40,16 @@ class InputTyping(QtGui.QWidget):
 		self._fade = fade
 
 		mainLayout = QtGui.QGridLayout()
-		mainLayout.addWidget(self.inputLineEdit, 0, 0)
-		mainLayout.addWidget(self.checkButton, 0, 1)
+		mainLayout.addWidget(self.inputLineEdit, 0, 0, 1, 2)
+		mainLayout.addWidget(self.checkButton, 0, 2)
 		mainLayout.addWidget(self.correctButton, 1, 1)
+		mainLayout.addWidget(self.skipButton, 1, 2)
 		self.setLayout(mainLayout)
 
-	def _retranslate(self):
-		self.checkButton.setText(_(u"Check!"))
-		self.correctButton.setText(_(u"Correct anyway"))
+	def retranslate(self):
+		self.checkButton.setText(_("Check!"))
+		self.correctButton.setText(_("Correct anyway"))
+		self.skipButton.setText(_("Skip"))
 
 	def _textEdited(self, text):
 		try:
@@ -63,6 +67,7 @@ class InputTyping(QtGui.QWidget):
 
 		self.checkButton.clicked.connect(self.checkAnswer)
 		self.correctButton.clicked.connect(self.correctLastAnswer)
+		self.skipButton.clicked.connect(self.lessonType.skip)
 
 	def newWord(self, word):
 		self._start = datetime.datetime.now()
@@ -123,6 +128,7 @@ class InputTypingModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._activeWidgets = set()
 
 		#Translations
 		global _
@@ -151,11 +157,16 @@ class InputTypingModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
+		for ref in self._activeWidgets:
+			wid = ref()
+			if wid is not None:
+				wid.retranslate()
 
 	def disable(self):
 		self.active = False
 
 		del self._modules
+		del self._activeWidgets
 
 	@property
 	def _fade(self):
@@ -166,7 +177,9 @@ class InputTypingModule(object):
 		return self._modules.default(type="wordsStringChecker").check
 
 	def createWidget(self):
-		return InputTyping(self._check, self._fade)
+		it = InputTypingWidget(self._check, self._fade)
+		self._activeWidgets.add(weakref.ref(it))
+		return it
 
 def init(moduleManager):
 	return InputTypingModule(moduleManager)

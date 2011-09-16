@@ -226,6 +226,7 @@ class SettingsDialogModule(object):
 	def show(self):
 		dialog = SettingsDialog(self._settings.registeredSettings())
 		self._activeDialogs.add(weakref.ref(dialog))
+		self._retranslate()
 		tab = self._uiModule.addCustomTab(dialog.windowTitle(), dialog)
 		tab.closeRequested.handle(self._modules.modulesUpdated.send) #FIXME: still needed?
 		tab.closeRequested.handle(tab.close)

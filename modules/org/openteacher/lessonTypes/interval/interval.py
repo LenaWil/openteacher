@@ -169,6 +169,9 @@ class IntervalLessonType(object):
 				# There is only one left, so ask that one
 				self.newItem.send(self._list["items"][self._group[0]])
 
+		#Just send the next question and everything will be fine :)
+		skip = _sendNext
+
 class IntervalModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(IntervalModule, self).__init__(*args, **kwargs)

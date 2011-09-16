@@ -46,6 +46,10 @@ class AllOnceLessonType(object):
 	def start(self):
 		self._sendNext()
 
+	def skip(self):
+		self._indexes.append(self._indexes.pop(askedItems))
+		self._sendNext()
+
 	def setResult(self, result):
 		# Add the test to the list (if it's not already there)
 		self._appendTest()

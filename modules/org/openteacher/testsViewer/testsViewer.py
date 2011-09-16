@@ -325,6 +325,7 @@ class TestsViewerModule(object):
 	def createTestsViewer(self):
 		tv = TestsViewer(self._mm)#FIXME: moduleManager or pass what's needed? Also on other places...
 		self._testsViewers.add(weakref.ref(tv)) #Weak reference so gc can still get into action
+		self._retranslate()
 		return tv
 
 def init(moduleManager):

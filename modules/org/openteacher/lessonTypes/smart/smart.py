@@ -50,7 +50,7 @@ class SmartLessonType(object):
 	def setResult(self, result):
 		# Add the test to the list (if it's not already there)
 		self._appendTest()
-		
+
 		self.askedItems += 1
 
 		self._test["results"].append(result)
@@ -66,6 +66,13 @@ class SmartLessonType(object):
 			except IndexError:
 				pass
 
+		self._sendNext()
+
+	def skip(self):
+		try:
+			self._indexes.insert(2, self._currentIndex)
+		except IndexError:
+			self._indexes.append(self._currentIndex)
 		self._sendNext()
 
 	def correctLastAnswer(self, result):

@@ -89,6 +89,7 @@ class WrtsApiModule(object):
 	def importFromWrts(self):
 		ld = self._ui.LoginDialog(self._uiModule.qtParent)
 		self._activeDialogs.add(ld)
+		self._retranslate()
 
 		tab = self._uiModule.addCustomTab(ld.windowTitle(), ld)
 		tab.closeRequested.handle(tab.close)
@@ -106,6 +107,7 @@ class WrtsApiModule(object):
 
 		ldc = self._ui.ListChoiceDialog(listsParser.lists, self._uiModule.qtParent)
 		self._activeDialogs.add(ldc)
+		self._retranslate()
 
 		tab = self._uiModule.addCustomTab(ldc.windowTitle(), ldc)
 		tab.closeRequested.handle(tab.close)

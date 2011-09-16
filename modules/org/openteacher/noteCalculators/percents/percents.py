@@ -40,7 +40,7 @@ class PercentsNoteCalculatorModule(object):
 	def calculateAverageNote(self, tests):
 		note = 0
 		for test in tests:
-			note += self._calculateFloat(test)
+			note += self._calculate(test)
 		note /= float(len(tests))
 		return str(int(note))
 

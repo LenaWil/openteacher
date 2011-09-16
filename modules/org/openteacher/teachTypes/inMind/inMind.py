@@ -29,17 +29,20 @@ class ThinkWidget(QtGui.QWidget):
 		
 		self.label = QtGui.QLabel()
 		self.label.setWordWrap(True)
-		self.button = QtGui.QPushButton()
+		self.viewAnswerButton = QtGui.QPushButton()
+		self.skipButton = QtGui.QPushButton()
 		
 		mainLayout = QtGui.QVBoxLayout()
 		mainLayout.addWidget(self.label)
-		mainLayout.addWidget(self.button)
+		mainLayout.addWidget(self.skipButton)
+		mainLayout.addWidget(self.viewAnswerButton)
 		
 		self.setLayout(mainLayout)
 
 	def retranslate(self):
 		self.label.setText(_("Think about the answer, and press the 'View answer' button when you're done."))
-		self.button.setText(_("View answer"))
+		self.viewAnswerButton.setText(_("View answer"))
+		self.skipButton.setText(_("Skip"))
 
 class AnswerWidget(QtGui.QWidget):
 	def __init__(self, *args, **kwargs):
@@ -90,7 +93,8 @@ class InMindTeachWidget(QtGui.QStackedWidget):
 		self.lessonType = lessonType
 
 		self.lessonType.newItem.handle(self.newItem)
-		self.thinkWidget.button.clicked.connect(self.startAnswering)
+		self.thinkWidget.viewAnswerButton.clicked.connect(self.startAnswering)
+		self.thinkWidget.skipButton.clicked.connect(self.lessonType.skip)
 		self.answerWidget.rightButton.clicked.connect(self.setRight)
 		self.answerWidget.wrongButton.clicked.connect(self.setWrong)
 
@@ -191,6 +195,7 @@ class InMindTeachTypeModule(object):
 	def createWidget(self, tabChanged):
 		imtw = InMindTeachWidget(self._compose)
 		self._activeWidgets.add(weakref.ref(imtw))
+		self._retranslate()
 		return imtw
 
 def init(moduleManager):

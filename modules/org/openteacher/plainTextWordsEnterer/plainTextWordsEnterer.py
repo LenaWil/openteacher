@@ -136,6 +136,7 @@ class PlainTextWordsEntererModule(object):
 
 		eptd = EnterPlainTextDialog(parse)
 		self._activeDialogs.add(eptd)
+		self._retranslate()
 		tab = self._uiModule.addCustomTab(eptd.windowTitle(), eptd)
 		tab.closeRequested.handle(tab.close)
 		eptd.rejected.connect(tab.close)

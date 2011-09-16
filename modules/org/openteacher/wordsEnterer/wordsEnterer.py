@@ -399,6 +399,8 @@ class WordsEntererModule(object):
 			self._parse
 		)
 		self._activeWidgets.add(weakref.ref(ew))
+		self._retranslate()
+
 		return ew
 
 	def enable(self):

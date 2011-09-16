@@ -352,6 +352,8 @@ class WordsTeacherModule(object):
 	def createWordsTeacher(self):
 		tw = TeachWidget(self._mm, self._onscreenKeyboard, self._applicationActivityChanged)
 		self._activeWidgets.add(weakref.ref(tw))
+		self._retranslate()
+
 		return tw
 
 	@property
