@@ -20,34 +20,39 @@
 
 from PyQt4 import QtCore, QtGui, QtWebKit, QtNetwork
 import weakref
+import os
+import BaseHTTPServer
 
 class OpenTeacherWebPage(QtWebKit.QWebPage):
-	def __init__(self, url, userAgent, language, *args, **kwargs):
+	def __init__(self, url, userAgent, fallbackPath, *args, **kwargs):
 		super(OpenTeacherWebPage, self).__init__(*args, **kwargs)
 
 		self.url = url
 		self.userAgent = userAgent
+		self.fallbackPath = fallbackPath
 
 	def userAgentForUrl(self, url):
 		return self.userAgent
 
 	def updateStatus(self, ok):
 		if not ok:
-			text = _("Couldn't reach %s, are you sure you're online?") % self.url
-			self.view().setHtml("<p>%s</p>" % text)
+			html = open(self.fallbackPath).read()
+			self.mainFrame().setHtml(html, QtCore.QUrl.fromLocalFile(
+				os.path.abspath(self.fallbackPath)
+			))
 
 	def updateLanguage(self, language):
 		request = QtNetwork.QNetworkRequest(QtCore.QUrl(self.url))
 		request.setRawHeader("Accept-Language", language)
 		self.mainFrame().load(request)
 
-		self.connect(self, QtCore.SIGNAL("loadFinished(bool)"), self.updateStatus)
+		self.loadFinished.connect(self.updateStatus)
 
 class DocumentationDialog(QtWebKit.QWebView):
-	def __init__(self, url, userAgent, *args, **kwargs):
+	def __init__(self, url, userAgent, fallbackPath, *args, **kwargs):
 		super(DocumentationDialog, self).__init__(*args, **kwargs)
 
-		self.page = OpenTeacherWebPage(url, userAgent, self)
+		self.page = OpenTeacherWebPage(url, userAgent, fallbackPath)
 		self.setPage(self.page)
 
 	def retranslate(self):
@@ -71,15 +76,18 @@ class DocumentationModule(object):
 
 	def show(self):
 		metadataMod = self._modules.default("active", type="metadata")
-		for module in self._mm.mods("active", type="ui"):#FIXME
-			dialog = DocumentationDialog(
-				metadataMod.documentationUrl,
-				metadataMod.userAgent
-			)
-			tab = module.addCustomTab(dialog.windowTitle(), dialog)
-			tab.closeRequested.handle(tab.close)
-			
-			self._activeDialogs.add(weakref.ref(dialog))
+		uiModule = self._modules.default("active", type="ui")
+
+		dialog = DocumentationDialog(
+			metadataMod.documentationUrl,
+			metadataMod.userAgent,
+			self._mm.resourcePath("docs/index.html")
+		)
+		tab = uiModule.addCustomTab(dialog.windowTitle(), dialog)
+		tab.closeRequested.handle(tab.close)
+
+		self._activeDialogs.add(weakref.ref(dialog))
+		self._retranslate()
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
