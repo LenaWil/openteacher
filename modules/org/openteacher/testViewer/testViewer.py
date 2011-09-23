@@ -173,11 +173,12 @@ class TestViewerModule(object):
 	def createTestViewer(self, *args, **kwargs):
 		tv = TestViewer(self._mm, *args, **kwargs)
 		self._testViewers.add(weakref.ref(tv))
+		#self._retranslate()#FIXME: this crashes if enabled but should be enabled
 		return tv
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		
+
 		self._testViewers = set()
 		try:
 			translator = self._modules.default(type="translator")
@@ -201,7 +202,7 @@ class TestViewerModule(object):
 		for tv in self._testViewers:
 			r = tv()
 			if r is not None:
-				tv.retranslate()
+				r.retranslate()
 
 	def disable(self):
 		self.active = False

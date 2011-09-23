@@ -19,6 +19,8 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+#FIXME:
+_, ngettext = unicode, unicode
 
 class WordsTestTypeModule(object):
 	QUESTION, ANSWER, GIVEN_ANSWER, CORRECT = xrange(4)

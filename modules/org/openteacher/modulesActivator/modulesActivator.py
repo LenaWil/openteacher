@@ -59,7 +59,7 @@ class ModulesActivatorModule(object):
 
 				#really activate them
 				for requiredMod in requiredMods:
-					self._activateModule(requiredMod, fail)
+					self._activateModule(requiredMod, True)
 
 				#check if the requirements are satisfied now, if not, raise an error
 				if len(set(selector)) == 0:
@@ -77,7 +77,10 @@ class ModulesActivatorModule(object):
 			for selector in mod.uses:
 				usableMods = self._inactiveModsFor(selector)
 				for usableMod in usableMods:
-					self._activateModule(usableMod, False)
+					try:
+						self._activateModule(usableMod, False)
+					except NotImplementedError:
+						continue
 
 		#enable the module itself
 		#
@@ -88,7 +91,7 @@ class ModulesActivatorModule(object):
 			mod.enable()
 
 	def activateModules(self):
-		for module in self._mm.mods:
+		for module in sorted(self._mm.mods):
 			try:
 				self._activateModule(module)
 			except NotImplementedError:

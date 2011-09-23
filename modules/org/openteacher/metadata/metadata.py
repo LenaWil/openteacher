@@ -55,6 +55,7 @@ class MetadataModule(object):
 		self.website = _("http://openteacher.org/")
 		self.userAgent = "%s/%s (+%s)" % (self.name, self.version, self.website)
 		self.documentationUrl = _("http://openteacher.org/documentation.html")
+		self.updatesUrl = "http://localhost/updates"
 		self.iconPath = self._mm.resourcePath("openteacher.png")
 		self.licenseIntro = open(self._mm.resourcePath("license_intro.txt")).read()
 		self.license = open(self._mm.resourcePath("license.txt")).read()

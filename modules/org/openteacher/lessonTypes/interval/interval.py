@@ -67,7 +67,7 @@ class IntervalLessonType(object):
 		for i in xrange(size):
 			try:
 				self._list["items"][i]
-			except:
+			except IndexError:
 				pass
 			else:
 				self._group.append(i)
@@ -96,20 +96,20 @@ class IntervalLessonType(object):
 		else:
 			if not self._list["tests"][-1] == self._test:
 				self._list["tests"].append(self._test)
-	
+
 	def _sendNext(self):		
 		minQuestions = 2
 		for module in self._mm.mods("active", type="settings"):
 			minQuestions = module.value("org.openteacher.lessonTypes.interval.minQuestions")
 		if minQuestions < 1:
 			minquestions = 2
-		
+
 		whenKnown = 80
 		for module in self._mm.mods("active", type="settings"):
 			whenKnown = module.value("org.openteacher.lessonTypes.interval.whenKnown")
 		if whenKnown < 0 or whenKnown > 99:
 			whenKnown = 80
-		
+
 		# Go through all the items in the group to see which can be removed
 		for i in self._group:
 			right = 0
@@ -121,14 +121,14 @@ class IntervalLessonType(object):
 						right += 1
 					elif item["result"] == "wrong":
 						wrong += 1
-			
+
 			if right + wrong > minQuestions and \
 			   right / float(right + wrong) > whenKnown / 100.0:
 				# Add new one
 				try:
 					# Try if it exists
 					self._list["items"][self._group[-1] + 1]
-				except:
+				except IndexError:
 					pass
 				else:
 					# Add it
@@ -169,8 +169,8 @@ class IntervalLessonType(object):
 				# There is only one left, so ask that one
 				self.newItem.send(self._list["items"][self._group[0]])
 
-		#Just send the next question and everything will be fine :)
-		skip = _sendNext
+	#Just send the next question and everything will be fine :)
+	skip = _sendNext
 
 class IntervalModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
