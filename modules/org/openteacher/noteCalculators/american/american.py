@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+#	Copyright 2011, Cas Widdershoven
 #	Copyright 2009-2011, Marten de Vries
 #
 #	This file is part of OpenTeacher.
@@ -71,7 +72,7 @@ class AmericanNoteCalculatorModule(object):
 		return self._convert(percents)
 
 	def enable(self):
-		self.name = _("American")
+		self.name = "American" #FIXME: translate
 		self.active = True
 
 	def disable(self):

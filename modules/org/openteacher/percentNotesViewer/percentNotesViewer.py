@@ -59,7 +59,7 @@ class Graph(QtGui.QWidget):
 			p.setPen(QtCore.Qt.NoPen)
 			p.drawRect(horPos, h, self.BAR_SIZE, -barHeight)
 			p.setPen(QtGui.QPen(self.palette().highlightedText()))
-			text = "%s%%" % note
+			text = "%s%%" % note#FIXME translatable?
 			y = h - self.FONT_MARGIN
 			#center on the bar
 			x = horPos + self.BAR_SIZE / 2.0 - self.fontMetrics().width(text) / 2.0
@@ -89,14 +89,19 @@ class PercentNotesViewerModule(object):
 		self._mm = moduleManager
 
 		self.type = "percentNotesViewer"
+		self.requires = (
+			self._mm.mods(type="percentsCalculator"),
+		)
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
 		self.active = True
 
 	def _percentNotesFor(self, tests):
-		calculatePercents = self._modules.chooseItem(
-			set(self._mm.mods("active", type="percentsCalculator"))
+		calculatePercents = self._modules.default(
+			"active",
+			type="percentsCalculator"
 		).calculatePercents
 		return map(calculatePercents, tests)
 
@@ -105,6 +110,7 @@ class PercentNotesViewerModule(object):
 
 	def disable(self):
 		self.active = False
+
 		del self._modules
 
 def init(moduleManager):

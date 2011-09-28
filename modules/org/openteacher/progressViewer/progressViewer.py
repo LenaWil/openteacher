@@ -20,6 +20,7 @@
 
 from PyQt4 import QtCore, QtGui
 import datetime
+import weakref
 
 class Graph(QtGui.QFrame):
 	def __init__(self, test, *args, **kwargs):
@@ -52,18 +53,18 @@ class Graph(QtGui.QFrame):
 			moment = self.start + datetime.timedelta(seconds=second)
 			for pause in self._test["pauses"]:
 				if pause["start"] < moment and pause["end"] > moment:
-					text = _("Pause")#FIXME: own translator
+					text = _("Pause")
 					break
 			try:
 				text
 			except NameError:
 				for result in self._test["results"]:
 					if result["active"]["start"] < moment and result["active"]["end"] > moment:
-						text = _("Thinking")#FIXME: own translator
+						text = _("Thinking")
 			try:
 				text
 			except NameError:
-				text = _("Answering")#FIXME: own translator
+				text = _("Answering")
 			QtGui.QToolTip.showText(
 				event.globalPos(),
 				text,
@@ -74,6 +75,8 @@ class Graph(QtGui.QFrame):
 	def _paintItem(self, p, item):
 		x = (item["start"] - self.start).total_seconds() * self._secondsPerPixel
 		width = (item["end"] - item["start"]).total_seconds() * self._secondsPerPixel
+		
+		print item["start"], item["end"]
 		p.drawRect(x, 0, width, self._h)
 
 	def paintEvent(self, event, *args, **kwargs):
@@ -88,17 +91,22 @@ class Graph(QtGui.QFrame):
 		self._secondsPerPixel = w / self._totalSeconds
 
 		colors = {}
-		color = self.palette().highlight().color()
-		colorDifference = (255 - color.lightness()) / (self._amountOfUniqueItems +1)#+1 so it doesn't become 0
+		baseColor = self.palette().highlight().color()
+		steps = 0
+		colorDifference = (255 - baseColor.lightness()) / (self._amountOfUniqueItems +1)#+1 so it doesn't become 0
 		for result in self._test["results"]:
 			try:
 				p.setBrush(QtGui.QBrush(colors[result["itemId"]]))
 			except KeyError:
-				p.setBrush(QtGui.QBrush(color))
-				color = QtGui.QColor(color)
+				color = QtGui.QColor(baseColor)
 				hsl = list(color.getHsl())
-				hsl[2] = color.lightness() + colorDifference
+				hsl[2] = hsl[2] + colorDifference * steps
 				color.setHsl(*hsl)
+
+				steps += 1
+
+				colors[result["itemId"]] = QtGui.QBrush(color)
+				p.setBrush(colors[result["itemId"]])
 
 			self._paintItem(p, result["active"])
 
@@ -109,6 +117,7 @@ class Graph(QtGui.QFrame):
 		p.setBrush(QtGui.QBrush())
 
 		p.end()
+		print ""
 		super(Graph, self).paintEvent(event, *args, **kwargs)
 
 	def sizeHint(self):
@@ -118,10 +127,10 @@ class ProgressViewer(QtGui.QWidget):
 	def __init__(self, test, *args, **kwargs):
 		super(ProgressViewer, self).__init__(*args, **kwargs)
 
-		graph = Graph(test)
+		self.graph = Graph(test)
 		format = "%X"
-		firstTime = QtGui.QLabel(graph.start.strftime(format))
-		lastTime = QtGui.QLabel(graph.end.strftime(format))
+		firstTime = QtGui.QLabel(self.graph.start.strftime(format))
+		lastTime = QtGui.QLabel(self.graph.end.strftime(format))
 		
 		horLayout = QtGui.QHBoxLayout()
 		horLayout.addWidget(firstTime)
@@ -130,7 +139,7 @@ class ProgressViewer(QtGui.QWidget):
 		
 		mainLayout = QtGui.QVBoxLayout()
 		mainLayout.addLayout(horLayout)
-		mainLayout.addWidget(graph)
+		mainLayout.addWidget(self.graph)
 		
 		self.setLayout(mainLayout)
 
@@ -142,13 +151,43 @@ class ProgressViewerModule(object):
 		self.type = "progressViewer"
 
 	def createProgressViewer(self, *args, **kwargs):
-		return ProgressViewer(*args, **kwargs)
+		pv = ProgressViewer(*args, **kwargs)
+		self._progressViewers.add(weakref.ref(pv))
+		return pv
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._progressViewers = set()
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.active = True
+
+	def _retranslate(self):
+		#Translations
+		global _
+		global ngettext
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
+		del self._progressViewers
 
 def init(moduleManager):
 	return ProgressViewerModule(moduleManager)

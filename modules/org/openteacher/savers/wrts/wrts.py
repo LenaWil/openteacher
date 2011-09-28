@@ -27,10 +27,16 @@ class WrtsSaverModule(object):
 
 		self._mm = moduleManager
 		self.type = "save"
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
+		self.requires = (
+			self._mm.mods(type="wordsStringComposer"),
+		)
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._modules.registerModule("WRTS (.wrts) saver", self)
+		self.name = "WRTS (.wrts) saver"
 		self._pyratemp = self._mm.import_("pyratemp")
 		self.saves = {"words": ["wrts"]}
 
@@ -40,18 +46,23 @@ class WrtsSaverModule(object):
 		self.active = False
 
 		del self._modules
+		del self.name
 		del self._pyratemp
 		del self.saves
 
-	def save(self, type, list, path, resources):
-		composers = set(self._mm.mods("active", type="wordsStringComposer"))
-		composer = self._modules.chooseItem(composers)
+	@property
+	def _compose(self):
+		return self._modules.default(
+			"active",
+			type="wordsStringComposer"
+		).compose
 
+	def save(self, type, list, path, resources):
 		class EvalPseudoSandbox(self._pyratemp.EvalPseudoSandbox):
 			def __init__(self2, *args, **kwargs):
 				self._pyratemp.EvalPseudoSandbox.__init__(self2, *args, **kwargs)
 
-				self2.register("compose", composer.compose)
+				self2.register("compose", self._compose)
 
 		templatePath = self._mm.resourcePath("template.xml")
 		t = self._pyratemp.Template(

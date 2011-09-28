@@ -33,17 +33,21 @@ class Teach2000LoaderModule(object):
 		self._mm = moduleManager
 
 		self.type = "load"
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
 
 	def enable(self):
-		for module in self._mm.mods("active", type="modules"):
-			module.registerModule("Teach2000 (.t2k) loader", self)
-
+		self.name = "Teach2000 (.t2k) loader"
 		self.loads = {"t2k": ["words"]}
+
 		self.active = True
 
 	def disable(self):
-		del self.loads
 		self.active = False
+
+		del self.name
+		del self.loads
 
 	def getFileTypeOf(self, path):
 		if path.endswith(".t2k"):
@@ -68,10 +72,10 @@ class Teach2000LoaderModule(object):
 			}
 			word["id"] = int(item.get("id"))
 			for question in item.findall("questions/question"):
-				word["questions"].append(question.text)
+				word["questions"].append([question.text])
 
 			for answer in item.findall("answers/answer"):
-				word["answers"].append(answer.text)
+				word["answers"].append([answer.text])
 
 			wordList["items"].append(word)
 			#FIXME: load tests, also results in the words!

@@ -20,6 +20,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt4 import QtCore, QtGui
+import weakref
 
 class TestsModel(QtCore.QAbstractTableModel):
 	DATE, NOTE, COMPLETED = xrange(3)
@@ -33,18 +34,22 @@ class TestsModel(QtCore.QAbstractTableModel):
 			"tests": [],
 			"items": [],
 		}
+		self._headers = ["", "", ""]
 
 	def headerData(self, section, orientation, role):
 		if role != QtCore.Qt.DisplayRole:
 			return
 		if orientation == QtCore.Qt.Horizontal:
-			return [
-				_("Date"),#FIXME: own translator
-				_("Note"),
-				_("Completed"),
-			][section]
+			return self._headers[section]
 		else:
 			return section + 1
+
+	def retranslate(self):
+		self._headers = [
+			_("Date"),#FIXME: own translator
+			_("Note"),
+			_("Completed"),
+		]
 
 	def data(self, index, role):
 		if not index.isValid():
@@ -57,9 +62,7 @@ class TestsModel(QtCore.QAbstractTableModel):
 				except (IndexError, KeyError):
 					return u""
 			elif index.column() == self.NOTE:
-				noteCalculator = self._modules.chooseItem(
-					set(self._mm.mods("active", type="noteCalculator"))
-				)
+				noteCalculator = self._modules.default("active", type="noteCalculator")
 				return noteCalculator.calculateNote(test)
 		elif role == QtCore.Qt.CheckStateRole and index.column() == self.COMPLETED:
 			return test["finished"]
@@ -95,17 +98,26 @@ class NotesWidget(QtGui.QWidget):
 		self.averageLabel = QtGui.QLabel()
 		self.lowestLabel = QtGui.QLabel()
 		
-		layout = QtGui.QFormLayout()
-		layout.addRow(_("Highest note:"), self.highestLabel)#FIXME: own translator
-		layout.addRow(_("Average note:"), self.averageLabel)
-		layout.addRow(_("Lowest note:"), self.lowestLabel)
+		self.layout = QtGui.QFormLayout()
+		self.layout.addRow(QtGui.QLabel(), self.highestLabel)
+		self.layout.addRow(QtGui.QLabel(), self.averageLabel)
+		self.layout.addRow(QtGui.QLabel(), self.lowestLabel)
 		
-		self.setLayout(layout)
+		self.setLayout(self.layout)
+
+	def retranslate(self):
+		self.layout.labelForField(self.highestLabel).setText(
+			_("Highest note:")
+		)
+		self.layout.labelForField(self.averageLabel).setText(
+			_("Average note:")
+		)
+		self.layout.labelForField(self.lowestLabel).setText(
+			_("Lowest note:")
+		)
 
 	def updateList(self, list):
-		noteCalculator = self._modules.chooseItem(
-			set(self._mm.mods("active", type="noteCalculator"))
-		)
+		noteCalculator = self._modules.default("active", type="noteCalculator")
 
 		notes = map(noteCalculator.calculateNote, list["tests"])
 		try:
@@ -196,10 +208,19 @@ class TestsViewerWidget(QtGui.QSplitter):
 			self.percentsNotesViewer.hide()
 		except AttributeError:
 			pass
-		self.percentsNotesViewer = self._modules.chooseItem(
-			set(self._mm.mods("active", type="percentNotesViewer"))
-		).createPercentNotesViewer(list["tests"])
-		self.addWidget(self.percentsNotesViewer)
+		try:
+			self.percentsNotesViewer = self._modules.default(
+				"active",
+				type="percentNotesViewer"
+			).createPercentNotesViewer(list["tests"])
+		except IndexError:
+			pass
+		else:
+			self.addWidget(self.percentsNotesViewer)
+
+	def retranslate(self):
+		self.notesWidget.retranslate()
+		self.testsModel.retranslate()
 
 class TestViewerWidget(QtGui.QWidget):
 	backActivated = QtCore.pyqtSignal()
@@ -210,17 +231,21 @@ class TestViewerWidget(QtGui.QWidget):
 		self._mm = moduleManager
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
-		backButton = QtGui.QPushButton(_("Back")) #FIXME: own translator, nicer button?
-		backButton.clicked.connect(self.backActivated.emit)
+		self.backButton = QtGui.QPushButton("")
+		self.backButton.clicked.connect(self.backActivated.emit)
 
-		testViewer = self._modules.chooseItem(
-			set(self._mm.mods("active", type="testViewer"))
+		testViewer = self._modules.default(
+			"active",
+			type="testViewer"
 		).createTestViewer(list, dataType, test)
 
 		layout = QtGui.QVBoxLayout()
 		layout.addWidget(testViewer)
-		layout.addWidget(backButton)
+		layout.addWidget(self.backButton)
 		self.setLayout(layout)
+
+	def retranslate(self):
+		self.backButton.setText(_("Back"))
 
 class TestsViewer(QtGui.QStackedWidget):
 	def __init__(self, moduleManager,  *args, **kwargs):
@@ -244,21 +269,64 @@ class TestsViewer(QtGui.QStackedWidget):
 	def updateList(self, list, dataType):
 		self.testsViewerWidget.updateList(list, dataType)
 
+	def retranslate(self):
+		for i in range(self.count()):
+			self.widget(i).retranslate()
+
 class TestsViewerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestsViewerModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "testsViewer"
-
-	def createTestsViewer(self):
-		return TestsViewer(self._mm)#FIXME: moduleManager or pass what's needed? Also on other places...
+		self.requires = (#FIXME: make testViewer & noteCalculator unneeded?
+			self._mm.mods(type="noteCalculator"),
+			self._mm.mods(type="testViewer"),
+		)
+		self.uses = (
+			self._mm.mods(type="percentNoteViewer"),
+			self._mm.mods(type="translator"),
+		)
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
+		self._testsViewers = set()
+		try:
+			translator = self._modules.default(type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 		self.active = True
 
 	def disable(self):
 		self.active = False
+		
+		del self._modules
+		del self._testsViewers
+
+	def _retranslate(self):
+		global _, ngettext
+		try:
+			translator = self._modules.default(type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda x, y, n: x if n == 1 else y
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		for tv in self._testsViewers:
+			r = tv() #check weak reference
+			if r is not None:
+				r.retranslate()
+
+	def createTestsViewer(self):
+		tv = TestsViewer(self._mm)#FIXME: moduleManager or pass what's needed? Also on other places...
+		self._testsViewers.add(weakref.ref(tv)) #Weak reference so gc can still get into action
+		self._retranslate()
+		return tv
 
 def init(moduleManager):
 	return TestsViewerModule(moduleManager)

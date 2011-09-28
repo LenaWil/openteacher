@@ -37,7 +37,7 @@ class PrintModule(object):
 		)
 
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._modules.registerModule(_("Printing module"), self)
+		self.name = _("Printing module")
 
 		self._pyratemp = self._mm.import_("pyratemp")
 		self.prints = ["topo"]
@@ -45,7 +45,9 @@ class PrintModule(object):
 
 	def disable(self):
 		self.active = False
+
 		del self._modules
+		del self.name
 		del self.prints
 		del self._pyratemp
 

@@ -25,6 +25,9 @@ class HardWordsModule(object):
 
 		self.type = "listModifier"
 		self.testName = "hardWords"
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
 
 	def modifyList(self, indexes, list):
 		self._list = list
@@ -52,17 +55,34 @@ class HardWordsModule(object):
 		return filter(lambda result: result["itemId"] == word["id"], results)
 
 	def enable(self):
-		#Translations
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
-		self.name = _("Only hard words (<50% right)")
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 		self.dataType = "words"
 		self.active = True
 
+	def _retranslate(self):
+		#Translations
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("Only hard words (<50% right)")
+
 	def disable(self):
 		self.active = False
+
+		del self._modules
 		del self.name
 		del self.dataType
 

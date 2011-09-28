@@ -24,6 +24,9 @@ class DutchNoteCalculatorModule(object):
 		self._mm = moduleManager
 
 		self.type = "noteCalculator"
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
 
 	def _formatNote(self, note):
 		if note == 10:
@@ -48,8 +51,31 @@ class DutchNoteCalculatorModule(object):
 		return self._formatNote(note)
 
 	def enable(self):
-		self.name = _("Dutch")
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 		self.active = True
+
+	def _retranslate(self):
+		#Translations
+		global _
+		global ngettext
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("Dutch")
 
 	def disable(self):
 		self.active = False

@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+#	Copyright 2011, Cas Widdershoven
 #	Copyright 2009-2011, Marten de Vries
 #
 #	This file is part of OpenTeacher.
@@ -18,6 +19,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+#FIXME: use percentsCalculator and return a string (including the % sign)
 class PercentsNoteCalculatorModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(PercentsNoteCalculatorModule, self).__init__(*args, **kwargs)
@@ -38,12 +40,12 @@ class PercentsNoteCalculatorModule(object):
 	def calculateAverageNote(self, tests):
 		note = 0
 		for test in tests:
-			note += self._calculateFloat(test)
+			note += self._calculate(test)
 		note /= float(len(tests))
 		return str(int(note))
 
 	def enable(self):
-		self.name = _("Percents")
+		self.name = "Percents" #FIXME: translate!
 		self.active = True
 
 	def disable(self):

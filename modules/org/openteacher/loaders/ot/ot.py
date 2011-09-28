@@ -32,16 +32,25 @@ class OpenTeacherLoaderModule(object):
 
 		self.type = "load"
 		self._mm = moduleManager
+		self.requires = (
+			self._mm.mods(type="wordsStringParser"),
+		)
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
 
 	def enable(self):
-		for module in self._mm.mods("active", type="modules"):
-			module.registerModule("OpenTeacher (.ot) loader", self)
-
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self.name = "OpenTeacher (.ot) loader"#FIXME: (live) translatable? Also for other modules
 		self.loads = {"ot": ["words"]}
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
+		del self.name
 		del self.loads
 
 	def getFileTypeOf(self, path):
@@ -84,9 +93,10 @@ class OpenTeacherLoaderModule(object):
 
 			#Parses the question
 			known = treeWord.findtext("known")
-			#FIXME: choose one
-			for module in self._mm.mods("active", type="wordsStringParser"):
-				listWord["questions"] = module.parse(known)
+			listWord["questions"] = self._modules.default(
+				"active",
+				type="wordsStringParser"
+			).parse(known)
 
 			#Parses the answers
 			second = treeWord.findtext("second")
@@ -96,8 +106,10 @@ class OpenTeacherLoaderModule(object):
 				foreign = treeWord.findtext("foreign")
 			#remove so the test is also reliable the next time
 			del second
-			for module in self._mm.mods("active", type="wordsStringParser"):
-				listWord["answers"] = module.parse(foreign)
+			listWord["answers"] = self._modules.default(
+				"active",
+				type="wordsStringParser"
+			).parse(foreign)
 
 			#Parses the results, all are saved in the test made above.
 			wrong, total = treeWord.findtext("results").split("/")
@@ -123,7 +135,8 @@ class OpenTeacherLoaderModule(object):
 			counter += 1
 
 		#Adds all results to the list
-		wordList["tests"].append(test)
+		if test["results"]:
+			wordList["tests"].append(test)
 		
 		return wordList
 

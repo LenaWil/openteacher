@@ -19,45 +19,62 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 class ModulesModule(object):
+	_lowestPriority = 10000
+
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(ModulesModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "modules"
-		self.requires = (1, 0)
-
-	def registerModule(self, name, module):
-		self._modules[name] = module
+		self.requires = (
+			self._mm.mods(type="event"),
+		)
 
 	@property
-	def registeredModules(self):
-		return self._modules.copy()
+	def profile(self):
+		return self.default("active", type="profile").name #FIXME: (question) implementation ok?
 
-	def activateModules(self):
-		#FIXME: leave modules that the user wants to be disabled disabled...
-		modules = set(self._mm.mods) - set(self._mm.mods("active"))
-		for module in modules:
-			#try/except catches too much here
-			if hasattr(module, "enable"):
-				module.enable()
-		self.modulesUpdated.emit()
+	def sort(self, *args, **kwargs):
+		def getPriority(mod):
+			try:
+				return mod.priorities[self._profile]
+			except (AttributeError, KeyError):
+				#return a negative priority to the sort algorithm so the
+				#module gets on top of the list. The negative integer
+				#needs to be a number, that makes sure the last
+				#installed module is on the top of the list. Maybe just
+				#use minutes since installation?
+				#
+				#FIXME: needs a different implementation. In the
+				#meantime, let randomness decide!
+				import random
+				return -random.randint(1, self._lowestPriority)
 
-	def chooseItem(self, items):
-		if len(items) == 0:
-			raise IndexError("No items to choose from.")
-		elif len(items) == 1:
-			return items.pop()
-		for module in self._mm.mods("active", type="ui"):
-			return module.chooseItem(items)
+		mods = set(self._mm.mods(*args, **kwargs))
+		return sorted(mods, key=getPriority)
+
+	def default(self, *args, **kwargs):
+		"""Raises IndexError if no modules remain after filtering with
+		   the arguments
+
+		"""
+		#Look if the user chose one #FIXME: make a replacement module
+#		preffered = self._registry.prefferedModule(*args, **kwargs)
+#		if preffered:
+#			return preffered
+		#Otherwise base it on our priority algorithm
+		return self.sort(*args, **kwargs)[0]
 
 	def enable(self):
-		self._modules = {}
-		self.modulesUpdated = self._mm.createEvent()
+		self.modulesUpdated = self.default( #FIXME: does the event have to exist?
+			type="event"
+		).createEvent()
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self._modules
+
 		del self.modulesUpdated
 
 def init(moduleManager):

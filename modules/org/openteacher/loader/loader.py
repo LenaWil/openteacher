@@ -38,6 +38,10 @@ class LoaderModule(object):
 		self._mm = moduleManager
 
 		self.type = "loader"
+		self.uses = (
+			self._mm.mods(type="lesson"),
+			self._mm.mods(type="load"),
+		)
 
 	@property
 	def _supportedFileTypes(self):
@@ -51,15 +55,15 @@ class LoaderModule(object):
 
 	@property
 	def usableExtensions(self):
-		exts = set()
+		exts = []
 
 		#Collect exts the loader modules support, if there is a gui
 		#module for the type(s) they can provide
-		for module in self._mm.mods("active", type="load"):
+		for module in self._modules.sort("active", type="load"):
 			for ext, fileTypes in module.loads.iteritems():
 				for fileType in fileTypes:
 					if fileType in self._supportedFileTypes:
-						exts.add(ext)
+						exts.append(ext)
 		return exts
 
 	@property
@@ -67,47 +71,52 @@ class LoaderModule(object):
 		return len(self.usableExtensions) != 0
 
 	def load(self, path):
-		loaders = set()
+		loaders = []
 
 		#Checks if loader modules can open it, and which type they would
 		#return if they would load it only adds it as a possibility if
 		#there also is a gui module for that type
-		
-		for loadModule in self._mm.mods("active", type="load"):
+
+		for loadModule in self._modules.sort("active", type="load"):
 			fileType = loadModule.getFileTypeOf(path)
-			for guiModule in self._mm.mods("active", type="lesson"):
+			for guiModule in self._modules.sort("active", type="lesson"):
 				try:
 					guiModule.loadFromList
 				except AttributeError:
 					continue
 				if guiModule.dataType == fileType:
-					loaders.add(Loader(loadModule, guiModule, path))
+					loaders.append(Loader(loadModule, guiModule, path))
 
 		if len(loaders) == 0:
 			raise NotImplementedError()
-		#Choose item
-		loader = self._modules.chooseItem(loaders)
+		#FIXME: choose loader or is the priority stuff used above enough?
+		loader = loaders[0]
 
 		loader.load()
 
 	def loadFromList(self, dataType, list):
-		loaders = set()
-		for lesson in self._mm.mods(type="lesson"):
+		loaders = []
+		for lesson in self._modules.sort("active", type="lesson"):
 			if lesson.dataType == dataType:
 				try:
 					lesson.loadFromList
 				except AttributeError:
 					continue
-				loaders.add(lesson)
-		loader = self._modules.chooseItem(loaders)
-		loader.loadFromList(list)
+				loaders.append(lesson)
+		if len(loaders) == 0:
+			raise NotImplementedError()
+		#FIXME: see above...
+		loader = loaders[0]
+		loader.loadFromList(list, "")#FIXME: remove this path argument
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
 		del self._modules
 
 def init(moduleManager):

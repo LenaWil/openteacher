@@ -33,16 +33,18 @@ class EnterPlainTextDialog(QtGui.QDialog):
 		buttonBox.accepted.connect(self.accept)
 		buttonBox.rejected.connect(self.reject)
 
-		label = QtGui.QLabel(_("Please enter the plain text in the text edit. Separate words with a new line and questions from answers with an equals sign ('=') or a tab."))
-		label.setWordWrap(True)
+		self._label = QtGui.QLabel()
+		self._label.setWordWrap(True)
 		self._textEdit = QtGui.QTextEdit()
 
 		layout = QtGui.QVBoxLayout()
-		layout.addWidget(label)
+		layout.addWidget(self._label)
 		layout.addWidget(self._textEdit)
 		layout.addWidget(buttonBox)
 		self.setLayout(layout)
 
+	def retranslate(self):
+		self._label.setText(_("Please enter the plain text in the text edit. Separate words with a new line and questions from answers with an equals sign ('=') or a tab."))
 		self.setWindowTitle(_("Plain text words enterer"))
 
 	def exec_(self, *args, **kwargs):
@@ -79,24 +81,29 @@ class PlainTextWordsEntererModule(object):
 		self._mm = moduleManager
 
 		self.type = "plainTextWordsEnterer"
+		self.requires = (
+			self._mm.mods(type="ui"),
+			self._mm.mods(type="wordsStringParser"),
+			self._mm.mods(type="loader"),
+		)
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
 
 	def enable(self):
 		self._references = set()
+		self._activeDialogs = set()
 
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._uiModule = set(self._mm.mods("active", type="ui")).pop()
+		self._uiModule = self._modules.default("active", type="ui")
 
-		#Translations
-		translator = set(self._mm.mods("active", type="translator")).pop()
-
-		global _
-		global ngettext
-
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
-
-		self._modules.registerModule(_("Plain text words enterer"), self)
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 
 		event = self._uiModule.addLessonCreateButton(_("Create words lesson by entering plain text"))
 		event.handle(self.createLesson)
@@ -104,33 +111,54 @@ class PlainTextWordsEntererModule(object):
 
 		self.active = True
 
+	def _retranslate(self):
+		#Translations
+		global _
+		global ngettext
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("Plain text words enterer")
+		for dialog in self._activeDialogs:
+			dialog.retranslate()
+
 	def createLesson(self):
-		parse = self._modules.chooseItem(
-			set(self._mm.mods("active", type="wordsStringParser"))
+		parse = self._modules.default(
+			"active",
+			type="wordsStringParser"
 		).parse
-		
+
 		eptd = EnterPlainTextDialog(parse)
+		self._activeDialogs.add(eptd)
+		self._retranslate()
 		tab = self._uiModule.addCustomTab(eptd.windowTitle(), eptd)
 		tab.closeRequested.handle(tab.close)
 		eptd.rejected.connect(tab.close)
 		eptd.accepted.connect(tab.close)
 
 		eptd.exec_()
+		self._activeDialogs.remove(eptd)
 		if not eptd.result():
 			return
 
-		#FIXME: rewrite: all sorts of things wrong...
-		self._modules.chooseItem(
-			set(self._mm.mods("active", type="lesson", dataType="words"))
-		).loadFromList(eptd.list, "")
+		self._modules.default(
+			"active",
+			type="loader"
+		).loadFromList("words", eptd.list)
 
 	def disable(self):
 		self.active = False
-		
+
 		del self._references
 		del self._modules
 		del self._uiModule
-		#de-register module
+		del self.name
 		#remove create lesson button
 
 def init(moduleManager):

@@ -24,10 +24,10 @@ class LoginDialog(QtGui.QDialog):
 	def __init__(self, *args, **kwargs):
 		super(LoginDialog, self).__init__(*args, **kwargs)
 		
-		emailLabel = QtGui.QLabel(_("Email: "))
+		self.emailLabel = QtGui.QLabel()
 		self.emailTextBox = QtGui.QLineEdit()
 		
-		passwordLabel = QtGui.QLabel(_("Password: "))
+		self.passwordLabel = QtGui.QLabel()
 		self.passwordTextBox = QtGui.QLineEdit()
 		self.passwordTextBox.setEchoMode(QtGui.QLineEdit.Password)
 
@@ -46,15 +46,13 @@ class LoginDialog(QtGui.QDialog):
 		)
 
 		layout = QtGui.QGridLayout()
-		layout.addWidget(emailLabel, 0, 0)
+		layout.addWidget(self.emailLabel, 0, 0)
 		layout.addWidget(self.emailTextBox, 0, 1)
-		layout.addWidget(passwordLabel, 1, 0)
+		layout.addWidget(self.passwordLabel, 1, 0)
 		layout.addWidget(self.passwordTextBox, 1, 1)
 		layout.addItem(verticalSpacer, 2, 0, 1, 2)
 		layout.addWidget(buttonBox, 3, 0, 1, 2)
 		self.setLayout(layout)
-
-		self.setWindowTitle(_("WRTS - login please:"))
 
 	@property
 	def email(self):
@@ -63,6 +61,11 @@ class LoginDialog(QtGui.QDialog):
 	@property
 	def password(self):
 		return unicode(self.passwordTextBox.text())
+
+	def retranslate(self):
+		self.setWindowTitle(_("WRTS - login please:"))
+		self.emailLabel.setText(_("Email: "))
+		self.passwordLabel.setText(_("Password: "))
 
 class ReadOnlyStringListModel(QtGui.QStringListModel):
 	def flags(self, index):
@@ -88,8 +91,9 @@ class ListChoiceDialog(QtGui.QDialog):
 		layout.addWidget(buttonBox)
 		self.setLayout(layout)
 
-		self.setWindowTitle(_("WRTS - Please choose a list:"))
-
 	@property
 	def selectedRowIndex(self):
 		return self.listView.selectedIndexes()[0].row()
+
+	def retranslate(self):
+		self.setWindowTitle(_("WRTS - Please choose a list:"))

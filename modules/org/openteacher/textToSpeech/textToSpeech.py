@@ -108,18 +108,25 @@ class TextToSpeechModule(object):
 		base = self
 
 		self.type = "textToSpeech"
-
-		# Create the say word event
-		self.say = self._mm.createEvent()
-	
-	def enable(self):
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
+		self.uses = (
+			self._mm.mods(type="translator"),
 		)
-		for module in self._mm.mods("active", type="modules"):
-			module.registerModule(_("Text to speech"), self)
-		
+		self.requires = (
+			self._mm.mods(type="event"),
+		)
+
+	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
+		#load translator
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+	
 		# For Windows and Mac
 		pyttsx = self._mm.importFrom(self._mm.resourcePath("tts"), "pyttsx")
 		
@@ -149,16 +156,38 @@ class TextToSpeechModule(object):
 				"Speed",
 				"number",
 				"Pronounciation",
-				"Voice",
+				"Voice",#FIXME: translate
 				120
 			)
-		
+
+		# Create the say word event
+		self.say = self._modules.default(type="event").createEvent()
+
 		self.say.handle(self.newWord)
 		
 		self.active = True
 		#self.newWord("Text to speech enabled")
-	
+
+	def _retranslate(self):
+		#Translations
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("Text to speech")
+
 	def disable(self):
+		del self._modules
+		del name
+		try:
+			del self.tts
+		except AttributeError:
+			pass
+		del self.say
 		self.active = False
 	
 	def newWord(self, word, thread=True):

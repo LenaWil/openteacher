@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+#	Copyright 2011, Cas Widdershoven
 #	Copyright 2009-2011, Marten de Vries
 #
 #	This file is part of OpenTeacher.
@@ -57,7 +58,7 @@ class GermanNoteCalculatorModule(object):
 		return self._convert(percents)
 
 	def enable(self):
-		self.name = _("German")
+		self.name = "German" #FIXME: translate!
 		self.active = True
 
 	def disable(self):

@@ -109,7 +109,7 @@ class StartTabButton(QtGui.QPushButton):
 		result = u""
 		curLine = u""
 		words = unicode(self._text).split(u" ")
-		w = self.width()# -20 #-20 to keep a margin
+		w = self.width()
 		try:
 			return self._cache[w]
 		except KeyError:
@@ -151,22 +151,25 @@ class StartWidget(QtGui.QSplitter):
 
 		self.createLessonLayout = QtGui.QGridLayout()
 
-		createLessonGroupBox = QtGui.QGroupBox(_("Create lesson:"))
-		createLessonGroupBox.setLayout(self.createLessonLayout)
+		self.createLessonGroupBox = QtGui.QGroupBox()
+		self.createLessonGroupBox.setLayout(self.createLessonLayout)
 
 		self.loadLessonLayout = QtGui.QGridLayout()
 
-		loadLessonGroupBox = QtGui.QGroupBox(_("Load lesson:"))
-		loadLessonGroupBox.setLayout(self.loadLessonLayout)
+		self.loadLessonGroupBox = QtGui.QGroupBox()
+		self.loadLessonGroupBox.setLayout(self.loadLessonLayout)
 
 		openLayout = QtGui.QVBoxLayout()
-		openLayout.addWidget(createLessonGroupBox)
-		openLayout.addWidget(loadLessonGroupBox)
+		openLayout.addWidget(self.createLessonGroupBox)
+		openLayout.addWidget(self.loadLessonGroupBox)
+		
+		left = self.style().pixelMetric(QtGui.QStyle.PM_LayoutLeftMargin)
+		openLayout.setContentsMargins(left, 0, 0, 0)
 
-		openWidget= QtGui.QWidget(self)
+		openWidget = QtGui.QWidget(self)
 		openWidget.setLayout(openLayout)
 
-		recentlyOpenedListView = QtGui.QListView()
+		recentlyOpenedListView = QtGui.QListView() #FIXME: rewrite
 		recentlyOpenedListView.setModel(QtGui.QStringListModel([
 			"French (words)",
 			"Europe (topo)",
@@ -176,11 +179,16 @@ class StartWidget(QtGui.QSplitter):
 		recentlyOpenedLayout = QtGui.QVBoxLayout()
 		recentlyOpenedLayout.addWidget(recentlyOpenedListView)
 
-		recentlyOpenedGridBox = QtGui.QGroupBox(_("Recently opened:"))
-		recentlyOpenedGridBox.setLayout(recentlyOpenedLayout)
+		self.recentlyOpenedGroupBox = QtGui.QGroupBox()
+		self.recentlyOpenedGroupBox.setLayout(recentlyOpenedLayout)
 
 		self.addWidget(openWidget)
-		self.addWidget(recentlyOpenedGridBox)
+		self.addWidget(self.recentlyOpenedGroupBox)
+
+	def retranslate(self):
+		self.createLessonGroupBox.setTitle(_("Create lesson:"))
+		self.loadLessonGroupBox.setTitle(_("Load lesson:"))
+		self.recentlyOpenedGroupBox.setTitle(_("Recently opened:"))
 
 	def addLessonCreateButton(self, text, icon=QtGui.QIcon()):
 		button = StartTabButton(icon, text, self)
@@ -218,8 +226,6 @@ class FilesTabWidget(QtGui.QTabWidget):
 	def __init__(self, *args, **kwargs):
 		super(FilesTabWidget, self).__init__(*args, **kwargs)
 
-		self.indexes = []
-
 		self.startWidget = StartWidget(self)
 		super(FilesTabWidget, self).addTab(
 			self.startWidget,
@@ -247,8 +253,12 @@ class FilesTabWidget(QtGui.QTabWidget):
 
 		return i
 
+	def retranslate(self):
+		self.startWidget.retranslate()
+
 class OpenTeacherWidget(QtGui.QMainWindow):
 	activityChanged = QtCore.pyqtSignal([object])
+
 	def __init__(self, *args, **kwargs):
 		super(OpenTeacherWidget, self).__init__(*args, **kwargs)
 
@@ -259,121 +269,120 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 		self.setCentralWidget(self.tabWidget)
 
 		#File menu
-		fileMenu = self.menuBar().addMenu(_("&File"))
+		self.fileMenu = self.menuBar().addMenu("")
 
-		self.newAction = fileMenu.addAction(
+		self.newAction = self.fileMenu.addAction(
 			QtGui.QIcon.fromTheme("filenew",
 				QtGui.QIcon(ICON_PATH + "new.png"),
 			),
-			_("&New")
+			""
 		)
-		self.newAction.setShortcut(QtGui.QKeySequence(_("Ctrl+N")))
+		self.newAction.setShortcut(QtGui.QKeySequence.New)
 
-		self.openAction = fileMenu.addAction(
+		self.openAction = self.fileMenu.addAction(
 			QtGui.QIcon.fromTheme("fileopen",
 				QtGui.QIcon(ICON_PATH + "open.png")
 			),
-			_("&Open")
+			""
 		)
-		self.openAction.setShortcut(QtGui.QKeySequence(_("Ctrl+O")))
+		self.openAction.setShortcut(QtGui.QKeySequence.Open)
 
-		fileMenu.addSeparator()
+		self.fileMenu.addSeparator()
 
-		self.saveAction = fileMenu.addAction(
+		self.saveAction = self.fileMenu.addAction(
 			QtGui.QIcon.fromTheme("filesave",
 				QtGui.QIcon(ICON_PATH + "save.png")
 			),
-			_("&Save")
+			""
 		)
-		self.saveAction.setShortcut(QtGui.QKeySequence(_("Ctrl+S")))
+		self.saveAction.setShortcut(QtGui.QKeySequence.Save)
 
-		self.saveAsAction = fileMenu.addAction(
+		self.saveAsAction = self.fileMenu.addAction(
 			QtGui.QIcon.fromTheme("filesaveas",
 				QtGui.QIcon(ICON_PATH + "save_as.png"),
 			),
-			_("Save &As")
+			""
 		)
-		self.saveAsAction.setShortcut(QtGui.QKeySequence(_("Ctrl+Shift+S")))
+		self.saveAsAction.setShortcut(QtGui.QKeySequence.SaveAs)
 
-		fileMenu.addSeparator()
+		self.fileMenu.addSeparator()
 
-		self.printAction = fileMenu.addAction(
+		self.printAction = self.fileMenu.addAction(
 			QtGui.QIcon.fromTheme("fileprint",
 				QtGui.QIcon(ICON_PATH + "print.png")
 			),
-			_("&Print")
+			""
 		)
-		self.printAction.setShortcut(QtGui.QKeySequence(_("Ctrl+P")))
+		self.printAction.setShortcut(QtGui.QKeySequence.Print)
 
-		fileMenu.addSeparator()
+		self.fileMenu.addSeparator()
 
-		self.quitAction = fileMenu.addAction(
+		self.quitAction = self.fileMenu.addAction(
 			QtGui.QIcon.fromTheme("exit",
 				QtGui.QIcon(ICON_PATH + "quit.png")
 			),
-			_("&Quit")
+			""
 		)
-		self.quitAction.setShortcut(QtGui.QKeySequence(_("Ctrl+Q")))
+		self.quitAction.setShortcut(QtGui.QKeySequence.Quit)
 
 		#Edit
-		editMenu = self.menuBar().addMenu(_("&Edit"))
-		self.settingsAction = editMenu.addAction(
+		self.editMenu = self.menuBar().addMenu("")
+		self.settingsAction = self.editMenu.addAction(
 			QtGui.QIcon(ICON_PATH + "settings.png"),
-			_("&Settings")
+			""
 		)
 
 		#Help
-		helpMenu = self.menuBar().addMenu(_("&Help"))
+		self.helpMenu = self.menuBar().addMenu("")
 
-		self.docsAction = helpMenu.addAction(
+		self.docsAction = self.helpMenu.addAction(
 			QtGui.QIcon.fromTheme("help",
 				QtGui.QIcon(ICON_PATH + "help.png")
 			),
-			_("&Documentation")
+			""
 		)
-		self.aboutAction = helpMenu.addAction(
+		self.aboutAction = self.helpMenu.addAction(
 			QtGui.QIcon(ICON_PATH + "about.png"),
-			_("&About")
+			""
 		)
 
 		#Toolbar
-		toolBar = self.addToolBar(_("Toolbar"))
-		toolBar.addAction(self.newAction)
-		toolBar.addAction(self.openAction)
-		toolBar.addSeparator()
-		toolBar.addAction(self.saveAction)
-		toolBar.addAction(self.saveAsAction)
-		toolBar.addSeparator()
-		toolBar.addAction(self.printAction)
-		toolBar.addSeparator()
-		toolBar.addAction(self.quitAction)
+		self.toolBar = self.addToolBar("")
+		self.toolBar.addAction(self.newAction)
+		self.toolBar.addAction(self.openAction)
+		self.toolBar.addSeparator()
+		self.toolBar.addAction(self.saveAction)
+		self.toolBar.addAction(self.saveAsAction)
+		self.toolBar.addSeparator()
+		self.toolBar.addAction(self.printAction)
+		self.toolBar.addSeparator()
+		self.toolBar.addAction(self.quitAction)
 
-		toolBar.setToolButtonStyle(QtCore.Qt.ToolButtonFollowStyle)
+		self.toolBar.setToolButtonStyle(QtCore.Qt.ToolButtonFollowStyle)
 
 		#activate statusBar
 		self.statusBar()
 
+	def retranslate(self):
+		self.fileMenu.setTitle(_("&File"))
+		self.newAction.setText(_("&New"))
+		self.openAction.setText(_("&Open"))
+		self.saveAction.setText(_("&Save"))
+		self.saveAsAction.setText(_("Save &As"))
+		self.printAction.setText(_("&Print"))
+		self.quitAction.setText(_("&Quit"))
+
+		self.editMenu.setTitle(_("&Edit"))
+		self.settingsAction.setText(_("&Settings"))
+
+		self.helpMenu.setTitle(_("&Help"))
+		self.docsAction.setText(_("&Documentation"))
+		self.aboutAction.setText(_("&About"))
+
+		self.toolBar.setWindowTitle(_("Toolbar"))
+
+		self.tabWidget.retranslate()
+
 	def changeEvent(self, event):
 		if event.type() == QtCore.QEvent.ActivationChange:
 			self.activityChanged.emit(self.isActiveWindow())
-
-class ItemChooser(QtGui.QDialog):#FIXME
-	def __init__(self, items, *args, **kwargs):
-		super(ItemChooser, self).__init__(*args, **kwargs)
-		
-		vbox = QtGui.QVBoxLayout()
-		
-		self.dict = {}
-		for item in items:
-			self.dict[str(item)] = item
-
-		for item in self.dict:
-			button = QtGui.QPushButton(item)
-			button.clicked.connect(self.buttonClicked)
-			vbox.addWidget(button)
-		self.setLayout(vbox)
-
-	def buttonClicked(self):
-		key = str(self.sender().text())
-		self.item = self.dict[key]
-		self.accept()

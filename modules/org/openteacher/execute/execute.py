@@ -26,32 +26,25 @@ class ExecuteModule(object):
 		self._mm = moduleManager
 
 		self.type = "execute"
+		self.requires = (
+			self._mm.mods(type="uiController"),
+			self._mm.mods(type="modulesActivator"),
+		)
 
 	def execute(self):
 		parser = optparse.OptionParser()
-		parser.add_option(
-			"-u",
-			"--ui",
-			dest="ui",
-			help="tells OpenTeacher to load the specified UI",
-			default="qt" #FIXME: should Qt be fixed?
-		)
+		#FIXME: add options, or remove this parser :P
 		options, args = parser.parse_args()
 		try:
 			path = args[0]
 		except IndexError:
 			path = None
 
-		for module in self._mm.mods(type="uiController"): #FIXME: choose a uiController. Maybe obligatory one like openteacher-core? Or command line setting?
-			module.enable()
-			module.initialize(options.ui)
+		modules = set(self._mm.mods(type="modules")).pop()
+		modules.default(type="modulesActivator").activateModules()
 
-		for module in self._mm.mods(type="modules"): #FIXME: choose a 'modules'. Maybe obligatory one like openteacher-core? Or command line setting?
-			module.enable()
-			module.activateModules()
-
-		for module in self._mm.mods("active", type="uiController"):
-			module.run(path)
+		uiController = modules.default("active", type="uiController")
+		uiController.run(path)
 
 def init(moduleManager):
 	return ExecuteModule(moduleManager)

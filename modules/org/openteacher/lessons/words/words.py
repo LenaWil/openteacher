@@ -20,24 +20,29 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+import weakref
+
 class Lesson(object):
-	def __init__(self, moduleManager, fileTab, module, list, enterWidget, teachWidget, resultsWidget, *args, **kwargs):
+	def __init__(self, moduleManager, fileTab, module, list, enterWidget, teachWidget, resultsWidget=None, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
 
 		self.resources = {} #To be removed...
 
 		self._mm = moduleManager
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
 		self.module = module
 
 		self.fileTab = fileTab
 		self.fileTab.closeRequested.handle(self.stop)
-		self.stopped = self._mm.createEvent()
+		self.stopped = self._modules.default(type="event").createEvent()
 
 		self.list = list
 
 		self._enterWidget = enterWidget
 		self._teachWidget = teachWidget
-		self._resultsWidget = resultsWidget
+		if resultsWidget:
+			self._resultsWidget = resultsWidget
 
 		self._teachWidget.lessonDone.connect(self._lessonDone)
 		self._teachWidget.listChanged.connect(self._listChanged)
@@ -46,11 +51,14 @@ class Lesson(object):
 		self.fileTab.currentTab = self._enterWidget
 	
 	def _listChanged(self, list):
-		self._resultsWidget.updateList(list, "words")
+		try:
+			self._resultsWidget.updateList(list, "words")
+		except AttributeError:
+			pass
 
 	def stop(self):
 		self.fileTab.close()
-		self.stopped.emit()
+		self.stopped.send()
 
 class WordsLessonModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -58,36 +66,58 @@ class WordsLessonModule(object):
 
 		self._mm = moduleManager
 		self.type = "lesson"
+		self.requires = (
+			self._mm.mods(type="ui"),
+			self._mm.mods(type="event"),
+			self._mm.mods(type="wordsEnterer"),
+			self._mm.mods(type="wordsTeacher"),
+		)
+		self.uses = (
+			self._mm.mods(type="translator"),
+			self._mm.mods(type="testsViewer"),
+		)
 
 	def enable(self):
 		self.dataType = "words"
 
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._uiModule = set(self._mm.mods("active", type="ui")).pop()
+		self._uiModule = self._modules.default("active", type="ui")
 
-		#Translations
-		translator = set(self._mm.mods("active", type="translator")).pop()
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 
-		global _
-		global ngettext
 
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
-
-		self._modules.registerModule(_("Words Lesson"), self)
-
-		self.lessonCreated = self._mm.createEvent()
-		self.lessonCreationFinished = self._mm.createEvent()
+		self.lessonCreated = self._modules.default(type="event").createEvent()
+		self.lessonCreationFinished = self._modules.default(type="event").createEvent()
 
 		self._counter = 1
 		self._references = set()
 
-		event = self._uiModule.addLessonCreateButton(_("Create words lesson"))
+		event = self._uiModule.addLessonCreateButton(_("Create words lesson")) #FIXME: retranslatable?
 		event.handle(self.createLesson)
 		self._references.add(event)
 
 		self.active = True
+
+	def _retranslate(self):
+		#Translations
+		global _
+		global ngettext
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("Words Lesson")
 
 	def disable(self):
 		self.active = False
@@ -95,6 +125,7 @@ class WordsLessonModule(object):
 		del self.dataType
 		del self._modules
 		del self._uiModule
+		del self.name
 		del self.lessonCreated
 		del self._counter
 		del self._references
@@ -104,33 +135,43 @@ class WordsLessonModule(object):
 			list = {"items": [], "tests": []}
 
 		#create widgets
-		enterWidget = self._modules.chooseItem(
-			set(self._mm.mods("active", type="wordsEnterer"))
+		enterWidget = self._modules.default(
+			"active",
+			type="wordsEnterer"
 		).createWordsEnterer()
 		enterWidget.updateList(list)
 
-		teachWidget = self._modules.chooseItem(
-			set(self._mm.mods("active", type="wordsTeacher"))
+		teachWidget = self._modules.default(
+			"active",
+			type="wordsTeacher"
 		).createWordsTeacher()
 		teachWidget.updateList(list)
 
-		resultsWidget = self._modules.chooseItem(
-			set(self._mm.mods("active", type="testsViewer"))
-		).createTestsViewer()
-		resultsWidget.updateList(list, "words")
-
-		fileTab = self._uiModule.addFileTab(
-			_("Word lesson %s") % self._counter,
+		widgets = [
 			enterWidget,
 			teachWidget,
-			resultsWidget
+		]
+		try:
+			resultsWidget = self._modules.default(
+				"active",
+				type="testsViewer"
+			).createTestsViewer()
+		except IndexError:
+			pass
+		else:
+			resultsWidget.updateList(list, "words")
+			widgets.append(resultsWidget)
+
+		fileTab = self._uiModule.addFileTab(
+			_("Word lesson %s") % self._counter, #FIXME: retranslatable
+			*widgets
 		)
 		self._counter += 1
 
-		lesson = Lesson(self._mm, fileTab, self, list, enterWidget, teachWidget, resultsWidget)
+		lesson = Lesson(self._mm, fileTab, self, list, *widgets)
 		self._references.add(lesson)
-		self.lessonCreated.emit(lesson)
-		self.lessonCreationFinished.emit()
+		self.lessonCreated.send(lesson)
+		self.lessonCreationFinished.send()
 
 		return lesson
 

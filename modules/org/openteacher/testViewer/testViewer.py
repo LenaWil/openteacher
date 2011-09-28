@@ -21,6 +21,7 @@
 
 from PyQt4 import QtCore, QtGui
 import datetime
+import weakref
 
 class TestModel(QtCore.QAbstractTableModel):
 	def __init__(self, moduleManager, list, dataType, test, *args, **kwargs):
@@ -78,24 +79,20 @@ class TestViewer(QtGui.QSplitter):
 		testModel = TestModel(self._mm, list, dataType, test)
 		tableView.setModel(testModel)
 
-		try:
-			completedText = _("yes") if test["finished"] else _("no") #FIXME: own translator
-		except KeyError:
-			completedText = _("no")
-		completedLabel = QtGui.QLabel(_("Completed: %s") % completedText)
-		
-		totalThinkingTimeLabel = QtGui.QLabel(_("Total thinking time: %s seconds") % self._totalThinkingTime)
+		self.totalThinkingTimeLabel = QtGui.QLabel()
 		vertSplitter = QtGui.QSplitter(QtCore.Qt.Vertical)
-		vertSplitter.addWidget(totalThinkingTimeLabel)
+		vertSplitter.addWidget(self.totalThinkingTimeLabel)
 		vertSplitter.addWidget(tableView)
 
 		#Horizontal splitter
-		calculateNote = self._modules.chooseItem(
-			set(self._mm.mods("active", type="noteCalculator"))
+		calculateNote = self._modules.default(
+			"active",
+			type="noteCalculator"
 		).calculateNote
 
 		factsLayout = QtGui.QVBoxLayout()
-		noteDrawer = QtGui.QLabel(_("Note:") + "<br /><span style=\"font-size: 40px\">%s</span>" % calculateNote(test)) #FIXME: noteDrawer + vertical align top
+		self.completedLabel = QtGui.QLabel()
+		noteDrawer = QtGui.QLabel(_("Note:") + "<br /><span style=\"font-size: 40px\">%s</span>" % calculateNote(test)) #FIXME: noteDrawer + vertical align top#FIXME:retranslate
 		factsLayout.addWidget(noteDrawer, 0, QtCore.Qt.AlignTop)
 		for module in self._mm.mods("active", type="testType"):
 			if module.dataType == dataType:
@@ -111,6 +108,7 @@ class TestViewer(QtGui.QSplitter):
 							label = QtGui.QLabel("%s<br /><span style=\"font-size: 14px\">%s</span>" % (fact[0], fact[1]))
 						factsLayout.addWidget(label, 0, QtCore.Qt.AlignTop)
 				break
+		factsLayout.addWidget(self.completedLabel)
 		factsLayout.addStretch()
 		
 		factsWidget = QtGui.QWidget()
@@ -121,13 +119,35 @@ class TestViewer(QtGui.QSplitter):
 		horSplitter.addWidget(factsWidget)
 
 		#Main splitter
-		progressWidget = self._modules.chooseItem(
-			set(self._mm.mods("active", type="progressViewer"))
-		).createProgressViewer(test)
+		try:
+			progressWidget = self._modules.default(
+				"active",
+				type="progressViewer"
+			).createProgressViewer(test)
+		except IndexError:
+			pass
 
 		self.addWidget(horSplitter)
-		self.addWidget(progressWidget)
-	
+		try:
+			self.addWidget(progressWidget)
+		except NameError:
+			pass
+
+	def retranslate(self):
+		self.setWindowTitle(_("Results"))
+		try:
+			completedText = _("yes") if test["finished"] else _("no") #FIXME: own translator
+		except KeyError:
+			completedText = _("no")
+		self.completedLabel.setText(_("Completed: %s") % completedText)
+
+		self.totalThinkingTimeLabel.setText(
+			ngettext(
+				"Total thinking time: %s second",
+				"Total thinking time: %s seconds",
+				self._totalThinkingTime)
+		)
+
 	@property
 	def _totalThinkingTime(self):
 		totalThinkingTime = datetime.timedelta()
@@ -141,12 +161,48 @@ class TestViewerModule(object):
 
 		self._mm = moduleManager
 		self.type = "testViewer"
+		self.requires = ( #FIXME: check if all really required, and if so make sure some things aren't.
+			self._mm.mods(type="noteCalculator"),
+			self._mm.mods(type="testType"),
+			self._mm.mods(type="progressViewer"),
+		)
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
 
 	def createTestViewer(self, *args, **kwargs):
-		return TestViewer(self._mm, *args, **kwargs)
+		tv = TestViewer(self._mm, *args, **kwargs)
+		self._testViewers.add(weakref.ref(tv))
+		#self._retranslate()#FIXME: this crashes if enabled but should be enabled
+		return tv
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
+		self._testViewers = set()
+		try:
+			translator = self._modules.default(type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 		self.active = True
+
+	def _retranslate(self):
+		global _, ngettext
+		try:
+			translator = self._modules.default(type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda x, y, n: x if n == 1 else y
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		for tv in self._testViewers:
+			r = tv()
+			if r is not None:
+				r.retranslate()
 
 	def disable(self):
 		self.active = False

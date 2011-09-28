@@ -22,6 +22,7 @@
 
 from PyQt4 import QtGui, QtCore
 import random
+import weakref
 
 class ShuffleAnswerTeachWidget(QtGui.QWidget):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -30,11 +31,10 @@ class ShuffleAnswerTeachWidget(QtGui.QWidget):
 		self._mm = moduleManager
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		
-		typingInputs = set(self._mm.mods("active", type="typingInput"))
 		try:
-			typingInput = self._modules.chooseItem(typingInputs)
+			typingInput = self._modules.default("active", type="typingInput")
 		except IndexError, e:
-			raise e #FIXME: show a nice error
+			raise e #FIXME: what to do?
 		else:
 			self.inputWidget = typingInput.createWidget()
 		
@@ -43,7 +43,13 @@ class ShuffleAnswerTeachWidget(QtGui.QWidget):
 		vbox.addWidget(self.hintLabel)
 		vbox.addWidget(self.inputWidget)
 		self.setLayout(vbox)
-		
+
+	def retranslate(self):
+		try:
+			self.setHint()
+		except AttributeError:
+			pass
+
 	def setHint(self):
 		hint = _("Hint:") + u" "
 		answer = self.word["answers"][0][0]#FIXME: use composer
@@ -75,27 +81,59 @@ class ShuffleAnswerTeachTypeModule(object):
 		self._mm = moduleManager
 
 		self.type = "teachType"
-
-	def enable(self):
-		global _
-		global ngettext
-
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
+		self.requires = (
+			self._mm.mods(type="typingInput"),
+		)
+		self.uses = (
+			self._mm.mods(type="translator"),
 		)
 
+	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._activeWidgets = set()
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.dataType = "words"
-		self.name = _("Shuffle Answer")
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
+		del self._activeWidgets
 		del self.dataType
 		del self.name
 
+	def _retranslate(self):
+		#Translations
+		global _
+		global ngettext
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("Shuffle answer")
+		for widget in self._activeWidgets:
+			r = widget()
+			if r is not None:
+				r.retranslate()
+
 	def createWidget(self, tabChanged):
-		return ShuffleAnswerTeachWidget(self._mm)
+		satw = ShuffleAnswerTeachWidget(self._mm)
+		self._activeWidgets.add(weakref.ref(satw))
+		return satw
 
 def init(moduleManager):
 	return ShuffleAnswerTeachTypeModule(moduleManager)

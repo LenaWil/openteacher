@@ -39,30 +39,33 @@ class SaverModule(object):
 		self._mm = moduleManager
 
 		self.type = "saver"
+		self.uses = (
+			self._mm.mods(type="save"),
+			self._mm.mods(type="lesson"),
+		)
+		self.requires = (
+			self._mm.mods(type="ui"),
+		)
 
 	@property
 	def usableExtensions(self):
-		extensions = set()
-		
+		extensions = []
+
 		dataType = self._currentLesson.module.dataType
-		
+
 		#Collect exts the loader modules support, if there is a gui
 		#module for the data type(s) they can provide
-		for module in self._mm.mods("active", type="save"):
+		for module in self._modules.sort("active", type="save"):
 			if module.saves.get(dataType) != None:
 				for ext in module.saves.get(dataType):
-					extensions.add(ext)
-		
+					extensions.append(ext)
+
 		return extensions
 
-	def _modulesUpdated(self):
-		#Keeps track of all created lessons
-		for module in self._mm.mods("active", type="lesson"):
-			module.lessonCreated.handle(self._lessonAdded)
-
+##################FIXME: DUPLICATE WITH PRINTER.PY!
 	@property
 	def _currentLesson(self):
-		uiModule = set(self._mm.mods("active", type="ui")).pop()
+		uiModule = self._modules.default("active", type="ui")
 		try:
 			return self._lessons[uiModule.currentFileTab]
 		except KeyError:
@@ -76,6 +79,7 @@ class SaverModule(object):
 
 	def _removeLesson(self, fileTab):
 		del self._lessons[fileTab]
+##################END DUPLICATE
 
 	@property
 	def saveSupport(self):
@@ -83,38 +87,40 @@ class SaverModule(object):
 
 	def save(self, path):
 		path = path.encode(sys.getfilesystemencoding())
-		savers = set()
-
-		if not self._currentLesson.module:
-			try:
-				self._currentLesson.module.save
-			except AttributeError:
-				raise NotImplementedError()
+		savers = []
 
 		dataType = self._currentLesson.module.dataType
-		for module in self._mm.mods("active", type="save"):
+		for module in self._modules.sort("active", type="save"):
 			if dataType in module.saves:
 				for ext in module.saves[dataType]:
 					if path.endswith(ext):
-						savers.add(Saver(module, dataType, self._currentLesson, path))
+						savers.append(Saver(module, dataType, self._currentLesson, path))
 
 		if len(savers) == 0:
 			raise NotImplementedError()
 
-		#Choose item
-		saver = self._modules.chooseItem(savers)
+		#FIXME: see loader.py for an explanation
+		saver = savers[0]
 		#Save
 		saver.save()
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._modules.modulesUpdated.handle(self._modulesUpdated)
 		self._lessons = {}
+
+		#Keeps track of all created lessons
+		for module in self._mm.mods("active", type="lesson"):
+			module.lessonCreated.handle(self._lessonAdded)
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		self._modules.modulesUpdated.unhandle(self._modulesUpdated)
+
+		#Keeps track of all created lessons
+		for module in self._mm.mods("active", type="lesson"):
+			module.lessonCreated.unhandle(self._lessonAdded)
+
 		del self._modules
 		del self._lessons
 

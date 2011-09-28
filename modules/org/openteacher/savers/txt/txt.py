@@ -25,10 +25,16 @@ class TxtSaverModule(object):
 		self._mm = moduleManager
 
 		self.type = "save"
+		self.requires = (
+			self._mm.mods(type="wordsStringComposer"),
+		)
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._modules.registerModule("Plain text (.txt) saver", self)
+		self.name = "Plain text (.txt) saver"
 		self.saves = {"words": ["txt"]}
 
 		self.active = True
@@ -37,12 +43,17 @@ class TxtSaverModule(object):
 		self.active = False
 
 		del self._modules
+		del self.name
 		del self.saves
 
-	def save(self, type, list, path, resources):		
-		composers = set(self._mm.mods("active", type="wordsStringComposer"))
-		compose = self._modules.chooseItem(composers).compose
+	@property
+	def _compose(self):
+		return self._modules.default(
+			"active",
+			type="wordsStringComposer"
+		).compose
 
+	def save(self, type, list, path, resources):		
 		text = u""
 
 		if "title" in list:
@@ -52,7 +63,7 @@ class TxtSaverModule(object):
 
 		if len(list["items"]) != 0:
 			#FIXME: questions -> not guaranteed to be there
-			lengths = map(lambda word: len(compose(word["questions"])), list["items"])
+			lengths = map(lambda word: len(self._compose(word["questions"])), list["items"])
 			maxLen = max(lengths) +1
 			#FIXME: should 8 be an advanced setting?
 			if maxLen < 8:
@@ -60,14 +71,14 @@ class TxtSaverModule(object):
 
 			for word in list["items"]:
 				try:
-					questions = compose(word["questions"])
+					questions = self._compose(word["questions"])
 				except KeyError:
 					questions = u""
 				text += u"".join([
 					questions,
 					(maxLen - len(questions)) * " ",
 					#FIXME: answers -> not guaranteed to be there
-					compose(word["answers"]),
+					self._compose(word["answers"]),
 					u"\n"
 				])
 

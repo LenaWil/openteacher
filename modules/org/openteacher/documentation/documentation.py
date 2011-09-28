@@ -18,41 +18,121 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+from PyQt4 import QtCore, QtGui, QtWebKit, QtNetwork
+import weakref
+import os
+import BaseHTTPServer
+
+class OpenTeacherWebPage(QtWebKit.QWebPage):
+	def __init__(self, url, userAgent, fallbackPath, *args, **kwargs):
+		super(OpenTeacherWebPage, self).__init__(*args, **kwargs)
+
+		self.url = url
+		self.userAgent = userAgent
+		self.fallbackPath = fallbackPath
+
+	def userAgentForUrl(self, url):
+		return self.userAgent
+
+	def updateStatus(self, ok):
+		if not ok:
+			html = open(self.fallbackPath).read()
+			self.mainFrame().setHtml(html, QtCore.QUrl.fromLocalFile(
+				os.path.abspath(self.fallbackPath)
+			))
+
+	def updateLanguage(self, language):
+		request = QtNetwork.QNetworkRequest(QtCore.QUrl(self.url))
+		request.setRawHeader("Accept-Language", language)
+		self.mainFrame().load(request)
+
+		self.loadFinished.connect(self.updateStatus)
+
+class DocumentationDialog(QtWebKit.QWebView):
+	def __init__(self, url, userAgent, fallbackPath, *args, **kwargs):
+		super(DocumentationDialog, self).__init__(*args, **kwargs)
+
+		self.page = OpenTeacherWebPage(url, userAgent, fallbackPath)
+		self.setPage(self.page)
+
+	def retranslate(self):
+		self.setWindowTitle(_("Documentation"))
+		#self.page is retranslated by the updateLanguage call done on a
+		#higher level
+
+	def updateLanguage(self, language):
+		self.page.updateLanguage(language)
+
 class DocumentationModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(DocumentationModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "documentation"
-
-	def show(self):
-		for module in self._mm.mods("active", "documentationUrl", type="metadata"):
-			documentationUrl = module.documentationUrl
-		for module in self._mm.mods("active", "userAgent", type="metadata"):
-			userAgent = module.userAgent
-		for module in self._mm.mods("active", type="ui"):
-			dialog = self._ui.DocumentationDialog(documentationUrl, userAgent, "en") #FIXME: language should be dynamic
-			tab = module.addCustomTab(dialog.windowTitle(), dialog)
-			tab.closeRequested.handle(tab.close)
-
-	def enable(self):
-		#Translations
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
+		self.requires = (
+			self._mm.mods(type="metadata"),
+			self._mm.mods(type="ui"),
 		)
 
-		for module in self._mm.mods("active", type="modules"):
-			module.registerModule(_("Documentation module"), self)
+	def show(self):
+		metadata = self._modules.default("active", type="metadata").metadata
+		uiModule = self._modules.default("active", type="ui")
 
-		self._ui = self._mm.import_("ui")
-		self._ui._, self._ui.ngettext = _, ngettext
+		dialog = DocumentationDialog(
+			metadata["documentationUrl"],
+			metadata["userAgent"],
+			self._mm.resourcePath("docs/index.html")
+		)
+		tab = uiModule.addCustomTab(dialog.windowTitle(), dialog)
+		tab.closeRequested.handle(tab.close)
+
+		self._activeDialogs.add(weakref.ref(dialog))
+		self._retranslate()
+
+	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._activeDialogs = set()
+
+		#load translator
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 
 		self.active = True
 
+	def _retranslate(self):
+		#load translator
+		global _
+		global ngettext
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+			language = "en"
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+			language = translator.language
+
+		self.name = _("Documentation module")
+		for dialog in self._activeDialogs:
+			r = dialog()
+			if r is not None:
+				r.retranslate()
+				r.updateLanguage(language)
+
 	def disable(self):
 		self.active = False
-		del self._ui
+
+		del self._modules
+		del self.name
+		del self._activeDialogs
 
 def init(moduleManager):
 	return DocumentationModule(moduleManager)

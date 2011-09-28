@@ -24,38 +24,59 @@ class MetadataModule(object):
 		self._mm = moduleManager
 
 		self.type = "metadata"
-
-	def enable(self):
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
+		self.uses = (
+			self._mm.mods(type="translator"),
 		)
 
-		self.name = _("OpenTeacher")
-		self.slogan = _("The easiest way to learn a new language")
-		self.version = _("3.x")
-		self.website = _("http://openteacher.org/")
-		self.userAgent = "%s/%s (+%s)" % (self.name, self.version, self.website)
-		self.documentationUrl = _("http://openteacher.org/documentation.html")
-		self.iconPath = self._mm.resourcePath("openteacher.png")
-		self.licenseIntro = open(self._mm.resourcePath("license_intro.txt")).read()
-		self.license = open(self._mm.resourcePath("license.txt")).read()
-		self.comicPath = self._mm.resourcePath("comic.png")
+	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+	def _retranslate(self):
+		#Translations
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.metadata = {
+			"name": _("OpenTeacher"),
+			"slogan": _("The easiest way to learn a new language"),
+			"version": _("3.x"),
+			"authors": _("OpenTeacher authors"),
+			"copyrightYears": _("2008-2011"),
+			"website": _("http://openteacher.org/"),
+			"documentationUrl": _("http://openteacher.org/documentation.html"),
+			"updatesUrl": "http://localhost/updates",
+			"iconPath": self._mm.resourcePath("openteacher.png"),
+			"licenseIntro": open(self._mm.resourcePath("license_intro.txt")).read(),
+			"license": open(self._mm.resourcePath("license.txt")).read(),
+			"comicPath": self._mm.resourcePath("comic.png"),
+		}
+		self.metadata["userAgent"] = "%s/%s (+%s)" % (
+			self.metadata["name"],
+			self.metadata["version"],
+			self.metadata["website"]
+		)
 
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
-		del self.name
-		del self.slogan
-		del self.version
-		del self.website
-		del self.documentationUrl
-		del self.iconPath
-		del self.licenseIntro
-		del self.license
-		del self.comicPath
+		del self._modules
+		del self.metadata
 
 def init(moduleManager):
 	return MetadataModule(moduleManager)
+

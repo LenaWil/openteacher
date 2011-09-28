@@ -26,25 +26,36 @@ class ResultsDialogModule(object):
 		self._mm = moduleManager
 
 		self.type = "resultsDialog"
+		self.requires = (
+			self._mm.mods(type="testViewer"),
+			self._mm.mods(type="ui"),
+		)
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
-	
+
+		del self._modules
+
 	def showResults(self, list, dataType, test):
-		self.resultsWidget = self._modules.chooseItem(
-			set(self._mm.mods("active", type="testViewer"))
+		self.resultsWidget = self._modules.default(
+			"active",
+			type="testViewer"
 		).createTestViewer(list, dataType, test)
 
-		for module in self._mm.mods("active", type="ui"):
-			self.tab = module.addCustomTab(
-				_("Results"),
-				self.resultsWidget
-			)
-			self.tab.closeRequested.handle(self.tab.close)
+		uiModule = self._modules.default(type="ui")
+		self.tab = uiModule.addCustomTab(
+			self.resultsWidget.windowTitle(),
+			self.resultsWidget
+		)
+		self.tab.closeRequested.handle(self.tab.close)
 
 def init(moduleManager):
 	return ResultsDialogModule(moduleManager)

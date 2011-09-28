@@ -20,6 +20,8 @@
 
 from PyQt4 import QtCore, QtGui
 
+#FIXME: also include QTimeLine stuff? Or make a separate module for that?
+
 class FaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(FaderModule, self).__init__(*args, **kwargs)

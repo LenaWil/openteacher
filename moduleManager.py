@@ -20,10 +20,19 @@
 
 import sys
 import os
-import imp
 import inspect
 
 class ModuleFilterer(object):
+	"""This class is used to filter a list of objects ('modules'). By
+	   calling an instance you can add filter requirements. There are
+	   two types of filter requirements:
+	   - an attribute equals a value
+	   - an attribute evaluates to true
+	   
+	   You can run through the results by a for loop, or get them in
+	   a python set/list/tuple/whatever by calling the appropriate
+	   conversion function (e.g. set(ModuleFilterer(modules)) )"""
+
 	def __init__(self, modules, *args, **kwargs):
 		super(ModuleFilterer, self).__init__(*args, **kwargs)
 		self._modules = modules
@@ -61,12 +70,17 @@ class ModuleFilterer(object):
 			return False
 
 class ModuleManager(object):
+	"""This class manages modules. It loads them from a directory when
+	   they meet the requirements for being a module, and it offers a
+	   few functions to the initialized modules, like getting resource
+	   paths and handling imports in the module directory."""
+
 	def __init__(self, modulesPath, *args, **kwargs):
 		super(ModuleManager, self).__init__(*args, **kwargs)
 
 		self.modulesPath = modulesPath
 		self._events = {}
-		self._references = []
+		self._references = set()
 
 		self._loadModules()
 
@@ -79,29 +93,24 @@ class ModuleManager(object):
 	def resourcePath(cls, resource):
 		return os.path.join(cls._callerOfCallerPath(), resource)
 
-	@staticmethod
-	def createEvent():
-		return Event()
-
 	@property
 	def mods(self):
 		return ModuleFilterer(self._modules)
 
 	def importFrom(self, path, moduleName):
-		fp, pathname, description = imp.find_module(moduleName, [path])
-		try:
-			#import the module
-			module = imp.load_module(moduleName, fp, pathname, description)
-			#remove the module from the python cache, to avoid
-			#namespace clashes
-			del sys.modules[moduleName]
-			#but keep our own reference, otherwise the module namespace
-			#will probably be garbage collected.
-			self._references.append(module)
-			return module
-		finally:
-			if fp:
-				fp.close()
+		#make sure the module is importable
+		sys.path.insert(0, path)
+		#import the module
+		module = __import__(moduleName)
+		#remove the module from the python cache, to avoid
+		#namespace clashes
+		del sys.modules[moduleName]
+		#but keep our own reference, otherwise the module namespace
+		#will probably be garbage collected.
+		self._references.add(module)
+		#remove the module path again so it doesn't influence other imports
+		sys.path.remove(path)
+		return module
 
 	def import_(self, moduleName):
 		return self.importFrom(self._callerOfCallerPath(), moduleName)
@@ -119,19 +128,3 @@ class ModuleManager(object):
 				container = self.importFrom(root, name)
 				module = container.init(self)
 				self._modules.add(module)
-
-class Event(object):
-	def __init__(self, *args, **kwargs):
-		super(Event, self).__init__(*args, **kwargs)
-
-		self._handlers = set()
-
-	def handle(self, handler):
-		self._handlers.add(handler)
-
-	def unhandle(self, handler):
-		self._handlers.remove(handler)
-
-	def emit(self, *args, **kwargs):
-		for handler in self._handlers:
-			handler(*args, **kwargs)

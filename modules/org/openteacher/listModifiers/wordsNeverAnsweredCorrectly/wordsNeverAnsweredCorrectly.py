@@ -25,6 +25,9 @@ class WordsNeverAnsweredCorrectlyModule(object):
 
 		self.type = "listModifier"
 		self.testName = "wordsNeverAnsweredCorrectly"
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
 
 	def modifyList(self, indexes, list):
 		self._list = list
@@ -47,17 +50,36 @@ class WordsNeverAnsweredCorrectlyModule(object):
 		return map(lambda result: result["result"], filteredResults)
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
 		#Translations
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.dataType = "words"
-		self.name = _("Only words you never answered correctly")
 		self.active = True
+
+	def _retranslate(self):
+		#Translations
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("Only words you never answered correctly")
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
 		del self.dataType
 		del self.name
 

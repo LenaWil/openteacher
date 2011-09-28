@@ -23,74 +23,109 @@ class WrtsApiModule(object):
 		super(WrtsApiModule, self).__init__()
 		self._mm = moduleManager
 
-	def enable(self):
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
+		self.requires = (
+			self._mm.mods(type="ui"),
+			self._mm.mods(type="loader"),
 		)
 
+	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._modules.registerModule(_("Wrts API connection"), self)
+		self._activeDialogs = set()
 
 		self._ui = self._mm.import_("ui")
-		self._ui._, self._ui.ngettext = _, ngettext
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self._api = self._mm.import_("api")
 		self._references = set()
 
-		self.wrtsConnection = self._api.WrtsConnection(self._mm)
+		self._wrtsConnection = self._api.WrtsConnection(self._mm)
 
-		for module in self._mm.mods("active", type="ui"):
-			event = module.addLessonLoadButton(_("Import from WRTS"))
-			event.handle(self.importFromWrts)
-			self._references.add(event)
+		event = self._uiModule.addLessonLoadButton("Import from WRTS")#FIXME: (re)translate
+		event.handle(self.importFromWrts)
+		self._references.add(event)
 		self.active = True
+
+	def _retranslate(self):
+		#Translations
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self._ui._, self._ui.ngettext = _, ngettext
+
+		self.name = _("Wrts API connection")
+		for dialog in self._activeDialogs:
+			dialog.retranslate()
+
+	@property
+	def _uiModule(self):
+		return self._modules.default("active", type="ui")
 
 	def disable(self):
 		self.active = False
+
 		del self._modules
+		del self._activeDialogs
+		del self.name
 		del self._ui
 		del self._api
 		del self._references
-		del self.wrtsConnection
+		del self._wrtsConnection
 
 	def importFromWrts(self):
-		for module in self._mm.mods("active", type="ui"):
-			ld = self._ui.LoginDialog(module.qtParent)		
+		ld = self._ui.LoginDialog(self._uiModule.qtParent)
+		self._activeDialogs.add(ld)
+		self._retranslate()
 
-			tab = module.addCustomTab(ld.windowTitle(), ld)
-			tab.closeRequested.handle(tab.close)
-			ld.rejected.connect(tab.close)
-			ld.accepted.connect(tab.close)
+		tab = self._uiModule.addCustomTab(ld.windowTitle(), ld)
+		tab.closeRequested.handle(tab.close)
+		ld.rejected.connect(tab.close)
+		ld.accepted.connect(tab.close)
 
-			ld.exec_()
-			if not ld.result():
-				return
+		ld.exec_()
+		self._activeDialogs.remove(ld)
+		if not ld.result():
+			return
 
-			self.wrtsConnection.logIn(ld.email, ld.password)
+		self._wrtsConnection.logIn(ld.email, ld.password)
 
-			listsParser = self.wrtsConnection.listsParser
+		listsParser = self._wrtsConnection.listsParser
 
-			ldc = self._ui.ListChoiceDialog(listsParser.lists, module.qtParent)
+		ldc = self._ui.ListChoiceDialog(listsParser.lists, self._uiModule.qtParent)
+		self._activeDialogs.add(ldc)
+		self._retranslate()
 
-			tab = module.addCustomTab(ldc.windowTitle(), ldc)
-			tab.closeRequested.handle(tab.close)
-			ldc.rejected.connect(tab.close)
-			ldc.accepted.connect(tab.close)
+		tab = self._uiModule.addCustomTab(ldc.windowTitle(), ldc)
+		tab.closeRequested.handle(tab.close)
+		ldc.rejected.connect(tab.close)
+		ldc.accepted.connect(tab.close)
 
-			ldc.exec_()
-			if not ldc.result():
-				return
+		ldc.exec_()
+		self._activeDialogs.remove(ldc)
+		if not ldc.result():
+			return
 
-			listUrl = listsParser.getWordListUrl(ldc.selectedRowIndex)
-			list = self.wrtsConnection.importWordList(listUrl)
+		listUrl = listsParser.getWordListUrl(ldc.selectedRowIndex)
+		list = self._wrtsConnection.importWordList(listUrl)
 
-			loaders = set(self._mm.mods("active", type="loader"))
-			try:
-				loader = self._modules.chooseItem(loaders)
-			except IndexError, e:
-				#show nice error and return
-				raise e
-			loader.loadFromList("words", list)
+		self._modules.default(
+			"active",
+			type="loader"
+		).loadFromList("words", list)
 
 def init(moduleManager):
 	return WrtsApiModule(moduleManager)

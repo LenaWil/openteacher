@@ -21,28 +21,36 @@
 
 from PyQt4 import QtGui, QtCore
 import datetime
+import weakref
 
 class ThinkWidget(QtGui.QWidget):
 	def __init__(self, *args, **kwargs):
 		super(ThinkWidget, self).__init__(*args, **kwargs)
 		
-		self.label = QtGui.QLabel(_("Think about the answer, and press the 'View answer' button when you're done."))
+		self.label = QtGui.QLabel()
 		self.label.setWordWrap(True)
-		self.button = QtGui.QPushButton(_("View answer"))
+		self.viewAnswerButton = QtGui.QPushButton()
+		self.skipButton = QtGui.QPushButton()
 		
 		mainLayout = QtGui.QVBoxLayout()
 		mainLayout.addWidget(self.label)
-		mainLayout.addWidget(self.button)
+		mainLayout.addWidget(self.skipButton)
+		mainLayout.addWidget(self.viewAnswerButton)
 		
 		self.setLayout(mainLayout)
+
+	def retranslate(self):
+		self.label.setText(_("Think about the answer, and press the 'View answer' button when you're done."))
+		self.viewAnswerButton.setText(_("View answer"))
+		self.skipButton.setText(_("Skip"))
 
 class AnswerWidget(QtGui.QWidget):
 	def __init__(self, *args, **kwargs):
 		super(AnswerWidget, self).__init__(*args, **kwargs)
 
 		self.label = QtGui.QLabel()
-		self.rightButton = QtGui.QPushButton(_("I was right"))
-		self.wrongButton = QtGui.QPushButton(_("I was wrong"))
+		self.rightButton = QtGui.QPushButton()
+		self.wrongButton = QtGui.QPushButton()
 
 		bottomLayout = QtGui.QHBoxLayout()
 		bottomLayout.addWidget(self.rightButton)
@@ -54,24 +62,39 @@ class AnswerWidget(QtGui.QWidget):
 		
 		self.setLayout(mainLayout)
 
+	def retranslate(self):
+		self.rightButton.setText(_("I was right"))
+		self.wrongButton.setText(_("I was wrong"))
+
 class InMindTeachWidget(QtGui.QStackedWidget):
-	def __init__(self, moduleManager, *args, **kwargs):
+	def __init__(self, compose, *args, **kwargs):
 		super(InMindTeachWidget, self).__init__(*args, **kwargs)
 
-		self._mm = moduleManager
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._compose = compose
 
 		self.thinkWidget = ThinkWidget()
 		self.answerWidget = AnswerWidget()
-		
+
 		self.addWidget(self.thinkWidget)
 		self.addWidget(self.answerWidget)
+
+	def retranslate(self):
+		self.thinkWidget.retranslate()
+		self.answerWidget.retranslate()
+		
+		curWid = self.currentWidget()
+		try:
+			self.newItem(self._currentWord)
+		except AttributeError:
+			pass
+		self.setCurrentWidget(curWid)
 
 	def updateLessonType(self, lessonType):
 		self.lessonType = lessonType
 
 		self.lessonType.newItem.handle(self.newItem)
-		self.thinkWidget.button.clicked.connect(self.startAnswering)
+		self.thinkWidget.viewAnswerButton.clicked.connect(self.startAnswering)
+		self.thinkWidget.skipButton.clicked.connect(self.lessonType.skip)
 		self.answerWidget.rightButton.clicked.connect(self.setRight)
 		self.answerWidget.wrongButton.clicked.connect(self.setWrong)
 
@@ -96,18 +119,8 @@ class InMindTeachWidget(QtGui.QStackedWidget):
 
 	def newItem(self, word):
 		self._currentWord = word
-		composers = set(self._mm.mods("active", type="wordsStringComposer"))
-		try:
-			compose = self._modules.chooseItem(composers).compose
-		except IndexError, e:
-			#FIXME: show a nice error message? Make it impossible to use
-			#inMind in another way?
-			#
-			#also check every file using 'self._modules.chooseItem', if
-			#the error is catched ánd handled.
-			raise e
 		self.answerWidget.label.setText(
-			_("Translation: ") + compose(word["answers"])
+			_("Translation: ") + self._compose(word["answers"])
 		)
 		self.start = datetime.datetime.now()
 		self.setCurrentWidget(self.thinkWidget)
@@ -122,26 +135,68 @@ class InMindTeachTypeModule(object):
 		self._mm = moduleManager
 
 		self.type = "teachType"
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
+		self.requires = (
+			self._mm.mods(type="wordsStringComposer"),
+		)
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
+		self._activeWidgets = set()
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.dataType = "words"
+		self.active = True
+
+	def _retranslate(self):
+		#Translations
 		global _
 		global ngettext
 
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
-		self.dataType = "words"
-		self.name = _("Think answers")
-		self.active = True
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("Think answer")
+		for widget in self._activeWidgets:
+			r = widget()
+			if r is not None:
+				r.retranslate()
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
+		del self._activeWidgets
 		del self.dataType
 		del self.name
 
+	@property
+	def _compose(self):
+		return self._modules.default(
+			"active",
+			type="wordsStringComposer"
+		).compose
+
 	def createWidget(self, tabChanged):
-		return InMindTeachWidget(self._mm)
+		imtw = InMindTeachWidget(self._compose)
+		self._activeWidgets.add(weakref.ref(imtw))
+		self._retranslate()
+		return imtw
 
 def init(moduleManager):
 	return InMindTeachTypeModule(moduleManager)

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
+#	Copyright 2011, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -23,22 +24,26 @@ import os
 import tempfile
 from PyQt4 import QtGui
 
-class OpenTeachingTopoSaverModule(object):
+class PdfSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(OpenTeachingTopoSaverModule, self).__init__(*args, **kwargs)
+		super(PdfSaverModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "save"
 
-	def enable(self):		
+	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._modules.registerModule("Open Teaching Media (.otmd) saver", self)
+		self.name = "Portable Document Format (.pdf) saver"
 		self.saves = {"words": ["pdf"]}
 		
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
+		del self.name
+		del self.saves
 
 	def save(self, type, list, path, resources):
 		composers = set(self._mm.mods("active", type="wordsStringComposer"))
@@ -69,4 +74,4 @@ class OpenTeachingTopoSaverModule(object):
 		painter.end()
 
 def init(moduleManager):
-	return OpenTeachingTopoSaverModule(moduleManager)
+	return PdfSaverModule(moduleManager)

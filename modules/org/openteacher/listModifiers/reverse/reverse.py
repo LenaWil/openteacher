@@ -26,23 +26,47 @@ class ReverseModule(object):
 		self._mm = moduleManager
 
 		self.type = "listModifier"
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
 
 	def modifyList(self, indexes, list):
 		#always work on the indexes, and return a list object
 		return __builtin__.list(reversed(indexes))
 
 	def enable(self):
-		#Translations
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.dataType = "all"
-		self.name = _("Reverse")
 		self.active = True
+
+	def _retranslate(self):
+		#Translations
+		global _
+		global ngettext
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("Reverse")
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
 		del self.dataType
 		del self.name
 

@@ -29,12 +29,9 @@ class OpenTeacher(object):
 		mm = moduleManager.ModuleManager(MODULES_PATH)
 
 		mods = set(mm.mods(type="openteacher-core"))
-		if len(mods) == 1:
-			mods.pop().run()
-		elif len(mods) == 0:
-			raise NotImplementedError("OpenTeacher core module doesn't have an implementation! Please install one.")
-		elif len(mods) > 1:
-			raise ValueError("There are %s OpenTeacher core module implementations! Please make sure there is only one." % len(mods))
+		if len(mods) != 1:
+			raise ValueError("There has to be exactly one openteacher-core module installed.")
+		mods.pop().run()
 		return 0
 
 if __name__ == "__main__":

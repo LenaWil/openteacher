@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Marten de Vries
+#	Copyright 2008-2011, Roel Huybrechts
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,6 +19,256 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+from PyQt4 import QtCore, QtGui
+import random
+import gettext
+import weakref
+
+class AboutTextLabel(QtGui.QLabel):
+	def __init__(self, metadata, templatePath, *args, **kwargs):
+		super(AboutTextLabel, self).__init__(*args, **kwargs)
+		
+		self._metadata = metadata
+		self._templatePath = templatePath
+
+		self.setOpenExternalLinks(True)
+		self.setAlignment(QtCore.Qt.AlignCenter)
+
+	def retranslate(self):
+		firstLine, secondLine = self._splitLineCloseToMiddle(
+			self._metadata["slogan"]
+		)
+
+		t = pyratemp.Template(open(self._templatePath).read())
+		data = self._metadata.copy()
+		data.update({
+			"firstLine": firstLine,
+			"secondLine": secondLine,
+			"websiteText": _("Project website"),
+		})
+		self.setText(t(**data))
+
+	def _splitLineCloseToMiddle(self, line):
+		"""Used to split the slogan at the space closest to the middle of it."""
+
+		#determine the middle and find the closest spaces
+		middle = len(line) /2
+		distanceFromLeft = line[:middle].find(" ")
+		distanceFromRight = line[middle:].find(" ")
+
+		#Check if spaces were found
+		if distanceFromLeft == -1 and distanceFromRight == -1:
+			return (line, "")
+		elif distanceFromLeft == -1:
+			pos = middle + distanceFromRight
+			return (line[:pos], line[pos:])
+		elif distanceFromRight == -1:
+			pos = middle - distanceFromLeft
+			return (line[:pos], line[pos:])
+		else:
+			#left is closest
+			if distanceFromLeft < distanceFromRight:
+				pos = middle - distanceFromLeft
+				return (line[:pos], line[pos:])
+			#right is closest
+			else:
+				pos = middle + distanceFromRight
+				return (line[:pos], line[pos:])
+
+class AboutImageLabel(QtGui.QLabel):
+	def __init__(self, metadata, *args, **kwargs):
+		super(AboutImageLabel, self).__init__(*args, **kwargs)
+
+		self.setPixmap(QtGui.QPixmap(metadata["comicPath"]))
+		self.setAlignment(QtCore.Qt.AlignCenter)
+
+class AboutWidget(QtGui.QWidget):
+	def __init__(self, metadata, templatePath, *args, **kwargs):
+		super(AboutWidget, self).__init__(*args, **kwargs)
+
+		imageLabel = AboutImageLabel(metadata)
+		self.textLabel = AboutTextLabel(metadata, templatePath)
+
+		layout = QtGui.QVBoxLayout()
+		layout.addStretch()
+		layout.addWidget(imageLabel)
+		layout.addStretch()
+		layout.addWidget(self.textLabel)
+		layout.addStretch()
+		self.setLayout(layout)
+
+	def retranslate(self):
+		self.textLabel.retranslate()
+
+class ShortLicenseWidget(QtGui.QWidget):
+	def __init__(self, metadata, *args, **kwargs):
+		super(ShortLicenseWidget, self).__init__(*args, **kwargs)
+
+		label = QtGui.QLabel()
+		label.setText(metadata["licenseIntro"])
+		self.fullLicenseButton = QtGui.QPushButton()
+
+		vbox = QtGui.QVBoxLayout()
+		vbox.addWidget(label)
+		vbox.addWidget(self.fullLicenseButton)
+		
+		self.layout = QtGui.QHBoxLayout()
+		self.layout.addStretch()
+		self.layout.addLayout(vbox)
+		self.layout.addStretch()
+		self.setLayout(self.layout)
+
+	def retranslate(self):
+		self.fullLicenseButton.setText(_("Full license text"))
+
+class LongLicenseWidget(QtGui.QTextEdit):
+	def __init__(self, metadata, *args, **kwargs):
+		super(LongLicenseWidget, self).__init__(*args, **kwargs)
+
+		self.setReadOnly(True)
+		self.setText(metadata["license"])
+
+class LicenseWidget(QtGui.QStackedWidget):
+	def __init__(self, metadata, *args, **kwargs):
+		super(LicenseWidget, self).__init__(*args, **kwargs)
+
+		self.shortLicenseWidget = ShortLicenseWidget(metadata)
+		self.longLicenseWidget = LongLicenseWidget(metadata)
+
+		self.shortLicenseWidget.fullLicenseButton.clicked.connect(self.showFullLicense)
+
+		self.addWidget(self.shortLicenseWidget)
+		self.addWidget(self.longLicenseWidget)
+
+	def retranslate(self):
+		self.shortLicenseWidget.retranslate()
+
+	def showFullLicense(self):
+		self.setCurrentIndex(1) #longLicenseWidget
+
+class PersonWidget(QtGui.QWidget):
+	def __init__(self, *args, **kwargs):
+		super(PersonWidget, self).__init__(*args, **kwargs)
+
+		self.taskLabel = QtGui.QLabel("")
+		self.taskLabel.setStyleSheet("font-size:24pt;")
+		self.nameLabel = QtGui.QLabel("")
+		self.nameLabel.setStyleSheet("font-size:36pt;")
+
+		palette = QtGui.QPalette()
+		color = palette.windowText().color()
+		color.setAlpha(0)
+		palette.setColor(QtGui.QPalette.WindowText, color)
+
+		self.taskLabel.setPalette(palette)
+		self.nameLabel.setPalette(palette)
+
+		self.taskLabel.setAlignment(QtCore.Qt.AlignCenter)
+		self.nameLabel.setAlignment(QtCore.Qt.AlignCenter)
+
+		self.layout = QtGui.QVBoxLayout()
+		self.layout.addWidget(self.taskLabel)
+		self.layout.addStretch()
+		self.layout.addWidget(self.nameLabel)
+		self.setLayout(self.layout)
+
+	def update(self, task, name):
+		self.taskLabel.setText(task)
+		self.nameLabel.setText(name)
+
+	def fade(self, step):
+		if step <= 255:
+			alpha = step
+		elif step > 765:
+			alpha = 1020 - step
+		else:
+			return
+
+		palette = QtGui.QPalette()
+		color = palette.windowText().color()
+		color.setAlpha(alpha)
+		palette.setColor(QtGui.QPalette.WindowText, color)
+
+		self.taskLabel.setPalette(palette)
+		self.nameLabel.setPalette(palette)
+
+class AuthorsWidget(QtGui.QWidget):
+	def __init__(self, authors, fade, *args, **kwargs):
+		super(AuthorsWidget, self).__init__(*args, **kwargs)
+		
+		if len(authors) == 0:
+			self.authors = None
+		else:
+			self.backupAuthors = list(authors)
+			self.authors = []
+
+		self._fade = fade
+
+		self.personWidget = PersonWidget()
+		self.launchpadLabel = QtGui.QLabel()
+		self.launchpadLabel.setAlignment(QtCore.Qt.AlignCenter)
+
+		self.layout = QtGui.QVBoxLayout()
+		self.layout.addWidget(self.personWidget)
+		self.layout.addStretch()
+		self.layout.addWidget(self.launchpadLabel)
+		self.setLayout(self.layout)
+
+	def retranslate(self):
+		self.launchpadLabel.setText(
+			_("Thanks to all Launchpad contributors!")
+		)
+
+	def startAnimation(self):
+		self.nextAuthor()
+		self.timeLine = QtCore.QTimeLine(8000)
+		#4x 255; 2x for the alpha gradients, 2x for a pause
+		self.timeLine.setFrameRange(0, 1020)
+		self.timeLine.frameChanged.connect(lambda x: self._fade(x, [self.personWidget.taskLabel, self.personWidget.nameLabel]))
+		self.timeLine.finished.connect(self.startAnimation)
+		self.timeLine.start()
+
+	def nextAuthor(self):
+		if self.authors is None:
+			return
+		try:
+			self.personWidget.update(*self.authors.pop())
+		except IndexError:
+			self.authors = self.backupAuthors[:]
+			random.shuffle(self.authors)
+			self.nextAuthor()
+
+class AboutDialog(QtGui.QTabWidget):
+	def __init__(self, authors, fade, metadata, templatePath, *args, **kwargs):
+		super(AboutDialog, self).__init__(*args, **kwargs)
+
+		self.setTabPosition(QtGui.QTabWidget.South)
+		self.setDocumentMode(True)
+
+		self.aboutWidget = AboutWidget(metadata, templatePath)
+		self.licenseWidget = LicenseWidget(metadata)
+		self.authorsWidget = AuthorsWidget(authors, fade)
+
+		self.addTab(self.aboutWidget, "")
+		self.addTab(self.licenseWidget, "")
+		self.addTab(self.authorsWidget, "")
+
+		self.currentChanged.connect(self.startAnimation)
+
+	def retranslate(self):
+		self.setWindowTitle(_("About"))
+		self.setTabText(0, _("About"))
+		self.setTabText(1, _("License"))
+		self.setTabText(2, _("Authors"))
+
+		self.aboutWidget.retranslate()
+		self.licenseWidget.retranslate()
+		self.authorsWidget.retranslate()
+
+	def startAnimation(self):
+		if self.currentWidget() == self.authorsWidget:
+			self.authorsWidget.startAnimation()
+
 class AboutModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(AboutModule, self).__init__(*args, **kwargs)
@@ -25,36 +276,79 @@ class AboutModule(object):
 		self._mm = moduleManager
 		self.type = "about"
 
+		self.requires = (
+			self._mm.mods(type="ui"),
+			self._mm.mods(type="fader")
+		)
+		self.uses = (
+			self._mm.mods(type="translator"),
+			self._mm.mods(type="authors"),
+		)
+
 	def show(self):
-		authorModules = set(self._mm.mods("active", type="authors"))
 		try:
-			authorModule = self._modules.chooseItem(authorModules)
+			module = self._modules.default("active", type="authors")
 		except IndexError:
 			authors = set()
 		else:
-			authors = authorModule.registeredAuthors
-		for module in self._mm.mods("active", type="ui"):
-			dialog = self._ui.AboutDialog(authors, self._mm)
-			tab = module.addCustomTab(dialog.windowTitle(), dialog)
-			tab.closeRequested.handle(tab.close)
+			authors = module.registeredAuthors
+		fade = self._modules.default("active", type="fader").fade
+		metadata = self._modules.default("active", type="metadata").metadata
+		templatePath = self._mm.resourcePath("about.html")
+		dialog = AboutDialog(authors, fade, metadata, templatePath)
+		tab = self._modules.default("active", type="ui").addCustomTab(
+			dialog.windowTitle(),
+			dialog
+		)
+		tab.closeRequested.handle(tab.close)
+
+		dialog.retranslate()
+		self._activeDialogs.add(weakref.ref(dialog))
+
+	def _retranslate(self):
+		global _
+		global ngettext
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		for dialog in self._activeDialogs:
+			r = dialog()
+			if r is not None:
+				r.retranslate()
+
+		self.name = _("About module")
 
 	def enable(self):
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
-
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._modules.registerModule(_("About module"), self)
 
-		self._ui = self._mm.import_("ui")
-		self._ui._, self._ui._ngettext = _, ngettext
+		self._activeDialogs = set()
+
+		global pyratemp
+		pyratemp = self._mm.import_("pyratemp")
+
+		#load translator
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
 		del self._modules
-		del self._ui
+		del self._activeDialogs
+		del self.name
 
 def init(moduleManager):
 	return AboutModule(moduleManager)

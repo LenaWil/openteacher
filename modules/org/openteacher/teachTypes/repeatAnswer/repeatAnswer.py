@@ -21,6 +21,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt4 import QtGui, QtCore
+import weakref
 
 #FIXME: should parent be replaced with signals & slots? Nicer style.
 
@@ -60,13 +61,19 @@ class StartScreenWidget(QtGui.QWidget):
 
 		self.parent = parent
 
+		self.label = QtGui.QLabel()
+		self.startButton = QtGui.QPushButton()
+
 		self.startScreen = QtGui.QVBoxLayout()
-		self.startScreen.addWidget(QtGui.QLabel(_("Click the button to start")))
-		self.startButton = QtGui.QPushButton(_("Start!"))
+		self.startScreen.addWidget(self.label)
 		self.startScreen.addWidget(self.startButton)
 		self.setLayout(self.startScreen)
 
 		self.startButton.clicked.connect(self.parent.startRepeat)
+
+	def retranslate(self):
+		self.label.setText(_("Click the button to start"))
+		self.startButton.setText(_("Start!"))
 
 class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
 	def __init__(self, moduleManager, tabChanged, *args, **kwargs):
@@ -84,16 +91,14 @@ class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
 		self.addWidget(self.repeatScreen)
 
 		#make input screen
-		typingInputs = set(self._mm.mods("active", type="typingInput"))
-		try:
-			typingInput = self._modules.chooseItem(typingInputs)
-		except IndexError, e:
-			raise e #FIXME: show a nice error
-		else:
-			self.inputWidget = typingInput.createWidget()
-			self.addWidget(self.inputWidget)
+		typingInput = self._modules.default("active", type="typingInput")
+		self.inputWidget = typingInput.createWidget()
+		self.addWidget(self.inputWidget)
 
 		tabChanged.connect(lambda: self.setCurrentWidget(self.startScreen))
+
+	def retranslate(self):
+		self.startScreen.retranslate()
 
 	def startRepeat(self):
 		self.setCurrentWidget(self.repeatScreen)
@@ -113,27 +118,61 @@ class RepeatAnswerTeachTypeModule(object):
 		self._mm = moduleManager
 
 		self.type = "teachType"
+		self.requires = (
+			self._mm.mods(type="typingInput"),
+		)
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		
+		self._activeWidgets = set()
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.dataType = "words"
+		self.active = True
+
+	def _retranslate(self):
+		#Translations
 		global _
 		global ngettext
 
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("Repeat answer")
 
-		self.dataType = "words"
-		self.name = _("Repeat Answer")
-		self.active = True
+		for widget in self._activeWidgets:
+			r = widget()
+			if r is not None:
+				r.retranslate()
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
+		del self._activeWidgets
 		del self.dataType
 		del self.name
 
 	def createWidget(self, tabChanged):
-		return RepeatAnswerTeachWidget(self._mm, tabChanged)
+		ratw = RepeatAnswerTeachWidget(self._mm, tabChanged)
+		self._activeWidgets.add(weakref.ref(ratw))
+		return ratw
 
 def init(moduleManager):
 	return RepeatAnswerTeachTypeModule(moduleManager)

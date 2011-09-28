@@ -22,7 +22,8 @@
 from PyQt4 import QtCore, QtGui
 
 class OnscreenKeyboardWidget(QtGui.QWidget):
-	def __init__(self, manager, characters, *args,  **kwargs):
+	letterChosen = QtCore.pyqtSignal([object])
+	def __init__(self, characters, *args,  **kwargs):
 		super(OnscreenKeyboardWidget, self).__init__(*args, **kwargs)
 
 		topWidget = QtGui.QWidget()
@@ -65,9 +66,6 @@ class OnscreenKeyboardWidget(QtGui.QWidget):
 		mainLayout.setContentsMargins(0, 0, 0, 0)
 		self.setLayout(mainLayout)
 
-		self._mm = manager
-		self.letterChosen = self._mm.createEvent()
-
 		topWidget.setSizePolicy(
 			QtGui.QSizePolicy.Expanding,
 			QtGui.QSizePolicy.Maximum
@@ -83,20 +81,27 @@ class OnscreenKeyboardModule(object):
 
 		self._mm = moduleManager
 		self.type = "onscreenKeyboard"
+		self.requires = (
+			self._mm.mods(type="event"),
+			self._mm.mods(type="onscreenKeyboardData"),
+		)
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
+		del self._modules
+
 	def createWidget(self):
 		widget = QtGui.QTabWidget()
-		widget.letterChosen = self._mm.createEvent()
-		for module in self._mm.mods("active", type="onscreenKeyboardData"):
-			tab = OnscreenKeyboardWidget(self._mm, module.data)
+		widget.letterChosen = self._modules.default(type="event").createEvent()
+		for module in self._modules.sort("active", type="onscreenKeyboardData"):
+			tab = OnscreenKeyboardWidget(module.data)
 			widget.addTab(tab, module.name)
-			tab.letterChosen.handle(widget.letterChosen.emit)
+			tab.letterChosen.connect(widget.letterChosen.send)
 		return widget
 
 def init(moduleManager):

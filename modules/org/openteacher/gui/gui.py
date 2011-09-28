@@ -21,7 +21,6 @@
 
 from PyQt4 import QtGui
 import sys
-import gettext
 import os
 
 class FileTab(object):
@@ -31,16 +30,19 @@ class FileTab(object):
 		self._tabWidget = tabWidget
 		self._widget = widget
 		self._mm = moduleManager
-		
-		self.closeRequested = self._mm.createEvent()
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
+		self.closeRequested = self._modules.default(
+			type="event"
+		).createEvent()
 
 		i = self._tabWidget.indexOf(self._widget)
 		closeButton = self._tabWidget.tabBar().tabButton(
 			i,
 			QtGui.QTabBar.RightSide
 		)
-		closeButton.clicked.connect(lambda: self.closeRequested.emit())
-		closeButton.setShortcut("Ctrl+F4")
+		closeButton.clicked.connect(lambda: self.closeRequested.send())
+		closeButton.setShortcut(QtGui.QKeySequence.Close)
 
 	def close(self):
 		i = self._tabWidget.indexOf(self._widget)
@@ -50,8 +52,11 @@ class LessonFileTab(FileTab):
 	def __init__(self, moduleManager, tabWidget, widget, *args, **kwargs):
 		super(LessonFileTab, self).__init__(moduleManager, tabWidget, widget, *args, **kwargs)
 
-		self.tabChanged = self._mm.createEvent()
-		self._widget.currentChanged.connect(lambda: self.tabChanged.emit())
+		self._mm = moduleManager
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
+		self.tabChanged = self._modules.default(type="event").createEvent()
+		self._widget.currentChanged.connect(lambda: self.tabChanged.send())
 	
 	def _setCurrentTab(self, value):
 		self._widget.setCurrentWidget(value)
@@ -67,83 +72,88 @@ class GuiModule(object):
 		self._mm = moduleManager
 
 		self.type = "ui"
+		self.requires = (
+			self._mm.mods(type="event"),
+			self._mm.mods(type="metadata"),
+		)
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
 
 	def enable(self):
-		self.newEvent = self._mm.createEvent()
-		self.openEvent = self._mm.createEvent()
-		self.saveEvent = self._mm.createEvent()
-		self.saveAsEvent = self._mm.createEvent()
-		self.printEvent = self._mm.createEvent()
-		self.quitEvent = self._mm.createEvent()
-		self.settingsEvent = self._mm.createEvent()
-		self.aboutEvent = self._mm.createEvent()
-		self.documentationEvent = self._mm.createEvent()
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		createEvent = self._modules.default(type="event").createEvent
 
-		self.tabChanged = self._mm.createEvent()
-		self.applicationActivityChanged = self._mm.createEvent()
+		self.newEvent = createEvent()
+		self.openEvent = createEvent()
+		self.saveEvent = createEvent()
+		self.saveAsEvent = createEvent()
+		self.printEvent = createEvent()
+		self.quitEvent = createEvent()
+		self.settingsEvent = createEvent()		
+		self.aboutEvent = createEvent()
+		self.documentationEvent = createEvent()
+
+		self.tabChanged = createEvent()
+		self.applicationActivityChanged = createEvent()
 
 		self._ui = self._mm.import_("ui")
 		self._ui.ICON_PATH = self._mm.resourcePath("icons/") #FIXME: something less hard to debug?
 
-		#Translations
-		global _
-		global ngettext
-
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = self._ui._, self._ui.ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
-		)
-
 		self._app = QtGui.QApplication(sys.argv)
-		gettext.install("OpenTeacher")#FIXME
-
 		self._widget = self._ui.OpenTeacherWidget()
 
-		for module in self._mm.mods("active", "name", type="metadata"):
-			name = module.name
-		for module in self._mm.mods("active", "version", type="metadata"):
-			version = module.version
-		for module in self._mm.mods("active", "iconPath", type="metadata"):
-			iconPath = module.iconPath
-		self._widget.setWindowTitle(" ".join([name, version]))
-		self._widget.setWindowIcon(QtGui.QIcon(iconPath))
+		#load translator
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		metadata = self._modules.default("active", type="metadata").metadata
+		self._widget.setWindowTitle(
+			" ".join([metadata["name"], metadata["version"]])
+		)
+		self._widget.setWindowIcon(QtGui.QIcon(metadata["iconPath"]))
 
 		self._fileTabs = {}
 
 		#Lambda's because otherwise Qt's argument checked is passed ->
 		#error.
 		self._widget.newAction.triggered.connect(
-			lambda: self.newEvent.emit()
+			lambda: self.newEvent.send()
 		)
 		self._widget.openAction.triggered.connect(
-			lambda: self.openEvent.emit()
+			lambda: self.openEvent.send()
 		)
 		self._widget.saveAction.triggered.connect(
-			lambda: self.saveEvent.emit()
+			lambda: self.saveEvent.send()
 		)
 		self._widget.saveAsAction.triggered.connect(
-			lambda: self.saveAsEvent.emit()
+			lambda: self.saveAsEvent.send()
 		)
 		self._widget.printAction.triggered.connect(
-			lambda: self.printEvent.emit()
+			lambda: self.printEvent.send()
 		)
 		self._widget.quitAction.triggered.connect(
-			lambda: self.quitEvent.emit()
+			lambda: self.quitEvent.send()
 		)
 		self._widget.settingsAction.triggered.connect(
-			lambda: self.settingsEvent.emit()
+			lambda: self.settingsEvent.send()
 		)
 		self._widget.aboutAction.triggered.connect(
-			lambda: self.aboutEvent.emit()
+			lambda: self.aboutEvent.send()
 		)
 		self._widget.docsAction.triggered.connect(
-			lambda: self.documentationEvent.emit()
+			lambda: self.documentationEvent.send()
 		)
 		self._widget.tabWidget.currentChanged.connect(
-			lambda: self.tabChanged.emit()
+			lambda: self.tabChanged.send()
 		)
 		self._widget.activityChanged.connect(
-			lambda activity: self.applicationActivityChanged.emit(
+			lambda activity: self.applicationActivityChanged.send(
 				"active" if activity else "inactive"
 			)
 		)
@@ -151,7 +161,8 @@ class GuiModule(object):
 
 	def disable(self):
 		self.active = False
-
+		
+		del self._modules
 		del self._ui
 		del self._app
 		del self._fileTabs
@@ -167,6 +178,22 @@ class GuiModule(object):
 		del self.tabChanged
 		del self.applicationActivityChanged
 		del self._widget
+
+	def _retranslate(self):
+		global _
+		global ngettext
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		
+		self._ui._, self._ui.ngettext = _, ngettext
+		self._widget.retranslate()
 
 	def run(self):
 		self._widget.show()
@@ -185,19 +212,19 @@ class GuiModule(object):
 	def addLessonCreateButton(self, *args, **kwargs):
 		button = self._widget.tabWidget.startWidget.addLessonCreateButton(*args, **kwargs)
 
-		event = self._mm.createEvent()
+		event = self._modules.default(type="event").createEvent()
 		#Lambda's because otherwise Qt's argument checked is passed ->
 		#error.
-		button.clicked.connect(lambda: event.emit())
+		button.clicked.connect(lambda: event.send())
 		return event
 
 	def addLessonLoadButton(self, *args, **kwargs):
 		button = self._widget.tabWidget.startWidget.addLessonLoadButton(*args, **kwargs)
 		
-		event = self._mm.createEvent()
+		event = self._modules.default(type="event").createEvent()
 		#Lambda's because otherwise Qt's argument checked is passed ->
 		#error.
-		button.clicked.connect(lambda: event.emit())
+		button.clicked.connect(lambda: event.send())
 		return event
 
 	def addFileTab(self, text, enterWidget=None, teachWidget=None, resultsWidget=None):
@@ -294,15 +321,6 @@ class GuiModule(object):
 		printer = QtGui.QPrinter()
 		
 		printDialog = QtGui.QPrintDialog(printer)
-		
-		if os.name == 'posix':
-			lastWidget = self._widget.tabWidget.currentWidget()
-			tab = self.addCustomTab(printDialog.windowTitle(), printDialog)
-			tab.closeRequested.handle(tab.close)
-			printDialog.rejected.connect(tab.close)
-			printDialog.accepted.connect(tab.close)
-			self._widget.tabWidget.setCurrentWidget(lastWidget)
-		
 		result = printDialog.exec_()
 		if not result:
 			return
@@ -336,11 +354,6 @@ class GuiModule(object):
 	@property
 	def startTabActive(self):
 		return self._widget.tabWidget.startWidget == self._widget.tabWidget.currentWidget()
-
-	def chooseItem(self, items): #FIXME: in separate module
-		d = self._ui.ItemChooser(items)
-		d.exec_()
-		return d.item
 
 def init(moduleManager):
 	return GuiModule(moduleManager)

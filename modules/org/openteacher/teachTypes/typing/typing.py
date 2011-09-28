@@ -28,31 +28,50 @@ class TypingTeachTypeModule(object):
 		self.type = "teachType"
 
 	def enable(self):
-		global _
-		global ngettext
-
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
+		self.requires = (
+			self._mm.mods(type="typingInput"),
+		)
+		self.uses = (
+			self._mm.mods(type="translator"),
 		)
 
-		self.dataType = "words"
-		self.name = _("Type Answer")
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.dataType = "words"
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
 		del self.dataType
 		del self.name
 		del self._modules
 
-	def createWidget(self, tabChanged):
-		typingInputs = set(self._mm.mods("active", type="typingInput"))
+	def _retranslate(self):
+		#Translations
 		try:
-			typingInput = self._modules.chooseItem(typingInputs)
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("Type answer")
+
+	def createWidget(self, tabChanged):
+		try:
+			typingInput = self._modules.default("active", type="typingInput")
 		except IndexError, e:
-			raise e #FIXME: show a nice error
+			raise e #FIXME: what to do?
 		else:
 			return typingInput.createWidget()
 

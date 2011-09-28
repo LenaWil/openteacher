@@ -26,12 +26,11 @@ newItem
 lessonDone
 """
 class AllOnceLessonType(object):
-	def __init__(self, moduleManager, list, indexes, *args, **kwargs):
+	def __init__(self, createEvent, list, indexes, *args, **kwargs):
 		super(AllOnceLessonType, self).__init__(*args, **kwargs)
-		self._mm = moduleManager
 
-		self.newItem = self._mm.createEvent()
-		self.lessonDone = self._mm.createEvent()
+		self.newItem = createEvent()
+		self.lessonDone = createEvent()
 		self._list = list
 		self._indexes = indexes
 		
@@ -45,7 +44,11 @@ class AllOnceLessonType(object):
 		self.askedItems = 0
 
 	def start(self):
-		self._emitNext()
+		self._sendNext()
+
+	def skip(self):
+		self._indexes.append(self._indexes.pop(askedItems))
+		self._sendNext()
 
 	def setResult(self, result):
 		# Add the test to the list (if it's not already there)
@@ -54,7 +57,7 @@ class AllOnceLessonType(object):
 		self._test["results"].append(result)
 
 		self.askedItems += 1
-		self._emitNext()
+		self._sendNext()
 
 	def addPause(self, pause):
 		self._test["pauses"].append(pause)
@@ -71,7 +74,7 @@ class AllOnceLessonType(object):
 			if not self._list["tests"][-1] == self._test:
 				self._list["tests"].append(self._test)
 
-	def _emitNext(self):		
+	def _sendNext(self):		
 		try:
 			i = self._indexes[self.askedItems]
 		except IndexError:
@@ -82,9 +85,9 @@ class AllOnceLessonType(object):
 					self._list["tests"]
 				except KeyError:
 					self._list["tests"] = []
-			self.lessonDone.emit()
+			self.lessonDone.send()
 		else:
-			self.newItem.emit(self._list["items"][i])
+			self.newItem.send(self._list["items"][i])
 
 class AllOnceModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -92,26 +95,52 @@ class AllOnceModule(object):
 		self._mm = moduleManager
 
 		self.type = "lessonType"
-
-	def enable(self):
-		#Translations
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
+		self.requires = (
+			self._mm.mods(type="event"),
+		)
+		self.uses = (
+			self._mm.mods(type="translator"),
 		)
 
-		self.newItem = self._mm.createEvent()
-		self.name = _("All once")
+	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.newItem = self._createEvent()
 		self.active = True
+
+	def _retranslate(self):
+		#Translations
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("All once")
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
 		del self.newItem
 		del self.name
 
+	@property
+	def _createEvent(self):
+		return self._modules.default(type="event").createEvent
+
 	def createLessonType(self, list, indexes):
-		lessonType = AllOnceLessonType(self._mm, list, indexes)
-		lessonType.newItem.handle(self.newItem.emit)
+		lessonType = AllOnceLessonType(self._createEvent, list, indexes)
+		lessonType.newItem.handle(self.newItem.send)
 		return lessonType
 
 def init(moduleManager):
