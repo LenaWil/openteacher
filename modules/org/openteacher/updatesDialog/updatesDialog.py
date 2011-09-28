@@ -118,8 +118,10 @@ class UpdatesDialogModule(object):
 
 		self.active = True
 
-		self.ud = UpdatesDialog(self._modules.default("active", type="updates").updates)
-		self.ud.show()
+		updates = self._modules.default("active", type="updates").updates
+		if updates:
+			self.ud = UpdatesDialog(updates)
+			self.ud.show()
 
 	def disable(self):
 		self.active = False

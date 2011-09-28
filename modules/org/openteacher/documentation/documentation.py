@@ -75,12 +75,12 @@ class DocumentationModule(object):
 		)
 
 	def show(self):
-		metadataMod = self._modules.default("active", type="metadata")
+		metadata = self._modules.default("active", type="metadata").metadata
 		uiModule = self._modules.default("active", type="ui")
 
 		dialog = DocumentationDialog(
-			metadataMod.documentationUrl,
-			metadataMod.userAgent,
+			metadata["documentationUrl"],
+			metadata["userAgent"],
 			self._mm.resourcePath("docs/index.html")
 		)
 		tab = uiModule.addCustomTab(dialog.windowTitle(), dialog)
@@ -113,17 +113,19 @@ class DocumentationModule(object):
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
 			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+			language = "en"
 		else:
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
+			language = translator.language
 
 		self.name = _("Documentation module")
 		for dialog in self._activeDialogs:
 			r = dialog()
 			if r is not None:
 				r.retranslate()
-				r.updateLanguage("en") #FIXME: update dynamically
+				r.updateLanguage(language)
 
 	def disable(self):
 		self.active = False

@@ -49,17 +49,25 @@ class MetadataModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		self.name = _("OpenTeacher")
-		self.slogan = _("The easiest way to learn a new language")
-		self.version = _("3.x")
-		self.website = _("http://openteacher.org/")
-		self.userAgent = "%s/%s (+%s)" % (self.name, self.version, self.website)
-		self.documentationUrl = _("http://openteacher.org/documentation.html")
-		self.updatesUrl = "http://localhost/updates"
-		self.iconPath = self._mm.resourcePath("openteacher.png")
-		self.licenseIntro = open(self._mm.resourcePath("license_intro.txt")).read()
-		self.license = open(self._mm.resourcePath("license.txt")).read()
-		self.comicPath = self._mm.resourcePath("comic.png")
+		self.metadata = {
+			"name": _("OpenTeacher"),
+			"slogan": _("The easiest way to learn a new language"),
+			"version": _("3.x"),
+			"authors": _("OpenTeacher authors"),
+			"copyrightYears": _("2008-2011"),
+			"website": _("http://openteacher.org/"),
+			"documentationUrl": _("http://openteacher.org/documentation.html"),
+			"updatesUrl": "http://localhost/updates",
+			"iconPath": self._mm.resourcePath("openteacher.png"),
+			"licenseIntro": open(self._mm.resourcePath("license_intro.txt")).read(),
+			"license": open(self._mm.resourcePath("license.txt")).read(),
+			"comicPath": self._mm.resourcePath("comic.png"),
+		}
+		self.metadata["userAgent"] = "%s/%s (+%s)" % (
+			self.metadata["name"],
+			self.metadata["version"],
+			self.metadata["website"]
+		)
 
 		self.active = True
 
@@ -67,15 +75,8 @@ class MetadataModule(object):
 		self.active = False
 
 		del self._modules
-		del self.name
-		del self.slogan
-		del self.version
-		del self.website
-		del self.documentationUrl
-		del self.iconPath
-		del self.licenseIntro
-		del self.license
-		del self.comicPath
+		del self.metadata
 
 def init(moduleManager):
 	return MetadataModule(moduleManager)
+

@@ -24,7 +24,7 @@ msgstr "OpenTeacher"
 
 #: metadata.py:35
 msgid "The easiest way to learn a new language"
-msgstr "The makkelijkste manier om een nieuwe taal te leren!"
+msgstr "De makkelijkste manier om een nieuwe taal te leren!"
 
 #: metadata.py:36
 msgid "3.x"

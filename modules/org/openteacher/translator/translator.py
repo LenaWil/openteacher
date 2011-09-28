@@ -42,8 +42,9 @@ class TranslatorModule(object):
 		).createEvent()
 		#gettext.install("OpenTeacher")#FIXME
 
-	def gettextFunctions(self, localeDir, language=None):
-		#FIXME: use module which also gives the possibility to choose
+	@property
+	def language(self):
+		language = None#FIXME: use module which also gives the possibility to choose
 		if not language:
 			try:
 				lc = self._modules.default("active", type="languageChooser")
@@ -53,6 +54,11 @@ class TranslatorModule(object):
 				language = lc.language
 		if not language:
 			language = locale.getdefaultlocale()[0]
+		return language
+
+	def gettextFunctions(self, localeDir, language=None):
+		if not language:
+			language = self.language
 		path = os.path.join(localeDir, language + ".mo")
 		if not os.path.isfile(path):
 			path = os.path.join(localeDir, language.split("_")[0] + ".mo")

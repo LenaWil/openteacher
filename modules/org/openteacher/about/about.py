@@ -25,41 +25,27 @@ import gettext
 import weakref
 
 class AboutTextLabel(QtGui.QLabel):
-	def __init__(self, moduleManager, *args, **kwargs):
+	def __init__(self, metadata, templatePath, *args, **kwargs):
 		super(AboutTextLabel, self).__init__(*args, **kwargs)
 		
-		self._mm = moduleManager
+		self._metadata = metadata
+		self._templatePath = templatePath
 
 		self.setOpenExternalLinks(True)
 		self.setAlignment(QtCore.Qt.AlignCenter)
 
 	def retranslate(self):
-		textPath = self._mm.resourcePath("about.html")
-		pyratemp = self._mm.import_("pyratemp")
+		firstLine, secondLine = self._splitLineCloseToMiddle(
+			self._metadata["slogan"]
+		)
 
-		for module in self._mm.mods("active", "name", type="metadata"):#FIXME and others
-			name = module.name
-
-		for module in self._mm.mods("active", "slogan", type="metadata"):
-			firstLine, secondLine = self._splitLineCloseToMiddle(module.slogan)
-
-		for module in self._mm.mods("active", "version", type="metadata"):
-			version = module.version
-
-		for module in self._mm.mods("active", "website", type="metadata"):
-			website = module.website
-
-		t = pyratemp.Template(open(textPath).read())
-		data = {
-			"name": name,
-			"version": version,
-			"first_line": firstLine,
-			"second_line": secondLine,
-			"copyright_years": "2008-2011", #FIXME: get from authors? Or from metadata?
-			"openteacher_authors": _("OpenTeacher authors"), #FIXME: see above
-			"project_website_link": website,
-			"project_website": _("Project website")
-		}
+		t = pyratemp.Template(open(self._templatePath).read())
+		data = self._metadata.copy()
+		data.update({
+			"firstLine": firstLine,
+			"secondLine": secondLine,
+			"websiteText": _("Project website"),
+		})
 		self.setText(t(**data))
 
 	def _splitLineCloseToMiddle(self, line):
@@ -90,21 +76,18 @@ class AboutTextLabel(QtGui.QLabel):
 				return (line[:pos], line[pos:])
 
 class AboutImageLabel(QtGui.QLabel):
-	def __init__(self, moduleManager, *args, **kwargs):
+	def __init__(self, metadata, *args, **kwargs):
 		super(AboutImageLabel, self).__init__(*args, **kwargs)
-		self._mm = moduleManager
-		
-		for module in self._mm.mods("active", "comicPath", type="metadata"):
-			self.setPixmap(QtGui.QPixmap(module.comicPath))
 
+		self.setPixmap(QtGui.QPixmap(metadata["comicPath"]))
 		self.setAlignment(QtCore.Qt.AlignCenter)
 
 class AboutWidget(QtGui.QWidget):
-	def __init__(self, moduleManager, *args, **kwargs):
+	def __init__(self, metadata, templatePath, *args, **kwargs):
 		super(AboutWidget, self).__init__(*args, **kwargs)
 
-		imageLabel = AboutImageLabel(moduleManager)#FIXME: translatable?
-		self.textLabel = AboutTextLabel(moduleManager)
+		imageLabel = AboutImageLabel(metadata)
+		self.textLabel = AboutTextLabel(metadata, templatePath)
 
 		layout = QtGui.QVBoxLayout()
 		layout.addStretch()
@@ -118,15 +101,11 @@ class AboutWidget(QtGui.QWidget):
 		self.textLabel.retranslate()
 
 class ShortLicenseWidget(QtGui.QWidget):
-	def __init__(self, moduleManager, *args, **kwargs):
+	def __init__(self, metadata, *args, **kwargs):
 		super(ShortLicenseWidget, self).__init__(*args, **kwargs)
-		self._mm = moduleManager
-
-		for module in self._mm.mods("active", "licenseIntro", type="metadata"):#FIXME: and others near here
-			shortLicense = module.licenseIntro
 
 		label = QtGui.QLabel()
-		label.setText(shortLicense)
+		label.setText(metadata["licenseIntro"])
 		self.fullLicenseButton = QtGui.QPushButton()
 
 		vbox = QtGui.QVBoxLayout()
@@ -143,22 +122,18 @@ class ShortLicenseWidget(QtGui.QWidget):
 		self.fullLicenseButton.setText(_("Full license text"))
 
 class LongLicenseWidget(QtGui.QTextEdit):
-	def __init__(self, moduleManager, *args, **kwargs):
+	def __init__(self, metadata, *args, **kwargs):
 		super(LongLicenseWidget, self).__init__(*args, **kwargs)
-		self._mm = moduleManager
-
-		for module in self._mm.mods("active", "license", type="metadata"):
-			longLicense = module.license
 
 		self.setReadOnly(True)
-		self.setText(longLicense)
+		self.setText(metadata["license"])
 
 class LicenseWidget(QtGui.QStackedWidget):
-	def __init__(self, moduleManager, *args, **kwargs):
+	def __init__(self, metadata, *args, **kwargs):
 		super(LicenseWidget, self).__init__(*args, **kwargs)
 
-		self.shortLicenseWidget = ShortLicenseWidget(moduleManager)
-		self.longLicenseWidget = LongLicenseWidget(moduleManager)
+		self.shortLicenseWidget = ShortLicenseWidget(metadata)
+		self.longLicenseWidget = LongLicenseWidget(metadata)
 
 		self.shortLicenseWidget.fullLicenseButton.clicked.connect(self.showFullLicense)
 
@@ -264,16 +239,14 @@ class AuthorsWidget(QtGui.QWidget):
 			self.nextAuthor()
 
 class AboutDialog(QtGui.QTabWidget):
-	def __init__(self, authors, fade, moduleManager, *args, **kwargs):
+	def __init__(self, authors, fade, metadata, templatePath, *args, **kwargs):
 		super(AboutDialog, self).__init__(*args, **kwargs)
-
-		self._mm = moduleManager
 
 		self.setTabPosition(QtGui.QTabWidget.South)
 		self.setDocumentMode(True)
 
-		self.aboutWidget = AboutWidget(self._mm)
-		self.licenseWidget = LicenseWidget(self._mm)
+		self.aboutWidget = AboutWidget(metadata, templatePath)
+		self.licenseWidget = LicenseWidget(metadata)
 		self.authorsWidget = AuthorsWidget(authors, fade)
 
 		self.addTab(self.aboutWidget, "")
@@ -305,7 +278,7 @@ class AboutModule(object):
 
 		self.requires = (
 			self._mm.mods(type="ui"),
-			self._mm.mods(type="fader") #FIXME: required?
+			self._mm.mods(type="fader")
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -320,7 +293,9 @@ class AboutModule(object):
 		else:
 			authors = module.registeredAuthors
 		fade = self._modules.default("active", type="fader").fade
-		dialog = AboutDialog(authors, fade, self._mm)
+		metadata = self._modules.default("active", type="metadata").metadata
+		templatePath = self._mm.resourcePath("about.html")
+		dialog = AboutDialog(authors, fade, metadata, templatePath)
 		tab = self._modules.default("active", type="ui").addCustomTab(
 			dialog.windowTitle(),
 			dialog
@@ -353,6 +328,9 @@ class AboutModule(object):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
 		self._activeDialogs = set()
+
+		global pyratemp
+		pyratemp = self._mm.import_("pyratemp")
 
 		#load translator
 		try:

@@ -40,8 +40,8 @@ class UpdatesModule(object):
 	def updates(self):
 		lastUpdate = datetime.datetime.min#datetime.datetime(2011, 9, 18, 17, 27, 16, 545688)#self._settings.value("org.openteacher.updates.lastUpdate")#FIXME
 		try:
-			jsonFile = urllib2.urlopen(self._metadata.updatesUrl)
-		except urllib2.HTTPError:
+			jsonFile = urllib2.urlopen(self._metadata["updatesUrl"])
+		except urllib2.URLError:
 			return
 		updates = json.load(jsonFile)
 		for i in xrange(len(updates)):
@@ -53,7 +53,7 @@ class UpdatesModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._metadata = self._modules.default("active", type="metadata")
+		self._metadata = self._modules.default("active", type="metadata").metadata
 		self._settings = self._modules.default("active", type="settings")
 
 		self._settings.registerSetting(

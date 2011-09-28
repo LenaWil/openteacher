@@ -109,7 +109,7 @@ class StartTabButton(QtGui.QPushButton):
 		result = u""
 		curLine = u""
 		words = unicode(self._text).split(u" ")
-		w = self.width()# -20 #-20 to keep a margin
+		w = self.width()
 		try:
 			return self._cache[w]
 		except KeyError:

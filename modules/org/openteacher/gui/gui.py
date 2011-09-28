@@ -112,11 +112,11 @@ class GuiModule(object):
 			translator.languageChanged.handle(self._retranslate)
 		self._retranslate()
 
-		metadataMod = self._modules.default("active", type="metadata")
-		self._widget.setWindowTitle(" ".join([
-			metadataMod.name, metadataMod.version
-		]))
-		self._widget.setWindowIcon(QtGui.QIcon(metadataMod.iconPath))
+		metadata = self._modules.default("active", type="metadata").metadata
+		self._widget.setWindowTitle(
+			" ".join([metadata["name"], metadata["version"]])
+		)
+		self._widget.setWindowIcon(QtGui.QIcon(metadata["iconPath"]))
 
 		self._fileTabs = {}
 
