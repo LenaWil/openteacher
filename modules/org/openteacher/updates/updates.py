@@ -75,6 +75,7 @@ class UpdatesModule(object):
 		asc = urllib2.urlopen(signature)
 		if not self._gpg.verify_file(asc, self._mm.resourcePath("update.zip")):
 			raise ValueError("No valid signature!")
+		#FIXME: use moduleInstaller?
 		updatesZip = zipfile.ZipFile(self._mm.resourcePath("update.zip"), "r")
 		updatesZip.extractall(self._mm.modulesPath) #FIXME: check if all paths aren't outside the path given, just in case.
 		os.remove(self._mm.resourcePath("update.zip"))

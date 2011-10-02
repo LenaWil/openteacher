@@ -169,11 +169,15 @@ class UpdatesDialogModule(object):
 		if not settings.value("org.openteacher.updatesDialog.doUpdates"):
 			return
 		updatesMod = modules.default("active", type="updates")
-		updates = updatesMod.updates
+		try:
+			updates = updatesMod.updates
+		except IOError:
+			return #FIXME possibly :P
 
 		if not updates:
 			return
 
+		#FIXME: should the updatesDialog check for new updates, or another module?
 		if settings.value("org.openteacher.updatesDialog.rememberChoice"):
 			updatesMod.update()
 		else:
