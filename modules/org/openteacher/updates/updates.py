@@ -24,6 +24,8 @@ try:
 except ImportError:
 	import simplejson as json
 import datetime
+import zipfile
+import os
 
 class UpdatesModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -34,27 +36,60 @@ class UpdatesModule(object):
 		self.requires = (
 			self._mm.mods(type="metadata"),
 			self._mm.mods(type="settings"),
+			self._mm.mods(type="gpg"),
 		)
+
+	@staticmethod
+	def _download(link, filename):
+		local = open(filename, "w")
+		online = urllib2.urlopen(link)
+		for line in online:
+			local.write(line)
+
+	def _downloadUpdates(self):
+		"""Raises IOError and ValueError"""
+		self._download(self._metadata["updatesUrl"], self._mm.resourcePath("updates.json"))
+		asc = urllib2.urlopen(self._metadata["updatesSignatureUrl"])
+		if not self._gpg.verify_file(asc, self._mm.resourcePath("updates.json")):
+			raise ValueError("No valid signature!")
 
 	@property
 	def updates(self):
+		if self._updatesCache is not None:
+			return self._updatesCache
 		lastUpdate = datetime.datetime.min#datetime.datetime(2011, 9, 18, 17, 27, 16, 545688)#self._settings.value("org.openteacher.updates.lastUpdate")#FIXME
-		try:
-			jsonFile = urllib2.urlopen(self._metadata["updatesUrl"])
-		except urllib2.URLError:
-			return
-		updates = json.load(jsonFile)
+		self._downloadUpdates()
+		updates = json.load(open(self._mm.resourcePath("updates.json")))
 		for i in xrange(len(updates)):
 			updates[i]["timestamp"] = datetime.datetime.strptime(
 				updates[i]["timestamp"],
 				"%Y-%m-%dT%H:%M:%S.%f"
 			)
-		return filter(lambda x: x["timestamp"] > lastUpdate, updates)
+		result = filter(lambda x: x["timestamp"] > lastUpdate, updates)
+		self._updatesCache = result
+		return result
+
+	def _installUpdate(self, link, signature):
+		"""Raises IOError and ValueError"""
+		self._download(link, self._mm.resourcePath("update.zip"))
+		asc = urllib2.urlopen(signature)
+		if not self._gpg.verify_file(asc, self._mm.resourcePath("update.zip")):
+			raise ValueError("No valid signature!")
+		updatesZip = zipfile.ZipFile(self._mm.resourcePath("update.zip"), "r")
+		updatesZip.extractall(self._mm.modulesPath) #FIXME: check if all paths aren't outside the path given, just in case.
+		os.remove(self._mm.resourcePath("update.zip"))
+
+	def update(self):
+		for update in self.updates:
+			self._installUpdate(update["link"], update["signature"])
+		#FIXME: restart OpenTeacher
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self._metadata = self._modules.default("active", type="metadata").metadata
 		self._settings = self._modules.default("active", type="settings")
+		self._gpg = self._modules.default("active", type="gpg").gpg
+		self._updatesCache = None
 
 		self._settings.registerSetting(
 			"org.openteacher.updates.lastUpdate",
@@ -74,7 +109,10 @@ class UpdatesModule(object):
 
 		del self._modules
 		del self._metadata
+		#FIXME: remove setting
 		del self._settings
+		del self._gpg
+		del self._updatesCache
 
 def init(moduleManager):
 	return UpdatesModule(moduleManager)

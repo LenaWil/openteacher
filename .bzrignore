@@ -1,1 +1,4 @@
 *.pyc
+modules/org/openteacher/updates/updates.json
+modules/nl/*
+modules/nl

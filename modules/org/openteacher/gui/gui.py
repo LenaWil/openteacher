@@ -202,8 +202,7 @@ class GuiModule(object):
 	def interrupt(self):
 		self._app.closeAllWindows()
 
-	def hide(self): #FIXME: why AttributeError? Is it really needed?
-		"""Raises AttributeError"""
+	def hide(self):
 		self._widget.hide()
 
 	def showStartTab(self):
@@ -262,7 +261,12 @@ class GuiModule(object):
 		self._app.setStyle(style)
 
 	@property
-	def qtParent(self): #FIXME: comments about valid uses.
+	def qtParent(self):
+		"""Only use this as widget parent, or for application
+		global Qt settings, and don't be surprised if another
+		module sets that setting differently.
+
+		"""
 		return self._widget
 
 	def getSavePath(self, startdir, exts): #FIXME: separate module
