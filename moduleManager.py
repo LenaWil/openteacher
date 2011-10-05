@@ -21,6 +21,7 @@
 import sys
 import os
 import inspect
+import imp
 
 class ModuleFilterer(object):
 	"""This class is used to filter a list of objects ('modules'). By
@@ -98,19 +99,21 @@ class ModuleManager(object):
 		return ModuleFilterer(self._modules)
 
 	def importFrom(self, path, moduleName):
-		#make sure the module is importable
-		sys.path.insert(0, path)
-		#import the module
-		module = __import__(moduleName)
-		#remove the module from the python cache, to avoid
-		#namespace clashes
-		del sys.modules[moduleName]
-		#but keep our own reference, otherwise the module namespace
-		#will probably be garbage collected.
-		self._references.add(module)
-		#remove the module path again so it doesn't influence other imports
-		sys.path.remove(path)
-		return module
+		fp, pathname, description = imp.find_module(moduleName, [path])
+		
+		try:
+			#import the module
+			module = imp.load_module(moduleName, fp, pathname, description)
+			#remove the module from the python cache, to avoid
+			#namespace clashes
+			del sys.modules[moduleName]
+			#but keep our own reference, otherwise the module namespace
+			#will probably be garbage collected.
+			self._references.add(module)
+			return module
+		finally:
+			if fp:
+				fp.close()
 
 	def import_(self, moduleName):
 		return self.importFrom(self._callerOfCallerPath(), moduleName)

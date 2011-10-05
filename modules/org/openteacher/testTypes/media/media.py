@@ -20,18 +20,36 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 
-class TopoTestTypeModule(object):
-	PLACE_NAME, CORRECT = xrange(2)
+class MediaTestTypeModule(object):
+	NAME, QUESTION, ANSWER, GIVEN_ANSWER, CORRECT = xrange(5)
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(TopoTestTypeModule, self).__init__(*args, **kwargs)
+		super(MediaTestTypeModule, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
 		
 		self.type = "testType"
-		self.dataType = "topo"
+		self.dataType = "media"
+		
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
 
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self.active = True
+		
+		#setup translation
+		global _
+		global ngettext
+		
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 
 	def disable(self):
 		self.active = False
@@ -43,7 +61,10 @@ class TopoTestTypeModule(object):
 	@property
 	def header(self):
 		return [
-			_("Place name"),#FIXME: own translator
+			_("Name"),#FIXME: own translator
+			_("Question"),
+			_("Answer"),
+			_("Given answer"),
 			_("Correct")
 		]
 	
@@ -56,10 +77,16 @@ class TopoTestTypeModule(object):
 		result = self._test["results"][row]
 		
 		item = self._itemForResult(result)
-		if column == self.PLACE_NAME:
+		if column == self.NAME:
 			return item["name"]
+		if column == self.QUESTION:
+			return item["question"]
+		if column == self.ANSWER:
+			return item["answer"]
+		if column == self.GIVEN_ANSWER:
+			return result["givenAnswer"]
 		elif column == self.CORRECT:
 			return result["result"] == "right"
 
 def init(moduleManager):
-	return TopoTestTypeModule(moduleManager)
+	return MediaTestTypeModule(moduleManager)
