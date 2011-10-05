@@ -78,16 +78,6 @@ class TeachTopoLessonModule(object):
 		event = module.addLessonCreateButton(_("Create topography lesson"))
 		event.handle(self.createLesson)
 		
-		# Add settings
-		for module in self._mm.mods("active", type="settings"):
-			module.registerSetting(
-				"org.openteacher.lessons.topo.opengl",
-				"OpenGL Rendering",
-				"boolean",
-				"Topo lesson",
-				"Rendering"
-			)
-		
 		self.active = True
 
 	def disable(self):

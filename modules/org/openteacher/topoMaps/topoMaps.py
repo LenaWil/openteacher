@@ -269,6 +269,7 @@ class TopoMapsModule(object):
 		
 		self.uses = (
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="settings"),
 		)
 	
 	def enable(self):
@@ -286,6 +287,16 @@ class TopoMapsModule(object):
 		else:
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
+			)
+		
+		# Add settings
+		for module in self._mm.mods("active", type="settings"):
+			module.registerSetting(
+				"org.openteacher.lessons.topo.opengl",
+				"OpenGL Rendering",
+				"boolean",
+				"Topo lesson",
+				"Rendering"
 			)
 	
 	def disable(self):

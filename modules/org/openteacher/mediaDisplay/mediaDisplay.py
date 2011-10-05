@@ -166,6 +166,7 @@ class MediaDisplayModule(object):
 		
 		self.uses = (
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="settings"),
 		)
 	
 	def enable(self):
@@ -183,6 +184,25 @@ class MediaDisplayModule(object):
 		else:
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
+			)
+		
+		# Add settings
+		for module in self._mm.mods("active", type="settings"):
+			module.registerSetting(
+				"org.openteacher.lessons.media.videohtml5",
+				"Use HTML5 for video",
+				"boolean",
+				"Media Lesson",
+				"Output"
+			)
+			
+		for module in self._mm.mods("active", type="settings"):
+			module.registerSetting(
+				"org.openteacher.lessons.media.audiohtml5",
+				"Use HTML5 for audio",
+				"boolean",
+				"Media Lesson",
+				"Output"
 			)
 	
 	def disable(self):

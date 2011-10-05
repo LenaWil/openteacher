@@ -74,25 +74,6 @@ class MediaLessonModule(object):
 		event = module.addLessonCreateButton(_("Create media lesson"))
 		event.handle(self.createLesson)
 		
-		# Add settings
-		for module in self._mm.mods("active", type="settings"):
-			module.registerSetting(
-				"org.openteacher.lessons.media.videohtml5",
-				"Use HTML5 for video",
-				"boolean",
-				"Media Lesson",
-				"Output"
-			)
-			
-		for module in self._mm.mods("active", type="settings"):
-			module.registerSetting(
-				"org.openteacher.lessons.media.audiohtml5",
-				"Use HTML5 for audio",
-				"boolean",
-				"Media Lesson",
-				"Output"
-			)
-		
 		self.active = True
 
 	def disable(self):
