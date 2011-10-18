@@ -187,26 +187,31 @@ class MediaDisplayModule(object):
 			)
 		
 		# Add settings
-		for module in self._mm.mods("active", type="settings"):
-			module.registerSetting(
-				"org.openteacher.lessons.media.videohtml5",
-				"Use HTML5 for video",
-				"boolean",
-				"Media Lesson",
-				"Output"
-			)
-			
-		for module in self._mm.mods("active", type="settings"):
-			module.registerSetting(
-				"org.openteacher.lessons.media.audiohtml5",
-				"Use HTML5 for audio",
-				"boolean",
-				"Media Lesson",
-				"Output"
-			)
+		self._settings = self._modules.default("active", type="settings")
+		#FIXME: where are these settings actually used???
+		self._html5VideoSetting = self._settings.registerSetting(**{
+			"internal_name": "org.openteacher.lessons.media.videohtml5",
+			"name": "Use HTML5 for video",
+			"type": "boolean",
+			"category": "Media Lesson",
+			"subcategory": "Output",
+			"defaultValue": False,
+		})
+
+		self._html5AudioSetting = self._settings.registerSetting(**{
+			"internal_name": "org.openteacher.lessons.media.audiohtml5",
+			"name": "Use HTML5 for audio",
+			"type": "boolean",
+			"category": "Media Lesson",
+			"subcategory": "Output",
+			"defaultValue": False,
+		})
 	
 	def disable(self):
 		self.active = False
+		del self._settings
+		del self._html5VideoSetting
+		del self._html5AudioSetting
 	
 	def createDisplay(self, autoplay):
 		return MediaControlDisplay(autoplay)

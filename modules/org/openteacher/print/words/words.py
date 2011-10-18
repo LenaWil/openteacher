@@ -93,7 +93,7 @@ class PrintModule(object):
 		)
 		html = t(**{"list": list})
 
-		name = self._modules.default("active", type="metadata").name
+		name = self._modules.default("active", type="metadata").metadata["name"]
 		printer.setCreator(name)
 		try:
 			printer.setDocName(list["title"])

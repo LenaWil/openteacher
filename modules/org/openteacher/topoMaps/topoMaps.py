@@ -30,7 +30,7 @@ class Map(QtGui.QGraphicsView):
 		super(Map, self).__init__(*args, **kwargs)
 		
 		module = base._modules.default("active", type="settings")
-		if module.value("org.openteacher.lessons.topo.opengl"):
+		if base._openGlSetting["value"]:
 			self.setViewport(QtOpenGL.QGLWidget())
 	
 	def setMap(self, map):
@@ -288,20 +288,23 @@ class TopoMapsModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		
+
 		# Add settings
-		for module in self._mm.mods("active", type="settings"):
-			module.registerSetting(
-				"org.openteacher.lessons.topo.opengl",
-				"OpenGL Rendering",
-				"boolean",
-				"Topo lesson",
-				"Rendering"
-			)
+		self._settings = self._modules.default("active", type="settings")
+		self._openGlSetting = self._settings.registerSetting(**{
+			"internal_name": "org.openteacher.lessons.topo.opengl",
+			"name": "OpenGL Rendering",
+			"type": "boolean",
+			"category": "Topo lesson",
+			"subcategory": "Rendering",
+			"defaultValue": False,
+		})
 	
 	def disable(self):
 		self.active = False
-	
+		del self._settings
+		del self._openGlSetting
+
 	def getEnterMap(self, enterWidget):
 		return EnterMap(enterWidget)
 	

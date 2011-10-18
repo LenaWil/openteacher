@@ -2,3 +2,4 @@
 modules/org/openteacher/updates/updates.json
 modules/nl/*
 modules/nl
+modules/org/openteacher/dataStore/store.shelve

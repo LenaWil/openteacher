@@ -35,6 +35,7 @@ class UpdatesModule(object):
 		self.type = "updates"
 		self.requires = (
 			self._mm.mods(type="metadata"),
+			self._mm.mods(type="dataStore"),
 			self._mm.mods(type="settings"),
 			self._mm.mods(type="gpg"),
 		)
@@ -57,7 +58,10 @@ class UpdatesModule(object):
 	def updates(self):
 		if self._updatesCache is not None:
 			return self._updatesCache
-		lastUpdate = datetime.datetime.min#datetime.datetime(2011, 9, 18, 17, 27, 16, 545688)#self._settings.value("org.openteacher.updates.lastUpdate")#FIXME
+		try:
+			lastUpdate = self._dataStore["org.openteacher.updates.lastUpdate"]
+		except KeyError:
+			lastUpdate = datetime.datetime.min
 		self._downloadUpdates()
 		updates = json.load(open(self._mm.resourcePath("updates.json")))
 		for i in xrange(len(updates)):
@@ -83,25 +87,16 @@ class UpdatesModule(object):
 	def update(self):
 		for update in self.updates:
 			self._installUpdate(update["link"], update["signature"])
+			self._dataStore["org.openteacher.updates.lastUpdate"] = update["timestamp"]
 		#FIXME: restart OpenTeacher
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self._metadata = self._modules.default("active", type="metadata").metadata
+		self._dataStore = self._modules.default("active", type="dataStore").store
 		self._settings = self._modules.default("active", type="settings")
 		self._gpg = self._modules.default("active", type="gpg").gpg
 		self._updatesCache = None
-
-		self._settings.registerSetting(
-			"org.openteacher.updates.lastUpdate",
-			"Last update"
-		)#FIXME: should not be visible in the settings dialog
-		#(17:16:18) commandoline: maybe we should just separate it: #i.e.: the settings stuff
-		#(17:16:25) commandoline: - one module which actually saves settings
-		#(17:16:32) commandoline: - one module that adds them for internal use
-		#(17:16:45) commandoline: - one module that adds them if the user needs to see them
-		#(17:16:58) commandoline: - one settingsDialog module
-		#(17:17:26) commandoline: - one modules module that saves the preference of the user for a module in the first module
 
 		self.active = True
 
@@ -110,7 +105,7 @@ class UpdatesModule(object):
 
 		del self._modules
 		del self._metadata
-		#FIXME: remove setting
+		del self._dataStore
 		del self._settings
 		del self._gpg
 		del self._updatesCache

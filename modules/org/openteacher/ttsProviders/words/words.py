@@ -36,14 +36,14 @@ class TextToSpeechProviderWords(object):
 		
 		# Add settings
 		for module in self._mm.mods("active", type="settings"):#FIXME
-			module.registerSetting(
-				"org.openteacher.ttsProviders.words.pronounce",
-				"Pronounce words",
-				"boolean",
-				"Pronounciation",
-				"Pronounciation", #FIXME: translate
-				False
-			)
+			module.registerSetting(**{
+				"internal_name": "org.openteacher.ttsProviders.words.pronounce",
+				"name": "Pronounce words",
+				"type": "boolean",
+				"category": "Pronounciation",
+				"subcategory": "Pronounciation", #FIXME: translate this and stuff above
+				"defaultValue": False,
+			})
 		
 		self.active = True
 

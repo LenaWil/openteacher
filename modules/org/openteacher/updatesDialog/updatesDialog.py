@@ -104,7 +104,7 @@ _, ngettext = unicode, lambda x, y, n: x if n == 1 else y #FIXME, including retr
 #			pass
 
 class UpdatesDialog(QtGui.QDialog):
-	def __init__(self, updates, *args, **kwargs):
+	def __init__(self, updates, rememberChoice, *args, **kwargs):
 		super(UpdatesDialog, self).__init__(*args, **kwargs)
 
 		label = QtGui.QLabel(ngettext(
@@ -113,6 +113,7 @@ class UpdatesDialog(QtGui.QDialog):
 			len(updates)
 		) % len(updates))
 		self.checkBox = QtGui.QCheckBox(_("Remember my choice"))
+		self.checkBox.setChecked(rememberChoice)
 		buttonBox = QtGui.QDialogButtonBox(
 			QtGui.QDialogButtonBox.No |
 			QtGui.QDialogButtonBox.Yes
@@ -135,6 +136,10 @@ class UpdatesDialog(QtGui.QDialog):
 			len(updates)
 		))
 
+	@property
+	def rememberChoice(self):
+		return self.checkBox.isChecked()
+
 class UpdatesDialogModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(UpdatesDialogModule, self).__init__(*args, **kwargs)
@@ -145,32 +150,29 @@ class UpdatesDialogModule(object):
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="updates"),
 			self._mm.mods(type="settings"),
+			self._mm.mods(type="dataStore"),
 		)
 
 	def enable(self):
 		modules = set(self._mm.mods("active", type="modules")).pop()
+		self._dataStore = modules.default("active", type="dataStore").store
 		settings = modules.default("active", type="settings")
-		settings.registerSetting(#FIXME: translate all these...
-			"org.openteacher.updatesDialog.rememberChoice",
-			"Ask permission to update (or not)",
-			type="boolean",
-			category="Updates",
-			defaultValue=False
-		)
-		settings.registerSetting(
-			"org.openteacher.updatesDialog.doUpdates",
-			"Update automatically",
-			type="boolean",
-			category="Updates",
-			defaultValue=True
-		)
+		self._rememberChoiceSetting = settings.registerSetting(**{#FIXME: translate all these...
+			"internal_name": "org.openteacher.updatesDialog.rememberChoice",
+			"name": "Remember if the user wants to install updates or not",
+			"type": "boolean",
+			"category": "Updates",
+			"defaultValue": False,
+		})
+		self._dataStore["org.openteacher.updatesDialog.userDidUpdatesLastTime"] = False
 		self.active = True
 
-		if not settings.value("org.openteacher.updatesDialog.doUpdates"):
+		if self._rememberChoiceSetting["value"] and not self._dataStore["org.openteacher.updatesDialog.userDidUpdatesLastTime"]:
+			#The user doesn't want to be bothered with updates
 			return
-		updatesMod = modules.default("active", type="updates")
+		self._updatesMod = modules.default("active", type="updates")
 		try:
-			updates = updatesMod.updates
+			updates = self._updatesMod.updates
 		except IOError:
 			return #FIXME possibly :P
 
@@ -178,22 +180,36 @@ class UpdatesDialogModule(object):
 			return
 
 		#FIXME: should the updatesDialog check for new updates, or another module?
-		if settings.value("org.openteacher.updatesDialog.rememberChoice"):
-			updatesMod.update()
+		if self._rememberChoiceSetting["value"] and self._dataStore["org.openteacher.updatesDialog.userDidUpdatesLastTime"]:
+			self._updatesMod.update()
 		else:
-			ud = UpdatesDialog(updates)
-			tab = modules.default("active", type="ui").addCustomTab(
-				ud.windowTitle(), #FIXME: retranslate, including dialog itself
-				ud
+			self._ud = UpdatesDialog(updates, self._rememberChoiceSetting["value"])
+			self._tab = modules.default("active", type="ui").addCustomTab(
+				self._ud.windowTitle(), #FIXME: retranslate, including dialog itself
+				self._ud
 			)
-			#FIXME: change the value of 'rememberChoice'
-			tab.closeRequested.handle(tab.close)
-			ud.accepted.connect(tab.close)
-			ud.rejected.connect(tab.close)
-			ud.accepted.connect(updatesMod.update)
+			self._tab.closeRequested.handle(self._ud.rejected.emit)
+			self._ud.accepted.connect(self._accepted)
+			self._ud.rejected.connect(self._rejected)
+
+	def _accepted(self):
+		self._rememberChoiceSetting["value"] = self._ud.rememberChoice
+		self._tab.close()
+		self._updatesMod.update()
+		self._dataStore["org.openteacher.updatesDialog.userDidUpdatesLastTime"] = True
+
+	def _rejected(self):
+		self._rememberChoiceSetting["value"] = self._ud.rememberChoice
+		self._tab.close()
+		self._dataStore["org.openteacher.updatesDialog.userDidUpdatesLastTime"] = False
 
 	def disable(self):
 		self.active = False
+		
+		del self._ud
+		del self._tab
+		del self._updatesMod
+		del self._dataStore
 
 def init(moduleManager):
 	return UpdatesDialogModule(moduleManager)

@@ -18,36 +18,28 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import optparse
+import shelve
 
-class ExecuteModule(object):
+class DataStoreModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(ExecuteModule, self).__init__(*args, **kwargs)
+		super(DataStoreModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "execute"
-		self.requires = (
-			self._mm.mods(type="event"),
-			self._mm.mods(type="uiController"),
-			self._mm.mods(type="modulesActivator"),
+		self.type = "dataStore"
+
+	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self.store = shelve.open(
+			self._mm.resourcePath("store.shelve"),
+			writeback=True
 		)
+		self.active = True
 
-	def execute(self):
-		parser = optparse.OptionParser()
-		#FIXME: add options, or remove this parser :P
-		options, args = parser.parse_args()
-		try:
-			path = args[0]
-		except IndexError:
-			path = None
+	def disable(self):
+		self.active = False
 
-		modules = set(self._mm.mods(type="modules")).pop()
-
-		self.aboutToExit = modules.default(type="event").createEvent()
-		modules.default(type="modulesActivator").activateModules()
-
-		uiController = modules.default("active", type="uiController")
-		uiController.run(path)
+		del self._modules
+		del self.store
 
 def init(moduleManager):
-	return ExecuteModule(moduleManager)
+	return DataStoreModule(moduleManager)

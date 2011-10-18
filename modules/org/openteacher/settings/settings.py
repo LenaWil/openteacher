@@ -24,67 +24,61 @@ class SettingsModule(object):
 		self._mm = moduleManager
 
 		self.type = "settings"
+		self.requires = (
+			self._mm.mods(type="dataStore"),
+		)
 
-	def registerSetting(self, internal_name, name, type="short_text", lessonType=None, category=None, defaultValue=None):
-		try:
-			self._settings[lessonType]
-		except KeyError:
-			self._settings[lessonType] = {}
-		try:
-			self._settings[lessonType][category]
-		except KeyError:
-			self._settings[lessonType][category] = {}
-		setting = self._settings[lessonType][category][internal_name] = {}
-		
-		def get_value():
-			return setting["value"]
-		def set_value(value):
-			setting["value"] = value
-			self.valueChanged.emit()
-		setting["value"] = property(get_value, set_value)
-		
-		setting["value"] = defaultValue
-		setting["name"] = name
-		setting["type"] = type
-		setting["options"] = []
-	
-	def getSetting(self, internal_name):
-		for lessonType in self._settings.values():
-			for category in lessonType.values():
-				try:
-					return category[internal_name]
-				except KeyError:
-					pass
+	def registerSetting(self, internal_name, **setting):
+		"""Adds a setting. internal_name should be unique and describe
+		what the setting contains, we *strongly recommmend* to use the
+		'reverse domain' naming	strategy because of the first property.
+		(E.g. com.example.moduleName.settingName).
 
-	def registeredSettings(self, lessonType=None, category=None):
-		if lessonType:
-			if category:
-				return self._settings[lessonType][category].copy()
-			return self._settings[lessonType].copy()
-		return self._settings.copy()
-	
-	def addOption(self, internal_name, value, data=None):
-		for lessonType in self._settings.values():
-			for category in lessonType.values():
-				try:
-					category[internal_name]["options"].append((value, data))
-				except KeyError:
-					pass
-	
-	def value(self, internal_name):
-		for lessonType in self._settings.values():
-			for category in lessonType.values():
-				try:
-					return category[internal_name]["value"]
-				except KeyError:
-					pass
+		The other arguments, describing the setting, should be:
+		 * name,
+		 * type="short_text",
+		  * boolean
+		  * short_text
+		  * long_text
+		  * number
+		  * options
+		  ... are available. #FIXME: correct?
+		 * category=None,
+		 * subcategory=None,
+		 * defaultValue=None
+
+		The following argument should be included when type="options"
+		 * options=[]
+		  * options should have this format: ("label", data)
+
+		This method returns a setting dict with the same properties as
+		described above, with the difference that defaultValue is
+		missing and that the 'value' key is added containing the actual
+		current value of the setting. You're free to modify the object,
+		as long as its values are valid.
+
+		"""
+		if not self._settings.has_key(internal_name):
+			setting["value"] = setting.pop("defaultValue")
+			self._settings[internal_name] = setting
+		return self._settings[internal_name]
+
+	@property
+	def registeredSettings(self):
+		return self._settings.values()
 
 	def enable(self):
-		self._settings = {}
+		modules = set(self._mm.mods("active", type="modules")).pop()
+		try:
+			self._settings = modules.default(type="dataStore").store["org.openteacher.settings.settings"]
+		except KeyError:
+			self._settings = modules.default(type="dataStore").store["org.openteacher.settings.settings"] = {}
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
 		del self._settings
 
 def init(moduleManager):

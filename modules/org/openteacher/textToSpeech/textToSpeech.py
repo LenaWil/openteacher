@@ -135,30 +135,27 @@ class TextToSpeechModule(object):
 			self.tts = TextToSpeech(pyttsx)
 		except DependencyError as e:
 			QtGui.QMessageBox.critical(None, "Error", unicode(e))
-		
-		for module in self._mm.mods("active", type="settings"):
-			module.value("org.openteacher.textToSpeech.voice")
-		
+
 		# Add settings
 		for module in self._mm.mods("active", type="settings"):
-			module.registerSetting(
-				"org.openteacher.textToSpeech.voice",
-				"Voice",
-				"options",
-				"Pronounciation",
-				"Voice",
-				self.tts.getVoices()[0][1]
-			)
-			for voice in self.tts.getVoices():
-				module.addOption("org.openteacher.textToSpeech.voice", voice[0], voice[1])
-			module.registerSetting(
-				"org.openteacher.textToSpeech.speed",
-				"Speed",
-				"number",
-				"Pronounciation",
-				"Voice",#FIXME: translate
-				120
-			)
+			#FIXME: translate name, category, subcategory
+			module.registerSetting(**{
+				"internal_name": "org.openteacher.textToSpeech.voice",
+				"name": "Voice",
+				"type": "options",
+				"category": "Pronounciation",
+				"subcategory": "Voice",
+				"defaultValue": self.tts.getVoices()[0][1],
+				"options": self.tts.getVoices(),
+			})
+			module.registerSetting(**{
+				"internal_name": "org.openteacher.textToSpeech.speed",
+				"name": "Speed",
+				"type": "number",
+				"category": "Pronounciation",
+				"subcategory": "Voice",
+				"defaultValue": 120,
+			})
 
 		# Create the say word event
 		self.say = self._modules.default(type="event").createEvent()

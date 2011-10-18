@@ -41,17 +41,10 @@ class ModulesActivatorModule(object):
 		if not self._hasPositivePriority(mod):
 			return
 		#and that aren't enabled already
-		try:
-			if mod.active:
-				return
-		except AttributeError:
-			pass
+		if hasattr(mod, "active") and mod.active:
+			return
 		#enable all requirements
-		try:
-			mod.requires
-		except AttributeError:
-			pass
-		else:
+		if hasattr(mod, "requires"):
 			#run through all requirement selectors
 			for selector in mod.requires:
 				#they can have different forms, this gets the corresponding ModuleFilterer object
@@ -69,11 +62,7 @@ class ModulesActivatorModule(object):
 						return
 
 		#also enable the mods the module can use (but doesn't need)
-		try:
-			mod.uses
-		except AttributeError:
-			pass
-		else:
+		if hasattr(mod, "uses"):
 			for selector in mod.uses:
 				usableMods = self._inactiveModsFor(selector)
 				for usableMod in usableMods:
@@ -82,11 +71,8 @@ class ModulesActivatorModule(object):
 					except NotImplementedError:
 						continue
 
-		#enable the module itself
-		#
-		#enable() isn't obligatory, use hasattr because an
-		#AttributeError is too common at this functions and will
-		#probably be masked with a try/except.
+		#enable the module itself. enable() an obligatory function, so
+		#test for it.
 		if hasattr(mod, "enable"):
 			mod.enable()
 

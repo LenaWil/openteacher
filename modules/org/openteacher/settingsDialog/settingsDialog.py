@@ -23,26 +23,48 @@ from PyQt4 import QtCore, QtGui
 import sys
 import weakref
 
-class LessonTypeTab(QtGui.QWidget):
-	def __init__(self, name, lessonType, *args, **kwargs):
-		super(LessonTypeTab, self).__init__(*args, **kwargs)
+#FIXME: split into a separate module?
+def byKey(key, items):
+	items = items[:]#copy, this is going to be destructive :P
+	while items:
+		try:
+			value = items[0][key]
+		except IndexError:
+			break
+		except KeyError:
+			value = None
+		havingSameValue = []
+		for item in items:
+			try:
+				if item[key] == value:
+					havingSameValue.append(item)
+					items.remove(item)
+			except KeyError:
+				if value is None:
+					havingSameValue.append(item)
+					items.remove(item)
+		yield value, havingSameValue
+
+class CategoryTab(QtGui.QWidget):
+	def __init__(self, name, inCategory, *args, **kwargs):
+		super(CategoryTab, self).__init__(*args, **kwargs)
 		
 		self.setWindowTitle(name)
 		vbox = QtGui.QVBoxLayout()
 
-		for name, category in lessonType.iteritems():
+		for name, inSubcategory in byKey("subcategory", inCategory):#replace
 			if name is None:
 				name = _("Miscellaneous") #FIXME: translate live
 
-			w = self.createCategoryGroupBox(name, category)
+			w = self.createSubcategoryGroupBox(name, inSubcategory)
 			vbox.addWidget(w)
 		
 		self.setLayout(vbox)
 
-	def createCategoryGroupBox(self, name, category):
+	def createSubcategoryGroupBox(self, name, inSubcategory):
 		groupBox = QtGui.QGroupBox(name)
 		groupBoxLayout = QtGui.QFormLayout()
-		for setting in category.values():
+		for setting in inSubcategory:
 			groupBoxLayout.addRow(
 				setting["name"],
 				self.createSettingWidget(setting)
@@ -56,8 +78,7 @@ class LessonTypeTab(QtGui.QWidget):
 			w.textChanged.connect(self.shortTextChanged)
 			
 			w.setting = setting
-			if setting["value"] != None:
-				w.setText(setting["value"])
+			w.setText(setting["value"])
 			
 		elif setting["type"] == "options":
 			w = QtGui.QComboBox()
@@ -67,34 +88,30 @@ class LessonTypeTab(QtGui.QWidget):
 			w.currentIndexChanged.connect(self.optionsChanged)
 			
 			w.setting = setting
-			if setting["value"] != None:
-				w.setCurrentIndex(w.findData(setting["value"]))
+			w.setCurrentIndex(w.findData(setting["value"]))
 			
 		elif setting["type"] == "long_text":
 			w = QtGui.QTextEdit()
 			w.textChanged.connect(self.longTextChanged)
 			
 			w.setting = setting
-			if setting["value"] != None:
-				w.setText(setting["value"])
+			w.setText(setting["value"])
 			
 		elif setting["type"] == "number":
 			w = QtGui.QSpinBox()
-			w.setRange(0, sys.maxint)
+			w.setRange(-32768, 32767) #FIXME: decide when setting is registered?
 			w.valueChanged.connect(self.numberChanged)
 			
 			w.setting = setting
-			if setting["value"] != None:
-				w.setValue(setting["value"])
+			w.setValue(setting["value"])
 			
 		elif setting["type"] == "boolean":
 			w = QtGui.QCheckBox()
 			w.stateChanged.connect(self.booleanChanged)
 			
 			w.setting = setting
-			if setting["value"] != None:
-				# *2 because 2 is checked and 0 is unchecked
-				w.setCheckState(setting["value"] * 2)
+			# *2 because 2 is checked and 0 is unchecked
+			w.setCheckState(setting["value"] * 2)
 			
 		return w
 
@@ -119,7 +136,7 @@ class LessonTypeTab(QtGui.QWidget):
 		w = self.sender()
 		w.setting["value"] = w.itemData(w.currentIndex()).toString()
 
-class SettingsDialog(QtGui.QTabWidget):#FIXME: make sure the 'simple' and 'advanced' buttons are more than stubs
+class SettingsDialog(QtGui.QTabWidget):#FIXME: make the 'simple' and 'advanced' buttons actually do something
 	def __init__(self, settings, *args, **kwargs):
 		super(SettingsDialog, self).__init__(*args, **kwargs)
 
@@ -127,10 +144,10 @@ class SettingsDialog(QtGui.QTabWidget):#FIXME: make sure the 'simple' and 'advan
 		self.setTabPosition(QtGui.QTabWidget.South)
 		self.setDocumentMode(True)
 
-		for name, lessonType in settings.iteritems():
+		for name, inCategory in byKey("category", settings):
 			if name is None:
 				name = _("Miscellaneous")#FIXME: translate live
-			self.createLessonTypeTab(name, lessonType)
+			self.createCategoryTab(name, inCategory)
 
 		self.advancedButton = QtGui.QPushButton()
 		self.advancedButton.clicked.connect(self.advanced)
@@ -145,8 +162,8 @@ class SettingsDialog(QtGui.QTabWidget):#FIXME: make sure the 'simple' and 'advan
 		self.simpleButton.setText(_("Simple mode"))
 		self.advancedButton.setText(_("Advanced mode"))
 
-	def createLessonTypeTab(self, name, lessonType):
-		tab = LessonTypeTab(name, lessonType)
+	def createCategoryTab(self, name, inCategory):
+		tab = CategoryTab(name, inCategory)
 		self.addTab(tab, tab.windowTitle())
 
 	def advanced(self):
@@ -224,11 +241,10 @@ class SettingsDialogModule(object):
 		return self._modules.default("active", type="settings")
 
 	def show(self):
-		dialog = SettingsDialog(self._settings.registeredSettings())
+		dialog = SettingsDialog(self._settings.registeredSettings)
 		self._activeDialogs.add(weakref.ref(dialog))
 		self._retranslate()
 		tab = self._uiModule.addCustomTab(dialog.windowTitle(), dialog)
-		tab.closeRequested.handle(self._modules.modulesUpdated.send) #FIXME: still needed?
 		tab.closeRequested.handle(tab.close)
 
 def init(moduleManager):

@@ -35,6 +35,9 @@ class OpenTeachingMediaSaverModule(object):
 		self._mm = moduleManager
 
 		self.type = "save"
+		self.requires = (
+			self._mm.mods(type="settings"),
+		)
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
@@ -43,15 +46,16 @@ class OpenTeachingMediaSaverModule(object):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self.name = "Open Teaching Media (.otmd) saver"
 		self.saves = {"media": ["otmd"]}
-		
-		for module in self._mm.mods("active", type="settings"):
-			module.registerSetting(
-				"org.openteacher.savers.otmd.compression",
-				"Enable compression",
-				"boolean",
-				"Media Lesson",
-				".otmd saving"
-			)
+
+		self._settings = self._modules.default("active", type="settings")
+		self._compressionSetting = self._settings.registerSetting(**{
+			"internal_name": "org.openteacher.savers.otmd.compression",
+			"name": "Enable compression",
+			"type": "boolean",
+			"category": "Media Lesson",
+			"subcategory": ".otmd saving",
+			"defaultValue": True, #FIXME: is this a good default?
+		})
 		
 		self.active = True
 
@@ -59,16 +63,16 @@ class OpenTeachingMediaSaverModule(object):
 		self.active = False
 
 		del self._modules
+		del self._settings
+		del self._compressionSetting
 		del self.name
 		del self.saves
 
 	def save(self, type, list, path, resources):
 		compression = zipfile.ZIP_STORED
-		
-		for module in self._mm.mods("active", type="settings"):
-			if module.value("org.openteacher.savers.otmd.compression"):
-				compression = zipfile.ZIP_DEFLATED
-		
+		if self._compressionSetting["value"]:
+			compression = zipfile.ZIP_DEFLATED
+
 		# Create zipfile
 		with zipfile.ZipFile(path, "w", compression) as zipFile:
 			itemsList = copy.deepcopy(list)
