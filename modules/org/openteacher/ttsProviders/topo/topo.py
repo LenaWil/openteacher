@@ -23,43 +23,47 @@ class TextToSpeechProviderTopo(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TextToSpeechProviderTopo, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
+		
+		self.requires = (
+			self._mm.mods(type="textToSpeech"),
+		)
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		for module in self._mm.mods("active", type="lessonType"):
-			module.newItem.handle(self.itemEmitted)
+			module.newItem.handle(self.itemSent)
+		
+		self._settings = self._modules.default("active", type="settings")
 		
 		# Add settings
-		for module in self._mm.mods("active", type="settings"):
-			module.registerSetting(
-				"org.openteacher.ttsProviders.topo.pronounce",
-				"Pronounce places",
-				"boolean",
-				"Pronounciation",
-				"Pronounciation",
-				False
-			)
+		self._pronounceSetting = self._settings.registerSetting(**{
+			"internal_name": "org.openteacher.ttsProviders.topo.pronounce",
+			"name": "Pronounce places",
+			"type": "boolean",
+			"category": "Pronounciation",
+			"subcategory": "Pronounciation", #FIXME: translate this and stuff above
+			"defaultValue": False,
+		})
 		
 		self.active = True
 
 	def disable(self):
 		self._modules
 		for module in self._mm.mods("active", type="lessonType"):
-			module.newItem.unhandle(self.itemEmitted)
+			module.newItem.unhandle(self.itemSent)
 
 		self.active = False
 	
-	def itemEmitted(self, item):
-		for module in self._mm.mods("active", type="settings"):
-			if(module.value("org.openteacher.ttsProviders.topo.pronounce")):
-				ttss = set(self._mm.mods("active", type="textToSpeech"))
-				try:
-					tts = self._modules.chooseItem(ttss)
-				except IndexError, e:
-					#FIXME: nice error handling
-					raise e
-				else:
-					tts.say.emit(item["name"])
+	def itemSent(self, item):
+		if self._pronounceSetting["value"]:
+			try:
+				item["name"]
+			except KeyError:
+				# I can't prounounce this
+				pass
+			else:
+				tts = self._modules.default("active", type="textToSpeech")
+				tts.say.send(item["name"])
 
 def init(moduleManager):
 	return TextToSpeechProviderTopo(moduleManager)

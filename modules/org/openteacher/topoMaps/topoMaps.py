@@ -53,6 +53,21 @@ class Map(QtGui.QGraphicsView):
 			self.scale(0.9,0.9)
 
 """
+A place on the map for the inverted order
+"""
+class TeachPlaceOnMap(QtGui.QGraphicsRectItem):
+	def __init__(self, place, *args, **kwargs):
+		super(TeachPlaceOnMap, self).__init__(*args, **kwargs)
+		
+		width = 10
+		height = 10
+		
+		self.setRect(place["x"] - width / 2, place["y"] - height / 2, width, height)
+		self.setBrush(QtGui.QBrush(QtGui.QColor("red")))
+		
+		self.place = place
+
+"""
 The graphics scene of the map where you enter
 """
 class EnterMapScene(QtGui.QGraphicsScene):

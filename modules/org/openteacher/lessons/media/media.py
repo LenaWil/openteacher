@@ -150,7 +150,7 @@ class Lesson(object):
 		# Stop media playing
 		self.enterWidget.mediaDisplay.stop()
 		self.teachWidget.mediaDisplay.stop()
-		self.stopped.emit()
+		self.stopped.send()
 	
 	def teachListChanged(self, list):
 		# Update results widget

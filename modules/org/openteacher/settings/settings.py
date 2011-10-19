@@ -62,6 +62,12 @@ class SettingsModule(object):
 			setting["value"] = setting.pop("defaultValue")
 			self._settings[internal_name] = setting
 		return self._settings[internal_name]
+	
+	def setting(self, internal_name):
+		"""
+		Method to return a setting from the internal name.
+		"""
+		return self._settings[internal_name]
 
 	@property
 	def registeredSettings(self):

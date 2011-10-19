@@ -34,7 +34,9 @@ class MediaTypeModule(object):
 		self.extensions = [".avi", ".wmv", ".flv", ".mp4", ".mpg", ".mpeg", ".mov"]
 		self.priority = 5
 
-	def enable(self):		
+	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._settings = self._modules.default("active", type="settings")
 		self.active = True
 
 	def disable(self):
@@ -56,9 +58,8 @@ class MediaTypeModule(object):
 	def showMedia(self, path, mediaDisplay, autoplay):
 		html5 = False
 		
-		for module in self._mm.mods("active", type="settings"):
-			if module.value("org.openteacher.lessons.media.videohtml5"):
-				html5 = True
+		if self._settings.setting("org.openteacher.lessons.media.audiohtml5")["value"]:
+			html5 = True
 		
 		if html5 or mediaDisplay.noPhonon:
 			if not mediaDisplay.noPhonon:

@@ -80,21 +80,6 @@ class TeachLessonOrderChooser(QtGui.QComboBox):
 			self.teachWidget.restartLesson()
 
 """
-A place on the map for the inverted order
-"""
-class TeachPlaceOnMap(QtGui.QGraphicsRectItem):
-	def __init__(self, place, *args, **kwargs):
-		super(TeachPlaceOnMap, self).__init__(*args, **kwargs)
-		
-		width = 10
-		height = 10
-		
-		self.setRect(place["x"] - width / 2, place["y"] - height / 2, width, height)
-		self.setBrush(QtGui.QBrush(QtGui.QColor("red")))
-		
-		self.place = place
-
-"""
 The lesson itself
 """
 class TeachTopoLesson(object):

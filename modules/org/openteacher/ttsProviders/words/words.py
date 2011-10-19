@@ -34,16 +34,16 @@ class TextToSpeechProviderWords(object):
 		for module in self._mm.mods("active", type="lessonType"):
 			module.newItem.handle(self.itemSent)
 		
-		# Add settings
-		for module in self._mm.mods("active", type="settings"):#FIXME
-			module.registerSetting(**{
-				"internal_name": "org.openteacher.ttsProviders.words.pronounce",
-				"name": "Pronounce words",
-				"type": "boolean",
-				"category": "Pronounciation",
-				"subcategory": "Pronounciation", #FIXME: translate this and stuff above
-				"defaultValue": False,
-			})
+		self._settings = self._modules.default("active", type="settings")
+		
+		self._pronounceSetting = self._settings.registerSetting(**{
+			"internal_name": "org.openteacher.ttsProviders.words.pronounce",
+			"name": "Pronounce words",
+			"type": "boolean",
+			"category": "Pronounciation",
+			"subcategory": "Pronounciation", #FIXME: translate this and stuff above
+			"defaultValue": False,
+		})
 		
 		self.active = True
 
@@ -55,22 +55,20 @@ class TextToSpeechProviderWords(object):
 		self.active = False
 
 	def itemSent(self, item):
-		for module in self._mm.mods("active", type="settings"):#FIXME
-			if module.value("org.openteacher.ttsProviders.words.pronounce"):
-				try:
-					text = self._modules.default(
-						"active",
-						type="wordsStringComposer"
-					).compose(item["questions"])
-				except KeyError:
-					# No questions
-					pass
-				else:
-					self._modules.default(
-						"active",
-						type="textToSpeech"
-					).say.send(text)
-				break
+		if self._pronounceSetting["value"]:
+			try:
+				text = self._modules.default(
+					"active",
+					type="wordsStringComposer"
+				).compose(item["questions"])
+			except KeyError:
+				# No questions, I can't pronounce this
+				pass
+			else:
+				self._modules.default(
+					"active",
+					type="textToSpeech"
+				).say.send(text)
 
 def init(moduleManager):
 	return TextToSpeechProviderWords(moduleManager)

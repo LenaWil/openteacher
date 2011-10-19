@@ -188,7 +188,7 @@ class MediaDisplayModule(object):
 		
 		# Add settings
 		self._settings = self._modules.default("active", type="settings")
-		#FIXME: where are these settings actually used???
+		# Settings (used in mediaTypes)
 		self._html5VideoSetting = self._settings.registerSetting(**{
 			"internal_name": "org.openteacher.lessons.media.videohtml5",
 			"name": "Use HTML5 for video",

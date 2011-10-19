@@ -135,27 +135,27 @@ class TextToSpeechModule(object):
 			self.tts = TextToSpeech(pyttsx)
 		except DependencyError as e:
 			QtGui.QMessageBox.critical(None, "Error", unicode(e))
-
+		
+		self._settings = self._modules.default("active", type="settings")
+		
 		# Add settings
-		for module in self._mm.mods("active", type="settings"):
-			#FIXME: translate name, category, subcategory
-			module.registerSetting(**{
-				"internal_name": "org.openteacher.textToSpeech.voice",
-				"name": "Voice",
-				"type": "options",
-				"category": "Pronounciation",
-				"subcategory": "Voice",
-				"defaultValue": self.tts.getVoices()[0][1],
-				"options": self.tts.getVoices(),
-			})
-			module.registerSetting(**{
-				"internal_name": "org.openteacher.textToSpeech.speed",
-				"name": "Speed",
-				"type": "number",
-				"category": "Pronounciation",
-				"subcategory": "Voice",
-				"defaultValue": 120,
-			})
+		self._ttsVoice = self._settings.registerSetting(**{
+			"internal_name": "org.openteacher.textToSpeech.voice",
+			"name": "Voice",
+			"type": "options",
+			"category": "Pronounciation",
+			"subcategory": "Voice",
+			"defaultValue": self.tts.getVoices()[0][1],
+			"options": self.tts.getVoices(),
+		})
+		self._ttsSpeed = self._settings.registerSetting(**{
+			"internal_name": "org.openteacher.textToSpeech.speed",
+			"name": "Speed",
+			"type": "number",
+			"category": "Pronounciation",
+			"subcategory": "Voice",
+			"defaultValue": 120,
+		})
 
 		# Create the say word event
 		self.say = self._modules.default(type="event").createEvent()
@@ -191,16 +191,12 @@ class TextToSpeechModule(object):
 		# First voice as default/if none is selected
 		voiceid = self.tts.getVoices()[0][1]
 		# Get the selected voice
-		for module in self._mm.mods("active", type="settings"):
-			if module.value("org.openteacher.textToSpeech.voice") != None:
-				voiceid = module.value("org.openteacher.textToSpeech.voice")
-				break
+		if self._ttsVoice != None:
+			voiceid = self._ttsVoice["value"]
 		speed = 120
 		# Get the selected speed
-		for module in self._mm.mods("active", type="settings"):
-			if module.value("org.openteacher.textToSpeech.speed") != None:
-				speed = module.value("org.openteacher.textToSpeech.speed")
-				break
+		if self._ttsSpeed:
+			speed = self._ttsSpeed["value"]
 		# Pronounce
 		self.tts.speak(word,speed,voiceid,thread)
 
