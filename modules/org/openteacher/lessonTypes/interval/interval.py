@@ -239,7 +239,7 @@ class IntervalModule(object):
 		return self._modules.default(type="event").createEvent
 
 	def createLessonType(self, list, indexes):
-		lessonType = IntervalLessonType(self._mm, self._createEvent, list, indexes)
+		lessonType = IntervalLessonType(self._createEvent, list, indexes, self._groupSizeSetting, self._minQuestionsSetting, self._whenKnownSetting)
 		lessonType.newItem.handle(self.newItem.send)
 		return lessonType
 
