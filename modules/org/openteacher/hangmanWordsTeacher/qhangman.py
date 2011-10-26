@@ -64,9 +64,10 @@ class HangmanWidget(QtGui.QWidget):
 			alreadyGuessedDialog.exec_()
 			self.guessEdit.clear()
 			return
+		self.guesses.append(guess)
 		wordLabelList = list(self.wordLabel.text())
 		if len(guess) == 1:
-			results = self.word.guessCharacter(guess)
+			results = self.word.guessCharacter(guess) #A list with [index, character]
 			if results:
 				for i in results:
 					wordLabelList[i[0]] = i[1]
@@ -74,6 +75,8 @@ class HangmanWidget(QtGui.QWidget):
 				for i in wordLabelList:
 					resultingString += i
 				self.wordLabel.setText(resultingString)
+				if self.wordLabel.text() == self.word._word:
+					self.showEndOfGame(True)
 			else:
 				self.wrongCharacters.append(str(guess))
 				self.wrongCharactersLabel.setText('Mistakes:  ' + '  |  '.join(self.wrongCharacters))
@@ -89,7 +92,6 @@ class HangmanWidget(QtGui.QWidget):
 				self.hgraph.update()
 				if self.word.mistakes >= 6:
 					self.showEndOfGame(False)
-		self.guesses.append(guess)
 		self.guessEdit.clear()
 	
 	def showEndOfGame(self, win):
