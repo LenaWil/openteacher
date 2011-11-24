@@ -138,6 +138,13 @@ class UserView(View):
 		else:
 			return Response(status.HTTP_401_UNAUTHORIZED)
 
+class UserMeView(View):
+	def get(self, request):
+		if role(request) is not None:
+			return reverse("user", kwargs={"id": request.user.id})
+		else:
+			return Response(status.HTTP_401_UNAUTHORIZED)
+
 class GroupsView(View):
 	form = GroupsForm
 
@@ -177,7 +184,12 @@ class GroupView(View):
 				"group_id": group_id,
 				"student_id": student.id
 			}))
-		return results
+		return {
+			"name": group.name,
+			"url": reverse("group", kwargs={"group_id": group_id}),
+			"id": group_id,
+			"members": results,
+		}
 
 	def post(self, request, group_id):
 		try:
@@ -268,9 +280,9 @@ class TestView(View):
 				"checked_answers": reverse("test_checked_answers", kwargs={"test_id": test_id}),
 			}
 
-	def delete(self, request, id):
+	def delete(self, request, test_id):
 		try:
-			test = Test.objects.get(id=id)
+			test = Test.objects.get(id=test_id)
 		except ObjectDoesNotExist:
 			return Response(status.HTTP_404_NOT_FOUND)
 		if request.user == test.teacher:
@@ -342,7 +354,7 @@ class TestStudentsView(View):
 		if not test.teacher == request.user:
 			return Response(status.HTTP_401_UNAUTHORIZED)
 		students = get_users_with_perms(test, attach_perms=True, with_group_users=False)
-		students = filter(lambda x: users[x] == "do_test", students)
+		students = filter(lambda x: "do_test" in students[x], students)
 		results = []
 		for student in students:
 			results.append(reverse("test_student", kwargs={"test_id": test_id, "student_id": student.id}))

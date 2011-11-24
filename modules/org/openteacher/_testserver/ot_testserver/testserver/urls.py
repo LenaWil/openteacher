@@ -20,6 +20,7 @@ from views import (
 	IndexView,
 	UsersView,
 	UserView,
+	UserMeView,
 	GroupsView,
 	GroupView,
 	GroupMemberView,
@@ -40,6 +41,7 @@ urlpatterns = patterns('',
 
 	url(r'^users/?$', UsersView.as_view(), name='users'),
 	url(r'^users/(?P<id>-?[0-9]+)/?$', UserView.as_view(), name='user'),
+	url(r'^users/me/?$', UserMeView.as_view(), name='user_me'),
 
 	url(r'^groups/?$', GroupsView.as_view(), name='groups'),
 	url(r'^groups/(?P<group_id>-?[0-9]+)/?$', GroupView.as_view(), name='group'),
