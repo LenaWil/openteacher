@@ -73,6 +73,9 @@ class DocumentationModule(object):
 			self._mm.mods(type="metadata"),
 			self._mm.mods(type="ui"),
 		)
+		self.uses = (
+			self._mm.mods(type="translator"),
+		),
 
 	def show(self):
 		metadata = self._modules.default("active", type="metadata").metadata

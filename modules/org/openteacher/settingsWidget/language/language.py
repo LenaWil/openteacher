@@ -21,44 +21,33 @@
 from PyQt4 import QtCore, QtGui
 import os
 
-class LanguageChooser(QtGui.QComboBox):
-	languageChanged = QtCore.pyqtSignal([object])
+class SettingsWidget(QtGui.QComboBox):
+	def __init__(self, languages, setting, *args, **kwargs):
+		super(SettingsWidget, self).__init__(*args, **kwargs)
 
-	def __init__(self, languages, i, *args, **kwargs):
-		super(LanguageChooser, self).__init__(*args, **kwargs)
+		self._setting = setting
 
-		try:
-			for code in sorted(languages):
-				self.addItem(languages[code], code)
-		except TypeError:
-			self.setModel(languages)
-		else:
-			self.insertItem(0, _("System default"), None)
-			self.insertSeparator(1)
-		self.setCurrentIndex(i)
+		for code in sorted(languages):
+			self.addItem(languages[code], code)
+		self.insertItem(0, _("System default"), None)
+		self.insertSeparator(1)
 
-		self.highlighted.connect(self._indexChanged)
+		self.highlighted.connect(self._valueChanged)
+		self.setCurrentIndex(self.findData(setting["value"]))
 
-	def _indexChanged(self, index):
-		self.languageChanged.emit(index)
+	def _valueChanged(self, index):
+		item = self.model().item(index)
+		self._setting["value"] = unicode(item.data(QtCore.Qt.UserRole).toString())
 
-class LanguageChooserModule(object):
+class SettingsWidgetModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(LanguageChooserModule, self).__init__(*args, **kwargs)
+		super(SettingsWidgetModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "languageChooser"
+		self.type = "settingsWidget"
 		self.requires = (
 			self._mm.mods(type="translator"),
 		)
-
-	@property
-	def language(self):
-		variant = self._model.item(self._index).data(QtCore.Qt.UserRole)
-		if variant.isNull():
-			return
-		else:
-			return str(variant.toString())
 
 	@property
 	def _languages(self):
@@ -77,45 +66,26 @@ class LanguageChooserModule(object):
 			languages[code] = _("I speak English")
 		return languages
 
-	def _languageChanged(self, index):
-		self._index = index
-		self._modules.default(type="translator").languageChanged.send()
-
-	def createLanguageChooser(self, *args, **kwargs):
-		if self._model:
-			lc = LanguageChooser(self._model, self._index, *args, **kwargs)
-		else:
-			lc = LanguageChooser(self._languages, self._index, *args, **kwargs)
-			self._model = lc.model()
-
-		lc.languageChanged.connect(self._languageChanged)
-		return lc
+	def createWidget(self, *args, **kwargs):
+		return SettingsWidget(self._languages, *args, **kwargs)
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self.widgetType = "language"
+
 		global _, ngettext
 		translator = self._modules.default("active", type="translator")
 		_, ngettext = translator.gettextFunctions(
 			self._mm.resourcePath("translations")
 		)
-		
-		self._model = None
-		self._index = 0
-
-		self.lc = self.createLanguageChooser()
-		self.lc.show()
-
-		self.lc2 = self.createLanguageChooser()
-		self.lc2.show()
 
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		
+
 		del self._modules
-		del self._model
-		del self._index
+		del self.widgetType
 
 def init(moduleManager):
-	return LanguageChooserModule(moduleManager)
+	return SettingsWidgetModule(moduleManager)

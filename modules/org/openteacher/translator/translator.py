@@ -28,9 +28,9 @@ class TranslatorModule(object):
 		self._mm = moduleManager
 
 		self.type = "translator"
-		self.uses = (
-			self._mm.mods("event"),
-			self._mm.mods("languageChooser"),
+		self.requires = (
+			self._mm.mods(type="event"),
+			self._mm.mods(type="settings"),
 		)
 
 	def enable(self):
@@ -40,38 +40,50 @@ class TranslatorModule(object):
 		self.languageChanged = self._modules.default(
 			type="event"
 		).createEvent()
-		#gettext.install("OpenTeacher")#FIXME
+
+		self._languageSetting = self._modules.default(
+			"active",
+			type="settings"
+		).registerSetting(**{
+			"internal_name": "org.openteacher.translator.language",
+			"type": "language",
+			"name": "Language", #FIXME: translate
+			"defaultValue": None,
+			"callback": {
+				"args": ("active",),
+				"kwargs": {"type": "translator"},
+				"method": "sendLanguageChanged",
+			}
+		})
+
+	def sendLanguageChanged(self):
+		"""A wrapper method called by the setting callback, which can't
+		   call the send() method directly
+
+		"""
+		self.languageChanged.send()
 
 	@property
 	def language(self):
-		language = None#FIXME: use module which also gives the possibility to choose
-		if not language:
-			try:
-				lc = self._modules.default("active", type="languageChooser")
-			except IndexError:
-				pass
-			else:
-				language = lc.language
-		if not language:
-			language = locale.getdefaultlocale()[0]
-		return language
+		return self._languageSetting["value"]
 
 	def gettextFunctions(self, localeDir, language=None):
 		if not language:
 			language = self.language
-		path = os.path.join(localeDir, language + ".mo")
-		if not os.path.isfile(path):
-			path = os.path.join(localeDir, language.split("_")[0] + ".mo")
-		if os.path.isfile(path):
-			t = gettext.GNUTranslations(open(path, "rb"))
-			return t.ugettext, t.ungettext
+		if language:
+			path = os.path.join(localeDir, language + ".mo")
+			if not os.path.isfile(path):
+				path = os.path.join(localeDir, language.split("_")[0] + ".mo")
+			if os.path.isfile(path):
+				t = gettext.GNUTranslations(open(path, "rb"))
+				return t.ugettext, t.ungettext
 		return unicode, lambda x, y, n: x if n == 1 else y
 
 	def disable(self):
 		self.active = False
 
 		del self._modules
-		del self.languageChaned
+		del self.languageChanged
 
 def init(moduleManager):
 	return TranslatorModule(moduleManager)

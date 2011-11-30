@@ -18,6 +18,17 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+class SettingDict(dict):
+	def __init__(self, executeCallback, *args, **kwargs):
+		super(SettingDict, self).__init__(*args, **kwargs)
+
+		self._executeCallback = executeCallback
+
+	def __setitem__(self, name, value):
+		super(SettingDict, self).__setitem__(name, value)
+		if name == "value" and self.has_key("callback"):
+			self._executeCallback(self["callback"])
+
 class SettingsModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(SettingsModule, self).__init__(*args, **kwargs)
@@ -41,13 +52,23 @@ class SettingsModule(object):
 		  * short_text
 		  * long_text
 		  * number
-		  * options
-		  ... are available. #FIXME: correct?
+		  * options #FIXME: shouldn't this be singular? (the type of the setting value is an option)
+		  * language
+		  ... are available.
 		 * category=None,
 		 * subcategory=None,
 		 * defaultValue=None
+		 * callback=None
+		  * should have this format:
+		    {
+				"args": ("active",),
+				"kwargs": {"type": "callback"},
+				"method": "callbackMethod",
+			}
+		    Where args and kwargs are the same as in the following:
+		    self._mm.mods(*args, **kwargs)
 
-		The following argument should be included when type="options"
+		The following argument should be included when type="options":
 		 * options=[]
 		  * options should have this format: ("label", data)
 
@@ -57,34 +78,51 @@ class SettingsModule(object):
 		current value of the setting. You're free to modify the object,
 		as long as its values are valid.
 
+		When a setting argument isn't given (e.g. category), then it
+		also isn't in the setting dict that is returned, so for the
+		non-obligatory ones (the one with default values above) check
+		for a KeyError and if there is one, threat it like the default
+		value is the current data.
+
+		If a callback is added, it's called when the value is changed
+		automatically by this module.
+
 		"""
 		if not self._settings.has_key(internal_name):
 			setting["value"] = setting.pop("defaultValue")
-			self._settings[internal_name] = setting
+			self._settings[internal_name] = SettingDict(self._executeCallback, setting)
 		return self._settings[internal_name]
 	
 	def setting(self, internal_name):
-		"""
-		Method to return a setting from the internal name.
-		"""
+		"""Method to return a setting from the internal name."""
+
 		return self._settings[internal_name]
 
 	@property
 	def registeredSettings(self):
 		return self._settings.values()
 
+	def _executeCallback(self, callback):
+		obj = self._modules.default(*callback["args"], **callback["kwargs"])
+		getattr(obj, callback["method"])() #execute
+
 	def enable(self):
-		modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		try:
-			self._settings = modules.default(type="dataStore").store["org.openteacher.settings.settings"]
+			self._settings = self._modules.default(type="dataStore").store["org.openteacher.settings.settings"]
 		except KeyError:
-			self._settings = modules.default(type="dataStore").store["org.openteacher.settings.settings"] = {}
+			self._settings = self._modules.default(type="dataStore").store["org.openteacher.settings.settings"] = {}
+
+		#replace the dicts by SettingDicts
+		for key, value in self._settings.iteritems():
+			self._settings[key] = SettingDict(self._executeCallback, value)
 
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
+		del self._modules
 		del self._settings
 
 def init(moduleManager):
