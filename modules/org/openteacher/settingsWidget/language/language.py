@@ -20,6 +20,7 @@
 
 from PyQt4 import QtCore, QtGui
 import os
+import locale
 
 class SettingsWidget(QtGui.QComboBox):
 	def __init__(self, languages, setting, *args, **kwargs):

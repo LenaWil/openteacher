@@ -65,18 +65,20 @@ class TranslatorModule(object):
 
 	@property
 	def language(self):
-		return self._languageSetting["value"]
+		lang = self._languageSetting["value"]
+		if not lang:
+			return locale.getdefaultlocale()[0]
+		return lang
 
 	def gettextFunctions(self, localeDir, language=None):
 		if not language:
 			language = self.language
-		if language:
-			path = os.path.join(localeDir, language + ".mo")
-			if not os.path.isfile(path):
-				path = os.path.join(localeDir, language.split("_")[0] + ".mo")
-			if os.path.isfile(path):
-				t = gettext.GNUTranslations(open(path, "rb"))
-				return t.ugettext, t.ungettext
+		path = os.path.join(localeDir, language + ".mo")
+		if not os.path.isfile(path):
+			path = os.path.join(localeDir, language.split("_")[0] + ".mo")
+		if os.path.isfile(path):
+			t = gettext.GNUTranslations(open(path, "rb"))
+			return t.ugettext, t.ungettext
 		return unicode, lambda x, y, n: x if n == 1 else y
 
 	def disable(self):
