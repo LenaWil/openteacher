@@ -140,7 +140,7 @@ class StartTabButton(QtGui.QPushButton):
 		super(StartTabButton, self).resizeEvent(*args, **kwargs)
 
 class StartWidget(QtGui.QSplitter):
-	def __init__(self, *args, **kwargs):
+	def __init__(self, recentlyOpenedViewer, *args, **kwargs):
 		super(StartWidget, self).__init__(*args, **kwargs)
 
 		self._createLessonCurrentRow = 0
@@ -169,21 +169,16 @@ class StartWidget(QtGui.QSplitter):
 		openWidget = QtGui.QWidget(self)
 		openWidget.setLayout(openLayout)
 
-		recentlyOpenedListView = QtGui.QListView() #FIXME: rewrite
-		recentlyOpenedListView.setModel(QtGui.QStringListModel([
-			"French (words)",
-			"Europe (topo)",
-			"Exam German (text)"
-		], self))
-
-		recentlyOpenedLayout = QtGui.QVBoxLayout()
-		recentlyOpenedLayout.addWidget(recentlyOpenedListView)
-
-		self.recentlyOpenedGroupBox = QtGui.QGroupBox()
-		self.recentlyOpenedGroupBox.setLayout(recentlyOpenedLayout)
-
 		self.addWidget(openWidget)
-		self.addWidget(self.recentlyOpenedGroupBox)
+
+		if recentlyOpenedViewer:
+			recentlyOpenedLayout = QtGui.QVBoxLayout()
+			recentlyOpenedLayout.addWidget(recentlyOpenedViewer)
+
+			self.recentlyOpenedGroupBox = QtGui.QGroupBox()
+			self.recentlyOpenedGroupBox.setLayout(recentlyOpenedLayout)
+
+			self.addWidget(self.recentlyOpenedGroupBox)
 
 	def retranslate(self):
 		self.createLessonGroupBox.setTitle(_("Create lesson:"))
@@ -223,10 +218,10 @@ class StartWidget(QtGui.QSplitter):
 		return button
 
 class FilesTabWidget(QtGui.QTabWidget):
-	def __init__(self, *args, **kwargs):
+	def __init__(self, recentlyOpenedViewer, *args, **kwargs):
 		super(FilesTabWidget, self).__init__(*args, **kwargs)
 
-		self.startWidget = StartWidget(self)
+		self.startWidget = StartWidget(recentlyOpenedViewer, self)
 		super(FilesTabWidget, self).addTab(
 			self.startWidget,
 			QtGui.QIcon.fromTheme("add",
@@ -259,13 +254,13 @@ class FilesTabWidget(QtGui.QTabWidget):
 class OpenTeacherWidget(QtGui.QMainWindow):
 	activityChanged = QtCore.pyqtSignal([object])
 
-	def __init__(self, *args, **kwargs):
+	def __init__(self, recentlyOpenedViewer=None, *args, **kwargs):
 		super(OpenTeacherWidget, self).__init__(*args, **kwargs)
 
 		self.resize(640, 480)
 
 		#tabWidget
-		self.tabWidget = FilesTabWidget(self)
+		self.tabWidget = FilesTabWidget(recentlyOpenedViewer, self)
 		self.setCentralWidget(self.tabWidget)
 
 		#File menu

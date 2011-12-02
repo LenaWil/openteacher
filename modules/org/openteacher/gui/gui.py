@@ -78,6 +78,7 @@ class GuiModule(object):
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="recentlyOpenedViewer"),
 		)
 
 	def enable(self):
@@ -101,7 +102,11 @@ class GuiModule(object):
 		self._ui.ICON_PATH = self._mm.resourcePath("icons/") #FIXME: something less hard to debug?
 
 		self._app = QtGui.QApplication(sys.argv)
-		self._widget = self._ui.OpenTeacherWidget()
+		try:
+			recentlyOpenedViewer = self._modules.default("active", type="recentlyOpenedViewer").createViewer()
+		except IndexError:
+			recentlyOpenedViewer = None
+		self._widget = self._ui.OpenTeacherWidget(recentlyOpenedViewer)
 
 		#load translator
 		try:

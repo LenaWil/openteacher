@@ -174,6 +174,7 @@ class TestViewerModule(object):
 		tv = TestViewer(self._mm, *args, **kwargs)
 		self._testViewers.add(weakref.ref(tv))
 		#self._retranslate()#FIXME: this crashes if enabled but should be enabled
+
 		return tv
 
 	def enable(self):

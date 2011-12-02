@@ -91,7 +91,6 @@ class WordsLessonModule(object):
 			translator.languageChanged.handle(self._retranslate)
 		self._retranslate()
 
-
 		self.lessonCreated = self._modules.default(type="event").createEvent()
 		self.lessonCreationFinished = self._modules.default(type="event").createEvent()
 
