@@ -49,7 +49,7 @@ class OpenTeachingWordsSaverModule(object):
 		del self.name
 		del self.saves
 
-	def _serialize(self, obj):
+	def serialize(self, obj):
 		try:
 			return obj.strftime("%Y-%m-%dT%H:%M:%S.%f")
 		except AttributeError:
@@ -60,7 +60,7 @@ class OpenTeachingWordsSaverModule(object):
 		otwdzip.writestr("list.json", json.dumps(
 			list, #the list to save
 			separators=(',',':'), #compact encoding
-			default=self._serialize
+			default=self.serialize
 		))
 
 def init(moduleManager):

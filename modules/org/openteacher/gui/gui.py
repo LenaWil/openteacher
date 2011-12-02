@@ -303,7 +303,7 @@ class GuiModule(object):
 			return unicode(filename)
 		else:
 			return None
-
+	
 	def getLoadPath(self, startdir, exts): #FIXME: separate module
 		stringExts = set()
 		for ext in exts:
@@ -324,7 +324,7 @@ class GuiModule(object):
 			return unicode(fileDialog.selectedFiles()[0])
 		else:
 			return None
-
+	
 	def getConfiguredPrinter(self): #FIXME: separate module
 		#Setup printer
 		printer = QtGui.QPrinter()
