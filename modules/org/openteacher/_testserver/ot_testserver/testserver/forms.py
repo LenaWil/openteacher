@@ -19,6 +19,11 @@ from django import forms
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from models import User, Group, Answers
 
+try:
+	import json
+except ImportError:
+	import simplejson as json
+
 def isValidRole(role):
 	if role not in ("admin", "teacher", "student"):
 		raise ValidationError("Invalid role, must be 'admin', 'teacher' or 'student'.")
@@ -30,6 +35,12 @@ def isStudent(user):
 	except (AttributeError, ObjectDoesNotExist):
 		pass #something wrong
 	raise ValidationError("The chosen user isn't a student")
+
+def isValidJson(data):
+	try:
+		json.loads(data)
+	except Exception:
+		raise ValidationError("Unable to parse the json, is it valid?")
 
 class UsersForm(forms.Form):
 	username = forms.CharField(max_length=200)
@@ -43,7 +54,7 @@ class GroupForm(forms.Form):
 	student_id = forms.ModelChoiceField(User.objects.all(), validators=[isStudent])
 
 class TestsForm(forms.Form):
-	list = forms.CharField(widget=forms.Textarea)
+	list = forms.CharField(widget=forms.Textarea, validators=[isValidJson])
 
 class TestGroupsForm(forms.Form):
 	group_id = forms.ModelChoiceField(Group.objects.all())
@@ -52,9 +63,9 @@ class TestStudentsForm(forms.Form):
 	student_id = forms.ModelChoiceField(User.objects.all(), validators=[isStudent])
 
 class TestAnswersForm(forms.Form):
-	list = forms.CharField(widget=forms.Textarea)
+	list = forms.CharField(widget=forms.Textarea, validators=[isValidJson])
 
 class TestCheckedAnswersForm(forms.Form):
 	answer_id = forms.ModelChoiceField(Answers.objects.all(), help_text="Choose an answer from the current test")
-	list = forms.CharField(widget=forms.Textarea)
+	list = forms.CharField(widget=forms.Textarea, validators=[isValidJson])
 	note = forms.CharField()

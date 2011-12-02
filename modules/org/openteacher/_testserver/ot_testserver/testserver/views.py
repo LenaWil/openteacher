@@ -28,6 +28,11 @@ from guardian.shortcuts import assign, remove_perm, get_users_with_perms, get_gr
 from models import Test, Answers, CheckedAnswers, User, UserProfile, Group
 from forms import UsersForm, GroupsForm, GroupForm, TestsForm, TestGroupsForm, TestStudentsForm, TestAnswersForm, TestCheckedAnswersForm
 
+try:
+	import json
+except ImportError:
+	import simplejson as json
+
 def role(request):
 	try:
 		return request.user.get_profile().role
@@ -268,17 +273,35 @@ class TestView(View):
 			test = Test.objects.get(id=test_id)
 		except ObjectDoesNotExist:
 			return Response(status.HTTP_404_NOT_FOUND)
-		if request.user.has_perm('do_test', test) or request.user == test.teacher:
-			return {
-				"id": test.id,
-				"list": test.list,
-				"teacher": reverse("user", kwargs={"id": test.teacher.id}),
-				"url": reverse("test", kwargs={"test_id": test_id}),
-				"students": reverse("test_students", kwargs={"test_id": test_id}),
-				"groups": reverse("test_groups", kwargs={"test_id": test_id}),
-				"answers": reverse("test_answers", kwargs={"test_id": test_id}),
-				"checked_answers": reverse("test_checked_answers", kwargs={"test_id": test_id}),
-			}
+		result = {
+			"id": test.id,
+			"teacher": reverse("user", kwargs={"id": test.teacher.id}),
+			"url": reverse("test", kwargs={"test_id": test_id}),
+			"students": reverse("test_students", kwargs={"test_id": test_id}),
+			"groups": reverse("test_groups", kwargs={"test_id": test_id}),
+			"answers": reverse("test_answers", kwargs={"test_id": test_id}),
+			"checked_answers": reverse("test_checked_answers", kwargs={"test_id": test_id}),
+		}
+		if request.user == test.teacher:
+			result["list"] = test.list
+			return result
+		elif request.user.has_perm('do_test', test):
+			result["list"] = self._strip_answers(test.list)
+			return result
+		else:
+			return Response(status.HTTP_401_UNAUTHORIZED)
+
+	def _strip_answers(self, list):
+		list = json.loads(list)
+		if list.has_key("tests"):
+			del list["tests"]
+		if list.has_key("items"):
+			for item in list["items"]:
+				try:
+					del item["answers"]
+				except KeyError:
+					pass
+		return json.dumps(list)
 
 	def delete(self, request, test_id):
 		try:
