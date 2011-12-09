@@ -26,7 +26,7 @@ from djangorestframework import status
 from guardian.shortcuts import assign, remove_perm, get_users_with_perms, get_groups_with_perms
 
 from models import Test, Answers, CheckedAnswers, User, UserProfile, Group
-from forms import UsersForm, GroupsForm, GroupForm, TestsForm, TestGroupsForm, TestStudentsForm, TestAnswersForm, TestCheckedAnswersForm
+from forms import UsersForm, GroupsForm, GroupForm, TestsForm, TestGroupsForm, TestStudentsForm, TestAnswersForm, TestCheckedAnswersForm, TestCheckedAnswerForm
 
 try:
 	import json
@@ -429,8 +429,8 @@ class TestAnswersView(View):
 		answers = Answers.objects.filter(test=test)
 		results = []
 		for answer in answers:
-			if test.teacher == request.user or request.user.has_perm("do_test", test):
-				results.append(reverse("test_answer", kwargs={"test_id": test_id, "answer_id": answer.id}))
+			if test.teacher == request.user or request.user == answer.student:
+				results.append(reverse("test_answer", kwargs={"test_id": test_id, "student_id": answer.student.id}))
 		return results
 
 	def post(self, request, test_id):
@@ -447,22 +447,21 @@ class TestAnswersView(View):
 				})
 			except IntegrityError:
 				return Response(status.HTTP_400_BAD_REQUEST, "You can only hand in answers once.")
-			return reverse("test_answer", kwargs={"test_id": test_id, "answer_id": answer.id})
+			return reverse("test_answer", kwargs={"test_id": test_id, "student_id": answer.student.id})
 		else:
 			return Response(status.HTTP_401_UNAUTHORIZED)
 
 class TestAnswerView(View):
 	form = TestAnswersForm
 
-	def get(self, request, test_id, answer_id):
+	def get(self, request, test_id, student_id):
 		try:
-			answer = Answers.objects.get(id=answer_id)
+			answer = Answers.objects.get(student=student_id)
 		except ObjectDoesNotExist:
 			return Response(status.HTTP_404_NOT_FOUND)
 		if request.user in (answer.student, answer.test.teacher):
 			return {
-				"id": answer.id,
-				"url": reverse("test_answer", kwargs={"test_id": test_id, "answer_id": answer_id}),
+				"url": reverse("test_answer", kwargs={"test_id": test_id, "student_id": student_id}),
 				"student": reverse("user", kwargs={"id": answer.student.id}),
 				"test": reverse("test", kwargs={"test_id": test_id}),
 				"list": answer.list,
@@ -481,8 +480,8 @@ class TestCheckedAnswersView(View):
 		checkedAnswers = CheckedAnswers.objects.filter(answer__test=test)
 		results = []
 		for checkedAnswer in checkedAnswers:
-			if test.teacher == request.user or request.user.has_perm("do_test", test):
-				results.append(reverse("test_checked_answer", kwargs={"test_id": test_id, "checked_answer_id": checkedAnswer.id}))
+			if test.teacher == request.user or checkedAnswer.answer.student == request.user:
+				results.append(reverse("test_checked_answer", kwargs={"test_id": test_id, "answer_id": checkedAnswer.answer.student.id}))
 		return results
 
 	def post(self, request, test_id):
@@ -502,44 +501,44 @@ class TestCheckedAnswersView(View):
 			except IntegrityError:
 				return Response(status.HTTP_400_BAD_REQUEST, "These answers have already been checked.")
 			else:
-				return reverse("test_checked_answer", kwargs={"test_id": test_id, "checked_answer_id": checkedAnswer.id})
+				return reverse("test_checked_answer", kwargs={"test_id": test_id, "answer_id": checkedAnswer.answer.student.id})
 		else:
 			return Response(status.HTTP_401_UNAUTHORIZED)
 
 class TestCheckedAnswerView(View):
-	form = TestCheckedAnswersForm
+	form = TestCheckedAnswerForm
 
-	def get(self, request, test_id, checked_answer_id):
+	def get(self, request, test_id, answer_id):
 		try:
-			checkedAnswer = CheckedAnswers.objects.get(id=checked_answer_id)
+			checkedAnswer = CheckedAnswers.objects.get(answer__student=answer_id)
 		except ObjectDoesNotExist:
 			return Response(status.HTTP_404_NOT_FOUND)
 		if request.user in (checkedAnswer.answer.student, checkedAnswer.answer.test.teacher):
 			return {
 				"list": checkedAnswer.list,
 				"note": checkedAnswer.note,
-				"answer": reverse("test_answer", kwargs={"test_id": test_id, "answer_id": checkedAnswer.answer.id}),
-				"url": reverse("test_checked_answer", kwargs={"test_id": test_id, "checked_answer_id": checked_answer_id}),
+				"answer": reverse("test_answer", kwargs={"test_id": test_id, "student_id": answer_id}),
+				"url": reverse("test_checked_answer", kwargs={"test_id": test_id, "answer_id": answer_id}),
 			}
 		else:
 			return Response(status.HTTP_401_UNAUTHORIZED)
 
-	def put(self, request, test_id, checked_answer_id):
+	def put(self, request, test_id, answer_id):
 		try:
-			checkedAnswer = CheckedAnswers.objects.get(id=checked_answer_id)
+			checkedAnswer = CheckedAnswers.objects.get(answer__student=answer_id)
 		except ObjectDoesNotExist:
 			return Response(status.HTTP_404_NOT_FOUND)
 		if checkedAnswer.answer.test.teacher == request.user:
 			checkedAnswer.list = self.CONTENT["list"]
 			checkedAnswer.note = self.CONTENT["note"]
 			checkedAnswer.save()
-			return reverse("test_checked_answer", kwargs={"test_id": test_id, "checked_answer_id": checked_answer_id})
+			return reverse("test_checked_answer", kwargs={"test_id": test_id, "answer_id": answer_id})
 		else:
 			return Response(status.HTTP_401_UNAUTHORIZED)
 
-	def delete(self, request, test_id, checked_answer_id):
+	def delete(self, request, test_id, answer_id):
 		try:
-			checkedAnswer = CheckedAnswers.objects.get(id=checked_answer_id)
+			checkedAnswer = CheckedAnswers.objects.get(answer__student=answer_id)
 		except ObjectDoesNotExist:
 			return Response(status.HTTP_404_NOT_FOUND)
 		if checkedAnswer.answer.test.teacher == request.user:

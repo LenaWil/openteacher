@@ -57,8 +57,8 @@ urlpatterns = patterns('',
 	url(r'^tests/(?P<test_id>-?[0-9]+)/students/(?P<student_id>-?[0-9]+)/?$', TestStudentView.as_view(), name='test_student'),
 
 	url(r'^tests/(?P<test_id>-?[0-9]+)/answers/?$', TestAnswersView.as_view(), name='test_answers'),
-	url(r'^tests/(?P<test_id>-?[0-9]+)/answers/(?P<answer_id>-?[0-9]+)/?$', TestAnswerView.as_view(), name='test_answer'),
+	url(r'^tests/(?P<test_id>-?[0-9]+)/answers/(?P<student_id>-?[0-9]+)/?$', TestAnswerView.as_view(), name='test_answer'),
 
 	url(r'^tests/(?P<test_id>-?[0-9]+)/checked_answers/?$', TestCheckedAnswersView.as_view(), name='test_checked_answers'),
-	url(r'^tests/(?P<test_id>-?[0-9]+)/checked_answers/(?P<checked_answer_id>-?[0-9]+)/?$', TestCheckedAnswerView.as_view(), name='test_checked_answer')
+	url(r'^tests/(?P<test_id>-?[0-9]+)/checked_answers/(?P<answer_id>-?[0-9]+)/?$', TestCheckedAnswerView.as_view(), name='test_checked_answer')
 )

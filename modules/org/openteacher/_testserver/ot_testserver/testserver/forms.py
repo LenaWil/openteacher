@@ -65,7 +65,9 @@ class TestStudentsForm(forms.Form):
 class TestAnswersForm(forms.Form):
 	list = forms.CharField(widget=forms.Textarea, validators=[isValidJson])
 
-class TestCheckedAnswersForm(forms.Form):
-	answer_id = forms.ModelChoiceField(Answers.objects.all(), help_text="Choose an answer from the current test")
+class TestCheckedAnswerForm(forms.Form):
 	list = forms.CharField(widget=forms.Textarea, validators=[isValidJson])
 	note = forms.CharField()
+
+class TestCheckedAnswersForm(TestCheckedAnswerForm):
+	answer_id = forms.ModelChoiceField(Answers.objects.all(), help_text="Choose an answer from the current test")
