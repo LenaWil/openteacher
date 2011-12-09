@@ -30,22 +30,22 @@ except:
 class TestSelecter(QtGui.QListWidget):
 	# Parameter: The current test (tests/<id>)
 	testChosen = QtCore.pyqtSignal(dict)
-	def __init__(self, connectionModule, *args, **kwargs):
+	def __init__(self, connection, *args, **kwargs):
 		super(TestSelecter, self).__init__(*args, **kwargs)
 		
-		self.connectionModule = connectionModule
+		self.connection = connection
 		self.currentRowChanged.connect(self._currentRowChanged)
 		
 		self._addTests()
 	
 	def _addTests(self):
 		# Get all tests
-		self.testsInfo = self.connectionModule.get("tests")
+		self.testsInfo = self.connection.get("tests")
 		self.testsInfos = []
 		
 		for test in self.testsInfo:
 			# Get name of this test
-			testInfo = self.connectionModule.get(test["url"])
+			testInfo = self.connection.get(test["url"])
 			testInfo["list"] = json.loads(testInfo["list"])
 			self.testsInfos.append(testInfo)
 			
@@ -91,12 +91,12 @@ class TestModeTestSelecterModule(object):
 				self._mm.resourcePath("translations")
 			)
 		
-		self.connectionModule = self._modules.default("active", type="testModeConnection")
+		self.connection = self._modules.default("active", type="testModeConnection").getConnection()
 		
 		self.active = True
 	
 	def getTestSelecter(self):
-		return TestSelecter(self.connectionModule)
+		return TestSelecter(self.connection)
 
 	def disable(self):
 		self.active = False

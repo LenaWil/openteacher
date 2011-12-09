@@ -21,22 +21,23 @@
 from PyQt4 import QtGui
 
 class StudentsView(QtGui.QTreeWidget):
-	def __init__(self, connectionModule, *args, **kwargs):
+	def __init__(self, connection, *args, **kwargs):
 		super(StudentsView, self).__init__(*args, **kwargs)
 		
-		self.connectionModule = connectionModule
+		self.connection = connection
+		self.header().hide();
 		
 		self._addStudents()
 	
 	def _addStudents(self):
 		# Get list of users
-		userList = self.connectionModule.get("users")
+		userList = self.connection.get("users")
 		
 		# Keep a dictionary of name to url of student so we can call the url from the name later
 		self.nameToUrl = dict()
 		
 		for user in userList:
-			userInfo = self.connectionModule.get(user["url"])
+			userInfo = self.connection.get(user["url"])
 			print userInfo
 			if "role" in userInfo and userInfo["role"] == "student":
 				# This is a student. Add the student to the list
@@ -48,7 +49,7 @@ class StudentsView(QtGui.QTreeWidget):
 				self.nameToUrl[userInfo["username"]] = userInfo["url"]
 	
 	def getCurrentStudent(self):
-		return self.connectionModule.get(self.nameToUrl[unicode(self.currentItem().text(0))])
+		return self.connection.get(self.nameToUrl[unicode(self.currentItem().text(0))])
 
 class TestModeStudentsView(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -74,8 +75,8 @@ class TestModeStudentsView(object):
 		self.active = False
 	
 	def getStudentsView(self):
-		connectionModule = self._modules.default("active", type="testModeConnection")
-		return StudentsView(connectionModule)
+		connection = self._modules.default("active", type="testModeConnection").getConnection()
+		return StudentsView(connection)
 
 def init(moduleManager):
 	return TestModeStudentsView(moduleManager)

@@ -70,10 +70,11 @@ class TestModeUploaderModule(object):
 	
 	def upload(self):
 		# First, login
-		self.connectionModule = self._modules.default("active", type="testModeConnection")
+		self.connection = self._modules.default("active", type="testModeConnection").getConnection()
+		self.connection.loggedIn.handle(self.upload_)
+		
 		self.loginid = uuid.uuid4()
-		self.connectionModule.login(self.loginid)
-		self.connectionModule.loggedIn.handle(self.upload_)
+		self.connection.login(self.loginid)
 	
 	def upload_(self, loginid):
 		# Check if this is indeed from the request I sent out
@@ -95,7 +96,7 @@ class TestModeUploaderModule(object):
 			)
 			
 			postData = {"list": listJson}
-			fb = self.connectionModule.post("tests",postData)
+			fb = self.connection.post("tests",postData)
 			print fb
 
 def init(moduleManager):

@@ -45,9 +45,6 @@ class ConnectWidget(QtGui.QWidget):
 		self.connectLayout = QtGui.QFormLayout()
 		self.setLayout(self.connectLayout)
 		
-		self.errorLabel = QtGui.QLabel()
-		self.connectLayout.addRow(self.errorLabel)
-		
 		self.serverField = QtGui.QLineEdit()
 		self.connectLayout.addRow(_("Server IP or hostname:"), self.serverField)
 		
@@ -65,9 +62,6 @@ class LoginWidget(QtGui.QWidget):
 		
 		self.loginLayout = QtGui.QFormLayout()
 		self.setLayout(self.loginLayout)
-		
-		self.errorLabel = QtGui.QLabel()
-		self.loginLayout.addRow(self.errorLabel)
 		
 		self.usernameField = QtGui.QLineEdit()
 		self.loginLayout.addRow(_("Username:"), self.usernameField)
@@ -99,23 +93,11 @@ class ConnectLoginWidget(QtGui.QWidget):
 	def afterConnect(self):
 		self.layout.setCurrentWidget(self.loginWidget)	
 
-class TestModeConnectionModule(object):
-	def __init__(self, moduleManager, *args, **kwargs):
-		super(TestModeConnectionModule, self).__init__(*args, **kwargs)
-		self._mm = moduleManager
+class Connection(object):
+	def __init__(self, modules, *args, **kwargs):
+		super(Connection, self).__init__(*args, **kwargs)
 		
-		self.type = "testModeConnection"
-		
-		self.uses = (
-			self._mm.mods(type="translator"),
-		)
-		self.requires = (
-			self._mm.mods(type="event"),
-			self._mm.mods(type="ui"),
-		)
-
-	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = modules
 		
 		# Connected event
 		self.connected = self._modules.default(type="event").createEvent()
@@ -123,55 +105,38 @@ class TestModeConnectionModule(object):
 		self.loggedIn = self._modules.default(type="event").createEvent()
 		
 		# Setup opener
-		#self.cj = cookielib.CookieJar()
 		self.opener = urllib2.build_opener()
 		self.server = None
 		self.serverName = None
 		self.auth = False
-		
-		#setup translation
-		global _
-		global ngettext
-		
-		try:
-			translator = self._modules.default("active", type="translator")
-		except IndexError:
-			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
-		else:
-			_, ngettext = translator.gettextFunctions(
-				self._mm.resourcePath("translations")
-			)
-		
-		self.active = True
-
-	def disable(self):
-		self.active = False
 	
 	# "Connected" to the server and logged in?
 	@property
 	def connectedLoggedIn(self):
-		return self.server <> None and self.auth == True
+		return self.server != None and self.auth == True
 	
 	# "Connect" to server
 	def connect(self, hostname):
 		try:
 			# Replace hostname by IP (so DNS is not needed at every request. Will speed things up.)
 			hostname = socket.gethostbyname(hostname)
-			# Try to fetch the index page
-			index = json.loads(self.opener.open("https://%s:8080/" % (hostname)).read())
-		except:
+		except socket.gaierror:
 			# Could not connect
-			self.connectLoginWidget.connectWidget.errorLabel.setText(_("Could not connect to the server. Possibly wrong hostname."))
-			self.connectLoginWidget.connectWidget.serverField.setStyleSheet("background-color: #ffb8b8;")
+			dialogShower = self._modules.default(type="dialogShower").getDialogShower()
+			dialogShower.showError(self.loginTab, "Could not connect to the server. Possibly wrong hostname.")
 		else:
 			# Check version
+			# Fixme: make this working
 			#if float(index["version"]) > MAXVERSION:
 			#	self.connectLoginWidget.connectWidget.errorLabel.setText(_("Server version too high. Please update OpenTeacher."))
 			#	self.connectLoginWidget.connectWidget.errorLabel.setStyleSheet("background-color: #ffb8b8;")
 			#else:
 			# Everything OK, Connected
 			self.server = hostname
+			# Try to fetch the index page
+			index = self.get("https://%s:8080/" % (hostname))
 			self.serverName = index["name"]
+			
 			self.connected.send()
 	
 	# Get path
@@ -212,28 +177,63 @@ class TestModeConnectionModule(object):
 		
 		self.opener.addheaders = [("Authorization", "Basic %s" % loginCreds)]
 		
-		self._afterLogin(loginid)
-		
 		#fixme: check password
-		"""
-		try:
-			data = self.open("user/login?username=%s&hashed_password=%s" % (username, passwd))
-		except urllib2.HTTPError:
-			# Wrong login
-			self.connectLoginWidget.loginWidget.passwordField.clear()
-			self.connectLoginWidget.loginWidget.usernameField.setStyleSheet("background-color: #ffb8b8;")
-			self.connectLoginWidget.loginWidget.passwordField.setStyleSheet("background-color: #ffb8b8;")
-			self.connectLoginWidget.loginWidget.errorLabel.setText(_("Wrong username or password! Try again."))
+		me = self.get("users/me")
+		
+		if str(me).strip() == "HTTP Error 401: UNAUTHORIZED":
+			# User was not logged in
+			# fixme: show dialog
+			dialogShower = self._modules.default(type="dialogShower").getDialogShower()
+			dialogShower.showError(self.loginTab, "Could not login. Wrong username or password.")
 		else:
-			# Everything went OK, go to after login
-			self._afterLogin()
-		"""
+			self._afterLogin(loginid)
 	
 	def _afterLogin(self, loginid):
 		# Logged in, set var to server
 		self.auth = True
 		self.loginTab.close()
 		self.loggedIn.send(loginid)
+
+class TestModeConnectionModule(object):
+	def __init__(self, moduleManager, *args, **kwargs):
+		super(TestModeConnectionModule, self).__init__(*args, **kwargs)
+		self._mm = moduleManager
+		
+		self.type = "testModeConnection"
+		
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
+		self.requires = (
+			self._mm.mods(type="event"),
+			self._mm.mods(type="ui"),
+		)
+
+	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		
+		#setup translation
+		global _
+		global ngettext
+		
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		
+		self.connection = Connection(self._modules)
+		
+		self.active = True
+
+	def disable(self):
+		self.active = False
+	
+	def getConnection(self):
+		return self.connection
 
 def init(moduleManager):
 	return TestModeConnectionModule(moduleManager)

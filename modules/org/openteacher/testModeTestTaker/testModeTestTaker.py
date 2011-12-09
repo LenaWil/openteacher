@@ -89,10 +89,10 @@ class TestModeTestTaker(object):
 	
 	def showTestTaker(self):
 		# First, login
-		self.connectionModule = self._modules.default("active", type="testModeConnection")
+		self.connection = self._modules.default("active", type="testModeConnection").getConnection()
+		self.connection.loggedIn.handle(self.showTestTaker_)
 		self.loginid = uuid.uuid4()
-		self.connectionModule.login(self.loginid)
-		self.connectionModule.loggedIn.handle(self.showTestTaker_)
+		self.connection.login(self.loginid)
 	
 	def showTestTaker_(self, loginid):
 		# Check if this is indeed from the request I sent out
@@ -131,7 +131,7 @@ class TestModeTestTaker(object):
 		
 		answeredList = self.teachWidget.getAnsweredList()
 		
-		self.connectionModule.post(answersUrl, {"list" : json.dumps(answeredList)})
+		self.connection.post(answersUrl, {"list" : json.dumps(answeredList)})
 		
 		# fixme: show nice "thank you" message
 	

@@ -233,22 +233,23 @@ class GuiModule(object):
 
 	def addFileTab(self, text, enterWidget=None, teachWidget=None, resultsWidget=None):
 		widget = self._ui.LessonTabWidget(enterWidget, teachWidget, resultsWidget)
-		self._widget.tabWidget.addTab(widget, text)
 		
-		fileTab = self._fileTabs[widget] = LessonFileTab(
-			self._mm,
-			self._widget.tabWidget,
-			widget
-		)
-		return fileTab
+		return self.addCustomTab(text, widget)
 
 	def addCustomTab(self, text, widget):
-		self._widget.tabWidget.addTab(widget, text)
+		# We wrap the layout in a QVBoxLayout widget, so messages can be added on top of the tab.
+		wrapperWidget = QtGui.QWidget()
+		wrapperLayout = QtGui.QVBoxLayout()
 		
-		fileTab = self._fileTabs[widget] = FileTab(
+		wrapperLayout.insertWidget(0, widget)
+		wrapperWidget.setLayout(wrapperLayout)
+		
+		self._widget.tabWidget.addTab(wrapperWidget, text)
+		
+		fileTab = self._fileTabs[wrapperWidget] = FileTab(
 			self._mm,
 			self._widget.tabWidget,
-			widget
+			wrapperWidget
 		)
 		return fileTab
 
