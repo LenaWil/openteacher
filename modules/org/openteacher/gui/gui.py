@@ -22,6 +22,7 @@
 from PyQt4 import QtGui
 import sys
 import os
+import platform
 
 class FileTab(object):
 	def __init__(self, moduleManager, tabWidget, widget, *args, **kwargs):
@@ -100,13 +101,25 @@ class GuiModule(object):
 
 		self._ui = self._mm.import_("ui")
 		self._ui.ICON_PATH = self._mm.resourcePath("icons/") #FIXME: something less hard to debug?
+		
+		# Add Aero glass option on Windows
+		self._settings = self._modules.default("active", type="settings")
+		if platform.system() == "Windows" and platform.version() >= 6.0:
+			self._aeroSetting = self._settings.registerSetting(**{
+			"internal_name": "org.openteacher.gui.aero",
+			"name": "Use Aero glass (experimental)",
+			"type": "boolean",
+			"category": "User interface",
+			"subcategory": "Effects",
+			"defaultValue": False,
+			})
 
 		self._app = QtGui.QApplication(sys.argv)
 		try:
 			recentlyOpenedViewer = self._modules.default("active", type="recentlyOpenedViewer").createViewer()
 		except IndexError:
 			recentlyOpenedViewer = None
-		self._widget = self._ui.OpenTeacherWidget(recentlyOpenedViewer)
+		self._widget = self._ui.OpenTeacherWidget(recentlyOpenedViewer, self._aeroSetting)
 
 		#load translator
 		try:
@@ -162,6 +175,7 @@ class GuiModule(object):
 				"active" if activity else "inactive"
 			)
 		)
+		
 		self.active = True
 
 	def disable(self):

@@ -142,6 +142,8 @@ class StartTabButton(QtGui.QPushButton):
 class StartWidget(QtGui.QSplitter):
 	def __init__(self, recentlyOpenedViewer, *args, **kwargs):
 		super(StartWidget, self).__init__(*args, **kwargs)
+		
+		self.setAutoFillBackground(True)
 
 		self._createLessonCurrentRow = 0
 		self._createLessonCurrentColumn = 0
@@ -222,6 +224,7 @@ class FilesTabWidget(QtGui.QTabWidget):
 		super(FilesTabWidget, self).__init__(*args, **kwargs)
 
 		self.startWidget = StartWidget(recentlyOpenedViewer, self)
+		
 		super(FilesTabWidget, self).addTab(
 			self.startWidget,
 			QtGui.QIcon.fromTheme("add",
@@ -232,8 +235,9 @@ class FilesTabWidget(QtGui.QTabWidget):
 
 		self.setDocumentMode(True)
 
-	def addTab(self, *args, **kwargs):
-		return self.insertTab(self.count() -1, *args, **kwargs) #-1 because of +-tab
+	def addTab(self, w, *args, **kwargs):
+		w.setAutoFillBackground(True)
+		return self.insertTab(self.count() -1, w, *args, **kwargs) #-1 because of +-tab
 
 	def insertTab(self, *args, **kwargs):
 		#create tab
@@ -254,18 +258,19 @@ class FilesTabWidget(QtGui.QTabWidget):
 class OpenTeacherWidget(QtGui.QMainWindow):
 	activityChanged = QtCore.pyqtSignal([object])
 
-	def __init__(self, recentlyOpenedViewer=None, *args, **kwargs):
+	def __init__(self, recentlyOpenedViewer=None, aeroSetting=False, *args, **kwargs):
 		super(OpenTeacherWidget, self).__init__(*args, **kwargs)
 
 		self.resize(640, 480)
 
 		#tabWidget
 		self.tabWidget = FilesTabWidget(recentlyOpenedViewer, self)
+		
 		self.setCentralWidget(self.tabWidget)
 
 		#File menu
 		self.fileMenu = self.menuBar().addMenu("")
-
+		
 		self.newAction = self.fileMenu.addAction(
 			QtGui.QIcon.fromTheme("filenew",
 				QtGui.QIcon(ICON_PATH + "new.png"),
@@ -319,7 +324,7 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 			""
 		)
 		self.quitAction.setShortcut(QtGui.QKeySequence.Quit)
-
+		
 		#Edit
 		self.editMenu = self.menuBar().addMenu("")
 		self.settingsAction = self.editMenu.addAction(
@@ -357,6 +362,24 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 
 		#activate statusBar
 		self.statusBar()
+		
+		# Aero glass
+		if aeroSetting["value"]:
+			self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
+			pal = self.palette()
+			bg = pal.window().color()
+			bg.setAlpha(230)
+			pal.setColor(QtGui.QPalette.Window, bg)
+			self.setPalette(pal)
+			from ctypes import windll, c_int, byref
+			windll.dwmapi.DwmExtendFrameIntoClientArea(c_int(self.winId()), byref(c_int(-1)))
+			# Refill status bar
+			self.statusBar().setAutoFillBackground(True)
+			# Remove borders from toolbar
+			self.toolBar.setStyleSheet("border: 0;")
+			# Make menu bar transparent
+			self.menuBar().setStyleSheet("QMenuBar { background-color:transparent; } QMenuBar::item { background-color: transparent; }")
+			
 
 	def retranslate(self):
 		self.fileMenu.setTitle(_("&File"))
