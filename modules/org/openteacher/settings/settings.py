@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Marten de Vries
+#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -21,7 +22,11 @@
 class SettingDict(dict):
 	def __init__(self, executeCallback, *args, **kwargs):
 		super(SettingDict, self).__init__(*args, **kwargs)
-
+		
+		# Set default values
+		if not "advanced" in self:
+			self["advanced"] = False
+		
 		self._executeCallback = executeCallback
 
 	def __setitem__(self, name, value):
@@ -58,6 +63,7 @@ class SettingsModule(object):
 		 * category=None,
 		 * subcategory=None,
 		 * defaultValue=None
+		 * advanced=False
 		 * callback=None
 		  * should have this format:
 		    {
@@ -108,6 +114,7 @@ class SettingsModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		
 		try:
 			self._settings = self._modules.default(type="dataStore").store["org.openteacher.settings.settings"]
 		except KeyError:

@@ -21,6 +21,7 @@
 
 import zipfile
 import datetime
+import uuid
 try:
 	import json
 except:
@@ -34,11 +35,14 @@ class OpenTeachingWordsLoaderModule(object):
 		self._mm = moduleManager
 		self.uses = (
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="recentlyOpened"),
 		)
 
 	def enable(self):
 		self.name = "Open Teaching Words (.otwd) loader"
 		self.loads = {"otwd": ["words"]}
+		
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
 
 		self.active = True
 
@@ -76,6 +80,19 @@ class OpenTeachingWordsLoaderModule(object):
 				else:
 					active["start"] = self._parseDt(active["start"])
 					active["end"] = self._parseDt(active["end"])
+		
+		# Add to recently opened
+		recentlyOpenedModule = self._modules.default("active", type="recentlyOpened")
+		recentlyOpenedModule.add(**{
+			"identifier": "org.openteacher.loaders.otwd.recentlyOpened." + str(uuid.uuid4()),
+			"label": list["title"],
+			"args": {},
+			"kwargs": { "path": path },
+			"method": "load",
+			"moduleArgsSelector": ("active",),
+			"moduleKwargsSelector": { "type": "loader" },
+		})
+		
 		return list
 
 def init(moduleManager):

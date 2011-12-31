@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Marten de Vries
+#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -13,12 +14,37 @@
 #	OpenTeacher is distributed in the hope that it will be useful,
 #	but WITHOUT ANY WARRANTY; without even the implied warranty of
 #	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+#	GNU Generatypel Public License for more details.
 #
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import shelve
+#import shelve
+import json
+import os
+import atexit
+
+class JSONShelve(dict):
+	def __init__(self, filepath, *args, **kwargs):
+		super(JSONShelve, self).__init__(*args, **kwargs)
+		
+		self.filepath = filepath
+		
+		if os.path.exists(self.filepath):
+			fp = open(self.filepath, 'r')
+			d = json.load(fp)
+			# Copy dict to self
+			for key, value in d.iteritems():
+				self[key] = value
+			fp.close()
+		else:
+			pass
+	
+	def write(self):
+		print "Writing settings file..."
+		fp = open(self.filepath, 'w+')
+		json.dump(self, fp)
+		fp.close()
 
 class DataStoreModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -29,11 +55,10 @@ class DataStoreModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self.store = shelve.open(
-			self._mm.resourcePath("store.shelve"),
-			writeback=True
-		)
+		self.store = JSONShelve(self._mm.resourcePath("store.json"))
 		self.active = True
+		
+		atexit.register(self.store.write)
 
 	def disable(self):
 		self.active = False

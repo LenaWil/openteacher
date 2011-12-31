@@ -22,6 +22,7 @@
 from PyQt4 import QtCore, QtGui
 import sys
 import weakref
+import copy
 
 #FIXME: split into a separate module?
 def byKey(key, items):
@@ -72,22 +73,21 @@ class CategoryTab(QtGui.QWidget):
 class SettingsDialog(QtGui.QTabWidget):#FIXME: make the 'simple' and 'advanced' buttons actually do something
 	def __init__(self, settings, widgets, *args, **kwargs):
 		super(SettingsDialog, self).__init__(*args, **kwargs)
-
+		
+		self.settings = settings
+		self.widgets = widgets
+		
 		#Setup widget
 		self.setTabPosition(QtGui.QTabWidget.South)
 		self.setDocumentMode(True)
-		
-		
-		categories = byKey("category", settings)
-		for name in categories.keys():
-			self.createCategoryTab(widgets, name, categories[name])
 		
 		self.advancedButton = QtGui.QPushButton()
 		self.advancedButton.clicked.connect(self.advanced)
 
 		self.simpleButton = QtGui.QPushButton()
 		self.simpleButton.clicked.connect(self.simple)
-
+		
+		# Go to simple mode
 		self.simple()
 
 	def retranslate(self):
@@ -98,12 +98,32 @@ class SettingsDialog(QtGui.QTabWidget):#FIXME: make the 'simple' and 'advanced' 
 	def createCategoryTab(self, *args, **kwargs):
 		tab = CategoryTab(*args, **kwargs)
 		self.addTab(tab, tab.windowTitle())
+	
+	def update(self):
+		# Copy settings
+		settings = copy.copy(self.settings)
+		
+		# Filter out advanced settings if in simple mode
+		if self.simpleMode:
+			for setting in settings:
+				if setting["advanced"]:
+					settings.remove(setting)
+		
+		self.clear()
+		categories = byKey("category", settings)
+		for name in categories.keys():
+			self.createCategoryTab(self.widgets, name, categories[name])
 
 	def advanced(self):
 		self.setCornerWidget(
 			self.simpleButton,
 			QtCore.Qt.BottomRightCorner
 		)
+		
+		self.simpleMode = False
+		
+		self.update()
+		
 		self.simpleButton.show()
 
 	def simple(self):
@@ -111,6 +131,11 @@ class SettingsDialog(QtGui.QTabWidget):#FIXME: make the 'simple' and 'advanced' 
 			self.advancedButton,
 			QtCore.Qt.BottomRightCorner
 		)
+		
+		self.simpleMode = True
+		
+		self.update()
+		
 		self.advancedButton.show()
 
 class SettingsDialogModule(object):

@@ -172,7 +172,7 @@ class StartWidget(QtGui.QSplitter):
 		openWidget.setLayout(openLayout)
 
 		self.addWidget(openWidget)
-
+		
 		if recentlyOpenedViewer:
 			recentlyOpenedLayout = QtGui.QVBoxLayout()
 			recentlyOpenedLayout.addWidget(recentlyOpenedViewer)

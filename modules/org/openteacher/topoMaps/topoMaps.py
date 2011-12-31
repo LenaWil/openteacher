@@ -313,6 +313,7 @@ class TopoMapsModule(object):
 			"category": "Topo lesson",
 			"subcategory": "Rendering",
 			"defaultValue": False,
+			"advanced": True,
 		})
 	
 	def disable(self):

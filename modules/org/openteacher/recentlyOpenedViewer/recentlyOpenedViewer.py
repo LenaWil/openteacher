@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Marten de Vries
+#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -21,10 +22,12 @@
 from PyQt4 import QtCore, QtGui
 import weakref
 
-class RecentlyOpenedModel(QtCore.QAbstractItemModel):
-	def __init__(self, *args, **kwargs):
+class RecentlyOpenedModel(QtCore.QAbstractListModel):
+	def __init__(self, modules, *args, **kwargs):
 		super(RecentlyOpenedModel, self).__init__(*args, **kwargs)
-
+		
+		self._modules = modules
+		
 		self._items = []
 
 	def columnCount(self, parent=None):
@@ -49,23 +52,36 @@ class RecentlyOpenedModel(QtCore.QAbstractItemModel):
 		self.endResetModel()
 
 	def open(self, row):
-		self._items[row]["open"]()
+		item = self._items[row]
+		print item
+		
+		module = self._modules.default(
+			*item["moduleArgsSelector"],
+			**item["moduleKwargsSelector"]
+		)
+		
+		method = getattr(module, item["method"])
+		
+		method(
+			*item["args"],
+			**item["kwargs"]
+		)
 
 class RecentlyOpenedListView(QtGui.QListView):
-	def __init__(self, *args, **kwargs):
+	def __init__(self, modules, *args, **kwargs):
 		super(RecentlyOpenedListView, self).__init__(*args, **kwargs)
 
-		self.setModel(RecentlyOpenedModel())
+		self.setModel(RecentlyOpenedModel(modules))
 		self.doubleClicked.connect(self._doubleClicked)
 
 	def _doubleClicked(self, index):
 		self.model().open(index.row())
 
 class RecentlyOpenedViewer(QtGui.QGroupBox):
-	def __init__(self, *args, **kwargs):
+	def __init__(self, modules, *args, **kwargs):
 		super(RecentlyOpenedViewer, self).__init__(*args, **kwargs)
 
-		self.listView = RecentlyOpenedListView()
+		self.listView = RecentlyOpenedListView(modules)
 
 		layout = QtGui.QVBoxLayout()
 		layout.addWidget(self.listView)
@@ -134,10 +150,10 @@ class RecentlyOpenedViewerModule(object):
 		del self._viewers
 
 	def createViewer(self):
-		viewer = RecentlyOpenedViewer()
-		viewer.listView.model().update(
-			self._recentlyOpened.getRecentlyOpened()
-		)
+		viewer = RecentlyOpenedViewer(self._modules)
+		recentlyOpened = self._recentlyOpened.getRecentlyOpened()
+		
+		viewer.listView.model().update(recentlyOpened)
 		self._viewers.add(weakref.ref(viewer))
 		return viewer
 

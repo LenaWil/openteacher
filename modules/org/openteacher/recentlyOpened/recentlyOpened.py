@@ -57,41 +57,28 @@ class RecentlyOpenedModule(object):
 		self._recentlyOpened.insert(0, kwargs)
 		if len(self._recentlyOpened) > 10: #FIXME: setting?
 			self._recentlyOpened.pop()
-		self.updated.send(self.recentlyOpened)
+		self.updated.send()
+		
+		#debug
+		self.store.write()
 
 	def remove(self, uniqueName):
 		for i in range(len(self._recentlyOpened)):
 			if self._recentlyOpened[i]["uniqueName"] == uniqueName:
 				del self._recentlyOpened[i]
 				return
-		self.updated.send(self.recentlyOpened)
+		self.updated.send()
 
 	def getRecentlyOpened(self):
-		result = []
-		for item in self._recentlyOpened:
-			entry = {}
-			entry["label"] = item["label"]
-			if item.has_key("icon"):
-				entry["icon"] = item["icon"]
-			module = self._modules.default(
-				*item["moduleArgsSelector"],
-				**item["moduleKwargsSelector"]
-			)
-			method = getattr(module, item["method"])
-			entry["open"] = lambda: method(
-				*item["args"],
-				**item["kwargs"]
-			)
-			result.append(entry)
-		return result
+		return self._recentlyOpened
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		store = self._modules.default("active", type="dataStore").store
+		self.store = self._modules.default("active", type="dataStore").store
 		try:
-			self._recentlyOpened = store["org.openteacher.recentlyOpened"]
+			self._recentlyOpened = self.store["org.openteacher.recentlyOpened"]
 		except KeyError:
-			self._recentlyOpened = store["org.openteacher.recentlyOpened"] = []
+			self._recentlyOpened = self.store["org.openteacher.recentlyOpened"] = []
 
 		self.updated = self._modules.default(type="event").createEvent()
 

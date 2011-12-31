@@ -54,7 +54,8 @@ class OpenTeachingMediaSaverModule(object):
 			"type": "boolean",
 			"category": "Media Lesson",
 			"subcategory": ".otmd saving",
-			"defaultValue": True, #FIXME: is this a good default?
+			"defaultValue": True,
+			"advanced": True,
 		})
 		
 		self.active = True

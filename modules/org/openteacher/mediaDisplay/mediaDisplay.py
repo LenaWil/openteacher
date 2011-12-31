@@ -196,6 +196,7 @@ class MediaDisplayModule(object):
 			"category": "Media Lesson",
 			"subcategory": "Output",
 			"defaultValue": False,
+			"advanced": True,
 		})
 		
 		self._html5AudioSetting = self._settings.registerSetting(**{
@@ -205,6 +206,7 @@ class MediaDisplayModule(object):
 			"category": "Media Lesson",
 			"subcategory": "Output",
 			"defaultValue": False,
+			"advanced": True,
 		})
 	
 	def disable(self):
