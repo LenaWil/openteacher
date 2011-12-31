@@ -23,6 +23,8 @@ from PyQt4 import QtCore
 
 import os
 import uuid
+import urllib2
+import copy
 
 try:
 	import json
@@ -40,6 +42,7 @@ Widget that shows all the tests
 """
 class TestsWidget(QtGui.QWidget):
 	testSelected = QtCore.pyqtSignal(dict)
+	message = QtCore.pyqtSignal(str)
 	def __init__(self, connection, upload, testSelecter, *args, **kwargs):
 		super(TestsWidget, self).__init__(*args, **kwargs)
 		
@@ -115,7 +118,7 @@ class PersonAdderWidget(QtGui.QWidget):
 			self.connection.post(self.info["students"], {"student_id":student["id"]})
 			
 			# Add to the local list
-			self.studentsInTest.addItem(student["username"])
+			self.studentsInTest.update()
 		else:
 			pass
 			#fixme: give nice message
@@ -123,26 +126,43 @@ class PersonAdderWidget(QtGui.QWidget):
 		self.back.emit()
 
 """
-Widget with the students in a test
+Widget with the students in a test (second column, middle)
 """
 class StudentsInTestWidget(QtGui.QListWidget):
-	def __init__(self, connection, studentsList, *args, **kwargs):
+	def __init__(self, connection, testInfo, answerChecker, *args, **kwargs):
 		super(StudentsInTestWidget, self).__init__(*args, **kwargs)
 		
 		self.connection = connection
-		# tests/<id>/students
-		self.studentsInTest = studentsList
+		self.testInfo = testInfo
+		self.answerChecker = answerChecker
+		
+		# If an answer in the answersChecker changes, I need to be updated
+		self.answerChecker.answersChanged.connect(self.update)
+		
+		# Widget keeps a local buffer of info
 		# list of tests/<id>/students/<id>
 		self.studentInTests = []
 		# list of users/<id>
 		self.studentInfos = []
 		
-		self._addPeopleToListWidget()
+		self.update()
 	
 	# Initial adding of people to the list
-	def _addPeopleToListWidget(self):
+	def update(self):
+		# Clear self
+		self.clear()
+		
+		# tests/<id>/students
+		self.studentsInTest = self.connection.get(self.testInfo["students"])
+		
+		# tests/<id>/checked_answers
+		checkedAnswers = self.connection.get(self.testInfo["checked_answers"])
+		checkedAnswersIds = map(lambda x: int(os.path.basename(x)), checkedAnswers)
+		# tests/<id>/answers
+		answers = self.connection.get(self.testInfo["answers"])
+		answersIds = map(lambda x: int(os.path.basename(x)), answers)
+		
 		for student in self.studentsInTest:
-			#fixme: add students to the combobox
 			studentInTest = self.connection.get(student)
 			# Remember this, so the server can rest next time
 			self.studentInTests.append(studentInTest)
@@ -151,20 +171,25 @@ class StudentsInTestWidget(QtGui.QListWidget):
 			# Remember this, so the server can rest next time
 			self.studentInfos.append(studentInfo)
 			
-			self.addItem(studentInfo["username"])
+			
+			# Set appended text
+			appender = "(DNP)"
+			# Look if answers have already been checked
+			if studentInfo["id"] in checkedAnswersIds:
+				checkedAnswers = self.answerChecker.getCheckedAnswer(self.testInfo["id"], studentInfo["id"])
+				appender = "(" + str(checkedAnswers["note"]) + ")"
+			elif studentInfo["id"] in answersIds:
+				appender = "(Handed in)"
+			
+			self.addItem(studentInfo["username"] + " " + appender)
 	
 	def getCurrentStudentInTest(self):
-		index = 0
-		for studentInfo in self.studentInfos:
-			studentInTest = self.studentInTests[index]
-			if studentInfo["username"] == self.currentItem().text():
-				return studentInTest
-			index += 1
+		return self.studentInTests[self.currentRow()]
 
 class TestInfoWidget(QtGui.QWidget):
 	# Parameter = dictionary as parsed tests/<id>/students/<id>
 	takenTestSelected = QtCore.pyqtSignal(dict)
-	def __init__(self, connection, info, list, *args, **kwargs):
+	def __init__(self, connection, info, list, answerChecker, *args, **kwargs):
 		super(TestInfoWidget, self).__init__(*args, **kwargs)
 		
 		layout = QtGui.QVBoxLayout()
@@ -175,8 +200,7 @@ class TestInfoWidget(QtGui.QWidget):
 		
 		layout.addWidget(QtGui.QLabel("People in this test:"))
 		
-		studentsList = connection.get(info["students"])
-		self.studentsInTest = StudentsInTestWidget(connection, studentsList)
+		self.studentsInTest = StudentsInTestWidget(connection, info, answerChecker)
 		self.studentsInTest.currentItemChanged.connect(self.selectedStudentChanged)
 		
 		layout.addWidget(self.studentsInTest)
@@ -187,16 +211,15 @@ class TestInfoWidget(QtGui.QWidget):
 		self.setLayout(layout)
 	
 	def selectedStudentChanged(self, current, previous):
-		# fixme: emit takenTestSelected
 		self.takenTestSelected.emit(self.studentsInTest.getCurrentStudentInTest())
 
 class TestActionWidget(QtGui.QStackedWidget):
 	# Parameter = dictionary as parsed tests/<id>/students/<id>
 	takenTestSelected = QtCore.pyqtSignal(dict)
-	def __init__(self, connection, studentsView, info, list, *args, **kwargs):
+	def __init__(self, connection, studentsView, info, list, answerChecker, *args, **kwargs):
 		super(TestActionWidget, self).__init__(*args, **kwargs)
 		
-		self.testInfoWidget = TestInfoWidget(connection, info, list)
+		self.testInfoWidget = TestInfoWidget(connection, info, list, answerChecker)
 		self.testInfoWidget.addPersonButton.clicked.connect(self._addPerson)
 		
 		self.personAdderWidget = PersonAdderWidget(connection, info, studentsView, self.testInfoWidget.studentsInTest)
@@ -219,12 +242,14 @@ Widget that shows the currently selected test (second column)
 class TestWidget(QtGui.QWidget):
 	# Parameter = dictionary as parsed tests/<id>/students/<id>
 	takenTestSelected = QtCore.pyqtSignal(dict)
+	message = QtCore.pyqtSignal(str)
 	def __init__(self, connection, info, studentsView, answerChecker, *args, **kwargs):
 		super(TestWidget, self).__init__(*args, **kwargs)
 		
 		self.connection = connection
 		self.info = info
 		self.list = self.info["list"]
+		self.answerChecker = answerChecker
 		
 		layout = QtGui.QVBoxLayout()
 		
@@ -234,27 +259,51 @@ class TestWidget(QtGui.QWidget):
 		name.setStyleSheet("font-size: 18px;")
 		layout.addWidget(name)
 		
-		testActionWidget = TestActionWidget(connection, studentsView, self.info, self.list)
+		testActionWidget = TestActionWidget(connection, studentsView, self.info, self.list, answerChecker)
 		testActionWidget.takenTestSelected.connect(self.takenTestSelected.emit)
+		
 		layout.addWidget(testActionWidget)
 		
-		checkButton = QtGui.QPushButton("Check answers")
-		checkButton.clicked.connect(lambda: self.checkAnswers(answerChecker))
-		layout.addWidget(checkButton)
+		self.checkButton = QtGui.QPushButton("(Re)check answers")
+		self.checkButton.clicked.connect(self.checkAnswers)
+		layout.addWidget(self.checkButton)
+		
+		self.publishButton = QtGui.QPushButton("(Re)publish answers")
+		self.publishButton.clicked.connect(self.publishAnswers)
+		
+		# If no answers in the test are checked, the publish button should be disabled.
+		# Get checked answers for this test
+		checkedAnswers = self.connection.get(info["checked_answers"])
+		if len(checkedAnswers) == 0:
+			self.publishButton.setEnabled(False)
+		
+		layout.addWidget(self.publishButton)
 		
 		self.setLayout(layout)
 		
 		# Fill widget with contents
 		name.setText(self.list["title"])
 	
-	def checkAnswers(self, answerChecker):
+	def checkAnswers(self):
 		givenAnswers = self.connection.get(self.info["answers"])
 		rightAnswers = self.list
-		# Get results
-		results = answerChecker.checkAnswers(self.info["id"], givenAnswers, rightAnswers)
+		# Check results
+		self.answerChecker.checkAnswers(self.info["id"], givenAnswers, rightAnswers)
+		# Enable publish button
+		self.publishButton.setEnabled(True)
+		# Show message
+		self.message.emit("Student's answers have been checked!")
+	
+	def publishAnswers(self):
+		# Publish results
+		self.answerChecker.publishAnswers(self.info["id"])
+		# Show message
+		self.message.emit("Student's results have been (re)published!")
 
-class AnswerChecker(object):
-	def __init__(self, connection, testChecker):
+class AnswerChecker(QtCore.QObject):
+	answersChanged = QtCore.pyqtSignal()
+	def __init__(self, connection, testChecker, *args, **kwargs):
+		super(AnswerChecker, self).__init__(*args, **kwargs)
 		self.connection = connection
 		self.testChecker = testChecker
 		
@@ -275,14 +324,30 @@ class AnswerChecker(object):
 			# Add results to list
 			rightAnswers["results"] = results
 			
-			self.update(testId, {"list": json.dumps(rightAnswers), "note": self.calculateNote(results), "answer_id": studentId})
+			self.update(testId, {"list": json.dumps(rightAnswers), "note": self.calculateNote(results), "answer_id": studentId}, False)
+		
+		self.answersChanged.emit()
 	
-	def update(self, testid, result):
+	def update(self, testid, result, emit=True):
 		if not testid in self.results:
 			self.results[testid] = dict()
 		self.results[testid][result["answer_id"]] = result
 		
-		print self.results
+		if emit:
+			self.answersChanged.emit()
+	
+	def getCheckedAnswer(self, testid, studentid):
+		# Check if it's already buffered locally
+		if testid in self.results and studentid in self.results[testid]:
+			return self.results[testid][studentid]
+		else:
+			# Otherwise, get it
+			checkedAnswer = self.connection.get("tests/" + str(testid) + "/checked_answers/" + str(studentid))
+			if type(checkedAnswer) == urllib2.HTTPError:
+				return None
+			result = {"list": checkedAnswer["list"], "note": checkedAnswer["note"], "answer_id": studentid}
+			self.update(testid, result, False)
+			return result
 	
 	def correctAnswer(self, testid, studentid, questionid):
 		list = json.loads(self.results[testid][studentid]["list"])
@@ -292,6 +357,15 @@ class AnswerChecker(object):
 				break
 		
 		self.update(testid, {"list": json.dumps(list), "note": self.calculateNote(list["results"]), "answer_id": studentid})
+	
+	def publishAnswers(self, testid):
+		for studentResult in self.results[testid].values():
+			e = self.connection.post("tests/" + str(testid) + "/checked_answers", studentResult)
+			if type(e) == urllib2.HTTPError:
+				studentid = studentResult["answer_id"]
+				newStudentResult = copy.deepcopy(studentResult)
+				del newStudentResult["answer_id"]
+				self.connection.put("tests/" + str(testid) + "/checked_answers/" + str(studentid), newStudentResult)
 	
 	def calculateNote(self, results):
 		results = map(lambda x: 1 if x["result"] == "right" else 0, results)
@@ -309,6 +383,7 @@ class AnswerChecker(object):
 Widget that shows the currently selected person in a test (third column)
 """
 class TakenTestWidget(QtGui.QWidget):
+	message = QtCore.pyqtSignal(str)
 	def __init__(self, connection, studentInTest, compose, answerChecker, *args, **kwargs):
 		super(TakenTestWidget, self).__init__(*args, **kwargs)
 		
@@ -318,86 +393,107 @@ class TakenTestWidget(QtGui.QWidget):
 		self.student = connection.get(studentInTest["student"])
 		self.test = connection.get(studentInTest["test"])
 		
-		# Get some important info
-		self.checkedAnswers = connection.get("tests/" + str(self.test["id"]) + "/checked_answers/" + str(self.student["id"]))
-		self.list = json.loads(self.checkedAnswers["list"])
-		results = map(lambda x: 1 if x["result"] == "right" else 0, self.list["results"])
-		answersRight = sum(results)
-		answersWrong = len(self.list["results"]) - answersRight
-		note = self.checkedAnswers["note"]
-		
-		# Add checked answer to the answer checker
-		answerChecker.update(self.test["id"], {"list": self.checkedAnswers["list"], "note": self.checkedAnswers["note"], "answer_id": self.student["id"]})
-		
 		layout = QtGui.QVBoxLayout()
 		
 		layout.addWidget(QtGui.QLabel("Person"))
-		
+			
 		name = QtGui.QLabel(self.student["username"])
 		name.setStyleSheet("font-size: 18px;")
 		layout.addWidget(name)
 		
-		fl = QtGui.QFormLayout()
-		fl.addRow("Answers right:", PropertyLabel(str(answersRight)))
-		fl.addRow("Answers wrong:", PropertyLabel(str(answersWrong)))
-		fl.addRow("OpenTeacher mark:", PropertyLabel(str(note)))
-		layout.addLayout(fl)
+		# Get the checked answers
+		self.checkedAnswers = self.answerChecker.getCheckedAnswer(self.test["id"], self.student["id"])
 		
-		self.table = QtGui.QTableWidget(3,3)
-		# Fill table
-		self.questionIds = []
-		for item in self.list["items"]:
-			# Find result
-			for result in self.list["results"]:
-				if result["itemId"] == item["id"]:
-					itemResult = result
-					break
+		if self.checkedAnswers == None:
+			l = QtGui.QLabel("Answers of this student have not been checked yet. Click the \"Check answers\" button in the second column.")
+			l.setWordWrap(True)
+			l.setSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Expanding)
+			layout.addWidget(l)
+		else:
+			list = json.loads(self.checkedAnswers["list"])
+			# Add checked answer to the answer checker
+			answerChecker.update(self.test["id"], {"list": self.checkedAnswers["list"], "note": self.checkedAnswers["note"], "answer_id": self.student["id"]})
+						
+			fl = QtGui.QFormLayout()
+			self.answersRightLabel = PropertyLabel()
+			fl.addRow("Answers right:", self.answersRightLabel)
+			self.answersWrongLabel = PropertyLabel()
+			fl.addRow("Answers wrong:", self.answersWrongLabel)
+			self.markLabel = PropertyLabel()
+			fl.addRow("OpenTeacher mark:", self.markLabel)
+			layout.addLayout(fl)
 			
-			if itemResult["result"] == "right":
-				resultWidget = QtGui.QTableWidgetItem("O")
-			else:
-				resultWidget = QtGui.QTableWidgetItem("X")
-			resultWidget.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+			self.table = QtGui.QTableWidget(3,3)
+			# Fill table
+			self.questionIds = []
+			for item in list["items"]:
+				# Find result
+				for result in list["results"]:
+					if result["itemId"] == item["id"]:
+						itemResult = result
+						break
+				
+				if itemResult["result"] == "right":
+					resultWidget = QtGui.QTableWidgetItem("O")
+				else:
+					resultWidget = QtGui.QTableWidgetItem("X")
+				resultWidget.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+				
+				self.table.setItem(len(self.questionIds), 0, resultWidget)
+				qItem = QtGui.QTableWidgetItem(compose(item["questions"]))
+				qItem.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+				self.table.setItem(len(self.questionIds), 1, qItem)
+				aItem = QtGui.QTableWidgetItem(itemResult["givenAnswer"])
+				aItem.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+				self.table.setItem(len(self.questionIds), 2, aItem)
+				
+				self.questionIds.append(item["id"])
 			
-			self.table.setItem(len(self.questionIds), 0, resultWidget)
-			qItem = QtGui.QTableWidgetItem(compose(item["questions"]))
-			qItem.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-			self.table.setItem(len(self.questionIds), 1, qItem)
-			aItem = QtGui.QTableWidgetItem(itemResult["givenAnswer"])
-			aItem.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-			self.table.setItem(len(self.questionIds), 2, aItem)
+			self.table.verticalHeader().setVisible(False)
+			self.table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+			self.table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+			self.table.resizeRowsToContents()
 			
-			self.questionIds.append(item["id"])
-		
-		self.table.verticalHeader().setVisible(False)
-		self.table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
-		self.table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
-		self.table.resizeRowsToContents()
-		
-		self.table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
-		self.table.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
-		
-		self.table.setHorizontalHeaderItem(0, QtGui.QTableWidgetItem(""))
-		self.table.setHorizontalHeaderItem(1, QtGui.QTableWidgetItem("Question"))
-		self.table.setHorizontalHeaderItem(2, QtGui.QTableWidgetItem("Given answer"))
-		self.table.cellClicked.connect(self.questionSelected)
-		
-		layout.addWidget(self.table)
-		
-		self.correctButton = QtGui.QPushButton("Correct")
-		self.correctButton.setEnabled(False)
-		self.correctButton.clicked.connect(self.correctAnswer)
-		
-		layout.addWidget(self.correctButton)
-		
-		mark = PropertyLabel(str(note))
-		mark.setStyleSheet("font-size: 18px;")
-		
-		fm = QtGui.QFormLayout()
-		fm.addRow("Final mark:", mark)
-		layout.addLayout(fm)
+			self.table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
+			self.table.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
+			
+			self.table.setHorizontalHeaderItem(0, QtGui.QTableWidgetItem(""))
+			self.table.setHorizontalHeaderItem(1, QtGui.QTableWidgetItem("Question"))
+			self.table.setHorizontalHeaderItem(2, QtGui.QTableWidgetItem("Given answer"))
+			self.table.cellClicked.connect(self.questionSelected)
+			
+			layout.addWidget(self.table)
+			
+			self.correctButton = QtGui.QPushButton("Correct")
+			self.correctButton.setEnabled(False)
+			self.correctButton.clicked.connect(self.correctAnswer)
+			
+			layout.addWidget(self.correctButton)
+			
+			self.finalMarkLabel = PropertyLabel()
+			self.finalMarkLabel.setStyleSheet("font-size: 18px;")
+			
+			fm = QtGui.QFormLayout()
+			fm.addRow("Final mark:", self.finalMarkLabel)
+			layout.addLayout(fm)
+			
+			self.fillLabels()
 		
 		self.setLayout(layout)
+	
+	def fillLabels(self):
+		checkedAnswer = self.answerChecker.getCheckedAnswer(self.test["id"], self.student["id"])
+		list = json.loads(checkedAnswer["list"])
+		results = map(lambda x: 1 if x["result"] == "right" else 0, list["results"])
+		
+		answersRight = sum(results)
+		answersWrong = len(list["results"]) - answersRight
+		note = checkedAnswer["note"]
+		
+		self.answersRightLabel.setText(str(answersRight))
+		self.answersWrongLabel.setText(str(answersWrong))
+		self.markLabel.setText(str(note))
+		self.finalMarkLabel.setText(str(note))
 	
 	def questionSelected(self, row, column):
 		if self.table.item(row, 0).text() == "X":
@@ -412,8 +508,12 @@ class TakenTestWidget(QtGui.QWidget):
 		self.answerChecker.correctAnswer(self.test["id"], self.student["id"], self.questionIds[self.table.currentRow()])
 		
 		self.table.setItem(self.table.currentRow(), 0, resultWidget)
+		
+		# Update labels
+		self.fillLabels()
 
 class TeacherPanel(QtGui.QSplitter):
+	message = QtCore.pyqtSignal(str)
 	def __init__(self, connection, studentsView, testSelecter, uploaderModule, answerChecker, compose, *args, **kwargs):
 		super(TeacherPanel, self).__init__(*args, **kwargs)
 		
@@ -425,6 +525,7 @@ class TeacherPanel(QtGui.QSplitter):
 		# Add tests layoutumn
 		self.testsWidget = TestsWidget(connection, uploaderModule, testSelecter)
 		self.testsWidget.testSelected.connect(lambda testInfo: self.addTestlayoutumn(testInfo, studentsView, self.answerChecker))
+		self.testsWidget.message.connect(self.message.emit)
 		
 		self.addWidget(self.testsWidget)
 		self.addWidget(QtGui.QWidget())
@@ -432,6 +533,7 @@ class TeacherPanel(QtGui.QSplitter):
 	def addTestlayoutumn(self, testInfo, studentsView, answerChecker):
 		testWidget = TestWidget(self.connection, testInfo, studentsView, answerChecker)
 		testWidget.takenTestSelected.connect(self.addTakenTestlayoutumn)
+		testWidget.message.connect(self.message.emit)
 		
 		try:
 			self.widget(1).setParent(None)
@@ -441,6 +543,7 @@ class TeacherPanel(QtGui.QSplitter):
 	
 	def addTakenTestlayoutumn(self, studentInTest):
 		takenTestWidget = TakenTestWidget(self.connection, studentInTest, self.compose, self.answerChecker)
+		takenTestWidget.message.connect(self.message.emit)
 		
 		try:
 			self.widget(2).setParent(None)
@@ -465,6 +568,7 @@ class TestModeTeacherPanelModule(object):
 			self._mm.mods(type="testModeStudentsView"),
 			self._mm.mods(type="testModeConnection"),
 			self._mm.mods(type="wordsStringComposer"),
+			self._mm.mods(type="dialogShower"),
 		)
 
 	def enable(self):
@@ -487,6 +591,8 @@ class TestModeTeacherPanelModule(object):
 		module = self._modules.default("active", type="ui")
 		event = module.addLessonCreateButton(_("Teacher panel"))
 		event.handle(self.showPanel)
+		
+		self.dialogShower = self._modules.default("active", type="dialogShower").getDialogShower()
 		
 		self.active = True
 
@@ -515,8 +621,13 @@ class TestModeTeacherPanelModule(object):
 			
 			self.teacherPanel = TeacherPanel(self.connection, studentsView, testSelecter, upload, answerChecker, compose)
 			
-			tab = uiModule.addCustomTab(_("Teacher Panel"), self.teacherPanel)
-			tab.closeRequested.handle(tab.close)
+			self.tab = uiModule.addCustomTab(_("Teacher Panel"), self.teacherPanel)
+			self.tab.closeRequested.handle(self.tab.close)
+			
+			self.teacherPanel.message.connect(self.showMessage)
+	
+	def showMessage(self, text):
+		self.dialogShower.showMessage(self.tab, text)
 
 def init(moduleManager):
 	return TestModeTeacherPanelModule(moduleManager)

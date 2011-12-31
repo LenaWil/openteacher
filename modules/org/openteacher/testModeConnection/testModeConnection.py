@@ -155,6 +155,15 @@ class Connection(object):
 		except urllib2.HTTPError, e:
 			return e
 	
+	def put(self, path, data):
+		data = urllib.urlencode(data)
+		try:
+			request = urllib2.Request("https://%s:8080/%s" % (self.server, path), data)
+			request.get_method = lambda: 'PUT'
+			return json.load(self.opener.open(request))
+		except urllib2.HTTPError, e:
+			return e
+	
 	# Method to log in. You need to send a uuid along, so your loggedIn doesn't react to other requests.
 	def login(self, loginid):
 		if self.connectedLoggedIn:

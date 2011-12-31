@@ -25,10 +25,11 @@ import os
 import platform
 
 class FileTab(object):
-	def __init__(self, moduleManager, tabWidget, widget, *args, **kwargs):
+	def __init__(self, moduleManager, tabWidget, wrapperWidget, widget, *args, **kwargs):
 		super(FileTab, self).__init__(*args, **kwargs)
 		
 		self._tabWidget = tabWidget
+		self._wrapperWidget = wrapperWidget
 		self._widget = widget
 		self._mm = moduleManager
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
@@ -37,7 +38,7 @@ class FileTab(object):
 			type="event"
 		).createEvent()
 
-		i = self._tabWidget.indexOf(self._widget)
+		i = self._tabWidget.indexOf(self._wrapperWidget)
 		closeButton = self._tabWidget.tabBar().tabButton(
 			i,
 			QtGui.QTabBar.RightSide
@@ -46,12 +47,12 @@ class FileTab(object):
 		closeButton.setShortcut(QtGui.QKeySequence.Close)
 
 	def close(self):
-		i = self._tabWidget.indexOf(self._widget)
+		i = self._tabWidget.indexOf(self._wrapperWidget)
 		self._tabWidget.removeTab(i)
 
 class LessonFileTab(FileTab):
-	def __init__(self, moduleManager, tabWidget, widget, *args, **kwargs):
-		super(LessonFileTab, self).__init__(moduleManager, tabWidget, widget, *args, **kwargs)
+	def __init__(self, moduleManager, tabWidget, wrapperWidget, widget, *args, **kwargs):
+		super(LessonFileTab, self).__init__(moduleManager, tabWidget, wrapperWidget, widget, *args, **kwargs)
 
 		self._mm = moduleManager
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
@@ -260,11 +261,20 @@ class GuiModule(object):
 		
 		self._widget.tabWidget.addTab(wrapperWidget, text)
 		
-		fileTab = self._fileTabs[wrapperWidget] = FileTab(
-			self._mm,
-			self._widget.tabWidget,
-			wrapperWidget
-		)
+		if type(widget) == self._ui.LessonTabWidget:
+			fileTab = self._fileTabs[wrapperWidget] = LessonFileTab(
+				self._mm,
+				self._widget.tabWidget,
+				wrapperWidget,
+				widget
+			)
+		else:
+			fileTab = self._fileTabs[wrapperWidget] = FileTab(
+				self._mm,
+				self._widget.tabWidget,
+				wrapperWidget,
+				widget
+			)
 		return fileTab
 
 	@property
