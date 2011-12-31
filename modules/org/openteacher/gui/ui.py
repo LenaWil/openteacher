@@ -364,7 +364,7 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 		self.statusBar()
 		
 		# Aero glass
-		if aeroSetting["value"]:
+		if aeroSetting:
 			self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
 			pal = self.palette()
 			bg = pal.window().color()

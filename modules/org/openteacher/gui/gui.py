@@ -114,13 +114,19 @@ class GuiModule(object):
 			"subcategory": "Effects",
 			"defaultValue": False,
 			})
-
+		else:
+			self._aeroSetting = None
+		
 		self._app = QtGui.QApplication(sys.argv)
 		try:
 			recentlyOpenedViewer = self._modules.default("active", type="recentlyOpenedViewer").createViewer()
 		except IndexError:
 			recentlyOpenedViewer = None
-		self._widget = self._ui.OpenTeacherWidget(recentlyOpenedViewer, self._aeroSetting)
+		
+		if self._aeroSetting != None and self._aeroSetting["value"] == True:
+			self._widget = self._ui.OpenTeacherWidget(recentlyOpenedViewer, True)
+		else:
+			self._widget = self._ui.OpenTeacherWidget(recentlyOpenedViewer, False)
 
 		#load translator
 		try:
