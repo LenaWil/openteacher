@@ -25,26 +25,18 @@ import weakref
 
 #FIXME: split into a separate module?
 def byKey(key, items):
-	items = items[:]#copy, this is going to be destructive :P
-	while items:
-		try:
-			value = items[0][key]
-		except IndexError:
-			break
-		except KeyError:
-			value = None
-		havingSameValue = []
-		for item in items:
-			try:
-				if item[key] == value:
-					havingSameValue.append(item)
-					items.remove(item)
-			except KeyError:
-				if value is None:
-					havingSameValue.append(item)
-					items.remove(item)
-		yield value, havingSameValue
-
+	catItems = dict()
+	for item in items:
+		if not key in item:
+			if "Miscellaneous" not in catItems:
+				catItems["Miscellaneous"] = []
+			catItems["Miscellaneous"].append(item)
+		else:
+			if item[key] not in catItems:
+				catItems[item[key]] = []
+			catItems[item[key]].append(item)
+	return catItems
+	
 class CategoryTab(QtGui.QWidget):
 	def __init__(self, widgets, name, inCategory, *args, **kwargs):
 		super(CategoryTab, self).__init__(*args, **kwargs)
@@ -53,14 +45,13 @@ class CategoryTab(QtGui.QWidget):
 
 		self.setWindowTitle(name)
 		vbox = QtGui.QVBoxLayout()
-
-		for name, inSubcategory in byKey("subcategory", inCategory):#replace
-			if name is None:
-				name = _("Miscellaneous") #FIXME: translate live
-
-			w = self.createSubcategoryGroupBox(name, inSubcategory)
+		
+		
+		categories = byKey("subcategory", inCategory)
+		for name in categories.keys():			
+			w = self.createSubcategoryGroupBox(name, categories[name])
 			vbox.addWidget(w)
-
+		
 		self.setLayout(vbox)
 
 	def createSubcategoryGroupBox(self, name, inSubcategory):
@@ -85,12 +76,12 @@ class SettingsDialog(QtGui.QTabWidget):#FIXME: make the 'simple' and 'advanced' 
 		#Setup widget
 		self.setTabPosition(QtGui.QTabWidget.South)
 		self.setDocumentMode(True)
-
-		for name, inCategory in byKey("category", settings):
-			if name is None:
-				name = _("Miscellaneous")#FIXME: translate live
-			self.createCategoryTab(widgets, name, inCategory)
-
+		
+		
+		categories = byKey("category", settings)
+		for name in categories.keys():
+			self.createCategoryTab(widgets, name, categories[name])
+		
 		self.advancedButton = QtGui.QPushButton()
 		self.advancedButton.clicked.connect(self.advanced)
 

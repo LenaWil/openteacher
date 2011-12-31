@@ -197,7 +197,7 @@ class MediaDisplayModule(object):
 			"subcategory": "Output",
 			"defaultValue": False,
 		})
-
+		
 		self._html5AudioSetting = self._settings.registerSetting(**{
 			"internal_name": "org.openteacher.lessons.media.audiohtml5",
 			"name": "Use HTML5 for audio",
