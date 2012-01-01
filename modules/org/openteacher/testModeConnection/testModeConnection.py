@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Milan Boers
+#	Copyright 2011-2012, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -91,7 +91,7 @@ class ConnectLoginWidget(QtGui.QWidget):
 		self.layout.addWidget(self.loginWidget)
 	
 	def afterConnect(self):
-		self.layout.setCurrentWidget(self.loginWidget)	
+		self.layout.setCurrentWidget(self.loginWidget)
 
 class Connection(object):
 	def __init__(self, modules, *args, **kwargs):
@@ -125,12 +125,6 @@ class Connection(object):
 			dialogShower = self._modules.default(type="dialogShower").getDialogShower()
 			dialogShower.showError(self.loginTab, "Could not connect to the server. Possibly wrong hostname.")
 		else:
-			# Check version
-			# Fixme: make this working
-			#if float(index["version"]) > MAXVERSION:
-			#	self.connectLoginWidget.connectWidget.errorLabel.setText(_("Server version too high. Please update OpenTeacher."))
-			#	self.connectLoginWidget.connectWidget.errorLabel.setStyleSheet("background-color: #ffb8b8;")
-			#else:
 			# Everything OK, Connected
 			self.server = hostname
 			# Try to fetch the index page
@@ -189,12 +183,12 @@ class Connection(object):
 		#fixme: check password
 		me = self.get("users/me")
 		
-		if str(me).strip() == "HTTP Error 401: UNAUTHORIZED":
+		if type(me) == urllib2.HTTPError:
 			# User was not logged in
-			# fixme: show dialog
-			dialogShower = self._modules.default(type="dialogShower").getDialogShower()
+			dialogShower = self._modules.default("active", type="dialogShower").getDialogShower()
 			dialogShower.showError(self.loginTab, "Could not login. Wrong username or password.")
 		else:
+			self.userId = int(os.path.basename(me))
 			self._afterLogin(loginid)
 	
 	def _afterLogin(self, loginid):

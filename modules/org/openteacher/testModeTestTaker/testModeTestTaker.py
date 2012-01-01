@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Milan Boers
+#	Copyright 2011-2012, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -21,6 +21,7 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 import uuid
+import urllib2
 
 try:
 	import json
@@ -100,7 +101,7 @@ class TestModeTestTaker(object):
 			uiModule = self._modules.default("active", type="ui")
 			
 			#teachWidget = self._modules.default("active", type="wordsTestTeacher").createWordsTeacher()
-			testSelecter = self._modules.default("active", type="testModeTestSelecter").getTestSelecter()
+			testSelecter = self._modules.default("active", type="testModeTestSelecter").getTestSelecter(True)
 			testChooser = TestChooser(testSelecter)
 			testChooser.testChosen.connect(self.takeTest)
 			
@@ -126,14 +127,20 @@ class TestModeTestTaker(object):
 	
 	# Hand in the test
 	def handIn(self, answersUrl):
-		# Close the teach widget
-		self.teachTab.close()
-		
 		answeredList = self.teachWidget.getAnsweredList()
+		dialogShower = self._modules.default("active", type="dialogShower").getDialogShower()
 		
-		self.connection.post(answersUrl, {"list" : json.dumps(answeredList)})
+		r = self.connection.post(answersUrl, {"list" : json.dumps(answeredList)})
 		
-		# fixme: show nice "thank you" message
+		# Check if there was an error.
+		if type(r) == urllib2.HTTPError:
+			# Show error message
+			dialogShower.showError(self.teachTab, "An error occured. The server could not be reached. Check your network connection.")
+		else:
+			# Show thank you message
+			dialogShower.showBigMessage("Your answers have successfully been handed in!")
+			# Close the teach widget
+			self.teachTab.close()
 	
 	def disable(self):
 		self.active = False

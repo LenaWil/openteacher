@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Milan Boers
+#	Copyright 2011-2012, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -58,12 +58,36 @@ class Dialog(QtGui.QWidget):
 		layout.addWidget(frame)
 		self.setLayout(layout)
 
+class BigDialog(QtGui.QWidget):
+	def __init__(self, imagePath, text, *args, **kwargs):
+		super(BigDialog, self).__init__(*args, **kwargs)
+		
+		layout = QtGui.QVBoxLayout()
+		
+		image = QtGui.QPixmap(imagePath)
+		imageLabel = QtGui.QLabel()
+		imageLabel.setPixmap(image)
+		imageLabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+		layout.addWidget(imageLabel)
+		
+		textLabel = QtGui.QLabel(text)
+		textLabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
+		textLabel.setWordWrap(True)
+		textLabel.setStyleSheet("font-size: 18px; font-weight: bold;")
+		layout.addWidget(textLabel)
+		
+		self.setLayout(layout)
+
 class DialogShower(object):
-	def __init__(self, logoImagePath, brokenImagePath, *args, **kwargs):
+	def __init__(self, logoImagePath, brokenImagePath, bigLogoImagePath, bigBrokenImagePath, uiModule, *args, **kwargs):
 		super(DialogShower, self).__init__(*args, **kwargs)
 		
 		self.logoImagePath = logoImagePath
 		self.brokenImagePath = brokenImagePath
+		self.bigLogoImagePath = bigLogoImagePath
+		self.bigBrokenImagePath = bigBrokenImagePath
+		
+		self.uiModule = uiModule
 		
 	def showError(self, tab, text):
 		dialog = Dialog(self.brokenImagePath, text, True)
@@ -72,6 +96,18 @@ class DialogShower(object):
 	def showMessage(self, tab, text):
 		dialog = Dialog(self.logoImagePath, text)
 		self.showDialog(tab, dialog)
+	
+	def showBigMessage(self, text):
+		dialog = BigDialog(self.bigLogoImagePath, text)
+		self.showBigDialog(dialog)
+	
+	def showBigError(self, text):
+		dialog = BigDialog(self.bigBrokenImagePath, text)
+		self.showBigDialog(dialog)
+	
+	def showBigDialog(self, dialog):
+		tab = self.uiModule.addCustomTab("Message", dialog)
+		tab.closeRequested.handle(tab.close)
 	
 	def showDialog(self, tab, dialog):
 		tabLayout = tab._widget.layout()
@@ -125,8 +161,12 @@ class DialogShowerModule(object):
 		
 		logoImagePath = self._mm.resourcePath("images/ot240.png")
 		brokenImagePath = self._mm.resourcePath("images/otbroken240.png")
+		bigLogoImagePath = self._mm.resourcePath("images/ot2300.png")
+		bigBrokenImagePath = self._mm.resourcePath("images/otbroken2300.png")
 		
-		self.dialogShower = DialogShower(logoImagePath, brokenImagePath)
+		uiModule = self._modules.default("active", type="ui")
+		
+		self.dialogShower = DialogShower(logoImagePath, brokenImagePath, bigLogoImagePath, bigBrokenImagePath, uiModule)
 		
 		self.active = True
 

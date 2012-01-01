@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Milan Boers
+#	Copyright 2011-2012, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -96,7 +96,7 @@ class PersonAdderWidget(QtGui.QWidget):
 		buttonLayout = QtGui.QHBoxLayout()
 		
 		addButton = QtGui.QPushButton("Add person/group")
-		addButton.clicked.connect(self._addPersonGroup)
+		addButton.clicked.connect(self._addPersons)
 		buttonLayout.addWidget(addButton)
 		
 		backButton = QtGui.QPushButton("Back")
@@ -108,20 +108,20 @@ class PersonAdderWidget(QtGui.QWidget):
 		self.setLayout(layout)
 	
 	# Adds the current person or group of the studentsView to the studentsList, but keeps unique
-	def _addPersonGroup(self):
-		student = self.studentsView.getCurrentStudent()
-		# fixme: make adding groups possible
+	def _addPersons(self):
+		students = self.studentsView.getCurrentStudents()
 		
-		# Add to the list (uniquely)
-		if len(self.studentsInTest.findItems(student["username"], QtCore.Qt.MatchExactly)) == 0:
-			# Add to the remote list
-			self.connection.post(self.info["students"], {"student_id":student["id"]})
-			
-			# Add to the local list
-			self.studentsInTest.update()
-		else:
-			pass
-			#fixme: give nice message
+		for student in students:
+			# Add to the list (uniquely)
+			if len(self.studentsInTest.findItems(student["username"], QtCore.Qt.MatchExactly)) == 0:
+				# Add to the remote list
+				self.connection.post(self.info["students"], {"student_id":student["id"]})
+				
+				# Add to the local list
+				self.studentsInTest.update()
+			else:
+				# Student has already been added. Let's not say anything about it.
+				pass
 		
 		self.back.emit()
 

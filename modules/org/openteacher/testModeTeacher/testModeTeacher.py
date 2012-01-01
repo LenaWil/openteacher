@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Milan Boers
+#	Copyright 2011-2012, Milan Boers
 #	Copyright 2011, Marten de Vries
 #	Copyright 2011, Cas Widdershoven
 #
@@ -42,9 +42,9 @@ class TeachWidget(QtGui.QWidget):
 		layout.addWidget(self.title)
 		
 		scrollArea = QtGui.QScrollArea()
-		#questionsWidget = QtGui.QWidget()
+		
 		self.questions = QtGui.QFormLayout()
-		#questionsWidget.setLayout(self.questions)
+		
 		scrollArea.setLayout(self.questions)
 		
 		layout.addWidget(scrollArea)
@@ -95,7 +95,7 @@ class TestModeTeacherModule(object):
 			self._mm.mods(type="wordsStringComposer"),
 		)
 
-	def createWordsTeacher(self):
+	def createWordsTeacher(self):		
 		tw = TeachWidget(self._mm, self._onscreenKeyboard, self._applicationActivityChanged)
 		#self._activeWidgets.add(weakref.ref(tw))
 		self._retranslate()

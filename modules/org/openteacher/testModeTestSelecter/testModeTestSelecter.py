@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Milan Boers
+#	Copyright 2011-2012, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -21,6 +21,7 @@
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 import uuid
+import os
 
 try:
 	import json
@@ -30,10 +31,12 @@ except:
 class TestSelecter(QtGui.QListWidget):
 	# Parameter: The current test (tests/<id>)
 	testChosen = QtCore.pyqtSignal(dict)
-	def __init__(self, connection, *args, **kwargs):
+	def __init__(self, connection, filter=False, *args, **kwargs):
 		super(TestSelecter, self).__init__(*args, **kwargs)
 		
 		self.connection = connection
+		# Are tests you already handed in answers for filtered out?
+		self.filter = filter
 		self.currentRowChanged.connect(self._currentRowChanged)
 		
 		self._addTests()
@@ -44,6 +47,15 @@ class TestSelecter(QtGui.QListWidget):
 		self.testsInfos = []
 		
 		for test in self.testsInfo:
+			if self.filter:
+				# Get urls of all answers for this test
+				answersUrls = self.connection.get(test["url"] + "/answers")
+				# Get userids of all answers for this test
+				answersIds = map(os.path.basename, answersUrls)
+				
+				if str(self.connection.userId) in answersIds:
+					break
+			
 			# Get name of this test
 			testInfo = self.connection.get(test["url"])
 			testInfo["list"] = json.loads(testInfo["list"])
@@ -95,8 +107,8 @@ class TestModeTestSelecterModule(object):
 		
 		self.active = True
 	
-	def getTestSelecter(self):
-		return TestSelecter(self.connection)
+	def getTestSelecter(self, filter=False):
+		return TestSelecter(self.connection, filter)
 
 	def disable(self):
 		self.active = False
