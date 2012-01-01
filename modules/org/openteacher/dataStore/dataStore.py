@@ -61,7 +61,7 @@ class DataStoreModule(object):
 		if not os.path.exists(self.folderPath):
 			os.makedirs(self.folderPath)
 		
-		self.store = JSONShelve(self._mm.resourcePath(os.path.join(self.folderPath, "store.json")))
+		self.store = JSONShelve(os.path.join(self.folderPath, "store.json"))
 		self.active = True
 		
 		atexit.register(self.store.write)
@@ -76,7 +76,7 @@ class DataStoreModule(object):
 		if os.name == "nt":
 			return os.path.join(os.getenv("appdata"), "OpenTeacher")
 		else:
-			return os.path.join(os.path.expanduser("~"), "openteacher")
+			return os.path.join(os.path.expanduser("~"), ".openteacher")
 
 def init(moduleManager):
 	return DataStoreModule(moduleManager)

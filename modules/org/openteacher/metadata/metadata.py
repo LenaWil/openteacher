@@ -58,7 +58,7 @@ class MetadataModule(object):
 			"website": _("http://openteacher.org/"),
 			"documentationUrl": _("http://openteacher.org/documentation.html"),
 			"updatesUrl": "http://openteacher.org/updates/updates.json",
-			"updatesSignatureUrl": "http://localhost/updates/updates.json.asc",
+			"updatesSignatureUrl": "http://openteacher.org/updates/updates.json.asc",
 			"iconPath": self._mm.resourcePath("openteacher.png"),
 			"licenseIntro": open(self._mm.resourcePath("license_intro.txt")).read(),
 			"license": open(self._mm.resourcePath("license.txt")).read(),
