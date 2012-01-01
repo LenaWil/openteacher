@@ -68,19 +68,19 @@ class EnterItemList(QtGui.QListView):
 		
 		self.enterWidget = enterWidget
 		
-		self.lm = EnterItemListModel(enterWidget.itemList,self)
+		self.lm = EnterItemListModel(enterWidget.list,self)
 		self.setModel(self.lm)
 		self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
 	
 	def update(self):
-		self.lm.update(self.enterWidget.itemList)
+		self.lm.update(self.enterWidget.list)
 	
 	def selectionChanged(self,current,previous):
 		self.setRightActiveItem()
 	
 	def setRightActiveItem(self):
-		if len(self.enterWidget.itemList["items"]) > 0:
-			self.enterWidget.setActiveItem(self.enterWidget.itemList["items"][self.currentIndex().row()])
+		if len(self.enterWidget.list["items"]) > 0:
+			self.enterWidget.setActiveItem(self.enterWidget.list["items"][self.currentIndex().row()])
 
 """
 The enter tab
@@ -88,7 +88,7 @@ The enter tab
 class EnterWidget(QtGui.QSplitter):
 	def __init__(self,*args, **kwargs):
 		super(EnterWidget, self).__init__(*args, **kwargs)
-		self.itemList = {
+		self.list = {
 			"items": list(),
 			"tests": list()
 		}
@@ -227,7 +227,7 @@ class EnterWidget(QtGui.QSplitter):
 				}
 				# Set id
 				try:
-					item["id"] = self.itemList["items"][-1]["id"] +1
+					item["id"] = self.list["items"][-1]["id"] +1
 				except IndexError:
 					item["id"] = 0
 				
@@ -243,7 +243,7 @@ class EnterWidget(QtGui.QSplitter):
 				if answer != None:
 					item["answer"] = answer
 				
-				self.itemList["items"].append(item)
+				self.list["items"].append(item)
 				self.updateWidgets()
 				break
 		else:
@@ -253,7 +253,7 @@ class EnterWidget(QtGui.QSplitter):
 	Remove an item from the list
 	"""
 	def removeItem(self):
-		self.itemList["items"].remove(self.activeitem)
+		self.list["items"].remove(self.activeitem)
 		self.updateWidgets()
 		self.mediaDisplay.clear()
 		self.enterName.setText("")

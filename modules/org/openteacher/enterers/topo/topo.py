@@ -37,7 +37,7 @@ class EnterPlacesWidget(QtGui.QListWidget):
 		self.clear()
 		
 		# Add all the places to the list
-		for place in self.enterWidget.places["items"]:
+		for place in self.enterWidget.list["items"]:
 			self.addItem(place["name"] + " (" + unicode(place["x"]) + "," + unicode(place["y"]) + ")")
 
 """
@@ -68,7 +68,7 @@ class EnterMapChooser(QtGui.QComboBox):
 		
 	def _otherMap(self):
 		if self.ask:
-			if len(self.enterWidget.places["items"]) > 0:
+			if len(self.enterWidget.list["items"]) > 0:
 				warningD = QtGui.QMessageBox()
 				warningD.setIcon(QtGui.QMessageBox.Warning)
 				warningD.setWindowTitle(_("Warning"))
@@ -91,9 +91,9 @@ class EnterMapChooser(QtGui.QComboBox):
 					self.setCurrentIndex(0)
 					self.insertItem(0, name, unicode({'mapPath': path, 'knownPlaces': ''}))
 					self.setCurrentIndex(0)
-			elif len(self.enterWidget.places["items"]) > 0 and self.ask:
+			elif len(self.enterWidget.list["items"]) > 0 and self.ask:
 				# Clear the entered items
-				self.enterWidget.places = {
+				self.enterWidget.list = {
 					"items": list(),
 					"tests": list()
 				}
@@ -145,7 +145,7 @@ class EnterWidget(QtGui.QSplitter):
 	def __init__(self, *args, **kwargs):
 		super(EnterWidget, self).__init__(*args, **kwargs)
 		#self.places = List()
-		self.places = {
+		self.list = {
 			"items": list(),
 			"tests": list()
 		}
@@ -232,7 +232,7 @@ class EnterWidget(QtGui.QSplitter):
 	Add a place to the list
 	"""
 	def addPlace(self,place):
-		self.places["items"].append(place)
+		self.list["items"].append(place)
 		self.updateWidgets()
 	
 	"""
@@ -242,10 +242,10 @@ class EnterWidget(QtGui.QSplitter):
 		for placeDict in self.mapChooser.currentMap["knownPlaces"]:
 			if name in placeDict["names"]:
 				try:
-					id = self.places["items"][-1]["id"] + 1
+					id = self.list["items"][-1]["id"] + 1
 				except IndexError:
 					id = 0
-				self.places["items"].append({
+				self.list["items"].append({
 					"name": unicode(name),
 					"x": placeDict["x"],
 					"y": placeDict["y"],
@@ -264,9 +264,9 @@ class EnterWidget(QtGui.QSplitter):
 	"""
 	def removePlace(self):
 		for placeItem in self.currentPlaces.selectedItems():
-			for place in self.places["items"]:
+			for place in self.list["items"]:
 				if placeItem.text() == unicode(place["name"] + " (" + unicode(place["x"]) + "," + unicode(place["y"]) + ")"):
-					self.places["items"].remove(place)
+					self.list["items"].remove(place)
 		self.updateWidgets()
 
 

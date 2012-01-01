@@ -3,7 +3,7 @@
 
 #	Copyright 2011, Marten de Vries
 #	Copyright 2011, Cas Widdershoven
-#	Copyright 2011, Milan Boers
+#	Copyright 2011-2012, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -21,6 +21,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import weakref
+from PyQt4 import QtGui, QtCore
 
 class Lesson(object):
 	def __init__(self, moduleManager, fileTab, module, list, enterWidget, teachWidget, resultsWidget=None, *args, **kwargs):
@@ -134,21 +135,21 @@ class WordsLessonModule(object):
 			list = {"items": [], "tests": []}
 
 		#create widgets
-		enterWidget = self._modules.default(
+		self.enterWidget = self._modules.default(
 			"active",
 			type="wordsEnterer"
 		).createWordsEnterer()
-		enterWidget.updateList(list)
+		self.enterWidget.updateList(list)
 
-		teachWidget = self._modules.default(
+		self.teachWidget = self._modules.default(
 			"active",
 			type="wordsTeacher"
 		).createWordsTeacher()
-		teachWidget.updateList(list)
+		self.teachWidget.updateList(list)
 
 		widgets = [
-			enterWidget,
-			teachWidget,
+			self.enterWidget,
+			self.teachWidget,
 		]
 		try:
 			resultsWidget = self._modules.default(
@@ -161,19 +162,25 @@ class WordsLessonModule(object):
 			resultsWidget.updateList(list, "words")
 			widgets.append(resultsWidget)
 
-		fileTab = self._uiModule.addFileTab(
+		self.fileTab = self._uiModule.addFileTab(
 			_("Word lesson %s") % self._counter, #FIXME: retranslatable
 			*widgets
 		)
+		self.fileTab.tabChanged.handle(self.tabChanged)
+		
 		self._counter += 1
 
-		lesson = Lesson(self._mm, fileTab, self, list, *widgets)
+		lesson = Lesson(self._mm, self.fileTab, self, list, *widgets)
 		self._references.add(lesson)
 		self.lessonCreated.send(lesson)
 		self.lessonCreationFinished.send()
 
 		return lesson
-
+	
+	def tabChanged(self):
+		lessonDialogsModule = self._modules.default("active", type="lessonDialogs")
+		lessonDialogsModule.onTabChanged(self.fileTab, self.enterWidget, self.teachWidget)
+	
 	@property
 	def _onscreenKeyboard(self):
 		keyboards = set(self._mm.mods("active", type="onscreenKeyboard"))

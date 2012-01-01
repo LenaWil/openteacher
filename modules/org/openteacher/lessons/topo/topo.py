@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Milan Boers
+#	Copyright 2011-2012, Milan Boers
 #	Copyright 2011, Marten de Vries
 #
 #	This file is part of OpenTeacher.
@@ -104,7 +104,7 @@ class TeachTopoLessonModule(object):
 			resultsWidget
 		)
 		
-		lesson = Lesson(self, fileTab, enterWidget, teachWidget, resultsWidget)
+		lesson = Lesson(self._modules, fileTab, enterWidget, teachWidget, resultsWidget)
 		self.lessonCreated.send(lesson)
 		
 		lessons.add(lesson)
@@ -130,8 +130,10 @@ class TeachTopoLessonModule(object):
 Lesson object (that means: this techwidget+enterwidget)
 """
 class Lesson(object):
-	def __init__(self, moduleManager, fileTab, enterWidget, teachWidget, resultsWidget, *args, **kwargs):
+	def __init__(self, modules, fileTab, enterWidget, teachWidget, resultsWidget, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
+		
+		self._modules = modules
 		
 		self.enterWidget = enterWidget
 		self.teachWidget = teachWidget
@@ -143,7 +145,6 @@ class Lesson(object):
 		
 		self.module = self
 		self.dataType = "topo"
-		self.list = self.enterWidget.places
 		
 		fileTab.closeRequested.handle(self.stop)
 		fileTab.tabChanged.handle(self.tabChanged)
@@ -164,26 +165,8 @@ class Lesson(object):
 		self.resultsWidget.updateList(list, "topo")
 	
 	def tabChanged(self):
-		if self.fileTab.currentTab == self.enterWidget:
-			if self.teachWidget.inLesson:
-				warningD = QtGui.QMessageBox()
-				warningD.setIcon(QtGui.QMessageBox.Warning)
-				warningD.setWindowTitle(_("Warning"))
-				warningD.setStandardButtons(QtGui.QMessageBox.Cancel | QtGui.QMessageBox.Ok)
-				warningD.setText(_("Are you sure you want to go back to the teach tab? This will end your lesson!"))
-				feedback = warningD.exec_()
-				if feedback == QtGui.QMessageBox.Ok:
-					self.teachWidget.stopLesson()
-				else:
-					self.fileTab.currentTab = self.teachWidget
-		elif self.fileTab.currentTab == self.teachWidget:
-			# If there are no words
-			if len(self.enterWidget.places["items"]) == 0:
-				QtGui.QMessageBox.critical(self.teachWidget, _("Not enough items"), _("You need to add items to your test first"))
-				self.fileTab.currentTab = self.enterWidget
-			# If not in a lesson (so it doesn't start a lesson if you go back from a mistakingly click on the Enter tab)
-			elif not self.teachWidget.inLesson:
-				self.teachWidget.initiateLesson(self.enterWidget.places, self.enterWidget.mapChooser.currentMap["mapPath"])
+		lessonDialogsModule = self._modules.default("active", type="lessonDialogs")
+		lessonDialogsModule.onTabChanged(self.fileTab, self.enterWidget, self.teachWidget, lambda: self.teachWidget.initiateLesson(self.enterWidget.list, self.enterWidget.mapChooser.currentMap["mapPath"]))
 	
 	@property
 	def resources(self):

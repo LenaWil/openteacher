@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Milan Boers
+#	Copyright 2011-2012, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -94,7 +94,7 @@ class EnterMapScene(QtGui.QGraphicsScene):
 				}
 				# Set id
 				try:
-					place["id"] = self.enterMap.enterWidget.places["items"][-1]["id"] + 1
+					place["id"] = self.enterMap.enterWidget.list["items"][-1]["id"] + 1
 				except IndexError:
 					place["id"] = 0
 				# And add the place
@@ -139,7 +139,7 @@ class EnterMap(Map):
 		self.placesList = []
 		
 		# Add all the places
-		for place in self.enterWidget.places["items"]:
+		for place in self.enterWidget.list["items"]:
 			# Make the little rectangle
 			rect = QtGui.QGraphicsRectItem(place["x"],place["y"],6,6)
 			rect.setBrush(QtGui.QBrush(QtGui.QColor("red")))

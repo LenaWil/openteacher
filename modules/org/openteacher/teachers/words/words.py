@@ -3,6 +3,7 @@
 
 #	Copyright 2011, Marten de Vries
 #	Copyright 2011, Cas Widdershoven
+#	Copyright 2012, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -199,6 +200,8 @@ class TeachWidget(QtGui.QStackedWidget):
 		self._buildUi(keyboardWidget)
 		self._connectSignals()
 		self._createModels()
+		
+		self.inLesson = False
 
 	def updateList(self, list):
 		self.list = list
@@ -234,6 +237,8 @@ class TeachWidget(QtGui.QStackedWidget):
 			widget.updateLessonType(self._lessonType)
 
 		self._lessonType.start()
+		
+		self.inLesson = True
 
 	def _activityChanged(self, activity):
 		if activity == "inactive":
@@ -273,6 +278,9 @@ class TeachWidget(QtGui.QStackedWidget):
 
 		for module in self._mm.mods("active", type="resultsDialog"):
 			module.showResults(self.list, "words", self.list["tests"][-1])
+		
+		self.inLesson = False
+		
 		self.lessonDone.emit()
 
 	def _buildUi(self, keyboardWidget):

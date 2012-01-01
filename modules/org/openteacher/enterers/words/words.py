@@ -241,6 +241,10 @@ class EnterWidget(QtGui.QSplitter):
 		self._wordsTableView.setModel(self._wordsTableModel)
 
 		self._connectSignals()
+	
+	@property
+	def list(self):
+		return self._wordsTableModel.list
 
 	def updateList(self, list):
 		self._wordsTableModel.updateList(list)
