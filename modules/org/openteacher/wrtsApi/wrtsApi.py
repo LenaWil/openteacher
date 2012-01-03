@@ -25,6 +25,7 @@ class WrtsApiModule(object):
 
 		self.uses = (
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="dataStore"),
 		)
 		self.requires = (
 			self._mm.mods(type="ui"),
@@ -87,21 +88,37 @@ class WrtsApiModule(object):
 		del self._wrtsConnection
 
 	def importFromWrts(self):
-		ld = self._ui.LoginDialog(self._uiModule.qtParent)
-		self._activeDialogs.add(ld)
-		self._retranslate()
+		try:
+			dataStore = self._modules.default("active", type="dataStore").store
+		except IndexError:
+			dataStore = False
+		try:
+			if dataStore != False:
+				email = dataStore["org.openteacher.wrtsApi.email"]
+				password = dataStore["org.openteacher.wrtsApi.password"]
+		except KeyError:
+			ld = self._ui.LoginDialog(bool(dataStore), self._uiModule.qtParent)
+			self._activeDialogs.add(ld)
+			self._retranslate()
 
-		tab = self._uiModule.addCustomTab(ld.windowTitle(), ld)
-		tab.closeRequested.handle(tab.close)
-		ld.rejected.connect(tab.close)
-		ld.accepted.connect(tab.close)
+			tab = self._uiModule.addCustomTab(ld.windowTitle(), ld)
+			tab.closeRequested.handle(tab.close)
+			ld.rejected.connect(tab.close)
+			ld.accepted.connect(tab.close)
 
-		ld.exec_()
-		self._activeDialogs.remove(ld)
-		if not ld.result():
-			return
+			ld.exec_()
+			self._activeDialogs.remove(ld)
+			if not ld.result():
+				return
+			
+			if ld.saveCheck and dataStore != False:	
+				dataStore["org.openteacher.wrtsApi.email"] = ld.email
+				dataStore["org.openteacher.wrtsApi.password"] = ld.password
 
-		self._wrtsConnection.logIn(ld.email, ld.password)
+			email = ld.email
+			password = ld.password
+
+		self._wrtsConnection.logIn(email, password)
 
 		listsParser = self._wrtsConnection.listsParser
 
