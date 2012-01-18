@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Marten de Vries
+#	Copyright 2012, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,6 +19,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+import urllib
 import urllib2
 try:
 	import json
@@ -42,16 +44,14 @@ class UpdatesModule(object):
 
 	@staticmethod
 	def _download(link, filename):
-		local = open(filename, "w")
-		online = urllib2.urlopen(link)
-		for line in online:
-			local.write(line)
+		urllib.urlretrieve(link, filename)
 
 	def _downloadUpdates(self):
 		"""Raises IOError and ValueError"""
 		self._download(self._metadata["updatesUrl"], self._mm.resourcePath("updates.json"))
 		asc = urllib2.urlopen(self._metadata["updatesSignatureUrl"])
-		if not self._gpg.verify_file(asc, self._mm.resourcePath("updates.json")):
+		verified = self._gpg.verify_file(asc, self._mm.resourcePath("updates.json"))
+		if verified != 0:
 			raise ValueError("No valid signature!")
 
 	@property
@@ -77,7 +77,8 @@ class UpdatesModule(object):
 		"""Raises IOError and ValueError"""
 		self._download(link, self._mm.resourcePath("update.zip"))
 		asc = urllib2.urlopen(signature)
-		if not self._gpg.verify_file(asc, self._mm.resourcePath("update.zip")):
+		verified = self._gpg.verify_file(asc, self._mm.resourcePath("update.zip"))
+		if verified != 0:
 			raise ValueError("No valid signature!")
 		#FIXME: use moduleInstaller?
 		updatesZip = zipfile.ZipFile(self._mm.resourcePath("update.zip"), "r")

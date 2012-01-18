@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Marten de Vries
+#	Copyright 2012, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,6 +19,35 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+import tempfile
+import subprocess
+
+class GPG(object):
+	def __init__(self, gpgbinary="gpg", *args, **kwargs):
+		super(GPG, self).__init__(*args, **kwargs)
+		
+		self.gpgbinary = gpgbinary
+	
+	def verify_file(self, sig, filename):
+		# Save sig to a temp file
+		f = tempfile.NamedTemporaryFile(delete=False, prefix="otgpg")
+		s = sig.read()
+		f.write(s)
+		f.close()
+		
+		args = []
+		args.append(self.gpgbinary)
+		args.append("--verify")
+		args.append(f.name)
+		args.append(filename)
+		
+		o = subprocess.call(args)
+		
+		os.unlink(f.name)
+		
+		return o
+
 class GpgModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(GpgModule, self).__init__(*args, **kwargs)
@@ -26,10 +56,10 @@ class GpgModule(object):
 		self.type = "gpg"
 
 	def enable(self):
-		self.gpg = self._mm.import_("gnupg").GPG(
-			#Loads the certificates of the OpenTeacher Maintainers
-			gnupghome=self._mm.resourcePath("gpghome")
-		)
+		if os.name == "nt":
+			self.gpg = GPG(gpgbinary=self._mm.resourcePath("gpgwin\\gpg.exe"))
+		else:
+			self.gpg = GPG()
 		self.active = True
 
 	def disable(self):
