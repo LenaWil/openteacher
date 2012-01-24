@@ -24,10 +24,11 @@ import tempfile
 import subprocess
 
 class GPG(object):
-	def __init__(self, gpgbinary="gpg", *args, **kwargs):
+	def __init__(self, gpgbinary="gpg", gpghome="~/.gpg", *args, **kwargs):
 		super(GPG, self).__init__(*args, **kwargs)
 		
 		self.gpgbinary = gpgbinary
+		self.gpghome = gpghome
 	
 	def verify_file(self, sig, filename):
 		# Save sig to a temp file
@@ -38,9 +39,15 @@ class GPG(object):
 		
 		args = []
 		args.append(self.gpgbinary)
+		args.append("--status-fd")
+		args.append("1")
+		args.append("--homedir")
+		args.append(self.gpghome)
 		args.append("--verify")
 		args.append(f.name)
 		args.append(filename)
+		
+		print args
 		
 		o = subprocess.call(args)
 		
@@ -57,9 +64,14 @@ class GpgModule(object):
 
 	def enable(self):
 		if os.name == "nt":
-			self.gpg = GPG(gpgbinary=self._mm.resourcePath("gpgwin\\gpg.exe"))
+			self.gpg = GPG(
+				gpgbinary=self._mm.resourcePath("gpgwin\\gpg.exe"),
+				gpghome=self._mm.resourcePath("gpghome")
+			)
 		else:
-			self.gpg = GPG()
+			self.gpg = GPG(
+				gpghome=self._mm.resourcePath("gpghome")
+			)
 		self.active = True
 
 	def disable(self):
