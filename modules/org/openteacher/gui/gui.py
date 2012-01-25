@@ -77,6 +77,7 @@ class GuiModule(object):
 		self.requires = (
 			self._mm.mods(type="event"),
 			self._mm.mods(type="metadata"),
+			self._mm.mods(type="settings"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -182,7 +183,12 @@ class GuiModule(object):
 				"active" if activity else "inactive"
 			)
 		)
-		
+
+		#set application name (handy for e.g. Phonon)
+		app = QtGui.QApplication.instance()
+		app.setApplicationName(metadata["name"])
+		app.setApplicationVersion(metadata["version"])
+
 		self.active = True
 
 	def disable(self):

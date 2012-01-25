@@ -43,6 +43,7 @@ class TeachTopoLessonModule(object):
 		)
 		self.requires = (
 			self._mm.mods(type="event"),
+			self._mm.mods(type="ui"),
 			self._mm.mods(type="topoTeacher"),
 			self._mm.mods(type="topoEnterer"),
 			self._mm.mods(type="testsViewer"),

@@ -28,10 +28,10 @@ class OpenTeacher(object):
 	def run(self):
 		mm = moduleManager.ModuleManager(MODULES_PATH)
 
-		mods = set(mm.mods(type="openteacher-core"))
+		mods = set(mm.mods(type="execute"))
 		if len(mods) != 1:
 			raise ValueError("There has to be exactly one openteacher-core module installed.")
-		mods.pop().run()
+		mods.pop().execute()
 		return 0
 
 if __name__ == "__main__":

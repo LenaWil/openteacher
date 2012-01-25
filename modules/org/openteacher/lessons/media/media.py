@@ -41,6 +41,7 @@ class MediaLessonModule(object):
 		)
 		self.requires = (
 			self._mm.mods(type="event"),
+			self._mm.mods(type="ui"),
 			self._mm.mods(type="mediaEnterer"),
 			self._mm.mods(type="mediaTeacher"),
 			self._mm.mods(type="testsViewer"),

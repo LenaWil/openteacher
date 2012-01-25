@@ -281,10 +281,13 @@ class TopoMapsModule(object):
 		self._mm = moduleManager
 		
 		self.type = "topoMaps"
+
+		self.requires = (
+			self._mm.mods(type="settings"),
+		)
 		
 		self.uses = (
 			self._mm.mods(type="translator"),
-			self._mm.mods(type="settings"),
 		)
 	
 	def enable(self):

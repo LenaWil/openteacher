@@ -28,26 +28,25 @@ class ExecuteModule(object):
 		self.type = "execute"
 		self.requires = (
 			self._mm.mods(type="event"),
-			self._mm.mods(type="uiController"),
-			self._mm.mods(type="modulesActivator"),
 		)
 
 	def execute(self):
-		parser = optparse.OptionParser()
-		#FIXME: add options, or remove this parser :P
-		options, args = parser.parse_args()
-		try:
-			path = args[0]
-		except IndexError:
-			path = None
+		modulesMods = set(self._mm.mods(type="modules"))
+		if len(modulesMods) != 1:
+			raise ValueError("There has to be exactly one modules module installed.")
+		modules = modulesMods.pop()
+		modules.enable()
 
 		modules = set(self._mm.mods(type="modules")).pop()
+		event = modules.default(type="event")
 
-		self.aboutToExit = modules.default(type="event").createEvent()
-		modules.default(type="modulesActivator").activateModules()
+		self.startRunning = event.createEvent()
+		self.aboutToExit = event.createEvent()
 
-		uiController = modules.default("active", type="uiController")
-		uiController.run(path)
+		modules.updateToProfile()
+
+		self.startRunning.send()
+		self.aboutToExit.send()
 
 def init(moduleManager):
 	return ExecuteModule(moduleManager)

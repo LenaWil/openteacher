@@ -27,9 +27,13 @@ class MediaTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(MediaTypeModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
-		
+
+		self.requires = (
+			self._mm.mods(type="settings"),
+		)
+
 		self.phononControls = True
-		
+
 		self.type = "mediaType"
 		self.extensions = [".mp3", ".wav", ".wma", ".aif", ".mid", ".midi", ".aac", ".flac"]
 		self.priority = 5

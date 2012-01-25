@@ -34,6 +34,7 @@ class UiControllerModule(object):
 			self._mm.mods(type="saver"),
 			self._mm.mods(type="printer"),
 			self._mm.mods(type="metadata"),
+			self._mm.mods(type="execute"),
 		)
 		self.uses = (
 			self._mm.mods(type="settingsDialog"),
@@ -44,6 +45,8 @@ class UiControllerModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._execute = self._modules.default(type="execute")
+		self._execute.startRunning.handle(self.run)
 
 		self.active = True
 

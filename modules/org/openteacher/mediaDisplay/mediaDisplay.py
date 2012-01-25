@@ -151,8 +151,6 @@ class MediaDisplay(QtGui.QStackedWidget):
 		# Set the active type
 		self.activeModule = None
 
-
-
 class MediaDisplayModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(MediaDisplayModule, self).__init__(*args, **kwargs)
@@ -163,10 +161,13 @@ class MediaDisplayModule(object):
 		self._mm = moduleManager
 		
 		self.type = "mediaDisplay"
+
+		self.requires = (
+			self._mm.mods(type="settings"),
+		)
 		
 		self.uses = (
 			self._mm.mods(type="translator"),
-			self._mm.mods(type="settings"),
 		)
 	
 	def enable(self):

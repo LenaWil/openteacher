@@ -47,28 +47,28 @@ class ModuleFilterer(object):
 		return self
 
 	def __iter__(self):
-		return iter(filter(self._filterModule, self._modules))
-
-	def _filterModule(self, module):
-		for attribute, value in self._where.iteritems():
-			if not self._equals(module, attribute, value):
-				return False
-		for attribute in self._whereTrue:
-			if not self._isTrue(module, attribute):
-				return False
-		return True
-
-	def _equals(self, module, attribute, value):
-		try:
-			return getattr(module, attribute) == value
-		except AttributeError:
-			return False
-
-	def _isTrue(self, module, attribute):
-		try:
-			return bool(getattr(module, attribute))
-		except AttributeError:
-			return False
+		result = set()
+		for module in self._modules:
+			append = True
+			for attribute, value in self._where.iteritems():
+				if not hasattr(module, attribute):
+					append = False
+					break
+				if getattr(module, attribute) != value:
+					append = False
+					break
+			if not append:
+				continue
+			for attribute in self._whereTrue:
+				if not hasattr(module, attribute):
+					append = False
+					break
+				if not bool(getattr(module, attribute)):
+					append = False
+					break
+			if append:
+				result.add(module)
+		return iter(result)
 
 class ModuleManager(object):
 	"""This class manages modules. It loads them from a directory when
@@ -100,7 +100,7 @@ class ModuleManager(object):
 
 	def importFrom(self, path, moduleName):
 		fp, pathname, description = imp.find_module(moduleName, [path])
-		
+
 		try:
 			#import the module
 			module = imp.load_module(moduleName, fp, pathname, description)
@@ -130,4 +130,7 @@ class ModuleManager(object):
 			if valid:
 				container = self.importFrom(root, name)
 				module = container.init(self)
+				#To compensate for the missing __module__ attribute of
+				#the class Python has when importing normally.
+				module.__class__.__file__ = root
 				self._modules.add(module)

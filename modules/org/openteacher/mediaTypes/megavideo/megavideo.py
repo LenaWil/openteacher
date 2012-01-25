@@ -26,7 +26,7 @@ class MediaTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(MediaTypeModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
-		
+
 		self.phononControls = False
 		
 		self.type = "mediaType"

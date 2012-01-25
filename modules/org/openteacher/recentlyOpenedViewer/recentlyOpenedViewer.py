@@ -53,11 +53,10 @@ class RecentlyOpenedModel(QtCore.QAbstractListModel):
 
 	def open(self, row):
 		item = self._items[row]
-		print item
-		
+
 		module = self._modules.default(
-			*item["moduleArgsSelector"],
-			**item["moduleKwargsSelector"]
+			*item["moduleArgsSelectors"],
+			**item["moduleKwargsSelectors"]
 		)
 		
 		method = getattr(module, item["method"])

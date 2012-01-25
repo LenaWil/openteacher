@@ -379,7 +379,6 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 			self.toolBar.setStyleSheet("border: 0;")
 			# Make menu bar transparent
 			self.menuBar().setStyleSheet("QMenuBar { background-color:transparent; } QMenuBar::item { background-color: transparent; }")
-			
 
 	def retranslate(self):
 		self.fileMenu.setTitle(_("&File"))

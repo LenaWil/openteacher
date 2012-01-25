@@ -24,13 +24,11 @@ class LoginDialog(QtGui.QDialog):
 	def __init__(self, store, *args, **kwargs):
 		super(LoginDialog, self).__init__(*args, **kwargs)
 		
-		self.emailLabel = QtGui.QLabel()
 		self.emailTextBox = QtGui.QLineEdit()
 		
-		self.passwordLabel = QtGui.QLabel()
 		self.passwordTextBox = QtGui.QLineEdit()
 		self.passwordTextBox.setEchoMode(QtGui.QLineEdit.Password)
-		
+
 		if store:
 			self.saveCheckbox = QtGui.QCheckBox("", self)
 
@@ -41,21 +39,17 @@ class LoginDialog(QtGui.QDialog):
 		buttonBox.accepted.connect(self.accept)
 		buttonBox.rejected.connect(self.reject)
 
-		verticalSpacer = QtGui.QSpacerItem(
-			20,
-			40,
-			QtGui.QSizePolicy.Minimum,
-			QtGui.QSizePolicy.Expanding
-		)
+		self.flayout = QtGui.QFormLayout()
+		self.flayout.addRow("0", self.emailTextBox)
+		self.flayout.addRow("1", self.passwordTextBox)
+		if store:
+			self.flayout.addRow(self.saveCheckbox)
 
-		layout = QtGui.QGridLayout()
-		layout.addWidget(self.emailLabel, 0, 0)
-		layout.addWidget(self.emailTextBox, 0, 1)
-		layout.addWidget(self.passwordLabel, 1, 0)
-		layout.addWidget(self.passwordTextBox, 1, 1)
-		layout.addWidget(self.saveCheckbox, 2, 0)
-		layout.addItem(verticalSpacer, 3, 0, 1, 2)
-		layout.addWidget(buttonBox, 4, 0, 1, 2)
+		layout = QtGui.QVBoxLayout()
+		layout.addLayout(self.flayout)
+		layout.addStretch()
+		layout.addWidget(buttonBox)
+
 		self.setLayout(layout)
 
 	@property
@@ -70,16 +64,21 @@ class LoginDialog(QtGui.QDialog):
 	def saveCheck(self):
 		try:
 			return self.saveCheckbox.isChecked()
-		except NameError:
+		except AttributeError:
 			return False
 
 	def retranslate(self):
 		self.setWindowTitle(_("WRTS - login please:"))
-		self.emailLabel.setText(_("Email: "))
-		self.passwordLabel.setText(_("Password: "))
+
+		self.flayout.itemAt(0, QtGui.QFormLayout.LabelRole).widget().setText(
+			_("Email: ")
+		)
+		self.flayout.itemAt(1, QtGui.QFormLayout.LabelRole).widget().setText(
+			_("Password: ")
+		)
 		try:
 			self.saveCheckbox.setText(_("Store mail address and password"))
-		except NameError:
+		except AttributeError:
 			pass
 
 class ReadOnlyStringListModel(QtGui.QStringListModel):
