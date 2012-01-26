@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -19,13 +19,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import zipfile
-import os
-import tempfile
-try:
-	import json
-except:
-	import simplejson
+import shutil
 
 class PngSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -50,8 +44,8 @@ class PngSaverModule(object):
 		del self.name
 		del self.saves
 
-	def save(self, type, list, path, resources):
-		resources["mapScreenshot"].save(path, "PNG")
+	def save(self, type, lesson, path):
+		shutil.copy(lesson.resources["mapScreenshot"], path)
 
 def init(moduleManager):
 	return PngSaverModule(moduleManager)

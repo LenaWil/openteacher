@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #    Copyright 2008-2011, Milan Boers
+#    Copyright 2012, Marten de Vries
 #
 #    This file is part of OpenTeacher.
 #

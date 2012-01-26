@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -60,11 +60,8 @@ class OpenTeacherLoaderModule(object):
 	def load(self, path):
 		#Create the new word list
 		wordList = {
-			"items": list(),
-			"tests": list(),
-			"title": unicode(),
-			"questionLanguage": unicode(),
-			"answerLanguage": unicode()
+			"items": [],
+			"tests": [],
 		}
 		#Feed the xml parser
 		root = ElementTree.parse(open(path)).getroot()
@@ -84,12 +81,9 @@ class OpenTeacherLoaderModule(object):
 			#Creates the word and sets its id (which is the current
 			#value of the counter)
 			listWord = {
-				"id": int(),
-				"questions": list(),
-				"answers": list(),
-				"comment": unicode()
+				"id": counter,
+				"comment": u""
 			}
-			listWord["id"] = counter
 
 			#Parses the question
 			known = treeWord.findtext("known")
@@ -138,7 +132,10 @@ class OpenTeacherLoaderModule(object):
 		if test["results"]:
 			wordList["tests"].append(test)
 		
-		return wordList
+		return {
+			"list": wordList,
+			"resources": {}
+		}
 
 def init(moduleManager):
 	return OpenTeacherLoaderModule(moduleManager)

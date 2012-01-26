@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -31,7 +31,7 @@ class Saver(object):
 		self.path = path
 
 	def save(self):
-		self.module.save(self.dataType, self.lesson.list, self.path, self.lesson.resources)
+		self.module.save(self.dataType, self.lesson, self.path)
 
 class SaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -41,17 +41,16 @@ class SaverModule(object):
 		self.type = "saver"
 		self.uses = (
 			self._mm.mods(type="save"),
-			self._mm.mods(type="lesson"),
 		)
 		self.requires = (
-			self._mm.mods(type="ui"),
+			self._mm.mods(type="lessonTracker"),
 		)
 
 	@property
 	def usableExtensions(self):
 		extensions = []
 
-		dataType = self._currentLesson.module.dataType
+		dataType = self._lessonTracker.currentLesson.module.dataType
 
 		#Collect exts the loader modules support, if there is a gui
 		#module for the data type(s) they can provide
@@ -62,67 +61,39 @@ class SaverModule(object):
 
 		return extensions
 
-##################FIXME: DUPLICATE WITH PRINTER.PY!
-	@property
-	def _currentLesson(self):
-		uiModule = self._modules.default("active", type="ui")
-		try:
-			return self._lessons[uiModule.currentFileTab]
-		except KeyError:
-			return
-
-	def _lessonAdded(self, lesson):
-		self._lessons[lesson.fileTab] = lesson
-		lesson.stopped.handle(
-			lambda: self._removeLesson(lesson.fileTab)
-		)
-
-	def _removeLesson(self, fileTab):
-		del self._lessons[fileTab]
-##################END DUPLICATE
-
 	@property
 	def saveSupport(self):
-		return self._currentLesson is not None and len(self.usableExtensions) != 0
+		return self._lessonTracker.currentLesson is not None and len(self.usableExtensions) != 0
 
 	def save(self, path):
 		path = path.encode(sys.getfilesystemencoding())
 		savers = []
 
-		dataType = self._currentLesson.module.dataType
+		dataType = self._lessonTracker.currentLesson.module.dataType
 		for module in self._modules.sort("active", type="save"):
 			if dataType in module.saves:
 				for ext in module.saves[dataType]:
 					if path.endswith(ext):
-						savers.append(Saver(module, dataType, self._currentLesson, path))
+						savers.append(Saver(module, dataType, self._lessonTracker.currentLesson, path))
 
 		if len(savers) == 0:
 			raise NotImplementedError()
 
-		#FIXME: see loader.py for an explanation
 		saver = savers[0]
 		#Save
 		saver.save()
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._lessons = {}
-
-		#Keeps track of all created lessons
-		for module in self._mm.mods("active", type="lesson"):
-			module.lessonCreated.handle(self._lessonAdded)
+		self._lessonTracker = self._modules.default("active", type="lessonTracker")
 
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
-		#Keeps track of all created lessons
-		for module in self._mm.mods("active", type="lesson"):
-			module.lessonCreated.unhandle(self._lessonAdded)
-
 		del self._modules
-		del self._lessons
+		del self._lessonTracker
 
 def init(moduleManager):
 	return SaverModule(moduleManager)

@@ -30,8 +30,8 @@ class PrintModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.requires = (
-			self._mm.mods(type="wordsStringComposer"),
 			self._mm.mods(type="metadata"),
+			self._mm.mods(type="wordsHtmlGenerator"),
 		)
 		
 	def enable(self):
@@ -45,7 +45,6 @@ class PrintModule(object):
 			translator.languageChanged.handle(self._retranslate)
 		self._retranslate()
 
-		self._pyratemp = self._mm.import_("pyratemp")
 		self.prints = ["words"]
 
 		self.active = True
@@ -70,33 +69,17 @@ class PrintModule(object):
 		del self._modules
 		del self.name
 		del self.prints
-		del self._pyratemp
 
-	@property
-	def compose(self):
-		return self._modules.default(
+	def print_(self, type, lesson, printer):
+		html = self._modules.default(
 			"active",
-			type="wordsStringComposer"
-		).compose
-
-	def print_(self, type, list, resources, printer):
-		class EvalPseudoSandbox(self._pyratemp.EvalPseudoSandbox):
-			def __init__(self2, *args, **kwargs):
-				self._pyratemp.EvalPseudoSandbox.__init__(self2, *args, **kwargs)
-
-				self2.register("compose", self.compose)
-
-		templatePath = self._mm.resourcePath("template.html")
-		t = self._pyratemp.Template(
-			open(templatePath).read(),
-			eval_class=EvalPseudoSandbox
-		)
-		html = t(**{"list": list})
+			type="wordsHtmlGenerator"
+		).generate(lesson)
 
 		name = self._modules.default("active", type="metadata").metadata["name"]
 		printer.setCreator(name)
 		try:
-			printer.setDocName(list["title"])
+			printer.setDocName(lesson.list["title"])
 		except KeyError:
 			printer.setDocName(_("Untitled word list"))
 
@@ -104,7 +87,7 @@ class PrintModule(object):
 		self._doc = QtWebKit.QWebView()
 		self._doc.loadFinished.connect(self._loadFinished)
 		self._doc.setHtml(html)
-	
+
 	def _loadFinished(self, ok):
 		self._doc.print_(self._printer)
 

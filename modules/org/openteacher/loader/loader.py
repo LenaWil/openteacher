@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -30,7 +30,7 @@ class Loader(object):
 		self.path = path
 
 	def load(self):
-		self.guiModule.loadFromList(self.loadModule.load(self.path), self.path)
+		self.guiModule.loadFromLesson(self.loadModule.load(self.path), self.path)
 
 class LoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -80,34 +80,26 @@ class LoaderModule(object):
 		for loadModule in self._modules.sort("active", type="load"):
 			fileType = loadModule.getFileTypeOf(path)
 			for guiModule in self._modules.sort("active", type="lesson"):
-				try:
-					guiModule.loadFromList
-				except AttributeError:
+				if not hasattr(guiModule, "loadFromLesson"):
 					continue
 				if guiModule.dataType == fileType:
 					loaders.append(Loader(loadModule, guiModule, path))
 
 		if len(loaders) == 0:
 			raise NotImplementedError()
-		#FIXME: choose loader or is the priority stuff used above enough?
 		loader = loaders[0]
 
 		loader.load()
 
-	def loadFromList(self, dataType, list):
+	def loadFromLesson(self, dataType, lesson):
 		loaders = []
-		for lesson in self._modules.sort("active", type="lesson"):
-			if lesson.dataType == dataType:
-				try:
-					lesson.loadFromList
-				except AttributeError:
-					continue
-				loaders.append(lesson)
+		for loader in self._modules.sort("active", type="lesson"):
+			if loader.dataType == dataType and hasattr(loader, "loadFromLesson"):
+				loaders.append(loader)
 		if len(loaders) == 0:
 			raise NotImplementedError()
-		#FIXME: see above...
 		loader = loaders[0]
-		loader.loadFromList(list, "")#FIXME: remove this path argument
+		loader.loadFromLesson(lesson, "")#FIXME: remove this path argument
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()

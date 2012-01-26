@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -57,21 +57,9 @@ class OpenTeacherSaverModule(object):
 			type="wordsStringComposer"
 		).compose
 
-	def save(self, type, wordList, path, resources):
+	def save(self, type, lesson, path):
 		#Copy, because we're going to modify it
-		wordList = copy.deepcopy(wordList)
-		try:
-			wordList["title"]
-		except AttributeError:
-			wordList["title"] = u""
-		try:
-			wordList["questionLanguage"]
-		except AttributeError:
-			wordList["questionLanguage"] = u""
-		try:
-			wordList["answerLanguage"]
-		except AttributeError:
-			wordList["answerLanguage"] = u""
+		wordList = copy.deepcopy(lesson.list)
 
 		for word in wordList["items"]:
 			#results

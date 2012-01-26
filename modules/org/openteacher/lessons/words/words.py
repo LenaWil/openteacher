@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #	Copyright 2011, Cas Widdershoven
 #	Copyright 2011-2012, Milan Boers
 #
@@ -27,7 +27,7 @@ class Lesson(object):
 	def __init__(self, moduleManager, fileTab, module, list, enterWidget, teachWidget, resultsWidget=None, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
 
-		self.resources = {} #To be removed...
+		self.resources = {}
 
 		self._mm = moduleManager
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
@@ -190,8 +190,11 @@ class WordsLessonModule(object):
 			return
 		return keyboard.createWidget()
 
-	def loadFromList(self, list, path): #FIXME: change topo lesson so path can be removed
-		self.createLesson(list)
+	#FIXME: change topo lesson so path can be removed
+	#At least, rename it to something more generic like 'label' so other
+	#things than files (e.g. webservices) can use it too.
+	def loadFromLesson(self, lesson, path):
+		self.createLesson(lesson["list"])
 
 def init(moduleManager):
 	return WordsLessonModule(moduleManager)

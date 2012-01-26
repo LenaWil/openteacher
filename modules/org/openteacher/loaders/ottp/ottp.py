@@ -53,7 +53,7 @@ class OpenTeachingTopoLoaderModule(object):
 	def getFileTypeOf(self, path):
 		if path.endswith(".ottp"):
 			return "topo"
-	
+
 	def _stringsToDatetimes(self, list):
 		for test in list["tests"]:
 			for result in test["results"]:
@@ -61,7 +61,7 @@ class OpenTeachingTopoLoaderModule(object):
 				result["active"]["end"] = datetime.datetime.strptime(result["active"]["end"], "%Y-%m-%dT%H:%M:%S.%f")
 		
 		return list
-	
+
 	def load(self, path):
 		# Open zipfile
 		with zipfile.ZipFile(path, "r") as zipFile:

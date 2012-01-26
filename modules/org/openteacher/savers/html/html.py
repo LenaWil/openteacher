@@ -19,22 +19,21 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import tarfile
-import os
-import tempfile
-from PyQt4 import QtGui
-
-class PdfSaverModule(object):
+class HtmlSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(PdfSaverModule, self).__init__(*args, **kwargs)
+		super(HtmlSaverModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "save"
 
+		self.requires = (
+			self._mm.mods(type="wordsHtmlGenerator"),
+		)
+
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self.name = "Portable Document Format (.pdf) saver"
-		self.saves = {"words": ["pdf"]}
+		self.name = "Hyper Text Markup Language (.html) saver"
+		self.saves = {"words": ["html"]}
 		
 		self.active = True
 
@@ -45,33 +44,14 @@ class PdfSaverModule(object):
 		del self.name
 		del self.saves
 
-	def save(self, type, list, path, resources):
-		composers = set(self._mm.mods("active", type="wordsStringComposer"))
-		compose = self._modules.chooseItem(composers).compose
-		
-		printer = QtGui.QPrinter()
-		printer.setOutputFileName(path)
-		printer.setOutputFormat(QtGui.QPrinter.PdfFormat)
-		
-		painter = QtGui.QPainter()
-		painter.begin(printer)
-		
-		i = 50
-		
-		if "title" in list:
-			painter.drawText(20, i, list["title"])
-			i += 15
-		if "questionLanguage" in list and "answerLanguage" in list:
-			painter.drawText(20, i, list["questionLanguage"] + "\t" + list["answerLanguage"])
-			i += 15
-				
-		i += 20
-		
-		for item in list["items"]:
-			painter.drawText(20, i, compose(item["questions"]) + "\t" + compose(item["answers"]))
-			i += 15
-		
-		painter.end()
+	def save(self, type, lesson, path):
+		html = self._modules.default(
+			"active",
+			type="wordsHtmlGenerator"
+		).generate(lesson, margin="0.5em")
+
+		with open(path, 'w') as htmlfile:
+			htmlfile.write(html)
 
 def init(moduleManager):
-	return PdfSaverModule(moduleManager)
+	return HtmlSaverModule(moduleManager)

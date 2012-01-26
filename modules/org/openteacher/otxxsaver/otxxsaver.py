@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2012, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -19,38 +19,40 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class Teach2000SaverModule(object):
+try:
+	import json
+except ImportError:
+	import simplejson as json
+import zipfile
+
+class OtxxSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(Teach2000SaverModule, self).__init__(*args, **kwargs)
+		super(OtxxSaverModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "save"
-		self.uses = (
-			self._mm.mods(type="translator"),
-		)
+		self.type = "otxxSaver"
+
+	def save(self, lesson, path, resourceFilenames={}, zipCompression=zipfile.ZIP_DEFLATED):
+		with zipfile.ZipFile(path, 'w', zipCompression) as otxxzip:
+			otxxzip.writestr("list.json", json.dumps(
+				lesson.list, #the list to save
+				separators=(',',':'), #compact encoding
+				default=self._serialize #serialize datetime
+			))
+			for resourceKey, filename in resourceFilenames.iteritems():
+				otxxzip.write(lesson.resources[resourceKey], filename)
+
+	def _serialize(self, obj):
+		try:
+			return obj.strftime("%Y-%m-%dT%H:%M:%S.%f")
+		except AttributeError:
+			raise TypeError("The type '%s' isn't JSON serializable." % obj.__class__)
 
 	def enable(self):
-		self._pyratemp = self._mm.import_("pyratemp")
-		self.name = "Teach2000 (.t2k) saver"
-		self.saves = {"words": ["t2k"]}
-
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
-		del self._pyratemp
-		del self.name
-		del self.saves
-
-	def save(self, type, lesson, path):
-		templatePath = self._mm.resourcePath("template.xml")
-		t = self._pyratemp.Template(open(templatePath).read())
-		data = {
-			"wordList": lesson.list
-		}
-		content = t(**data)
-		open(path, "w").write(content.encode("UTF-8"))
-
 def init(moduleManager):
-	return Teach2000SaverModule(moduleManager)
+	return OtxxSaverModule(moduleManager)

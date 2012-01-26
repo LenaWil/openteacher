@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2012, Marten de Vries
+#	Copyright 2011, Cas Widdershoven
 #
 #	This file is part of OpenTeacher.
 #
@@ -91,9 +92,9 @@ class WrtsApiModule(object):
 		try:
 			dataStore = self._modules.default("active", type="dataStore").store
 		except IndexError:
-			dataStore = False
+			dataStore = None
 		try:
-			if dataStore != False:
+			if dataStore:
 				email = dataStore["org.openteacher.wrtsApi.email"]
 				password = dataStore["org.openteacher.wrtsApi.password"]
 		except KeyError:
@@ -111,7 +112,7 @@ class WrtsApiModule(object):
 			if not ld.result():
 				return
 			
-			if ld.saveCheck and dataStore != False:	
+			if ld.saveCheck and dataStore:	
 				dataStore["org.openteacher.wrtsApi.email"] = ld.email
 				dataStore["org.openteacher.wrtsApi.password"] = ld.password
 

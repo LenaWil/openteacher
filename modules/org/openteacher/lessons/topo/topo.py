@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Milan Boers
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -19,14 +19,13 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui
-
 import os
+import tempfile
+import atexit
 
-"""
-The module
-"""
 class TeachTopoLessonModule(object):
+	"""The module"""
+
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TeachTopoLessonModule, self).__init__(*args, **kwargs)
 		
@@ -114,32 +113,35 @@ class TeachTopoLessonModule(object):
 		self.lessonCreationFinished.send()
 		return lessons
 	
-	def loadFromList(self, list, path):
+	def loadLesson(self, lesson, path):
 		for lesson in self.createLesson():
 			lesson.enterWidget.mapChooser.setCurrentIndex(0)
-			lesson.enterWidget.mapChooser.insertItem(0, os.path.basename(path), unicode({'mapPath': list["resources"]["mapPath"], 'knownPlaces': ''}))
+			lesson.enterWidget.mapChooser.insertItem(0, os.path.basename(path), unicode({'mapPath': lesson["resources"]["mapPath"], 'knownPlaces': ''}))
 			lesson.enterWidget.mapChooser.setCurrentIndex(0)
 			
 			# Load the list
-			lesson.enterWidget.places = list["list"]
+			lesson.enterWidget.places = lesson["list"]
 			# Update the widgets
 			lesson.enterWidget.updateWidgets()
 			# Update results widget
-			lesson.resultsWidget.updateList(list["list"], "topo")
+			lesson.resultsWidget.updateList(lesson["list"], "topo")
 
-"""
-Lesson object (that means: this techwidget+enterwidget)
-"""
+#FIXME: list-property: AttributeError: 'EnterWidget' object has no attribute 'places'
+#so how to get it?
 class Lesson(object):
+	"""Lesson object (that means: this techwidget+enterwidget)"""
+
 	def __init__(self, modules, fileTab, enterWidget, teachWidget, resultsWidget, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
 		
 		self._modules = modules
-		
+		self._tempFiles = set()
+		atexit.register(self._removeTempFiles)
+
 		self.enterWidget = enterWidget
 		self.teachWidget = teachWidget
 		self.resultsWidget = resultsWidget
-		
+
 		self.fileTab = fileTab
 		
 		self.stopped = base._modules.default(type="event").createEvent()
@@ -168,12 +170,22 @@ class Lesson(object):
 	def tabChanged(self):
 		lessonDialogsModule = self._modules.default("active", type="lessonDialogs")
 		lessonDialogsModule.onTabChanged(self.fileTab, self.enterWidget, self.teachWidget, lambda: self.teachWidget.initiateLesson(self.enterWidget.list, self.enterWidget.mapChooser.currentMap["mapPath"]))
-	
+
+	def _removeTempFiles(self):
+		for file in self._tempFiles:
+			os.remove(file)
+
 	@property
 	def resources(self):
+		screenshotPath = tempfile.mkstemp()[1]
+		self._tempFiles.add(screenshotPath)
+
+		screenshot = self.enterWidget.enterMap.getScreenshot()
+		screenshot.save(screenshotPath, "PNG")
+
 		return {
 			"mapPath": self.enterWidget.mapChooser.currentMap["mapPath"],
-			"mapScreenshot": self.enterWidget.enterMap.getScreenshot()
+			"mapScreenshot": screenshotPath,
 		}
 
 def init(moduleManager):

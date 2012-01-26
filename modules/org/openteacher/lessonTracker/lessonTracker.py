@@ -1,8 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Milan Boers
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -19,44 +18,56 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
-class OpenTeachingTopoSaverModule(object):
+class LessonTrackerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(OpenTeachingTopoSaverModule, self).__init__(*args, **kwargs)
+		super(LessonTrackerModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "save"
+		self.type = "lessonTracker"
+
 		self.requires = (
-			self._mm.mods(type="otxxSaver"),
+			self._mm.mods(type="ui"),
 		)
 		self.uses = (
-			self._mm.mods(type="translator"),
+			self._mm.mods(type="lesson"),
 		)
+
+	@property
+	def currentLesson(self):
+		uiModule = self._modules.default("active", type="ui")
+		try:
+			return self._lessons[uiModule.currentFileTab]
+		except KeyError:
+			return
+
+	def _lessonAdded(self, lesson):
+		self._lessons[lesson.fileTab] = lesson
+		lesson.stopped.handle(
+			lambda: self._removeLesson(lesson.fileTab)
+		)
+
+	def _removeLesson(self, fileTab):
+		del self._lessons[fileTab]
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._otxxSaver = self._modules.default("active", type="otxxSaver")
+		self._lessons = {}
 
-		self.name = "Open Teaching Topo (.ottp) saver"
-		self.saves = {"topo": ["ottp"]}
+		#Keeps track of all created lessons
+		for module in self._mm.mods("active", type="lesson"):
+			module.lessonCreated.handle(self._lessonAdded)
 
 		self.active = True
 
 	def disable(self):
+		del self._modules
+		del self._lessons
+
+		#Keeps track of all created lessons
+		for module in self._mm.mods("active", type="lesson"):
+			module.lessonCreated.unhandle(self._lessonAdded)
+
 		self.active = False
 
-		del self._modules
-		del self.name
-		del self.saves
-
-	def save(self, type, lesson, path):
-		resourceFilenames = {
-			"mapPath": "map" + os.path.splitext(
-				lesson.resources["mapPath"]
-			)[1]
-		}
-		self._otxxSaver.save(lesson, path, resourceFilenames)
-
 def init(moduleManager):
-	return OpenTeachingTopoSaverModule(moduleManager)
+	return LessonTrackerModule(moduleManager)

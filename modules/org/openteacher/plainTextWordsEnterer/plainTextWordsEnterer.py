@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -53,7 +53,7 @@ class EnterPlainTextDialog(QtGui.QDialog):
 		super(EnterPlainTextDialog, self).exec_(*args, **kwargs)
 
 	@property
-	def list(self):
+	def lesson(self):
 		list = {"items": [], "tests": []}
 		text = unicode(self._textEdit.toPlainText())
 		counter = 0
@@ -73,7 +73,10 @@ class EnterPlainTextDialog(QtGui.QDialog):
 			list["items"].append(word)
 
 			counter += 1
-		return list
+		return {
+			"resources": {},
+			"list": list,
+		}
 
 class PlainTextWordsEntererModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -150,7 +153,7 @@ class PlainTextWordsEntererModule(object):
 		self._modules.default(
 			"active",
 			type="loader"
-		).loadFromList("words", eptd.list)
+		).loadFromLesson("words", eptd.lesson)
 
 	def disable(self):
 		self.active = False

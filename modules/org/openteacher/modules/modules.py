@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -115,15 +115,16 @@ class ModulesModule(object):
 			except AttributeError:
 				active = False
 			if self._hasPositivePriority(mod) and not active:
+				depsactive = True
 				if hasattr(mod, "requires"):
 					for dep in mod.requires:
-						try:
-							depactive = dep.active
-						except AttributeError:
-							depactive = False
-						if not depactive:
-							continue
-				if hasattr(mod, "enable"):
+						depsactive = len(filter(
+							lambda x: not hasattr(x, "active") or bool(getattr(x, "active")),
+							dep
+						)) != 0
+						if not depsactive:
+							break
+				if hasattr(mod, "enable") and depsactive:
 					mod.enable()
 
 		#disable modules
@@ -133,15 +134,16 @@ class ModulesModule(object):
 			except AttributeError:
 				active = False
 			if not self._hasPositivePriority(mod) and active:
+				depsactive = True
 				if hasattr(mod, "requires"):
 					for dep in mod.requires:
-						try:
-							depactive = dep.active
-						except AttributeError:
-							depactive = False
-						if not depactive:
-							continue
-				if hasattr(mod, "disable"):
+						depsactive = len(filter(
+							lambda x: not hasattr(x, "active") or bool(getattr(x, "active")),
+							dep
+						)) != 0
+						if not depsactive:
+							break
+				if hasattr(mod, "disable") and depsactive:
 					mod.disable()
 
 	def enable(self):

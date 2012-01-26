@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -53,23 +53,23 @@ class TxtSaverModule(object):
 			type="wordsStringComposer"
 		).compose
 
-	def save(self, type, list, path, resources):		
+	def save(self, type, lesson, path):		
 		text = u""
 
-		if "title" in list:
-			text += list["title"] + "\n\n"
-		if "questionLanguage" in list and "answerLanguage" in list:
-			text += list["questionLanguage"] + " - " + list["answerLanguage"] + "\n\n"
+		if "title" in lesson.list:
+			text += lesson.list["title"] + "\n\n"
+		if "questionLanguage" in lesson.list and "answerLanguage" in lesson.list:
+			text += lesson.list["questionLanguage"] + " - " + lesson.list["answerLanguage"] + "\n\n"
 
-		if len(list["items"]) != 0:
+		if len(lesson.list["items"]) != 0:
 			#FIXME: questions -> not guaranteed to be there
-			lengths = map(lambda word: len(self._compose(word["questions"])), list["items"])
+			lengths = map(lambda word: len(self._compose(word["questions"])), lesson.list["items"])
 			maxLen = max(lengths) +1
 			#FIXME: should 8 be an advanced setting?
 			if maxLen < 8:
 				maxLen = 8
 
-			for word in list["items"]:
+			for word in lesson.list["items"]:
 				try:
 					questions = self._compose(word["questions"])
 				except KeyError:

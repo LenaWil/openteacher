@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -57,7 +57,7 @@ class WrtsSaverModule(object):
 			type="wordsStringComposer"
 		).compose
 
-	def save(self, type, list, path, resources):
+	def save(self, type, lesson, path):
 		class EvalPseudoSandbox(self._pyratemp.EvalPseudoSandbox):
 			def __init__(self2, *args, **kwargs):
 				self._pyratemp.EvalPseudoSandbox.__init__(self2, *args, **kwargs)
@@ -71,7 +71,7 @@ class WrtsSaverModule(object):
 		)
 
 		data = {
-			"list": list,
+			"list": lesson.list,
 			"date": datetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S %z").strip() #FIXME: not datetime.now(), but the real ones!
 		}
 		content = t(**data)

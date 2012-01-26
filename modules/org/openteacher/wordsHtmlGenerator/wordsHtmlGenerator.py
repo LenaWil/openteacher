@@ -19,20 +19,43 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class Teach2000SaverModule(object):
+class WordsHtmlGeneratorModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(Teach2000SaverModule, self).__init__(*args, **kwargs)
+		super(WordsHtmlGeneratorModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "save"
-		self.uses = (
-			self._mm.mods(type="translator"),
+		self.type = "wordsHtmlGenerator"
+		self.requires = (
+			self._mm.mods(type="wordsStringComposer"),
 		)
 
+	def generate(self, lesson, margin="0"):
+		class EvalPseudoSandbox(self._pyratemp.EvalPseudoSandbox):
+			def __init__(self2, *args, **kwargs):
+				self._pyratemp.EvalPseudoSandbox.__init__(self2, *args, **kwargs)
+
+				self2.register("compose", self.compose)
+
+		templatePath = self._mm.resourcePath("template.html")
+		t = self._pyratemp.Template(
+			open(templatePath).read(),
+			eval_class=EvalPseudoSandbox
+		)
+		return t(**{
+			"list": lesson.list,
+			"margin": margin
+		})
+
+	@property
+	def compose(self):
+		return self._modules.default(
+			"active",
+			type="wordsStringComposer"
+		).compose
+
 	def enable(self):
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self._pyratemp = self._mm.import_("pyratemp")
-		self.name = "Teach2000 (.t2k) saver"
-		self.saves = {"words": ["t2k"]}
 
 		self.active = True
 
@@ -40,17 +63,6 @@ class Teach2000SaverModule(object):
 		self.active = False
 
 		del self._pyratemp
-		del self.name
-		del self.saves
-
-	def save(self, type, lesson, path):
-		templatePath = self._mm.resourcePath("template.xml")
-		t = self._pyratemp.Template(open(templatePath).read())
-		data = {
-			"wordList": lesson.list
-		}
-		content = t(**data)
-		open(path, "w").write(content.encode("UTF-8"))
 
 def init(moduleManager):
-	return Teach2000SaverModule(moduleManager)
+	return WordsHtmlGeneratorModule(moduleManager)

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -19,49 +19,38 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import zipfile
-try:
-	import json
-except:
-	import simplejson as json
-
 class OpenTeachingWordsSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(OpenTeachingWordsSaverModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "save"
+		self.requires = (
+			self._mm.mods(type="otxxSaver"),
+		)
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
 
 	def enable(self):		
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._otxxSaver = self._modules.default("active", type="otxxSaver")
+
 		self.name = "Open Teaching Words (.otwd) saver"
 		self.saves = {"words": ["otwd"]}
 		
 		self.active = True
 
+	def save(self, type, lesson, path):
+		self._otxxSaver.save(lesson, path)
+
 	def disable(self):
 		self.active = False
 
 		del self._modules
+		del self._otxxSaver
 		del self.name
 		del self.saves
-
-	def serialize(self, obj):
-		try:
-			return obj.strftime("%Y-%m-%dT%H:%M:%S.%f")
-		except AttributeError:
-			raise TypeError("The type '%s' isn't JSON serializable." % obj.__class__)
-
-	def save(self, type, list, path, resources):
-		otwdzip = zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED)
-		otwdzip.writestr("list.json", json.dumps(
-			list, #the list to save
-			separators=(',',':'), #compact encoding
-			default=self.serialize
-		))
 
 def init(moduleManager):
 	return OpenTeachingWordsSaverModule(moduleManager)

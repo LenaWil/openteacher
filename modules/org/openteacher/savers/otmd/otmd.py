@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -20,14 +20,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import zipfile
-import os
-import tempfile
 import copy
-import datetime
-try:
-	import json
-except:
-	import simplejson
 
 class OpenTeachingMediaSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -37,6 +30,7 @@ class OpenTeachingMediaSaverModule(object):
 		self.type = "save"
 		self.requires = (
 			self._mm.mods(type="settings"),
+			self._mm.mods(type="otxxSaver"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -44,6 +38,8 @@ class OpenTeachingMediaSaverModule(object):
 
 	def enable(self):		
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._otxxSaver = self._modules.default("active", type="otxxSaver")
+
 		self.name = "Open Teaching Media (.otmd) saver"
 		self.saves = {"media": ["otmd"]}
 
@@ -64,35 +60,28 @@ class OpenTeachingMediaSaverModule(object):
 		self.active = False
 
 		del self._modules
+		del self._otxxSaver
 		del self._settings
 		del self._compressionSetting
 		del self.name
 		del self.saves
 
-	def save(self, type, list, path, resources):
+	def save(self, type, lesson, path):
 		compression = zipfile.ZIP_STORED
 		if self._compressionSetting["value"]:
 			compression = zipfile.ZIP_DEFLATED
 
-		# Create zipfile
-		with zipfile.ZipFile(path, "w", compression) as zipFile:
-			itemsList = copy.deepcopy(list)
-			
-			for item in itemsList["items"]:
-				if not item["remote"]:
-					zipFile.write(item["filename"], os.path.basename(item["filename"]))
-					item["filename"] = os.path.basename(item["filename"])
-			
-			# Create temp file
-			listFile = tempfile.NamedTemporaryFile(delete=False)
-			listFile.write(json.dumps(itemsList, default=lambda obj: datetime.datetime.strftime(obj, "%Y-%m-%dT%H:%M:%S.%f")))
-			listFile.close()
-			
-			# Add file to zip
-			zipFile.write(listFile.name, "list.json")
-			
-			# Delete temp file
-			os.unlink(listFile.name)
+		#FIXME: let media use the resources attribute in a way similar
+		#to topo.
+		lesson = copy.deepcopy(lesson)
+		lesson.resources = {
+		}
+		for item in lesson.list["items"]:
+			if not item["remote"]:
+				resources[os.path.basename(item["filename"])] = item["filename"]
+				item["filename"] = os.path.basename(item["filename"])
+
+		self._otxxSaver.save(lesson, path, resources.keys(), compression)
 
 def init(moduleManager):
 	return OpenTeachingMediaSaverModule(moduleManager)
