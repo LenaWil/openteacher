@@ -111,11 +111,11 @@ class MediaLessonModule(object):
 	def loadFromLesson(self, lessonl, path):
 		for lesson in self.createLesson():
 			# Load the list
-			self.enterWidget.list = lessonl
+			self.enterWidget.list = lessonl["list"]
 			# Update the widgets
 			self.enterWidget.updateWidgets()
 			# Update the results widget
-			self.resultsWidget.updateList(lessonl, "media")
+			self.resultsWidget.updateList(lessonl["list"], "media")
 
 """
 Lesson object (that means: this techwidget+enterwidget)

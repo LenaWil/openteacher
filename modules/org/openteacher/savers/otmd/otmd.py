@@ -89,7 +89,7 @@ class OpenTeachingMediaSaverModule(object):
 		for resourceName in lesson_clone.resources:
 			resourceFilenames[resourceName] = resourceName
 
-		self._otxxSaver.save(lesson, path, resourceFilenames, compression)
+		self._otxxSaver.save(lesson_clone, path, resourceFilenames, compression)
 
 def init(moduleManager):
 	return OpenTeachingMediaSaverModule(moduleManager)

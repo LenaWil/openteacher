@@ -66,12 +66,12 @@ class OtxxLoaderModule(object):
 
 			resources = {}
 			for resourceKey, filename in resourceFilenames.iteritems():
-				path = tempfile.mkstemp()[1]
-				self._tempPaths.add(path)
+				temppath = tempfile.mkstemp()[1]
+				self._tempPaths.add(temppath)
 				resourceFile = zipFile.open(filename)
-				shutil.copyfileobj(resourceFile, open(path, 'w'))
+				shutil.copyfileobj(resourceFile, open(temppath, 'w'))
 
-				resources[resourceKey] = path
+				resources[resourceKey] = temppath
 
 		# Add to recently opened
 		try:
