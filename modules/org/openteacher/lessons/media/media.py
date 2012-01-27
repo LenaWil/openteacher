@@ -108,14 +108,14 @@ class MediaLessonModule(object):
 		self.lessonCreationFinished.send()
 		return lessons
 	
-	def loadFromList(self, list, path):
+	def loadFromLesson(self, lessonl, path):
 		for lesson in self.createLesson():
 			# Load the list
-			self.enterWidget.itemList = list
+			self.enterWidget.list = lessonl
 			# Update the widgets
 			self.enterWidget.updateWidgets()
 			# Update the results widget
-			self.resultsWidget.updateList(list, "media")
+			self.resultsWidget.updateList(lessonl, "media")
 
 """
 Lesson object (that means: this techwidget+enterwidget)
@@ -141,6 +141,10 @@ class Lesson(object):
 		self.fileTab.tabChanged.handle(self.tabChanged)
 		self.teachWidget.lessonDone.connect(self.toEnterTab)
 		self.teachWidget.listChanged.connect(self.teachListChanged)
+	
+	@property
+	def list(self):
+		return self.enterWidget.list
 	
 	def stop(self):
 		# Stop lesson if in one

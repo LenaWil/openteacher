@@ -113,18 +113,18 @@ class TeachTopoLessonModule(object):
 		self.lessonCreationFinished.send()
 		return lessons
 	
-	def loadLesson(self, lesson, path):
+	def loadFromLesson(self, lessonl, path):
 		for lesson in self.createLesson():
 			lesson.enterWidget.mapChooser.setCurrentIndex(0)
-			lesson.enterWidget.mapChooser.insertItem(0, os.path.basename(path), unicode({'mapPath': lesson["resources"]["mapPath"], 'knownPlaces': ''}))
+			lesson.enterWidget.mapChooser.insertItem(0, os.path.basename(path), unicode({'mapPath': lessonl["resources"]["mapPath"], 'knownPlaces': ''}))
 			lesson.enterWidget.mapChooser.setCurrentIndex(0)
 			
 			# Load the list
-			lesson.enterWidget.places = lesson["list"]
+			lesson.enterWidget.places = lessonl["list"]
 			# Update the widgets
 			lesson.enterWidget.updateWidgets()
 			# Update results widget
-			lesson.resultsWidget.updateList(lesson["list"], "topo")
+			lesson.resultsWidget.updateList(lessonl["list"], "topo")
 
 #FIXME: list-property: AttributeError: 'EnterWidget' object has no attribute 'places'
 #so how to get it?
@@ -153,6 +153,10 @@ class Lesson(object):
 		fileTab.tabChanged.handle(self.tabChanged)
 		self.teachWidget.lessonDone.connect(self.toEnterTab)
 		self.teachWidget.listChanged.connect(self.teachListChanged)
+	
+	@property
+	def list(self):
+		return self.enterWidget.list
 	
 	def stop(self):
 		# Stop lesson if in one
