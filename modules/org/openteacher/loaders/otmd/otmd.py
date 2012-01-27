@@ -19,15 +19,6 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import zipfile
-import tempfile
-import os
-import uuid
-import copy
-import datetime
-try:
-	import json
-except:
-	import simplejson
 
 class OpenTeachingMediaLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -38,10 +29,16 @@ class OpenTeachingMediaLoaderModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
+		self.requires = (
+			self._mm.mods(type="otxxLoader"),
+		)
 
 	def enable(self):
 		self.name = ("Open Teaching Media (.otmd) loader", self)
 		self.loads = {"otmd": ["media"]}
+
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._otxxLoader = self._modules.default("active", type="otxxLoader")
 
 		self.active = True
 
@@ -51,41 +48,21 @@ class OpenTeachingMediaLoaderModule(object):
 		del self.name
 		del self.loads
 
+		del self._modules
+		del self._otxxLoader
+
 	def getFileTypeOf(self, path):
 		if path.endswith(".otmd"):
 			return "media"
-	
-	def _stringsToDatetimes(self, list):
-		for test in list["tests"]:
-			for result in test["results"]:
-				result["active"]["start"] = datetime.datetime.strptime(result["active"]["start"], "%Y-%m-%dT%H:%M:%S.%f")
-				result["active"]["end"] = datetime.datetime.strptime(result["active"]["end"], "%Y-%m-%dT%H:%M:%S.%f")
-		
-		return list
-	
+
 	def load(self, path):
-		# Open zipfile
+		resourceFilenames = {}
 		with zipfile.ZipFile(path, "r") as zipFile:
-			# Open json file with places
-			listFile = zipFile.open("list.json")
-			wordList = listFile.readlines()
-			listFile.close()
-			
-			id = str(uuid.uuid1())
-			tempFilePath = os.path.join(tempfile.gettempdir(), "openteacher\org\loaders\otmd\\" + id)
-			
-			list = self._stringsToDatetimes(json.loads(wordList[0]))
-		
-			for name in zipFile.namelist():
-				if name != "list.json":
-					zipFile.extract(name, tempFilePath)
-					# Search for same name
-					for item in list["items"]:
-						if item["filename"] == name:
-							item["filename"] = os.path.abspath(os.path.join(tempFilePath, name))
-							break
-			
-			return list
+			names = zipFile.namelist()
+		names.remove("list.json")
+		for name in names:
+			resourceFilenames[name] = name
+		return self._otxxLoader.load(path, resourceFilenames)
 
 def init(moduleManager):
 	return OpenTeachingMediaLoaderModule(moduleManager)

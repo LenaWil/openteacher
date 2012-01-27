@@ -21,6 +21,10 @@
 
 import zipfile
 import copy
+import os
+
+class Lesson(object):
+	pass
 
 class OpenTeachingMediaSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -73,15 +77,19 @@ class OpenTeachingMediaSaverModule(object):
 
 		#FIXME: let media use the resources attribute in a way similar
 		#to topo.
-		lesson = copy.deepcopy(lesson)
-		lesson.resources = {
-		}
-		for item in lesson.list["items"]:
+		lesson_clone = Lesson()
+		lesson_clone.list = copy.deepcopy(lesson.list)
+		lesson_clone.resources = {}
+		for item in lesson_clone.list["items"]:
 			if not item["remote"]:
-				resources[os.path.basename(item["filename"])] = item["filename"]
+				lesson_clone.resources[os.path.basename(item["filename"])] = item["filename"]
 				item["filename"] = os.path.basename(item["filename"])
 
-		self._otxxSaver.save(lesson, path, resources.keys(), compression)
+		resourceFilenames = {}
+		for resourceName in lesson_clone.resources:
+			resourceFilenames[resourceName] = resourceName
+
+		self._otxxSaver.save(lesson, path, resourceFilenames, compression)
 
 def init(moduleManager):
 	return OpenTeachingMediaSaverModule(moduleManager)

@@ -79,7 +79,10 @@ class Teach2000LoaderModule(object):
 
 			wordList["items"].append(word)
 			#FIXME: load tests, also results in the words!
-		return wordList
+		return {
+			"resources": {},
+			"list": wordList
+		}
 
 def init(manager):
 	return Teach2000LoaderModule(manager)

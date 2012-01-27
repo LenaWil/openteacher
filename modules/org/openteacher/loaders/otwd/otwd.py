@@ -35,14 +35,15 @@ class OpenTeachingWordsLoaderModule(object):
 		self._mm = moduleManager
 		self.uses = (
 			self._mm.mods(type="translator"),
-			self._mm.mods(type="recentlyOpened"),
+			self._mm.mods(type="otxxLoader"),
 		)
 
 	def enable(self):
 		self.name = "Open Teaching Words (.otwd) loader"
 		self.loads = {"otwd": ["words"]}
-		
+
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._otxxLoader = self._modules.default("active", type="otxxLoader")
 
 		self.active = True
 
@@ -52,48 +53,15 @@ class OpenTeachingWordsLoaderModule(object):
 		del self.name
 		del self.loads
 
+		del self._modules
+		del self._otxxLoader
+
 	def getFileTypeOf(self, path):
 		if path.endswith(".otwd"):
 			return "words"
 
-	def _parseDt(self, data):
-		return datetime.datetime.strptime(data, "%Y-%m-%dT%H:%M:%S.%f")
-
 	def load(self, path):
-		otwdzip = zipfile.ZipFile(path, "r")
-		listFile = otwdzip.open("list.json")
-		list = json.load(listFile)
-		for item in list["items"]:
-			try:
-				item["created"] = self._parseDt(item["created"])
-			except KeyError:
-				pass
-		for test in list["tests"]:
-			for pause in test["pauses"]:
-				pause["start"] = self._parseDt(pause["start"])
-				pause["end"] = self._parseDt(pause["end"])
-			for result in test["results"]:
-				try:
-					active = result["active"]
-				except AttributeError:
-					pass
-				else:
-					active["start"] = self._parseDt(active["start"])
-					active["end"] = self._parseDt(active["end"])
-		
-		# Add to recently opened
-		recentlyOpenedModule = self._modules.default("active", type="recentlyOpened")
-		recentlyOpenedModule.add(**{
-			"identifier": "org.openteacher.loaders.otwd.recentlyOpened." + str(uuid.uuid4()),
-			"label": list["title"],
-			"args": {},
-			"kwargs": { "path": path },
-			"method": "load",
-			"moduleArgsSelector": ("active",),
-			"moduleKwargsSelector": { "type": "loader" },
-		})
-		
-		return list
+		return self._otxxLoader.load(path)
 
 def init(moduleManager):
 	return OpenTeachingWordsLoaderModule(moduleManager)

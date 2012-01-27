@@ -51,11 +51,7 @@ class OpenTeachingTopoSaverModule(object):
 		del self.saves
 
 	def save(self, type, lesson, path):
-		resourceFilenames = {
-			"mapPath": "map" + os.path.splitext(
-				lesson.resources["mapPath"]
-			)[1]
-		}
+		resourceFilenames = {"mapPath": "map.image"}
 		self._otxxSaver.save(lesson, path, resourceFilenames)
 
 def init(moduleManager):

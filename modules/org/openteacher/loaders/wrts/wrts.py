@@ -97,7 +97,10 @@ class WrtsLoaderModule(object):
 
 			counter += 1
 
-		return wordList
+		return {
+			"resources": {},
+			"list": wordList,
+		}
 
 def init(moduleManager):
 	return WrtsLoaderModule(moduleManager)

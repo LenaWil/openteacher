@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
+#	Copyright 2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,29 +19,26 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import zipfile
-import tempfile
-import os
-import uuid
-import datetime
-try:
-	import json
-except:
-	import simplejson
-
 class OpenTeachingTopoLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(OpenTeachingTopoLoaderModule, self).__init__(*args, **kwargs)
 
-		self.type = "load"
 		self._mm = moduleManager
+		self.type = "load"
+
 		self.uses = (
 			self._mm.mods(type="translator"),
+		)
+		self.requires = (
+			self._mm.mods(type="otxxLoader"),
 		)
 
 	def enable(self):
 		self.name = "Open Teaching Topo (.ottp) loader"
 		self.loads = {"ottp": ["topo"]}
+
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._otxxLoader = self._modules.default("active", type="otxxLoader")
 
 		self.active = True
 
@@ -50,44 +48,15 @@ class OpenTeachingTopoLoaderModule(object):
 		del self.name
 		del self.loads
 
+		del self._modules
+		del self._otxxLoader
+
 	def getFileTypeOf(self, path):
 		if path.endswith(".ottp"):
 			return "topo"
 
-	def _stringsToDatetimes(self, list):
-		for test in list["tests"]:
-			for result in test["results"]:
-				result["active"]["start"] = datetime.datetime.strptime(result["active"]["start"], "%Y-%m-%dT%H:%M:%S.%f")
-				result["active"]["end"] = datetime.datetime.strptime(result["active"]["end"], "%Y-%m-%dT%H:%M:%S.%f")
-		
-		return list
-
 	def load(self, path):
-		# Open zipfile
-		with zipfile.ZipFile(path, "r") as zipFile:
-			listFile = zipFile.open("list.json")
-			wordList = listFile.readlines()
-			listFile.close()
-			
-			tempFilePath = os.path.join(tempfile.gettempdir(), "openteacher\org\loaders\ottp\\" + str(uuid.uuid1()))
-			
-			# Open map
-			for name in zipFile.namelist():
-				if os.path.splitext(name)[0] == "map":
-					zipFile.extract(name, tempFilePath)
-					mapName = name
-					break
-			
-			tempFilePath = os.path.join(tempFilePath, name)
-			
-			feedback = {
-				"list": self._stringsToDatetimes(json.loads(wordList[0])),
-				"resources": {
-					"mapPath": tempFilePath
-				}
-			}
-			
-			return feedback
+		return self._otxxLoader.load(path, {"mapPath": "map.image"})
 
 def init(moduleManager):
 	return OpenTeachingTopoLoaderModule(moduleManager)
