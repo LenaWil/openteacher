@@ -117,11 +117,11 @@ class EnterMap(Map):
 	"""
 	Override base class _setPicture with one that uses an EnterMapScene instead of QGraphicsScene
 	"""
-	def _setPicture(self, picture):
+	def _setPicture(self, filepath):
 		# Create a new scene
 		self.scene = EnterMapScene(self)
 		# Set the pixmap of the scene
-		self.pixmap = QtGui.QPixmap(picture)
+		self.pixmap = QtGui.QPixmap(filepath)
 		self.scene.addPixmap(self.pixmap)
 		# Set the scene
 		self.setScene(self.scene)

@@ -116,18 +116,17 @@ class TeachTopoLessonModule(object):
 	def loadFromLesson(self, lessonl, path):
 		for lesson in self.createLesson():
 			lesson.enterWidget.mapChooser.setCurrentIndex(0)
+			
 			lesson.enterWidget.mapChooser.insertItem(0, os.path.basename(path), unicode({'mapPath': lessonl["resources"]["mapPath"], 'knownPlaces': ''}))
 			lesson.enterWidget.mapChooser.setCurrentIndex(0)
 			
 			# Load the list
-			lesson.enterWidget.places = lessonl["list"]
+			lesson.enterWidget.list = lessonl["list"]
 			# Update the widgets
 			lesson.enterWidget.updateWidgets()
 			# Update results widget
 			lesson.resultsWidget.updateList(lessonl["list"], "topo")
 
-#FIXME: list-property: AttributeError: 'EnterWidget' object has no attribute 'places'
-#so how to get it?
 class Lesson(object):
 	"""Lesson object (that means: this techwidget+enterwidget)"""
 

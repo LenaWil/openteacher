@@ -66,12 +66,15 @@ class OtxxLoaderModule(object):
 
 			resources = {}
 			for resourceKey, filename in resourceFilenames.iteritems():
-				temppath = tempfile.mkstemp()[1]
-				self._tempPaths.add(temppath)
+				tf = tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(filename)[1])
+				path2 = tf.name
+				
+				self._tempPaths.add(path2)
 				resourceFile = zipFile.open(filename)
-				shutil.copyfileobj(resourceFile, open(temppath, 'w'))
-
-				resources[resourceKey] = temppath
+				
+				shutil.copyfileobj(resourceFile, tf)
+				
+				resources[resourceKey] = path2
 
 		# Add to recently opened
 		try:
@@ -97,6 +100,7 @@ class OtxxLoaderModule(object):
 	def _cleanupTempPaths(self):
 		if hasattr(self, "_tempPaths"):
 			for path in self._tempPaths:
+				print "Removing ", path
 				os.remove(path)
 
 	def enable(self):
