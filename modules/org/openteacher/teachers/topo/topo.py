@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Milan Boers
+#	Copyright 2011-2012, Milan Boers
 #	Copyright 2011, Marten de Vries
 #
 #	This file is part of OpenTeacher.
@@ -185,7 +185,7 @@ class TeachTopoLesson(object):
 	"""
 	Ends the lesson
 	"""
-	def endLesson(self):
+	def endLesson(self, showResults=True):
 		self.teachWidget.inLesson = False
 		
 		# Update and go to results widget, only if the test is progressing
@@ -194,9 +194,13 @@ class TeachTopoLesson(object):
 		except IndexError:
 			pass
 		else:
-			# Go to results widget
-			module = base._modules.default("active", type="resultsDialog")
-			module.showResults(self.itemList, "topo", self.itemList["tests"][-1])
+			if showResults:
+				try:
+					# Go to results widget
+					module = base._modules.default("active", type="resultsDialog")
+					module.showResults(self.itemList, "topo", self.itemList["tests"][-1])
+				except IndexError:
+					pass
 		
 		self.teachWidget.lessonDone.emit()
 	
@@ -289,8 +293,8 @@ class TeachWidget(QtGui.QWidget):
 	"""
 	Stops the lesson
 	"""
-	def stopLesson(self):
-		self.lesson.endLesson()
+	def stopLesson(self, showResults=True):
+		self.lesson.endLesson(showResults)
 		
 		del self.lesson
 	
@@ -345,6 +349,7 @@ class TopoTeacherModule(object):
 		
 		self.uses = (
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="resultsDialog"),
 		)
 		self.requires = (
 			self._mm.mods(type="topoMaps"),

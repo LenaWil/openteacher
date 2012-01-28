@@ -231,7 +231,7 @@ class TeachWidget(QtGui.QStackedWidget):
 		self._lessonType = lessonTypeModule.createLessonType(self.list, indexes)
 
 		self._lessonType.newItem.handle(self._newItem)
-		self._lessonType.lessonDone.handle(self._lessonDone)
+		self._lessonType.lessonDone.handle(self.stopLesson)
 
 		for widget in self._teachTypeWidgets:
 			widget.updateLessonType(self._lessonType)
@@ -272,12 +272,16 @@ class TeachWidget(QtGui.QStackedWidget):
 		self._lessonWidget.progressBar.setMaximum(self._lessonType.totalItems)
 		self._lessonWidget.progressBar.setValue(self._lessonType.askedItems)
 
-	def _lessonDone(self):
+	def stopLesson(self, showResults=True):
 		self._applicationActivityChanged.unhandle(self._activityChanged)
 		self._updateProgress()
-
-		for module in self._mm.mods("active", type="resultsDialog"):
-			module.showResults(self.list, "words", self.list["tests"][-1])
+		
+		if showResults:
+			try:
+				module = self._modules.default("active", type="resultsDialog")
+				module.showResults(self.list, "words", self.list["tests"][-1])
+			except IndexError:
+				pass
 		
 		self.inLesson = False
 		
@@ -355,6 +359,7 @@ class WordsTeacherModule(object):
 			#dialog (since they're already on the teach settings widget)
 			self._mm.mods(type="itemModifier"),
 			self._mm.mods(type="listModifier"),
+			self._mm.mods(type="resultsDialog"),
 		)
 		self.requires = (
 			self._mm.mods(type="wordsStringComposer"),

@@ -122,8 +122,8 @@ class TeachWidget(QtGui.QWidget):
 	"""
 	Stops the lesson
 	"""
-	def stopLesson(self):
-		self.lesson.endLesson()
+	def stopLesson(self, showResults=True):
+		self.lesson.endLesson(showResults)
 		del self.lesson
 	
 	"""
@@ -152,9 +152,6 @@ class TeachMediaLesson(object):
 		self.lessonType.start()
 		
 		self.teachWidget.inLesson = True
-		
-		#self.startThinkingTime
-		#self.endThinkingTime
 		
 		# Reset the progress bar
 		self.teachWidget.progress.setValue(0)
@@ -215,7 +212,7 @@ class TeachMediaLesson(object):
 	"""
 	Ends the lesson
 	"""
-	def endLesson(self):
+	def endLesson(self, showResults=True):
 		self.teachWidget.inLesson = False
 
 		# stop media
@@ -227,9 +224,13 @@ class TeachMediaLesson(object):
 		except IndexError:
 			pass
 		else:
-			# Go to results widget
-			module = base._modules.default("active", type="resultsDialog")
-			module.showResults(self.itemList, "media", self.itemList["tests"][-1])
+			if showResults:
+				try:
+					# Go to results widget
+					module = base._modules.default("active", type="resultsDialog")
+					module.showResults(self.itemList, "media", self.itemList["tests"][-1])
+				except IndexError:
+					pass
 		
 		self.teachWidget.lessonDone.emit()
 	
@@ -255,6 +256,7 @@ class MediaTeacherModule(object):
 		
 		self.uses = (
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="resultsDialog"),
 		)
 		self.requires = (
 			self._mm.mods(type="mediaDisplay"),

@@ -51,7 +51,7 @@ class LessonDialogsModule(object):
 				warningD.setText("Are you sure you want to go back to the teach tab? This will end your lesson!")
 				feedback = warningD.exec_()
 				if feedback == QtGui.QMessageBox.Ok:
-					teachWidget.stopLesson()
+					teachWidget.stopLesson(showResults=False)
 				else:
 					fileTab.currentTab = teachWidget
 		elif fileTab.currentTab == teachWidget:
