@@ -29,9 +29,6 @@ class TeachTopoLessonModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TeachTopoLessonModule, self).__init__(*args, **kwargs)
 		
-		global base
-		base = self
-		
 		self._mm = moduleManager
 		self.counter = 1
 		
@@ -143,7 +140,7 @@ class Lesson(object):
 
 		self.fileTab = fileTab
 		
-		self.stopped = base._modules.default(type="event").createEvent()
+		self.stopped = self._modules.default(type="event").createEvent()
 		
 		self.module = self
 		self.dataType = "topo"
