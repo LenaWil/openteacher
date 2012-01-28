@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -21,25 +21,109 @@
 import webbrowser
 import cherrypy
 import inspect
+import os
+import types
+
+class ResourcesHandler(object):
+	def __init__(self, templates, *args, **kwargs):
+		super(ResourcesHandler, self).__init__(*args, **kwargs)
+
+		self._templates = templates
+
+	@cherrypy.expose
+	def style_css(self):
+		cherrypy.response.headers['Content-Type']= 'text/css'
+		return open(self._templates["style"]).read()
 
 class ModulesHandler(object):
 	def __init__(self, mods, templates, *args, **kwargs):
 		super(ModulesHandler, self).__init__(*args, **kwargs)
 
-		self._mods = mods
+		self._mods = {}
+		for mod in mods:
+			id = os.path.split(mod.__class__.__file__)[0]
+			self._mods[id] = mod
 		self._templates = templates
+
+	def _emptyMethod(self):
+		pass
+
+	def _newlineToBr(self, text):
+		if text:
+			return text.replace("\n", "<br />\n")
+		else:
+			return text
 
 	@cherrypy.expose
 	def index(self):
 		t = pyratemp.Template(filename=self._templates["modules"])
-		mods = sorted(mod.__class__.__module__ for mod in self._mods)
 		return t(**{
-			"mods": mods
+			"mods": sorted(self._mods.keys())
 		})
 
+	def _isFunction(self, mod, x):
+		try:
+			obj = getattr(mod.__class__, x)
+		except AttributeError:
+			obj = getattr(mod, x)
+		return isinstance(obj, types.MethodType)
+
+	def _modsForRequirement(self, selectors):
+		requirements = []
+		for selector in selectors:
+			selectorResults = set()
+			requiredMods = set(selector)
+			for requiredMod in requiredMods:
+				selectorResults.add((
+					os.path.split(requiredMod.__class__.__file__)[0],
+					requiredMod.__class__.__name__
+				))
+		requirements.append(selectorResults)
+		return requirements
+
 	@cherrypy.expose
-	def default(self, module):
-		return module
+	def modules(self, *args):
+		mod = self._mods["modules/" + "/".join(args)]
+
+		attrs = dir(mod)
+		methods = filter(lambda x: self._isFunction(mod, x), attrs)
+		properties = set(attrs) - set(methods)
+
+		checkPublic = lambda x: not x.startswith("_")
+		methods = filter(checkPublic, methods)
+		properties = filter(checkPublic, properties)
+
+		#remove special properties
+		properties = set(properties) - set(["type", "uses", "requires"])
+
+		#uses
+		try:
+			uses = self._modsForRequirement(mod.uses)
+		except AttributeError:
+			uses = set()
+
+		#requires
+		try:
+			requires = self._modsForRequirement(mod.requires)
+		except AttributeError:
+			requires = set()
+
+		methodDocs = {}
+		for method in methods:
+			methodObj = getattr(mod, method)
+			methodDocs[method] = self._newlineToBr(methodObj.__doc__)
+
+		t = pyratemp.Template(filename=self._templates["module"])
+		return t(**{
+			"name": mod.__class__.__name__,
+			"moddoc": self._newlineToBr(mod.__doc__),
+			"type": getattr(mod, "type", None),
+			"uses": uses,
+			"requires": requires,
+			"methods": sorted(methods),
+			"methodDocs": methodDocs,
+			"properties": sorted(properties),
+		})
 
 class CodeDocumentationModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -54,9 +138,13 @@ class CodeDocumentationModule(object):
 
 		mods = self._modules.sort()
 		templates = {
-			"modules": self._mm.resourcePath("modules.html")
+			"modules": self._mm.resourcePath("modules.html"),
+			"module": self._mm.resourcePath("module.html"),
+			"style": self._mm.resourcePath("style.css")
 		}
-		cherrypy.quickstart(ModulesHandler(mods, templates))
+		root = ModulesHandler(mods, templates)
+		root.resources = ResourcesHandler(templates)
+		cherrypy.quickstart(root)
 
 	def enable(self):
 		global pyratemp
