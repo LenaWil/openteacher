@@ -60,20 +60,21 @@ class MediaLessonModule(object):
 				self._mm.resourcePath("translations")
 			)
 
+		module = self._modules.default("active", type="ui")
+		self._button = module.addLessonCreateButton()
+		self._button.clicked.handle(self.createLesson)
+		self._button.text = _("Create media lesson") #FIXME: retranslate
+
 		self.lessonCreated = self._modules.default(type="event").createEvent()
 		self.lessonCreationFinished = self._modules.default(type="event").createEvent()
-		
-		module = self._modules.default("active", type="ui")
-		event = module.addLessonCreateButton(_("Create media lesson"))
-		event.handle(self.createLesson)
 		
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
+		del self._button
 		del self.dataType
-		del self.name
 		del self.lessonCreated
 		del self.lessonCreationFinished
 	

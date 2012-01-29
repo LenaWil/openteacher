@@ -19,6 +19,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+#FIXME: replace the missing errors.* module that this module has because
+#of 2.x.
+
 class WrtsApiModule(object):
 	def __init__(self, moduleManager):
 		super(WrtsApiModule, self).__init__()
@@ -36,9 +39,14 @@ class WrtsApiModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._uiModule = self._modules.default("active", type="ui")
 		self._activeDialogs = set()
 
 		self._ui = self._mm.import_("ui")
+		self._api = self._mm.import_("api")
+
+		self._button = self._uiModule.addLessonLoadButton()
+		self._button.clicked.handle(self.importFromWrts)
 
 		try:
 			translator = self._modules.default("active", type="translator")
@@ -48,14 +56,8 @@ class WrtsApiModule(object):
 			translator.languageChanged.handle(self._retranslate)
 		self._retranslate()
 
-		self._api = self._mm.import_("api")
-		self._references = set()
-
 		self._wrtsConnection = self._api.WrtsConnection(self._mm)
 
-		event = self._uiModule.addLessonLoadButton("Import from WRTS")#FIXME: (re)translate
-		event.handle(self.importFromWrts)
-		self._references.add(event)
 		self.active = True
 
 	def _retranslate(self):
@@ -70,23 +72,23 @@ class WrtsApiModule(object):
 			)
 		self._ui._, self._ui.ngettext = _, ngettext
 
+		self._button.text = "Import from WRTS"
+
 		for dialog in self._activeDialogs:
 			dialog.retranslate()
 			dialog.tab.title = dialog.windowTitle()
 
-	@property
-	def _uiModule(self):
-		return self._modules.default("active", type="ui")
-
 	def disable(self):
 		self.active = False
 
+		self._button.remove()
+
 		del self._modules
+		del self._uiModule
 		del self._activeDialogs
-		del self.name
 		del self._ui
 		del self._api
-		del self._references
+		del self._button
 		del self._wrtsConnection
 
 	def importFromWrts(self):

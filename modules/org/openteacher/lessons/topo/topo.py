@@ -60,6 +60,12 @@ class TeachTopoLessonModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
+
+		# Add the button to start
+		module = self._modules.default("active", type="ui")
+		self._button = module.addLessonCreateButton()
+		self._button.clicked.handle(self.createLesson)
+		self._button.text = _("Create topography lesson") #FIXME: retranslate!
 		
 		# Data type
 		self.dataType = "topo"
@@ -68,17 +74,12 @@ class TeachTopoLessonModule(object):
 		self.lessonCreated = self._modules.default(type="event").createEvent()
 		self.lessonCreationFinished = self._modules.default(type="event").createEvent()
 		
-		# Add the button to start
-		module = self._modules.default("active", type="ui")
-		event = module.addLessonCreateButton(_("Create topography lesson"))
-		event.handle(self.createLesson)
-		
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
-		del self.name
+		del self._button
 		del self.dataType
 		del self.lessonCreated
 		del self.lessonCreationFinished

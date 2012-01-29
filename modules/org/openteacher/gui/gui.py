@@ -19,6 +19,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+#FIXME: sort buttons on the start tab and make the remove buttons of it
+#work.
+
 from PyQt4 import QtGui
 import sys
 import platform
@@ -73,6 +76,32 @@ class LessonFileTab(FileTab):
 		lambda self: self._widget.currentWidget(),
 		lambda self, value: self._widget.setCurrentWidget(value)
 	)
+
+class Button(object):
+	def __init__(self, qtButton, createEvent, removeMethod, *args, **kwargs):
+		super(Button, self).__init__(*args, **kwargs)
+
+		self.clicked = createEvent()
+
+		self._qtButton = qtButton
+		#Lambda because otherwise Qt's argument checked is passed ->
+		#error.
+		self._qtButton.clicked.connect(lambda: self.clicked.send())
+		
+		self._removeMethod = removeMethod
+
+	text = property(
+		lambda self: self._qtButton.text(),
+		lambda self, value: self._qtButton.setText(value)
+	)
+
+	icon = property(
+		lambda self: self._qtButton.icon(),
+		lambda self, icon: self._qtButton.setIcon(icon)
+	)
+
+	def remove(self):
+		self._removeMethod(self._qtButton)
 
 class GuiModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -247,21 +276,15 @@ class GuiModule(object):
 
 	def addLessonCreateButton(self, *args, **kwargs):
 		button = self._widget.tabWidget.startWidget.addLessonCreateButton(*args, **kwargs)
+		createEvent = self._modules.default(type="event").createEvent
 
-		event = self._modules.default(type="event").createEvent()
-		#Lambda's because otherwise Qt's argument checked is passed ->
-		#error.
-		button.clicked.connect(lambda: event.send())
-		return event
+		return Button(button, createEvent, self._widget.tabWidget.startWidget.removeLessonCreateButton)
 
 	def addLessonLoadButton(self, *args, **kwargs):
 		button = self._widget.tabWidget.startWidget.addLessonLoadButton(*args, **kwargs)
+		createEvent = self._modules.default(type="event").createEvent
 
-		event = self._modules.default(type="event").createEvent()
-		#Lambda's because otherwise Qt's argument checked is passed ->
-		#error.
-		button.clicked.connect(lambda: event.send())
-		return event
+		return Button(button, createEvent, self._widget.tabWidget.startWidget.removeLessonLoadButton)
 
 	def addFileTab(self, enterWidget=None, teachWidget=None, resultsWidget=None, previousTabOnClose=False):
 		widget = self._ui.LessonTabWidget(enterWidget, teachWidget, resultsWidget)

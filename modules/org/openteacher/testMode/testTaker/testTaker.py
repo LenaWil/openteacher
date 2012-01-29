@@ -84,8 +84,9 @@ class TestModeTestTaker(object):
 		
 		# FIXME: make menu option
 		module = self._modules.default("active", type="ui")
-		event = module.addLessonCreateButton(_("Take test"))
-		event.handle(self.showTestTaker)
+		self._button = module.addLessonCreateButton()
+		self._button.clicked.handle(self.showTestTaker)
+		self._button.text = _("Take test") #FIXME: retranslate!
 		
 		self.active = True
 	

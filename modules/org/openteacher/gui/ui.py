@@ -87,9 +87,11 @@ class LessonTabWidget(QtGui.QTabWidget):
 		self.setDocumentMode(True)
 
 class StartTabButton(QtGui.QPushButton):
-	def __init__(self, icon=None, text=u"", *args, **kwargs):
-		super(StartTabButton, self).__init__(icon, u"", *args, **kwargs)
-		self.setText(text)
+	def __init__(self, *args, **kwargs):
+		super(StartTabButton, self).__init__(*args, **kwargs)
+		#our setText is reimplemented and the QPushButton constructor
+		#doesn't call setText by default.
+		self.setText(self.text())
 
 		self.setSizePolicy(
 			QtGui.QSizePolicy.MinimumExpanding,
@@ -190,8 +192,8 @@ class StartWidget(QtGui.QSplitter):
 		self.loadLessonGroupBox.setTitle(_("Load lesson:"))
 		self.recentlyOpenedGroupBox.setTitle(_("Recently opened:"))
 
-	def addLessonCreateButton(self, text, icon=QtGui.QIcon()):
-		button = StartTabButton(icon, text, self)
+	def addLessonCreateButton(self):
+		button = StartTabButton()
 
 		self.createLessonLayout.addWidget(
 			button,
@@ -206,8 +208,8 @@ class StartWidget(QtGui.QSplitter):
 
 		return button
 
-	def addLessonLoadButton(self, text, icon=QtGui.QIcon()):
-		button = StartTabButton(icon, text, self)
+	def addLessonLoadButton(self):
+		button = StartTabButton()
 
 		self.loadLessonLayout.addWidget(
 			button,
@@ -221,6 +223,57 @@ class StartWidget(QtGui.QSplitter):
 			self._loadLessonCurrentColumn = 0
 
 		return button
+
+	def removeLessonCreateButton(self, button):
+		i = self.createLessonLayout.indexOf(button)
+		row, column = self.createLessonLayout.getItemPosition(i)[:2]
+
+		self.createLessonLayout.removeWidget(button)
+		prevColumn = column
+		column += 1
+		if column == 2:
+			column = 0
+			row += 1
+		while row != self.createLessonLayout.rowCount():
+			item = self.createLessonLayout.itemAtPosition(row, column)
+			self.createLessonLayout.addItem(item, row, column)
+			prevColumn = column
+			column += 1
+			if column == 2:
+				column = 0
+				row += 1
+
+		self._createLessonCurrentColumn -= 1
+		if self._createLessonCurrentColumn == 0:
+			self._createLessonCurrentRow -= 1
+			self._createLessonCurrentColumn = 1
+
+	def removeLessonLoadButton(self, button):
+		i = self.loadLessonLayout.indexOf(button)
+		row, column = self.createLessonLayout.getItemPosition(i)[:2]
+
+		self.loadLessonLayout.removeWidget(button)
+		button.setParent(None)
+		prevColumn = column
+		column += 1
+		if column == 2:
+			column = 0
+			row += 1
+		while True:
+			item = self.loadLessonLayout.itemAtPosition(row, column)
+			if not item:
+				break
+			self.loadLessonLayout.addItem(item, row, column)
+			prevColumn = column
+			column += 1
+			if column == 2:
+				column = 0
+				row += 1
+
+		self._loadLessonCurrentColumn -= 1
+		if self._loadLessonCurrentColumn == 0:
+			self._loadLessonCurrentRow -= 1
+			self._loadLessonCurrentColumn = 1
 
 class FilesTabWidget(QtGui.QTabWidget):
 	def __init__(self, recentlyOpenedViewer, *args, **kwargs):

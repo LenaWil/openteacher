@@ -100,6 +100,9 @@ class PlainTextWordsEntererModule(object):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self._uiModule = self._modules.default("active", type="ui")
 
+		self._button = self._uiModule.addLessonCreateButton()
+		self._button.clicked.handle(self.createLesson)
+
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -107,10 +110,6 @@ class PlainTextWordsEntererModule(object):
 		else:
 			translator.languageChanged.handle(self._retranslate)
 		self._retranslate()
-
-		event = self._uiModule.addLessonCreateButton(_("Create words lesson by entering plain text"))
-		event.handle(self.createLesson)
-		self._references.add(event)
 
 		self.active = True
 
@@ -127,6 +126,8 @@ class PlainTextWordsEntererModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
+
+		self._button.text = _("Create words lesson by entering plain text")
 		for dialog in self._activeDialogs:
 			dialog.retranslate()
 			dialog.tab.title = dialog.windowTitle()
@@ -161,11 +162,12 @@ class PlainTextWordsEntererModule(object):
 	def disable(self):
 		self.active = False
 
+		self._button.remove()
+
 		del self._references
 		del self._modules
 		del self._uiModule
-		del self.name
-		#remove create lesson button
+		del self._button
 
 def init(moduleManager):
 	return PlainTextWordsEntererModule(moduleManager)

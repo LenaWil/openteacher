@@ -38,10 +38,9 @@ class PropertyLabel(QtGui.QLabel):
 		
 		self.setAlignment(QtCore.Qt.AlignRight)
 
-"""
-Widget that shows all the tests
-"""
 class TestsWidget(QtGui.QWidget):
+	"""Widget that shows all the tests"""
+
 	testSelected = QtCore.pyqtSignal(dict)
 	message = QtCore.pyqtSignal(str)
 	def __init__(self, connection, upload, testSelecter, *args, **kwargs):
@@ -67,19 +66,18 @@ class TestsWidget(QtGui.QWidget):
 		
 		self.setLayout(layout)
 
-"""
-The widget you see when you press "Add student"
-"""
 class PersonAdderWidget(QtGui.QWidget):
-	"""
-	Init parameters:
-	- Connection object (like in the testModeConnection module)
-	- The dictionary representing the test this adds persons for
-	- Students view object (like in the testModeStudentsView module)
-	- Students list object (like an object of the StudentsInTestWidget class here)
-	"""
+	"""The widget you see when you press 'Add student'"""
+
 	back = QtCore.pyqtSignal()
 	def __init__(self, connection, info, studentsView, studentsList, *args, **kwargs):
+		"""Init parameters:
+		    - Connection object (like in the testModeConnection module)
+		    - The dictionary representing the test this adds persons for
+		    - Students view object (like in the testModeStudentsView module)
+		    - Students list object (like an object of the StudentsInTestWidget class here)
+
+		"""
 		super(PersonAdderWidget, self).__init__(*args, **kwargs)
 		
 		self.connection = connection
@@ -126,10 +124,9 @@ class PersonAdderWidget(QtGui.QWidget):
 		
 		self.back.emit()
 
-"""
-Widget with the students in a test (second column, middle)
-"""
 class StudentsInTestWidget(QtGui.QListWidget):
+	"""Widget with the students in a test (second column, middle)"""
+
 	def __init__(self, connection, testInfo, answerChecker, *args, **kwargs):
 		super(StudentsInTestWidget, self).__init__(*args, **kwargs)
 		
@@ -237,10 +234,9 @@ class TestActionWidget(QtGui.QStackedWidget):
 	def _personAdded(self):
 		self.setCurrentWidget(self.testInfoWidget)
 
-"""
-Widget that shows the currently selected test (second column)
-"""
 class TestWidget(QtGui.QWidget):
+	"""Widget that shows the currently selected test (second column)"""
+
 	# Parameter = dictionary as parsed tests/<id>/students/<id>
 	takenTestSelected = QtCore.pyqtSignal(dict)
 	message = QtCore.pyqtSignal(str)
@@ -380,10 +376,9 @@ class AnswerChecker(QtCore.QObject):
 			if item["id"] == id:
 				return item
 
-"""
-Widget that shows the currently selected person in a test (third column)
-"""
 class TakenTestWidget(QtGui.QWidget):
+	"""Widget that shows the currently selected person in a test (third column)"""
+
 	message = QtCore.pyqtSignal(str)
 	def __init__(self, connection, studentInTest, compose, answerChecker, *args, **kwargs):
 		super(TakenTestWidget, self).__init__(*args, **kwargs)
@@ -590,15 +585,19 @@ class TestModeTeacherPanelModule(object):
 		
 		# FIXME: make menu option
 		module = self._modules.default("active", type="ui")
-		event = module.addLessonCreateButton(_("Teacher panel"))
-		event.handle(self.showPanel)
-		
+		self._button = module.addLessonCreateButton()
+		self._button.clicked.handle(self.showPanel)
+		self._button.text = _("Teacher panel") #FIXME: retranslate...
+
 		self.dialogShower = self._modules.default("active", type="dialogShower").getDialogShower()
 		
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+		del self._button
+		del self.dialogShower
 	
 	def showPanel(self):
 		# First, login

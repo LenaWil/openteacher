@@ -91,6 +91,9 @@ class WordsLessonModule(object):
 
 		self._lessons = set()
 
+		self._button = self._uiModule.addLessonCreateButton()
+		self._button.clicked.handle(self.createLesson)
+
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -101,12 +104,6 @@ class WordsLessonModule(object):
 
 		self.lessonCreated = self._modules.default(type="event").createEvent()
 		self.lessonCreationFinished = self._modules.default(type="event").createEvent()
-
-		self._references = set()
-
-		event = self._uiModule.addLessonCreateButton(_("Create words lesson")) #FIXME: retranslatable?
-		event.handle(self.createLesson)
-		self._references.add(event)
 
 		self.active = True
 
@@ -123,6 +120,8 @@ class WordsLessonModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
+		
+		self._button.text = _("Create words lesson")
 		for ref in self._lessons:
 			lesson = ref()
 			if lesson:
@@ -130,14 +129,15 @@ class WordsLessonModule(object):
 
 	def disable(self):
 		self.active = False
-		#FIXME: remove create button
+
+		self._button.remove()
+
 		del self.dataType
 		del self._modules
 		del self._uiModule
 		del self._lessons
-		del self.name
 		del self.lessonCreated
-		del self._references
+		del self._button
 
 	def createLesson(self, list=None):
 		if list is None:
