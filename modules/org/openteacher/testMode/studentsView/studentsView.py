@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Milan Boers
+#	Copyright 2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -91,9 +92,9 @@ class TestModeStudentsView(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestModeStudentsView, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
-		
+
 		self.type = "testModeStudentsView"
-		
+
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
@@ -104,11 +105,13 @@ class TestModeStudentsView(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
 	
 	def getStudentsView(self):
 		connection = self._modules.default("active", type="testModeConnection").getConnection()

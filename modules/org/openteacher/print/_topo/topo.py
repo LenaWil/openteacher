@@ -37,7 +37,6 @@ class PrintModule(object):
 		)
 
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self.name = _("Printing module")
 
 		self._pyratemp = self._mm.import_("pyratemp")
 		self.prints = ["topo"]

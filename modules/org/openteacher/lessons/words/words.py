@@ -48,6 +48,11 @@ class Lesson(object):
 		self._teachWidget.lessonDone.connect(self._lessonDone)
 		self._teachWidget.listChanged.connect(self._listChanged)
 
+		self.retranslate()
+
+	def retranslate(self):
+		self.fileTab.title = _("Word lesson: %s") % self.list.get("title", _("Unnamed"))
+
 	def _lessonDone(self):
 		self.fileTab.currentTab = self._enterWidget
 	
@@ -84,6 +89,8 @@ class WordsLessonModule(object):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self._uiModule = self._modules.default("active", type="ui")
 
+		self._lessons = set()
+
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -95,7 +102,6 @@ class WordsLessonModule(object):
 		self.lessonCreated = self._modules.default(type="event").createEvent()
 		self.lessonCreationFinished = self._modules.default(type="event").createEvent()
 
-		self._counter = 1
 		self._references = set()
 
 		event = self._uiModule.addLessonCreateButton(_("Create words lesson")) #FIXME: retranslatable?
@@ -117,7 +123,10 @@ class WordsLessonModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		self.name = _("Words Lesson")
+		for ref in self._lessons:
+			lesson = ref()
+			if lesson:
+				lesson.retranslate()
 
 	def disable(self):
 		self.active = False
@@ -125,9 +134,9 @@ class WordsLessonModule(object):
 		del self.dataType
 		del self._modules
 		del self._uiModule
+		del self._lessons
 		del self.name
 		del self.lessonCreated
-		del self._counter
 		del self._references
 
 	def createLesson(self, list=None):
@@ -162,16 +171,12 @@ class WordsLessonModule(object):
 			resultsWidget.updateList(list, "words")
 			widgets.append(resultsWidget)
 
-		self.fileTab = self._uiModule.addFileTab(
-			_("Word lesson %s") % self._counter, #FIXME: retranslatable
-			*widgets
-		)
+		self.fileTab = self._uiModule.addFileTab(*widgets)
 		self.fileTab.tabChanged.handle(self.tabChanged)
-		
-		self._counter += 1
 
 		lesson = Lesson(self._mm, self.fileTab, self, list, *widgets)
-		self._references.add(lesson)
+		self._lessons.add(weakref.ref(lesson))
+
 		self.lessonCreated.send(lesson)
 		self.lessonCreationFinished.send()
 

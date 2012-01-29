@@ -60,8 +60,6 @@ class MediaLessonModule(object):
 				self._mm.resourcePath("translations")
 			)
 
-		self.name = _("Media Lesson")
-
 		self.lessonCreated = self._modules.default(type="event").createEvent()
 		self.lessonCreationFinished = self._modules.default(type="event").createEvent()
 		
@@ -81,29 +79,28 @@ class MediaLessonModule(object):
 	
 	def createLesson(self):		
 		lessons = set()
-		
+
 		module = self._modules.default("active", type="ui")
-		
+
 		self.enterWidget = self._modules.default("active", type="mediaEnterer").createMediaEnterer()
 		self.teachWidget = self._modules.default("active", type="mediaTeacher").createMediaTeacher()
 		self.resultsWidget = self._modules.default("active", type="testsViewer").createTestsViewer()
-		
+
 		self.fileTab = module.addFileTab(
-			_("Media lesson %s") % self.counter,
 			self.enterWidget,
 			self.teachWidget,
 			self.resultsWidget
 		)
-		
-		lesson = Lesson(self._modules, self.fileTab, self.enterWidget, self.teachWidget, self.resultsWidget)
+
+		lesson = Lesson(self._modules, self.fileTab, self.enterWidget, self.teachWidget, self.resultsWidget, self.counter)
 		self.lessonCreated.send(lesson)
-		
+
 		lessons.add(lesson)
-		
+
 		self.counter += 1
 		self.lessonCreationFinished.send()
 		return lessons
-	
+
 	def loadFromLesson(self, lessonl, path):
 		# Replace filenames with their real (temporary) files
 		for item in lessonl["list"]["items"]:
@@ -121,7 +118,7 @@ class MediaLessonModule(object):
 Lesson object (that means: this techwidget+enterwidget)
 """
 class Lesson(object):
-	def __init__(self, modules, fileTab, enterWidget, teachWidget, resultsWidget, *args, **kwargs):
+	def __init__(self, modules, fileTab, enterWidget, teachWidget, resultsWidget, counter, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
 		
 		self._modules = modules
@@ -141,7 +138,9 @@ class Lesson(object):
 		self.fileTab.tabChanged.handle(self.tabChanged)
 		self.teachWidget.lessonDone.connect(self.toEnterTab)
 		self.teachWidget.listChanged.connect(self.teachListChanged)
-	
+
+		self.fileTab.title = _("Media lesson %s") % counter #FIXME: retranslate
+
 	@property
 	def list(self):
 		return self.enterWidget.list

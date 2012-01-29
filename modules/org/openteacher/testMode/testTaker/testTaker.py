@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Milan Boers
+#	Copyright 2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -105,7 +106,8 @@ class TestModeTestTaker(object):
 			testChooser = TestChooser(testSelecter)
 			testChooser.testChosen.connect(self.takeTest)
 			
-			self.testChooseTab = uiModule.addCustomTab(_("Choose test"), testChooser)
+			self.testChooseTab = uiModule.addCustomTab(testChooser)
+			self.testChooseTab.title = _("Choose test") #FIXME: retranslate etc.
 			self.testChooseTab.closeRequested.handle(self.testChooseTab.close)
 	
 	"""
@@ -120,7 +122,8 @@ class TestModeTestTaker(object):
 		
 		uiModule = self._modules.default("active", type="ui")
 		
-		self.teachTab = uiModule.addCustomTab(_("Taking test"), self.teachWidget)
+		self.teachTab = uiModule.addCustomTab(self.teachWidget)
+		self.teachTab.title = _("Taking test") #FIXME: retranslate etc.
 		self.teachTab.closeRequested.handle(self.teachTab.close)
 		
 		self.teachWidget.lessonDone.connect(lambda: self.handIn(testInfo["answers"]))

@@ -175,7 +175,6 @@ class TextToSpeechModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		self.name = _("Text to speech")
 
 	def disable(self):
 		del self._modules

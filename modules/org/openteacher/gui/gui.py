@@ -39,19 +39,27 @@ class FileTab(object):
 			type="event"
 		).createEvent()
 
-		i = self._tabWidget.indexOf(self._wrapperWidget)
 		closeButton = self._tabWidget.tabBar().tabButton(
-			i,
+			self._index,
 			QtGui.QTabBar.RightSide
 		)
 		closeButton.clicked.connect(lambda: self.closeRequested.send())
 		closeButton.setShortcut(QtGui.QKeySequence.Close)
+
+	@property
+	def _index(self):
+		return self._tabWidget.indexOf(self._wrapperWidget)
 
 	def close(self):
 		i = self._tabWidget.indexOf(self._wrapperWidget)
 		self._tabWidget.removeTab(i)
 		if self._lastWidget:
 			self._tabWidget.setCurrentWidget(self._lastWidget)
+
+	title = property(
+		lambda self: self._tabWidget.tabText(self._index),
+		lambda self, val: self._tabWidget.setTabText(self._index, val)
+	)
 
 class LessonFileTab(FileTab):
 	def __init__(self, *args, **kwargs):
@@ -255,12 +263,12 @@ class GuiModule(object):
 		button.clicked.connect(lambda: event.send())
 		return event
 
-	def addFileTab(self, text, enterWidget=None, teachWidget=None, resultsWidget=None, previousTabOnClose=False):
+	def addFileTab(self, enterWidget=None, teachWidget=None, resultsWidget=None, previousTabOnClose=False):
 		widget = self._ui.LessonTabWidget(enterWidget, teachWidget, resultsWidget)
 
-		return self.addCustomTab(text, widget, previousTabOnClose)
+		return self.addCustomTab(widget, previousTabOnClose)
 
-	def addCustomTab(self, text, widget, previousTabOnClose=False):
+	def addCustomTab(self, widget, previousTabOnClose=False):
 		# We wrap the layout in a QVBoxLayout widget, so messages can be added on top of the tab.
 		wrapperWidget = QtGui.QWidget()
 		wrapperLayout = QtGui.QVBoxLayout()
@@ -273,7 +281,7 @@ class GuiModule(object):
 		else:
 			lastWidget = None
 
-		self._widget.tabWidget.addTab(wrapperWidget, text)
+		self._widget.tabWidget.addTab(wrapperWidget, "")
 
 		args = (self._mm, self._widget.tabWidget, wrapperWidget, widget, lastWidget)
 

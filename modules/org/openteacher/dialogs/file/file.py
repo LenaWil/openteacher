@@ -48,7 +48,8 @@ class FileDialogsModule(object):
 		fileDialog.setNameFilters(filters)
 		fileDialog.setDirectory(startdir)
 
-		tab = self._ui.addCustomTab(fileDialog.windowTitle(), fileDialog, previousTabOnClose=True)
+		tab = self._ui.addCustomTab(fileDialog, previousTabOnClose=True)
+		tab.title = fileDialog.windowTitle()
 		tab.closeRequested.handle(tab.close)
 		fileDialog.rejected.connect(tab.close)
 		fileDialog.accepted.connect(tab.close)
@@ -75,7 +76,8 @@ class FileDialogsModule(object):
 		fileDialog.setFilter(filter)
 		fileDialog.setDirectory(startdir)
 
-		tab = self._ui.addCustomTab(fileDialog.windowTitle(), fileDialog)
+		tab = self._ui.addCustomTab(fileDialog)
+		tab.title = fileDialog.windowTitle()
 		tab.closeRequested.handle(tab.close)
 		fileDialog.rejected.connect(tab.close)
 		fileDialog.accepted.connect(tab.close)

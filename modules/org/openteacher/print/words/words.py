@@ -61,7 +61,6 @@ class PrintModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		self.name = _("Printing module")
 
 	def disable(self):
 		self.active = False

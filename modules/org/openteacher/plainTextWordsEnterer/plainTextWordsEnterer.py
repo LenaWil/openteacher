@@ -127,9 +127,9 @@ class PlainTextWordsEntererModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		self.name = _("Plain text words enterer")
 		for dialog in self._activeDialogs:
 			dialog.retranslate()
+			dialog.tab.title = dialog.windowTitle()
 
 	def createLesson(self):
 		parse = self._modules.default(
@@ -139,11 +139,14 @@ class PlainTextWordsEntererModule(object):
 
 		eptd = EnterPlainTextDialog(parse)
 		self._activeDialogs.add(eptd)
-		self._retranslate()
-		tab = self._uiModule.addCustomTab(eptd.windowTitle(), eptd)
+
+		tab = self._uiModule.addCustomTab(eptd)
 		tab.closeRequested.handle(tab.close)
+		eptd.tab = tab
 		eptd.rejected.connect(tab.close)
 		eptd.accepted.connect(tab.close)
+
+		self._retranslate()
 
 		eptd.exec_()
 		self._activeDialogs.remove(eptd)

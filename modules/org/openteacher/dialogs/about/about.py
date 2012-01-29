@@ -269,9 +269,9 @@ class AboutDialog(QtGui.QTabWidget):
 		if self.currentWidget() == self.authorsWidget:
 			self.authorsWidget.startAnimation()
 
-class AboutModule(object):
+class AboutDialogModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(AboutModule, self).__init__(*args, **kwargs)
+		super(AboutDialogModule, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
 		self.type = "about"
@@ -296,14 +296,13 @@ class AboutModule(object):
 		metadata = self._modules.default("active", type="metadata").metadata
 		templatePath = self._mm.resourcePath("about.html")
 		dialog = AboutDialog(authors, fade, metadata, templatePath)
-		tab = self._modules.default("active", type="ui").addCustomTab(
-			dialog.windowTitle(),
-			dialog
-		)
+		self._activeDialogs.add(weakref.ref(dialog))
+
+		tab = self._modules.default("active", type="ui").addCustomTab(dialog)
+		dialog.tab = tab
 		tab.closeRequested.handle(tab.close)
 
-		dialog.retranslate()
-		self._activeDialogs.add(weakref.ref(dialog))
+		self._retranslate()
 
 	def _retranslate(self):
 		global _
@@ -317,12 +316,11 @@ class AboutModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		for dialog in self._activeDialogs:
-			r = dialog()
-			if r is not None:
-				r.retranslate()
-
-		self.name = _("About module")
+		for ref in self._activeDialogs:
+			dialog = ref()
+			if dialog is not None:
+				dialog.retranslate()
+				dialog.tab.title = dialog.windowTitle()
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
@@ -351,4 +349,4 @@ class AboutModule(object):
 		del self.name
 
 def init(moduleManager):
-	return AboutModule(moduleManager)
+	return AboutDialogModule(moduleManager)

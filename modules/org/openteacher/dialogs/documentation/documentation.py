@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -86,7 +86,8 @@ class DocumentationModule(object):
 			metadata["userAgent"],
 			self._mm.resourcePath("docs/index.html")
 		)
-		tab = uiModule.addCustomTab(dialog.windowTitle(), dialog)
+		tab = uiModule.addCustomTab(dialog)
+		dialog.tab = tab
 		tab.closeRequested.handle(tab.close)
 
 		self._activeDialogs.add(weakref.ref(dialog))
@@ -123,12 +124,12 @@ class DocumentationModule(object):
 			)
 			language = translator.language
 
-		self.name = _("Documentation module")
-		for dialog in self._activeDialogs:
-			r = dialog()
-			if r is not None:
-				r.retranslate()
-				r.updateLanguage(language)
+		for ref in self._activeDialogs:
+			dialog = ref()
+			if dialog is not None:
+				dialog.retranslate()
+				dialog.updateLanguage(language)
+				dialog.tab.title = dialog.windowTitle()
 
 	def disable(self):
 		self.active = False

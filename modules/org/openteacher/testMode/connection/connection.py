@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Milan Boers
+#	Copyright 2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -33,10 +34,11 @@ except:
 
 MAXVERSION = 1.0
 
-"""
-We use HTTP so there's not actually a continuous connection, but this class is basically here to check whether a server exists.
-"""
 class ConnectWidget(QtGui.QWidget):
+	"""We use HTTP so there's not actually a continuous connection, but
+	   this class is basically here to check whether a server exists.
+
+	"""
 	def __init__(self, connection, *args, **kwargs):
 		super(ConnectWidget, self).__init__(*args, **kwargs)
 		
@@ -166,8 +168,9 @@ class Connection(object):
 			self.connectLoginWidget = ConnectLoginWidget(self, loginid)
 			
 			module = self._modules.default("active", type="ui")
-			self.loginTab = module.addCustomTab(_("Login"), self.connectLoginWidget)
-			
+			self.loginTab = module.addCustomTab(self.connectLoginWidget)
+			self.loginTab.title = _("Login") #FIXME: retranslate etc.
+
 			self.loginTab.closeRequested.handle(self.loginTab.close)
 	
 	# Checks if login is right (and implicitly fetches the token) (te be used only inside this module)

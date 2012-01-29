@@ -70,9 +70,9 @@ class WrtsApiModule(object):
 			)
 		self._ui._, self._ui.ngettext = _, ngettext
 
-		self.name = _("Wrts API connection")
 		for dialog in self._activeDialogs:
 			dialog.retranslate()
+			dialog.tab.title = dialog.windowTitle()
 
 	@property
 	def _uiModule(self):
@@ -101,12 +101,14 @@ class WrtsApiModule(object):
 		except KeyError:
 			ld = self._ui.LoginDialog(bool(dataStore), self._uiModule.qtParent)
 			self._activeDialogs.add(ld)
-			self._retranslate()
 
-			tab = self._uiModule.addCustomTab(ld.windowTitle(), ld)
+			tab = self._uiModule.addCustomTab(ld)
 			tab.closeRequested.handle(tab.close)
+			ld.tab = tab
 			ld.rejected.connect(tab.close)
 			ld.accepted.connect(tab.close)
+
+			self._retranslate()
 
 			ld.exec_()
 			self._activeDialogs.remove(ld)
@@ -126,25 +128,34 @@ class WrtsApiModule(object):
 
 		ldc = self._ui.ListChoiceDialog(listsParser.lists, self._uiModule.qtParent)
 		self._activeDialogs.add(ldc)
-		self._retranslate()
 
-		tab = self._uiModule.addCustomTab(ldc.windowTitle(), ldc)
+		tab = self._uiModule.addCustomTab(ldc)
 		tab.closeRequested.handle(tab.close)
 		ldc.rejected.connect(tab.close)
+		ldc.tab = tab
 		ldc.accepted.connect(tab.close)
+
+		self._retranslate()
 
 		ldc.exec_()
 		self._activeDialogs.remove(ldc)
 		if not ldc.result():
 			return
 
-		listUrl = listsParser.getWordListUrl(ldc.selectedRowIndex)
+		try:
+			listUrl = listsParser.getWordListUrl(ldc.selectedRowIndex)
+		except IndexError:
+			#FIXME: show error instead: none selected
+			return
 		list = self._wrtsConnection.importWordList(listUrl)
 
 		self._modules.default(
 			"active",
 			type="loader"
-		).loadFromList("words", list)
+		).loadFromLesson("words", {
+			"list": list,
+			"resources": {},
+		})
 
 def init(moduleManager):
 	return WrtsApiModule(moduleManager)

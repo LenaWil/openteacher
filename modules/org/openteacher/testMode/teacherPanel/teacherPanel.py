@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Milan Boers
+#	Copyright 2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -621,7 +622,8 @@ class TestModeTeacherPanelModule(object):
 			
 			self.teacherPanel = TeacherPanel(self.connection, studentsView, testSelecter, upload, answerChecker, compose)
 			
-			self.tab = uiModule.addCustomTab(_("Teacher Panel"), self.teacherPanel)
+			self.tab = uiModule.addCustomTab(self.teacherPanel)
+			self.tab.title = _("Teacher Panel") #FIXME: retranslate etc.
 			self.tab.closeRequested.handle(self.tab.close)
 			
 			self.teacherPanel.message.connect(self.showMessage)

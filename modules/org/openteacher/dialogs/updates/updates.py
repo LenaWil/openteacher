@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -184,10 +184,8 @@ class UpdatesDialogModule(object):
 			self._updatesMod.update()
 		else:
 			self._ud = UpdatesDialog(updates, self._rememberChoiceSetting["value"])
-			self._tab = modules.default("active", type="ui").addCustomTab(
-				self._ud.windowTitle(), #FIXME: retranslate, including dialog itself
-				self._ud
-			)
+			self._tab = modules.default("active", type="ui").addCustomTab(self._ud)
+			self._tab.title = "Updates"#FIXME: retranslate, including dialog itself
 			self._tab.closeRequested.handle(self._ud.rejected.emit)
 			self._ud.accepted.connect(self._accepted)
 			self._ud.rejected.connect(self._rejected)

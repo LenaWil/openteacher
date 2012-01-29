@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -183,10 +183,11 @@ class SettingsDialogModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		for dialog in self._activeDialogs:
-			r = dialog()
-			if r is not None:
-				r.retranslate()
+		for ref in self._activeDialogs:
+			dialog = ref()
+			if dialog is not None:
+				dialog.retranslate()
+				dialog.tab.title = dialog.windowTitle()
 
 	def disable(self):
 		self.active = False
@@ -206,9 +207,12 @@ class SettingsDialogModule(object):
 	def show(self):
 		dialog = SettingsDialog(self._settings.registeredSettings, self._settingsWidgets.widgets)
 		self._activeDialogs.add(weakref.ref(dialog))
-		self._retranslate()
-		tab = self._uiModule.addCustomTab(dialog.windowTitle(), dialog)
+
+		tab = self._uiModule.addCustomTab(dialog)
+		dialog.tab = tab
 		tab.closeRequested.handle(tab.close)
+
+		self._retranslate()
 
 def init(moduleManager):
 	return SettingsDialogModule(moduleManager)

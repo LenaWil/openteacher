@@ -61,8 +61,6 @@ class TeachTopoLessonModule(object):
 				self._mm.resourcePath("translations")
 			)
 		
-		self.name = _("Topo Lesson")
-	
 		# Data type
 		self.dataType = "topo"
 		
@@ -95,13 +93,12 @@ class TeachTopoLessonModule(object):
 		resultsWidget = self._modules.default("active", type="testsViewer").createTestsViewer()
 		
 		fileTab = module.addFileTab(
-			_("Topo lesson %s") % self.counter,
 			enterWidget,
 			teachWidget,
 			resultsWidget
 		)
 		
-		lesson = Lesson(self._modules, fileTab, enterWidget, teachWidget, resultsWidget)
+		lesson = Lesson(self._modules, fileTab, enterWidget, teachWidget, resultsWidget, self.counter)
 		self.lessonCreated.send(lesson)
 		
 		lessons.add(lesson)
@@ -127,7 +124,7 @@ class TeachTopoLessonModule(object):
 class Lesson(object):
 	"""Lesson object (that means: this techwidget+enterwidget)"""
 
-	def __init__(self, modules, fileTab, enterWidget, teachWidget, resultsWidget, *args, **kwargs):
+	def __init__(self, modules, fileTab, enterWidget, teachWidget, resultsWidget, counter, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
 		
 		self._modules = modules
@@ -139,7 +136,8 @@ class Lesson(object):
 		self.resultsWidget = resultsWidget
 
 		self.fileTab = fileTab
-		
+		self.fileTab.title = ("Topo lesson %s") % counter #FIXME: retranslate
+
 		self.stopped = self._modules.default(type="event").createEvent()
 		
 		self.module = self

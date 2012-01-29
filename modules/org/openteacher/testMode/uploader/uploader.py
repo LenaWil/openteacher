@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
+#	Copyright 2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -88,6 +89,7 @@ class TestModeUploaderModule(object):
 			list = loadModule.load(result)
 			
 			# Save it to a json string
+			#FIXME: serialize is private now, and that's good so let's update this.
 			saveModule = self._modules.default("active", type="save", saves={"words": ["otwd"]})
 			listJson = json.dumps(
 				list, #the list to save
