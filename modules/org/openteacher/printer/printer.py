@@ -55,9 +55,9 @@ class PrinterModule(object):
 		if len(printers) == 0:
 			raise NotImplementedError()
 
-		printer = printers[0]
+		printerWrapper = printers[0]
 		#Save
-		printer.print_()
+		printerWrapper.print_()
 
 	@property
 	def printSupport(self):

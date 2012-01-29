@@ -38,7 +38,7 @@ class OpenTeachingTopoSaverModule(object):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self._otxxSaver = self._modules.default("active", type="otxxSaver")
 
-		self.name = "Open Teaching Topo (.ottp) saver"
+		self.name = "Open Teaching Topography"
 		self.saves = {"topo": ["ottp"]}
 
 		self.active = True

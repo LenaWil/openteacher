@@ -41,7 +41,7 @@ class WrtsLoaderModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self.name = "WRTS (.wrts) loader"
+		self.name = "WRDS"
 		self.loads = {"wrts": ["words"]}
 
 		self.active = True

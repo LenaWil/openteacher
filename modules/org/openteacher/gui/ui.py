@@ -21,6 +21,9 @@
 from PyQt4 import QtCore, QtGui
 import os
 
+#INFO: ICON_PATH is set by gui.py . Set it yourself when re-using this
+#code in another context.
+
 class CloseButton(QtGui.QAbstractButton):
 	def __init__(self, *args, **kwargs):
 		super(CloseButton, self).__init__(*args, **kwargs)

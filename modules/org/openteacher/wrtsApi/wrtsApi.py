@@ -24,6 +24,7 @@ class WrtsApiModule(object):
 		super(WrtsApiModule, self).__init__()
 		self._mm = moduleManager
 
+		self.type = "wrtsApi"
 		self.uses = (
 			self._mm.mods(type="translator"),
 			self._mm.mods(type="dataStore"),

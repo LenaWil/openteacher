@@ -34,7 +34,7 @@ class OpenTeachingTopoLoaderModule(object):
 		)
 
 	def enable(self):
-		self.name = "Open Teaching Topo (.ottp) loader"
+		self.name = "Open Teaching Topography"
 		self.loads = {"ottp": ["topo"]}
 
 		self._modules = set(self._mm.mods("active", type="modules")).pop()

@@ -34,7 +34,7 @@ class PdfSaverModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self.name = "Portable Document Format (.pdf) saver"
+		self.name = "Portable Document Format"
 		self.saves = {"words": ["pdf"]}
 		
 		self.active = True

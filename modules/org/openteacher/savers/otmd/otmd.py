@@ -44,7 +44,7 @@ class OpenTeachingMediaSaverModule(object):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self._otxxSaver = self._modules.default("active", type="otxxSaver")
 
-		self.name = "Open Teaching Media (.otmd) saver"
+		self.name = "Open Teaching Media"
 		self.saves = {"media": ["otmd"]}
 
 		self._settings = self._modules.default("active", type="settings")

@@ -36,12 +36,6 @@ class AuthorsModule(object):
 		self._authors = set()
 		self.active = True
 
-		##########FIXME: DEMO DATA
-		self.registerAuthor("Core developer", "Milan Boers")
-		self.registerAuthor("Core developer", "Cas Widdershoven")
-		self.registerAuthor("Core developer", "Marten de Vries")
-		##########END DEMO DATA
-
 	def disable(self):
 		self.active = False
 		del self._authors

@@ -36,7 +36,7 @@ class OpenTeacherSaverModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self.name = "OpenTeacher (.ot) saver" #FIXME: make translatable. And others too?
+		self.name = "OpenTeacher 2.x" #FIXME: make translatable. And others too?
 		self._pyratemp = self._mm.import_("pyratemp")
 		self.saves = {"words": ["ot"]}
 

@@ -48,18 +48,18 @@ class SaverModule(object):
 
 	@property
 	def usableExtensions(self):
-		extensions = []
+		extensions = set()
 
 		dataType = self._lessonTracker.currentLesson.module.dataType
 
 		#Collect exts the loader modules support, if there is a gui
 		#module for the data type(s) they can provide
 		for module in self._modules.sort("active", type="save"):
-			if module.saves.get(dataType) != None:
-				for ext in module.saves.get(dataType):
-					extensions.append(ext)
+			if module.saves.get(dataType) is not None:
+				for ext in module.saves[dataType]:
+					extensions.add((ext, module.name))
 
-		return extensions
+		return sorted(extensions)
 
 	@property
 	def saveSupport(self):

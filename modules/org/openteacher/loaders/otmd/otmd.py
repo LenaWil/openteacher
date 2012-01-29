@@ -34,7 +34,7 @@ class OpenTeachingMediaLoaderModule(object):
 		)
 
 	def enable(self):
-		self.name = ("Open Teaching Media (.otmd) loader", self)
+		self.name = "Open Teaching Media"
 		self.loads = {"otmd": ["media"]}
 
 		self._modules = set(self._mm.mods("active", type="modules")).pop()

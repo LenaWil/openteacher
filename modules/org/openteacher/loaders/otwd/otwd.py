@@ -39,7 +39,7 @@ class OpenTeachingWordsLoaderModule(object):
 		)
 
 	def enable(self):
-		self.name = "Open Teaching Words (.otwd) loader"
+		self.name = "Open Teaching Words"
 		self.loads = {"otwd": ["words"]}
 
 		self._modules = set(self._mm.mods("active", type="modules")).pop()

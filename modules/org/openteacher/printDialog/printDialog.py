@@ -19,38 +19,33 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class Teach2000SaverModule(object):
+from PyQt4 import QtGui
+
+class PrintDialogModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(Teach2000SaverModule, self).__init__(*args, **kwargs)
+		super(PrintDialogModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "save"
-		self.uses = (
-			self._mm.mods(type="translator"),
-		)
+		self.type = "printDialog"
+
+	def getConfiguredPrinter(self):
+		"""Returns a completely configured QPrinter, or None when the
+		   user cancels the configuration dialog.
+
+		"""
+		printer = QtGui.QPrinter()
+
+		printDialog = QtGui.QPrintDialog(printer)
+		result = printDialog.exec_()
+		if not result:
+			return
+		return printer
 
 	def enable(self):
-		self._pyratemp = self._mm.import_("pyratemp")
-		self.name = "Teach2000"
-		self.saves = {"words": ["t2k"]}
-
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
-		del self._pyratemp
-		del self.name
-		del self.saves
-
-	def save(self, type, lesson, path):
-		templatePath = self._mm.resourcePath("template.xml")
-		t = self._pyratemp.Template(open(templatePath).read())
-		data = {
-			"wordList": lesson.list
-		}
-		content = t(**data)
-		open(path, "w").write(content.encode("UTF-8"))
-
 def init(moduleManager):
-	return Teach2000SaverModule(moduleManager)
+	return PrintDialogModule(moduleManager)

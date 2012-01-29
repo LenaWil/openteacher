@@ -29,10 +29,12 @@ class UiControllerModule(object):
 		self.type = "uiController"
 		self.requires = (
 			self._mm.mods(type="ui"),
-			#FIXME: make loader, saver and printer into self.uses?
+			#FIXME: make loader, saver, printDialog and printer into self.uses?
 			self._mm.mods(type="loader"),
 			self._mm.mods(type="saver"),
 			self._mm.mods(type="printer"),
+			self._mm.mods(type="printDialog"),
+			self._mm.mods(type="fileDialogs"),
 			self._mm.mods(type="metadata"),
 			self._mm.mods(type="execute"),
 		)
@@ -45,8 +47,9 @@ class UiControllerModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._execute = self._modules.default(type="execute")
-		self._execute.startRunning.handle(self.run)
+		self._fileDialogs = self._modules.default("active", type="fileDialogs")
+		execute = self._modules.default(type="execute")
+		execute.startRunning.handle(self.run)
 
 		self.active = True
 
@@ -54,6 +57,7 @@ class UiControllerModule(object):
 		self.active = False
 
 		del self._modules
+		del self._fileDialogs
 
 	def run(self, path=None):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
@@ -79,7 +83,7 @@ class UiControllerModule(object):
 
 		usableExtensions = loader.usableExtensions
 		if not path:
-			path = self._uiModule.getLoadPath(
+			path = self._fileDialogs.getLoadPath(
 				os.path.expanduser("~"), #FIXME: path should be saved & restored
 				usableExtensions
 			)
@@ -95,10 +99,9 @@ class UiControllerModule(object):
 	def saveAs(self):
 		saver = self._modules.default("active", type="saver")
 
-		usableExtensions = saver.usableExtensions
-		path = self._uiModule.getSavePath(
+		path = self._fileDialogs.getSavePath(
 			os.path.expanduser("~"), #FIXME: path should be saved & restored
-			usableExtensions
+			saver.usableExtensions
 		)
 		if path:
 			saver.save(path)
@@ -106,7 +109,10 @@ class UiControllerModule(object):
 
 	def print_(self):
 		#Setup printer
-		qtPrinter = self._uiModule.getConfiguredPrinter()
+		qtPrinter = self._modules.default(
+			"active",
+			type="printDialog"
+		).getConfiguredPrinter()
 		if qtPrinter is None:
 			return
 

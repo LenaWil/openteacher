@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Marten de Vries
-#	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -19,38 +18,42 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class Teach2000SaverModule(object):
+class OpenTeacherAuthorsModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(Teach2000SaverModule, self).__init__(*args, **kwargs)
+		super(OpenTeacherAuthorsModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "save"
+		self.type = "openteacherAuthors"
 		self.uses = (
-			self._mm.mods(type="translator"),
+			self._mm.mods(type="authors"),
 		)
 
 	def enable(self):
-		self._pyratemp = self._mm.import_("pyratemp")
-		self.name = "Teach2000"
-		self.saves = {"words": ["t2k"]}
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		a = self._modules.default("active", type="authors")
+
+		#Core development team
+		a.registerAuthor("Core developer", "Milan Boers") #FIXME: translate
+		a.registerAuthor("Core developer", "Cas Widdershoven")
+		a.registerAuthor("Core developer", "Marten de Vries")
+
+		#Patches
+		a.registerAuthor("Patches contributor", "Roel Huybrechts")
+		a.registerAuthor("Patches contributor", "David D Lowe")
+
+		#Packaging
+		a.registerAuthor("Debian/Ubuntu packager", "Charlie Smotherman")
+
+		#Artwork
+		a.registerAuthor("Artwork", "Yordi de Graaf")
+
+		#Translators
+		#FIXME: add them here
 
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
-		del self._pyratemp
-		del self.name
-		del self.saves
-
-	def save(self, type, lesson, path):
-		templatePath = self._mm.resourcePath("template.xml")
-		t = self._pyratemp.Template(open(templatePath).read())
-		data = {
-			"wordList": lesson.list
-		}
-		content = t(**data)
-		open(path, "w").write(content.encode("UTF-8"))
-
 def init(moduleManager):
-	return Teach2000SaverModule(moduleManager)
+	return OpenTeacherAuthorsModule(moduleManager)

@@ -34,7 +34,7 @@ class TxtSaverModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self.name = "Plain text (.txt) saver"
+		self.name = "Plain text"
 		self.saves = {"words": ["txt"]}
 
 		self.active = True

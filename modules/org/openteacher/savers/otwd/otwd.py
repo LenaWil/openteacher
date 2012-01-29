@@ -36,7 +36,7 @@ class OpenTeachingWordsSaverModule(object):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self._otxxSaver = self._modules.default("active", type="otxxSaver")
 
-		self.name = "Open Teaching Words (.otwd) saver"
+		self.name = "Open Teaching Words"
 		self.saves = {"words": ["otwd"]}
 		
 		self.active = True

@@ -38,7 +38,7 @@ class Teach2000LoaderModule(object):
 		)
 
 	def enable(self):
-		self.name = "Teach2000 (.t2k) loader"
+		self.name = "Teach2000"
 		self.loads = {"t2k": ["words"]}
 
 		self.active = True

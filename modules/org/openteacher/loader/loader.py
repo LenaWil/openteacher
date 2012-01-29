@@ -55,7 +55,14 @@ class LoaderModule(object):
 
 	@property
 	def usableExtensions(self):
-		exts = []
+		"""Returns a alphabetically sorted list of tuples. The tuples
+		   have this form: (file_format_name, ext). For example:
+		   ("OpenTeaching words file", "otwd"). The list includes all
+		   extensions that can be loaded with the modules currently in
+		   use by OpenTeacher
+
+		"""
+		exts = set()
 
 		#Collect exts the loader modules support, if there is a gui
 		#module for the type(s) they can provide
@@ -63,8 +70,8 @@ class LoaderModule(object):
 			for ext, fileTypes in module.loads.iteritems():
 				for fileType in fileTypes:
 					if fileType in self._supportedFileTypes:
-						exts.append(ext)
-		return exts
+						exts.add((ext, module.name))
+		return sorted(exts)
 
 	@property
 	def openSupport(self):
