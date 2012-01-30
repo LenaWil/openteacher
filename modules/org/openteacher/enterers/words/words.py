@@ -108,13 +108,12 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 		self.endResetModel()
 
 	def sort(self, column, order):
-		#FIXME: KeyErrors!
 		if column == self.QUESTIONS:
-			items = sorted(self.list["items"], key=lambda word: word["questions"][0])
+			items = sorted(self.list["items"], key=lambda word: word["questions"][0] if "questions" in word else u"")
 		elif column == self.ANSWERS:
-			items = sorted(self.list["items"], key=lambda word: word["answers"][0])
+			items = sorted(self.list["items"], key=lambda word: word["answers"][0] if "answers" in word else u"")
 		elif column == self.COMMENT:
-			items = sorted(self.list["items"], key=lambda word: word["comment"])
+			items = sorted(self.list["items"], key=lambda word: word["comment"] if "comment" in word else u"")
 
 		if order == QtCore.Qt.DescendingOrder:
 			items.reverse()

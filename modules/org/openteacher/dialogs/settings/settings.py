@@ -23,32 +23,19 @@ from PyQt4 import QtCore, QtGui
 import sys
 import weakref
 import copy
-
-#FIXME: split into a separate module?
-def byKey(key, items):
-	catItems = dict()
-	for item in items:
-		if not key in item:
-			if "Miscellaneous" not in catItems:
-				catItems["Miscellaneous"] = []
-			catItems["Miscellaneous"].append(item)
-		else:
-			if item[key] not in catItems:
-				catItems[item[key]] = []
-			catItems[item[key]].append(item)
-	return catItems
 	
 class CategoryTab(QtGui.QWidget):
-	def __init__(self, widgets, name, inCategory, *args, **kwargs):
+	def __init__(self, byKey, widgets, name, inCategory, *args, **kwargs):
 		super(CategoryTab, self).__init__(*args, **kwargs)
 
+		self.byKey = byKey
 		self._widgets = widgets
 
 		self.setWindowTitle(name)
 		vbox = QtGui.QVBoxLayout()
 		
 		
-		categories = byKey("subcategory", inCategory)
+		categories = self.byKey("subcategory", inCategory)
 		for name in categories.keys():			
 			w = self.createSubcategoryGroupBox(name, categories[name])
 			vbox.addWidget(w)
@@ -70,11 +57,12 @@ class CategoryTab(QtGui.QWidget):
 		groupBox.setLayout(groupBoxLayout)
 		return groupBox
 
-class SettingsDialog(QtGui.QTabWidget):#FIXME: make the 'simple' and 'advanced' buttons actually do something
-	def __init__(self, settings, widgets, *args, **kwargs):
+class SettingsDialog(QtGui.QTabWidget):
+	def __init__(self, byKey, settings, widgets, *args, **kwargs):
 		super(SettingsDialog, self).__init__(*args, **kwargs)
 		
 		self.settings = settings
+		self.byKey = byKey
 		self.widgets = widgets
 		
 		#Setup widget
@@ -96,13 +84,13 @@ class SettingsDialog(QtGui.QTabWidget):#FIXME: make the 'simple' and 'advanced' 
 		self.advancedButton.setText(_("Advanced mode"))
 
 	def createCategoryTab(self, *args, **kwargs):
-		tab = CategoryTab(*args, **kwargs)
+		tab = CategoryTab(self.byKey, *args, **kwargs)
 		self.addTab(tab, tab.windowTitle())
 	
 	def update(self):
 		# Copy settings
 		settings = copy.copy(self.settings)
-		
+
 		# Filter out advanced settings if in simple mode
 		if self.simpleMode:
 			for setting in settings:
@@ -110,7 +98,7 @@ class SettingsDialog(QtGui.QTabWidget):#FIXME: make the 'simple' and 'advanced' 
 					settings.remove(setting)
 		
 		self.clear()
-		categories = byKey("category", settings)
+		categories = self.byKey("category", settings)
 		for name in categories.keys():
 			self.createCategoryTab(self.widgets, name, categories[name])
 
@@ -151,11 +139,15 @@ class SettingsDialogModule(object):
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="settings"),
 			self._mm.mods(type="settingsWidgets"),
+			self._mm.mods(type="settingsFilterer"),
 		)
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self._uiModule = self._modules.default("active", type="ui")
+		self._settings = self._modules.default("active", type="settings")
+		self._settingsWidgets = self._modules.default("active", type="settingsWidgets")
+		self._settingsFilterer = self._modules.default("active", type="settingsFilterer")
 
 		self._activeDialogs = set()
 
@@ -194,18 +186,17 @@ class SettingsDialogModule(object):
 
 		del self._modules
 		del self._uiModule
+		del self._settings
+		del self._settingsWidgets
+		del self._settingsFilterer
 		del self._activeDialogs
 
-	@property
-	def _settings(self):
-		return self._modules.default("active", type="settings")
-
-	@property
-	def _settingsWidgets(self):
-		return self._modules.default("active", type="settingsWidgets")
-
 	def show(self):
-		dialog = SettingsDialog(self._settings.registeredSettings, self._settingsWidgets.widgets)
+		dialog = SettingsDialog(
+			self._settingsFilterer.byKey,
+			self._settings.registeredSettings,
+			self._settingsWidgets.widgets
+		)
 		self._activeDialogs.add(weakref.ref(dialog))
 
 		tab = self._uiModule.addCustomTab(dialog)

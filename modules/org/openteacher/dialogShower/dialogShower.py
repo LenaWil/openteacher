@@ -137,8 +137,6 @@ class DialogShowerModule(object):
 		
 		self.type = "dialogShower"
 		
-		self.uses = (
-		)
 		self.requires = (
 			self._mm.mods(type="ui"),
 		)

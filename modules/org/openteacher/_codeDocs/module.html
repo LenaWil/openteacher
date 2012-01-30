@@ -1,4 +1,4 @@
-#!	Copyright 2010-2012, Marten de Vries
+#!	Copyright 2012, Marten de Vries
 #!
 #!	This file is part of OpenTeacher.
 #!
@@ -25,75 +25,83 @@
 		<link rel='stylesheet' type='text/css' href='/resources/style.css' />
 	</head>
 	<body>
-		<a class='back' href='/'>Back to index</a>
-		<h1>Module: @!name!@</h1>
-		<!--(if moddoc)-->
+		<div id='header'>
+			<img id='logo' src='/resources/logo' />
+			<h1>Module: @!name!@</h1>
+			<a id='nav' href='/'>&lt; Back to index</a><br />
+		</div>
+		<div id='page'>
+			<!--(if moddoc)-->
+				<p>
+					$!moddoc!$
+				</p>
+			<!--(end)-->
 			<p>
-				$!moddoc!$
-			</p>
-		<!--(end)-->
-		<p>
-			<table>
-				<tbody>
-					<!--(if type)-->
-						<tr>
-							<td>Type:</td>
-							<td>@!type!@</td>
-						</tr>
-					<!--(end)-->
-					<!--(if uses)-->
-						<tr>
-							<td>Uses (at least one of):</td>
-							<td>
-								<!--(for selector in uses)-->
-									<!--(for url, name in selector)-->
-										<a href='/@!url!@'>@!name!@</a>
-									<!--(end)-->
-									<br />
-								<!--(end)-->
-							</td>
-						</tr>
-					<!--(end)-->
-					<!--(if requires)-->
-						<tr>
-							<td>Requires (at least one of):</td>
-							<td>
-								<!--(for selector in requires)-->
-									<!--(for url, name in selector)-->
-										<a href='/@!url!@'>@!name!@</a>
-									<!--(end)-->
-									<br />
-								<!--(end)-->
-							</td>
-						</tr>
-					<!--(end)-->
-				</tbody>
-			</table>
-		</p>
-		<!--(if methods)-->
-			<h2>Methods:</h2>
-			<ul>
-				<!--(for method in methods)-->
-					<li>
-						<strong>@!method!@</strong>
-						<!--(if methodDocs[method])-->
-							<br />
-							<em>$!methodDocs[method]!$</em>
+				<table>
+					<tbody>
+						<!--(if type)-->
+							<tr>
+								<td>Type:</td>
+								<td>@!type!@</td>
+							</tr>
 						<!--(end)-->
-					</li>
-				<!--(end)-->
-			</ul>
-		<!--(end)-->
-		<!--(if properties)-->
-			<h2>Properties:</h2>
-			<ul>
-				<!--(for property in properties)-->
-					<li>
-						<strong>@!property!@</strong>
-					</li>
-				<!--(end)-->
-			</ul>
-		<!--(end)-->
-		<a class='back' href='/'>Back to index</a>
+						<!--(if uses)-->
+							<tr>
+								<td>Uses (at least one of):</td>
+								<td>
+									<!--(for selector in uses)-->
+										<!--(for url, name in selector)-->
+											<a href='/@!url!@.html'>@!name!@ &gt;</a>
+										<!--(end)-->
+										<br />
+									<!--(end)-->
+								</td>
+							</tr>
+						<!--(end)-->
+						<!--(if requires)-->
+							<tr>
+								<td>Requires (at least one of):</td>
+								<td>
+									<!--(for selector in requires)-->
+										<!--(for url, name in selector)-->
+											<a href='/@!url!@.html'>@!name!@ &gt;</a>
+										<!--(end)-->
+										<br />
+									<!--(end)-->
+								</td>
+							</tr>
+						<!--(end)-->
+					</tbody>
+				</table>
+			</p>
+			<!--(if methods)-->
+				<h2>Methods:</h2>
+				<ul>
+					<!--(for method in methods)-->
+						<li>
+							<strong>@!method!@</strong>
+							<!--(if methodDocs[method])-->
+								<br />
+								<em>$!methodDocs[method]!$</em>
+							<!--(end)-->
+						</li>
+					<!--(end)-->
+				</ul>
+			<!--(end)-->
+			<!--(if properties)-->
+				<h2>Properties:</h2>
+				<ul>
+					<!--(for property in properties)-->
+						<li>
+							<strong>@!property!@</strong>
+						</li>
+					<!--(end)-->
+				</ul>
+			<!--(end)-->
+		</div>
+		<div id='footer'>
+			<a href='/'>&lt; Back to index</a><br />
+			<em>OpenTeacher code documentation</em>
+		</div>
 	</body>
 </html>

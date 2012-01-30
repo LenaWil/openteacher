@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+#	Copyright 2011-2012, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -18,42 +19,31 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui
-
-class ResultsDialogModule(object):
+class SettingsFiltererModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(ResultsDialogModule, self).__init__(*args, **kwargs)
+		super(SettingsFiltererModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "resultsDialog"
-		self.requires = (
-			self._mm.mods(type="testViewer"),
-			self._mm.mods(type="ui"),
-		)
-		self.uses = (
-			self._mm.mods(type="translator"),
-		)
+		self.type = "settingsFilterer"
+
+	def byKey(self, key, items):
+		catItems = dict()
+		for item in items:
+			if not key in item:
+				if "Miscellaneous" not in catItems:
+					catItems["Miscellaneous"] = []
+				catItems["Miscellaneous"].append(item)
+			else:
+				if item[key] not in catItems:
+					catItems[item[key]] = []
+				catItems[item[key]].append(item)
+		return catItems
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
-
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
-		del self._modules
-
-	def showResults(self, list, dataType, test):
-		self.resultsWidget = self._modules.default(
-			"active",
-			type="testViewer"
-		).createTestViewer(list, dataType, test)
-
-		uiModule = self._modules.default(type="ui")
-		self.tab = uiModule.addCustomTab(self.resultsWidget)
-		self.tab.title = self.resultsWidget.windowTitle() #FIXME: update on retranslate
-		self.tab.closeRequested.handle(self.tab.close)
-
 def init(moduleManager):
-	return ResultsDialogModule(moduleManager)
+	return SettingsFiltererModule(moduleManager)

@@ -136,7 +136,7 @@ class TestViewer(QtGui.QSplitter):
 	def retranslate(self):
 		self.setWindowTitle(_("Results"))
 		try:
-			completedText = _("yes") if test["finished"] else _("no") #FIXME: own translator
+			completedText = _("yes") if self.test["finished"] else _("no")
 		except KeyError:
 			completedText = _("no")
 		self.completedLabel.setText(_("Completed: %s") % completedText)
@@ -173,7 +173,7 @@ class TestViewerModule(object):
 	def createTestViewer(self, *args, **kwargs):
 		tv = TestViewer(self._mm, *args, **kwargs)
 		self._testViewers.add(weakref.ref(tv))
-		#self._retranslate()#FIXME: this crashes if enabled but should be enabled
+		self._retranslate()
 
 		return tv
 

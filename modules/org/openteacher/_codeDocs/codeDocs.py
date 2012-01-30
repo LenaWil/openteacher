@@ -23,6 +23,7 @@ import cherrypy
 import inspect
 import os
 import types
+import mimetypes
 
 class ResourcesHandler(object):
 	def __init__(self, templates, *args, **kwargs):
@@ -34,6 +35,12 @@ class ResourcesHandler(object):
 	def style_css(self):
 		cherrypy.response.headers['Content-Type']= 'text/css'
 		return open(self._templates["style"]).read()
+
+	@cherrypy.expose
+	def logo(self):
+		mimetype = mimetypes.guess_type(self._templates["logo"], strict=False)[0]
+		cherrypy.response.headers['Content-Type'] = mimetype
+		return open(self._templates["logo"]).read()
 
 class ModulesHandler(object):
 	def __init__(self, mods, templates, *args, **kwargs):
@@ -83,6 +90,8 @@ class ModulesHandler(object):
 
 	@cherrypy.expose
 	def modules(self, *args):
+		args = list(args)
+		args[-1] = args[-1][:-len(".html")]
 		mod = self._mods["modules/" + "/".join(args)]
 
 		attrs = dir(mod)
@@ -132,25 +141,33 @@ class CodeDocumentationModule(object):
 
 		self.type = "codeDocumentationShower"
 
-	def showDocumentation(self):
-		#FIXME: this relies on the slowness of this method :P
-		webbrowser.open("http://localhost:8080/")
+		self.requires = (
+			self._mm.mods(type="metadata"),
+			self._mm.mods(type="execute"),
+		)
 
+	def showDocumentation(self):
 		mods = self._modules.sort()
 		templates = {
 			"modules": self._mm.resourcePath("modules.html"),
 			"module": self._mm.resourcePath("module.html"),
-			"style": self._mm.resourcePath("style.css")
+			"style": self._mm.resourcePath("style.css"),
+			"logo": self._modules.default("active", type="metadata").metadata["iconPath"],
 		}
 		root = ModulesHandler(mods, templates)
 		root.resources = ResourcesHandler(templates)
-		cherrypy.quickstart(root)
+
+		cherrypy.tree.mount(root)
+		cherrypy.engine.start()
+		webbrowser.open("http://localhost:8080/")
+		cherrypy.engine.block()
 
 	def enable(self):
 		global pyratemp
 		pyratemp = self._mm.import_("pyratemp")
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self.showDocumentation()
+
+		self._modules.default(type="execute").startRunning.handle(self.showDocumentation)
 
 		self.active = True
 

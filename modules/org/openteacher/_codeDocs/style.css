@@ -1,5 +1,5 @@
 /*
-	Copyright 2010-2012, Marten de Vries
+	Copyright 2012, Marten de Vries
 
 	This file is part of OpenTeacher.
 
@@ -17,10 +17,47 @@
 	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-body {
-	font-family: Ubuntu, sans-serif;
+#header {
+	background-color:#D1E9FA;
+	margin:0;
+	padding:0.5em;
+	height:72px;
 }
 
-.back {
+#logo {
+	height:64px;
+	float:left;
+	padding-right:1em;
+}
+
+#nav {
+	float:right;
+	text-align:right;
+}
+
+#header h1 {
+	margin:0;
+}
+
+body {
+	margin:0;
+	font-family: Ubuntu, sans-serif;
+	background-color:#F6FAFD;
+}
+
+#page {
+	padding:0.5em;
+}
+
+#footer {
+	background-color:#C9DDE4;
+	width:100%;
 	font-size:smaller;
+	text-align:right;
+	padding:0.5em;
+	float:right;
+}
+
+a {
+	color:#000;
 }

@@ -25,11 +25,19 @@
 		<link rel='stylesheet' type='text/css' href='resources/style.css' />
 	</head>
 	<body>
-		<h1>Modules:</h1>
-		<ul>
-		<!--(for mod in mods)-->
-			<li><a href='@!mod!@'>@!mod[len("modules/"):]!@</a></li>
-		<!--(end)-->
-		</ul>
+		<div id='header'>
+			<img id='logo' src='/resources/logo' />
+			<h1>Modules:</h1>
+		</div>
+		<div id='page'>
+			<ul>
+			<!--(for mod in mods)-->
+				<li><a href='@!mod!@.html'>@!mod[len("modules/"):]!@</a></li>
+			<!--(end)-->
+			</ul>
+		</div>
+		<div id='footer'>
+			<em>OpenTeacher code documentation</em>
+		</div>
 	</body>
 </html>
