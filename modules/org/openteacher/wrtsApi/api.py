@@ -24,6 +24,12 @@ try:
 except ImportError:
 	from xml.etree import ElementTree
 
+class LoginError(ValueError):
+	pass
+
+class ConnectionError(IOError):
+	pass
+
 class WrtsConnection(object):
 	"""This class is used to keep a connection with WRTS. It stores authenticationdata and offers some
 	   methods which make it easy to get some data without the need of remembering the URL.
@@ -49,7 +55,7 @@ class WrtsConnection(object):
 		self.loggedIn = False
 
 	def logIn(self, email, password):
-		"""Creates a connection to WRTS, with the authenticationdata inside it. Raises possibly a WrtsConnectionError/WrtsLoginError"""
+		"""Creates a connection to WRTS, with the authenticationdata inside it. Raises possibly a ConnectionError/LoginError"""
 
 		#Create connection
 		unencoded = u"%s:%s" % (email, password)
@@ -61,7 +67,7 @@ class WrtsConnection(object):
 		self._opener.addheaders = [("Authorization", "Basic %s" % encoded),
 								   ("User-Agent", "OpenTeacher")]
 
-		#Try loading the api; if not logged in it won't work, and raises a WrtsLoginError
+		#Try loading the api; if not logged in it won't work, and raises a LoginError
 		self._openUrl("http://www.wrts.nl/api", "HEAD")
 
 	@property
@@ -71,7 +77,7 @@ class WrtsConnection(object):
 		return ListsParser(xml)
 
 	def exportWordList(self, wordList):
-		"""Exports a wordList to WRTS, fully automatic after your login. Throws WrtsConnectionError"""
+		"""Exports a wordList to WRTS, fully automatic after your login. Throws LoginError/ConnectionError"""
 		#Create the xml-document and set the wordlist
 		requestXml = RequestXml(wordList)
 
@@ -79,7 +85,7 @@ class WrtsConnection(object):
 		self._openUrl("http://www.wrts.nl/api/lists", "POST", requestXml.createXml(), {"Content-Type": "application/xml"})
 
 	def importWordList(self, url):
-		"""Downloads a WRTS wordlist from URL and parses it into a WordList object. Throws WrtsConnectionError/WrtsLoginError"""
+		"""Downloads a WRTS wordlist from URL and parses it into a WordList object. Throws LoginError/ConnectionError"""
 		xmlStream = self._openUrl(url)
 		wordListParser = WordListParser(self._mm, xmlStream)
 
@@ -87,7 +93,7 @@ class WrtsConnection(object):
 		return wordListParser.list
 
 	def _openUrl(self, url, method="GET", body=None, additionalHeaders=None):
-		"""Open an url, and return the response as a xml.dom.minidom.Document. Can raise a WrtsConnectionError/WrtsConnectionError"""
+		"""Open an url, and return the response as a xml.dom.minidom.Document. Can raise a LoginError/ConnectionError"""
 		#If additionalHeaders not defined, they're set empty
 		if not additionalHeaders:
 			additionalHeaders = {}
@@ -106,7 +112,7 @@ class WrtsConnection(object):
 				#Not logged in
 				self.loggedIn = False
 				#Tell the user he/she isn't authorized.
-				raise errors.WrtsLoginError()
+				raise LoginError()
 			else:
 				#Unknown status (most likely an error): not logged in
 				self.loggedIn = False
@@ -118,14 +124,14 @@ class WrtsConnection(object):
 					print e.code
 
 				#But because it doesn't make sense to break the program for a WRTS error, show a nice error:
-				raise errors.WrtsConnectionError()
+				raise ConnectionErrorError()
 		except urllib2.URLError, e:
 			#Something wrong with the connection
 			self.loggedIn = False
 			#show for debugging
 			print e
 			#Show a nice error to the user.
-			raise errors.WrtsConnectionError()
+			raise ConnectionError()
 
 		#If no errors during request
 		self.loggedIn = True

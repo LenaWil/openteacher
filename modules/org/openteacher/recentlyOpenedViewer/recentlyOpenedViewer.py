@@ -84,6 +84,7 @@ class RecentlyOpenedViewer(QtGui.QGroupBox):
 
 		layout = QtGui.QVBoxLayout()
 		layout.addWidget(self.listView)
+		self.setFlat(True)
 		self.setLayout(layout)
 
 	def retranslate(self):

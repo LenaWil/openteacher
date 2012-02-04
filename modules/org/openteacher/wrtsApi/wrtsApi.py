@@ -22,6 +22,8 @@
 #FIXME: replace the missing errors.* module that this module has because
 #of 2.x.
 
+from PyQt4 import QtGui
+
 class WrtsApiModule(object):
 	def __init__(self, moduleManager):
 		super(WrtsApiModule, self).__init__()
@@ -30,7 +32,7 @@ class WrtsApiModule(object):
 		self.type = "wrtsApi"
 		self.uses = (
 			self._mm.mods(type="translator"),
-			self._mm.mods(type="dataStore"),
+			self._mm.mods(type="settings"),
 		)
 		self.requires = (
 			self._mm.mods(type="ui"),
@@ -56,27 +58,32 @@ class WrtsApiModule(object):
 			translator.languageChanged.handle(self._retranslate)
 		self._retranslate()
 
+		try:
+			self._settings = self._modules.default("active", type="settings")
+		except IndexError:
+			self._emailSetting = None
+			self._passwordSetting = None
+		else:
+			self._emailSetting = self._settings.registerSetting(
+				internal_name="org.openteacher.wrtsApi.email",
+				name=_("Email"),
+				type="short_text",
+				defaultValue=u"",
+				category=_("WRTS"),
+				subcategory=_("Login credentials"),
+			)
+			self._passwordSetting = self._settings.registerSetting(
+				internal_name="org.openteacher.wrtsApi.password",
+				name=_("Password"),
+				type="password",
+				defaultValue=u"",
+				category=_("WRTS"),
+				subcategory=_("Login credentials"),
+			)
+
 		self._wrtsConnection = self._api.WrtsConnection(self._mm)
 
 		self.active = True
-
-	def _retranslate(self):
-		#Translations
-		try:
-			translator = self._modules.default("active", type="translator")
-		except IndexError:
-			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
-		else:
-			_, ngettext = translator.gettextFunctions(
-				self._mm.resourcePath("translations")
-			)
-		self._ui._, self._ui.ngettext = _, ngettext
-
-		self._button.text = "Import from WRTS"
-
-		for dialog in self._activeDialogs:
-			dialog.retranslate()
-			dialog.tab.title = dialog.windowTitle()
 
 	def disable(self):
 		self.active = False
@@ -89,19 +96,59 @@ class WrtsApiModule(object):
 		del self._ui
 		del self._api
 		del self._button
+		del self._settings
+		del self._emailSetting
+		del self._passwordSetting
 		del self._wrtsConnection
 
-	def importFromWrts(self):
+	def _retranslate(self):
+		global _, ngettext
+
+		#Translations
 		try:
-			dataStore = self._modules.default("active", type="dataStore").store
+			translator = self._modules.default("active", type="translator")
 		except IndexError:
-			dataStore = None
-		try:
-			if dataStore:
-				email = dataStore["org.openteacher.wrtsApi.email"]
-				password = dataStore["org.openteacher.wrtsApi.password"]
-		except KeyError:
-			ld = self._ui.LoginDialog(bool(dataStore), self._uiModule.qtParent)
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self._ui._, self._ui.ngettext = _, ngettext
+
+		self._button.text = _("Import from WRTS")
+
+		for dialog in self._activeDialogs:
+			dialog.retranslate()
+			dialog.tab.title = dialog.windowTitle()
+
+	def _invalidLogin(self):
+		QtGui.QMessageBox.warning(
+			self._uiModule.qtParent,
+			_("Invalid login credentials"),
+			_("WRTS didn't accept the login credentials. Are you sure you entered your e-mail and password correctly?")
+		)
+
+	def _noConnection(self):
+		QtGui.QMessageBox.warning(
+			self._uiModule.qtParent,
+			_("No WRTS connection"),
+			_("WRTS didn't accept the connection. Are you sure that your internet connection works and WRTS is online?")
+		)
+
+	def importFromWrts(self, forceLogin=False):
+		if self._emailSetting and self._passwordSetting:
+			#settings are enabled
+			email = self._emailSetting["value"]
+			password = self._passwordSetting["value"]
+
+			valid = email and password #not blank
+			settingsEnabled = True
+		else:
+			valid = False
+			settingsEnabled = False
+
+		if forceLogin or not valid:
+			ld = self._ui.LoginDialog(settingsEnabled, self._uiModule.qtParent)
 			self._activeDialogs.add(ld)
 
 			tab = self._uiModule.addCustomTab(ld)
@@ -116,19 +163,32 @@ class WrtsApiModule(object):
 			self._activeDialogs.remove(ld)
 			if not ld.result():
 				return
-			
-			if ld.saveCheck and dataStore:	
-				dataStore["org.openteacher.wrtsApi.email"] = ld.email
-				dataStore["org.openteacher.wrtsApi.password"] = ld.password
+
+			if ld.saveCheck and settingsEnabled:
+				self._emailSetting["value"] = ld.email
+				self._passwordSetting["value"] = ld.password
 
 			email = ld.email
 			password = ld.password
 
-		self._wrtsConnection.logIn(email, password)
+		try:
+			self._wrtsConnection.logIn(email, password)
+		except self._api.LoginError:
+			if forceLogin or not valid:
+				#if tried
+				self._invalidLogin()
+			else:
+				#just the setting, let the user try
+				self.importFromWrts(forceLogin=True)
+			return
+		except self._api.ConnectionError:
+			self._noConnection()
+			return
 
-		listsParser = self._wrtsConnection.listsParser
-
-		ldc = self._ui.ListChoiceDialog(listsParser.lists, self._uiModule.qtParent)
+		ldc = self._ui.ListChoiceDialog(
+			self._wrtsConnection.listsParser.lists,
+			self._uiModule.qtParent
+		)
 		self._activeDialogs.add(ldc)
 
 		tab = self._uiModule.addCustomTab(ldc)
@@ -145,11 +205,23 @@ class WrtsApiModule(object):
 			return
 
 		try:
-			listUrl = listsParser.getWordListUrl(ldc.selectedRowIndex)
+			listUrl = self._wrtsConnection.listsParser.getWordListUrl(ldc.selectedRowIndex)
 		except IndexError:
-			#FIXME: show error instead: none selected
+			#No list selected, report.
+			QtGui.QMessageBox.warning(
+				self._uiModule.qtParent,
+				_("No list selected"),
+				_("No list was selected. Please try again.")
+			)
 			return
-		list = self._wrtsConnection.importWordList(listUrl)
+		try:
+			list = self._wrtsConnection.importWordList(listUrl)
+		except self._api.WRTSLoginError:
+			self._invalidLogin()
+			return
+		except self._api.WRTSConnectionError:
+			self._noConnection()
+			return
 
 		self._modules.default(
 			"active",

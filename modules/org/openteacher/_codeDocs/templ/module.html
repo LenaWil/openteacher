@@ -23,6 +23,7 @@
 	<head>
 		<title>Module: @!name!@</title>
 		<link rel='stylesheet' type='text/css' href='/resources/style.css' />
+		<link rel="shortcut icon" type="image/png" href="/resources/logo">
 	</head>
 	<body>
 		<div id='header'>
@@ -79,7 +80,7 @@
 				<ul>
 					<!--(for method in methods)-->
 						<li>
-							<strong>@!method!@</strong>
+							<strong>@!method!@(@!", ".join(methodArgs[method])!@)</strong>
 							<!--(if methodDocs[method])-->
 								<br />
 								<em>$!methodDocs[method]!$</em>

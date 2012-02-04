@@ -42,6 +42,16 @@ class ResourcesHandler(object):
 		cherrypy.response.headers['Content-Type'] = mimetype
 		return open(self._templates["logo"]).read()
 
+	@cherrypy.expose
+	def jquery_js(self):
+		cherrypy.response.headers['Content-Type'] = 'text/javascript'
+		return open(self._templates["jquery"]).read()
+
+	@cherrypy.expose
+	def jquery_quicksearch_js(self):
+		cherrypy.response.headers['Content-Type'] = 'text/javascript'
+		return open(self._templates["jquery_quicksearch"]).read()
+
 class ModulesHandler(object):
 	def __init__(self, mods, templates, *args, **kwargs):
 		super(ModulesHandler, self).__init__(*args, **kwargs)
@@ -118,9 +128,11 @@ class ModulesHandler(object):
 			requires = set()
 
 		methodDocs = {}
+		methodArgs = {}
 		for method in methods:
 			methodObj = getattr(mod, method)
 			methodDocs[method] = self._newlineToBr(methodObj.__doc__)
+			methodArgs[method] = inspect.getargspec(methodObj)[0]
 
 		t = pyratemp.Template(filename=self._templates["module"])
 		return t(**{
@@ -131,6 +143,7 @@ class ModulesHandler(object):
 			"requires": requires,
 			"methods": sorted(methods),
 			"methodDocs": methodDocs,
+			"methodArgs": methodArgs,
 			"properties": sorted(properties),
 		})
 
@@ -149,10 +162,12 @@ class CodeDocumentationModule(object):
 	def showDocumentation(self):
 		mods = self._modules.sort()
 		templates = {
-			"modules": self._mm.resourcePath("modules.html"),
-			"module": self._mm.resourcePath("module.html"),
-			"style": self._mm.resourcePath("style.css"),
+			"modules": self._mm.resourcePath("templ/modules.html"),
+			"module": self._mm.resourcePath("templ/module.html"),
+			"style": self._mm.resourcePath("templ/style.css"),
 			"logo": self._modules.default("active", type="metadata").metadata["iconPath"],
+			"jquery": self._mm.resourcePath("templ/jquery.js"),
+			"jquery_quicksearch": self._mm.resourcePath("templ/jquery.quicksearch.js")
 		}
 		root = ModulesHandler(mods, templates)
 		root.resources = ResourcesHandler(templates)

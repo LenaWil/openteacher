@@ -72,7 +72,10 @@ class TestsModel(QtCore.QAbstractTableModel):
 			return self._list["tests"][index.row()]
 
 	def rowCount(self, parent):
-		return len(self._list["tests"])
+		try:
+			return len(self._list["tests"])
+		except KeyError:
+			return 0
 
 	def columnCount(self, parent):
 		return 3
@@ -119,7 +122,10 @@ class NotesWidget(QtGui.QWidget):
 	def updateList(self, list):
 		noteCalculator = self._modules.default("active", type="noteCalculator")
 
-		notes = map(noteCalculator.calculateNote, list["tests"])
+		try:
+			notes = map(noteCalculator.calculateNote, list["tests"])
+		except KeyError:
+			notes = []
 		try:
 			self.highestLabel.setText(unicode(max(notes))) #FIXME: is max and min ok?
 		except ValueError:
@@ -130,7 +136,7 @@ class NotesWidget(QtGui.QWidget):
 			self.lowestLabel.setText(_("-")) #FIXME: description + own translator
 		try:
 			average = noteCalculator.calculateAverageNote(list["tests"])
-		except ZeroDivisionError:
+		except (ZeroDivisionError, KeyError):
 			average = _("-") #FIXME: description + own translator
 		self.averageLabel.setText(unicode(average))
 
@@ -213,7 +219,7 @@ class TestsViewerWidget(QtGui.QSplitter):
 				"active",
 				type="percentNotesViewer"
 			).createPercentNotesViewer(list["tests"])
-		except IndexError:
+		except (IndexError, KeyError):
 			pass
 		else:
 			self.addWidget(self.percentsNotesViewer)
@@ -279,7 +285,7 @@ class TestsViewerModule(object):
 		self._mm = moduleManager
 
 		self.type = "testsViewer"
-		self.requires = (#FIXME: make testViewer & noteCalculator unneeded?
+		self.requires = (
 			self._mm.mods(type="noteCalculator"),
 			self._mm.mods(type="testViewer"),
 		)

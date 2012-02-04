@@ -64,15 +64,16 @@ class TestModeTestTaker(object):
 			self._mm.mods(type="event"),
 			self._mm.mods(type="wordsTestTeacher"),
 			self._mm.mods(type="testModeConnection"),
+			self._mm.mods(type="testMenu"),
 		)
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		
+
 		#setup translation
 		global _
 		global ngettext
-		
+
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -81,15 +82,26 @@ class TestModeTestTaker(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		
-		# FIXME: make menu option
-		module = self._modules.default("active", type="ui")
-		self._button = module.addLessonCreateButton()
-		self._button.clicked.handle(self.showTestTaker)
-		self._button.text = _("Take test") #FIXME: retranslate!
-		
+
+		ui = self._modules.default("active", type="ui")
+		self._testMenu = self._modules.default("active", type="testMenu").menu
+
+		self._action = QtGui.QAction(ui.qtParent)
+		self._action.activated.connect(self.showTestTaker)
+		self._action.setText(_("Take test")) #FIXME: retranslate!
+		self._testMenu.addAction(self._action)
+
 		self.active = True
-	
+
+	def disable(self):
+		self.active = False
+
+		self._testMenu.removeAction(self._action)
+
+		del self._modules
+		del self._action
+		del self._testMenu
+
 	def showTestTaker(self):
 		# First, login
 		self.connection = self._modules.default("active", type="testModeConnection").getConnection()
@@ -146,8 +158,5 @@ class TestModeTestTaker(object):
 			# Close the teach widget
 			self.teachTab.close()
 	
-	def disable(self):
-		self.active = False
-
 def init(moduleManager):
 	return TestModeTestTaker(moduleManager)

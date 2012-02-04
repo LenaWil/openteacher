@@ -57,12 +57,13 @@ class SettingsModule(object):
 		  * short_text
 		  * long_text
 		  * number
+		  * password
 		  * options #FIXME: shouldn't this be singular? (the type of the setting value is an option)
 		  * language
 		  ... are available.
+		 * defaultValue
 		 * category=None,
 		 * subcategory=None,
-		 * defaultValue=None
 		 * advanced=False
 		 * callback=None
 		  * should have this format:
@@ -94,7 +95,7 @@ class SettingsModule(object):
 		automatically by this module.
 
 		"""
-		if not self._settings.has_key(internal_name):
+		if not internal_name in self._settings:
 			setting["value"] = setting.pop("defaultValue")
 			self._settings[internal_name] = SettingDict(self._executeCallback, setting)
 		return self._settings[internal_name]

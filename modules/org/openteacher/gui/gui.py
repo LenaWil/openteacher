@@ -113,6 +113,7 @@ class GuiModule(object):
 			self._mm.mods(type="event"),
 			self._mm.mods(type="metadata"),
 			self._mm.mods(type="settings"),
+			self._mm.mods(type="menuWrapper"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -164,6 +165,10 @@ class GuiModule(object):
 		else:
 			self._widget = self._ui.OpenTeacherWidget(recentlyOpenedViewer, False)
 
+		#add the open action as a load button too.
+		self._loadButton = self.addLessonLoadButton()
+		self._loadButton.clicked.handle(self.openEvent.send)
+
 		#load translator
 		try:
 			translator = self._modules.default("active", type="translator")
@@ -180,6 +185,12 @@ class GuiModule(object):
 		self._widget.setWindowIcon(QtGui.QIcon(metadata["iconPath"]))
 
 		self._fileTabs = {}
+
+		#Make menus accessable
+		wrapMenu = self._modules.default("active", type="menuWrapper").wrapMenu
+		self.fileMenu = wrapMenu(self._widget.fileMenu)
+		self.editMenu = wrapMenu(self._widget.editMenu)
+		self.helpMenu = wrapMenu(self._widget.helpMenu)
 
 		#Lambda's because otherwise Qt's argument checked is passed ->
 		#error.
@@ -227,6 +238,8 @@ class GuiModule(object):
 
 	def disable(self):
 		self.active = False
+
+		self._loadButton.remove()
 		
 		del self._modules
 		del self._ui
@@ -244,6 +257,10 @@ class GuiModule(object):
 		del self.tabChanged
 		del self.applicationActivityChanged
 		del self._widget
+		del self.fileMenu
+		del self.editMenu
+		del self.helpMenu
+		del self._loadButton
 
 	def _retranslate(self):
 		global _
@@ -257,9 +274,11 @@ class GuiModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		
+
 		self._ui._, self._ui.ngettext = _, ngettext
 		self._widget.retranslate()
+
+		self._loadButton.text = _("Open from file")
 
 	def run(self):
 		self._widget.show()

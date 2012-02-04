@@ -560,6 +560,7 @@ class TestModeTeacherPanelModule(object):
 		self.requires = (
 			self._mm.mods(type="event"),
 			self._mm.mods(type="ui"),
+			self._mm.mods(type="testMenu"),
 			self._mm.mods(type="testModeUploader"),
 			self._mm.mods(type="testModeStudentsView"),
 			self._mm.mods(type="testModeConnection"),
@@ -583,11 +584,13 @@ class TestModeTeacherPanelModule(object):
 				self._mm.resourcePath("translations")
 			)
 		
-		# FIXME: make menu option
-		module = self._modules.default("active", type="ui")
-		self._button = module.addLessonCreateButton()
-		self._button.clicked.handle(self.showPanel)
-		self._button.text = _("Teacher panel") #FIXME: retranslate...
+		ui = self._modules.default("active", type="ui")
+		self._testMenu = self._modules.default("active", type="testMenu").menu
+
+		self._action = QtGui.QAction(ui.qtParent)
+		self._action.activated.connect(self.showPanel)
+		self._action.setText(_("Teacher panel")) #FIXME: retranslate...
+		self._testMenu.addAction(self._action)
 
 		self.dialogShower = self._modules.default("active", type="dialogShower").getDialogShower()
 		
@@ -596,7 +599,10 @@ class TestModeTeacherPanelModule(object):
 	def disable(self):
 		self.active = False
 
-		del self._button
+		self._testMenu.removeAction(self._action)
+
+		del self._testMenu
+		del self._action
 		del self.dialogShower
 	
 	def showPanel(self):

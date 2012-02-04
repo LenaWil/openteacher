@@ -147,8 +147,6 @@ class StartTabButton(QtGui.QPushButton):
 class StartWidget(QtGui.QSplitter):
 	def __init__(self, recentlyOpenedViewer, *args, **kwargs):
 		super(StartWidget, self).__init__(*args, **kwargs)
-		
-		self.setAutoFillBackground(True)
 
 		self._createLessonCurrentRow = 0
 		self._createLessonCurrentColumn = 0
@@ -169,7 +167,7 @@ class StartWidget(QtGui.QSplitter):
 		openLayout = QtGui.QVBoxLayout()
 		openLayout.addWidget(self.createLessonGroupBox)
 		openLayout.addWidget(self.loadLessonGroupBox)
-		
+
 		left = self.style().pixelMetric(QtGui.QStyle.PM_LayoutLeftMargin)
 		openLayout.setContentsMargins(left, 0, 0, 0)
 
@@ -177,15 +175,21 @@ class StartWidget(QtGui.QSplitter):
 		openWidget.setLayout(openLayout)
 
 		self.addWidget(openWidget)
-		
+
+		self.setStretchFactor(0, 7)
+
 		if recentlyOpenedViewer:
 			recentlyOpenedLayout = QtGui.QVBoxLayout()
+
+			right = self.style().pixelMetric(QtGui.QStyle.PM_LayoutRightMargin)
+			recentlyOpenedLayout.setContentsMargins(0, 0, 0, 0)
 			recentlyOpenedLayout.addWidget(recentlyOpenedViewer)
 
 			self.recentlyOpenedGroupBox = QtGui.QGroupBox()
 			self.recentlyOpenedGroupBox.setLayout(recentlyOpenedLayout)
 
 			self.addWidget(self.recentlyOpenedGroupBox)
+			self.setStretchFactor(1, 2)
 
 	def retranslate(self):
 		self.createLessonGroupBox.setTitle(_("Create lesson:"))
