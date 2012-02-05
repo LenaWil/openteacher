@@ -19,9 +19,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-#FIXME: replace the missing errors.* module that this module has because
-#of 2.x.
-
 from PyQt4 import QtGui
 
 class WrtsApiModule(object):
@@ -37,11 +34,14 @@ class WrtsApiModule(object):
 		self.requires = (
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="loader"),
+			self._mm.mods(type="lessonTracker"),
+			self._mm.mods(type="wordsStringComposer"),
 		)
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
 		self._uiModule = self._modules.default("active", type="ui")
+		self._lessonTracker = self._modules.default("active", type="lessonTracker")
 		self._activeDialogs = set()
 
 		self._ui = self._mm.import_("ui")
@@ -49,6 +49,10 @@ class WrtsApiModule(object):
 
 		self._button = self._uiModule.addLessonLoadButton()
 		self._button.clicked.handle(self.importFromWrts)
+
+		self._action = QtGui.QAction(self._uiModule.qtParent)
+		self._action.activated.connect(self.exportToWrts)
+		self._uiModule.fileMenu.addAction(self._action)
 
 		try:
 			translator = self._modules.default("active", type="translator")
@@ -92,6 +96,7 @@ class WrtsApiModule(object):
 
 		del self._modules
 		del self._uiModule
+		del self._lessonTracker
 		del self._activeDialogs
 		del self._ui
 		del self._api
@@ -116,6 +121,7 @@ class WrtsApiModule(object):
 		self._ui._, self._ui.ngettext = _, ngettext
 
 		self._button.text = _("Import from WRTS")
+		self._action.setText(_("Export to WRTS"))
 
 		for dialog in self._activeDialogs:
 			dialog.retranslate()
@@ -135,7 +141,7 @@ class WrtsApiModule(object):
 			_("WRTS didn't accept the connection. Are you sure that your internet connection works and WRTS is online?")
 		)
 
-	def importFromWrts(self, forceLogin=False):
+	def _loginToWrts(self, forceLogin=False):
 		if self._emailSetting and self._passwordSetting:
 			#settings are enabled
 			email = self._emailSetting["value"]
@@ -168,8 +174,7 @@ class WrtsApiModule(object):
 				self._emailSetting["value"] = ld.email
 				self._passwordSetting["value"] = ld.password
 
-			email = ld.email
-			password = ld.password
+			email, password = ld.email, ld.password
 
 		try:
 			self._wrtsConnection.logIn(email, password)
@@ -179,11 +184,39 @@ class WrtsApiModule(object):
 				self._invalidLogin()
 			else:
 				#just the setting, let the user try
-				self.importFromWrts(forceLogin=True)
+				self._loginToWrts(forceLogin=True)
 			return
 		except self._api.ConnectionError:
 			self._noConnection()
 			return
+
+	def exportToWrts(self):
+		lesson = self._lessonTracker.currentLesson
+		if not (lesson and lesson.module.dataType == "words"):
+			return #FIXME: menu item should be disabled in this situation
+		self._loginToWrts()
+
+		try:
+			self._wrtsConnection.exportWordList(
+				lesson.list,
+				self._modules.default("active", type="wordsStringComposer").compose
+			)
+		except self._api.NotEnoughMetadataError:
+			QtGui.QMessageBox.warning(
+				self._uiModule.qtParent,
+				_("No word list metadata given."),
+				_("Please fill in the wordlist title, question language and answer language first. Then try again.")
+			)
+		except self._api.LoginError:
+			self._invalidLogin()
+			return
+		except self._api.ConnectionError:
+			self._noConnection()
+			return
+		#FIXME: inform the user
+
+	def importFromWrts(self):
+		self._loginToWrts()
 
 		ldc = self._ui.ListChoiceDialog(
 			self._wrtsConnection.listsParser.lists,
@@ -216,10 +249,10 @@ class WrtsApiModule(object):
 			return
 		try:
 			list = self._wrtsConnection.importWordList(listUrl)
-		except self._api.WRTSLoginError:
+		except self._api.LoginError:
 			self._invalidLogin()
 			return
-		except self._api.WRTSConnectionError:
+		except self._api.ConnectionError:
 			self._noConnection()
 			return
 
@@ -230,6 +263,7 @@ class WrtsApiModule(object):
 			"list": list,
 			"resources": {},
 		})
+		#FIXME: inform the user?
 
 def init(moduleManager):
 	return WrtsApiModule(moduleManager)

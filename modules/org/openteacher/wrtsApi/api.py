@@ -24,11 +24,79 @@ try:
 except ImportError:
 	from xml.etree import ElementTree
 
+import xml.dom.minidom
+
 class LoginError(ValueError):
 	pass
 
 class ConnectionError(IOError):
 	pass
+
+class NotEnoughMetadataError(ValueError):
+	pass
+
+#FIXME: convert this class to pyratemp (using template engine?)?
+class RequestXml(xml.dom.minidom.Document):
+	"""The RequestXml class is used to create xml understood by the WRTS-api. The
+	   xml is used to send wordLists to WRTS."""
+	def __init__(self, wordList, compose):
+		xml.dom.minidom.Document.__init__(self)
+		self.wordList = wordList
+
+		self._compose = compose
+
+	def createXml(self):
+		l = self.wordList
+		#Check if enough metadata is supplied, otherwise raise an error.
+		if not (
+			"title" in l and l["title"] and
+			"questionLanguage" in l and l["questionLanguage"] and
+			"answerLanguage" in l and l["answerLanguage"]
+		):
+			raise NotEnoughMetadataError()
+
+		#create the root-element
+		listDom = self.createElement("list")
+		self.appendChild(listDom)
+
+		#create a words-element
+		wordsDom = self.createElement("words")
+		listDom.appendChild(wordsDom)
+
+		#append a title, question language, and answer language element
+		titleDom = self.createElement("title")
+		titleDom.appendChild(self.createTextNode(l["title"]))
+		listDom.appendChild(titleDom)
+
+		questionLanguageDom = self.createElement("lang-a")
+		questionLanguageDom.appendChild(self.createTextNode(l["questionLanguage"]))
+		listDom.appendChild(questionLanguageDom)
+
+		answerLanguageDom = self.createElement("lang-b")
+		answerLanguageDom.appendChild(self.createTextNode(l["answerLanguage"]))
+		listDom.appendChild(answerLanguageDom)
+
+		for word in l["items"]:
+			#create word-element
+			wordDom = self.createElement("word")
+
+			#append question
+			questionWordDom = self.createElement("word-a")
+			questionWordDom.appendChild(self.createTextNode(
+				self._compose(word["questions"])
+			))
+			wordDom.appendChild(questionWordDom)
+
+			#append answer (and second answer if one)
+			answerWordDom = self.createElement("word-b")
+			answerWordDom.appendChild(self.createTextNode(
+				self._compose(word["answers"])
+			))
+			wordDom.appendChild(answerWordDom)
+
+			#append word to wordsElement
+			wordsDom.appendChild(wordDom)
+		return self.toxml(encoding="UTF-8")
 
 class WrtsConnection(object):
 	"""This class is used to keep a connection with WRTS. It stores authenticationdata and offers some
@@ -76,10 +144,10 @@ class WrtsConnection(object):
 		xml = self._openUrl("http://www.wrts.nl/api/lists")
 		return ListsParser(xml)
 
-	def exportWordList(self, wordList):
+	def exportWordList(self, wordList, compose):
 		"""Exports a wordList to WRTS, fully automatic after your login. Throws LoginError/ConnectionError"""
 		#Create the xml-document and set the wordlist
-		requestXml = RequestXml(wordList)
+		requestXml = RequestXml(wordList, compose)
 
 		#Send a POST request, with as body the xml
 		self._openUrl("http://www.wrts.nl/api/lists", "POST", requestXml.createXml(), {"Content-Type": "application/xml"})
