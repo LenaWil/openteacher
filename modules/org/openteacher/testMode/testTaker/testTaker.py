@@ -87,7 +87,7 @@ class TestModeTestTaker(object):
 		self._testMenu = self._modules.default("active", type="testMenu").menu
 
 		self._action = QtGui.QAction(ui.qtParent)
-		self._action.activated.connect(self.showTestTaker)
+		self._action.triggered.connect(self.showTestTaker)
 		self._action.setText(_("Take test")) #FIXME: retranslate!
 		self._testMenu.addAction(self._action)
 

@@ -51,7 +51,7 @@ class WrtsApiModule(object):
 		self._button.clicked.handle(self.importFromWrts)
 
 		self._action = QtGui.QAction(self._uiModule.qtParent)
-		self._action.activated.connect(self.exportToWrts)
+		self._action.triggered.connect(self.exportToWrts)
 		self._uiModule.fileMenu.addAction(self._action)
 
 		try:
@@ -93,6 +93,7 @@ class WrtsApiModule(object):
 		self.active = False
 
 		self._button.remove()
+		self._uiModule.fileMenu.removeAction(self._action)
 
 		del self._modules
 		del self._uiModule

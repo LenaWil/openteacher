@@ -30,7 +30,7 @@ class OpenTeacher(object):
 
 		mods = set(mm.mods(type="execute"))
 		if len(mods) != 1:
-			raise ValueError("There has to be exactly one openteacher-core module installed.")
+			raise ValueError("There has to be exactly one execute module installed.")
 		mods.pop().execute()
 		return 0
 
