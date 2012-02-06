@@ -35,19 +35,35 @@
 	</head>
 	<body>
 		<div id='header'>
-			<img id='logo' src='resources/logo' />
-			<h1>Modules:</h1>
-			<a id='nav' href='priorities.html'>Module priorities by profile &gt;</a>
+			<img id='logo' src='/resources/logo' />
+			<h1>Module priorities by profile</h1>
+			<a id='nav' href='/'>&lt; Back to index</a><br />
 		</div>
 		<div id='page'>
-			Search: <input id='search' type='text' />
-			<ul id='modules'>
-			<!--(for mod in mods)-->
-				<li><a href='@!mod!@.html'>@!mod[len("modules/"):]!@</a></li>
+			<!--(for profile in profiles)-->
+				<h2>@!profile.name!@</h2>
+				<table>
+						<thead>
+							<tr>
+								<th>Identifier</th>
+								<th>Priority (0-1000 high-low)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!--(for key, mod in mods)-->
+								<!--(if profile.name in mod.priorities)-->
+									<tr>
+										<td>@!key[len("modules/"):]!@</td>
+										<td>@!mod.priorities[profile.name]!@</td>
+									</tr>
+								<!--(end)-->
+							<!--(end)-->
+						</tbody>
+				</table>
 			<!--(end)-->
-			</ul>
 		</div>
 		<div id='footer'>
+			<a href='/'>&lt; Back to index</a><br />
 			<em>OpenTeacher code documentation</em>
 		</div>
 	</body>

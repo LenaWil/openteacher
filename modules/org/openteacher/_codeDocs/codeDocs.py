@@ -53,11 +53,12 @@ class ResourcesHandler(object):
 		return open(self._templates["jquery_quicksearch"]).read()
 
 class ModulesHandler(object):
-	def __init__(self, mods, templates, *args, **kwargs):
+	def __init__(self, moduleManager, templates, *args, **kwargs):
 		super(ModulesHandler, self).__init__(*args, **kwargs)
 
+		self._mm = moduleManager
 		self._mods = {}
-		for mod in mods:
+		for mod in self._mm.mods:
 			id = os.path.split(mod.__class__.__file__)[0]
 			self._mods[id] = mod
 		self._templates = templates
@@ -76,6 +77,22 @@ class ModulesHandler(object):
 		t = pyratemp.Template(filename=self._templates["modules"])
 		return t(**{
 			"mods": sorted(self._mods.keys())
+		})
+
+	@cherrypy.expose
+	def priorities_html(self):
+		profiles = self._mm.mods("active", type="profile")
+		profiles = sorted(profiles, key=lambda m: m.name)
+
+		mods = {}
+		for mod in self._mm.mods("priorities"):
+			mods[mod.__class__.__file__] = mod
+		mods = sorted(mods.iteritems())
+
+		t = pyratemp.Template(filename=self._templates["priorities"])
+		return t(**{
+			"mods": mods,
+			"profiles": profiles,
 		})
 
 	def _isFunction(self, mod, x):
@@ -158,18 +175,21 @@ class CodeDocumentationModule(object):
 			self._mm.mods(type="metadata"),
 			self._mm.mods(type="execute"),
 		)
+		self.uses = (
+			self._mm.mods(type="profile"),
+		)
 
 	def showDocumentation(self):
-		mods = self._modules.sort()
 		templates = {
 			"modules": self._mm.resourcePath("templ/modules.html"),
+			"priorities": self._mm.resourcePath("templ/priorities.html"),
 			"module": self._mm.resourcePath("templ/module.html"),
 			"style": self._mm.resourcePath("templ/style.css"),
 			"logo": self._modules.default("active", type="metadata").metadata["iconPath"],
 			"jquery": self._mm.resourcePath("templ/jquery.js"),
-			"jquery_quicksearch": self._mm.resourcePath("templ/jquery.quicksearch.js")
+			"jquery_quicksearch": self._mm.resourcePath("templ/jquery.quicksearch.js"),
 		}
-		root = ModulesHandler(mods, templates)
+		root = ModulesHandler(self._mm, templates)
 		root.resources = ResourcesHandler(templates)
 
 		cherrypy.tree.mount(root)
