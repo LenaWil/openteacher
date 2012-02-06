@@ -81,6 +81,16 @@ class ShuffleAnswerTeachTypeModule(object):
 		self._mm = moduleManager
 
 		self.type = "teachType"
+		self.priorities = {
+			"student@home": 558,
+			"student@school": 558,
+			"teacher": 558,
+			"wordsonly": 558,
+			"selfstudy": 558,
+			"testsuite": 558,
+			"codedocumentation": 558,
+			"all": 558,
+		}
 		self.requires = (
 			self._mm.mods(type="typingInput"),
 		)

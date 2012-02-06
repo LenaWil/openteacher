@@ -47,7 +47,7 @@ class SpeakThread(threading.Thread):
 			nullDevice = open(os.devnull, "w")
 			ret = subprocess.call(["espeak", self.text, "-v" + self.voiceid], stdout=nullDevice, stderr=nullDevice)
 
-class TextToSpeech():
+class TextToSpeech(object):
 	autoPlay = True
 	def __init__(self, pyttsx):
 		if os.name == 'nt' or os.name == 'mac':
@@ -117,7 +117,7 @@ class TextToSpeechModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()
-
+		
 		#load translator
 		try:
 			translator = self._modules.default("active", type="translator")
@@ -126,9 +126,16 @@ class TextToSpeechModule(object):
 		else:
 			translator.languageChanged.handle(self._retranslate)
 		self._retranslate()
-	
+		
+		self.active = True
+		
+		t = threading.Thread(target=self._enable)
+		t.start()
+		
+	def _enable(self):
 		# For Windows and Mac
 		pyttsx = self._mm.importFrom(self._mm.resourcePath("tts"), "pyttsx")
+		
 		
 		# Create text to speech engine
 		try:
@@ -161,9 +168,6 @@ class TextToSpeechModule(object):
 		self.say = self._modules.default(type="event").createEvent()
 
 		self.say.handle(self.newWord)
-		
-		self.active = True
-		#self.newWord("Text to speech enabled")
 
 	def _retranslate(self):
 		#Translations

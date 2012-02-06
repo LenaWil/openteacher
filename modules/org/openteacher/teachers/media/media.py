@@ -253,6 +253,16 @@ class MediaTeacherModule(object):
 		self._mm = moduleManager
 		
 		self.type = "mediaTeacher"
+		self.priorities = {
+			"student@home": 520,
+			"student@school": 520,
+			"teacher": 520,
+			"wordsonly": -1,
+			"selfstudy": 520,
+			"testsuite": 520,
+			"codedocumentation": 520,
+			"all": 520,
+		}
 		
 		self.uses = (
 			self._mm.mods(type="translator"),

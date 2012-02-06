@@ -27,6 +27,16 @@ class PdfSaverModule(object):
 		self._mm = moduleManager
 
 		self.type = "save"
+		self.priorities = {
+			"student@home": 784,
+			"student@school": 784,
+			"teacher": 784,
+			"wordsonly": 784,
+			"selfstudy": 784,
+			"testsuite": 784,
+			"codedocumentation": 784,
+			"all": 784,
+		}
 
 		self.requires = (
 			self._mm.mods(type="wordsHtmlGenerator"),

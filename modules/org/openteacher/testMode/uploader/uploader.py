@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Milan Boers
+#	Copyright 2011-2012, Milan Boers
 #	Copyright 2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
@@ -36,6 +36,16 @@ class TestModeUploaderModule(object):
 		self._mm = moduleManager
 		
 		self.type = "testModeUploader"
+		self.priorities = {
+			"student@home": -1,
+			"student@school": 560,
+			"teacher": -1,
+			"wordsonly": -1,
+			"selfstudy": -1,
+			"testsuite": 560,
+			"codedocumentation": 560,
+			"all": 560,
+		}
 		
 		self.uses = (
 			self._mm.mods(type="translator"),

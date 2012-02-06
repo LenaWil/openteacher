@@ -31,7 +31,16 @@ class MediaTypeModule(object):
 		
 		self.type = "mediaType"
 		self.remoteNames = ["Dailymotion"]
-		self.priority = 10
+		self.priorities = {
+			"student@home": 300,
+			"student@school": 300,
+			"teacher": 300,
+			"wordsonly": -1,
+			"selfstudy": 300,
+			"testsuite": 300,
+			"codedocumentation": 300,
+			"all": 300,
+		}
 
 	def enable(self):
 		self.active = True

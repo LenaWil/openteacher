@@ -25,6 +25,16 @@ class HtmlSaverModule(object):
 		self._mm = moduleManager
 
 		self.type = "save"
+		self.priorities = {
+			"student@home": 616,
+			"student@school": 616,
+			"teacher": 616,
+			"wordsonly": 616,
+			"selfstudy": 616,
+			"testsuite": 616,
+			"codedocumentation": 616,
+			"all": 616,
+		}
 
 		self.requires = (
 			self._mm.mods(type="wordsHtmlGenerator"),

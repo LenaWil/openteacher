@@ -33,6 +33,16 @@ class MapModule(object):
 		self.knownPlaces = self._getKnownPlaces()
 
 		self.type = "map"
+		self.priorities = {
+			"student@home": 306,
+			"student@school": 306,
+			"teacher": 306,
+			"wordsonly": -1,
+			"selfstudy": 306,
+			"testsuite": 306,
+			"codedocumentation": 306,
+			"all": 306,
+		}
 
 	def enable(self):
 		self.active = True

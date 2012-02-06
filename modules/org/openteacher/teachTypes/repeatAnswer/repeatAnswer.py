@@ -118,6 +118,16 @@ class RepeatAnswerTeachTypeModule(object):
 		self._mm = moduleManager
 
 		self.type = "teachType"
+		self.priorities = {
+			"student@home": 651,
+			"student@school": 651,
+			"teacher": 651,
+			"wordsonly": 651,
+			"selfstudy": 651,
+			"testsuite": 651,
+			"codedocumentation": 651,
+			"all": 651,
+		}
 		self.requires = (
 			self._mm.mods(type="typingInput"),
 		)

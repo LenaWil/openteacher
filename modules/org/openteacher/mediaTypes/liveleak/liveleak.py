@@ -31,7 +31,16 @@ class MediaTypeModule(object):
 		
 		self.type = "mediaType"
 		self.remoteNames = ["LiveLeak"]
-		self.priority = 10
+		self.priorities = {
+			"student@home": 250,
+			"student@school": 250,
+			"teacher": 250,
+			"wordsonly": -1,
+			"selfstudy": 250,
+			"testsuite": 250,
+			"codedocumentation": 250,
+			"all": 250,
+		}
 
 	def enable(self):
 		self.active = True

@@ -30,6 +30,16 @@ class MediaLessonModule(object):
 		self.counter = 1
 
 		self.type = "lesson"
+		self.priorities = {
+			"student@home": 667,
+			"student@school": 667,
+			"teacher": 667,
+			"wordsonly": -1,
+			"selfstudy": 667,
+			"testsuite": 667,
+			"codedocumentation": 667,
+			"all": 667,
+		}
 		self.dataType = "media"
 		
 		self.uses = (

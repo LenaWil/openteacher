@@ -32,6 +32,17 @@ class OpenTeachingMediaSaverModule(object):
 		self._mm = moduleManager
 
 		self.type = "save"
+		self.priorities = {
+			"student@home": 112,
+			"student@school": 112,
+			"teacher": 112,
+			"wordsonly": -1,
+			"selfstudy": 112,
+			"testsuite": 112,
+			"codedocumentation": 112,
+			"all": 112,
+		}
+		
 		self.requires = (
 			self._mm.mods(type="settings"),
 			self._mm.mods(type="otxxSaver"),

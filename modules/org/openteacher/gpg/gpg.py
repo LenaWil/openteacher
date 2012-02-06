@@ -37,17 +37,16 @@ class GPG(object):
 		f.write(s)
 		f.close()
 		
-		args = []
-		args.append(self.gpgbinary)
-		args.append("--status-fd")
-		args.append("1")
-		args.append("--homedir")
-		args.append(self.gpghome)
-		args.append("--verify")
-		args.append(f.name)
-		args.append(filename)
-		
-		print args
+		args = [
+			self.gpgbinary,
+			"--status-fd",
+			"1",
+			"--homedir",
+			self.gpghome,
+			"--verify",
+			f.name,
+			filename
+		]
 		
 		o = subprocess.call(args)
 		

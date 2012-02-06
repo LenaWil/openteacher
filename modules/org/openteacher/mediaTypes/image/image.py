@@ -32,7 +32,16 @@ class MediaTypeModule(object):
 		
 		self.type = "mediaType"
 		self.extensions = [".jpg", ".jpeg", ".png", ".bmp", ".gif", ".tif", ".tiff"]
-		self.priority = 5
+		self.priorities = {
+			"student@home": 500,
+			"student@school": 500,
+			"teacher": 500,
+			"wordsonly": -1,
+			"selfstudy": 500,
+			"testsuite": 500,
+			"codedocumentation": 500,
+			"all": 500,
+		}
 
 	def enable(self):
 		self.active = True

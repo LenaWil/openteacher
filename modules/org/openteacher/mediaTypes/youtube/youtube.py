@@ -31,7 +31,16 @@ class MediaTypeModule(object):
 		
 		self.type = "mediaType"
 		self.remoteNames = ["YouTube"]
-		self.priority = 10
+		self.priorities = {
+			"student@home": 100,
+			"student@school": 100,
+			"teacher": 100,
+			"wordsonly": -1,
+			"selfstudy": 100,
+			"testsuite": 100,
+			"codedocumentation": 100,
+			"all": 100,
+		}
 
 	def enable(self):
 		self.active = True

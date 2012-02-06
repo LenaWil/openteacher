@@ -362,6 +362,16 @@ class WordsEntererModule(object):
 		self._mm = moduleManager
 
 		self.type = "wordsEnterer"
+		self.priorities = {
+			"student@home": 450,
+			"student@school": 450,
+			"teacher": 450,
+			"wordsonly": 450,
+			"selfstudy": 450,
+			"testsuite": 450,
+			"codedocumentation": 450,
+			"all": 450,
+		}
 		self.uses = (
 			self._mm.mods(type="translator"),
 			self._mm.mods(type="onscreenKeyboard"),

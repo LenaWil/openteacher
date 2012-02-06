@@ -33,6 +33,16 @@ class TeachTopoLessonModule(object):
 		self.counter = 1
 		
 		self.type = "lesson"
+		self.priorities = {
+			"student@home": 580,
+			"student@school": 580,
+			"teacher": 580,
+			"wordsonly": -1,
+			"selfstudy": 580,
+			"testsuite": 580,
+			"codedocumentation": 580,
+			"all": 580,
+		}
 		
 		self.uses = (
 			self._mm.mods(type="translator"),

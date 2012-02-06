@@ -25,6 +25,17 @@ class OpenTeachingMediaLoaderModule(object):
 		super(OpenTeachingMediaLoaderModule, self).__init__(*args, **kwargs)
 		
 		self.type = "load"
+		self.priorities = {
+			"student@home": 216,
+			"student@school": 216,
+			"teacher": 216,
+			"wordsonly": -1,
+			"selfstudy": 216,
+			"testsuite": 216,
+			"codedocumentation": 216,
+			"all": 216,
+		}
+		
 		self._mm = moduleManager
 		self.uses = (
 			self._mm.mods(type="translator"),

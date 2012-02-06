@@ -25,6 +25,16 @@ class OpenTeachingTopoLoaderModule(object):
 
 		self._mm = moduleManager
 		self.type = "load"
+		self.priorities = {
+			"student@home": 324,
+			"student@school": 324,
+			"teacher": 324,
+			"wordsonly": -1,
+			"selfstudy": 324,
+			"testsuite": 324,
+			"codedocumentation": 324,
+			"all": 324,
+		}
 
 		self.uses = (
 			self._mm.mods(type="translator"),

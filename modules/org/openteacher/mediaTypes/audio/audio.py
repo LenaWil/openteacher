@@ -37,7 +37,16 @@ class MediaTypeModule(object):
 
 		self.type = "mediaType"
 		self.extensions = [".mp3", ".wav", ".wma", ".aif", ".mid", ".midi", ".aac", ".flac"]
-		self.priority = 5
+		self.priorities = {
+			"student@home": 550,
+			"student@school": 550,
+			"teacher": 550,
+			"wordsonly": -1,
+			"selfstudy": 550,
+			"testsuite": 550,
+			"codedocumentation": 550,
+			"all": 550,
+		}
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()

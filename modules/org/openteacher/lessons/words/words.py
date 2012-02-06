@@ -72,6 +72,16 @@ class WordsLessonModule(object):
 
 		self._mm = moduleManager
 		self.type = "lesson"
+		self.priorities = {
+			"student@home": 493,
+			"student@school": 493,
+			"teacher": 493,
+			"wordsonly": 493,
+			"selfstudy": 493,
+			"testsuite": 493,
+			"codedocumentation": 493,
+			"all": 493,
+		}
 		self.requires = (
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="event"),

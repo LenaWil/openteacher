@@ -27,6 +27,16 @@ class OpenTeacherSaverModule(object):
 		self._mm = moduleManager
 
 		self.type = "save"
+		self.priorities = {
+			"student@home": 364,
+			"student@school": 364,
+			"teacher": 364,
+			"wordsonly": 364,
+			"selfstudy": 364,
+			"testsuite": 364,
+			"codedocumentation": 364,
+			"all": 364,
+		}
 		self.requires = (
 			self._mm.mods(type="wordsStringComposer"),
 		)

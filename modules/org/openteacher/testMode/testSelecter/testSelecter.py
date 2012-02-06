@@ -78,6 +78,16 @@ class TestModeTestSelecterModule(object):
 		self._mm = moduleManager
 		
 		self.type = "testModeTestSelecter"
+		self.priorities = {
+			"student@home": -1,
+			"student@school": 532,
+			"teacher": 532,
+			"wordsonly": -1,
+			"selfstudy": -1,
+			"testsuite": 532,
+			"codedocumentation": 532,
+			"all": 532,
+		}
 		
 		self.uses = (
 			self._mm.mods(type="translator"),

@@ -32,7 +32,16 @@ class MediaTypeModule(object):
 		
 		self.type = "mediaType"
 		self.extensions = [".txt"]
-		self.priority = 5
+		self.priorities = {
+			"student@home": 450,
+			"student@school": 450,
+			"teacher": 450,
+			"wordsonly": -1,
+			"selfstudy": 450,
+			"testsuite": 450,
+			"codedocumentation": 450,
+			"all": 450,
+		}
 
 	def enable(self):
 		self.active = True

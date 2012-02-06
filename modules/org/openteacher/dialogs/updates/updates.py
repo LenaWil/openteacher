@@ -20,6 +20,8 @@
 
 from PyQt4 import QtCore, QtGui
 
+import threading
+
 _, ngettext = unicode, lambda x, y, n: x if n == 1 else y #FIXME, including retranslation
 
 #class UpdatesListModel(QtCore.QAbstractTableModel):
@@ -140,7 +142,8 @@ class UpdatesDialog(QtGui.QDialog):
 	def rememberChoice(self):
 		return self.checkBox.isChecked()
 
-class UpdatesDialogModule(object):
+class UpdatesDialogModule(QtCore.QObject):
+	_finishedFetching = QtCore.pyqtSignal()
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(UpdatesDialogModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
@@ -154,9 +157,9 @@ class UpdatesDialogModule(object):
 		)
 
 	def enable(self):
-		modules = set(self._mm.mods("active", type="modules")).pop()
-		self._dataStore = modules.default("active", type="dataStore").store
-		settings = modules.default("active", type="settings")
+		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._dataStore = self._modules.default("active", type="dataStore").store
+		settings = self._modules.default("active", type="settings")
 		self._rememberChoiceSetting = settings.registerSetting(**{#FIXME: translate all these...
 			"internal_name": "org.openteacher.updatesDialog.rememberChoice",
 			"name": "Remember if the user wants to install updates or not",
@@ -166,25 +169,35 @@ class UpdatesDialogModule(object):
 		})
 		self._dataStore["org.openteacher.updatesDialog.userDidUpdatesLastTime"] = False
 		self.active = True
-
+		
+		self._finishedFetching.connect(self.__enable)
+		
+		# Fetch updates thread
+		t = threading.Thread(target=self._enable)
+		t.start()
+	
+	def _enable(self):
 		if self._rememberChoiceSetting["value"] and not self._dataStore["org.openteacher.updatesDialog.userDidUpdatesLastTime"]:
 			#The user doesn't want to be bothered with updates
 			return
-		self._updatesMod = modules.default("active", type="updates")
+		self._updatesMod = self._modules.default("active", type="updates")
 		try:
-			updates = self._updatesMod.updates
+			self._updates = self._updatesMod.updates
 		except IOError:
 			return #FIXME possibly :P
 
-		if not updates:
+		if not self._updates:
 			return
-
+		
+		self._finishedFetching.emit()
+	
+	def __enable(self):
 		#FIXME: should the updatesDialog check for new updates, or another module?
 		if self._rememberChoiceSetting["value"] and self._dataStore["org.openteacher.updatesDialog.userDidUpdatesLastTime"]:
 			self._updatesMod.update()
 		else:
-			self._ud = UpdatesDialog(updates, self._rememberChoiceSetting["value"])
-			self._tab = modules.default("active", type="ui").addCustomTab(self._ud)
+			self._ud = UpdatesDialog(self._updates, self._rememberChoiceSetting["value"])
+			self._tab = self._modules.default("active", type="ui").addCustomTab(self._ud)
 			self._tab.title = "Updates"#FIXME: retranslate, including dialog itself
 			self._tab.closeRequested.handle(self._ud.rejected.emit)
 			self._ud.accepted.connect(self._accepted)

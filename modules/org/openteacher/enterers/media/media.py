@@ -308,6 +308,16 @@ class MediaEntererModule(object):
 		self._mm = moduleManager
 		
 		self.type = "mediaEnterer"
+		self.priorities = {
+			"student@home": 510,
+			"student@school": 510,
+			"teacher": 510,
+			"wordsonly": -1,
+			"selfstudy": 510,
+			"testsuite": 510,
+			"codedocumentation": 510,
+			"all": 510,
+		}
 		
 		self.uses = (
 			self._mm.mods(type="translator"),

@@ -553,6 +553,16 @@ class TestModeTeacherPanelModule(object):
 		self._mm = moduleManager
 		
 		self.type = "testModeTeacherPanel"
+		self.priorities = {
+			"student@home": -1,
+			"student@school": 492,
+			"teacher": 492,
+			"wordsonly": -1,
+			"selfstudy": -1,
+			"testsuite": 492,
+			"codedocumentation": 492,
+			"all": 492,
+		}
 		
 		self.uses = (
 			self._mm.mods(type="translator"),

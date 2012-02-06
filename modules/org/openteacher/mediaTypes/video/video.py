@@ -37,7 +37,16 @@ class MediaTypeModule(object):
 		
 		self.type = "mediaType"
 		self.extensions = [".avi", ".wmv", ".flv", ".mp4", ".mpg", ".mpeg", ".mov"]
-		self.priority = 5
+		self.priorities = {
+			"student@home": 400,
+			"student@school": 400,
+			"teacher": 400,
+			"wordsonly": -1,
+			"selfstudy": 400,
+			"testsuite": 400,
+			"codedocumentation": 400,
+			"all": 400,
+		}
 
 	def enable(self):
 		self._modules = set(self._mm.mods("active", type="modules")).pop()

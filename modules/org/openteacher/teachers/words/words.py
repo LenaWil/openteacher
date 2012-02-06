@@ -353,6 +353,17 @@ class WordsTeacherModule(object):
 		self._mm = moduleManager
 
 		self.type = "wordsTeacher"
+		self.priorities = {
+			"student@home": 506,
+			"student@school": 506,
+			"teacher": 506,
+			"wordsonly": 506,
+			"selfstudy": 506,
+			"testsuite": 506,
+			"codedocumentation": 506,
+			"all": 506,
+		}
+		
 		self.uses = (
 			self._mm.mods(type="translator"),
 			#FIXME from here on: should these items be in the settings

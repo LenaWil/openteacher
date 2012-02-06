@@ -206,6 +206,16 @@ class TestModeConnectionModule(object):
 		self._mm = moduleManager
 		
 		self.type = "testModeConnection"
+		self.priorities = {
+			"student@home": -1,
+			"student@school": 444,
+			"teacher": 444,
+			"wordsonly": -1,
+			"selfstudy": -1,
+			"testsuite": 444,
+			"codedocumentation": 444,
+			"all": 444,
+		}
 		
 		self.uses = (
 			self._mm.mods(type="translator"),

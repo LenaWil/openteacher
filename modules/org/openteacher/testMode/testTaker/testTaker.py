@@ -56,6 +56,16 @@ class TestModeTestTaker(object):
 		self._mm = moduleManager
 		
 		self.type = "testModeTestTaker"
+		self.priorities = {
+			"student@home": -1,
+			"student@school": 504,
+			"teacher": -1,
+			"wordsonly": -1,
+			"selfstudy": -1,
+			"testsuite": 504,
+			"codedocumentation": 504,
+			"all": 504,
+		}
 		
 		self.uses = (
 			self._mm.mods(type="translator"),

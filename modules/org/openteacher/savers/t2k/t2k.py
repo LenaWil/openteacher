@@ -25,6 +25,16 @@ class Teach2000SaverModule(object):
 		self._mm = moduleManager
 
 		self.type = "save"
+		self.priorities = {
+			"student@home": 448,
+			"student@school": 448,
+			"teacher": 448,
+			"wordsonly": 448,
+			"selfstudy": 448,
+			"testsuite": 448,
+			"codedocumentation": 448,
+			"all": 448,
+		}
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)

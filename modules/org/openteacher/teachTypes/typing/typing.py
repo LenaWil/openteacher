@@ -26,6 +26,16 @@ class TypingTeachTypeModule(object):
 		super(TypingTeachTypeModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 		self.type = "teachType"
+		self.priorities = {
+			"student@home": 465,
+			"student@school": 465,
+			"teacher": 465,
+			"wordsonly": 465,
+			"selfstudy": 465,
+			"testsuite": 465,
+			"codedocumentation": 465,
+			"all": 465,
+		}
 
 	def enable(self):
 		self.requires = (

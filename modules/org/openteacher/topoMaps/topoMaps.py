@@ -281,6 +281,16 @@ class TopoMapsModule(object):
 		self._mm = moduleManager
 		
 		self.type = "topoMaps"
+		self.priorities = {
+			"student@home": 416,
+			"student@school": 416,
+			"teacher": 416,
+			"wordsonly": -1,
+			"selfstudy": 416,
+			"testsuite": 416,
+			"codedocumentation": 416,
+			"all": 416,
+		}
 
 		self.requires = (
 			self._mm.mods(type="settings"),

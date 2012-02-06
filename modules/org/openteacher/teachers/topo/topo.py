@@ -346,6 +346,16 @@ class TopoTeacherModule(object):
 		self._mm = moduleManager
 		
 		self.type = "topoTeacher"
+		self.priorities = {
+			"student@home": 504,
+			"student@school": 504,
+			"teacher": 504,
+			"wordsonly": -1,
+			"selfstudy": 504,
+			"testsuite": 504,
+			"codedocumentation": 504,
+			"all": 504,
+		}
 		
 		self.uses = (
 			self._mm.mods(type="translator"),

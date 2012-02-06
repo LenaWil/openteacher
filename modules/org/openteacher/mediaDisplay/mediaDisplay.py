@@ -161,6 +161,16 @@ class MediaDisplayModule(object):
 		self._mm = moduleManager
 		
 		self.type = "mediaDisplay"
+		self.priorities = {
+			"student@home": 495,
+			"student@school": 495,
+			"teacher": 495,
+			"wordsonly": -1,
+			"selfstudy": 495,
+			"testsuite": 495,
+			"codedocumentation": 495,
+			"all": 495,
+		}
 
 		self.requires = (
 			self._mm.mods(type="settings"),

@@ -280,6 +280,16 @@ class TopoEntererModule(object):
 		self._mm = moduleManager
 		
 		self.type = "topoEnterer"
+		self.priorities = {
+			"student@home": 640,
+			"student@school": 640,
+			"teacher": 640,
+			"wordsonly": -1,
+			"selfstudy": 640,
+			"testsuite": 640,
+			"codedocumentation": 640,
+			"all": 640,
+		}
 		
 		self.uses = (
 			self._mm.mods(type="translator"),

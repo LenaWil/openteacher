@@ -94,6 +94,16 @@ class TestModeStudentsView(object):
 		self._mm = moduleManager
 
 		self.type = "testModeStudentsView"
+		self.priorities = {
+			"student@home": -1,
+			"student@school": -1,
+			"teacher": 546,
+			"wordsonly": -1,
+			"selfstudy": -1,
+			"testsuite": 546,
+			"codedocumentation": 546,
+			"all": 546,
+		}
 
 		self.uses = (
 			self._mm.mods(type="translator"),

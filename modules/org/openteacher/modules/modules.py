@@ -37,29 +37,33 @@ class ModulesModule(object):
 	@property
 	def profile(self):
 		return self.default("active", type="profile").name
-
+	
+	def getPriority(self, mod):
+		try:
+			return mod.priorities[self._profile]
+		except (AttributeError, KeyError):
+			#return a negative priority to the sort algorithm so the
+			#module gets on top of the list. The negative integer
+			#needs to be a number, that makes sure the last
+			#installed module is on the top of the list. This just
+			#uses seconds since installation.
+			path = mod.__class__.__file__
+			return - int(os.path.getmtime(path))
+	
 	def sort(self, *args, **kwargs):
-		def getPriority(mod):
-			try:
-				return mod.priorities[self._profile]
-			except (AttributeError, KeyError):
-				#return a negative priority to the sort algorithm so the
-				#module gets on top of the list. The negative integer
-				#needs to be a number, that makes sure the last
-				#installed module is on the top of the list. This just
-				#uses seconds since installation.
-				path = mod.__class__.__file__
-				return - int(os.path.getmtime(path))
-
 		mods = set(self._mm.mods(*args, **kwargs))
-		return sorted(mods, key=getPriority)
+		return sorted(mods, key=self.getPriority)
 
 	def default(self, *args, **kwargs):
 		"""Raises IndexError if no modules remain after filtering with
 		   the arguments
 
 		"""
-		return self.sort(*args, **kwargs)[0]
+		mods = set(self._mm.mods(*args, **kwargs))
+		try:
+			return min(mods, key=self.getPriority)
+		except ValueError:
+			raise IndexError
 
 	#Enabling/disabling modules
 	def _hasPositivePriority(self, mod):
@@ -71,7 +75,7 @@ class ModulesModule(object):
 	def updateToProfile(self):
 		#build dependency tree by topological sorting
 		#http://en.wikipedia.org/wiki/Topological_sort ; second algorithm
-
+		
 		filterCache = {}
 		def depFor(type, mod):
 			attribute = getattr(mod, type)
@@ -107,7 +111,7 @@ class ModulesModule(object):
 
 		for mod in mods_without_dependencies:
 			visit(mod)
-
+		
 		#enable modules
 		for mod in reversed(sorted_tree):
 			try:
@@ -126,7 +130,7 @@ class ModulesModule(object):
 							break
 				if hasattr(mod, "enable") and depsactive:
 					mod.enable()
-
+		
 		#disable modules
 		for mod in sorted_tree:
 			try:
