@@ -22,7 +22,7 @@
 #FIXME: sort buttons on the start tab and make the remove buttons of it
 #work.
 
-from PyQt4 import QtGui
+from PyQt4 import QtCore, QtGui
 import sys
 import platform
 
@@ -243,7 +243,6 @@ class GuiModule(object):
 		
 		del self._modules
 		del self._ui
-		del self._app
 		del self._fileTabs
 		del self.newEvent
 		del self.openEvent
@@ -281,8 +280,16 @@ class GuiModule(object):
 		self._loadButton.text = _("Open from file")
 
 	def run(self):
+		"""Starts the event loop of the Qt application. 
+		   Can only be called once.
+
+		"""
 		self._widget.show()
 		self._app.exec_()
+
+		#Prevents segmentation fault
+		del self._app
+		QtCore.qApp = None
 
 	def interrupt(self):
 		self._app.closeAllWindows()
