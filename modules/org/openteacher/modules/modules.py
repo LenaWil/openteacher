@@ -38,7 +38,7 @@ class ModulesModule(object):
 	def profile(self):
 		return self.default("active", type="profile").name
 	
-	def getPriority(self, mod):
+	def _getPriority(self, mod):
 		try:
 			return mod.priorities[self._profile]
 		except (AttributeError, KeyError):
@@ -52,7 +52,7 @@ class ModulesModule(object):
 	
 	def sort(self, *args, **kwargs):
 		mods = set(self._mm.mods(*args, **kwargs))
-		return sorted(mods, key=self.getPriority)
+		return sorted(mods, key=self._getPriority)
 
 	def default(self, *args, **kwargs):
 		"""Raises IndexError if no modules remain after filtering with
@@ -61,9 +61,9 @@ class ModulesModule(object):
 		"""
 		mods = set(self._mm.mods(*args, **kwargs))
 		try:
-			return min(mods, key=self.getPriority)
+			return min(mods, key=self._getPriority)
 		except ValueError:
-			raise IndexError
+			raise IndexError()
 
 	#Enabling/disabling modules
 	def _hasPositivePriority(self, mod):
