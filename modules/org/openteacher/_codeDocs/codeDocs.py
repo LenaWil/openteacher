@@ -25,33 +25,6 @@ import os
 import types
 import mimetypes
 
-class ResourcesHandler(object):
-	def __init__(self, templates, *args, **kwargs):
-		super(ResourcesHandler, self).__init__(*args, **kwargs)
-
-		self._templates = templates
-
-	@cherrypy.expose
-	def style_css(self):
-		cherrypy.response.headers['Content-Type']= 'text/css'
-		return open(self._templates["style"]).read()
-
-	@cherrypy.expose
-	def logo(self):
-		mimetype = mimetypes.guess_type(self._templates["logo"], strict=False)[0]
-		cherrypy.response.headers['Content-Type'] = mimetype
-		return open(self._templates["logo"]).read()
-
-	@cherrypy.expose
-	def jquery_js(self):
-		cherrypy.response.headers['Content-Type'] = 'text/javascript'
-		return open(self._templates["jquery"]).read()
-
-	@cherrypy.expose
-	def jquery_quicksearch_js(self):
-		cherrypy.response.headers['Content-Type'] = 'text/javascript'
-		return open(self._templates["jquery_quicksearch"]).read()
-
 class ModulesHandler(object):
 	def __init__(self, moduleManager, templates, *args, **kwargs):
 		super(ModulesHandler, self).__init__(*args, **kwargs)
@@ -71,6 +44,30 @@ class ModulesHandler(object):
 			return text.replace("\n", "<br />\n")
 		else:
 			return text
+
+	@cherrypy.expose
+	def resources(self, *args):
+		path = "/".join(args)
+		if path == "logo":
+			path = self._templates["logo"]
+		else:
+			#construct the path
+			path = os.path.normpath(
+				os.path.join(self._templates["resources"], path)
+			)
+			#check if the path is valid (i.e. is in the resources
+			#directory.)
+			if not path.startswith(self._templates["resources"]):
+				#404
+				raise cherrypy.HTTPError(404)
+		mimetype = mimetypes.guess_type(path, strict=False)[0]
+		if mimetype:
+			cherrypy.response.headers["Content-Type"] = mimetype
+		try:
+			return open(path).read()
+		except IOError:
+			#404
+			raise cherrypy.HTTPError(404)
 
 	@cherrypy.expose
 	def index(self):
@@ -184,15 +181,15 @@ class CodeDocumentationModule(object):
 			"modules": self._mm.resourcePath("templ/modules.html"),
 			"priorities": self._mm.resourcePath("templ/priorities.html"),
 			"module": self._mm.resourcePath("templ/module.html"),
-			"style": self._mm.resourcePath("templ/style.css"),
+			"resources": self._mm.resourcePath("resources"),
 			"logo": self._modules.default("active", type="metadata").metadata["iconPath"],
-			"jquery": self._mm.resourcePath("templ/jquery.js"),
-			"jquery_quicksearch": self._mm.resourcePath("templ/jquery.quicksearch.js"),
 		}
 		root = ModulesHandler(self._mm, templates)
-		root.resources = ResourcesHandler(templates)
 
 		cherrypy.tree.mount(root)
+		cherrypy.config.update({
+			"environment": "production",
+		})
 		cherrypy.engine.start()
 		webbrowser.open("http://localhost:8080/")
 		cherrypy.engine.block()

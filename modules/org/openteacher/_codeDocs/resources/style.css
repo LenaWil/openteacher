@@ -62,11 +62,35 @@ a {
 	color:#000;
 }
 
-table {
+.tablesorter {
 	width:100%;
 	border-collapse:collapse;
 }
 
-table, th, td {
+.tablesorter th {
+	text-align:left;
+	background-color:#ccc;
+}
+
+.tablesorter, .tablesorter th, .tablesorter td {
 	border: 1px solid #000;
+}
+
+.tablesorter thead tr .header {
+	background-image: url("tablesorter/bg.gif");
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+
+.tablesorter thead tr .headerSortUp {
+	background-image: url("tablesorter/asc.gif");
+}
+
+.tablesorter thead tr .headerSortDown {
+	background-image: url("tablesorter/desc.gif");
+}
+
+.odd {
+	background-color:#eee;
 }
