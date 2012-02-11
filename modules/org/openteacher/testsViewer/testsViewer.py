@@ -28,7 +28,7 @@ class TestsModel(QtCore.QAbstractTableModel):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestsModel, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		self._list = {
 			"tests": [],
@@ -95,7 +95,7 @@ class NotesWidget(QtGui.QWidget):
 		super(NotesWidget, self).__init__(*args, **kwargs)
 		
 		self._mm = moduleManager
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		
 		self.highestLabel = QtGui.QLabel()
 		self.averageLabel = QtGui.QLabel()
@@ -182,7 +182,7 @@ class TestsViewerWidget(QtGui.QSplitter):
 		super(TestsViewerWidget, self).__init__(QtCore.Qt.Vertical, *args, **kwargs)
 
 		self._mm = moduleManager
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		self.testsModel = TestsModel(self._mm)
 		testsView = QtGui.QTableView()
@@ -235,7 +235,7 @@ class TestViewerWidget(QtGui.QWidget):
 		super(TestViewerWidget, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		self.backButton = QtGui.QPushButton("")
 		self.backButton.clicked.connect(self.backActivated.emit)
@@ -286,6 +286,7 @@ class TestsViewerModule(object):
 
 		self.type = "testsViewer"
 		self.requires = (
+			self._mm.mods(type="ui"),
 			self._mm.mods(type="noteCalculator"),
 			self._mm.mods(type="testViewer"),
 		)
@@ -295,7 +296,7 @@ class TestsViewerModule(object):
 		)
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		self._testsViewers = set()
 		try:

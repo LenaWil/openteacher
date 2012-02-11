@@ -19,7 +19,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-
 class TopoTestTypeModule(object):
 	PLACE_NAME, CORRECT = xrange(2)
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -35,7 +34,7 @@ class TopoTestTypeModule(object):
 		)
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.active = True
 		
 		#setup translation

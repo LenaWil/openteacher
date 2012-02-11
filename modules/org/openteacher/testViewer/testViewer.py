@@ -72,7 +72,7 @@ class TestViewer(QtGui.QSplitter):
 		self.test = test
 
 		self._mm = moduleManager
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		#Vertical splitter
 		tableView = QtGui.QTableView()
@@ -162,6 +162,7 @@ class TestViewerModule(object):
 		self._mm = moduleManager
 		self.type = "testViewer"
 		self.requires = ( #FIXME: check if all really required, and if so make sure some things aren't.
+			self._mm.mods(type="ui"),
 			self._mm.mods(type="noteCalculator"),
 			self._mm.mods(type="testType"),
 			self._mm.mods(type="progressViewer"),
@@ -178,7 +179,7 @@ class TestViewerModule(object):
 		return tv
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		self._testViewers = set()
 		try:

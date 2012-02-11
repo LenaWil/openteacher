@@ -51,7 +51,7 @@ class OpenTeacherLoaderModule(object):
 		)
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.name = "OpenTeacher 2.x"#FIXME: (live) translatable? Also for other modules
 		self.loads = {"ot": ["words"]}
 

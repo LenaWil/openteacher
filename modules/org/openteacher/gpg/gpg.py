@@ -31,6 +31,7 @@ class GPG(object):
 		self.gpghome = gpghome
 	
 	def verify_file(self, sig, filename):
+		#FIXME: SECURITY BUG: Check pub key, now every signature is valid...
 		# Save sig to a temp file
 		f = tempfile.NamedTemporaryFile(delete=False, prefix="otgpg")
 		s = sig.read()
@@ -48,7 +49,8 @@ class GPG(object):
 			filename
 		]
 		
-		o = subprocess.call(args)
+		null = open(os.devnull, "w")
+		o = subprocess.call(args, stdout=null, stderr=null)
 		
 		os.unlink(f.name)
 		

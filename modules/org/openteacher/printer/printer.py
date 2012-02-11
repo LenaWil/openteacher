@@ -73,7 +73,7 @@ class PrinterModule(object):
 		return False
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._lessonTracker = self._modules.default("active", type="lessonTracker")
 
 		self.active = True

@@ -149,11 +149,12 @@ class InMindTeachTypeModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.requires = (
+			self._mm.mods(type="ui"),
 			self._mm.mods(type="wordsStringComposer"),
 		)
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		self._activeWidgets = set()
 

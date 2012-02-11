@@ -143,9 +143,9 @@ class SettingsDialogModule(object):
 		)
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._uiModule = self._modules.default("active", type="ui")
-		self._settings = self._modules.default("active", type="settings")
+		self._settings = self._modules.default(type="settings")
 		self._settingsWidgets = self._modules.default("active", type="settingsWidgets")
 		self._settingsFilterer = self._modules.default("active", type="settingsFilterer")
 

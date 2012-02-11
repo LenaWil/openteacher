@@ -32,7 +32,7 @@ class TeachWidget(QtGui.QWidget):
 		super(TeachWidget, self).__init__(*args, **kwargs)
 		
 		self._mm = moduleManager
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._composer = self._modules.default("active", type="wordsStringComposer")
 		
 		layout = QtGui.QVBoxLayout()
@@ -102,6 +102,7 @@ class TestModeTeacherModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.requires = (
+			self._mm.mods(type="ui"),
 			self._mm.mods(type="wordsStringComposer"),
 		)
 
@@ -128,7 +129,7 @@ class TestModeTeacherModule(object):
 		return uiModule.applicationActivityChanged
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		#self._activeWidgets = set()
 
 		try:

@@ -150,13 +150,17 @@ class ProgressViewerModule(object):
 
 		self.type = "progressViewer"
 
+		self.requires = (
+			self._mm.mods(type="ui"),
+		)
+
 	def createProgressViewer(self, *args, **kwargs):
 		pv = ProgressViewer(*args, **kwargs)
 		self._progressViewers.add(weakref.ref(pv))
 		return pv
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._progressViewers = set()
 
 		try:

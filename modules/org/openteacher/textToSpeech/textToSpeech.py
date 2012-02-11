@@ -112,11 +112,12 @@ class TextToSpeechModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.requires = (
+			self._mm.mods(type="ui"),
 			self._mm.mods(type="event"),
 		)
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		
 		#load translator
 		try:
@@ -135,15 +136,14 @@ class TextToSpeechModule(object):
 	def _enable(self):
 		# For Windows and Mac
 		pyttsx = self._mm.importFrom(self._mm.resourcePath("tts"), "pyttsx")
-		
-		
+
 		# Create text to speech engine
 		try:
 			self.tts = TextToSpeech(pyttsx)
 		except DependencyError as e:
 			QtGui.QMessageBox.critical(None, "Error", unicode(e))
 		
-		self._settings = self._modules.default("active", type="settings")
+		self._settings = self._modules.default(type="settings")
 		
 		# Add settings
 		self._ttsVoice = self._settings.registerSetting(**{

@@ -323,7 +323,7 @@ class AboutDialogModule(object):
 				dialog.tab.title = dialog.windowTitle()
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		self._activeDialogs = set()
 

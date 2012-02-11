@@ -29,7 +29,7 @@ class ShuffleAnswerTeachWidget(QtGui.QWidget):
 		super(ShuffleAnswerTeachWidget, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		
 		try:
 			typingInput = self._modules.default("active", type="typingInput")
@@ -92,6 +92,7 @@ class ShuffleAnswerTeachTypeModule(object):
 			"all": 558,
 		}
 		self.requires = (
+			self._mm.mods(type="ui"),
 			self._mm.mods(type="typingInput"),
 		)
 		self.uses = (
@@ -99,7 +100,7 @@ class ShuffleAnswerTeachTypeModule(object):
 		)
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._activeWidgets = set()
 
 		try:
@@ -141,7 +142,7 @@ class ShuffleAnswerTeachTypeModule(object):
 				r.retranslate()
 
 	def createWidget(self, tabChanged):
-		satw = ShuffleAnswerTeachWidget(self._mm)
+		satw = ShuffleAnswerTeachWidget(self._mm) #FIXME: get rid of the mm here, just pass the widget
 		self._activeWidgets.add(weakref.ref(satw))
 		return satw
 

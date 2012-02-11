@@ -181,7 +181,7 @@ class IntervalModule(object):
 
 	def enable(self):
 		#Translations
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -192,7 +192,7 @@ class IntervalModule(object):
 			)
 
 		# Settings
-		self._settings = self._modules.default("active", type="settings")
+		self._settings = self._modules.default(type="settings")
 		self._groupSizeSetting = self._settings.registerSetting(**{
 			"internal_name": "org.openteacher.lessonTypes.interval.groupSize",
 			"name": "Max. size of group", #FIXME: translate and others!

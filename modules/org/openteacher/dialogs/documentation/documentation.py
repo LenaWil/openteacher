@@ -94,7 +94,7 @@ class DocumentationModule(object):
 		self._retranslate()
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._activeDialogs = set()
 
 		#load translator

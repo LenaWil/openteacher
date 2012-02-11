@@ -104,7 +104,7 @@ class OtxxLoaderModule(object):
 				os.remove(path)
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._tempPaths = set()
 
 		self.active = True

@@ -37,7 +37,7 @@ class RandomModule(object):
 
 	def enable(self):
 		#Translations
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		try:
 			translator = self._modules.default("active", type="translator")

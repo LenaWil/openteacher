@@ -28,6 +28,10 @@ class PrintDialogModule(object):
 
 		self.type = "printDialog"
 
+		self.requires = (
+			self._mm.mods(type="ui"),
+		)
+
 	def getConfiguredPrinter(self):
 		"""Returns a completely configured QPrinter, or None when the
 		   user cancels the configuration dialog.

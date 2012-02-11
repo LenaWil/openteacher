@@ -157,9 +157,9 @@ class UpdatesDialogModule(QtCore.QObject):
 		)
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._dataStore = self._modules.default("active", type="dataStore").store
-		settings = self._modules.default("active", type="settings")
+		self._modules = set(self._mm.mods(type="modules")).pop()
+		self._dataStore = self._modules.default(type="dataStore").store
+		settings = self._modules.default(type="settings")
 		self._rememberChoiceSetting = settings.registerSetting(**{#FIXME: translate all these...
 			"internal_name": "org.openteacher.updatesDialog.rememberChoice",
 			"name": "Remember if the user wants to install updates or not",

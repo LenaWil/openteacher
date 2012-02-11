@@ -36,7 +36,7 @@ class PrintModule(object):
 			self._mm.resourcePath("translations")
 		)
 
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		self._pyratemp = self._mm.import_("pyratemp")
 		self.prints = ["topo"]

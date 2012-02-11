@@ -194,7 +194,7 @@ class TeachWidget(QtGui.QStackedWidget):
 		super(TeachWidget, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager #FIXME: get rid of the moduleManager in this widget! And in all widgets, if possible...
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._applicationActivityChanged = applicationActivityChanged
 
 		self._buildUi(keyboardWidget)
@@ -373,6 +373,7 @@ class WordsTeacherModule(object):
 			self._mm.mods(type="resultsDialog"),
 		)
 		self.requires = (
+			self._mm.mods(type="ui"),
 			self._mm.mods(type="wordsStringComposer"),
 			#FIXME from here on: should these items be in the settings
 			#dialog (since they're already on the teach settings widget)
@@ -403,7 +404,7 @@ class WordsTeacherModule(object):
 		return uiModule.applicationActivityChanged
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._activeWidgets = set()
 
 		try:

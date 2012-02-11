@@ -92,10 +92,10 @@ class UpdatesModule(object):
 		#FIXME: restart OpenTeacher
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._metadata = self._modules.default("active", type="metadata").metadata
-		self._dataStore = self._modules.default("active", type="dataStore").store
-		self._settings = self._modules.default("active", type="settings")
+		self._dataStore = self._modules.default(type="dataStore").store
+		self._settings = self._modules.default(type="settings")
 		self._gpg = self._modules.default("active", type="gpg").gpg
 		self._updatesCache = None
 

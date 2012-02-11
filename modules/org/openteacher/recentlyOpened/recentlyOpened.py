@@ -73,8 +73,8 @@ class RecentlyOpenedModule(object):
 		return self._recentlyOpened
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self.store = self._modules.default("active", type="dataStore").store
+		self._modules = set(self._mm.mods(type="modules")).pop()
+		self.store = self._modules.default(type="dataStore").store
 		try:
 			self._recentlyOpened = self.store["org.openteacher.recentlyOpened"]
 		except KeyError:

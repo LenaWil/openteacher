@@ -194,7 +194,10 @@ class StartWidget(QtGui.QSplitter):
 	def retranslate(self):
 		self.createLessonGroupBox.setTitle(_("Create lesson:"))
 		self.loadLessonGroupBox.setTitle(_("Load lesson:"))
-		self.recentlyOpenedGroupBox.setTitle(_("Recently opened:"))
+		try:
+			self.recentlyOpenedGroupBox.setTitle(_("Recently opened:"))
+		except AttributeError:
+			pass
 
 	def addLessonCreateButton(self):
 		button = StartTabButton()

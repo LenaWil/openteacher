@@ -46,7 +46,7 @@ class UiControllerModule(object):
 		)
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._fileDialogs = self._modules.default("active", type="fileDialogs")
 		execute = self._modules.default(type="execute")
 		execute.startRunning.handle(self.run)
@@ -60,7 +60,7 @@ class UiControllerModule(object):
 		del self._fileDialogs
 
 	def run(self, path=None):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._uiModule = self._modules.default("active", type="ui")
 
 		self._connectEvents()

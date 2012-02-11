@@ -173,6 +173,7 @@ class MediaDisplayModule(object):
 		}
 
 		self.requires = (
+			self._mm.mods(type="ui"),
 			self._mm.mods(type="settings"),
 		)
 		
@@ -181,7 +182,7 @@ class MediaDisplayModule(object):
 		)
 	
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.active = True
 		
 		#setup translation
@@ -198,7 +199,7 @@ class MediaDisplayModule(object):
 			)
 		
 		# Add settings
-		self._settings = self._modules.default("active", type="settings")
+		self._settings = self._modules.default(type="settings")
 		# Settings (used in mediaTypes)
 		self._html5VideoSetting = self._settings.registerSetting(**{
 			"internal_name": "org.openteacher.lessons.media.videohtml5",

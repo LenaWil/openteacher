@@ -55,7 +55,7 @@ class HardWordsModule(object):
 		return filter(lambda result: result["itemId"] == word["id"], results)
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		try:
 			translator = self._modules.default("active", type="translator")

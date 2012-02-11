@@ -31,7 +31,7 @@ class FileTab(object):
 		super(FileTab, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		self._tabWidget = tabWidget
 		self._wrapperWidget = wrapperWidget
@@ -121,7 +121,7 @@ class GuiModule(object):
 		)
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		createEvent = self._modules.default(type="event").createEvent
 
 		self.newEvent = createEvent()
@@ -141,7 +141,7 @@ class GuiModule(object):
 		self._ui.ICON_PATH = self._mm.resourcePath("icons/")
 
 		# Add Aero glass option on Windows
-		self._settings = self._modules.default("active", type="settings")
+		self._settings = self._modules.default(type="settings")
 		if platform.system() == "Windows" and platform.version() >= 6.0:
 			self._aeroSetting = self._settings.registerSetting(**{
 			"internal_name": "org.openteacher.gui.aero",

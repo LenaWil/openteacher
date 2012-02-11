@@ -96,6 +96,7 @@ class RecentlyOpenedViewerModule(object):
 		self._mm = moduleManager
 
 		self.requires = (
+			self._mm.mods(type="ui"),
 			self._mm.mods(type="recentlyOpened"),
 		)
 		self.uses = (
@@ -109,7 +110,7 @@ class RecentlyOpenedViewerModule(object):
 
 		self._viewers = set()
 
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:

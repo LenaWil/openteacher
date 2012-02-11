@@ -21,7 +21,6 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import weakref
-from PyQt4 import QtGui, QtCore
 
 class Lesson(object):
 	def __init__(self, moduleManager, fileTab, module, list, enterWidget, teachWidget, resultsWidget=None, *args, **kwargs):
@@ -30,7 +29,7 @@ class Lesson(object):
 		self.resources = {}
 
 		self._mm = moduleManager
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		self.module = module
 
@@ -96,7 +95,7 @@ class WordsLessonModule(object):
 	def enable(self):
 		self.dataType = "words"
 
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._uiModule = self._modules.default("active", type="ui")
 
 		self._lessons = set()

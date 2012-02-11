@@ -49,8 +49,8 @@ class MediaTypeModule(object):
 		}
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		self._settings = self._modules.default("active", type="settings")
+		self._modules = set(self._mm.mods(type="modules")).pop()
+		self._settings = self._modules.default(type="settings")
 		self.active = True
 
 	def disable(self):

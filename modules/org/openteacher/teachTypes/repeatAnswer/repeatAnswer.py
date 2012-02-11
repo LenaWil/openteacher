@@ -80,7 +80,7 @@ class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
 		super(RepeatAnswerTeachWidget, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		#make start screen
 		self.startScreen = StartScreenWidget(self)
@@ -129,6 +129,7 @@ class RepeatAnswerTeachTypeModule(object):
 			"all": 651,
 		}
 		self.requires = (
+			self._mm.mods(type="ui"),
 			self._mm.mods(type="typingInput"),
 		)
 		self.uses = (
@@ -136,7 +137,7 @@ class RepeatAnswerTeachTypeModule(object):
 		)
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		
 		self._activeWidgets = set()
 

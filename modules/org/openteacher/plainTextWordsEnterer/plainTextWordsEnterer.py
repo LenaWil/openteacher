@@ -97,7 +97,7 @@ class PlainTextWordsEntererModule(object):
 		self._references = set()
 		self._activeDialogs = set()
 
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._uiModule = self._modules.default("active", type="ui")
 
 		self._button = self._uiModule.addLessonCreateButton()

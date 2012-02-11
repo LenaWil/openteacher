@@ -87,7 +87,7 @@ class FileDialogsModule(object):
 			return
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._ui = self._modules.default("active", type="ui")
 
 		global _

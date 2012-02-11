@@ -23,7 +23,7 @@ import inspect
 import time
 
 class ModulesModule(object):
-	_lowestPriority = 10000
+	"""Lowest (positive) priority: 10 000"""
 
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(ModulesModule, self).__init__(*args, **kwargs)
@@ -34,13 +34,9 @@ class ModulesModule(object):
 			self._mm.mods(type="event"),
 		)
 
-	@property
-	def profile(self):
-		return self.default("active", type="profile").name
-	
 	def _getPriority(self, mod):
 		try:
-			return mod.priorities[self._profile]
+			return mod.priorities[self.profile]
 		except (AttributeError, KeyError):
 			#return a negative priority to the sort algorithm so the
 			#module gets on top of the list. The negative integer
@@ -68,14 +64,14 @@ class ModulesModule(object):
 	#Enabling/disabling modules
 	def _hasPositivePriority(self, mod):
 		try:
-			return mod.priorities[self._modules.profile] >= 0
-		except AttributeError:
+			return mod.priorities[self.profile] >= 0
+		except (AttributeError, KeyError):
 			return True #If no priorities-stuff, just enable
 
 	def updateToProfile(self):
 		#build dependency tree by topological sorting
 		#http://en.wikipedia.org/wiki/Topological_sort ; second algorithm
-		
+
 		filterCache = {}
 		def depFor(type, mod):
 			attribute = getattr(mod, type)
@@ -111,7 +107,7 @@ class ModulesModule(object):
 
 		for mod in mods_without_dependencies:
 			visit(mod)
-		
+
 		#enable modules
 		for mod in reversed(sorted_tree):
 			try:
@@ -130,7 +126,7 @@ class ModulesModule(object):
 							break
 				if hasattr(mod, "enable") and depsactive:
 					mod.enable()
-		
+
 		#disable modules
 		for mod in sorted_tree:
 			try:
@@ -149,12 +145,6 @@ class ModulesModule(object):
 							break
 				if hasattr(mod, "disable") and depsactive:
 					mod.disable()
-
-	def enable(self):
-		self.active = True
-
-	def disable(self):
-		self.active = False
 
 def init(moduleManager):
 	return ModulesModule(moduleManager)

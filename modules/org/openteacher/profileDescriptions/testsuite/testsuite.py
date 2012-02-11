@@ -18,15 +18,15 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class ProfileModule(object):
+class ProfileDescriptionModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(ProfileModule, self).__init__(*args, **kwargs)
+		super(ProfileDescriptionModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "profile"
+		self.type = "profileDescription"
 
 	def enable(self):
-		self.name = u"selfstudy"
+		self.name = u"testsuite"
 		self.active = True
 
 	def disable(self):
@@ -34,4 +34,4 @@ class ProfileModule(object):
 		del self.name
 
 def init(moduleManager):
-	return ProfileModule(moduleManager)
+	return ProfileDescriptionModule(moduleManager)

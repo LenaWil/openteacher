@@ -26,8 +26,8 @@ except ImportError:
 
 class ModulePackage(object):
 	def __init__(self, installPath, file, *args, **kwargs):
-		"""Raises all kinds of errors return by the zipfile module and
-		IOError
+		"""Raises all kinds of errors returned by the zipfile module and
+		   IOError
 
 		"""
 		super(ModuleInstaller, self).__init__(*args, **kwargs)

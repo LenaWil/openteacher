@@ -47,6 +47,7 @@ class SettingsWidgetModule(object):
 
 		self.type = "settingsWidget"
 		self.requires = (
+			self._mm.mods(type="ui"),
 			self._mm.mods(type="translator"),
 		)
 
@@ -71,7 +72,7 @@ class SettingsWidgetModule(object):
 		return SettingsWidget(self._languages, *args, **kwargs)
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.widgetType = "language"
 
 		global _, ngettext

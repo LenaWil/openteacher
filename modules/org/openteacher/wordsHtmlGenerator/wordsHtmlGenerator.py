@@ -54,7 +54,7 @@ class WordsHtmlGeneratorModule(object):
 		).compose
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._pyratemp = self._mm.import_("pyratemp")
 
 		self.active = True

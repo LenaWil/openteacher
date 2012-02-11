@@ -40,9 +40,22 @@ class SettingsModule(object):
 		self._mm = moduleManager
 
 		self.type = "settings"
-		self.requires = (
-			self._mm.mods(type="dataStore"),
-		)
+
+	def initialize(self):
+		"""Connects to data store, should be called before doing
+		   anything else but only once in each program run. Normally,
+		   that's handled by the execute module.
+
+		"""
+		store = set(self._mm.mods(type="dataStore")).pop().store
+		try:
+			self._settings = store["org.openteacher.settings.settings"]
+		except KeyError:
+			self._settings = store["org.openteacher.settings.settings"] = {}
+
+		#replace the dicts by SettingDicts
+		for key, value in self._settings.iteritems():
+			self._settings[key] = SettingDict(self._executeCallback, value)
 
 	def registerSetting(self, internal_name, **setting):
 		"""Adds a setting. internal_name should be unique and describe
@@ -112,26 +125,6 @@ class SettingsModule(object):
 	def _executeCallback(self, callback):
 		obj = self._modules.default(*callback["args"], **callback["kwargs"])
 		getattr(obj, callback["method"])() #execute
-
-	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
-		
-		try:
-			self._settings = self._modules.default(type="dataStore").store["org.openteacher.settings.settings"]
-		except KeyError:
-			self._settings = self._modules.default(type="dataStore").store["org.openteacher.settings.settings"] = {}
-
-		#replace the dicts by SettingDicts
-		for key, value in self._settings.iteritems():
-			self._settings[key] = SettingDict(self._executeCallback, value)
-
-		self.active = True
-
-	def disable(self):
-		self.active = False
-
-		del self._modules
-		del self._settings
 
 def init(moduleManager):
 	return SettingsModule(moduleManager)

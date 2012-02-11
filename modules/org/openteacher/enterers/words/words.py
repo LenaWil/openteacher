@@ -377,6 +377,7 @@ class WordsEntererModule(object):
 			self._mm.mods(type="onscreenKeyboard"),
 		)
 		self.requires = (
+			self._mm.mods(type="ui"),
 			self._mm.mods(type="wordsStringComposer"),
 			self._mm.mods(type="wordsStringParser"),
 		)
@@ -417,7 +418,7 @@ class WordsEntererModule(object):
 		return ew
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._activeWidgets = set()
 
 		try:

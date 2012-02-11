@@ -39,7 +39,7 @@ class WrtsApiModule(object):
 		)
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._uiModule = self._modules.default("active", type="ui")
 		self._lessonTracker = self._modules.default("active", type="lessonTracker")
 		self._activeDialogs = set()
@@ -63,7 +63,7 @@ class WrtsApiModule(object):
 		self._retranslate()
 
 		try:
-			self._settings = self._modules.default("active", type="settings")
+			self._settings = self._modules.default(type="settings")
 		except IndexError:
 			self._emailSetting = None
 			self._passwordSetting = None

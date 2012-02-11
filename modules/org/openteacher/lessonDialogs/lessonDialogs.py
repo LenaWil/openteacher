@@ -30,9 +30,12 @@ class LessonDialogsModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
+		self.requires = (
+			self._mm.mods(type="ui"),
+		)
 	
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.active = True
 	
 	def disable(self):

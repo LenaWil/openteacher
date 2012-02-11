@@ -30,11 +30,11 @@ class TextToSpeechProviderWords(object):
 		)
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		for module in self._mm.mods("active", type="lessonType"):
 			module.newItem.handle(self.itemSent)
 		
-		self._settings = self._modules.default("active", type="settings")
+		self._settings = self._modules.default(type="settings")
 		
 		self._pronounceSetting = self._settings.registerSetting(**{
 			"internal_name": "org.openteacher.ttsProviders.words.pronounce",

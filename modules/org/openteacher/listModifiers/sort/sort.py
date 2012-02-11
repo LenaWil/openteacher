@@ -40,7 +40,7 @@ class SortModule(object):
 		return [list["items"].index(word) for word in newList]
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		#Translations
 		try:

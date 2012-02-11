@@ -19,13 +19,20 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui, QtCore
-
 class TypingTeachTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TypingTeachTypeModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
+
 		self.type = "teachType"
+
+		self.requires = (
+			self._mm.mods(type="typingInput"),
+		)
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
+
 		self.priorities = {
 			"student@home": 465,
 			"student@school": 465,
@@ -38,14 +45,7 @@ class TypingTeachTypeModule(object):
 		}
 
 	def enable(self):
-		self.requires = (
-			self._mm.mods(type="typingInput"),
-		)
-		self.uses = (
-			self._mm.mods(type="translator"),
-		)
-
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		try:
 			translator = self._modules.default("active", type="translator")

@@ -93,12 +93,13 @@ class TestModeTestSelecterModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.requires = (
+			self._mm.mods(type="ui"),
 			self._mm.mods(type="event"),
 			self._mm.mods(type="testModeConnection"),
 		)
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		
 		#setup translation
 		global _

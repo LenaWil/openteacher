@@ -52,13 +52,13 @@ class OpenTeachingMediaSaverModule(object):
 		)
 
 	def enable(self):		
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._otxxSaver = self._modules.default("active", type="otxxSaver")
 
 		self.name = "Open Teaching Media"
 		self.saves = {"media": ["otmd"]}
 
-		self._settings = self._modules.default("active", type="settings")
+		self._settings = self._modules.default(type="settings")
 		self._compressionSetting = self._settings.registerSetting(**{
 			"internal_name": "org.openteacher.savers.otmd.compression",
 			"name": "Enable compression",

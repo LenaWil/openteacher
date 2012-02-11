@@ -42,7 +42,7 @@ class PngSaverModule(object):
 		)
 
 	def enable(self):		
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.name = "Portable Network Graphics"
 		self.saves = {"topo": ["png"]}
 

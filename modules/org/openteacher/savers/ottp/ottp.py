@@ -45,7 +45,7 @@ class OpenTeachingTopoSaverModule(object):
 		)
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._otxxSaver = self._modules.default("active", type="otxxSaver")
 
 		self.name = "Open Teaching Topography"

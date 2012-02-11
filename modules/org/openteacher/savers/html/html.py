@@ -41,7 +41,7 @@ class HtmlSaverModule(object):
 		)
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.name = "Hyper Text Markup Language"
 		self.saves = {"words": ["html"]}
 		

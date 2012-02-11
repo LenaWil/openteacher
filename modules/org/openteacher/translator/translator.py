@@ -36,13 +36,12 @@ class TranslatorModule(object):
 	def enable(self):
 		self.active = True
 
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.languageChanged = self._modules.default(
 			type="event"
 		).createEvent()
 
 		self._languageSetting = self._modules.default(
-			"active",
 			type="settings"
 		).registerSetting(**{
 			"internal_name": "org.openteacher.translator.language",

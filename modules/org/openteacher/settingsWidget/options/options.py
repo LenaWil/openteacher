@@ -42,6 +42,10 @@ class SettingsWidgetModule(object):
 
 		self.type = "settingsWidget"
 
+		self.requires = (
+			self._mm.mods(type="ui"),
+		)
+
 	def createWidget(self, *args, **kwargs):
 		return SettingsWidget(*args, **kwargs)
 

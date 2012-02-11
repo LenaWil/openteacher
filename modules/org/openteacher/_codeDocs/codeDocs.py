@@ -78,7 +78,7 @@ class ModulesHandler(object):
 
 	@cherrypy.expose
 	def priorities_html(self):
-		profiles = self._mm.mods("active", type="profile")
+		profiles = self._mm.mods("active", type="profileDescription")
 		profiles = sorted(profiles, key=lambda m: m.name)
 
 		mods = {}
@@ -173,7 +173,7 @@ class CodeDocumentationModule(object):
 			self._mm.mods(type="execute"),
 		)
 		self.uses = (
-			self._mm.mods(type="profile"),
+			self._mm.mods(type="profileDescription"),
 		)
 
 	def showDocumentation(self):
@@ -197,7 +197,7 @@ class CodeDocumentationModule(object):
 	def enable(self):
 		global pyratemp
 		pyratemp = self._mm.import_("pyratemp")
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		self._modules.default(type="execute").startRunning.handle(self.showDocumentation)
 

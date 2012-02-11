@@ -362,11 +362,12 @@ class TopoTeacherModule(object):
 			self._mm.mods(type="resultsDialog"),
 		)
 		self.requires = (
+			self._mm.mods(type="ui"),
 			self._mm.mods(type="topoMaps"),
 		)
 	
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.active = True
 		
 		#setup translation

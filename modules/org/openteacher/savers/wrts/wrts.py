@@ -45,7 +45,7 @@ class WrtsSaverModule(object):
 		)
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.name = "WRDS"
 		self._pyratemp = self._mm.import_("pyratemp")
 		self.saves = {"words": ["wrts"]}

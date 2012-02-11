@@ -50,7 +50,7 @@ class WordsNeverAnsweredCorrectlyModule(object):
 		return map(lambda result: result["result"], filteredResults)
 
 	def enable(self):
-		self._modules = set(self._mm.mods("active", type="modules")).pop()
+		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		#Translations
 		try:
