@@ -34,7 +34,6 @@ E_REG = {MSSAM : (137.89, 1.11),
          MSMIKE : (154.37, 1.11)}
 
 def buildDriver(moduleManager, proxy):
-    print moduleManager.resourcePath("tts/pyttsx")
     global voice
     voice = moduleManager.importFrom(moduleManager.resourcePath(".."), "voice");
     return SAPI5Driver(proxy)

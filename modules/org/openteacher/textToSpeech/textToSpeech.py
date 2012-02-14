@@ -49,9 +49,9 @@ class SpeakThread(threading.Thread):
 
 class TextToSpeech(object):
 	autoPlay = True
-	def __init__(self, pyttsx):
+	def __init__(self, pyttsx, _mm):
 		if os.name == 'nt' or os.name == 'mac':
-			self.engine = pyttsx.init(base._mm)
+			self.engine = pyttsx.init(_mm)
 		elif os.name == 'posix':
 			self.nullDevice = open(os.devnull, "w")
 			#check if espeak was installed
@@ -138,7 +138,7 @@ class TextToSpeechModule(object):
 
 		# Create text to speech engine
 		try:
-			self.tts = TextToSpeech(pyttsx)
+			self.tts = TextToSpeech(pyttsx, self._mm)
 		except DependencyError as e:
 			try:
 				m = self._modules.default("active", type="dialogShower")
