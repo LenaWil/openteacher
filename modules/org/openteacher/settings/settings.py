@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -109,9 +109,13 @@ class SettingsModule(object):
 		automatically by this module.
 
 		"""
-		if not internal_name in self._settings:
+		if internal_name in self._settings:
+			#copy the value
+			setting["value"] = self._settings[internal_name]["value"]
+		else:
+			#use the default value
 			setting["value"] = setting.pop("defaultValue")
-			self._settings[internal_name] = SettingDict(self._executeCallback, setting)
+		self._settings[internal_name] = SettingDict(self._executeCallback, setting)
 		return self._settings[internal_name]
 	
 	def setting(self, internal_name):
