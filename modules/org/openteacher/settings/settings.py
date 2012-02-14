@@ -73,6 +73,7 @@ class SettingsModule(object):
 		  * password
 		  * options #FIXME: shouldn't this be singular? (the type of the setting value is an option)
 		  * language
+		  * profile
 		  ... are available.
 		 * defaultValue
 		 * category=None,

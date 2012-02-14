@@ -26,7 +26,12 @@ class ProfileDescriptionModule(object):
 		self.type = "profileDescription"
 
 	def enable(self):
-		self.name = u"wordsonly"
+		self.desc = {
+			"name": "wordsonly",
+			"niceName": "Just gimme my good old OpenTeacher 2.x!", #FIXME: translate
+			"advanced": False,
+		}
+
 		self.active = True
 
 	def disable(self):

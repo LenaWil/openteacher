@@ -26,12 +26,16 @@ class ProfileDescriptionModule(object):
 		self.type = "profileDescription"
 
 	def enable(self):
-		self.name = u"all"
+		self.desc = {
+			"name": "all",
+			"niceName": "Enable every OpenTeacher GUI feature", #FIXME: translate
+			"advanced": False,
+		}
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self.name
+		del self.desc
 
 def init(moduleManager):
 	return ProfileDescriptionModule(moduleManager)

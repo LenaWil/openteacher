@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -26,12 +26,16 @@ class ProfileDescriptionModule(object):
 		self.type = "profileDescription"
 
 	def enable(self):
-		self.name = u"student@school"
+		self.desc = {
+			"name": "student@school",
+			"niceName": "Features for students using OpenTeacher at school", #FIXME: translate
+			"advanced": False,
+		}
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self.name
+		del self.desc
 
 def init(moduleManager):
 	return ProfileDescriptionModule(moduleManager)

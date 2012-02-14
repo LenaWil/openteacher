@@ -26,12 +26,16 @@ class ProfileDescriptionModule(object):
 		self.type = "profileDescription"
 
 	def enable(self):
-		self.name = u"testsuite"
+		self.desc = {
+			"name": "testsuite",
+			"niceName": "Runs the OpenTeacher test suite", #FIXME: translate
+			"advanced": True,
+		}
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self.name
+		del self.desc
 
 def init(moduleManager):
 	return ProfileDescriptionModule(moduleManager)

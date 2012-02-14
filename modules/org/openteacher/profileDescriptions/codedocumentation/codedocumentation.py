@@ -26,12 +26,16 @@ class ProfileDescriptionModule(object):
 		self.type = "profileDescription"
 
 	def enable(self):
-		self.name = u"codedocumentation"
+		self.desc = {
+			"name": "codedocumentation",
+			"niceName": "Code documentation web server", #FIXME: translate
+			"advanced": True,
+		}
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self.name
+		del self.desc
 
 def init(moduleManager):
 	return ProfileDescriptionModule(moduleManager)
