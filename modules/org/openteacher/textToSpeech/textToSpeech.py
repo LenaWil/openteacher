@@ -104,15 +104,13 @@ class TextToSpeechModule(object):
 	voiceid = None
 	def __init__(self, mm):
 		self._mm = mm
-		global base
-		base = self
 
 		self.type = "textToSpeech"
 		self.uses = (
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="dialogShower"),
 		)
 		self.requires = (
-			self._mm.mods(type="ui"),
 			self._mm.mods(type="event"),
 		)
 
@@ -130,8 +128,9 @@ class TextToSpeechModule(object):
 		
 		self.active = True
 		
-		t = threading.Thread(target=self._enable)
-		t.start()
+		#t = threading.Thread(target=self._enable)
+		#t.start()
+		self._enable()
 		
 	def _enable(self):
 		# For Windows and Mac
@@ -141,33 +140,37 @@ class TextToSpeechModule(object):
 		try:
 			self.tts = TextToSpeech(pyttsx)
 		except DependencyError as e:
-			QtGui.QMessageBox.critical(None, "Error", unicode(e))
-		
-		self._settings = self._modules.default(type="settings")
-		
-		# Add settings
-		self._ttsVoice = self._settings.registerSetting(**{
-			"internal_name": "org.openteacher.textToSpeech.voice",
-			"name": "Voice",
-			"type": "options",
-			"category": "Pronounciation",
-			"subcategory": "Voice",
-			"defaultValue": self.tts.getVoices()[0][1],
-			"options": self.tts.getVoices(),
-		})
-		self._ttsSpeed = self._settings.registerSetting(**{
-			"internal_name": "org.openteacher.textToSpeech.speed",
-			"name": "Speed",
-			"type": "number",
-			"category": "Pronounciation",
-			"subcategory": "Voice",
-			"defaultValue": 120,
-		})
+			try:
+				m = self._modules.default("active", type="dialogShower")
+				m.showBigError.send(unicode(e))
+			except IndexError:
+				pass
+		else:
+			self._settings = self._modules.default(type="settings")
+			
+			# Add settings
+			self._ttsVoice = self._settings.registerSetting(**{
+				"internal_name": "org.openteacher.textToSpeech.voice",
+				"name": "Voice",
+				"type": "options",
+				"category": "Pronounciation",
+				"subcategory": "Voice",
+				"defaultValue": self.tts.getVoices()[0][1],
+				"options": self.tts.getVoices(),
+			})
+			self._ttsSpeed = self._settings.registerSetting(**{
+				"internal_name": "org.openteacher.textToSpeech.speed",
+				"name": "Speed",
+				"type": "number",
+				"category": "Pronounciation",
+				"subcategory": "Voice",
+				"defaultValue": 120,
+			})
 
-		# Create the say word event
-		self.say = self._modules.default(type="event").createEvent()
+			# Create the say word event
+			self.say = self._modules.default(type="event").createEvent()
 
-		self.say.handle(self.newWord)
+			self.say.handle(self.newWord)
 
 	def _retranslate(self):
 		#Translations

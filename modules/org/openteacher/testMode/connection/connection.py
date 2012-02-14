@@ -124,8 +124,8 @@ class Connection(object):
 			hostname = socket.gethostbyname(hostname)
 		except socket.gaierror:
 			# Could not connect
-			dialogShower = self._modules.default(type="dialogShower").getDialogShower()
-			dialogShower.showError(self.loginTab, "Could not connect to the server. Possibly wrong hostname.")
+			dialogShower = self._modules.default(type="dialogShower")
+			dialogShower.showError.send(self.loginTab, "Could not connect to the server. Possibly wrong hostname.")
 		else:
 			# Everything OK, Connected
 			self.server = hostname
@@ -188,8 +188,8 @@ class Connection(object):
 		
 		if type(me) == urllib2.HTTPError:
 			# User was not logged in
-			dialogShower = self._modules.default("active", type="dialogShower").getDialogShower()
-			dialogShower.showError(self.loginTab, "Could not login. Wrong username or password.")
+			dialogShower = self._modules.default("active", type="dialogShower")
+			dialogShower.showError.send(self.loginTab, "Could not login. Wrong username or password.")
 		else:
 			self.userId = int(os.path.basename(me))
 			self._afterLogin(loginid)

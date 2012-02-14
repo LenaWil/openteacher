@@ -155,17 +155,17 @@ class TestModeTestTaker(object):
 	# Hand in the test
 	def handIn(self, answersUrl):
 		answeredList = self.teachWidget.getAnsweredList()
-		dialogShower = self._modules.default("active", type="dialogShower").getDialogShower()
+		dialogShower = self._modules.default("active", type="dialogShower")
 		
 		r = self.connection.post(answersUrl, {"list" : json.dumps(answeredList)})
 		
 		# Check if there was an error.
 		if type(r) == urllib2.HTTPError:
 			# Show error message
-			dialogShower.showError(self.teachTab, "An error occured. The server could not be reached. Check your network connection.")
+			dialogShower.showError.send(self.teachTab, "An error occured. The server could not be reached. Check your network connection.")
 		else:
 			# Show thank you message
-			dialogShower.showBigMessage("Your answers have successfully been handed in!")
+			dialogShower.showBigMessage.send("Your answers have successfully been handed in!")
 			# Close the teach widget
 			self.teachTab.close()
 	

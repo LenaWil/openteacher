@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Marten de Vries
+#	Copyright 2012, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -71,13 +72,17 @@ class TranslatorModule(object):
 
 	def gettextFunctions(self, localeDir, language=None):
 		if not language:
+			# Try to fill it
 			language = self.language
-		path = os.path.join(localeDir, language + ".mo")
-		if not os.path.isfile(path):
-			path = os.path.join(localeDir, language.split("_")[0] + ".mo")
-		if os.path.isfile(path):
-			t = gettext.GNUTranslations(open(path, "rb"))
-			return t.ugettext, t.ungettext
+		# If it is filled...
+		if language:
+			path = os.path.join(localeDir, language + ".mo")
+			if not os.path.isfile(path):
+				path = os.path.join(localeDir, language.split("_")[0] + ".mo")
+			if os.path.isfile(path):
+				t = gettext.GNUTranslations(open(path, "rb"))
+				return t.ugettext, t.ungettext
+		# Otherwise, default
 		return unicode, lambda x, y, n: x if n == 1 else y
 
 	def disable(self):

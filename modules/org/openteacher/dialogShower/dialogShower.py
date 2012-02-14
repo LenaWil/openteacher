@@ -106,7 +106,7 @@ class DialogShower(object):
 		self.showBigDialog(dialog)
 	
 	def showBigDialog(self, dialog):
-		tab = self.uiModule.addCustomTab("Message", dialog)
+		tab = self.uiModule.addCustomTab(dialog)
 		tab.closeRequested.handle(tab.close)
 	
 	def showDialog(self, tab, dialog):
@@ -139,10 +139,13 @@ class DialogShowerModule(object):
 		
 		self.requires = (
 			self._mm.mods(type="ui"),
+			self._mm.mods(type="event"),
 		)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
+		
+		_event = self._modules.default(type="event")
 		
 		#setup translation
 		global _
@@ -166,13 +169,24 @@ class DialogShowerModule(object):
 		
 		self.dialogShower = DialogShower(logoImagePath, brokenImagePath, bigLogoImagePath, bigBrokenImagePath, uiModule)
 		
+		self.showError = _event.createEvent()
+		self.showMessage = _event.createEvent()
+		self.showBigMessage = _event.createEvent()
+		self.showBigError = _event.createEvent()
+		self.showBigDialog = _event.createEvent()
+		self.showDialog = _event.createEvent()
+		
+		self.showError.handle(self.dialogShower.showError)
+		self.showMessage.handle(self.dialogShower.showMessage)
+		self.showBigMessage.handle(self.dialogShower.showBigMessage)
+		self.showBigError.handle(self.dialogShower.showBigError)
+		self.showBigDialog.handle(self.dialogShower.showBigDialog)
+		self.showDialog.handle(self.dialogShower.showDialog)
+		
 		self.active = True
 
 	def disable(self):
 		self.active = False
-	
-	def getDialogShower(self):
-		return self.dialogShower
 
 def init(moduleManager):
 	return DialogShowerModule(moduleManager)

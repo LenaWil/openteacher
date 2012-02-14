@@ -602,7 +602,7 @@ class TestModeTeacherPanelModule(object):
 		self._action.setText(_("Teacher panel")) #FIXME: retranslate...
 		self._testMenu.addAction(self._action)
 
-		self.dialogShower = self._modules.default("active", type="dialogShower").getDialogShower()
+		self.dialogShower = self._modules.default("active", type="dialogShower")
 		
 		self.active = True
 
@@ -644,7 +644,7 @@ class TestModeTeacherPanelModule(object):
 			self.teacherPanel.message.connect(self.showMessage)
 	
 	def showMessage(self, text):
-		self.dialogShower.showMessage(self.tab, text)
+		self.dialogShower.showMessage.send(self.tab, text)
 
 def init(moduleManager):
 	return TestModeTeacherPanelModule(moduleManager)
