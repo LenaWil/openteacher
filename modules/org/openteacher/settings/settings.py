@@ -47,12 +47,14 @@ class SettingsModule(object):
 		   that's handled by the execute module.
 
 		"""
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		store = set(self._mm.mods(type="dataStore")).pop().store
+		
 		try:
 			self._settings = store["org.openteacher.settings.settings"]
 		except KeyError:
 			self._settings = store["org.openteacher.settings.settings"] = {}
-
+		
 		#replace the dicts by SettingDicts
 		for key, value in self._settings.iteritems():
 			self._settings[key] = SettingDict(self._executeCallback, value)

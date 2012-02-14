@@ -199,9 +199,9 @@ class SettingsDialogModule(object):
 		)
 		self._activeDialogs.add(weakref.ref(dialog))
 
-		tab = self._uiModule.addCustomTab(dialog)
-		dialog.tab = tab
-		tab.closeRequested.handle(tab.close)
+		self.tab = self._uiModule.addCustomTab(dialog)
+		dialog.tab = self.tab
+		self.tab.closeRequested.handle(self.tab.close)
 
 		self._retranslate()
 

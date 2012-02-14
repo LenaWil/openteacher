@@ -30,8 +30,8 @@ class SettingsWidget(QtGui.QComboBox):
 		for profile in profiles:
 			if not profile.desc["advanced"]:
 				self.addItem(profile.desc["niceName"], profile.desc["name"])
-		self.currentIndexChanged.connect(self._valueChanged)
 		self.setCurrentIndex(self.findData(setting["value"]))
+		self.currentIndexChanged.connect(self._valueChanged)
 
 	def _valueChanged(self):
 		self._setting["value"] = unicode(self.itemData(self.currentIndex()).toString())

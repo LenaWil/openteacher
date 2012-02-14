@@ -110,7 +110,7 @@ class DialogShower(object):
 		tab.closeRequested.handle(tab.close)
 	
 	def showDialog(self, tab, dialog):
-		tabLayout = tab._widget.layout()
+		tabLayout = tab._wrapperWidget.layout()
 				
 		# First, remove all other errors if any are there
 		for i in xrange(tabLayout.count() - 1):

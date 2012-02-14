@@ -50,6 +50,11 @@ class ExecuteModule(object):
 			"type": "profile",
 			"defaultValue": "all",
 			"subcategory": "Profile",
+			"callback": {
+				"args": (),
+				"kwargs": {"type": "execute"},
+				"method": "_settingChanged",
+			}
 		})
 
 		parser = argparse.ArgumentParser()
@@ -62,18 +67,24 @@ class ExecuteModule(object):
 		})
 		args = parser.parse_args()
 
-		modules = self._getMod(type="modules")
-		modules.profile = args.profile
+		self._modules = self._getMod(type="modules")
+		self._modules.profile = args.profile
 
-		event = modules.default(type="event")
+		event = self._modules.default(type="event")
 
 		self.startRunning = event.createEvent()
 		self.aboutToExit = event.createEvent()
 
-		modules.updateToProfile()
+		self._modules.updateToProfile()
 
 		self.startRunning.send()
 		self.aboutToExit.send()
+	
+	def _settingChanged(self):
+		dialogShower = self._modules.default("active", type="dialogShower")
+		settingsDialog = self._modules.default("active", type="settingsDialog")
+		dialogShower.showMessage.send(settingsDialog.tab, "Restart OpenTeacher for this setting to take effect.")
+		
 
 def init(moduleManager):
 	return ExecuteModule(moduleManager)
