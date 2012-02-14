@@ -51,7 +51,10 @@ class SettingsWidgetModule(object):
 		)
 
 	def createWidget(self, *args, **kwargs):
-		profiles = self._modules.sort("active", type="profileDescription")
+		profiles = sorted(
+			self._mm.mods("active", type="profileDescription"),
+			key=lambda p: p.desc["niceName"]
+		)
 		return SettingsWidget(profiles, *args, **kwargs)
 
 	def enable(self):
