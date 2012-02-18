@@ -92,7 +92,7 @@ class Teach2000LoaderModule(object):
 			#FIXME: load tests, also results in the words!
 		return {
 			"resources": {},
-			"list": wordList
+			"list": wordList,
 		}
 
 def init(manager):

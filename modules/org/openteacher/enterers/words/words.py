@@ -87,13 +87,19 @@ class WordsTableView(QtGui.QTableView):
 		
 		return self.model().index(row, column)
 
+class EmptyLesson(object):
+	def __init__(self, *args, **kwargs):
+		super(EmptyLesson, self).__init__(*args, **kwargs)
+
+		self.list = {}
+
 class WordsTableModel(QtCore.QAbstractTableModel):
 	QUESTIONS, ANSWERS, COMMENT = xrange(3)
 
 	def __init__(self, compose, parse, *args, **kwargs):
 		super(WordsTableModel, self).__init__(*args, **kwargs)
 
-		self.updateList({"items": [], "tests": []})
+		self.updateLesson(EmptyLesson())
 		self._compose = compose
 		self._parse = parse
 		self._headers = ["", "", ""]
@@ -101,35 +107,45 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 	def retranslate(self):
 		self._headers = [_("Questions"), _("Answers"), _("Comment")]
 
-	def updateList(self, list):
+	def updateLesson(self, lesson):
 		self.beginResetModel()
-		self.list = list
-		self.indexes = range(len(self.list["items"]))
+		self.lesson = lesson
+		try:
+			self.indexes = range(len(self.lesson.list["items"]))
+		except KeyError:
+			self.indexes = []
 		self.endResetModel()
 
 	def sort(self, column, order):
+		try:
+			items = self.lesson.list["items"]
+		except KeyError:
+			items = []
 		if column == self.QUESTIONS:
-			items = sorted(self.list["items"], key=lambda word: word["questions"][0] if "questions" in word else u"")
+			sortedItems = sorted(items, key=lambda word: word["questions"][0] if "questions" in word else u"")
 		elif column == self.ANSWERS:
-			items = sorted(self.list["items"], key=lambda word: word["answers"][0] if "answers" in word else u"")
+			sortedItems = sorted(items, key=lambda word: word["answers"][0] if "answers" in word else u"")
 		elif column == self.COMMENT:
-			items = sorted(self.list["items"], key=lambda word: word["comment"] if "comment" in word else u"")
+			sortedItems = sorted(items, key=lambda word: word["comment"] if "comment" in word else u"")
 
 		if order == QtCore.Qt.DescendingOrder:
 			items.reverse()
 
 		self.layoutAboutToBeChanged.emit()
-		self.indexes = [self.list["items"].index(item) for item in items]
+		self.indexes = [self.lesson.list["items"].index(item) for item in items]
 		self.layoutChanged.emit()
 
 	def updateTitle(self, title):
-		self.list["title"] = unicode(title)
+		self.lesson.list["title"] = unicode(title)
+		self.lesson.changed = True
 
 	def updateQuestionLanguage(self, questionLanguage):
-		self.list["questionLanguage"] = unicode(questionLanguage)
+		self.lesson.list["questionLanguage"] = unicode(questionLanguage)
+		self.lesson.changed = True
 
 	def updateAnswerLanguage(self, answerLanguage):
-		self.list["answerLanguage"] = unicode(answerLanguage)
+		self.lesson.list["answerLanguage"] = unicode(answerLanguage)
+		self.lesson.changed = True
 
 	def headerData(self, section, orientation, role):
 		if role != QtCore.Qt.DisplayRole:
@@ -140,7 +156,10 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 			return section +1
 
 	def rowCount(self, parent=None):
-		return len(self.list["items"]) +1
+		try:
+			return len(self.lesson.list["items"]) +1
+		except KeyError:
+			return 1
 
 	def columnCount(self, parent=None):
 		return 3
@@ -154,7 +173,7 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 		except IndexError:
 			return u"" #last (empty) row
 		else:
-			word = self.list["items"][listIndex]
+			word = self.lesson.list["items"][listIndex]
 
 			if index.column() == self.QUESTIONS:
 				try:
@@ -184,6 +203,9 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 			return False
 		#makes calling without a QVariant possible (more dynamic).
 		value = QtCore.QVariant(value)
+		#add 'items' key to the list if not there already, since setData needs it.
+		if "items" not in self.lesson.list:
+			self.lesson.list["items"] = []
 		while True:
 			try:
 				listIndex = self.indexes[index.row()]
@@ -192,7 +214,7 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 					return False
 				word = {"created": datetime.datetime.now()}
 				try:
-					word["id"] = self.list["items"][-1]["id"] +1
+					word["id"] = self.lesson.list["items"][-1]["id"] +1
 				except IndexError:
 					word["id"] = 0
 				self.beginInsertRows(
@@ -200,11 +222,11 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 					self.rowCount(),
 					self.rowCount()
 				)
-				self.list["items"].append(word)
-				self.indexes.append(self.list["items"].index(word))
+				self.lesson.list["items"].append(word)
+				self.indexes.append(self.lesson.list["items"].index(word))
 				self.endInsertRows()
 			else:
-				word = self.list["items"][listIndex]
+				word = self.lesson.list["items"][listIndex]
 
 				if index.column() == self.QUESTIONS:
 					word["questions"] = self._parse(unicode(value.toString()))
@@ -215,6 +237,7 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 					if len(word["comment"]) == 0:
 						del word["comment"]
 				break
+		self.lesson.changed = True
 		return True
 
 	def removeRow(self, row, parent=QtCore.QModelIndex()):
@@ -225,7 +248,7 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 		for i in xrange(len(self.indexes)):
 			if self.indexes[i] > listIndex:
 				self.indexes[i] -= 1
-		del self.list["items"][listIndex]
+		del self.lesson.list["items"][listIndex]
 		self.endRemoveRows()
 
 class EnterWidget(QtGui.QSplitter):
@@ -240,23 +263,23 @@ class EnterWidget(QtGui.QSplitter):
 		self._wordsTableView.setModel(self._wordsTableModel)
 
 		self._connectSignals()
-	
-	@property
-	def list(self):
-		return self._wordsTableModel.list
 
-	def updateList(self, list):
-		self._wordsTableModel.updateList(list)
+	@property
+	def lesson(self):
+		return self._wordsTableModel.lesson
+
+	def updateLesson(self, lesson):
+		self._wordsTableModel.updateLesson(lesson)
 		try:
-			self._titleTextBox.setText(list["title"])
+			self._titleTextBox.setText(lesson.list["title"])
 		except KeyError:
 			pass
 		try:
-			self._questionLanguageTextBox.setText(list["questionLanguage"])
+			self._questionLanguageTextBox.setText(lesson.list["questionLanguage"])
 		except KeyError:
 			pass
 		try:
-			self._answerLanguageTextBox.setText(list["answerLanguage"])
+			self._answerLanguageTextBox.setText(lesson.list["answerLanguage"])
 		except KeyError:
 			pass
 

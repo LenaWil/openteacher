@@ -63,5 +63,7 @@ class HtmlSaverModule(object):
 		with open(path, 'w') as htmlfile:
 			htmlfile.write(html)
 
+		lesson.path = None
+
 def init(moduleManager):
 	return HtmlSaverModule(moduleManager)

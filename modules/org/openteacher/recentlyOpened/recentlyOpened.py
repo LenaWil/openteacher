@@ -33,8 +33,6 @@ class RecentlyOpenedModule(object):
 	def add(self, **kwargs):
 		"""This method adds 'something that was recently opened' to the
 		   list. The arguments should be:
-		    * identifier
-		     * preferably the domain syntax (com.example.module.unique_name)
 		    * label
 		     * text describing the recently opened thing. E.g. a title
 		       or, if nothing better exists, a file name.
@@ -54,19 +52,11 @@ class RecentlyOpenedModule(object):
 			 * the keyword arguments that need to be passed to 'method'
 
 		"""
+		if kwargs in self._recentlyOpened:
+			self._recentlyOpened.remove(kwargs)
 		self._recentlyOpened.insert(0, kwargs)
 		if len(self._recentlyOpened) > 10: #FIXME: setting?
 			self._recentlyOpened.pop()
-		self.updated.send()
-		
-		#debug
-		self.store.write()
-
-	def remove(self, uniqueName):
-		for i in range(len(self._recentlyOpened)):
-			if self._recentlyOpened[i]["uniqueName"] == uniqueName:
-				del self._recentlyOpened[i]
-				return
 		self.updated.send()
 
 	def getRecentlyOpened(self):

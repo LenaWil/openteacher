@@ -138,6 +138,9 @@ class EnterPlaceByName(QtGui.QLineEdit):
 		self.completer.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
 		self.setCompleter(self.completer)
 
+class DummyLesson(object):
+	pass
+
 """
 The enter tab
 """
@@ -149,6 +152,7 @@ class EnterWidget(QtGui.QSplitter):
 			"items": list(),
 			"tests": list()
 		}
+		self.lesson = DummyLesson()
 		
 		#create the GUI
 		self.addPlaceEdit = EnterPlaceByName()
@@ -233,6 +237,7 @@ class EnterWidget(QtGui.QSplitter):
 	"""
 	def addPlace(self,place):
 		self.list["items"].append(place)
+		self.lesson.changed = True
 		self.updateWidgets()
 	
 	"""
@@ -258,6 +263,8 @@ class EnterWidget(QtGui.QSplitter):
 		
 		self.addPlaceEdit.setText("")
 		self.addPlaceEdit.setFocus()
+
+		self.lesson.changed = True
 		
 	"""
 	Remove a place from the list
@@ -267,8 +274,8 @@ class EnterWidget(QtGui.QSplitter):
 			for place in self.list["items"]:
 				if placeItem.text() == unicode(place["name"] + " (" + unicode(place["x"]) + "," + unicode(place["y"]) + ")"):
 					self.list["items"].remove(place)
+			self.lesson.changed = True
 		self.updateWidgets()
-
 
 class TopoEntererModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

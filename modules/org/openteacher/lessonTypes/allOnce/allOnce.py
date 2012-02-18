@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #	Copyright 2011, Cas Widdershoven
 #	Copyright 2011, Milan Boers
 #
@@ -68,6 +68,8 @@ class AllOnceLessonType(object):
 	def _appendTest(self):
 		try:
 			self._list["tests"][-1]
+		except KeyError:
+			self._list["tests"] = [self._test]
 		except IndexError:
 			self._list["tests"].append(self._test)
 		else:

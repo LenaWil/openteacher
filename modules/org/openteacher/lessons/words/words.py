@@ -23,7 +23,7 @@
 import weakref
 
 class Lesson(object):
-	def __init__(self, moduleManager, fileTab, module, list, enterWidget, teachWidget, resultsWidget=None, *args, **kwargs):
+	def __init__(self, moduleManager, fileTab, module, lessonData, enterWidget, teachWidget, resultsWidget=None, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
 
 		self.resources = {}
@@ -37,24 +37,46 @@ class Lesson(object):
 		self.fileTab.closeRequested.handle(self.stop)
 		self.stopped = self._modules.default(type="event").createEvent()
 
-		self.list = list
+		self.changedEvent = self._modules.default(type="event").createEvent()
+
+		self.list = lessonData["list"]
+		if "changed" in lessonData:
+			self.changed = lessonData["changed"]
+		if "path" in lessonData:
+			self.path = lessonData["path"]
 
 		self._enterWidget = enterWidget
 		self._teachWidget = teachWidget
 		if resultsWidget:
 			self._resultsWidget = resultsWidget
 
+		self._enterWidget.updateLesson(self)
+		self._teachWidget.updateLesson(self)
+
 		self._teachWidget.lessonDone.connect(self._lessonDone)
 		self._teachWidget.listChanged.connect(self._listChanged)
 
 		self.retranslate()
+
+	@property
+	def changed(self):
+		return self._changed
+
+	@changed.setter
+	def changed(self, value):
+		self._changed = value
+		self.changedEvent.send()
+
+	@changed.deleter
+	def changed(self):
+		del self._changed
 
 	def retranslate(self):
 		self.fileTab.title = _("Word lesson: %s") % self.list.get("title", _("Unnamed"))
 
 	def _lessonDone(self):
 		self.fileTab.currentTab = self._enterWidget
-	
+
 	def _listChanged(self, list):
 		try:
 			self._resultsWidget.updateList(list, "words")
@@ -148,22 +170,23 @@ class WordsLessonModule(object):
 		del self.lessonCreated
 		del self._button
 
-	def createLesson(self, list=None):
-		if list is None:
-			list = {"items": [], "tests": []}
+	def createLesson(self, lessonData=None):
+		if not lessonData:
+			lessonData = {
+				"list": {},
+				"resources": {},
+			}
 
 		#create widgets
 		self.enterWidget = self._modules.default(
 			"active",
 			type="wordsEnterer"
 		).createWordsEnterer()
-		self.enterWidget.updateList(list)
 
 		self.teachWidget = self._modules.default(
 			"active",
 			type="wordsTeacher"
 		).createWordsTeacher()
-		self.teachWidget.updateList(list)
 
 		widgets = [
 			self.enterWidget,
@@ -177,13 +200,13 @@ class WordsLessonModule(object):
 		except IndexError:
 			pass
 		else:
-			resultsWidget.updateList(list, "words")
+			resultsWidget.updateList(lessonData["list"], "words")
 			widgets.append(resultsWidget)
 
 		self.fileTab = self._uiModule.addFileTab(*widgets)
 		self.fileTab.tabChanged.handle(self.tabChanged)
 
-		lesson = Lesson(self._mm, self.fileTab, self, list, *widgets)
+		lesson = Lesson(self._mm, self.fileTab, self, lessonData, *widgets)
 		self._lessons.add(weakref.ref(lesson))
 
 		self.lessonCreated.send(lesson)
@@ -204,11 +227,8 @@ class WordsLessonModule(object):
 			return
 		return keyboard.createWidget()
 
-	#FIXME: change topo lesson so path can be removed
-	#At least, rename it to something more generic like 'label' so other
-	#things than files (e.g. webservices) can use it too.
-	def loadFromLesson(self, lesson, path):
-		self.createLesson(lesson["list"])
+	def loadFromLesson(self, lesson):
+		self.createLesson(lesson)
 
 def init(moduleManager):
 	return WordsLessonModule(moduleManager)

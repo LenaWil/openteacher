@@ -85,7 +85,9 @@ class WrtsSaverModule(object):
 			"date": datetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S %z").strip() #FIXME: not datetime.now(), but the real ones!
 		}
 		content = t(**data)
-		open(path, "w").write(content.encode("UTF-8"))
+		with open(path, "w") as f:
+			f.write(content.encode("UTF-8"))
+		lesson.path = None
 
 def init(moduleManager):
 	return WrtsSaverModule(moduleManager)

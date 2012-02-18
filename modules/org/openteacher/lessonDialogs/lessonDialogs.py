@@ -58,7 +58,7 @@ class LessonDialogsModule(object):
 					fileTab.currentTab = teachWidget
 		elif fileTab.currentTab == teachWidget:
 			# If there are no words
-			if len(enterWidget.list["items"]) == 0:
+			if not "items" in enterWidget.lesson.list or len(enterWidget.lesson.list["items"]) == 0:
 				QtGui.QMessageBox.critical(teachWidget, "Not enough items", "You need to add items to your test first")
 				fileTab.currentTab = enterWidget
 			elif func != None:

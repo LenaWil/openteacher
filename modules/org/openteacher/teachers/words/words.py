@@ -203,8 +203,8 @@ class TeachWidget(QtGui.QStackedWidget):
 		
 		self.inLesson = False
 
-	def updateList(self, list):
-		self.list = list
+	def updateLesson(self, lesson):
+		self.lesson = lesson
 
 	def _showSettings(self):
 		self.setCurrentWidget(self._settingsWidget)
@@ -220,15 +220,15 @@ class TeachWidget(QtGui.QStackedWidget):
 			#Show nicer error
 			raise e
 
-		indexes = range(len(self.list["items"]))
+		indexes = range(len(self.lesson.list["items"]))
 
 		for listModifier in self._listModifiersModel.modifiers:
 			if listModifier["active"]:
 				indexes = listModifier["module"].modifyList(
 					indexes,
-					self.list
+					self.lesson.list
 				)
-		self._lessonType = lessonTypeModule.createLessonType(self.list, indexes)
+		self._lessonType = lessonTypeModule.createLessonType(self.lesson.list, indexes)
 
 		self._lessonType.newItem.handle(self._newItem)
 		self._lessonType.lessonDone.handle(self.stopLesson)
@@ -258,7 +258,8 @@ class TeachWidget(QtGui.QStackedWidget):
 				item = itemModifier["module"].modifyItem(item)
 
 		# Update the list
-		self.listChanged.emit(self.list)
+		self.listChanged.emit(self.lesson.list)
+		self.lesson.changed = True
 
 		compose = self._modules.default("active", type="wordsStringComposer").compose
 		self._lessonWidget.questionLabel.setText(compose(item["questions"]))
@@ -279,7 +280,7 @@ class TeachWidget(QtGui.QStackedWidget):
 		if showResults:
 			try:
 				module = self._modules.default("active", type="resultsDialog")
-				module.showResults(self.list, "words", self.list["tests"][-1])
+				module.showResults(self.lesson.list, "words", self.lesson.list["tests"][-1])
 			except IndexError:
 				pass
 		

@@ -92,7 +92,10 @@ class TxtSaverModule(object):
 					u"\n"
 				])
 
-		open(path, "w").write(text.encode("UTF-8"))
+		with open(path, "w") as f:
+			f.write(text.encode("UTF-8"))
+
+		lesson.path = None
 
 def init(moduleManager):
 	return TxtSaverModule(moduleManager)

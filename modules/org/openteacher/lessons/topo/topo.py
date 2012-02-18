@@ -95,8 +95,6 @@ class TeachTopoLessonModule(object):
 		del self.lessonCreationFinished
 	
 	def createLesson(self):
-		lessons = set()
-		
 		module = self._modules.default("active", type="ui")
 		
 		enterWidget = self._modules.default("active", type="topoEnterer").createTopoEnterer()
@@ -108,29 +106,38 @@ class TeachTopoLessonModule(object):
 			teachWidget,
 			resultsWidget
 		)
-		
+
 		lesson = Lesson(self._modules, fileTab, enterWidget, teachWidget, resultsWidget, self.counter)
 		self.lessonCreated.send(lesson)
-		
-		lessons.add(lesson)
-		
+
+		#so they can send changedEvents
+		enterWidget.lesson = lesson
+		teachWidget.lesson = lesson
+
 		self.counter += 1
 		self.lessonCreationFinished.send()
-		return lessons
+		return lesson
 	
-	def loadFromLesson(self, lessonl, path):
-		for lesson in self.createLesson():
-			lesson.enterWidget.mapChooser.setCurrentIndex(0)
-			
-			lesson.enterWidget.mapChooser.insertItem(0, os.path.basename(path), unicode({'mapPath': lessonl["resources"]["mapPath"], 'knownPlaces': ''}))
-			lesson.enterWidget.mapChooser.setCurrentIndex(0)
-			
-			# Load the list
-			lesson.enterWidget.list = lessonl["list"]
-			# Update the widgets
-			lesson.enterWidget.updateWidgets()
-			# Update results widget
-			lesson.resultsWidget.updateList(lessonl["list"], "topo")
+	def loadFromLesson(self, lessonl):
+		lesson = self.createLesson()
+		fileName = lessonl["path"] if "path" in lessonl else _("Import source") #FIXME: something other text?
+		lesson.enterWidget.mapChooser.setCurrentIndex(0)
+		
+		lesson.enterWidget.mapChooser.insertItem(0, fileName, unicode({'mapPath': lessonl["resources"]["mapPath"], 'knownPlaces': ''}))
+		lesson.enterWidget.mapChooser.setCurrentIndex(0)
+		
+		# Load the list
+		lesson.enterWidget.list = lessonl["list"]
+		# Update the widgets
+		lesson.enterWidget.updateWidgets()
+		# Update results widget
+		lesson.resultsWidget.updateList(lessonl["list"], "topo")
+
+		#Set if the file was changed and the file's path if one
+		if "changed" in lessonl:
+			lesson.changed = lessonl["changed"]
+		if "path" in lessonl:
+			lesson.path = lessonl["path"]
 
 class Lesson(object):
 	"""Lesson object (that means: this techwidget+enterwidget)"""
@@ -158,31 +165,25 @@ class Lesson(object):
 		fileTab.tabChanged.handle(self.tabChanged)
 		self.teachWidget.lessonDone.connect(self.toEnterTab)
 		self.teachWidget.listChanged.connect(self.teachListChanged)
-	
+
+		self.changedEvent = self._modules.default(type="event").createEvent()
+
+	@property
+	def changed(self):
+		return self._changed
+
+	@changed.setter
+	def changed(self, value):
+		self._changed = value
+		self.changedEvent.send()
+
+	@changed.deleter
+	def changed(self):
+		del self._changed
+
 	@property
 	def list(self):
 		return self.enterWidget.list
-	
-	def stop(self):
-		# Stop lesson if in one
-		if self.teachWidget.inLesson:
-			self.teachWidget.stopLesson()
-		self.fileTab.close()
-		self.stopped.send()
-	
-	def toEnterTab(self):
-		self.fileTab.currentTab = self.enterWidget
-	
-	def teachListChanged(self, list):
-		self.resultsWidget.updateList(list, "topo")
-	
-	def tabChanged(self):
-		lessonDialogsModule = self._modules.default("active", type="lessonDialogs")
-		lessonDialogsModule.onTabChanged(self.fileTab, self.enterWidget, self.teachWidget, lambda: self.teachWidget.initiateLesson(self.enterWidget.list, self.enterWidget.mapChooser.currentMap["mapPath"]))
-
-	def _removeTempFiles(self):
-		for file in self._tempFiles:
-			os.remove(file)
 
 	@property
 	def resources(self):
@@ -196,6 +197,28 @@ class Lesson(object):
 			"mapPath": self.enterWidget.mapChooser.currentMap["mapPath"],
 			"mapScreenshot": screenshotPath,
 		}
+	
+	def stop(self):
+		# Stop lesson if in one
+		if self.teachWidget.inLesson:
+			self.teachWidget.stopLesson()
+		self.fileTab.close()
+		self.stopped.send()
+	
+	def toEnterTab(self):
+		self.fileTab.currentTab = self.enterWidget
+	
+	def teachListChanged(self, list):
+		self.resultsWidget.updateList(list, "topo")
+		self.changed = True
+	
+	def tabChanged(self):
+		lessonDialogsModule = self._modules.default("active", type="lessonDialogs")
+		lessonDialogsModule.onTabChanged(self.fileTab, self.enterWidget, self.teachWidget, lambda: self.teachWidget.initiateLesson(self.enterWidget.list, self.enterWidget.mapChooser.currentMap["mapPath"]))
+
+	def _removeTempFiles(self):
+		for file in self._tempFiles:
+			os.remove(file)
 
 def init(moduleManager):
 	return TeachTopoLessonModule(moduleManager)

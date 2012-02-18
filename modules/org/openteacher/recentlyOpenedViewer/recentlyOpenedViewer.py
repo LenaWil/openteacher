@@ -96,7 +96,9 @@ class RecentlyOpenedViewerModule(object):
 		self._mm = moduleManager
 
 		self.requires = (
-			self._mm.mods(type="ui"),
+			#FIXME: fix the circular dependency with gui and then enable
+			#this again!
+#			self._mm.mods(type="ui"),
 			self._mm.mods(type="recentlyOpened"),
 		)
 		self.uses = (

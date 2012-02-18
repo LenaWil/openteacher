@@ -70,6 +70,8 @@ class PdfSaverModule(object):
 		self._doc.loadFinished.connect(self._loadFinished)
 		self._doc.setHtml(html)
 
+		lesson.path = None
+
 	def _loadFinished(self, ok):
 		self._doc.print_(self._printer)
 

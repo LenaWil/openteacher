@@ -60,7 +60,10 @@ class Teach2000SaverModule(object):
 			"wordList": lesson.list
 		}
 		content = t(**data)
-		open(path, "w").write(content.encode("UTF-8"))
+		with open(path, "w") as f:
+			f.write(content.encode("UTF-8"))
+
+		lesson.path = None
 
 def init(moduleManager):
 	return Teach2000SaverModule(moduleManager)

@@ -29,7 +29,7 @@ class UiControllerModule(object):
 		self.type = "uiController"
 		self.requires = (
 			self._mm.mods(type="ui"),
-			#FIXME: make loader, saver, printDialog and printer into self.uses?
+			#FIXME: make loader, saver, lessonTracker fileDialogs, printDialog and printer into self.uses?
 			self._mm.mods(type="loader"),
 			self._mm.mods(type="saver"),
 			self._mm.mods(type="printer"),
@@ -37,6 +37,7 @@ class UiControllerModule(object):
 			self._mm.mods(type="fileDialogs"),
 			self._mm.mods(type="metadata"),
 			self._mm.mods(type="execute"),
+			self._mm.mods(type="lessonTracker"),
 		)
 		self.uses = (
 			self._mm.mods(type="settingsDialog"),
@@ -47,17 +48,26 @@ class UiControllerModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
+
 		self._fileDialogs = self._modules.default("active", type="fileDialogs")
-		execute = self._modules.default(type="execute")
-		execute.startRunning.handle(self.run)
+		self._lessonTracker = self._modules.default("active", type="lessonTracker")
+		self._saver = self._modules.default("active", type="saver")
+		self._execute = self._modules.default(type="execute")
+
+		self._execute.startRunning.handle(self.run)
 
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
+		self._execute.startRunning.unhandle(self.run)
+
 		del self._modules
 		del self._fileDialogs
+		del self._lessonTracker
+		del self._saver
+		del self._execute
 
 	def run(self, path=None):
 		self._modules = set(self._mm.mods(type="modules")).pop()
@@ -91,20 +101,28 @@ class UiControllerModule(object):
 			loader.load(path)
 		#FIXME: inform the user of succes...
 
-	def save(self):
-		#FIXME: this should first check if a path is already known
-		self.saveAs()
+	def save(self, path=None):
+		saver = self._modules.default("active", type="saver")
+
+		if not path:
+			try:
+				path = self._lessonTracker.currentLesson.path
+			except AttributeError:
+				self.saveAs()
+				return
+		if path:
+			saver.save(path)
+		else:
+			self.saveAs()
 		#FIXME: inform the user of succes...
 
 	def saveAs(self):
-		saver = self._modules.default("active", type="saver")
-
 		path = self._fileDialogs.getSavePath(
 			os.path.expanduser("~"), #FIXME: path should be saved & restored
-			saver.usableExtensions
+			self._saver.usableExtensions
 		)
 		if path:
-			saver.save(path)
+			self._saver.save(path)
 		#FIXME: inform the user of succes...
 
 	def print_(self):
@@ -152,6 +170,11 @@ class UiControllerModule(object):
 		self._uiModule.tabChanged.unhandle(self._updateMenuItems)
 
 	def _updateMenuItems(self):
+		#subscribe self to the lesson (if it's there nothing happens
+		#due to the internal implementation of event.)
+		if hasattr(self._lessonTracker.currentLesson, "changedEvent"):
+			self._lessonTracker.currentLesson.changedEvent.handle(self._updateMenuItems)
+
 		#new, hide when already on the +-tab
 		hideNew = self._uiModule.startTabActive
 		self._uiModule.enableNew(not hideNew)
@@ -172,8 +195,13 @@ class UiControllerModule(object):
 			saveSupport = False
 		else:
 			saveSupport = saver.saveSupport
-		self._uiModule.enableSave(saveSupport)
 		self._uiModule.enableSaveAs(saveSupport)
+
+		try:
+			enableSave = saveSupport and self._lessonTracker.currentLesson.changed
+		except AttributeError:
+			enableSave = saveSupport #assume changed
+		self._uiModule.enableSave(enableSave)
 
 		#print
 		try:

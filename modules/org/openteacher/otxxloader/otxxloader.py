@@ -45,6 +45,8 @@ class OtxxLoaderModule(object):
 		atexit.register(self._cleanupTempPaths)
 
 	def _stringsToDatetimes(self, list):
+		if not "tests" in list:
+			return list
 		for test in list["tests"]:
 			for result in test["results"]:
 				result["active"]["start"] = self.stringToDatetime(result["active"]["start"])
@@ -83,7 +85,6 @@ class OtxxLoaderModule(object):
 			pass
 		else:
 			recentlyOpenedModule.add(**{
-				"identifier": "org.openteacher.otxxloader.recentlyOpened." + str(uuid.uuid4()),
 				"label": list.get("title", os.path.basename(path)) or os.path.basename(path), #or for empty
 				"args": {},
 				"kwargs": {"path": path},

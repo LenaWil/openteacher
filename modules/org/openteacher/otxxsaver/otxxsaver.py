@@ -42,6 +42,9 @@ class OtxxSaverModule(object):
 			for resourceKey, filename in resourceFilenames.iteritems():
 				otxxzip.write(lesson.resources[resourceKey], filename)
 
+		lesson.path = path
+		lesson.changed = False
+
 	def _serialize(self, obj):
 		try:
 			return obj.strftime("%Y-%m-%dT%H:%M:%S.%f")

@@ -145,7 +145,7 @@ class OpenTeacherLoaderModule(object):
 		
 		return {
 			"list": wordList,
-			"resources": {}
+			"resources": {},
 		}
 
 def init(moduleManager):

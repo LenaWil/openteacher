@@ -89,8 +89,6 @@ class MediaLessonModule(object):
 		del self.lessonCreationFinished
 	
 	def createLesson(self):		
-		lessons = set()
-
 		module = self._modules.default("active", type="ui")
 
 		self.enterWidget = self._modules.default("active", type="mediaEnterer").createMediaEnterer()
@@ -106,24 +104,34 @@ class MediaLessonModule(object):
 		lesson = Lesson(self._modules, self.fileTab, self.enterWidget, self.teachWidget, self.resultsWidget, self.counter)
 		self.lessonCreated.send(lesson)
 
-		lessons.add(lesson)
+		#so it can set the changed property
+		self.enterWidget.lesson = lesson
 
 		self.counter += 1
 		self.lessonCreationFinished.send()
-		return lessons
+		return lesson
 
-	def loadFromLesson(self, lessonl, path):
+	def loadFromLesson(self, lessonl):
 		# Replace filenames with their real (temporary) files
 		for item in lessonl["list"]["items"]:
-			item["filename"] = lessonl["resources"][item["filename"]]
-		
-		for lesson in self.createLesson():
-			# Load the list
-			self.enterWidget.list = lessonl["list"]
-			# Update the widgets
-			self.enterWidget.updateWidgets()
-			# Update the results widget
-			self.resultsWidget.updateList(lessonl["list"], "media")
+			try:
+				item["filename"] = lessonl["resources"][item["filename"]]
+			except KeyError:
+				#Remote-data items
+				pass
+
+		lesson = self.createLesson()
+		# Load the list
+		self.enterWidget.list = lessonl["list"]
+		# Update the widgets
+		self.enterWidget.updateWidgets()
+		# Update the results widget
+		self.resultsWidget.updateList(lessonl["list"], "media")
+
+		if "path" in lessonl:
+			lesson.path = lessonl["path"]
+		if "changed" in lessonl:
+			lesson.changed = lessonl["changed"]
 
 """
 Lesson object (that means: this techwidget+enterwidget)
@@ -152,6 +160,21 @@ class Lesson(object):
 
 		self.fileTab.title = _("Media lesson %s") % counter #FIXME: retranslate
 
+		self.changedEvent = self._modules.default(type="event").createEvent()
+
+	@property
+	def changed(self):
+		return self._changed
+
+	@changed.setter
+	def changed(self, value):
+		self._changed = value
+		self.changedEvent.send()
+
+	@changed.deleter
+	def changed(self):
+		del self._changed
+
 	@property
 	def list(self):
 		return self.enterWidget.list
@@ -169,6 +192,7 @@ class Lesson(object):
 	def teachListChanged(self, list):
 		# Update results widget
 		self.resultsWidget.updateList(list, "media")
+		self.changed = True
 	
 	def toEnterTab(self):
 		self.fileTab.currentTab = self.enterWidget

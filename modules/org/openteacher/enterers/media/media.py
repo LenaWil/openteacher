@@ -82,6 +82,9 @@ class EnterItemList(QtGui.QListView):
 		if len(self.enterWidget.list["items"]) > 0:
 			self.enterWidget.setActiveItem(self.enterWidget.list["items"][self.currentIndex().row()])
 
+class DummyLesson(object):
+	pass
+
 """
 The enter tab
 """
@@ -92,6 +95,7 @@ class EnterWidget(QtGui.QSplitter):
 			"items": list(),
 			"tests": list()
 		}
+		self.lesson = DummyLesson()
 		
 		self.enterItemList = EnterItemList(self)
 		
@@ -244,26 +248,30 @@ class EnterWidget(QtGui.QSplitter):
 					item["answer"] = answer
 				
 				self.list["items"].append(item)
+				self.lesson.changed = True
 				self.updateWidgets()
 				break
 		else:
 			QtGui.QMessageBox.critical(self, _("Unsupported file type"), _("This type of file is not supported:\n" + filename))
-	
+
 	"""
 	Remove an item from the list
 	"""
 	def removeItem(self):
-		self.list["items"].remove(self.activeitem)
-		self.updateWidgets()
-		self.mediaDisplay.clear()
-		self.enterName.setText("")
-		self.enterName.setEnabled(False)
-		self.enterQuestion.setText("")
-		self.enterQuestion.setEnabled(False)
-		self.enterAnswer.setText("")
-		self.enterAnswer.setEnabled(False)
-		self.enterItemList.setRightActiveItem()
-	
+		if self.activeitem in self.list["items"]:
+			self.list["items"].remove(self.activeitem)
+			self.updateWidgets()
+			self.mediaDisplay.clear()
+			self.enterName.setText("")
+			self.enterName.setEnabled(False)
+			self.enterQuestion.setText("")
+			self.enterQuestion.setEnabled(False)
+			self.enterAnswer.setText("")
+			self.enterAnswer.setEnabled(False)
+			self.enterItemList.setRightActiveItem()
+
+			self.list.changed = True
+
 	"""
 	Change the active item
 	"""
@@ -281,22 +289,26 @@ class EnterWidget(QtGui.QSplitter):
 	Change the name of the active item
 	"""
 	def changeName(self):
-		self.activeitem["name"] = unicode(self.enterName.text())
-		self.updateWidgets()
-	
+		if self.activeitem["name"] != unicode(self.enterName.text()):
+			self.activeitem["name"] = unicode(self.enterName.text())
+			self.updateWidgets()
+			self.lesson.changed = True	
 	
 	"""
 	Change the question of the active item
 	"""
 	def changeQuestion(self):
-		self.activeitem["question"] = unicode(self.enterQuestion.text())
+		if self.activeitem["question"] != unicode(self.enterQuestion.text()):
+			self.activeitem["question"] = unicode(self.enterQuestion.text())
+			self.lesson.changed = True
 	
 	"""
 	Change the description of the active item
 	"""
 	def changeAnswer(self):
-		self.activeitem["answer"] = unicode(self.enterAnswer.text())
-	
+		if self.activeitem["answer"] != unicode(self.enterAnswer.text()):
+			self.activeitem["answer"] = unicode(self.enterAnswer.text())
+			self.lesson.changed = True
 
 class MediaEntererModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

@@ -57,5 +57,7 @@ class PngSaverModule(object):
 	def save(self, type, lesson, path):
 		shutil.copy(lesson.resources["mapScreenshot"], path)
 
+		lesson.path = None
+
 def init(moduleManager):
 	return PngSaverModule(moduleManager)

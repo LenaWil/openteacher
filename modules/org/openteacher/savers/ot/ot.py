@@ -97,7 +97,10 @@ class OpenTeacherSaverModule(object):
 			"wordList": wordList
 		}
 		content = t(**data)
-		open(path, "w").write(content.encode("UTF-8"))
+		with open(path, "w") as f:
+			f.write(content.encode("UTF-8"))
+
+		lesson.path = None
 
 def init(moduleManager):
 	return OpenTeacherSaverModule(moduleManager)

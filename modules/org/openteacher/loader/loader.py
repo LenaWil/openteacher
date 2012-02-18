@@ -30,7 +30,12 @@ class Loader(object):
 		self.path = path
 
 	def load(self):
-		self.guiModule.loadFromLesson(self.loadModule.load(self.path), self.path)
+		lesson = self.loadModule.load(self.path)
+		lesson.update({
+			"changed": False,
+			"path": self.path,
+		})
+		self.guiModule.loadFromLesson(lesson)
 
 class LoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -106,7 +111,7 @@ class LoaderModule(object):
 		if len(loaders) == 0:
 			raise NotImplementedError()
 		loader = loaders[0]
-		loader.loadFromLesson(lesson, "")#FIXME: remove this path argument
+		loader.loadFromLesson(lesson)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
