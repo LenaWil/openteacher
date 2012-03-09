@@ -35,7 +35,7 @@ class FileDialogsModule(object):
 			self._mm.mods(type="ui"),
 		)
 
-	def getSavePath(self, startdir, exts):
+	def getSavePath(self, startdir, exts, default):
 		stringExts = []
 
 		filters = []
@@ -46,6 +46,7 @@ class FileDialogsModule(object):
 		fileDialog.setAcceptMode(QtGui.QFileDialog.AcceptSave)
 		fileDialog.setWindowTitle(_("Choose file to save"))
 		fileDialog.setNameFilters(filters)
+		fileDialog.selectNameFilter(default[1] + " (*." + default[0] + ")")
 		fileDialog.setDirectory(startdir)
 
 		tab = self._ui.addCustomTab(fileDialog, previousTabOnClose=True)

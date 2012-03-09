@@ -119,7 +119,10 @@ class UiControllerModule(object):
 	def saveAs(self):
 		path = self._fileDialogs.getSavePath(
 			os.path.expanduser("~"), #FIXME: path should be saved & restored
-			self._saver.usableExtensions
+			#sort on names (not extensions)
+			sorted(self._saver.usableExtensions, key=lambda ext: ext[1]),
+			#default (== top most) extension
+			self._saver.usableExtensions[0]
 		)
 		if path:
 			self._saver.save(path)

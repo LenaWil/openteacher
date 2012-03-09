@@ -48,7 +48,7 @@ class SaverModule(object):
 
 	@property
 	def usableExtensions(self):
-		extensions = set()
+		extensions = []
 
 		dataType = self._lessonTracker.currentLesson.module.dataType
 
@@ -57,9 +57,9 @@ class SaverModule(object):
 		for module in self._modules.sort("active", type="save"):
 			if module.saves.get(dataType) is not None:
 				for ext in module.saves[dataType]:
-					extensions.add((ext, module.name))
+					extensions.append((ext, module.name))
 
-		return sorted(extensions)
+		return extensions
 
 	@property
 	def saveSupport(self):
