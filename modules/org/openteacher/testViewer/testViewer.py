@@ -141,12 +141,12 @@ class TestViewer(QtGui.QSplitter):
 			completedText = _("no")
 		self.completedLabel.setText(_("Completed: %s") % completedText)
 
-		self.totalThinkingTimeLabel.setText(
-			ngettext(
-				"Total thinking time: %s second",
-				"Total thinking time: %s seconds",
-				self._totalThinkingTime)
-		)
+		seconds = int(round(self._totalThinkingTime))
+		self.totalThinkingTimeLabel.setText(ngettext(
+			"Total thinking time: %s second",
+			"Total thinking time: %s seconds",
+			seconds
+		) % seconds)
 
 	@property
 	def _totalThinkingTime(self):

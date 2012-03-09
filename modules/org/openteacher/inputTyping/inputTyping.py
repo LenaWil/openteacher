@@ -3,6 +3,7 @@
 
 #	Copyright 2011, Cas Widdershoven
 #	Copyright 2011, Marten de Vries
+#	Copyright 2008-2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -22,12 +23,17 @@
 from PyQt4 import QtGui, QtCore
 import datetime
 import weakref
+import difflib
 
 class InputTypingWidget(QtGui.QWidget):
-	def __init__(self, check, fade, *args, **kwargs):
+	def __init__(self, check, compose, *args, **kwargs):
 		super(InputTypingWidget, self).__init__(*args, **kwargs)
 
 		self._check = check
+		self._compose = compose
+		self._check = check
+
+		self.correctLabel = QtGui.QLabel()
 
 		self.inputLineEdit = QtGui.QLineEdit()
 		self.inputLineEdit.textEdited.connect(self._textEdited)
@@ -37,13 +43,12 @@ class InputTypingWidget(QtGui.QWidget):
 		self.checkButton.setShortcut(QtCore.Qt.Key_Return)
 		self.correctButton = QtGui.QPushButton()
 
-		self._fade = fade
-
 		mainLayout = QtGui.QGridLayout()
-		mainLayout.addWidget(self.inputLineEdit, 0, 0, 1, 2)
-		mainLayout.addWidget(self.checkButton, 0, 2)
-		mainLayout.addWidget(self.correctButton, 1, 1)
-		mainLayout.addWidget(self.skipButton, 1, 2)
+		mainLayout.addWidget(self.correctLabel, 0, 0, 1, 3)
+		mainLayout.addWidget(self.inputLineEdit, 1, 0, 1, 2)
+		mainLayout.addWidget(self.checkButton, 1, 2)
+		mainLayout.addWidget(self.correctButton, 2, 1)
+		mainLayout.addWidget(self.skipButton, 2, 2)
 		self.setLayout(mainLayout)
 
 	def retranslate(self):
@@ -74,6 +79,27 @@ class InputTypingWidget(QtGui.QWidget):
 		self.word = word
 		self.inputLineEdit.clear()
 
+	def diff(self, answers, givenAnswer):
+		#Check if the input looks like the answer or the second answer.
+		try:
+			similar = difflib.get_close_matches(givenAnswer, [answers])[0]
+		except IndexError:
+			#It doesn't, set similar to None
+			similar = None
+
+		#If they look like each other.
+		if similar:
+			#Show the differences graphical
+			output = ""
+			for item in difflib.ndiff(givenAnswer, similar):
+				if item.startswith('+ '):
+					output += '<span style="color: #1da90b;"><u>%s</u></span>' % item[2:]
+				elif item.startswith('- '):
+					output += '<span style="color: #da0f0f;"><s>%s</s></span>' % item[2:]
+				else:
+					output += item[2:]
+			return output
+
 	def correctLastAnswer(self):
 		try:
 			self._previousResult.update({
@@ -90,29 +116,56 @@ class InputTypingWidget(QtGui.QWidget):
 	def checkAnswer(self):
 		givenStringAnswer = unicode(self.inputLineEdit.text())
 
-		self._previousResult = result = self._check(givenStringAnswer, self.word)
+		self._previousResult = self._check(givenStringAnswer, self.word)
 		try:
 			self._end
 		except AttributeError:
 			self._end = datetime.datetime.now()
-		result.update({
+		self._previousResult.update({
 			"active": {
 				"start": self._start,
 				"end": self._end,
 			},
 		})
-		self.timeLine = QtCore.QTimeLine(2000)
-		self.timeLine.setFrameRange(0, 1020)
-		if result["result"] == "right":
-			self.timeLine.frameChanged.connect(lambda x: self._fade(x, [self.inputLineEdit], [0, 255, 0]))
+		self.enableUi(False)
+		if self._previousResult["result"] == "wrong":
+			timeLine = QtCore.QTimeLine(2000, self) #FIXME: setting!
+			timeLine.setFrameRange(0, 255) #256 color steps
+			timeLine.frameChanged.connect(self.fade)
+			timeLine.finished.connect(self.timerFinished)
+			timeLine.start()
+			#show diff
+			answers = self._compose(self.word["answers"])
+			diff = self.diff(answers, givenStringAnswer)
+			if diff:
+				text = _("Correct answer: <b>%s</b> [%s]") % (answers, diff)
+			else:
+				text = _("Correct answer: <b>%s</b>") % answers
+			self.correctLabel.setText(text)
 		else:
-			self.timeLine.frameChanged.connect(lambda x: self._fade(x, [self.inputLineEdit], [255, 0, 0]))
-		self.timeLine.start()
-		del self._end
+			#no need to start timer in the first place
+			self.timerFinished()
 
-		self.lessonType.setResult(result)
+	def enableUi(self, enable):
+		self.checkButton.setEnabled(enable)
+		self.correctButton.setEnabled(enable)
+		self.skipButton.setEnabled(enable)
+		self.inputLineEdit.setEnabled(enable)
+
+	def fade(self, step):
+		stylesheet = "QLineEdit {color: rgb(%s, %s, %s, %s)}" % (255, 00, 00, 255-step)
+		self.inputLineEdit.setStyleSheet(stylesheet)
+
+	def timerFinished(self):
+		del self._end
+		self.lessonType.setResult(self._previousResult)
+		self.enableUi(True)
+		self.correctLabel.clear()
 
 class InputTypingModule(object):
+	_check = property(lambda self: self._modules.default(type="wordsStringChecker").check)
+	_compose = property(lambda self: self._modules.default(type="wordsStringComposer").compose)
+
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(InputTypingModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
@@ -124,7 +177,7 @@ class InputTypingModule(object):
 		self.requires = (
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="wordsStringChecker"),
-			self._mm.mods(type="fader") #FIXME: requires?
+			self._mm.mods(type="wordsStringComposer"),
 		)
 
 	def enable(self):
@@ -169,17 +222,10 @@ class InputTypingModule(object):
 		del self._modules
 		del self._activeWidgets
 
-	@property
-	def _fade(self):
-		return self._modules.default("active", type="fader").fade
-
-	@property
-	def _check(self):
-		return self._modules.default(type="wordsStringChecker").check
-
 	def createWidget(self):
-		it = InputTypingWidget(self._check, self._fade)
+		it = InputTypingWidget(self._check, self._compose)
 		self._activeWidgets.add(weakref.ref(it))
+		it.retranslate()
 		return it
 
 def init(moduleManager):

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-10 18:39+0200\n"
+"POT-Creation-Date: 2012-03-09 22:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,24 +18,28 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: testViewer.py:94
+#: testViewer.py:95
 msgid "Note:"
 msgstr ""
 
 #: testViewer.py:137
+msgid "Results"
+msgstr ""
+
+#: testViewer.py:139
 msgid "yes"
 msgstr ""
 
-#: testViewer.py:137 testViewer.py:139
+#: testViewer.py:139 testViewer.py:141
 msgid "no"
 msgstr ""
 
-#: testViewer.py:140
+#: testViewer.py:142
 #, python-format
 msgid "Completed: %s"
 msgstr ""
 
-#: testViewer.py:144
+#: testViewer.py:147
 #, python-format
 msgid "Total thinking time: %s second"
 msgid_plural "Total thinking time: %s seconds"

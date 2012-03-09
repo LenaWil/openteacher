@@ -155,6 +155,7 @@ class PersonWidget(QtGui.QWidget):
 		self.nameLabel = QtGui.QLabel("")
 		self.nameLabel.setStyleSheet("font-size:36pt;")
 
+		#to prevent flash of unstyled content
 		palette = QtGui.QPalette()
 		color = palette.windowText().color()
 		color.setAlpha(0)
@@ -193,7 +194,7 @@ class PersonWidget(QtGui.QWidget):
 		self.nameLabel.setPalette(palette)
 
 class AuthorsWidget(QtGui.QWidget):
-	def __init__(self, authors, fade, *args, **kwargs):
+	def __init__(self, authors, *args, **kwargs):
 		super(AuthorsWidget, self).__init__(*args, **kwargs)
 		
 		if len(authors) == 0:
@@ -201,8 +202,6 @@ class AuthorsWidget(QtGui.QWidget):
 		else:
 			self.backupAuthors = list(authors)
 			self.authors = []
-
-		self._fade = fade
 
 		self.personWidget = PersonWidget()
 		self.launchpadLabel = QtGui.QLabel()
@@ -221,12 +220,12 @@ class AuthorsWidget(QtGui.QWidget):
 
 	def startAnimation(self):
 		self.nextAuthor()
-		self.timeLine = QtCore.QTimeLine(8000)
+		timeLine = QtCore.QTimeLine(8000, self)
 		#4x 255; 2x for the alpha gradients, 2x for a pause
-		self.timeLine.setFrameRange(0, 1020)
-		self.timeLine.frameChanged.connect(lambda x: self._fade(x, [self.personWidget.taskLabel, self.personWidget.nameLabel]))
-		self.timeLine.finished.connect(self.startAnimation)
-		self.timeLine.start()
+		timeLine.setFrameRange(0, 1020)
+		timeLine.frameChanged.connect(self.personWidget.fade)
+		timeLine.finished.connect(self.startAnimation)
+		timeLine.start()
 
 	def nextAuthor(self):
 		if self.authors is None:
@@ -239,7 +238,7 @@ class AuthorsWidget(QtGui.QWidget):
 			self.nextAuthor()
 
 class AboutDialog(QtGui.QTabWidget):
-	def __init__(self, authors, fade, metadata, templatePath, *args, **kwargs):
+	def __init__(self, authors, metadata, templatePath, *args, **kwargs):
 		super(AboutDialog, self).__init__(*args, **kwargs)
 
 		self.setTabPosition(QtGui.QTabWidget.South)
@@ -247,7 +246,7 @@ class AboutDialog(QtGui.QTabWidget):
 
 		self.aboutWidget = AboutWidget(metadata, templatePath)
 		self.licenseWidget = LicenseWidget(metadata)
-		self.authorsWidget = AuthorsWidget(authors, fade)
+		self.authorsWidget = AuthorsWidget(authors)
 
 		self.addTab(self.aboutWidget, "")
 		self.addTab(self.licenseWidget, "")
@@ -278,7 +277,6 @@ class AboutDialogModule(object):
 
 		self.requires = (
 			self._mm.mods(type="ui"),
-			self._mm.mods(type="fader")
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -292,10 +290,9 @@ class AboutDialogModule(object):
 			authors = set()
 		else:
 			authors = module.registeredAuthors
-		fade = self._modules.default("active", type="fader").fade
 		metadata = self._modules.default("active", type="metadata").metadata
 		templatePath = self._mm.resourcePath("about.html")
-		dialog = AboutDialog(authors, fade, metadata, templatePath)
+		dialog = AboutDialog(authors, metadata, templatePath)
 		self._activeDialogs.add(weakref.ref(dialog))
 
 		tab = self._modules.default("active", type="ui").addCustomTab(dialog)

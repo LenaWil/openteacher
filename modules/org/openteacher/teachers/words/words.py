@@ -108,7 +108,10 @@ class TeachLessonWidget(QtGui.QSplitter):
 
 		self.changeSettingsButton = QtGui.QPushButton()
 		self.wordLabel = QtGui.QLabel()
-		self.questionLabel = QtGui.QLabel()#FIXME: a bit larger font for this label?
+		self.questionLabel = QtGui.QLabel()
+		font = QtGui.QFont()
+		font.setPointSize(24)
+		self.questionLabel.setFont(font)
 		self.questionLabel.setWordWrap(True)
 		self.commentLabel = QtGui.QLabel()
 		self.commentLabel.setWordWrap(True)
