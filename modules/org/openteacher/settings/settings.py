@@ -23,10 +23,6 @@ class SettingDict(dict):
 	def __init__(self, executeCallback, *args, **kwargs):
 		super(SettingDict, self).__init__(*args, **kwargs)
 		
-		# Set default values
-		if not "advanced" in self:
-			self["advanced"] = False
-		
 		self._executeCallback = executeCallback
 
 	def __setitem__(self, name, value):

@@ -75,6 +75,27 @@ class OnscreenKeyboardWidget(QtGui.QWidget):
 		text = unicode(self.sender().text())
 		self.letterChosen.emit(text)
 
+class KeyboardsWidget(QtGui.QTabWidget):
+	def __init__(self, createEvent, data, *args, **kwargs):
+		super(KeyboardsWidget, self).__init__(*args, **kwargs)
+
+		self.letterChosen = createEvent()
+		self._data = data
+		self._update()
+
+	def _update(self):
+		#clean the widget, needed if this method has been called before.
+		self.clear()
+		for module in self._data:
+			#create tab and add it to the widget
+			tab = OnscreenKeyboardWidget(module.data)
+			self.addTab(tab, module.name)
+			#connect the event that handles letter selection
+			tab.letterChosen.connect(self.letterChosen.send)
+			#make sure the widget updates on character changes
+			if hasattr(module, "updated"):
+				module.updated.handle(self._update)
+
 class OnscreenKeyboardModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(OnscreenKeyboardModule, self).__init__(*args, **kwargs)
@@ -97,13 +118,10 @@ class OnscreenKeyboardModule(object):
 		del self._modules
 
 	def createWidget(self):
-		widget = QtGui.QTabWidget()
-		widget.letterChosen = self._modules.default(type="event").createEvent()
-		for module in self._modules.sort("active", type="onscreenKeyboardData"):
-			tab = OnscreenKeyboardWidget(module.data)
-			widget.addTab(tab, module.name)
-			tab.letterChosen.connect(widget.letterChosen.send)
-		return widget
+		return KeyboardsWidget(
+			self._modules.default(type="event").createEvent,
+			self._modules.sort("active", type="onscreenKeyboardData")
+		)
 
 def init(moduleManager):
 	return OnscreenKeyboardModule(moduleManager)

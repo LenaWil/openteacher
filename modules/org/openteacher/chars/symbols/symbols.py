@@ -25,12 +25,21 @@ class SymbolsModule(object):
 		self._mm = moduleManager
 
 		self.type = "onscreenKeyboardData"
+		self.requires = (
+			self._mm.mods(type="settings"),
+			self._mm.mods(type="event"),
+		)
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
 
+	def sendUpdated(self):
+		"""Wrapper for the settings callback"""
+		self.updated.send()
+
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
+		self._settings = self._modules.default(type="settings")
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -39,16 +48,30 @@ class SymbolsModule(object):
 			translator.languageChanged.handle(self._retranslate)
 		self._retranslate()
 
-		self.data = (
-			(u"à", u"á", u"â", u"ä", u"ã", u"å"),
-			(u"À", u"Á", u"Â", u"Ä", u"Ã", u"Å"),
-			(u"è", u"é", u"ê", u"ë", u"Ç", u"ç"),
-			(u"È", u"É", u"Ê", u"Ë", u"Ñ", u"ñ"),
-			(u"ì", u"í", u"î", u"ï", u"Û", u"û"),
-			(u"Ì", u"Í", u"Î", u"Ï", u"Ú", u"ú"),
-			(u"ò", u"ó", u"ô", u"ö", u"Ü", u"ü"),
-			(u"Ò", u"Ó", u"Ô", u"Ö", u"Ù", u"ß")
-		)
+		self.internalName = "org.openteacher.chars.symbols"
+		self.updated = self._modules.default(type="event").createEvent()
+
+		self._setting = self._settings.registerSetting(**{
+			"internal_name": "org.openteacher.chars.symbols.data",
+			"name": self.name,
+			"type": "character_table",
+			"defaultValue": [
+				[u"à", u"á", u"â", u"ä", u"ã", u"å"],
+				[u"À", u"Á", u"Â", u"Ä", u"Ã", u"Å"],
+				[u"è", u"é", u"ê", u"ë", u"Ç", u"ç"],
+				[u"È", u"É", u"Ê", u"Ë", u"Ñ", u"ñ"],
+				[u"ì", u"í", u"î", u"ï", u"Û", u"û"],
+				[u"Ì", u"Í", u"Î", u"Ï", u"Ú", u"ú"],
+				[u"ò", u"ó", u"ô", u"ö", u"Ü", u"ü"],
+				[u"Ò", u"Ó", u"Ô", u"Ö", u"Ù", u"ß"],
+			],
+			"callback": {
+				"args": ("active",),
+				"kwargs": {"internalName": self.internalName},
+				"method": "sendUpdated",
+			}
+		})
+		self.data = self._setting["value"]
 		self.active = True
 
 	def _retranslate(self):
@@ -61,6 +84,10 @@ class SymbolsModule(object):
 				self._mm.resourcePath("translations")
 			)
 		self.name = _("Symbols")
+		try:
+			self._setting["name"] = self._name
+		except AttributeError:
+			pass
 
 	def disable(self):
 		self.active = False

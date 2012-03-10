@@ -94,7 +94,7 @@ class SettingsDialog(QtGui.QTabWidget):
 		# Filter out advanced settings if in simple mode
 		if self.simpleMode:
 			for setting in settings:
-				if setting["advanced"]:
+				if "advanced" in setting and setting["advanced"]:
 					settings.remove(setting)
 		
 		self.clear()
