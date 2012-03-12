@@ -25,18 +25,11 @@ import random
 import weakref
 
 class ShuffleAnswerTeachWidget(QtGui.QWidget):
-	def __init__(self, moduleManager, *args, **kwargs):
+	def __init__(self, inputWidget, compose, *args, **kwargs):
 		super(ShuffleAnswerTeachWidget, self).__init__(*args, **kwargs)
-
-		self._mm = moduleManager
-		self._modules = set(self._mm.mods(type="modules")).pop()
 		
-		try:
-			typingInput = self._modules.default("active", type="typingInput")
-		except IndexError, e:
-			raise e #FIXME: what to do?
-		else:
-			self.inputWidget = typingInput.createWidget()
+		self.inputWidget = inputWidget
+		self.compose = compose
 		
 		vbox = QtGui.QVBoxLayout()
 		self.hintLabel = QtGui.QLabel()
@@ -52,7 +45,8 @@ class ShuffleAnswerTeachWidget(QtGui.QWidget):
 
 	def setHint(self):
 		hint = _("Hint:") + u" "
-		answer = self.word["answers"][0][0]#FIXME: use composer
+		
+		answer = self.compose(self.word["answers"])
 		if len(answer) != 1:
 			while True:
 				hintList = list(answer)
@@ -94,6 +88,7 @@ class ShuffleAnswerTeachTypeModule(object):
 		self.requires = (
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="typingInput"),
+			self._mm.mods(type="wordsStringComposer"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -142,7 +137,15 @@ class ShuffleAnswerTeachTypeModule(object):
 				r.retranslate()
 
 	def createWidget(self, tabChanged):
-		satw = ShuffleAnswerTeachWidget(self._mm) #FIXME: get rid of the mm here, just pass the widget
+		try:
+			typingInput = self._modules.default("active", type="typingInput")
+		except IndexError, e:
+			raise e #FIXME: what to do?
+		else:
+			inputWidget = typingInput.createWidget()
+		compose = self._modules.default("active", type="wordsStringComposer").compose
+		
+		satw = ShuffleAnswerTeachWidget(inputWidget, compose)
 		self._activeWidgets.add(weakref.ref(satw))
 		return satw
 

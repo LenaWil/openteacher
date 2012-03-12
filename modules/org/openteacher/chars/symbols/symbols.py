@@ -26,10 +26,10 @@ class SymbolsModule(object):
 
 		self.type = "onscreenKeyboardData"
 		self.requires = (
-			self._mm.mods(type="settings"),
 			self._mm.mods(type="event"),
 		)
 		self.uses = (
+			self._mm.mods(type="settings"),
 			self._mm.mods(type="translator"),
 		)
 
@@ -39,7 +39,7 @@ class SymbolsModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self._settings = self._modules.default(type="settings")
+		
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -50,12 +50,8 @@ class SymbolsModule(object):
 
 		self.internalName = "org.openteacher.chars.symbols"
 		self.updated = self._modules.default(type="event").createEvent()
-
-		self._setting = self._settings.registerSetting(**{
-			"internal_name": "org.openteacher.chars.symbols.data",
-			"name": self.name,
-			"type": "character_table",
-			"defaultValue": [
+		
+		defaultSetting = [
 				[u"à", u"á", u"â", u"ä", u"ã", u"å"],
 				[u"À", u"Á", u"Â", u"Ä", u"Ã", u"Å"],
 				[u"è", u"é", u"ê", u"ë", u"Ç", u"ç"],
@@ -64,14 +60,26 @@ class SymbolsModule(object):
 				[u"Ì", u"Í", u"Î", u"Ï", u"Ú", u"ú"],
 				[u"ò", u"ó", u"ô", u"ö", u"Ü", u"ü"],
 				[u"Ò", u"Ó", u"Ô", u"Ö", u"Ù", u"ß"],
-			],
-			"callback": {
-				"args": ("active",),
-				"kwargs": {"internalName": self.internalName},
-				"method": "sendUpdated",
-			}
-		})
-		self.data = self._setting["value"]
+			]
+		
+		try:
+			self._settings = self._modules.default(type="settings")
+		except IndexError, e:
+			self.data = defaultSetting
+		else:
+			self._setting = self._settings.registerSetting(**{
+				"internal_name": "org.openteacher.chars.symbols.data",
+				"name": self.name,
+				"type": "character_table",
+				"defaultValue": defaultSetting,
+				"callback": {
+					"args": ("active",),
+					"kwargs": {"internalName": self.internalName},
+					"method": "sendUpdated",
+				}
+			})
+			self.data = self._setting["value"]
+		
 		self.active = True
 
 	def _retranslate(self):

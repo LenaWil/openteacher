@@ -193,11 +193,10 @@ class TeachWidget(QtGui.QStackedWidget):
 	lessonDone = QtCore.pyqtSignal()
 	listChanged = QtCore.pyqtSignal([object])
 
-	def __init__(self, moduleManager, keyboardWidget, applicationActivityChanged, *args, **kwargs):
+	def __init__(self, modules, keyboardWidget, applicationActivityChanged, *args, **kwargs):
 		super(TeachWidget, self).__init__(*args, **kwargs)
 
-		self._mm = moduleManager #FIXME: get rid of the moduleManager in this widget! And in all widgets, if possible...
-		self._modules = set(self._mm.mods(type="modules")).pop()
+		self._modules = modules
 		self._applicationActivityChanged = applicationActivityChanged
 
 		self._buildUi(keyboardWidget)
@@ -382,11 +381,12 @@ class WordsTeacherModule(object):
 			#FIXME from here on: should these items be in the settings
 			#dialog (since they're already on the teach settings widget)
 			self._mm.mods(type="lessonType"),
+			self._mm.mods(type="lessonType"),
 			self._mm.mods(type="teachType"),
 		)
 
 	def createWordsTeacher(self):
-		tw = TeachWidget(self._mm, self._onscreenKeyboard, self._applicationActivityChanged)
+		tw = TeachWidget(self._modules, self._onscreenKeyboard, self._applicationActivityChanged)
 		self._activeWidgets.add(weakref.ref(tw))
 		self._retranslate()
 

@@ -30,6 +30,19 @@ class TextToSpeechProviderTopo(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
+		#setup translation
+		global _
+		global ngettext
+		
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		
 		for module in self._mm.mods("active", type="lessonType"):
 			module.newItem.handle(self.itemSent)
 		
@@ -38,10 +51,10 @@ class TextToSpeechProviderTopo(object):
 		# Add settings
 		self._pronounceSetting = self._settings.registerSetting(**{
 			"internal_name": "org.openteacher.ttsProviders.topo.pronounce",
-			"name": "Pronounce places",
+			"name": _("Pronounce places"),
 			"type": "boolean",
-			"category": "Pronounciation",
-			"subcategory": "Pronounciation", #FIXME: translate this and stuff above
+			"category": _("Pronounciation"),
+			"subcategory": _("Pronounciation"), #FIXME: retranslate
 			"defaultValue": False,
 		})
 		

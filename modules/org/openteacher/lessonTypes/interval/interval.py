@@ -102,7 +102,7 @@ class IntervalLessonType(object):
 			minQuestions = 2
 
 		whenKnown = self._whenKnownSetting["value"]
-		if whenKnown < 0 or whenKnown > 99:#FIXME: add minValue and maxValue to the settings module instead?
+		if whenKnown < 0 or whenKnown > 99:
 			whenKnown = 80
 
 		# Go through all the items in the group to see which can be removed
@@ -175,10 +175,10 @@ class IntervalModule(object):
 		self.type = "lessonType"
 		self.requires = (
 			self._mm.mods(type="event"),
-			self._mm.mods(type="settings"),#FIXME: should not be required? Also in other modules?
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="settings"),
 		)
 
 	def enable(self):
@@ -194,31 +194,44 @@ class IntervalModule(object):
 			)
 
 		# Settings
-		self._settings = self._modules.default(type="settings")
-		self._groupSizeSetting = self._settings.registerSetting(**{
-			"internal_name": "org.openteacher.lessonTypes.interval.groupSize",
-			"name": "Max. size of group", #FIXME: translate and others!
-			"type": "number",
-			"category": "Lessons",
-			"subcategory": "Interval",
-			"defaultValue": 4,
-		})
-		self._minQuestionsSetting = self._settings.registerSetting(**{
-			"internal_name": "org.openteacher.lessonTypes.interval.minQuestions",
-			"name": "Min. questions asked",
-			"type": "number",
-			"category": "Lessons",
-			"subcategory": "Interval",
-			"defaultValue": 2,
-		})
-		self._whenKnownSetting = self._settings.registerSetting(**{
-			"internal_name": "org.openteacher.lessonTypes.interval.whenKnown",
-			"name": "% right before known",
-			"type": "number",
-			"category": "Lessons",
-			"subcategory": "Interval",
-			"defaultValue":80,
-		})
+		try:
+			self._settings = self._modules.default(type="settings")
+		except IndexError, e:
+			self._whenKnownSetting = dict()
+			self._minQuestionsSetting = dict()
+			self.__groupSizeSetting = dict()
+			self._whenKnownSetting["value"] = 80
+			self._minQuestionsSetting["value"] = 2
+			self._groupSizeSetting["value"] = 4
+		else:
+			self._groupSizeSetting = self._settings.registerSetting(**{
+				"internal_name": "org.openteacher.lessonTypes.interval.groupSize",
+				"name": _("Max. size of group"),
+				"type": "number",
+				"category": _("Lessons"),
+				"subcategory": _("Interval"),
+				"defaultValue": 4,
+				"minValue": 1,
+			})
+			self._minQuestionsSetting = self._settings.registerSetting(**{
+				"internal_name": "org.openteacher.lessonTypes.interval.minQuestions",
+				"name": _("Min. questions asked"),
+				"type": "number",
+				"category": _("Lessons"),
+				"subcategory": _("Interval"),
+				"defaultValue": 2,
+				"minValue": 1,
+			})
+			self._whenKnownSetting = self._settings.registerSetting(**{
+				"internal_name": "org.openteacher.lessonTypes.interval.whenKnown",
+				"name": _("% right before known"),
+				"type": "number",
+				"category": _("Lessons"),
+				"subcategory": _("Interval"),
+				"defaultValue":80,
+				"minValue": 0,
+				"maxValue": 99,
+			})
 
 		self.newItem = self._createEvent()
 		self.name = _("Interval")

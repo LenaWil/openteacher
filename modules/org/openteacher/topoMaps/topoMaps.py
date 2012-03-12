@@ -294,11 +294,11 @@ class TopoMapsModule(object):
 
 		self.requires = (
 			self._mm.mods(type="ui"),
-			self._mm.mods(type="settings"),
 		)
 		
 		self.uses = (
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="settings"),
 		)
 	
 	def enable(self):
@@ -319,16 +319,21 @@ class TopoMapsModule(object):
 			)
 
 		# Add settings
-		self._settings = self._modules.default(type="settings")
-		self._openGlSetting = self._settings.registerSetting(**{
-			"internal_name": "org.openteacher.lessons.topo.opengl",
-			"name": "OpenGL Rendering",
-			"type": "boolean",
-			"category": "Topo lesson",
-			"subcategory": "Rendering",
-			"defaultValue": False,
-			"advanced": True,
-		})
+		try:
+			self._settings = self._modules.default(type="settings")
+		except IndexError, e:
+			self._openGlSetting = dict()
+			self._openGlSetting["value"] = False
+		else:
+			self._openGlSetting = self._settings.registerSetting(**{
+				"internal_name": "org.openteacher.lessons.topo.opengl",
+				"name": "OpenGL Rendering",
+				"type": "boolean",
+				"category": "Topo lesson",
+				"subcategory": "Rendering",
+				"defaultValue": False,
+				"advanced": True,
+			})
 	
 	def disable(self):
 		self.active = False

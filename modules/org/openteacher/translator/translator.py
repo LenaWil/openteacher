@@ -31,6 +31,8 @@ class TranslatorModule(object):
 		self.type = "translator"
 		self.requires = (
 			self._mm.mods(type="event"),
+		)
+		self.uses = (
 			self._mm.mods(type="settings"),
 		)
 
@@ -41,20 +43,24 @@ class TranslatorModule(object):
 		self.languageChanged = self._modules.default(
 			type="event"
 		).createEvent()
-
-		self._languageSetting = self._modules.default(
-			type="settings"
-		).registerSetting(**{
-			"internal_name": "org.openteacher.translator.language",
-			"type": "language",
-			"name": "Language", #FIXME: translate
-			"defaultValue": None,
-			"callback": {
-				"args": ("active",),
-				"kwargs": {"type": "translator"},
-				"method": "sendLanguageChanged",
-			}
-		})
+		
+		try:
+			settings = self._modules.default(type="settings")
+		except IndexError, e:
+			self._languageSetting = dict()
+			self._languageSetting["value"] = None
+		else:
+			self._languageSetting = settings.registerSetting(**{
+				"internal_name": "org.openteacher.translator.language",
+				"type": "language",
+				"name": "Language", #FIXME: translate
+				"defaultValue": None,
+				"callback": {
+					"args": ("active",),
+					"kwargs": {"type": "translator"},
+					"method": "sendLanguageChanged",
+				}
+			})
 
 	def sendLanguageChanged(self):
 		"""A wrapper method called by the setting callback, which can't

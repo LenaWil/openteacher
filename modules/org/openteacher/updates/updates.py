@@ -38,7 +38,6 @@ class UpdatesModule(object):
 		self.requires = (
 			self._mm.mods(type="metadata"),
 			self._mm.mods(type="dataStore"),
-			self._mm.mods(type="settings"),
 			self._mm.mods(type="gpg"),
 		)
 
@@ -95,7 +94,6 @@ class UpdatesModule(object):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._metadata = self._modules.default("active", type="metadata").metadata
 		self._dataStore = self._modules.default(type="dataStore").store
-		self._settings = self._modules.default(type="settings")
 		self._gpg = self._modules.default("active", type="gpg").gpg
 		self._updatesCache = None
 
@@ -107,7 +105,6 @@ class UpdatesModule(object):
 		del self._modules
 		del self._metadata
 		del self._dataStore
-		del self._settings
 		del self._gpg
 		del self._updatesCache
 

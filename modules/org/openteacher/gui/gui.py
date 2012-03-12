@@ -112,12 +112,12 @@ class GuiModule(object):
 		self.requires = (
 			self._mm.mods(type="event"),
 			self._mm.mods(type="metadata"),
-			self._mm.mods(type="settings"),
 			self._mm.mods(type="menuWrapper"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
 			self._mm.mods(type="recentlyOpenedViewer"),
+			self._mm.mods(type="settings"),
 		)
 
 	def enable(self):
@@ -141,18 +141,22 @@ class GuiModule(object):
 		self._ui.ICON_PATH = self._mm.resourcePath("icons/")
 
 		# Add Aero glass option on Windows
-		self._settings = self._modules.default(type="settings")
-		if platform.system() == "Windows" and platform.version() >= 6.0:
-			self._aeroSetting = self._settings.registerSetting(**{
-			"internal_name": "org.openteacher.gui.aero",
-			"name": "Use Aero glass (experimental)",
-			"type": "boolean",
-			"category": "User interface",
-			"subcategory": "Effects",
-			"defaultValue": False,
-			})
-		else:
+		try:
+			self._settings = self._modules.default(type="settings")
+		except IndexError, e:
 			self._aeroSetting = None
+		else:
+			if platform.system() == "Windows" and platform.version() >= 6.0:
+				self._aeroSetting = self._settings.registerSetting(**{
+				"internal_name": "org.openteacher.gui.aero",
+				"name": "Use Aero glass (experimental)",
+				"type": "boolean",
+				"category": "User interface",
+				"subcategory": "Effects",
+				"defaultValue": False,
+				})
+			else:
+				self._aeroSetting = None
 		
 		self._app = QtGui.QApplication(sys.argv)
 		try:

@@ -54,6 +54,7 @@ class TestModeUploaderModule(object):
 			self._mm.mods(type="event"),
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="testModeConnection"),
+			self._mm.mods(type="testMenu"),
 		)
 
 	def enable(self):
@@ -72,7 +73,13 @@ class TestModeUploaderModule(object):
 				self._mm.resourcePath("translations")
 			)
 		
-		# FIXME: make menu option
+		ui = self._modules.default("active", type="ui")
+		self._testMenu = self._modules.default("active", type="testMenu").menu
+
+		self._action = QtGui.QAction(ui.qtParent)
+		self._action.triggered.connect(self.upload)
+		self._action.setText(_("Upload lesson")) #FIXME: retranslate...
+		self._testMenu.addAction(self._action)
 		
 		self.active = True
 

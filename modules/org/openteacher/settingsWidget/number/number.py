@@ -25,8 +25,12 @@ class SettingsWidget(QtGui.QSpinBox):
 		super(SettingsWidget, self).__init__(*args, **kwargs)
 
 		self._setting = setting
-
-		self.setRange(-32768, 32767) #FIXME: decide when setting is registered?
+		
+		self.setRange(-32768, 32767)
+		if "minValue" in setting:
+			self.setMinimum(setting["minValue"])
+		if "maxValue" in setting:
+			self.setMaximum(setting["maxValue"])
 		self.setValue(setting["value"])
 		self.valueChanged.connect(self._valueChanged)
 

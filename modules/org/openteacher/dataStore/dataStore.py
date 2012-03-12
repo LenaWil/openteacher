@@ -40,7 +40,6 @@ class JSONShelve(dict):
 			pass
 	
 	def write(self):
-#		print "Writing data store to file..."
 		fp = open(self.filepath, 'w+')
 		json.dump(self, fp)
 		fp.close()
@@ -52,12 +51,12 @@ class DataStoreModule(object):
 
 		self.type = "dataStore"
 
-		self.folderPath = self._getFolderPath() #FIXME: private?
+		self._folderPath = self._getFolderPath()
 		# Create folder path if not exists
-		if not os.path.exists(self.folderPath):
-			os.makedirs(self.folderPath)
+		if not os.path.exists(self._folderPath):
+			os.makedirs(self._folderPath)
 
-		self.store = JSONShelve(os.path.join(self.folderPath, "store.json"))
+		self.store = JSONShelve(os.path.join(self._folderPath, "store.json"))
 		atexit.register(self.store.write)
 
 	def _getFolderPath(self):

@@ -75,7 +75,7 @@ class TeachTopoLessonModule(object):
 		module = self._modules.default("active", type="ui")
 		self._button = module.addLessonCreateButton()
 		self._button.clicked.handle(self.createLesson)
-		self._button.text = _("Create topography lesson") #FIXME: retranslate!
+		self._button.text = _("Create topography lesson")
 		
 		# Data type
 		self.dataType = "topo"
@@ -101,13 +101,13 @@ class TeachTopoLessonModule(object):
 		teachWidget = self._modules.default("active", type="topoTeacher").createTopoTeacher()
 		resultsWidget = self._modules.default("active", type="testsViewer").createTestsViewer()
 		
-		fileTab = module.addFileTab(
+		self.fileTab = module.addFileTab(
 			enterWidget,
 			teachWidget,
 			resultsWidget
 		)
 
-		lesson = Lesson(self._modules, fileTab, enterWidget, teachWidget, resultsWidget, self.counter)
+		lesson = Lesson(self._modules, self.fileTab, enterWidget, teachWidget, resultsWidget, self.counter)
 		self.lessonCreated.send(lesson)
 
 		#so they can send changedEvents
@@ -120,7 +120,7 @@ class TeachTopoLessonModule(object):
 	
 	def loadFromLesson(self, lessonl):
 		lesson = self.createLesson()
-		fileName = lessonl["path"] if "path" in lessonl else _("Import source") #FIXME: something other text?
+		fileName = lessonl["path"] if "path" in lessonl else _("Import source")
 		lesson.enterWidget.mapChooser.setCurrentIndex(0)
 		
 		lesson.enterWidget.mapChooser.insertItem(0, fileName, unicode({'mapPath': lessonl["resources"]["mapPath"], 'knownPlaces': ''}))
@@ -138,6 +138,9 @@ class TeachTopoLessonModule(object):
 			lesson.changed = lessonl["changed"]
 		if "path" in lessonl:
 			lesson.path = lessonl["path"]
+		
+		# Update title
+		self.fileTab.title = _("Topo lesson: %s") % os.path.basename(lesson.path)
 
 class Lesson(object):
 	"""Lesson object (that means: this techwidget+enterwidget)"""
@@ -154,7 +157,7 @@ class Lesson(object):
 		self.resultsWidget = resultsWidget
 
 		self.fileTab = fileTab
-		self.fileTab.title = ("Topo lesson %s") % counter #FIXME: retranslate
+		self.fileTab.title = ("Topo lesson: %s") % counter
 
 		self.stopped = self._modules.default(type="event").createEvent()
 		

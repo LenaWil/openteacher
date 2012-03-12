@@ -44,11 +44,11 @@ class OpenTeachingMediaSaverModule(object):
 		}
 		
 		self.requires = (
-			self._mm.mods(type="settings"),
 			self._mm.mods(type="otxxSaver"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="settings"),
 		)
 
 	def enable(self):		
@@ -57,17 +57,22 @@ class OpenTeachingMediaSaverModule(object):
 
 		self.name = "Open Teaching Media"
 		self.saves = {"media": ["otmd"]}
-
-		self._settings = self._modules.default(type="settings")
-		self._compressionSetting = self._settings.registerSetting(**{
-			"internal_name": "org.openteacher.savers.otmd.compression",
-			"name": "Enable compression",
-			"type": "boolean",
-			"category": "Media Lesson",
-			"subcategory": ".otmd saving",
-			"defaultValue": True,
-			"advanced": True,
-		})
+		
+		try:
+			self._settings = self._modules.default(type="settings")
+		except IndexError, e:
+			self._compressionSetting = dict()
+			self._compressionSetting["value"] = True
+		else:
+			self._compressionSetting = self._settings.registerSetting(**{
+				"internal_name": "org.openteacher.savers.otmd.compression",
+				"name": "Enable compression",
+				"type": "boolean",
+				"category": "Media Lesson",
+				"subcategory": ".otmd saving",
+				"defaultValue": True,
+				"advanced": True,
+			})
 		
 		self.active = True
 

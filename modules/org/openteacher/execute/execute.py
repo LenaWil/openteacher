@@ -28,6 +28,8 @@ class ExecuteModule(object):
 		self.type = "execute"
 		self.requires = (
 			self._mm.mods(type="event"),
+		)
+		self.uses = (
 			self._mm.mods(type="settings"),
 		)
 
@@ -40,22 +42,26 @@ class ExecuteModule(object):
 	def execute(self):
 		#do the only-one check. FIXME: move into settings maybe? (discuss!)
 		self._getMod(type="dataStore")
-
-		settings = self._getMod(type="settings")
-		settings.initialize()
-
-		profileSetting = settings.registerSetting(**{
-			"internal_name": "org.openteacher.execute.startup_profile",
-			"name": "Start profile",
-			"type": "profile",
-			"defaultValue": "all",
-			"subcategory": "Profile",
-			"callback": {
-				"args": (),
-				"kwargs": {"type": "execute"},
-				"method": "_settingChanged",
-			}
-		})
+		
+		try:
+			settings = self._getMod(type="settings")
+			settings.initialize()
+		except:
+			profileSetting = dict()
+			profileSetting["value"] = "all"
+		else:
+			profileSetting = settings.registerSetting(**{
+				"internal_name": "org.openteacher.execute.startup_profile",
+				"name": "Start profile",
+				"type": "profile",
+				"defaultValue": "all",
+				"subcategory": "Profile",
+				"callback": {
+					"args": (),
+					"kwargs": {"type": "execute"},
+					"method": "_settingChanged",
+				}
+			})
 
 		parser = argparse.ArgumentParser()
 		parser.add_argument("-p", "--profile", **{

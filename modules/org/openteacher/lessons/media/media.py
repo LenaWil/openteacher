@@ -19,6 +19,8 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
 """
 The module
 """
@@ -73,7 +75,7 @@ class MediaLessonModule(object):
 		module = self._modules.default("active", type="ui")
 		self._button = module.addLessonCreateButton()
 		self._button.clicked.handle(self.createLesson)
-		self._button.text = _("Create media lesson") #FIXME: retranslate
+		self._button.text = _("Create media lesson")
 
 		self.lessonCreated = self._modules.default(type="event").createEvent()
 		self.lessonCreationFinished = self._modules.default(type="event").createEvent()
@@ -132,6 +134,9 @@ class MediaLessonModule(object):
 			lesson.path = lessonl["path"]
 		if "changed" in lessonl:
 			lesson.changed = lessonl["changed"]
+		
+		# Update title
+		self.fileTab.title = _("Media lesson: %s") % os.path.basename(lesson.path)
 
 """
 Lesson object (that means: this techwidget+enterwidget)
@@ -158,7 +163,7 @@ class Lesson(object):
 		self.teachWidget.lessonDone.connect(self.toEnterTab)
 		self.teachWidget.listChanged.connect(self.teachListChanged)
 
-		self.fileTab.title = _("Media lesson %s") % counter #FIXME: retranslate
+		self.fileTab.title = _("Media lesson: %s") % counter
 
 		self.changedEvent = self._modules.default(type="event").createEvent()
 

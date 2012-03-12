@@ -26,10 +26,11 @@ import weakref
 #FIXME: should parent be replaced with signals & slots? Nicer style.
 
 class RepeatScreenWidget(QtGui.QWidget):
-	def __init__(self, parent, *args, **kwargs):
+	def __init__(self, repeatAnswerTeachWidget, modules, *args, **kwargs):
 		super(RepeatScreenWidget, self).__init__(*args, **kwargs)
 
-		self.parent = parent
+		self._repeatAnswerTeachWidget = repeatAnswerTeachWidget
+		self._modules = modules
 
 		self.showAnswerScreen = QtGui.QVBoxLayout()
 		self.answerLabel = QtGui.QLabel()
@@ -37,7 +38,8 @@ class RepeatScreenWidget(QtGui.QWidget):
 		self.setLayout(self.showAnswerScreen)
 
 	def fade(self):
-		self.answerLabel.setText(self.parent.word["answers"][0][0]) #FIXME: composer
+		compose = self._modules.default("active", type="wordsStringComposer").compose
+		self.answerLabel.setText(compose(self._repeatAnswerTeachWidget.word["answers"]))
 		timer = QtCore.QTimeLine(2000, self)
 		timer.setFrameRange(0, 255)
 		timer.frameChanged.connect(self.fadeAction)
@@ -53,7 +55,7 @@ class RepeatScreenWidget(QtGui.QWidget):
 		self.answerLabel.setPalette(palette)
 
 	def finish(self):
-		self.parent.setCurrentWidget(self.parent.inputWidget)
+		self._repeatAnswerTeachWidget.setCurrentWidget(self._repeatAnswerTeachWidget.inputWidget)
 
 class StartScreenWidget(QtGui.QWidget):
 	def __init__(self, parent, *args, **kwargs):
@@ -76,18 +78,17 @@ class StartScreenWidget(QtGui.QWidget):
 		self.startButton.setText(_("Start!"))
 
 class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
-	def __init__(self, moduleManager, tabChanged, *args, **kwargs):
+	def __init__(self, modules, tabChanged, *args, **kwargs):
 		super(RepeatAnswerTeachWidget, self).__init__(*args, **kwargs)
 
-		self._mm = moduleManager
-		self._modules = set(self._mm.mods(type="modules")).pop()
+		self._modules = modules
 
 		#make start screen
 		self.startScreen = StartScreenWidget(self)
 		self.addWidget(self.startScreen)
 
 		#make "show answer" screen
-		self.repeatScreen = RepeatScreenWidget(self)
+		self.repeatScreen = RepeatScreenWidget(self, modules)
 		self.addWidget(self.repeatScreen)
 
 		#make input screen
@@ -131,6 +132,7 @@ class RepeatAnswerTeachTypeModule(object):
 		self.requires = (
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="typingInput"),
+			self._mm.mods(type="wordsStringComposer"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -181,7 +183,7 @@ class RepeatAnswerTeachTypeModule(object):
 		del self.name
 
 	def createWidget(self, tabChanged):
-		ratw = RepeatAnswerTeachWidget(self._mm, tabChanged)
+		ratw = RepeatAnswerTeachWidget(self._modules, tabChanged)
 		self._activeWidgets.add(weakref.ref(ratw))
 		return ratw
 

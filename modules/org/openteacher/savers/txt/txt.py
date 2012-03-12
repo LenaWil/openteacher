@@ -40,13 +40,43 @@ class TxtSaverModule(object):
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="settings"),
 		)
 
 	def enable(self):
+		#Translations
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.name = "Plain text"
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		
+		self.name = _("Plain text")
 		self.saves = {"words": ["txt"]}
-
+		
+		
+		try:
+			self._settings = self._modules.default(type="settings")
+		except IndexError, e:
+			self._maxLenSetting = dict()
+			self._maxLenSetting["value"] = 8
+		else:
+			self._maxLenSetting = self._settings.registerSetting(**{
+				"internal_name": "org.openteacher.savers.txt.maxLen",
+				"name": _("Min. space between words"),
+				"type": "number",
+				"category": _("Saving"),
+				"subcategory": _("Txt"),
+				"defaultValue":8,
+				"minValue": 0,
+				"advanced": True,
+			})
+			
+		
 		self.active = True
 
 	def disable(self):
@@ -74,9 +104,9 @@ class TxtSaverModule(object):
 		if len(lesson.list["items"]) != 0:
 			#FIXME: questions -> not guaranteed to be there
 			lengths = map(lambda word: len(self._compose(word["questions"])), lesson.list["items"])
-			maxLen = max(lengths) +1
+			maxLen = max(lengths) + 1
 			#FIXME: should 8 be an advanced setting?
-			if maxLen < 8:
+			if maxLen < self._maxLenSetting["value"]:
 				maxLen = 8
 
 			for word in lesson.list["items"]:

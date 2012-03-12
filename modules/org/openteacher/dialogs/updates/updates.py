@@ -153,21 +153,30 @@ class UpdatesDialogModule(QtCore.QObject):
 		self.requires = (
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="updates"),
-			self._mm.mods(type="settings"),
 			self._mm.mods(type="dataStore"),
+		)
+		self.uses = (
+			self._mm.mods(type="settings"),
 		)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._dataStore = self._modules.default(type="dataStore").store
-		settings = self._modules.default(type="settings")
-		self._rememberChoiceSetting = settings.registerSetting(**{#FIXME: translate all these...
-			"internal_name": "org.openteacher.updatesDialog.rememberChoice",
-			"name": "Remember if the user wants to install updates or not",
-			"type": "boolean",
-			"category": "Updates",
-			"defaultValue": False,
-		})
+		
+		try:
+			settings = self._modules.default(type="settings")
+		except IndexError, e:
+			self._rememberChoiceSetting = dict()
+			self._rememberChoiceSetting["value"] = False
+		else:
+			self._rememberChoiceSetting = settings.registerSetting(**{#FIXME: translate all these...
+				"internal_name": "org.openteacher.updatesDialog.rememberChoice",
+				"name": "Remember if the user wants to install updates or not",
+				"type": "boolean",
+				"category": "Updates",
+				"defaultValue": False,
+			})
+		
 		self._dataStore["org.openteacher.updatesDialog.userDidUpdatesLastTime"] = False
 		self.active = True
 		

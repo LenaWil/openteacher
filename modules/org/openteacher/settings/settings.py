@@ -74,8 +74,10 @@ class SettingsModule(object):
 		  * profile
 		  ... are available.
 		 * defaultValue
-		 * category=None,
-		 * subcategory=None,
+		 * minValue=None
+		 * maxValue=None
+		 * category=None
+		 * subcategory=None
 		 * advanced=False
 		 * callback=None
 		  * should have this format:
