@@ -202,7 +202,14 @@ class CodeDocumentationModule(object):
 		})
 		cherrypy.engine.start()
 		webbrowser.open("http://localhost:8080/")
-		cherrypy.engine.block()
+		print "Type 'quit' and press enter to stop the server"
+		while True:
+			try:
+				if raw_input("> ") in ("q", "Q", "quit", "Quit"):
+					break
+			except KeyboardInterrupt:
+				break
+		cherrypy.engine.exit()
 
 	def enable(self):
 		global pyratemp
