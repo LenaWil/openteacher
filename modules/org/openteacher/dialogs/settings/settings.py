@@ -90,10 +90,8 @@ class SettingsDialog(QtGui.QTabWidget):
 	def update(self):
 		# Copy settings
 		settings = copy.copy(self.settings)
-
-		# Filter out advanced settings if in simple mode
 		if self.simpleMode:
-			for setting in settings:
+			for setting in self.settings:
 				if "advanced" in setting and setting["advanced"]:
 					settings.remove(setting)
 		

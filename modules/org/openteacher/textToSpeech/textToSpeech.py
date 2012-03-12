@@ -165,6 +165,7 @@ class TextToSpeechModule(object):
 				"category": "Pronounciation",
 				"subcategory": "Voice",
 				"defaultValue": 120,
+				"minValue": 1,
 			})
 
 			# Create the say word event

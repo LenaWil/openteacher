@@ -53,10 +53,9 @@ class MediaTypeModule(object):
 		
 		try:
 			self._settings = self._modules.default(type="settings")
-		except IndexError, e:
+			self._html5 = self._settings.setting("org.openteacher.lessons.media.videohtml5")["value"]
+		except:
 			self._html5 = False
-		else:
-			self._html5 = self._settings.setting("org.openteacher.lessons.media.audiohtml5")["value"]
 		
 		self.active = True
 
@@ -77,6 +76,11 @@ class MediaTypeModule(object):
 		return path
 	
 	def showMedia(self, path, mediaDisplay, autoplay):
+		try:
+			self._html5 = self._settings.setting("org.openteacher.lessons.media.videohtml5")["value"]
+		except:
+			self._html5 = False
+		
 		if self._html5 or mediaDisplay.noPhonon:
 			if not mediaDisplay.noPhonon:
 				# Stop any media playing

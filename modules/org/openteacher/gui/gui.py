@@ -148,12 +148,13 @@ class GuiModule(object):
 		else:
 			if platform.system() == "Windows" and platform.version() >= 6.0:
 				self._aeroSetting = self._settings.registerSetting(**{
-				"internal_name": "org.openteacher.gui.aero",
-				"name": "Use Aero glass (experimental)",
-				"type": "boolean",
-				"category": "User interface",
-				"subcategory": "Effects",
-				"defaultValue": False,
+					"internal_name": "org.openteacher.gui.aero",
+					"name": "Use Aero glass (experimental)",
+					"type": "boolean",
+					"category": "User interface",
+					"subcategory": "Effects",
+					"defaultValue": False,
+					"advanced": True,
 				})
 			else:
 				self._aeroSetting = None
