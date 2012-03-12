@@ -79,7 +79,7 @@ class ModulesHandler(object):
 	@cherrypy.expose
 	def priorities_html(self):
 		profiles = self._mm.mods("active", type="profileDescription")
-		profiles = sorted(profiles, key=lambda m: m.name)
+		profiles = sorted(profiles, key=lambda p: p.desc["name"])
 
 		mods = {}
 		for mod in self._mm.mods("priorities"):
@@ -175,6 +175,16 @@ class CodeDocumentationModule(object):
 		self.uses = (
 			self._mm.mods(type="profileDescription"),
 		)
+		self.priorities = {
+			"student@home": -1,
+			"student@school": -1,
+			"teacher": -1,
+			"wordsonly": -1,
+			"selfstudy": -1,
+			"testsuite": -1,
+			"codedocumentation": 0,
+			"all": -1,
+		}
 
 	def showDocumentation(self):
 		templates = {

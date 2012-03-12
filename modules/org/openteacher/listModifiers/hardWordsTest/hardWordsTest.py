@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -21,13 +21,6 @@
 import unittest
 
 class HardWordsTestCase(unittest.TestCase):
-	def setUp(self):
-		for module in self._mm.mods(type="translator"):
-			module.enable()
-		for module in self._mm.mods("testName", type="listModifier"):
-			if module.testName == "hardWords":
-				module.enable()
-
 	def testWordWithoutResults(self):
 		wordList = {
 			"items": [
@@ -138,16 +131,9 @@ class HardWordsTestCase(unittest.TestCase):
 		self._test(wordList, [])
 
 	def _test(self, input, output):
-		for module in self._mm.mods("active", type="listModifier"):
-			indexes = module.modifyList(range(len(input["items"])), input)
+		for mod in self._mm.mods("active", type="listModifier", testName="hardWords"):
+			indexes = mod.modifyList(range(len(input["items"])), input)
 			self.assertEqual(indexes, output)
-
-	def tearDown(self):
-		for module in self._mm.mods("active", type="translator"):
-			module.disable()
-
-		for module in self._mm.mods("active", type="listModifier"):
-			module.disable()
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -155,6 +141,9 @@ class TestModule(object):
 		self._mm = moduleManager
 
 		self.type = "test"
+		self.uses = (
+			self._mm.mods(type="listModifier", testName="hardWords"),
+		)
 
 	def enable(self):
 		self.TestCase = HardWordsTestCase

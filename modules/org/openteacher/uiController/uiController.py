@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -45,6 +45,10 @@ class UiControllerModule(object):
 			self._mm.mods(type="documentation"),
 			self._mm.mods(type="translator"),
 		)
+		self.priorities = {
+			"codedocumentation": -1,
+			"testsuite": -1,
+		}
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -21,13 +21,9 @@
 import unittest
 
 class WordsStringComposerTestCase(unittest.TestCase):
-	def setUp(self):
-		for module in self._mm.mods(type="wordsStringComposer"):
-			module.enable()
-
 	def _test(self, input, output):
-		for module in self._mm.mods("active", type="wordsStringComposer"):
-			string = module.compose(input)
+		for mod in self._mm.mods("active", type="wordsStringComposer"):
+			string = mod.compose(input)
 			self.assertEqual(string, output)
 
 	def testSingleWord(self):
@@ -60,16 +56,15 @@ class WordsStringComposerTestCase(unittest.TestCase):
 			u"être"
 		)
 
-	def tearDown(self):
-		for module in self._mm.mods("active", type="wordsStringComposer"):
-			module.disable()
-
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "test"
+		self.uses = (
+			self._mm.mods(type="wordsStringComposer"),
+		)
 
 	def enable(self):
 		self.TestCase = WordsStringComposerTestCase

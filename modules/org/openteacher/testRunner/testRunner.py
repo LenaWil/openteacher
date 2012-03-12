@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -26,8 +26,31 @@ class TestRunnerModule(object):
 		self._mm = moduleManager
 
 		self.type = "testRunner"
+		self.priorities = {
+			"student@home": -1,
+			"student@school": -1,
+			"teacher": -1,
+			"wordsonly": -1,
+			"selfstudy": -1,
+			"testsuite": 0,
+			"codedocumentation": -1,
+			"all": -1,
+		}
+		self.requires = (
+			self._mm.mods(type="execute"),
+		)
 
-	def run(self):
+	def enable(self):
+		self._modules = set(self._mm.mods(type="modules")).pop()
+		self._execute = self._modules.default(type="execute")
+		self._execute.startRunning.handle(self._run)
+
+	def disable(self):
+		self._execute.startRunning.unhandle(self._run)
+		del self._execute
+		del self._modules
+
+	def _run(self):
 		testSuite = unittest.TestSuite()
 		for module in self._mm.mods(type="test"):
 			module.enable()

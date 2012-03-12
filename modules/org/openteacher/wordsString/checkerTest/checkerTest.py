@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -36,13 +36,6 @@ class WordsStringCheckerTestCase(unittest.TestCase):
 			"answers": [(u"naar(binnen)", u"in"), (u"tot", u"jegens")],
 		}
 
-		for module in self._mm.mods(type="wordsStringChecker"):
-			module.enable()
-		for module in self._mm.mods(type="wordsStringParser"):
-			module.enable()
-		for module in self._mm.mods(type="modules"):
-			module.enable()
-
 	def testSingleRightAnswer(self):
 		self._test(u"in", self.word1, "wrong")
 
@@ -63,7 +56,7 @@ class WordsStringCheckerTestCase(unittest.TestCase):
 		self._test(u"1. in, op, bij 2. tijdens", self.word1, "right")
 
 	def testFullAnswerWithExtraWrongWords(self):
-		#gelijk tijdig met isn't in the answers (however it's possibly right.)
+		#gelijktijdig met isn't in the answers (however it's possibly right.)
 		self._test(u"1. in, op, bij 2. tijdens, gelijktijdig met", self.word1, "wrong")
 
 	def testWordsInWeirdOrder(self):
@@ -72,25 +65,10 @@ class WordsStringCheckerTestCase(unittest.TestCase):
 	def testFullNotationAndDontIncludeAnNonObligatoryWord(self):
 		self._test(u"1. in, naar(binnen) 2. jegens", self.word2, "right")
 
-	def testResultProperties(self):
-		for module in self._mm.mods("active", type="wordsStringChecker"):
-			result = module.check("", self.word1)
-			self.assertTrue(result.has_key("result"))
-			self.assertEqual(result["itemId"], self.word1["id"])
-			self.assertEqual(result["givenAnswer"], "")
-
 	def _test(self, givenAnswer, word, output):
-		for module in self._mm.mods("active", type="wordsStringChecker"):
-			result = module.check(givenAnswer, word)
+		for mod in self._mm.mods("active", type="wordsStringChecker"):
+			result = mod.check(givenAnswer, word)
 			self.assertEqual(result["result"], output)
-
-	def tearDown(self):
-		del self.word1
-		del self.word2
-		for module in self._mm.mods("active", type="wordsStringChecker"):
-			module.disable()
-		for module in self._mm.mods("active", type="wordsStringParser"):
-			module.disable()
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -98,6 +76,9 @@ class TestModule(object):
 		self._mm = moduleManager
 
 		self.type = "test"
+		self.uses = (
+			self._mm.mods(type="wordsStringChecker"),
+		)
 
 	def enable(self):
 		self.TestCase = WordsStringCheckerTestCase
