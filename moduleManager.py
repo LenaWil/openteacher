@@ -125,7 +125,8 @@ class ModuleManager(object):
 			name = os.path.split(root)[1]
 			valid = (
 				name + ".py" in files and
-				not "_" in root
+				#os.sep so names like random_.py are allowed.
+				not os.sep + "_" in root
 			)
 			if valid:
 				container = self.importFrom(root, name)

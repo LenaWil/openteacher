@@ -35,6 +35,7 @@ class TestRunnerModule(object):
 			"testsuite": 0,
 			"codedocumentation": -1,
 			"all": -1,
+			"testserver": -1,
 		}
 		self.requires = (
 			self._mm.mods(type="execute"),

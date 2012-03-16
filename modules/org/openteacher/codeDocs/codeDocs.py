@@ -184,6 +184,7 @@ class CodeDocumentationModule(object):
 			"testsuite": -1,
 			"codedocumentation": 0,
 			"all": -1,
+			"testserver": -1,
 		}
 
 	def showDocumentation(self):
@@ -202,6 +203,7 @@ class CodeDocumentationModule(object):
 		})
 		cherrypy.engine.start()
 		webbrowser.open("http://localhost:8080/")
+		print "Serving at http://localhost:8080/"
 		print "Type 'quit' and press enter to stop the server"
 		while True:
 			try:

@@ -48,6 +48,7 @@ class UiControllerModule(object):
 		self.priorities = {
 			"codedocumentation": -1,
 			"testsuite": -1,
+			"testserver": -1,
 		}
 
 	def enable(self):

@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -24,18 +24,39 @@ class TestServerModule(object):
 		self._mm = moduleManager
 
 		self.type = "test_server"
+		self.requires = (
+			self._mm.mods(type="execute"),
+		)
+		self.priorities = {
+			"student@home": -1,
+			"student@school": -1,
+			"teacher": -1,
+			"wordsonly": -1,
+			"selfstudy": -1,
+			"testsuite": -1,
+			"codedocumentation": -1,
+			"all": -1,
+			"testserver": 0,
+		}
 
 	def enable(self):
 		self._server = self._mm.import_("server")
+		self._modules = set(self._mm.mods(type="modules")).pop()
+		self._execute = self._modules.default(type="execute")
+		self._execute.startRunning.handle(self._run)
 
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
-		del self._server
+		self._execute.startRunning.unhandle(self._run)
 
-	def run(self):
+		del self._server
+		del self._modules
+		del self._execute
+
+	def _run(self):
 		self._server.main()
 
 def init(moduleManager):
