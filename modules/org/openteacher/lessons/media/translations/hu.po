@@ -1,0 +1,97 @@
+# Hungarian translation for openteacher
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-07-11 17:56+0200\n"
+"PO-Revision-Date: 2011-09-13 07:58+0000\n"
+"Last-Translator: Richard Somlói <ricsipontaz@gmail.com>\n"
+"Language-Team: Hungarian <hu@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-09-14 05:00+0000\n"
+"X-Generator: Launchpad (build 13921)\n"
+
+#: media.py:304
+msgid "Remove"
+msgstr "Eltávolítás"
+
+#: media.py:306
+msgid "Add local media"
+msgstr "Helyi média hozzáadása"
+
+#: media.py:308
+msgid "Add remote media"
+msgstr "Távoli média hozzáadása"
+
+#: media.py:329
+msgid "Name:"
+msgstr "Név:"
+
+#: media.py:332
+msgid "Description:"
+msgstr "Leírás:"
+
+#: media.py:368
+msgid "Select file(s)"
+msgstr "Fájl(ok) kijelölése"
+
+#: media.py:368
+msgid "Media"
+msgstr "Média"
+
+#: media.py:376
+msgid "File URL"
+msgstr "Fájl elérési útvonala"
+
+#: media.py:376
+msgid ""
+"Enter the URL of your website or media item.\n"
+"Supported video sites: YouTube, Dailymotion, Vimeo."
+msgstr ""
+"Adja meg a honlapja vagy a médiaelem elérési útvonalát.\n"
+"Támogatott videomegosztók: YouTube, Dailymotion, Vimeo."
+
+#: media.py:434
+msgid "Warning"
+msgstr "Figyelem"
+
+#: media.py:436
+msgid ""
+"Are you sure you want to go back to the enter tab? This will end your lesson!"
+msgstr ""
+"Biztos benne, hogy visszatér a szómegadás laphoz? Ezzel befejeződik a lecke!"
+
+#: media.py:485
+msgid "Lesson type:"
+msgstr "Lecketípus:"
+
+#: media.py:495
+msgid "Check"
+msgstr "Ellenőrzés"
+
+#: media.py:538
+msgid "Not enough items"
+msgstr "Nincs elég elem"
+
+#: media.py:538
+msgid "You need to add items to your test first"
+msgstr "Először hozzá kell adni néhány elemet a teszthez"
+
+#: media.py:621
+msgid "Media Lesson"
+msgstr "Médialecke"
+
+#: media.py:629
+msgid "Create media lesson"
+msgstr "Médialecke készítése"
+
+#: media.py:649
+#, python-format
+msgid "Media lesson %s"
+msgstr "Médialecke %s"

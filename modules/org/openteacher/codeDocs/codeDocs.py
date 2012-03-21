@@ -18,6 +18,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+#FIXME: python 3.x/openteacher.py doesn't work correctly now for this module.
 import webbrowser
 import cherrypy
 import inspect

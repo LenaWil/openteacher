@@ -1,0 +1,96 @@
+# Spanish translation for openteacher
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-07-11 17:56+0200\n"
+"PO-Revision-Date: 2011-11-15 16:36+0000\n"
+"Last-Translator: Fitoschido <fitoschido@gmail.com>\n"
+"Language-Team: Spanish <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-11-16 05:28+0000\n"
+"X-Generator: Launchpad (build 14291)\n"
+
+#: media.py:304
+msgid "Remove"
+msgstr "Quitar"
+
+#: media.py:306
+msgid "Add local media"
+msgstr "Añadir medios locales"
+
+#: media.py:308
+msgid "Add remote media"
+msgstr "Añadir medios remotos"
+
+#: media.py:329
+msgid "Name:"
+msgstr "Nombre:"
+
+#: media.py:332
+msgid "Description:"
+msgstr "Descripción:"
+
+#: media.py:368
+msgid "Select file(s)"
+msgstr "Seleccionar archivo(s)"
+
+#: media.py:368
+msgid "Media"
+msgstr "Medios"
+
+#: media.py:376
+msgid "File URL"
+msgstr "URL del archivo"
+
+#: media.py:376
+msgid ""
+"Enter the URL of your website or media item.\n"
+"Supported video sites: YouTube, Dailymotion, Vimeo."
+msgstr ""
+"Introduzca la URL del sitio web o elemento multimedia.\n"
+"Sitios de vídeo compatibles: YouTube, Dailymotion, Vimeo."
+
+#: media.py:434
+msgid "Warning"
+msgstr "Aviso"
+
+#: media.py:436
+msgid ""
+"Are you sure you want to go back to the enter tab? This will end your lesson!"
+msgstr ""
+
+#: media.py:485
+msgid "Lesson type:"
+msgstr "Tipo de lección:"
+
+#: media.py:495
+msgid "Check"
+msgstr "Comprobar"
+
+#: media.py:538
+msgid "Not enough items"
+msgstr "No hay elementos suficientes"
+
+#: media.py:538
+msgid "You need to add items to your test first"
+msgstr "Necesita añadir elementos a su prueba primero"
+
+#: media.py:621
+msgid "Media Lesson"
+msgstr "Lección de medios"
+
+#: media.py:629
+msgid "Create media lesson"
+msgstr "Crear lección de medios"
+
+#: media.py:649
+#, python-format
+msgid "Media lesson %s"
+msgstr "Lección de medios %s"

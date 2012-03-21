@@ -1,0 +1,50 @@
+# Spanish translation for openteacher
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"PO-Revision-Date: 2011-11-15 17:14+0000\n"
+"Last-Translator: Fitoschido <fitoschido@gmail.com>\n"
+"Language-Team: Spanish <es@li.org>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-11-16 05:29+0000\n"
+"X-Generator: Launchpad (build 14291)\n"
+
+#: inMind.py:43
+msgid ""
+"Think about the answer, and press the 'View answer' button when you're done."
+msgstr ""
+"Piense en la respuesta, y pulse el botón «Ver respuesta» cuando esté listo."
+
+#: inMind.py:44
+msgid "View answer"
+msgstr "Ver respuesta"
+
+#: inMind.py:45
+msgid "Skip"
+msgstr ""
+
+#: inMind.py:66
+msgid "I was right"
+msgstr "Tenía razón"
+
+#: inMind.py:67
+msgid "I was wrong"
+msgstr "Estaba equivocado"
+
+#: inMind.py:123
+msgid "Translation: "
+msgstr "Traducción: "
+
+#: inMind.py:186
+#, fuzzy
+msgid "Think answer"
+msgstr "Pensar las respuestas"
