@@ -33,8 +33,7 @@ class CategoryTab(QtGui.QWidget):
 
 		self.setWindowTitle(name)
 		vbox = QtGui.QVBoxLayout()
-		
-		
+
 		categories = self.byKey("subcategory", inCategory)
 		for name in categories.keys():			
 			w = self.createSubcategoryGroupBox(name, categories[name])
@@ -46,10 +45,7 @@ class CategoryTab(QtGui.QWidget):
 		groupBox = QtGui.QGroupBox(name)
 		groupBoxLayout = QtGui.QFormLayout()
 		for setting in inSubcategory:
-			try:
-				createWidget = self._widgets[setting["type"]]
-			except KeyError:
-				continue #FIXME
+			createWidget = self._widgets[setting["type"]]
 			groupBoxLayout.addRow(
 				setting["name"],
 				createWidget(setting)

@@ -429,10 +429,11 @@ class TakenTestWidget(QtGui.QWidget):
 						itemResult = result
 						break
 				
+				resultWidget = QtGui.QTableWidgetItem()
 				if itemResult["result"] == "right":
-					resultWidget = QtGui.QTableWidgetItem("O")
+					resultWidget.setCheckState(QtCore.Qt.Checked)
 				else:
-					resultWidget = QtGui.QTableWidgetItem("X")
+					resultWidget.setCheckState(QtCore.Qt.Unchecked)
 				resultWidget.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 				
 				self.table.setItem(len(self.questionIds), 0, resultWidget)

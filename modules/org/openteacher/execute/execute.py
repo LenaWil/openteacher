@@ -40,9 +40,9 @@ class ExecuteModule(object):
 		return mods.pop()
 
 	def execute(self):
-		#do the only-one check. FIXME: move into settings maybe? (discuss!)
+		#load the settings module's dependencies (currently one)
 		self._getMod(type="dataStore")
-		
+
 		try:
 			settings = self._getMod(type="settings")
 			settings.initialize()
