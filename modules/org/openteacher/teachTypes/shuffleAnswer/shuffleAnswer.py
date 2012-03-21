@@ -93,6 +93,7 @@ class ShuffleAnswerTeachTypeModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
+		self.filesWithTranslations = ["shuffleAnswer.py"]
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

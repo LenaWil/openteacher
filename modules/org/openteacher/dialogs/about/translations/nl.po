@@ -6,46 +6,44 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-12 10:23+0200\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-03-21 21:36+0100\n"
 "PO-Revision-Date: 2011-07-19 02:58+0000\n"
 "Last-Translator: Marten de Vries <Unknown>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2011-07-20 05:32+0000\n"
 "X-Generator: Launchpad (build 13405)\n"
-"Language: \n"
 
-#: about.py:48
-msgid "About module"
-msgstr "Overmodule"
-
-#: ui.py:54
-msgid "OpenTeacher authors"
-msgstr "OpenTeacher auteurs"
-
-#: ui.py:56
+#: about.py:47
 msgid "Project website"
 msgstr "Project website"
 
-#: ui.py:125
+#: about.py:122
 msgid "Full license text"
 msgstr "Volledige licentietekst"
 
-#: ui.py:220
+#: about.py:218
 msgid "Thanks to all Launchpad contributors!"
 msgstr "Alle helpers op Launchpad, bedankt!"
 
-#: ui.py:261 ui.py:265
+#: about.py:258 about.py:259
 msgid "About"
 msgstr "Over"
 
-#: ui.py:262
+#: about.py:260
 msgid "License"
 msgstr "Licentie"
 
-#: ui.py:263
+#: about.py:261
 msgid "Authors"
 msgstr "Auteurs"
+
+#~ msgid "About module"
+#~ msgstr "Overmodule"
+
+#~ msgid "OpenTeacher authors"
+#~ msgstr "OpenTeacher auteurs"

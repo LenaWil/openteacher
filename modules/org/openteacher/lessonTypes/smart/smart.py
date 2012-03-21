@@ -130,6 +130,7 @@ class SmartModule(object):
 			self._mm.mods(type="event"),
 			self._mm.mods(type="translator"),
 		)
+		self.filesWithTranslations = ["smart.py"]
 
 	def enable(self):
 		#Translations

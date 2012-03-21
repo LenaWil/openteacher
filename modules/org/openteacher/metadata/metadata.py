@@ -27,6 +27,7 @@ class MetadataModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
+		self.filesWithTranslations = ["metadata.py"]
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
@@ -56,6 +57,7 @@ class MetadataModule(object):
 			"authors": _("OpenTeacher authors"),
 			"copyrightYears": _("2008-2011"),
 			"website": _("http://openteacher.org/"),
+			"email": "openteachermaintainers@lists.launchpad.net",
 			"documentationUrl": _("http://openteacher.org/documentation.html"),
 			"updatesUrl": "http://openteacher.org/updates/updates.json",
 			"updatesSignatureUrl": "http://openteacher.org/updates/updates.json.asc",

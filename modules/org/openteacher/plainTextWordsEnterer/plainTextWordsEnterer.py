@@ -92,6 +92,7 @@ class PlainTextWordsEntererModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
+		self.filesWithTranslations = ["plainTextWordsEnterer.py"]
 
 	def enable(self):
 		self._references = set()

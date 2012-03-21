@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Cas Widdershoven
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #	Copyright 2008-2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -138,9 +138,9 @@ class InputTypingWidget(QtGui.QWidget):
 			answers = self._compose(self.word["answers"])
 			diff = self.diff(answers, givenStringAnswer)
 			if diff:
-				text = _("Correct answer: <b>%s</b> [%s]") % (answers, diff)
+				text = _("Correct answer: <b>{answers}</b> [{diff}]").format(answers=answers, diff=diff)
 			else:
-				text = _("Correct answer: <b>%s</b>") % answers
+				text = _("Correct answer: <b>{answers}</b>").format(answers=answers)
 			self.correctLabel.setText(text)
 		else:
 			#no need to start timer in the first place
@@ -179,6 +179,7 @@ class InputTypingModule(object):
 			self._mm.mods(type="wordsStringChecker"),
 			self._mm.mods(type="wordsStringComposer"),
 		)
+		self.filesWithTranslations = ["inputTyping.py"]
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

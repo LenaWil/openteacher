@@ -170,6 +170,7 @@ class TestViewerModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
+		self.filesWithTranslations = ["testViewer.py"]
 
 	def createTestViewer(self, *args, **kwargs):
 		tv = TestViewer(self._mm, *args, **kwargs)

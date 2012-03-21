@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-10 19:02+0200\n"
+"Project-Id-Version: OpenTeacher 3.x\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-03-21 21:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,35 +17,35 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: testsViewer.py:47
+#: testsViewer.py:49
 msgid "Date"
 msgstr ""
 
-#: testsViewer.py:48
+#: testsViewer.py:50
 msgid "Note"
 msgstr ""
 
-#: testsViewer.py:49
+#: testsViewer.py:51
 msgid "Completed"
 msgstr ""
 
-#: testsViewer.py:108
+#: testsViewer.py:113
 msgid "Highest note:"
 msgstr ""
 
-#: testsViewer.py:111
+#: testsViewer.py:116
 msgid "Average note:"
 msgstr ""
 
-#: testsViewer.py:114
+#: testsViewer.py:119
 msgid "Lowest note:"
 msgstr ""
 
-#: testsViewer.py:124 testsViewer.py:128 testsViewer.py:132 testsViewer.py:160
-#: testsViewer.py:166
+#: testsViewer.py:132 testsViewer.py:136 testsViewer.py:140 testsViewer.py:168
+#: testsViewer.py:174
 msgid "-"
 msgstr ""
 
-#: testsViewer.py:246
+#: testsViewer.py:254
 msgid "Back"
 msgstr ""

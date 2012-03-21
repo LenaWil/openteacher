@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-12 10:23+0200\n"
+"Project-Id-Version: OpenTeacher 3.x\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-03-21 21:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,34 +17,26 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: about.py:48
-msgid "About module"
-msgstr ""
-
-#: ui.py:54
-msgid "OpenTeacher authors"
-msgstr ""
-
-#: ui.py:56
+#: about.py:47
 msgid "Project website"
 msgstr ""
 
-#: ui.py:125
+#: about.py:122
 msgid "Full license text"
 msgstr ""
 
-#: ui.py:220
+#: about.py:218
 msgid "Thanks to all Launchpad contributors!"
 msgstr ""
 
-#: ui.py:261 ui.py:265
+#: about.py:258 about.py:259
 msgid "About"
 msgstr ""
 
-#: ui.py:262
+#: about.py:260
 msgid "License"
 msgstr ""
 
-#: ui.py:263
+#: about.py:261
 msgid "Authors"
 msgstr ""

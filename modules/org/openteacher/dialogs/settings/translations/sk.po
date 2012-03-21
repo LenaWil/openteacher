@@ -6,33 +6,32 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-07-12 10:19+0200\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-03-21 21:36+0100\n"
 "PO-Revision-Date: 2011-08-01 20:56+0000\n"
 "Last-Translator: Alexander Suchan <supersasho@gmail.com>\n"
 "Language-Team: Slovak <sk@li.org>\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2011-08-02 05:18+0000\n"
 "X-Generator: Launchpad (build 13552)\n"
 
-#: ui.py:20
-msgid "Modules"
-msgstr "Moduly"
+#: settings.py:78
+msgid "Settings"
+msgstr "Nastavenia"
 
-#: ui.py:40 ui.py:105
-msgid "Miscellaneous"
-msgstr "Rôzne"
-
-#: ui.py:108
-msgid "Advanced mode"
-msgstr "Pokročilý mód"
-
-#: ui.py:111
+#: settings.py:79
 msgid "Simple mode"
 msgstr "Jednoduchý mód"
 
-#: ui.py:114
-msgid "Settings"
-msgstr "Nastavenia"
+#: settings.py:80
+msgid "Advanced mode"
+msgstr "Pokročilý mód"
+
+#~ msgid "Modules"
+#~ msgstr "Moduly"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "Rôzne"

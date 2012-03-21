@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-18 13:58+0200\n"
+"Project-Id-Version: OpenTeacher 3.x\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-03-21 21:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,10 +17,31 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: inputTyping.py:37
+#: inputTyping.py:55
 msgid "Check!"
 msgstr ""
 
-#: inputTyping.py:39 inputTyping.py:67
+#: inputTyping.py:56
 msgid "Correct anyway"
+msgstr ""
+
+#: inputTyping.py:57
+msgid "Skip"
+msgstr ""
+
+#: inputTyping.py:107
+#, python-format
+msgid "Corrected: %s"
+msgstr ""
+
+#: inputTyping.py:112
+msgid "Corrected"
+msgstr ""
+
+#: inputTyping.py:141
+msgid "Correct answer: <b>{answers}</b> [{diff}]"
+msgstr ""
+
+#: inputTyping.py:143
+msgid "Correct answer: <b>{answers}</b>"
 msgstr ""

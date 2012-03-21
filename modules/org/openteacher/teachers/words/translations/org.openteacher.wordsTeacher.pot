@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-23 15:23+0200\n"
+"Project-Id-Version: OpenTeacher 3.x\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-03-21 21:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,42 +17,42 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: wordsTeacher.py:34 wordsTeacher.py:48
+#: words.py:80 words.py:83
 msgid "Up"
 msgstr ""
 
-#: wordsTeacher.py:35 wordsTeacher.py:49
+#: words.py:81 words.py:84
 msgid "Down"
 msgstr ""
 
-#: wordsTeacher.py:61
+#: words.py:87
 msgid "Don't show this screen again when I start a lesson."
 msgstr ""
 
-#: wordsTeacher.py:64
+#: words.py:90
 msgid "I'm ready, start the lesson!"
 msgstr ""
 
-#: wordsTeacher.py:68
+#: words.py:93
 msgid "Lesson settings"
 msgstr ""
 
-#: wordsTeacher.py:70
+#: words.py:96
 msgid "Lesson type"
 msgstr ""
 
-#: wordsTeacher.py:71
+#: words.py:99
 msgid "Modify word"
 msgstr ""
 
-#: wordsTeacher.py:72
+#: words.py:102
 msgid "Modify word list"
 msgstr ""
 
-#: wordsTeacher.py:87
+#: words.py:151
 msgid "Change lesson settings"
 msgstr ""
 
-#: wordsTeacher.py:89
+#: words.py:152
 msgid "Word:"
 msgstr ""

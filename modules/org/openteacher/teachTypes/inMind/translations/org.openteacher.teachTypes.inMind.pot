@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-12 10:32+0200\n"
+"Project-Id-Version: OpenTeacher 3.x\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-03-21 21:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,27 +17,31 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: inMind.py:27
+#: inMind.py:43
 msgid ""
 "Think about the answer, and press the 'View answer' button when you're done."
 msgstr ""
 
-#: inMind.py:29
+#: inMind.py:44
 msgid "View answer"
 msgstr ""
 
-#: inMind.py:42
+#: inMind.py:45
+msgid "Skip"
+msgstr ""
+
+#: inMind.py:66
 msgid "I was right"
 msgstr ""
 
-#: inMind.py:43
+#: inMind.py:67
 msgid "I was wrong"
 msgstr ""
 
-#: inMind.py:99
+#: inMind.py:123
 msgid "Translation: "
 msgstr ""
 
-#: inMind.py:115
-msgid "Think answers"
+#: inMind.py:186
+msgid "Think answer"
 msgstr ""

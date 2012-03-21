@@ -282,6 +282,7 @@ class AboutDialogModule(object):
 			self._mm.mods(type="translator"),
 			self._mm.mods(type="authors"),
 		)
+		self.filesWithTranslations = ["about.py"]
 
 	def show(self):
 		try:

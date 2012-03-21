@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-12 10:48+0200\n"
+"Project-Id-Version: OpenTeacher 3.x\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-03-21 21:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,26 +17,84 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ui.py:27
-msgid "Email: "
+#: wrtsApi.py:74
+msgid "Email"
 msgstr ""
 
-#: ui.py:30
-msgid "Password: "
+#: wrtsApi.py:77 wrtsApi.py:85
+msgid "WRTS"
 msgstr ""
 
-#: ui.py:57
+#: wrtsApi.py:78 wrtsApi.py:86
+msgid "Login credentials"
+msgstr ""
+
+#: wrtsApi.py:82
+msgid "Password"
+msgstr ""
+
+#: wrtsApi.py:125
+msgid "Import from WRTS"
+msgstr ""
+
+#: wrtsApi.py:126
+msgid "Export to WRTS"
+msgstr ""
+
+#: wrtsApi.py:135
+msgid "Invalid login credentials"
+msgstr ""
+
+#: wrtsApi.py:136
+msgid ""
+"WRTS didn't accept the login credentials. Are you sure you entered your e-"
+"mail and password correctly?"
+msgstr ""
+
+#: wrtsApi.py:142
+msgid "No WRTS connection"
+msgstr ""
+
+#: wrtsApi.py:143
+msgid ""
+"WRTS didn't accept the connection. Are you sure that your internet "
+"connection works and WRTS is online?"
+msgstr ""
+
+#: wrtsApi.py:209
+msgid "No word list metadata given."
+msgstr ""
+
+#: wrtsApi.py:210
+msgid ""
+"Please fill in the wordlist title, question language and answer language "
+"first. Then try again."
+msgstr ""
+
+#: wrtsApi.py:248
+msgid "No list selected"
+msgstr ""
+
+#: wrtsApi.py:249
+msgid "No list was selected. Please try again."
+msgstr ""
+
+#: ui.py:72
 msgid "WRTS - login please:"
 msgstr ""
 
-#: ui.py:91
+#: ui.py:75
+msgid "Email: "
+msgstr ""
+
+#: ui.py:78
+msgid "Password: "
+msgstr ""
+
+#: ui.py:81
+msgid "Store mail address and password"
+msgstr ""
+
+#: ui.py:114
 msgid "WRTS - Please choose a list:"
-msgstr ""
-
-#: wrtsApi.py:33
-msgid "Wrts API connection"
-msgstr ""
-
-#: wrtsApi.py:43
-msgid "Import from WRTS"
 msgstr ""

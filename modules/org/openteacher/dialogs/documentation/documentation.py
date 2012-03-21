@@ -75,7 +75,8 @@ class DocumentationModule(object):
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
-		),
+		)
+		self.filesWithTranslations = ["documentation.py"]
 
 	def show(self):
 		metadata = self._modules.default("active", type="metadata").metadata

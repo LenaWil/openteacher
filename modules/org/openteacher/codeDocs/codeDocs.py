@@ -184,6 +184,7 @@ class CodeDocumentationModule(object):
 			"testsuite": -1,
 			"codedocumentation": 0,
 			"all": -1,
+			"update-translations": -1,
 			"testserver": -1,
 		}
 

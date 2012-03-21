@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Cas Widdershoven
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -43,6 +43,7 @@ class TypingTeachTypeModule(object):
 			"codedocumentation": 465,
 			"all": 465,
 		}
+		self.filesWithTranslations = ["typing.py"]
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

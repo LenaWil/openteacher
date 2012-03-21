@@ -6,49 +6,47 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-10 19:02+0200\n"
-"PO-Revision-Date: 2011-09-10 19:03+0100\n"
-"Last-Translator: Marten de Vries <marten94@gmail.com>\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-03-21 21:36+0100\n"
+"PO-Revision-Date: 2011-10-04 14:57+0000\n"
+"Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-10-05 04:54+0000\n"
+"X-Generator: Launchpad (build 14085)\n"
 
-#: testsViewer.py:47
+#: testsViewer.py:49
 msgid "Date"
 msgstr "Datum"
 
-#: testsViewer.py:48
+#: testsViewer.py:50
 msgid "Note"
 msgstr "Cijfer"
 
-#: testsViewer.py:49
+#: testsViewer.py:51
 msgid "Completed"
 msgstr "Voltooid"
 
-#: testsViewer.py:108
+#: testsViewer.py:113
 msgid "Highest note:"
 msgstr "Hoogste cijfer:"
 
-#: testsViewer.py:111
+#: testsViewer.py:116
 msgid "Average note:"
 msgstr "Gemiddelde cijfer:"
 
-#: testsViewer.py:114
+#: testsViewer.py:119
 msgid "Lowest note:"
 msgstr "Laagste cijfer:"
 
-#: testsViewer.py:124
-#: testsViewer.py:128
-#: testsViewer.py:132
-#: testsViewer.py:160
-#: testsViewer.py:166
+#: testsViewer.py:132 testsViewer.py:136 testsViewer.py:140 testsViewer.py:168
+#: testsViewer.py:174
 msgid "-"
 msgstr "-"
 
-#: testsViewer.py:246
+#: testsViewer.py:254
 msgid "Back"
 msgstr "Terug"
-

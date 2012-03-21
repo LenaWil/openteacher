@@ -49,6 +49,7 @@ class UiControllerModule(object):
 			"codedocumentation": -1,
 			"testsuite": -1,
 			"testserver": -1,
+			"update-translations": -1
 		}
 
 	def enable(self):

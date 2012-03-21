@@ -384,6 +384,7 @@ class WordsTeacherModule(object):
 			self._mm.mods(type="lessonType"),
 			self._mm.mods(type="teachType"),
 		)
+		self.filesWithTranslations = ["words.py"]
 
 	def createWordsTeacher(self):
 		tw = TeachWidget(self._modules, self._onscreenKeyboard, self._applicationActivityChanged)

@@ -294,6 +294,7 @@ class TestsViewerModule(object):
 			self._mm.mods(type="percentNoteViewer"),
 			self._mm.mods(type="translator"),
 		)
+		self.filesWithTranslations = ["testsViewer.py"]
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

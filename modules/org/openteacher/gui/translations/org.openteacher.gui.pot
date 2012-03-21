@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-11 17:20+0200\n"
+"Project-Id-Version: OpenTeacher 3.x\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-03-21 21:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,110 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gui.py:232
-msgid "Choose file to save"
-msgstr ""
-
-#: gui.py:256
-msgid "Choose file to open"
-msgstr ""
-
-#: ui.py:30
-msgid "Close Tab"
-msgstr ""
-
-#: ui.py:76
-msgid "Enter list"
-msgstr ""
-
-#: ui.py:77
-msgid "Teach me!"
-msgstr ""
-
-#: ui.py:103
-msgid "Create lesson:"
-msgstr ""
-
-#: ui.py:108
-msgid "Load lesson:"
-msgstr ""
-
-#: ui.py:128
-msgid "Recently opened:"
-msgstr ""
-
-#: ui.py:210
-msgid "&File"
-msgstr ""
-
-#: ui.py:216
-msgid "&New"
-msgstr ""
-
-#: ui.py:218
-msgid "Ctrl+N"
-msgstr ""
-
-#: ui.py:224
-msgid "&Open"
-msgstr ""
-
-#: ui.py:226
-msgid "Ctrl+O"
-msgstr ""
-
-#: ui.py:234
-msgid "&Save"
-msgstr ""
-
-#: ui.py:236
-msgid "Ctrl+S"
-msgstr ""
-
-#: ui.py:242
-msgid "Save &As"
-msgstr ""
-
-#: ui.py:244
-msgid "Ctrl+Shift+S"
-msgstr ""
-
-#: ui.py:252
-msgid "&Print"
-msgstr ""
-
-#: ui.py:254
-msgid "Ctrl+P"
-msgstr ""
-
-#: ui.py:262
-msgid "&Quit"
-msgstr ""
-
-#: ui.py:264
-msgid "Ctrl+Q"
-msgstr ""
-
-#: ui.py:267
-msgid "&Edit"
-msgstr ""
-
-#: ui.py:270
-msgid "&Settings"
-msgstr ""
-
-#: ui.py:274
-msgid "&Help"
-msgstr ""
-
-#: ui.py:280
-msgid "&Documentation"
-msgstr ""
-
-#: ui.py:284
-msgid "&About"
-msgstr ""
-
-#: ui.py:288
-msgid "Toolbar"
+#: gui.py:286
+msgid "Open from file"
 msgstr ""

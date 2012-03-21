@@ -103,6 +103,7 @@ class AllOnceModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
+		self.filesWithTranslations = ["allOnce.py"]
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
