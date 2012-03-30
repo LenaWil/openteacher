@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -49,10 +49,29 @@ class WrtsLoaderModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
+		self.filesWithTranslations = ("wrts.py",)
+
+	def _retranslate(self):
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("WRDS")
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.name = "WRDS"
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.loads = {"wrts": ["words"]}
 
 		self.active = True

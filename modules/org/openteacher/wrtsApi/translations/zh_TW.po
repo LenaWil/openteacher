@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-03-30 23:41+0200\n"
 "PO-Revision-Date: 2011-09-05 14:48+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
@@ -24,7 +24,7 @@ msgid "Email"
 msgstr "電子郵件: "
 
 #: wrtsApi.py:77 wrtsApi.py:85
-msgid "WRTS"
+msgid "WRDS"
 msgstr ""
 
 #: wrtsApi.py:78 wrtsApi.py:86
@@ -37,12 +37,13 @@ msgid "Password"
 msgstr "密碼： "
 
 #: wrtsApi.py:125
-msgid "Import from WRTS"
+#, fuzzy
+msgid "Import from WRDS"
 msgstr "從 WRTS 匯入"
 
 #: wrtsApi.py:126
 #, fuzzy
-msgid "Export to WRTS"
+msgid "Export to WRDS"
 msgstr "從 WRTS 匯入"
 
 #: wrtsApi.py:135
@@ -51,18 +52,18 @@ msgstr ""
 
 #: wrtsApi.py:136
 msgid ""
-"WRTS didn't accept the login credentials. Are you sure you entered your e-"
+"WRDS didn't accept the login credentials. Are you sure you entered your e-"
 "mail and password correctly?"
 msgstr ""
 
 #: wrtsApi.py:142
-msgid "No WRTS connection"
+msgid "No WRDS connection"
 msgstr ""
 
 #: wrtsApi.py:143
 msgid ""
-"WRTS didn't accept the connection. Are you sure that your internet "
-"connection works and WRTS is online?"
+"WRDS didn't accept the connection. Are you sure that your internet "
+"connection works and WRDS is online?"
 msgstr ""
 
 #: wrtsApi.py:209
@@ -84,7 +85,8 @@ msgid "No list was selected. Please try again."
 msgstr ""
 
 #: ui.py:72
-msgid "WRTS - login please:"
+#, fuzzy
+msgid "WRDS - login please:"
 msgstr "登入 WRTS"
 
 #: ui.py:75
@@ -100,5 +102,6 @@ msgid "Store mail address and password"
 msgstr ""
 
 #: ui.py:114
-msgid "WRTS - Please choose a list:"
+#, fuzzy
+msgid "WRDS - Please choose a list:"
 msgstr "WRTS - 請選擇列表："

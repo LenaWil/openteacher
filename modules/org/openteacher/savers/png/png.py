@@ -40,11 +40,35 @@ class PngSaverModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
+		self.filesWithTranslations = ("png.py",)
+
+	def _retranslate(self):
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		#TRANSLATORS: This is the name of an image format. Please just
+		#use the English name of it, unless the format is known under
+		#another name in your language (or you have a very good reason
+		#yourself for translating it). For more information about PNG:
+		#http://en.wikipedia.org/wiki/Portable_Network_Graphics
+		self.name = _("Portable Network Graphics")
 
 	def enable(self):		
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.name = "Portable Network Graphics"
 		self.saves = {"topo": ["png"]}
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 
 		self.active = True
 

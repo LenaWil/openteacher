@@ -74,7 +74,7 @@ class WrtsApiModule(object):
 				name=_("Email"),
 				type="short_text",
 				defaultValue=u"",
-				category=_("WRTS"),
+				category=_("WRDS"),
 				subcategory=_("Login credentials"),
 			)
 			self._passwordSetting = self._settings.registerSetting(
@@ -82,7 +82,7 @@ class WrtsApiModule(object):
 				name=_("Password"),
 				type="password",
 				defaultValue=u"",
-				category=_("WRTS"),
+				category=_("WRDS"),
 				subcategory=_("Login credentials"),
 			)
 
@@ -122,8 +122,8 @@ class WrtsApiModule(object):
 			)
 		self._ui._, self._ui.ngettext = _, ngettext
 
-		self._button.text = _("Import from WRTS")
-		self._action.setText(_("Export to WRTS"))
+		self._button.text = _("Import from WRDS")
+		self._action.setText(_("Export to WRDS"))
 
 		for dialog in self._activeDialogs:
 			dialog.retranslate()
@@ -133,17 +133,18 @@ class WrtsApiModule(object):
 		QtGui.QMessageBox.warning(
 			self._uiModule.qtParent,
 			_("Invalid login credentials"),
-			_("WRTS didn't accept the login credentials. Are you sure you entered your e-mail and password correctly?")
+			_("WRDS didn't accept the login credentials. Are you sure you entered your e-mail and password correctly?")
 		)
 
 	def _noConnection(self):
 		QtGui.QMessageBox.warning(
 			self._uiModule.qtParent,
-			_("No WRTS connection"),
-			_("WRTS didn't accept the connection. Are you sure that your internet connection works and WRTS is online?")
+			_("No WRDS connection"),
+			_("WRDS didn't accept the connection. Are you sure that your internet connection works and WRDS is online?")
 		)
 
 	def _loginToWrts(self, forceLogin=False):
+		"""Returns True if login succeeded, and False if it didn't."""
 		if self._emailSetting and self._passwordSetting:
 			#settings are enabled
 			email = self._emailSetting["value"]
@@ -186,17 +187,20 @@ class WrtsApiModule(object):
 				self._invalidLogin()
 			else:
 				#just the setting, let the user try
-				self._loginToWrts(forceLogin=True)
-			return
+				return self._loginToWrts(forceLogin=True)
+			return False
 		except self._api.ConnectionError:
 			self._noConnection()
-			return
+			return False
+		else:
+			return True
 
 	def exportToWrts(self):
 		lesson = self._lessonTracker.currentLesson
 		if not (lesson and lesson.module.dataType == "words"):
 			return #FIXME: menu item should be disabled in this situation
-		self._loginToWrts()
+		if not self._loginToWrts():
+			return
 
 		try:
 			self._wrtsConnection.exportWordList(
@@ -218,7 +222,8 @@ class WrtsApiModule(object):
 		#FIXME: inform the user
 
 	def importFromWrts(self):
-		self._loginToWrts()
+		if not self._loginToWrts():
+			return
 
 		ldc = self._ui.ListChoiceDialog(
 			self._wrtsConnection.listsParser.lists,

@@ -19,6 +19,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
+import uuid
 
 class TestCase(unittest.TestCase):
 	"""Test the really critical behaviour of the modules module.
@@ -29,6 +30,12 @@ class TestCase(unittest.TestCase):
 		for mod in self._mm.mods(type="modules"):
 			a = mod.default(type="test", name="modulesTest")
 			self.assertEquals(a, self.thisMod)
+
+	def testDefaultUnexisting(self):
+		for mod in self._mm.mods(type="modules"):
+			with self.assertRaises(IndexError):
+				#random, no chance this property really exists...
+				mod.default(uuid=uuid.uuid4())
 
 	def testIfInSort(self):
 		for mod in self._mm.mods(type="modules"):

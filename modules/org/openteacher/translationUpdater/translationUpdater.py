@@ -27,7 +27,7 @@ class TranslationUpdaterModule(object):
 		super(TranslationUpdaterModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "myNiceModuleType"
+		self.type = "translation-updater"
 
 		self.priorities = {
 			"student@home": -1,
@@ -67,7 +67,7 @@ class TranslationUpdaterModule(object):
 			try:
 				files = m.filesWithTranslations
 			except AttributeError:
-				print path
+				print "WARNING: %s doesn't specify files to translate. Passing over." % path
 				continue
 			#adjust potpath to be relative to 'path'
 			potname = os.path.basename(potpath)

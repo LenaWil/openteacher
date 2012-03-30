@@ -42,6 +42,23 @@ class TxtSaverModule(object):
 			self._mm.mods(type="translator"),
 			self._mm.mods(type="settings"),
 		)
+		self.filesWithTranslations = ("txt.py",)
+
+	def _retranslate(self):
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("Plain text")
+		self._maxLenSetting.update({
+				"name": _("Minimum space between words"),
+				"category": _("Saving"),
+				"subcategory": _("Txt"),
+		})
 
 	def enable(self):
 		#Translations
@@ -54,11 +71,9 @@ class TxtSaverModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		
-		self.name = _("Plain text")
+
 		self.saves = {"words": ["txt"]}
-		
-		
+
 		try:
 			self._settings = self._modules.default(type="settings")
 		except IndexError, e:
@@ -67,16 +82,20 @@ class TxtSaverModule(object):
 		else:
 			self._maxLenSetting = self._settings.registerSetting(**{
 				"internal_name": "org.openteacher.savers.txt.maxLen",
-				"name": _("Min. space between words"),
 				"type": "number",
-				"category": _("Saving"),
-				"subcategory": _("Txt"),
 				"defaultValue":8,
 				"minValue": 0,
 				"advanced": True,
 			})
-			
-		
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.active = True
 
 	def disable(self):
@@ -101,11 +120,15 @@ class TxtSaverModule(object):
 		if "questionLanguage" in lesson.list and "answerLanguage" in lesson.list:
 			text += lesson.list["questionLanguage"] + " - " + lesson.list["answerLanguage"] + "\n\n"
 
+		def getQuestionLength(word):
+			if "questions" in word:
+				return len(self._compose(word["questions"]))
+			else:
+				return 0
+
 		if len(lesson.list["items"]) != 0:
-			#FIXME: questions -> not guaranteed to be there
-			lengths = map(lambda word: len(self._compose(word["questions"])), lesson.list["items"])
+			lengths = map(getQuestionLength, lesson.list["items"])
 			maxLen = max(lengths) + 1
-			#FIXME: should 8 be an advanced setting?
 			if maxLen < self._maxLenSetting["value"]:
 				maxLen = 8
 
@@ -117,8 +140,7 @@ class TxtSaverModule(object):
 				text += u"".join([
 					questions,
 					(maxLen - len(questions)) * " ",
-					#FIXME: answers -> not guaranteed to be there
-					self._compose(word["answers"]),
+					self._compose(word["answers"]) if "answers" in word else u"",
 					u"\n"
 				])
 

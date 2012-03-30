@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -39,13 +39,40 @@ class HtmlSaverModule(object):
 		self.requires = (
 			self._mm.mods(type="wordsHtmlGenerator"),
 		)
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
+		self.filesWithTranslations = ("html.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.name = "Hyper Text Markup Language"
 		self.saves = {"words": ["html"]}
-		
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.active = True
+
+	def _retranslate(self):
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		#TRANSLATORS: This is the name of an internet standard. Please
+		#just use the English name of it, unless the standard is known
+		#under another name in your language (or you have a very good
+		#reason yourself for translating it). For more information about
+		#HTML: http://en.wikipedia.org/wiki/HTML
+		self.name = _("Hyper Text Markup Language")
 
 	def disable(self):
 		self.active = False

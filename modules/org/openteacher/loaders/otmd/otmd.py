@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Milan Boers
+#	Copyright 2011-2012, Milan Boers
+#	Copyright 2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -43,13 +44,32 @@ class OpenTeachingMediaLoaderModule(object):
 		self.requires = (
 			self._mm.mods(type="otxxLoader"),
 		)
+		self.filesWithTranslations = ("otmd.py",)
+
+	def _retranslate(self):
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("Open Teaching Media")
 
 	def enable(self):
-		self.name = "Open Teaching Media"
-		self.loads = {"otmd": ["media"]}
-
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._otxxLoader = self._modules.default("active", type="otxxLoader")
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.loads = {"otmd": ["media"]}
 
 		self.active = True
 

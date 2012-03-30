@@ -69,7 +69,7 @@ class LoginDialog(QtGui.QDialog):
 			return False
 
 	def retranslate(self):
-		self.setWindowTitle(_("WRTS - login please:"))
+		self.setWindowTitle(_("WRDS - login please:"))
 
 		self.flayout.itemAt(0, QtGui.QFormLayout.LabelRole).widget().setText(
 			_("Email: ")
@@ -111,4 +111,4 @@ class ListChoiceDialog(QtGui.QDialog):
 		return self.listView.selectedIndexes()[0].row()
 
 	def retranslate(self):
-		self.setWindowTitle(_("WRTS - Please choose a list:"))
+		self.setWindowTitle(_("WRDS - Please choose a list:"))

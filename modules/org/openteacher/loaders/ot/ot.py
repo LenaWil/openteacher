@@ -49,13 +49,31 @@ class OpenTeacherLoaderModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
+		self.filesWithTranslations = ("ot.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.name = "OpenTeacher 2.x"#FIXME: (live) translatable? Also for other modules
 		self.loads = {"ot": ["words"]}
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 
 		self.active = True
+
+	def _retranslate(self):
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("OpenTeacher 2.x")
 
 	def disable(self):
 		self.active = False

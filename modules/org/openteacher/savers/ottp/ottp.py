@@ -43,13 +43,32 @@ class OpenTeachingTopoSaverModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
+		self.filesWithTranslations = ("ottp.py",)
+
+	def _retranslate(self):
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("Open Teaching Topography")
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._otxxSaver = self._modules.default("active", type="otxxSaver")
 
-		self.name = "Open Teaching Topography"
 		self.saves = {"topo": ["ottp"]}
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 
 		self.active = True
 

@@ -43,14 +43,35 @@ class OpenTeacherSaverModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
+		self.filesWithTranslations = ("ot.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.name = "OpenTeacher 2.x" #FIXME: make translatable. And others too?
 		self._pyratemp = self._mm.import_("pyratemp")
 		self.saves = {"words": ["ot"]}
 
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.active = True
+
+	def _retranslate(self):
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		#TRANSLATORS: Please don't translate 'OpenTeacher' unless you've
+		#a good reason for doing so in your language, of course.
+		self.name = _("OpenTeacher 2.x")
 
 	def disable(self):
 		self.active = False

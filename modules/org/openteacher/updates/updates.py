@@ -58,7 +58,10 @@ class UpdatesModule(object):
 		if self._updatesCache is not None:
 			return self._updatesCache
 		try:
-			lastUpdate = self._dataStore["org.openteacher.updates.lastUpdate"]
+			lastUpdate = datetime.datetime.strptime(
+				self._dataStore["org.openteacher.updates.lastUpdate"],
+				"%Y-%m-%dT%H:%M:%S.%f"
+			)
 		except KeyError:
 			lastUpdate = datetime.datetime.min
 		self._downloadUpdates()
@@ -79,7 +82,6 @@ class UpdatesModule(object):
 		verified = self._gpg.verify_file(asc, self._mm.resourcePath("update.zip"))
 		if verified != 0:
 			raise ValueError("No valid signature!")
-		#FIXME: use moduleInstaller?
 		updatesZip = zipfile.ZipFile(self._mm.resourcePath("update.zip"), "r")
 		updatesZip.extractall(self._mm.modulesPath) #FIXME: check if all paths aren't outside the path given, just in case.
 		os.remove(self._mm.resourcePath("update.zip"))
@@ -87,8 +89,12 @@ class UpdatesModule(object):
 	def update(self):
 		for update in self.updates:
 			self._installUpdate(update["link"], update["signature"])
-			self._dataStore["org.openteacher.updates.lastUpdate"] = update["timestamp"]
-		#FIXME: restart OpenTeacher
+			self._dataStore["org.openteacher.updates.lastUpdate"] = datetime.datetime.strftime(
+				update["timestamp"],
+				"%Y-%m-%dT%H:%M:%S.%f"
+			)
+		#Done installing updates, inform caller to restart in order for the changes to take effect.
+		raise SystemExit("Updates installed, please restart.")
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

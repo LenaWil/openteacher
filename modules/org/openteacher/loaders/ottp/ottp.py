@@ -42,13 +42,32 @@ class OpenTeachingTopoLoaderModule(object):
 		self.requires = (
 			self._mm.mods(type="otxxLoader"),
 		)
+		self.filesWithTranslations = ("ottp.py",)
+
+	def _retranslate(self):
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("Open Teaching Topography")
 
 	def enable(self):
-		self.name = "Open Teaching Topography"
 		self.loads = {"ottp": ["topo"]}
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._otxxLoader = self._modules.default("active", type="otxxLoader")
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 
 		self.active = True
 

@@ -38,11 +38,33 @@ class Teach2000SaverModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
+		self.filesWithTranslations = ("t2k.py",)
+
+	def _retranslate(self):
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		#TRANSLATORS: This is the name of an application. For more info
+		#about Teach2000: http://www.teach2000.org/
+		self.name = _("Teach2000")
 
 	def enable(self):
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._pyratemp = self._mm.import_("pyratemp")
-		self.name = "Teach2000"
 		self.saves = {"words": ["t2k"]}
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 
 		self.active = True
 

@@ -18,13 +18,13 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-#FIXME: python 3.x/openteacher.py doesn't work correctly now for this module.
 import webbrowser
 import cherrypy
 import inspect
 import os
 import types
 import mimetypes
+import sys
 
 class ModulesHandler(object):
 	def __init__(self, moduleManager, templates, *args, **kwargs):
@@ -33,7 +33,11 @@ class ModulesHandler(object):
 		self._mm = moduleManager
 		self._mods = {}
 		for mod in self._mm.mods:
-			id = os.path.split(mod.__class__.__file__)[0]
+			#get the path of the module
+			id = os.path.dirname(mod.__class__.__file__)
+			#make sure the path is relative to the modules root for easier recognition
+			common = os.path.commonprefix([sys.argv[0], id])
+			id = id[len(common):]
 			self._mods[id] = mod
 		self._templates = templates
 

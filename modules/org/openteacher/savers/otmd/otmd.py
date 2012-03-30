@@ -50,14 +50,30 @@ class OpenTeachingMediaSaverModule(object):
 			self._mm.mods(type="translator"),
 			self._mm.mods(type="settings"),
 		)
+		self.filesWithTranslations = ("otmd.py",)
+
+	def _retranslate(self):
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("Open Teaching Media")
+		self._compressionSetting.update({
+			"name": "Enable compression",
+			"category": "Media Lesson",
+			"subcategory": ".otmd saving",
+		})
 
 	def enable(self):		
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._otxxSaver = self._modules.default("active", type="otxxSaver")
 
-		self.name = "Open Teaching Media"
 		self.saves = {"media": ["otmd"]}
-		
+
 		try:
 			self._settings = self._modules.default(type="settings")
 		except IndexError, e:
@@ -66,14 +82,19 @@ class OpenTeachingMediaSaverModule(object):
 		else:
 			self._compressionSetting = self._settings.registerSetting(**{
 				"internal_name": "org.openteacher.savers.otmd.compression",
-				"name": "Enable compression",
 				"type": "boolean",
-				"category": "Media Lesson",
-				"subcategory": ".otmd saving",
 				"defaultValue": True,
 				"advanced": True,
 			})
-		
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.active = True
 
 	def disable(self):

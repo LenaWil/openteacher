@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -51,13 +51,22 @@ class MetadataModule(object):
 				self._mm.resourcePath("translations")
 			)
 		self.metadata = {
+			#TRANSLATORS: OpenTeacher is a name, so please only
+			#translate or transliterate it if you've got a good reason
+			#to do so.
 			"name": _("OpenTeacher"),
 			"slogan": _("The easiest way to learn a new language"),
 			"version": _("3.x"),
 			"authors": _("OpenTeacher authors"),
 			"copyrightYears": _("2008-2012"),
+			#TRANSLATORS: If you want to change this to another, e.g.
+			#localized website, please contact us
+			#(openteachermaintainers@lists.launchpad.net) first.
 			"website": _("http://openteacher.org/"),
 			"email": "openteachermaintainers@lists.launchpad.net",
+			#TRANSLATORS: If you want to change this to another, e.g.
+			#localized website, please contact us
+			#(openteachermaintainers@lists.launchpad.net) first.
 			"documentationUrl": _("http://openteacher.org/documentation.html"),
 			"updatesUrl": "http://openteacher.org/updates/updates.json",
 			"updatesSignatureUrl": "http://openteacher.org/updates/updates.json.asc",

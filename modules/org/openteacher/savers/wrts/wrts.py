@@ -43,12 +43,33 @@ class WrtsSaverModule(object):
 		self.requires = (
 			self._mm.mods(type="wordsStringComposer"),
 		)
+		self.filesWithTranslations = ("wrts.py",)
+
+	def _retranslate(self):
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		#TRANSLATORS: WRDS is the name of a web service. Also known as
+		#WRTS (the Dutch name). International website: http://wrds.eu/
+		self.name = _("WRDS")
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.name = "WRDS"
 		self._pyratemp = self._mm.import_("pyratemp")
 		self.saves = {"words": ["wrts"]}
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 
 		self.active = True
 

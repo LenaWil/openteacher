@@ -23,99 +23,14 @@ from PyQt4 import QtCore, QtGui
 
 import threading
 
-_, ngettext = unicode, lambda x, y, n: x if n == 1 else y #FIXME, including retranslation
-
-#class UpdatesListModel(QtCore.QAbstractTableModel):
-#	def __init__(self, updates, *args, **kwargs):
-#		super(UpdatesListModel, self).__init__(*args, **kwargs)
-#		
-#		self._updates = updates
-#		for update in self._updates:
-#			update["toBeInstalled"] = QtCore.Qt.Checked
-#
-#	def columnCount(self, parent):
-#		return 2
-#
-#	def rowCount(self, parent):
-#		return len(self._updates)
-#
-#	def flags(self, *args, **kwargs):
-#		return (
-#			super(UpdatesListModel, self).flags(*args, **kwargs) |
-#			QtCore.Qt.ItemIsUserCheckable
-#		)
-#
-#	def data(self, index, role=QtCore.Qt.DisplayRole):
-#		if not index.isValid():
-#			return
-#		update = self._updates[index.row()]
-#		if role == QtCore.Qt.CheckStateRole:
-#			return update["toBeInstalled"]
-#		elif role == QtCore.Qt.DisplayRole:
-#			if index.column() == 0:
-#				return "\n".join([
-#					update["name"],
-#					update["timestamp"].strftime("%x")
-#				])
-#			elif index.column() == 1:
-#				return update["description"]
-#
-#	def setData(self, index, value, role=QtCore.Qt.EditRole):
-#		if not index.isValid() or role != QtCore.Qt.CheckStateRole:
-#			return False
-#
-#		self._updates[index.row()]["toBeInstalled"] = value
-#		return True
-#
-#class UpdatesDialog(QtGui.QDialog):
-#	def __init__(self, updates, *args, **kwargs):
-#		super(UpdatesDialog, self).__init__(*args, **kwargs)
-#
-#		self.descriptionWidget = QtGui.QLabel()
-#		self.descriptionWidget.setWordWrap(True)
-#		self.model = UpdatesListModel(updates)
-#
-#		listView = QtGui.QListView()
-#		listView.setModel(self.model)
-#		listView.selectionModel().currentChanged.connect(
-#			self.updateDescription
-#		)
-#
-#		splitter = QtGui.QSplitter()
-#		splitter.addWidget(listView)
-#		splitter.addWidget(self.descriptionWidget)
-#
-#		buttonBox = QtGui.QDialogButtonBox()
-#		buttonBox.addButton(_("Install selection"), QtGui.QDialogButtonBox.AcceptRole)
-#		buttonBox.addButton(QtGui.QDialogButtonBox.Cancel)
-#
-#		buttonBox.accepted.connect(self.accept)
-#		buttonBox.rejected.connect(self.reject)
-#
-#		layout = QtGui.QVBoxLayout()
-#		layout.addWidget(splitter)
-#		layout.addWidget(buttonBox)
-#		self.setLayout(layout)
-#
-#		self.setWindowTitle(_("Updates"))
-#
-#	def updateDescription(self, new, old):
-#		i = self.model.createIndex(new.row(), 1)
-#		try:
-#			self.descriptionWidget.setText(self.model.data(i))
-#		except TypeError:
-#			pass
-
 class UpdatesDialog(QtGui.QDialog):
 	def __init__(self, updates, rememberChoice, *args, **kwargs):
 		super(UpdatesDialog, self).__init__(*args, **kwargs)
 
-		label = QtGui.QLabel(ngettext(
-			"There is %s update available, do you want to update?",
-			"There are %s updates available, do you want to update?",
-			len(updates)
-		) % len(updates))
-		self.checkBox = QtGui.QCheckBox(_("Remember my choice"))
+		self._updatesLength = len(updates)
+
+		self.label = QtGui.QLabel()
+		self.checkBox = QtGui.QCheckBox()
 		self.checkBox.setChecked(rememberChoice)
 		buttonBox = QtGui.QDialogButtonBox(
 			QtGui.QDialogButtonBox.No |
@@ -127,24 +42,37 @@ class UpdatesDialog(QtGui.QDialog):
 		buttonBox.rejected.connect(self.reject)
 
 		layout = QtGui.QVBoxLayout()
-		layout.addWidget(label)
+		layout.addWidget(self.label)
 		layout.addStretch()
 		layout.addWidget(self.checkBox)
 		layout.addWidget(buttonBox)
 		
 		self.setLayout(layout)
+
+	def retranslate(self):
 		self.setWindowTitle(ngettext(
 			"Update available",
 			"Updates available",
-			len(updates)
+			self._updatesLength
 		))
+		self.label.setText(ngettext(
+			"There is %s update available, do you want to update?",
+			"There are %s updates available, do you want to update?",
+			self._updatesLength
+		) % self._updatesLength)
+		self.checkBox.setText(_("Remember my choice"))
 
 	@property
 	def rememberChoice(self):
 		return self.checkBox.isChecked()
 
-class UpdatesDialogModule(QtCore.QObject):
-	_finishedFetching = QtCore.pyqtSignal()
+class UpdatesDialogModule(object):
+	#Separate class, so the namespace isn't cluttered.
+	class _Signals(QtCore.QObject):
+		finishedFetching = QtCore.pyqtSignal()
+	#one time instance, so overwrite the class
+	_Signals = _Signals()
+
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(UpdatesDialogModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
@@ -157,36 +85,71 @@ class UpdatesDialogModule(QtCore.QObject):
 		)
 		self.uses = (
 			self._mm.mods(type="settings"),
+			self._mm.mods(type="translator"),
 		)
+		self.filesWithTranslations = ("updates.py",)
+
+	def _retranslate(self):
+		#Translations
+		global _
+		global ngettext
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+
+		if hasattr(self, "_ud"):
+			#if update dialog opened, retranslate
+			self._ud.retranslate()
+		if hasattr(self, "_tab"):
+			#same situation
+			self._tab.title = _("Updates")
+
+		self._rememberChoiceSetting.update({
+			"name": _("Remember if I want to install updates or not"),
+			"category": _("Updates"),
+		})
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._dataStore = self._modules.default(type="dataStore").store
-		
+
 		try:
 			settings = self._modules.default(type="settings")
 		except IndexError, e:
-			self._rememberChoiceSetting = dict()
-			self._rememberChoiceSetting["value"] = False
+			self._rememberChoiceSetting = {
+				"value": False,
+			}
 		else:
-			self._rememberChoiceSetting = settings.registerSetting(**{#FIXME: translate all these...
+			self._rememberChoiceSetting = settings.registerSetting(**{
 				"internal_name": "org.openteacher.updatesDialog.rememberChoice",
-				"name": "Remember if the user wants to install updates or not",
 				"type": "boolean",
-				"category": "Updates",
 				"defaultValue": False,
 			})
-		
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self._dataStore["org.openteacher.updatesDialog.userDidUpdatesLastTime"] = False
 		self.active = True
-		
-		self._finishedFetching.connect(self.__enable)
-		
+
+		self._Signals.finishedFetching.connect(self._showUpdatesDialog)
+
 		# Fetch updates thread
-		t = threading.Thread(target=self._enable)
+		t = threading.Thread(target=self._checkUpdates)
 		t.start()
-	
-	def _enable(self):
+
+	def _checkUpdates(self):
 		if self._rememberChoiceSetting["value"] and not self._dataStore["org.openteacher.updatesDialog.userDidUpdatesLastTime"]:
 			#The user doesn't want to be bothered with updates
 			return
@@ -194,29 +157,32 @@ class UpdatesDialogModule(QtCore.QObject):
 		try:
 			self._updates = self._updatesMod.updates
 		except IOError:
-			return #FIXME possibly :P
+			#error downloading updates, silently fail.
+			return
 
 		if not self._updates:
 			return
-		
-		self._finishedFetching.emit()
+
+		self._Signals.finishedFetching.emit()
 	
-	def __enable(self):
-		#FIXME: should the updatesDialog check for new updates, or another module?
+	def _showUpdatesDialog(self):
 		if self._rememberChoiceSetting["value"] and self._dataStore["org.openteacher.updatesDialog.userDidUpdatesLastTime"]:
 			self._updatesMod.update()
 		else:
 			self._ud = UpdatesDialog(self._updates, self._rememberChoiceSetting["value"])
 			self._tab = self._modules.default("active", type="ui").addCustomTab(self._ud)
-			self._tab.title = "Updates"#FIXME: retranslate, including dialog itself
 			self._tab.closeRequested.handle(self._ud.rejected.emit)
 			self._ud.accepted.connect(self._accepted)
 			self._ud.rejected.connect(self._rejected)
+			self._retranslate()
 
 	def _accepted(self):
 		self._rememberChoiceSetting["value"] = self._ud.rememberChoice
 		self._tab.close()
-		self._updatesMod.update()
+		try:
+			self._updatesMod.update()
+		except SystemExit:
+			QtGui.QMessageBox.information(None, _("Updating completed"), _("All updates were succesfully installed. In order for the changes to take effect, please restart the application."))
 		self._dataStore["org.openteacher.updatesDialog.userDidUpdatesLastTime"] = True
 
 	def _rejected(self):
