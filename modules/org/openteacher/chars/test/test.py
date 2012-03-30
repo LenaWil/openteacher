@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -20,47 +20,15 @@
 
 import unittest
 
-class WordsStringParserTestCase(unittest.TestCase):
-	def _test(self, input, output):
-		for mod in self._mm.mods("active", type="wordsStringParser"):
-			data = mod.parse(input)
-			self.assertEqual(data, output)
+class TestCase(unittest.TestCase):
+	def testAmountOfColumns(self):
+		for mod in self._mm.mods("active", type="chars"):
+			for row in mod.data:
+				self.assertEquals(len(row), 6)
 
-	def testSingleWord(self):
-		self._test(
-			u"one",
-			[(u"one",)]
-		)
-
-	def testMultipleWords(self):
-		self._test(
-			u"one, two",
-			[(u"one", u"two")]
-		)
-	
-	def testObligatoryWords(self):
-		self._test(
-			u"1. one 2. two",
-			[(u"one",), (u"two",)]
-		)
-	
-	def testObligatoryAndMultipleWords(self):
-		self._test(
-			u"1. one, uno 2. two",
-			[(u"one", u"uno"), (u"two",)]
-		)
-
-	def testWrongObligatoryNumbers(self):
-		self._test(
-			u"1. one 3. two",
-			[(u"one",), (u"two",)]
-		)
-
-	def testNonASCIILetters(self):
-		self._test(
-			u"être",
-			[(u"être",)]
-		)
+	def testRowLengthNotZero(self):
+		for mod in self._mm.mods("active", type="chars"):
+			self.assertFalse(len(mod.data) == 0)
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -69,11 +37,11 @@ class TestModule(object):
 
 		self.type = "test"
 		self.uses = (
-			self._mm.mods(type="wordsStringParser"),
+			self._mm.mods(type="chars"),
 		)
 
 	def enable(self):
-		self.TestCase = WordsStringParserTestCase
+		self.TestCase = TestCase
 		self.TestCase._mm = self._mm
 		self.active = True
 

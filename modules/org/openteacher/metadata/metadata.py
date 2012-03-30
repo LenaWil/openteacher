@@ -55,7 +55,7 @@ class MetadataModule(object):
 			"slogan": _("The easiest way to learn a new language"),
 			"version": _("3.x"),
 			"authors": _("OpenTeacher authors"),
-			"copyrightYears": _("2008-2011"),
+			"copyrightYears": _("2008-2012"),
 			"website": _("http://openteacher.org/"),
 			"email": "openteachermaintainers@lists.launchpad.net",
 			"documentationUrl": _("http://openteacher.org/documentation.html"),

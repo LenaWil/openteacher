@@ -56,7 +56,8 @@ class WordsStringCheckerTestCase(unittest.TestCase):
 		self._test(u"1. in, op, bij 2. tijdens", self.word1, "right")
 
 	def testFullAnswerWithExtraWrongWords(self):
-		#gelijktijdig met isn't in the answers (however it's possibly right.)
+		#gelijktijdig met isn't in the answers (however it's possibly
+		#right linguistically seen.)
 		self._test(u"1. in, op, bij 2. tijdens, gelijktijdig met", self.word1, "wrong")
 
 	def testWordsInWeirdOrder(self):
