@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-03-31 20:57+0200\n"
 "PO-Revision-Date: 2011-08-02 11:12+0000\n"
 "Last-Translator: Alexander Suchan <supersasho@gmail.com>\n"
 "Language-Team: Slovak <sk@li.org>\n"
@@ -22,83 +22,106 @@ msgstr ""
 msgid "Open from file"
 msgstr ""
 
+#: ui.py:33
+msgid "Close Tab"
+msgstr "Zatvoriť záložku"
+
+#: ui.py:80
+msgid "Enter list"
+msgstr "Vstúp do zoznamu"
+
+#: ui.py:82
+msgid "Teach me!"
+msgstr "Nauč ma!"
+
+#: ui.py:84
+msgid "Show results"
+msgstr ""
+
+#: ui.py:195
+msgid "Create lesson:"
+msgstr "Vytvor lekciu"
+
+#: ui.py:196
+msgid "Load lesson:"
+msgstr "Načítaj lekciu"
+
+#: ui.py:198
+msgid "Recently opened:"
+msgstr "Nedávno otvorené"
+
+#: ui.py:447
+msgid "&File"
+msgstr "&Súbor"
+
+#: ui.py:448
+msgid "&New"
+msgstr "&Nový"
+
+#: ui.py:449
+msgid "&Open"
+msgstr "&Otvoriť"
+
+#: ui.py:450
+msgid "&Save"
+msgstr "&Uložiť"
+
+#: ui.py:451
+msgid "Save &As"
+msgstr "Uložiť &ako"
+
+#: ui.py:452
+msgid "&Print"
+msgstr "&Tlač"
+
+#: ui.py:453
+msgid "&Quit"
+msgstr "&Zavrieť"
+
+#: ui.py:455
+msgid "&Edit"
+msgstr "&Upraviť"
+
+#: ui.py:456
+msgid "&Settings"
+msgstr "&Nastavenia"
+
+#: ui.py:458
+msgid "&Help"
+msgstr "&Nápoveda"
+
+#: ui.py:459
+msgid "&Documentation"
+msgstr "&Dokumentácia"
+
+#: ui.py:460
+msgid "&About"
+msgstr "&O programe"
+
+#: ui.py:462
+msgid "Toolbar"
+msgstr "Panel nástrojov"
+
 #~ msgid "Choose file to save"
 #~ msgstr "Vyber subor na uloženie"
 
 #~ msgid "Choose file to open"
 #~ msgstr "Vyberte súbor k otvoreniu"
 
-#~ msgid "Close Tab"
-#~ msgstr "Zatvoriť záložku"
-
-#~ msgid "Enter list"
-#~ msgstr "Vstúp do zoznamu"
-
-#~ msgid "Teach me!"
-#~ msgstr "Nauč ma!"
-
-#~ msgid "Create lesson:"
-#~ msgstr "Vytvor lekciu"
-
-#~ msgid "Load lesson:"
-#~ msgstr "Načítaj lekciu"
-
-#~ msgid "Recently opened:"
-#~ msgstr "Nedávno otvorené"
-
-#~ msgid "&File"
-#~ msgstr "&Súbor"
-
-#~ msgid "&New"
-#~ msgstr "&Nový"
-
 #~ msgid "Ctrl+N"
 #~ msgstr "Ctrl+N"
-
-#~ msgid "&Open"
-#~ msgstr "&Otvoriť"
 
 #~ msgid "Ctrl+O"
 #~ msgstr "Ctrl+O"
 
-#~ msgid "&Save"
-#~ msgstr "&Uložiť"
-
 #~ msgid "Ctrl+S"
 #~ msgstr "Ctrl+S"
-
-#~ msgid "Save &As"
-#~ msgstr "Uložiť &ako"
 
 #~ msgid "Ctrl+Shift+S"
 #~ msgstr "Ctrl+Shift+S"
 
-#~ msgid "&Print"
-#~ msgstr "&Tlač"
-
 #~ msgid "Ctrl+P"
 #~ msgstr "Ctrl+P"
 
-#~ msgid "&Quit"
-#~ msgstr "&Zavrieť"
-
 #~ msgid "Ctrl+Q"
 #~ msgstr "Ctrl+Q"
-
-#~ msgid "&Edit"
-#~ msgstr "&Upraviť"
-
-#~ msgid "&Settings"
-#~ msgstr "&Nastavenia"
-
-#~ msgid "&Help"
-#~ msgstr "&Nápoveda"
-
-#~ msgid "&Documentation"
-#~ msgstr "&Dokumentácia"
-
-#~ msgid "&About"
-#~ msgstr "&O programe"
-
-#~ msgid "Toolbar"
-#~ msgstr "Panel nástrojov"

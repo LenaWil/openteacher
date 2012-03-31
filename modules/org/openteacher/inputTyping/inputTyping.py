@@ -179,7 +179,7 @@ class InputTypingModule(object):
 			self._mm.mods(type="wordsStringChecker"),
 			self._mm.mods(type="wordsStringComposer"),
 		)
-		self.filesWithTranslations = ["inputTyping.py"]
+		self.filesWithTranslations = ("inputTyping.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

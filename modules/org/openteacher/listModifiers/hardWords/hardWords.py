@@ -28,7 +28,7 @@ class HardWordsModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ["hardWords.py"]
+		self.filesWithTranslations = ("hardWords.py",)
 
 	def modifyList(self, indexes, list):
 		self._list = list

@@ -43,7 +43,7 @@ class TypingTeachTypeModule(object):
 			"codedocumentation": 465,
 			"all": 465,
 		}
-		self.filesWithTranslations = ["typing.py"]
+		self.filesWithTranslations = ("typing.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

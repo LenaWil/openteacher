@@ -119,7 +119,7 @@ class GuiModule(object):
 			self._mm.mods(type="recentlyOpenedViewer"),
 			self._mm.mods(type="settings"),
 		)
-		self.filesWithTranslations = ["gui.py"]
+		self.filesWithTranslations = ("gui.py", "ui.py")
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

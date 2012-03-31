@@ -381,10 +381,9 @@ class WordsTeacherModule(object):
 			#FIXME from here on: should these items be in the settings
 			#dialog (since they're already on the teach settings widget)
 			self._mm.mods(type="lessonType"),
-			self._mm.mods(type="lessonType"),
 			self._mm.mods(type="teachType"),
 		)
-		self.filesWithTranslations = ["words.py"]
+		self.filesWithTranslations = ("words.py",)
 
 	def createWordsTeacher(self):
 		tw = TeachWidget(self._modules, self._onscreenKeyboard, self._applicationActivityChanged)

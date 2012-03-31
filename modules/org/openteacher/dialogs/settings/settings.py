@@ -160,7 +160,7 @@ class SettingsDialogModule(object):
 			self._mm.mods(type="settingsWidgets"),
 			self._mm.mods(type="settingsFilterer"),
 		)
-		self.filesWithTranslations = ["settings.py"]
+		self.filesWithTranslations = ("settings.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

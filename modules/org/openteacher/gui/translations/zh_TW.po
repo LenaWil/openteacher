@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-03-31 20:57+0200\n"
 "PO-Revision-Date: 2011-12-11 14:59+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
@@ -22,83 +22,106 @@ msgstr ""
 msgid "Open from file"
 msgstr ""
 
+#: ui.py:33
+msgid "Close Tab"
+msgstr "關閉分頁"
+
+#: ui.py:80
+msgid "Enter list"
+msgstr "輸入列表"
+
+#: ui.py:82
+msgid "Teach me!"
+msgstr "教我！"
+
+#: ui.py:84
+msgid "Show results"
+msgstr ""
+
+#: ui.py:195
+msgid "Create lesson:"
+msgstr "建立課程："
+
+#: ui.py:196
+msgid "Load lesson:"
+msgstr "載入課程："
+
+#: ui.py:198
+msgid "Recently opened:"
+msgstr "最近開啟檔案："
+
+#: ui.py:447
+msgid "&File"
+msgstr "檔案（&F）"
+
+#: ui.py:448
+msgid "&New"
+msgstr "新建(&N)..."
+
+#: ui.py:449
+msgid "&Open"
+msgstr "開啟 (&O)"
+
+#: ui.py:450
+msgid "&Save"
+msgstr "儲存(&S)..."
+
+#: ui.py:451
+msgid "Save &As"
+msgstr "另存新檔(&A)"
+
+#: ui.py:452
+msgid "&Print"
+msgstr "列印(&P)"
+
+#: ui.py:453
+msgid "&Quit"
+msgstr "結束(&Q)"
+
+#: ui.py:455
+msgid "&Edit"
+msgstr "編輯 (&E)"
+
+#: ui.py:456
+msgid "&Settings"
+msgstr "設置(&S)"
+
+#: ui.py:458
+msgid "&Help"
+msgstr "幫助(&H)"
+
+#: ui.py:459
+msgid "&Documentation"
+msgstr "說明文件(&D)"
+
+#: ui.py:460
+msgid "&About"
+msgstr "關於(&A)"
+
+#: ui.py:462
+msgid "Toolbar"
+msgstr "工具列"
+
 #~ msgid "Choose file to save"
 #~ msgstr "選擇檔案儲存"
 
 #~ msgid "Choose file to open"
 #~ msgstr "選擇檔案開啟"
 
-#~ msgid "Close Tab"
-#~ msgstr "關閉分頁"
-
-#~ msgid "Enter list"
-#~ msgstr "輸入列表"
-
-#~ msgid "Teach me!"
-#~ msgstr "教我！"
-
-#~ msgid "Create lesson:"
-#~ msgstr "建立課程："
-
-#~ msgid "Load lesson:"
-#~ msgstr "載入課程："
-
-#~ msgid "Recently opened:"
-#~ msgstr "最近開啟檔案："
-
-#~ msgid "&File"
-#~ msgstr "檔案（&F）"
-
-#~ msgid "&New"
-#~ msgstr "新建(&N)..."
-
 #~ msgid "Ctrl+N"
 #~ msgstr "Ctrl+N"
-
-#~ msgid "&Open"
-#~ msgstr "開啟 (&O)"
 
 #~ msgid "Ctrl+O"
 #~ msgstr "Ctrl+O"
 
-#~ msgid "&Save"
-#~ msgstr "儲存(&S)..."
-
 #~ msgid "Ctrl+S"
 #~ msgstr "Ctrl+S"
-
-#~ msgid "Save &As"
-#~ msgstr "另存新檔(&A)"
 
 #~ msgid "Ctrl+Shift+S"
 #~ msgstr "Ctrl+Shift+S"
 
-#~ msgid "&Print"
-#~ msgstr "列印(&P)"
-
 #~ msgid "Ctrl+P"
 #~ msgstr "Ctrl+P"
 
-#~ msgid "&Quit"
-#~ msgstr "結束(&Q)"
-
 #~ msgid "Ctrl+Q"
 #~ msgstr "Ctrl+Q"
-
-#~ msgid "&Edit"
-#~ msgstr "編輯 (&E)"
-
-#~ msgid "&Settings"
-#~ msgstr "設置(&S)"
-
-#~ msgid "&Help"
-#~ msgstr "幫助(&H)"
-
-#~ msgid "&Documentation"
-#~ msgstr "說明文件(&D)"
-
-#~ msgid "&About"
-#~ msgstr "關於(&A)"
-
-#~ msgid "Toolbar"
-#~ msgstr "工具列"

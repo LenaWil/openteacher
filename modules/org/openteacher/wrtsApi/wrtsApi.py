@@ -37,7 +37,7 @@ class WrtsApiModule(object):
 			self._mm.mods(type="lessonTracker"),
 			self._mm.mods(type="wordsStringComposer"),
 		)
-		self.filesWithTranslations = ["wrtsApi.py", "ui.py"]
+		self.filesWithTranslations = ("wrtsApi.py", "ui.py")
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

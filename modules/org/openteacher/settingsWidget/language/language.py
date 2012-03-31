@@ -50,7 +50,7 @@ class SettingsWidgetModule(object):
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ["language.py"]
+		self.filesWithTranslations = ("language.py",)
 
 	@property
 	def _languages(self):

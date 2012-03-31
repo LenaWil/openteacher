@@ -32,7 +32,7 @@ class SymbolsModule(object):
 			self._mm.mods(type="settings"),
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ["symbols.py"]
+		self.filesWithTranslations = ("symbols.py",)
 
 	def sendUpdated(self):
 		"""Wrapper for the settings callback"""

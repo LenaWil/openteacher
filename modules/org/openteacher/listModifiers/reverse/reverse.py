@@ -29,7 +29,7 @@ class ReverseModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ["reverse.py"]
+		self.filesWithTranslations = ("reverse.py",)
 
 	def modifyList(self, indexes, list):
 		#always work on the indexes, and return a list object

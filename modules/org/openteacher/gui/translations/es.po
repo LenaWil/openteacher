@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-03-31 20:57+0200\n"
 "PO-Revision-Date: 2011-11-15 16:18+0000\n"
 "Last-Translator: Fitoschido <fitoschido@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -22,83 +22,106 @@ msgstr ""
 msgid "Open from file"
 msgstr ""
 
+#: ui.py:33
+msgid "Close Tab"
+msgstr "Cerrar pestaña"
+
+#: ui.py:80
+msgid "Enter list"
+msgstr "Introduzca una lista"
+
+#: ui.py:82
+msgid "Teach me!"
+msgstr "¡Enséñeme!"
+
+#: ui.py:84
+msgid "Show results"
+msgstr ""
+
+#: ui.py:195
+msgid "Create lesson:"
+msgstr "Crear lección:"
+
+#: ui.py:196
+msgid "Load lesson:"
+msgstr "Cargar lección:"
+
+#: ui.py:198
+msgid "Recently opened:"
+msgstr "Abiertos recientemente:"
+
+#: ui.py:447
+msgid "&File"
+msgstr "&Archivo"
+
+#: ui.py:448
+msgid "&New"
+msgstr "&Nuevo"
+
+#: ui.py:449
+msgid "&Open"
+msgstr "&Abrir"
+
+#: ui.py:450
+msgid "&Save"
+msgstr "&Guardar"
+
+#: ui.py:451
+msgid "Save &As"
+msgstr "Guardar &como"
+
+#: ui.py:452
+msgid "&Print"
+msgstr "&Imprimir"
+
+#: ui.py:453
+msgid "&Quit"
+msgstr "&Salir"
+
+#: ui.py:455
+msgid "&Edit"
+msgstr "&Editar"
+
+#: ui.py:456
+msgid "&Settings"
+msgstr "&Preferencias"
+
+#: ui.py:458
+msgid "&Help"
+msgstr "Ay&uda"
+
+#: ui.py:459
+msgid "&Documentation"
+msgstr "&Documentación"
+
+#: ui.py:460
+msgid "&About"
+msgstr "&Acerca de"
+
+#: ui.py:462
+msgid "Toolbar"
+msgstr "Barra de herramientas"
+
 #~ msgid "Choose file to save"
 #~ msgstr "Elija el archivo a guardar"
 
 #~ msgid "Choose file to open"
 #~ msgstr "Elija el archivo a abrir"
 
-#~ msgid "Close Tab"
-#~ msgstr "Cerrar pestaña"
-
-#~ msgid "Enter list"
-#~ msgstr "Introduzca una lista"
-
-#~ msgid "Teach me!"
-#~ msgstr "¡Enséñeme!"
-
-#~ msgid "Create lesson:"
-#~ msgstr "Crear lección:"
-
-#~ msgid "Load lesson:"
-#~ msgstr "Cargar lección:"
-
-#~ msgid "Recently opened:"
-#~ msgstr "Abiertos recientemente:"
-
-#~ msgid "&File"
-#~ msgstr "&Archivo"
-
-#~ msgid "&New"
-#~ msgstr "&Nuevo"
-
 #~ msgid "Ctrl+N"
 #~ msgstr "Ctrl+N"
-
-#~ msgid "&Open"
-#~ msgstr "&Abrir"
 
 #~ msgid "Ctrl+O"
 #~ msgstr "Ctrl+O"
 
-#~ msgid "&Save"
-#~ msgstr "&Guardar"
-
 #~ msgid "Ctrl+S"
 #~ msgstr "Ctrl+S"
-
-#~ msgid "Save &As"
-#~ msgstr "Guardar &como"
 
 #~ msgid "Ctrl+Shift+S"
 #~ msgstr "Ctrl+Mayús+S"
 
-#~ msgid "&Print"
-#~ msgstr "&Imprimir"
-
 #~ msgid "Ctrl+P"
 #~ msgstr "Ctrl+P"
 
-#~ msgid "&Quit"
-#~ msgstr "&Salir"
-
 #~ msgid "Ctrl+Q"
 #~ msgstr "Ctrl+Q"
-
-#~ msgid "&Edit"
-#~ msgstr "&Editar"
-
-#~ msgid "&Settings"
-#~ msgstr "&Preferencias"
-
-#~ msgid "&Help"
-#~ msgstr "Ay&uda"
-
-#~ msgid "&Documentation"
-#~ msgstr "&Documentación"
-
-#~ msgid "&About"
-#~ msgstr "&Acerca de"
-
-#~ msgid "Toolbar"
-#~ msgstr "Barra de herramientas"

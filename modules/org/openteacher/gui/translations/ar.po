@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-03-31 20:57+0200\n"
 "PO-Revision-Date: 2011-08-09 09:54+0000\n"
 "Last-Translator: elacheche <elachecheanis@gmail.com>\n"
 "Language-Team: Arabic <ar@li.org>\n"
@@ -22,83 +22,106 @@ msgstr ""
 msgid "Open from file"
 msgstr ""
 
+#: ui.py:33
+msgid "Close Tab"
+msgstr "إغلاق علامة التبويب"
+
+#: ui.py:80
+msgid "Enter list"
+msgstr "أدخل قائمة"
+
+#: ui.py:82
+msgid "Teach me!"
+msgstr "علّمني"
+
+#: ui.py:84
+msgid "Show results"
+msgstr ""
+
+#: ui.py:195
+msgid "Create lesson:"
+msgstr "إنشاء درس :"
+
+#: ui.py:196
+msgid "Load lesson:"
+msgstr "تحميل درس :"
+
+#: ui.py:198
+msgid "Recently opened:"
+msgstr "ما فتح مؤخّرا:"
+
+#: ui.py:447
+msgid "&File"
+msgstr "&ملف"
+
+#: ui.py:448
+msgid "&New"
+msgstr "&جديد"
+
+#: ui.py:449
+msgid "&Open"
+msgstr "&إفتح"
+
+#: ui.py:450
+msgid "&Save"
+msgstr "&حفظ"
+
+#: ui.py:451
+msgid "Save &As"
+msgstr "حفظ &تحت"
+
+#: ui.py:452
+msgid "&Print"
+msgstr "&طباعة"
+
+#: ui.py:453
+msgid "&Quit"
+msgstr "&إنهاء"
+
+#: ui.py:455
+msgid "&Edit"
+msgstr "&حرّر"
+
+#: ui.py:456
+msgid "&Settings"
+msgstr "&إعدادات"
+
+#: ui.py:458
+msgid "&Help"
+msgstr "&مساعدة"
+
+#: ui.py:459
+msgid "&Documentation"
+msgstr "&الوثائق"
+
+#: ui.py:460
+msgid "&About"
+msgstr "&حول"
+
+#: ui.py:462
+msgid "Toolbar"
+msgstr "شريط الأدوات"
+
 #~ msgid "Choose file to save"
 #~ msgstr "إختر ملف للحفظ"
 
 #~ msgid "Choose file to open"
 #~ msgstr "إختر ملف للفتح"
 
-#~ msgid "Close Tab"
-#~ msgstr "إغلاق علامة التبويب"
-
-#~ msgid "Enter list"
-#~ msgstr "أدخل قائمة"
-
-#~ msgid "Teach me!"
-#~ msgstr "علّمني"
-
-#~ msgid "Create lesson:"
-#~ msgstr "إنشاء درس :"
-
-#~ msgid "Load lesson:"
-#~ msgstr "تحميل درس :"
-
-#~ msgid "Recently opened:"
-#~ msgstr "ما فتح مؤخّرا:"
-
-#~ msgid "&File"
-#~ msgstr "&ملف"
-
-#~ msgid "&New"
-#~ msgstr "&جديد"
-
 #~ msgid "Ctrl+N"
 #~ msgstr "Ctrl+N"
-
-#~ msgid "&Open"
-#~ msgstr "&إفتح"
 
 #~ msgid "Ctrl+O"
 #~ msgstr "Ctrl+O"
 
-#~ msgid "&Save"
-#~ msgstr "&حفظ"
-
 #~ msgid "Ctrl+S"
 #~ msgstr "Ctrl+S"
-
-#~ msgid "Save &As"
-#~ msgstr "حفظ &تحت"
 
 #~ msgid "Ctrl+Shift+S"
 #~ msgstr "Ctrl+Shift+S"
 
-#~ msgid "&Print"
-#~ msgstr "&طباعة"
-
 #~ msgid "Ctrl+P"
 #~ msgstr "Ctrl+P"
 
-#~ msgid "&Quit"
-#~ msgstr "&إنهاء"
-
 #~ msgid "Ctrl+Q"
 #~ msgstr "Ctrl+Q"
-
-#~ msgid "&Edit"
-#~ msgstr "&حرّر"
-
-#~ msgid "&Settings"
-#~ msgstr "&إعدادات"
-
-#~ msgid "&Help"
-#~ msgstr "&مساعدة"
-
-#~ msgid "&Documentation"
-#~ msgstr "&الوثائق"
-
-#~ msgid "&About"
-#~ msgstr "&حول"
-
-#~ msgid "Toolbar"
-#~ msgstr "شريط الأدوات"

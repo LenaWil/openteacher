@@ -27,7 +27,7 @@ class SortModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ["sort.py"]
+		self.filesWithTranslations = ("sort.py",)
 
 	def modifyList(self, indexes, list):
 		def getFirstQuestion(word):

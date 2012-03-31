@@ -180,7 +180,7 @@ class IntervalModule(object):
 			self._mm.mods(type="translator"),
 			self._mm.mods(type="settings"),
 		)
-		self.filesWithTranslations = ["interval.py"]
+		self.filesWithTranslations = ("interval.py",)
 
 	def enable(self):
 		#Translations

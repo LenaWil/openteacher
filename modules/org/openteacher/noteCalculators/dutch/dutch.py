@@ -27,7 +27,7 @@ class DutchNoteCalculatorModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ["dutch.py"]
+		self.filesWithTranslations = ("dutch.py",)
 
 	def _formatNote(self, note):
 		if note == 10:

@@ -27,7 +27,7 @@ class MetadataModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ["metadata.py"]
+		self.filesWithTranslations = ("metadata.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

@@ -29,7 +29,7 @@ class RandomModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ["random_.py"]
+		self.filesWithTranslations = ("random_.py",)
 
 	def modifyList(self, indexes, list):
 		#always work on the indexes

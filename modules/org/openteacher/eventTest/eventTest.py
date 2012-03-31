@@ -22,12 +22,12 @@ import unittest
 
 class TestCase(unittest.TestCase):
 	def testSendEmptyEvent(self):
-		for e in self._mm.mods("active", type="event"):
+		for e in self._mm.mods(type="event"):
 			a = e.createEvent()
 			self.assertIsNone(a.send())
 
 	def testEvent(self):
-		for e in self._mm.mods("active", type="event"):
+		for e in self._mm.mods(type="event"):
 			def callback():
 				called["true"] = True
 				return 1
@@ -38,7 +38,7 @@ class TestCase(unittest.TestCase):
 			self.assertTrue(called["true"])
 
 	def testMultipleEvents(self):
-		for e in self._mm.mods("active", type="event"):
+		for e in self._mm.mods(type="event"):
 			def callback():
 				counter["value"] += 1
 			counter = {"value": 0}
@@ -52,7 +52,7 @@ class TestCase(unittest.TestCase):
 	def testAddRemoveEvent(self):
 		callback = lambda: None
 		callback2 = lambda: None
-		for e in self._mm.mods("active", type="event"):
+		for e in self._mm.mods(type="event"):
 			a = e.createEvent()
 			a.handle(callback)
 			a.handle(callback)
@@ -67,10 +67,24 @@ class TestCase(unittest.TestCase):
 			self.assertEquals(args, testArgs)
 			self.assertEquals(kwargs, testKwargs)
 
-		for e in self._mm.mods("active", type="event"):
+		for e in self._mm.mods(type="event"):
 			a = e.createEvent()
 			a.handle(callback)
 			a.send(*testArgs, **testKwargs)
+
+	def testRegisteringHandlerInsideHandler(self):
+		"""Expected behaviour is that it'll not call the newly
+		   registered handler, but that it won't crash either."""
+		def callback():
+			a.handle(callback3)
+
+		def callback3():
+			raise Exception("Shouldn't get here...")
+
+		for e in self._mm.mods(type="event"):
+			a = e.createEvent()
+			a.handle(callback)
+			a.send()
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

@@ -27,7 +27,7 @@ class ForeignKnownModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ["foreignKnown.py"]
+		self.filesWithTranslations = ("foreignKnown.py",)
 
 	def modifyItem(self, item):
 		#modify in place, because the caller is responsable for passing

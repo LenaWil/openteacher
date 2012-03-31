@@ -33,8 +33,8 @@ class PrintModule(object):
 			self._mm.mods(type="metadata"),
 			self._mm.mods(type="wordsHtmlGenerator"),
 		)
-		self.filesWithTranslations = ["words.py"]
-		
+		self.filesWithTranslations = ("words.py",)
+	
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 

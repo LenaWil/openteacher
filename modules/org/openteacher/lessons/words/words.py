@@ -113,7 +113,7 @@ class WordsLessonModule(object):
 			self._mm.mods(type="translator"),
 			self._mm.mods(type="testsViewer"),
 		)
-		self.filesWithTranslations = ["words.py"]
+		self.filesWithTranslations = ("words.py",)
 
 	def enable(self):
 		self.dataType = "words"

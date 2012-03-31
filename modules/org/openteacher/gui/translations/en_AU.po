@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-03-31 20:57+0200\n"
 "PO-Revision-Date: 2012-01-04 15:10+0000\n"
 "Last-Translator: Joel Pickett <jlkpcktt@gmail.com>\n"
 "Language-Team: English (Australia) <en_AU@li.org>\n"
@@ -22,83 +22,106 @@ msgstr ""
 msgid "Open from file"
 msgstr ""
 
+#: ui.py:33
+msgid "Close Tab"
+msgstr "Close Tab"
+
+#: ui.py:80
+msgid "Enter list"
+msgstr "Enter list"
+
+#: ui.py:82
+msgid "Teach me!"
+msgstr "Teach me!"
+
+#: ui.py:84
+msgid "Show results"
+msgstr ""
+
+#: ui.py:195
+msgid "Create lesson:"
+msgstr "Create lesson:"
+
+#: ui.py:196
+msgid "Load lesson:"
+msgstr "Load lesson:"
+
+#: ui.py:198
+msgid "Recently opened:"
+msgstr "Recently opened:"
+
+#: ui.py:447
+msgid "&File"
+msgstr "&File"
+
+#: ui.py:448
+msgid "&New"
+msgstr "&New"
+
+#: ui.py:449
+msgid "&Open"
+msgstr "&Open"
+
+#: ui.py:450
+msgid "&Save"
+msgstr "&Save"
+
+#: ui.py:451
+msgid "Save &As"
+msgstr "Save &As"
+
+#: ui.py:452
+msgid "&Print"
+msgstr "&Print"
+
+#: ui.py:453
+msgid "&Quit"
+msgstr "&Quit"
+
+#: ui.py:455
+msgid "&Edit"
+msgstr "&Edit"
+
+#: ui.py:456
+msgid "&Settings"
+msgstr "&Settings"
+
+#: ui.py:458
+msgid "&Help"
+msgstr "&Help"
+
+#: ui.py:459
+msgid "&Documentation"
+msgstr "&Documentation"
+
+#: ui.py:460
+msgid "&About"
+msgstr "&About"
+
+#: ui.py:462
+msgid "Toolbar"
+msgstr "Toolbar"
+
 #~ msgid "Choose file to save"
 #~ msgstr "Choose file to save"
 
 #~ msgid "Choose file to open"
 #~ msgstr "Choose file to open"
 
-#~ msgid "Close Tab"
-#~ msgstr "Close Tab"
-
-#~ msgid "Enter list"
-#~ msgstr "Enter list"
-
-#~ msgid "Teach me!"
-#~ msgstr "Teach me!"
-
-#~ msgid "Create lesson:"
-#~ msgstr "Create lesson:"
-
-#~ msgid "Load lesson:"
-#~ msgstr "Load lesson:"
-
-#~ msgid "Recently opened:"
-#~ msgstr "Recently opened:"
-
-#~ msgid "&File"
-#~ msgstr "&File"
-
-#~ msgid "&New"
-#~ msgstr "&New"
-
 #~ msgid "Ctrl+N"
 #~ msgstr "Ctrl+N"
-
-#~ msgid "&Open"
-#~ msgstr "&Open"
 
 #~ msgid "Ctrl+O"
 #~ msgstr "Ctrl+O"
 
-#~ msgid "&Save"
-#~ msgstr "&Save"
-
 #~ msgid "Ctrl+S"
 #~ msgstr "Ctrl+S"
-
-#~ msgid "Save &As"
-#~ msgstr "Save &As"
 
 #~ msgid "Ctrl+Shift+S"
 #~ msgstr "Ctrl+Shift+S"
 
-#~ msgid "&Print"
-#~ msgstr "&Print"
-
 #~ msgid "Ctrl+P"
 #~ msgstr "Ctrl+P"
 
-#~ msgid "&Quit"
-#~ msgstr "&Quit"
-
 #~ msgid "Ctrl+Q"
 #~ msgstr "Ctrl+Q"
-
-#~ msgid "&Edit"
-#~ msgstr "&Edit"
-
-#~ msgid "&Settings"
-#~ msgstr "&Settings"
-
-#~ msgid "&Help"
-#~ msgstr "&Help"
-
-#~ msgid "&Documentation"
-#~ msgstr "&Documentation"
-
-#~ msgid "&About"
-#~ msgstr "&About"
-
-#~ msgid "Toolbar"
-#~ msgstr "Toolbar"

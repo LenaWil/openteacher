@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.x\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-31 17:46+0200\n"
+"POT-Creation-Date: 2012-03-31 20:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,4 +19,84 @@ msgstr ""
 
 #: gui.py:286
 msgid "Open from file"
+msgstr ""
+
+#: ui.py:33
+msgid "Close Tab"
+msgstr ""
+
+#: ui.py:80
+msgid "Enter list"
+msgstr ""
+
+#: ui.py:82
+msgid "Teach me!"
+msgstr ""
+
+#: ui.py:84
+msgid "Show results"
+msgstr ""
+
+#: ui.py:195
+msgid "Create lesson:"
+msgstr ""
+
+#: ui.py:196
+msgid "Load lesson:"
+msgstr ""
+
+#: ui.py:198
+msgid "Recently opened:"
+msgstr ""
+
+#: ui.py:447
+msgid "&File"
+msgstr ""
+
+#: ui.py:448
+msgid "&New"
+msgstr ""
+
+#: ui.py:449
+msgid "&Open"
+msgstr ""
+
+#: ui.py:450
+msgid "&Save"
+msgstr ""
+
+#: ui.py:451
+msgid "Save &As"
+msgstr ""
+
+#: ui.py:452
+msgid "&Print"
+msgstr ""
+
+#: ui.py:453
+msgid "&Quit"
+msgstr ""
+
+#: ui.py:455
+msgid "&Edit"
+msgstr ""
+
+#: ui.py:456
+msgid "&Settings"
+msgstr ""
+
+#: ui.py:458
+msgid "&Help"
+msgstr ""
+
+#: ui.py:459
+msgid "&Documentation"
+msgstr ""
+
+#: ui.py:460
+msgid "&About"
+msgstr ""
+
+#: ui.py:462
+msgid "Toolbar"
 msgstr ""

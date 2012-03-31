@@ -28,7 +28,7 @@ class WordsNeverAnsweredCorrectlyModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ["wordsNeverAnsweredCorrectly.py"]
+		self.filesWithTranslations = ("wordsNeverAnsweredCorrectly.py",)
 
 	def modifyList(self, indexes, list):
 		self._list = list

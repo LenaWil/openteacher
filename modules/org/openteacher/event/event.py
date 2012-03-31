@@ -31,7 +31,7 @@ class Event(object):
 		self._handlers.remove(handler)
 
 	def send(self, *args, **kwargs):
-		for handler in self._handlers:
+		for handler in self._handlers.copy():
 			handler(*args, **kwargs)
 
 class EventModule(object):

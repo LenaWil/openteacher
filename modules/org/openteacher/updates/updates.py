@@ -49,7 +49,7 @@ class UpdatesModule(object):
 		"""Raises IOError and ValueError"""
 		self._download(self._metadata["updatesUrl"], self._mm.resourcePath("updates.json"))
 		asc = urllib2.urlopen(self._metadata["updatesSignatureUrl"])
-		verified = self._gpg.verify_file(asc, self._mm.resourcePath("updates.json"))
+		verified = self._gpg.verify_file(asc, open(self._mm.resourcePath("updates.json")))
 		if verified != 0:
 			raise ValueError("No valid signature!")
 
@@ -79,7 +79,7 @@ class UpdatesModule(object):
 		"""Raises IOError and ValueError"""
 		self._download(link, self._mm.resourcePath("update.zip"))
 		asc = urllib2.urlopen(signature)
-		verified = self._gpg.verify_file(asc, self._mm.resourcePath("update.zip"))
+		verified = self._gpg.verify_file(asc, open(self._mm.resourcePath("update.zip")))
 		if verified != 0:
 			raise ValueError("No valid signature!")
 		updatesZip = zipfile.ZipFile(self._mm.resourcePath("update.zip"), "r")

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-03-31 20:57+0200\n"
 "PO-Revision-Date: 2011-09-28 17:09+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,83 +22,106 @@ msgstr ""
 msgid "Open from file"
 msgstr ""
 
+#: ui.py:33
+msgid "Close Tab"
+msgstr "Sluit Tab"
+
+#: ui.py:80
+msgid "Enter list"
+msgstr "Voeg toe"
+
+#: ui.py:82
+msgid "Teach me!"
+msgstr "Overhoor me!"
+
+#: ui.py:84
+msgid "Show results"
+msgstr ""
+
+#: ui.py:195
+msgid "Create lesson:"
+msgstr "Maak een les aan:"
+
+#: ui.py:196
+msgid "Load lesson:"
+msgstr "Laad een les:"
+
+#: ui.py:198
+msgid "Recently opened:"
+msgstr "Recent geopend:"
+
+#: ui.py:447
+msgid "&File"
+msgstr "&Bestand"
+
+#: ui.py:448
+msgid "&New"
+msgstr "&Nieuw"
+
+#: ui.py:449
+msgid "&Open"
+msgstr "&Open"
+
+#: ui.py:450
+msgid "&Save"
+msgstr "&Opslaan"
+
+#: ui.py:451
+msgid "Save &As"
+msgstr "Opslaan &Als"
+
+#: ui.py:452
+msgid "&Print"
+msgstr "&Print"
+
+#: ui.py:453
+msgid "&Quit"
+msgstr "A&fsluiten"
+
+#: ui.py:455
+msgid "&Edit"
+msgstr "B&ewerken"
+
+#: ui.py:456
+msgid "&Settings"
+msgstr "&Instellingen"
+
+#: ui.py:458
+msgid "&Help"
+msgstr "&Help"
+
+#: ui.py:459
+msgid "&Documentation"
+msgstr "&Documentatie"
+
+#: ui.py:460
+msgid "&About"
+msgstr "&Over"
+
+#: ui.py:462
+msgid "Toolbar"
+msgstr "Toolbar"
+
 #~ msgid "Choose file to save"
 #~ msgstr "Kies een bestandsnaam voor het opslaan"
 
 #~ msgid "Choose file to open"
 #~ msgstr "Kies een bestand om te openen"
 
-#~ msgid "Close Tab"
-#~ msgstr "Sluit Tab"
-
-#~ msgid "Enter list"
-#~ msgstr "Voeg toe"
-
-#~ msgid "Teach me!"
-#~ msgstr "Overhoor me!"
-
-#~ msgid "Create lesson:"
-#~ msgstr "Maak een les aan:"
-
-#~ msgid "Load lesson:"
-#~ msgstr "Laad een les:"
-
-#~ msgid "Recently opened:"
-#~ msgstr "Recent geopend:"
-
-#~ msgid "&File"
-#~ msgstr "&Bestand"
-
-#~ msgid "&New"
-#~ msgstr "&Nieuw"
-
 #~ msgid "Ctrl+N"
 #~ msgstr "Ctrl+N"
-
-#~ msgid "&Open"
-#~ msgstr "&Open"
 
 #~ msgid "Ctrl+O"
 #~ msgstr "Ctrl+O"
 
-#~ msgid "&Save"
-#~ msgstr "&Opslaan"
-
 #~ msgid "Ctrl+S"
 #~ msgstr "Ctrl+S"
-
-#~ msgid "Save &As"
-#~ msgstr "Opslaan &Als"
 
 #~ msgid "Ctrl+Shift+S"
 #~ msgstr "Ctrl+Shift+S"
 
-#~ msgid "&Print"
-#~ msgstr "&Print"
-
 #~ msgid "Ctrl+P"
 #~ msgstr "Ctrl+P"
 
-#~ msgid "&Quit"
-#~ msgstr "A&fsluiten"
-
 #~ msgid "Ctrl+Q"
 #~ msgstr "Ctrl+Q"
-
-#~ msgid "&Edit"
-#~ msgstr "B&ewerken"
-
-#~ msgid "&Settings"
-#~ msgstr "&Instellingen"
-
-#~ msgid "&Help"
-#~ msgstr "&Help"
-
-#~ msgid "&Documentation"
-#~ msgstr "&Documentatie"
-
-#~ msgid "&About"
-#~ msgstr "&Over"
-
-#~ msgid "Toolbar"
-#~ msgstr "Toolbar"

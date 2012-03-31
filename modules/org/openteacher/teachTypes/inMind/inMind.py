@@ -152,7 +152,7 @@ class InMindTeachTypeModule(object):
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="wordsStringComposer"),
 		)
-		self.filesWithTranslations = ["inMind.py"]
+		self.filesWithTranslations = ("inMind.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

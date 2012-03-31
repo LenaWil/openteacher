@@ -19,42 +19,17 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import tempfile
-import subprocess
+import gpgme
 
 class GPG(object):
-	def __init__(self, gpgbinary="gpg", gpghome="~/.gpg", *args, **kwargs):
+	def __init__(self, gpghome="~/.gpg", *args, **kwargs):
 		super(GPG, self).__init__(*args, **kwargs)
-		
-		self.gpgbinary = gpgbinary
-		self.gpghome = gpghome
+
+		self._c = gpgme.Context()
+		self._c.set_engine_info(self._c.protocol, None, gpghome)
 	
-	def verify_file(self, sig, filename):
-		#FIXME: SECURITY BUG: Check pub key, now every signature is valid...
-		# Save sig to a temp file
-		f = tempfile.NamedTemporaryFile(delete=False, prefix="otgpg")
-		s = sig.read()
-		f.write(s)
-		f.close()
-		
-		args = [
-			self.gpgbinary,
-			"--status-fd",
-			"1",
-			"--homedir",
-			self.gpghome,
-			"--verify",
-			f.name,
-			filename
-		]
-		
-		null = open(os.devnull, "w")
-		o = subprocess.call(args, stdout=null, stderr=null)
-		
-		os.unlink(f.name)
-		
-		return o
+	def verify_file(self, sigio, fileio):
+		return self._c.verify(sigio, fileio, None)[0].summary
 
 class GpgModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -64,15 +39,8 @@ class GpgModule(object):
 		self.type = "gpg"
 
 	def enable(self):
-		if os.name == "nt":
-			self.gpg = GPG(
-				gpgbinary=self._mm.resourcePath("gpgwin\\gpg.exe"),
-				gpghome=self._mm.resourcePath("gpghome")
-			)
-		else:
-			self.gpg = GPG(
-				gpghome=self._mm.resourcePath("gpghome")
-			)
+		self.gpg = GPG(self._mm.resourcePath("gpghome"))
+
 		self.active = True
 
 	def disable(self):

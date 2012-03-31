@@ -404,7 +404,7 @@ class WordsEntererModule(object):
 			self._mm.mods(type="wordsStringComposer"),
 			self._mm.mods(type="wordsStringParser"),
 		)
-		self.filesWithTranslations = ["words.py"]
+		self.filesWithTranslations = ("words.py",)
 
 	@property
 	def _onscreenKeyboard(self):
