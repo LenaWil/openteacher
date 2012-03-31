@@ -24,18 +24,41 @@ class ProfileDescriptionModule(object):
 		self._mm = moduleManager
 
 		self.type = "profileDescription"
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
+		self.filesWithTranslations = ("selfstudy.py",)
 
-	def enable(self):
-		self.name = u"selfstudy"
+	def _retranslate(self):
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 		self.desc = {
 			"name": "selfstudy",
-			"niceName": "Everything you need for using OpenTeacher for self-study.", #FIXME: translate
+			"niceName": _("Everything you need for using OpenTeacher for self-study."),
 			"advanced": False,
 		}
+
+	def enable(self):
+		self._modules = set(self._mm.mods(type="modules")).pop()
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
+		del self._modules
 		del self.desc
 
 def init(moduleManager):

@@ -24,17 +24,41 @@ class ProfileDescriptionModule(object):
 		self._mm = moduleManager
 
 		self.type = "profileDescription"
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
+		self.filesWithTranslations = ("shell.py",)
 
-	def enable(self):
+	def _retranslate(self):
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 		self.desc = {
 			"name": "shell",
-			"niceName": "Starts an interactive python shell with a module manager with all modules loaded.",
+			"niceName": _("Starts an interactive python shell with a module manager with all modules loaded."),
 			"advanced": True,
 		}
+
+	def enable(self):
+		self._modules = set(self._mm.mods(type="modules")).pop()
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
+		del self._modules
 		del self.desc
 
 def init(moduleManager):
