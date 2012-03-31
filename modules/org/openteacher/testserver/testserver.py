@@ -38,6 +38,7 @@ class TestServerModule(object):
 			"all": -1,
 			"update-translations": -1,
 			"testserver": 0,
+			"shell": -1,
 		}
 
 	def enable(self):

@@ -191,6 +191,7 @@ class CodeDocumentationModule(object):
 			"all": -1,
 			"update-translations": -1,
 			"testserver": -1,
+			"shell": -1
 		}
 
 	def showDocumentation(self):

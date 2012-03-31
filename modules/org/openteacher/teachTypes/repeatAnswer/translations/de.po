@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-03-31 16:41+0200\n"
 "PO-Revision-Date: 2012-02-11 14:55+0000\n"
 "Last-Translator: Alexander Haack <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
@@ -18,15 +18,15 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-02-12 05:03+0000\n"
 "X-Generator: Launchpad (build 14771)\n"
 
-#: repeatAnswer.py:77
+#: repeatAnswer.py:68
 msgid "Click the button to start"
 msgstr "Klicken Sie zum Starten auf die Taste"
 
-#: repeatAnswer.py:78
+#: repeatAnswer.py:69
 msgid "Start!"
 msgstr "Start!"
 
-#: repeatAnswer.py:171
+#: repeatAnswer.py:166
 #, fuzzy
 msgid "Repeat answer"
 msgstr "Antwort wiederholen"

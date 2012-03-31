@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-03-31 15:23+0200\n"
 "PO-Revision-Date: 2011-09-13 07:58+0000\n"
 "Last-Translator: Richard Somlói <ricsipontaz@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
@@ -18,15 +18,15 @@ msgstr ""
 "X-Launchpad-Export-Date: 2011-09-14 05:00+0000\n"
 "X-Generator: Launchpad (build 13921)\n"
 
-#: settings.py:78
+#: settings.py:91
 msgid "Settings"
 msgstr "Beállítások"
 
-#: settings.py:79
+#: settings.py:92
 msgid "Simple mode"
 msgstr "Egyszerű mód"
 
-#: settings.py:80
+#: settings.py:93
 msgid "Advanced mode"
 msgstr "Haladó mód"
 

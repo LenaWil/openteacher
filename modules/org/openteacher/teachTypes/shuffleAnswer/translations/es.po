@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-03-31 16:41+0200\n"
 "PO-Revision-Date: 2011-11-15 16:27+0000\n"
 "Last-Translator: Fitoschido <fitoschido@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "X-Launchpad-Export-Date: 2011-11-16 05:29+0000\n"
 "X-Generator: Launchpad (build 14291)\n"
 
-#: shuffleAnswer.py:47
+#: shuffleAnswer.py:64
 msgid "Hint:"
 msgstr "Pista:"
 
-#: shuffleAnswer.py:134
+#: shuffleAnswer.py:159
 #, fuzzy
 msgid "Shuffle answer"
 msgstr "Respuesta aleatoria"

@@ -23,7 +23,7 @@ from PyQt4 import QtCore, QtGui
 import sys
 import weakref
 import copy
-	
+
 class CategoryTab(QtGui.QWidget):
 	def __init__(self, byKey, widgets, name, inCategory, *args, **kwargs):
 		super(CategoryTab, self).__init__(*args, **kwargs)
@@ -38,7 +38,7 @@ class CategoryTab(QtGui.QWidget):
 		for name in categories.keys():			
 			w = self.createSubcategoryGroupBox(name, categories[name])
 			vbox.addWidget(w)
-		
+
 		self.setLayout(vbox)
 
 	def createSubcategoryGroupBox(self, name, inSubcategory):
@@ -53,36 +53,61 @@ class CategoryTab(QtGui.QWidget):
 		groupBox.setLayout(groupBoxLayout)
 		return groupBox
 
+	def retranslate(self):
+		pass
+
 class SettingsDialog(QtGui.QTabWidget):
 	def __init__(self, byKey, settings, widgets, *args, **kwargs):
 		super(SettingsDialog, self).__init__(*args, **kwargs)
-		
+
 		self.settings = settings
 		self.byKey = byKey
 		self.widgets = widgets
-		
+
 		#Setup widget
 		self.setTabPosition(QtGui.QTabWidget.South)
 		self.setDocumentMode(True)
-		
+
 		self.advancedButton = QtGui.QPushButton()
 		self.advancedButton.clicked.connect(self.advanced)
 
 		self.simpleButton = QtGui.QPushButton()
 		self.simpleButton.clicked.connect(self.simple)
-		
+
 		# Go to simple mode
 		self.simple()
+
+		#Used to track if the widget needs to be updated because of
+		#retranslation. We can't do that directly, because then the
+		#language box in which the language is selected is also updated
+		#immediately, rendering it unusable. Instead, we do it when the
+		#widget is hidden (see the eventFilter method.)
+		self._updateNeeded = False
+
+		#so the focus can be tracked
+		self.installEventFilter(self)
 
 	def retranslate(self):
 		self.setWindowTitle(_("Settings"))
 		self.simpleButton.setText(_("Simple mode"))
 		self.advancedButton.setText(_("Advanced mode"))
+		self._updateNeeded = True
 
 	def createCategoryTab(self, *args, **kwargs):
 		tab = CategoryTab(self.byKey, *args, **kwargs)
 		self.addTab(tab, tab.windowTitle())
-	
+
+	def eventFilter(self, object, event, *args, **kwargs):
+		if event.type() == QtCore.QEvent.Hide and self._updateNeeded:
+			tabIndex = self.currentIndex()
+			self.update()
+			self._updateNeeded = False
+			#Reset the index
+			self.setCurrentIndex(tabIndex)
+			return True
+		else:
+			return False
+
 	def update(self):
 		# Copy settings
 		settings = copy.copy(self.settings)
@@ -90,7 +115,7 @@ class SettingsDialog(QtGui.QTabWidget):
 			for setting in self.settings:
 				if "advanced" in setting and setting["advanced"]:
 					settings.remove(setting)
-		
+
 		self.clear()
 		categories = self.byKey("category", settings)
 		for name in categories.keys():
@@ -101,11 +126,11 @@ class SettingsDialog(QtGui.QTabWidget):
 			self.simpleButton,
 			QtCore.Qt.BottomRightCorner
 		)
-		
+
 		self.simpleMode = False
-		
+
 		self.update()
-		
+
 		self.simpleButton.show()
 
 	def simple(self):
@@ -113,11 +138,11 @@ class SettingsDialog(QtGui.QTabWidget):
 			self.advancedButton,
 			QtCore.Qt.BottomRightCorner
 		)
-		
+
 		self.simpleMode = True
-		
+
 		self.update()
-		
+
 		self.advancedButton.show()
 
 class SettingsDialogModule(object):
@@ -153,6 +178,8 @@ class SettingsDialogModule(object):
 			pass
 		else:
 			translator.languageChanged.handle(self._retranslate)
+			#so text of settings is also updated.
+			translator.languageChangeDone.handle(self._retranslate)
 		self._retranslate()
 
 		self.active = True

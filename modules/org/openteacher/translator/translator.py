@@ -40,10 +40,10 @@ class TranslatorModule(object):
 		self.active = True
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.languageChanged = self._modules.default(
-			type="event"
-		).createEvent()
-		
+		createEvent = self._modules.default(type="event").createEvent
+		self.languageChanged = createEvent()
+		self.languageChangeDone = createEvent()
+
 		try:
 			settings = self._modules.default(type="settings")
 		except IndexError, e:
@@ -68,6 +68,7 @@ class TranslatorModule(object):
 
 		"""
 		self.languageChanged.send()
+		self.languageChangeDone.send()
 
 	@property
 	def language(self):

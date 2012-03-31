@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Cas Widdershoven
-#	Copyright 2009-2011, Marten de Vries
+#	Copyright 2009-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -25,13 +25,18 @@ class FrenchNoteCalculatorModule(object):
 		self._mm = moduleManager
 
 		self.type = "noteCalculator"
+		self.filesWithTranslations = ("french.py",)
+
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
 
 	def _calculate(self, test):
 		results = map(lambda x: 1 if x["result"] == "right" else 0, test["results"])
 		total = len(results)
 		amountRight = sum(results)
 
-		return int(float(amountRight) / float(total) * 20)
+		return int(round(float(amountRight) / float(total) * 20))
 
 	def calculateNote(self, test):
 		return self._calculate(test)
@@ -44,12 +49,35 @@ class FrenchNoteCalculatorModule(object):
 		return str(int(note))
 
 	def enable(self):
-		self.name = "French" #FIXME: translate!
+		self._modules = set(self._mm.mods(type="modules")).pop()
+
+		#Connect to the languageChanged event so retranslating is done.
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.active = True
+
+	def _retranslate(self):
+		#Load translations
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.name = _("French")
 
 	def disable(self):
 		self.active = False
 		del self.name
+		del self._modules
 
 def init(moduleManager):
 	return FrenchNoteCalculatorModule(moduleManager)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.x\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-30 23:41+0200\n"
+"POT-Creation-Date: 2012-03-31 16:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,21 +61,21 @@ msgid ""
 "connection works and WRDS is online?"
 msgstr ""
 
-#: wrtsApi.py:209
+#: wrtsApi.py:213
 msgid "No word list metadata given."
 msgstr ""
 
-#: wrtsApi.py:210
+#: wrtsApi.py:214
 msgid ""
 "Please fill in the wordlist title, question language and answer language "
 "first. Then try again."
 msgstr ""
 
-#: wrtsApi.py:248
+#: wrtsApi.py:253
 msgid "No list selected"
 msgstr ""
 
-#: wrtsApi.py:249
+#: wrtsApi.py:254
 msgid "No list was selected. Please try again."
 msgstr ""
 

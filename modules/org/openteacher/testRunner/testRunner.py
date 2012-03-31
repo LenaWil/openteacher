@@ -37,6 +37,8 @@ class TestRunnerModule(object):
 			"all": -1,
 			"update-translations": -1,
 			"testserver": -1,
+			"testrunner": -1,
+			"shell": -1,
 		}
 		self.requires = (
 			self._mm.mods(type="execute"),

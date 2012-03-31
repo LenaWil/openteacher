@@ -40,6 +40,7 @@ class TranslationUpdaterModule(object):
 			"all": -1,
 			"update-translations": 0,
 			"testserver": -1,
+			"shell": -1,
 		}
 		self.requires = (
 			self._mm.mods(type="metadata"),
@@ -104,14 +105,17 @@ class TranslationUpdaterModule(object):
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._metadata = self._modules.default("active", type="metadata").metadata
-		self._run()
-		exit()
+
+		self._execute = self._modules.default(type="execute")
+		self._execute.startRunning.handle(self._run)
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
 		del self._modules
 		del self._metadata
+		del self._execute
 
 def init(moduleManager):
 	return TranslationUpdaterModule(moduleManager)

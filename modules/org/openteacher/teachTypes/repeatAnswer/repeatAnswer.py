@@ -23,8 +23,6 @@
 from PyQt4 import QtGui, QtCore
 import weakref
 
-#FIXME: should parent be replaced with signals & slots? Nicer style.
-
 class RepeatScreenWidget(QtGui.QWidget):
 	def __init__(self, repeatAnswerTeachWidget, modules, *args, **kwargs):
 		super(RepeatScreenWidget, self).__init__(*args, **kwargs)
@@ -37,13 +35,13 @@ class RepeatScreenWidget(QtGui.QWidget):
 		self.showAnswerScreen.addWidget(self.answerLabel)
 		self.setLayout(self.showAnswerScreen)
 
-	def fade(self):
+	def fade(self, callback):
 		compose = self._modules.default("active", type="wordsStringComposer").compose
-		self.answerLabel.setText(compose(self._repeatAnswerTeachWidget.word["answers"]))
+		self.answerLabel.setText(compose(self.word["answers"]))
 		timer = QtCore.QTimeLine(2000, self)
 		timer.setFrameRange(0, 255)
 		timer.frameChanged.connect(self.fadeAction)
-		timer.finished.connect(self.finish)
+		timer.finished.connect(callback)
 		timer.start()
 
 	def fadeAction(self, frame):
@@ -54,14 +52,9 @@ class RepeatScreenWidget(QtGui.QWidget):
 
 		self.answerLabel.setPalette(palette)
 
-	def finish(self):
-		self._repeatAnswerTeachWidget.setCurrentWidget(self._repeatAnswerTeachWidget.inputWidget)
-
 class StartScreenWidget(QtGui.QWidget):
-	def __init__(self, parent, *args, **kwargs):
+	def __init__(self, *args, **kwargs):
 		super(StartScreenWidget, self).__init__(*args, **kwargs)
-
-		self.parent = parent
 
 		self.label = QtGui.QLabel()
 		self.startButton = QtGui.QPushButton()
@@ -70,8 +63,6 @@ class StartScreenWidget(QtGui.QWidget):
 		self.startScreen.addWidget(self.label)
 		self.startScreen.addWidget(self.startButton)
 		self.setLayout(self.startScreen)
-
-		self.startButton.clicked.connect(self.parent.startRepeat)
 
 	def retranslate(self):
 		self.label.setText(_("Click the button to start"))
@@ -85,6 +76,7 @@ class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
 
 		#make start screen
 		self.startScreen = StartScreenWidget(self)
+		self.startScreen.startButton.clicked.connect(self.startRepeat)
 		self.addWidget(self.startScreen)
 
 		#make "show answer" screen
@@ -101,16 +93,19 @@ class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
 	def retranslate(self):
 		self.startScreen.retranslate()
 
+	def _onRepeatFinished(self):
+		self.setCurrentWidget(self.inputWidget)
+
 	def startRepeat(self):
 		self.setCurrentWidget(self.repeatScreen)
-		self.repeatScreen.fade()
+		self.repeatScreen.fade(self._onRepeatFinished)
 
 	def updateLessonType(self, lessonType, *args, **kwargs):
 		self.inputWidget.updateLessonType(lessonType, *args, **kwargs)
 		lessonType.newItem.handle(self.newWord)
 
 	def newWord(self, word):
-		self.word = word
+		self.repeatScreen.word = word
 		self.startRepeat()
 
 class RepeatAnswerTeachTypeModule(object):
@@ -137,7 +132,7 @@ class RepeatAnswerTeachTypeModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ["repeatAnswer.py"]
+		self.filesWithTranslations = ("repeatAnswer.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

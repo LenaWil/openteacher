@@ -79,12 +79,8 @@ class TypingTeachTypeModule(object):
 		self.name = _("Type answer")
 
 	def createWidget(self, tabChanged):
-		try:
-			typingInput = self._modules.default("active", type="typingInput")
-		except IndexError, e:
-			raise e #FIXME: what to do?
-		else:
-			return typingInput.createWidget()
+		typingInput = self._modules.default("active", type="typingInput")
+		return typingInput.createWidget()
 
 def init(moduleManager):
 	return TypingTeachTypeModule(moduleManager)

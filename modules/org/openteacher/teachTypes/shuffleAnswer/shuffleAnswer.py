@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Cas Widdershoven
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -43,21 +43,46 @@ class ShuffleAnswerTeachWidget(QtGui.QWidget):
 		except AttributeError:
 			pass
 
+#	Two solutions for the OpenTeacher 2.2 bug at 24-10-11:
+#	(the commented version isn't ported to 3.x)
+#
+#	def setHint(self, answer):
+#		hint = QtCore.QCoreApplication.translate("OpenTeacher", "Hint:") + u" "
+#		if len(answer) > 1 and not answer.strip(answer[0]): #If len(answer) == 1, it is always the same shuffled#			for i in range(255): #Avoid "while True"
+#				hintList = list(answer) #Make random.shuffle() possible
+#				random.shuffle(hintList) #The actual shuffling of the word
+#				if hintList != list(answer): #Check if the hint isn't the same as the answer
+#					hint += u"".join(hintList) #Put the shuffled word in a string
+#					self.ui.hintLabelShuffle.setText(hint) #Set the hint
+#				else:
+#					continue #It's the same; try again
+#		else:
+#			hint += u"." * len(answer) #It's only one character (0 should already be caught), so the hint string is only a dot
+#			self.ui.hintLabelShuffle.setText(hint) #Set the hint
+
 	def setHint(self):
 		hint = _("Hint:") + u" "
-		
-		answer = self.compose(self.word["answers"])
-		if len(answer) != 1:
-			while True:
-				hintList = list(answer)
-				random.shuffle(hintList)
-				if hintList != list(answer):
-					hint += u"".join(hintList)
-					break
-				else:
-					continue
+
+		#Shuffle list making sure that no letter gets at the same
+		#position if possible.
+		if "answers" in self.word:
+			oldAnswer = list(self.compose(self.word["answers"]))
 		else:
-			hint += u"."
+			oldAnswer = u""
+		answer = oldAnswer[:]
+		for i in range(len(answer) -1):
+			j = i + 1 + int(random.random() * (len(answer) -i -1))
+
+			answer[i], answer[j] = answer[j], answer[i]
+
+		#Check if the word has a minimum length and could be shuffled.
+		#If not, the hint is a few dots, as much as there are letters
+		#in the answer
+		if len(answer) <= 2 or oldAnswer == answer:
+			hint += u"." * len(answer)
+		else:
+			hint += u"".join(answer)
+
 		self.hintLabel.setText(hint)
 
 	def updateLessonType(self, lessonType, *args, **kwargs):
@@ -93,7 +118,7 @@ class ShuffleAnswerTeachTypeModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ["shuffleAnswer.py"]
+		self.filesWithTranslations = ("shuffleAnswer.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
@@ -138,14 +163,11 @@ class ShuffleAnswerTeachTypeModule(object):
 				r.retranslate()
 
 	def createWidget(self, tabChanged):
-		try:
-			typingInput = self._modules.default("active", type="typingInput")
-		except IndexError, e:
-			raise e #FIXME: what to do?
-		else:
-			inputWidget = typingInput.createWidget()
+		typingInput = self._modules.default("active", type="typingInput")
+
+		inputWidget = typingInput.createWidget()
 		compose = self._modules.default("active", type="wordsStringComposer").compose
-		
+
 		satw = ShuffleAnswerTeachWidget(inputWidget, compose)
 		self._activeWidgets.add(weakref.ref(satw))
 		return satw

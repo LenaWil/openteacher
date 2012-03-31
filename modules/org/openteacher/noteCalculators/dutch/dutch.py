@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2009-2011, Marten de Vries
+#	Copyright 2009-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -31,7 +31,10 @@ class DutchNoteCalculatorModule(object):
 
 	def _formatNote(self, note):
 		if note == 10:
-			return u"10" #makes sure '10.0' isn't returned
+			#makes sure '10,0' isn't returned, since that's not a valid
+			#dutch note. (It would mean that 10.8 would be possible,
+			#which isn't.)
+			return u"10"
 		return (u"%0.1f" % note).replace(".", ",")
 
 	def _calculateFloat(self, test):
@@ -54,6 +57,7 @@ class DutchNoteCalculatorModule(object):
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
+		#Connect to the languageChanged event so retranslating is done.
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -64,10 +68,7 @@ class DutchNoteCalculatorModule(object):
 		self.active = True
 
 	def _retranslate(self):
-		#Translations
-		global _
-		global ngettext
-
+		#Load translations
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
