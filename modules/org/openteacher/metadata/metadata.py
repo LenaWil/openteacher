@@ -56,7 +56,7 @@ class MetadataModule(object):
 			#to do so.
 			"name": _("OpenTeacher"),
 			"slogan": _("The easiest way to learn a new language"),
-			"version": _("3.x"),
+			"version": _("3.0"),
 			"authors": _("OpenTeacher authors"),
 			"copyrightYears": _("2008-2012"),
 			#TRANSLATORS: If you want to change this to another, e.g.

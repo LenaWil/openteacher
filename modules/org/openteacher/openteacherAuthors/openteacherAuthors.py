@@ -58,9 +58,10 @@ class OpenTeacherAuthorsModule(object):
 		a = self._authors
 		r = self._removers
 
-		for remove in self._removers:
+		for remove in self._removers.copy():
 			#remove all authors with the wrong translated roles
 			remove()
+			self._removers.remove(remove)
 
 		#Add all the contributors. With their newly translated role
 

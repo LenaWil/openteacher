@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-30 22:49+0200\n"
+"POT-Creation-Date: 2012-04-01 18:49+0200\n"
 "PO-Revision-Date: 2011-08-01 15:54+0000\n"
 "Last-Translator: Alexander Suchan <supersasho@gmail.com>\n"
 "Language-Team: Slovak <sk@li.org>\n"
@@ -30,7 +30,8 @@ msgid "The easiest way to learn a new language"
 msgstr "Najľahší spôsob ako sa naučiť nový jazyk"
 
 #: metadata.py:59
-msgid "3.x"
+#, fuzzy
+msgid "3.0"
 msgstr "3.x"
 
 #: metadata.py:60

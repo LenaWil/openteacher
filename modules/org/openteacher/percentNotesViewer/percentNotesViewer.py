@@ -59,7 +59,7 @@ class Graph(QtGui.QWidget):
 			p.setPen(QtCore.Qt.NoPen)
 			p.drawRect(horPos, h, self.BAR_SIZE, -barHeight)
 			p.setPen(QtGui.QPen(self.palette().highlightedText()))
-			text = "%s%%" % note#FIXME translatable?
+			text = "%s%%" % note
 			y = h - self.FONT_MARGIN
 			#center on the bar
 			x = horPos + self.BAR_SIZE / 2.0 - self.fontMetrics().width(text) / 2.0

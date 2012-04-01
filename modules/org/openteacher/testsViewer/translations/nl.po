@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-04-01 20:19+0200\n"
 "PO-Revision-Date: 2011-10-04 14:57+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,11 +42,15 @@ msgstr "Gemiddelde cijfer:"
 msgid "Lowest note:"
 msgstr "Laagste cijfer:"
 
-#: testsViewer.py:132 testsViewer.py:136 testsViewer.py:140 testsViewer.py:168
-#: testsViewer.py:174
+#. TRANSLATORS: This is meant as 'here would normally
+#. stand a note, but today not.' If '-' isn't
+#. appropriate in you language for that, please replace.
+#. Otherwise, just copy the original.
+#: testsViewer.py:136 testsViewer.py:140 testsViewer.py:144 testsViewer.py:172
+#: testsViewer.py:178
 msgid "-"
 msgstr "-"
 
-#: testsViewer.py:254
+#: testsViewer.py:258
 msgid "Back"
 msgstr "Terug"

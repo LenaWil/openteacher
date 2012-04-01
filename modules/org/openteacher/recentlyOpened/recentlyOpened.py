@@ -24,11 +24,17 @@ class RecentlyOpenedModule(object):
 		self._mm = moduleManager
 
 		self.type = "recentlyOpened"
-		
+
+		self.uses = (
+			self._mm.mods(type="translator"),
+			self._mm.mods(type="settings"),
+		)
+
 		self.requires = (
 			self._mm.mods(type="event"),
 			self._mm.mods(type="dataStore"),
 		)
+		self.filesWithTranslations = ("recentlyOpened.py",)
 
 	def add(self, **kwargs):
 		"""This method adds 'something that was recently opened' to the
@@ -55,7 +61,7 @@ class RecentlyOpenedModule(object):
 		if kwargs in self._recentlyOpened:
 			self._recentlyOpened.remove(kwargs)
 		self._recentlyOpened.insert(0, kwargs)
-		if len(self._recentlyOpened) > 10: #FIXME: setting?
+		while len(self._recentlyOpened) > self._sizeSetting["value"]:
 			self._recentlyOpened.pop()
 		self.updated.send()
 
@@ -72,7 +78,43 @@ class RecentlyOpenedModule(object):
 
 		self.updated = self._modules.default(type="event").createEvent()
 
+		try:
+			self._sizeSetting = self._modules.default(type="setting").registerSetting(**{
+				"internal_name": "org.openteacher.recentlyOpened.size",
+				"type": "number",
+				"defaultValue": 10,
+			})
+		except IndexError:
+			self._sizeSetting = {
+				"value": 10,
+			}
+
+		#Make sure this mod retranslates on language change.
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		#Translate the UI for the first time.
+		self._retranslate()
+
 		self.active = True
+
+	def _retranslate(self):
+		#Install translator for this method
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+
+		self._sizeSetting.update({
+			"name": _("Amount of recently opened files to remember"),
+		})
 
 	def disable(self):
 		self.active = False

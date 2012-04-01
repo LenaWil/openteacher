@@ -25,6 +25,8 @@ except ImportError:
 		from xml.etree import ElementTree
 	except ImportError:
 		from elementTree import ElementTree
+import locale
+import datetime
 
 class WrtsLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -94,10 +96,6 @@ class WrtsLoaderModule(object):
 
 		wordList = {
 			"items": list(),
-			"tests": list(),
-			"title": unicode(),
-			"questionLanguage": unicode(),
-			"answerLanguage": unicode()
 		}
 
 		#dutch: titel = title
@@ -105,6 +103,17 @@ class WrtsLoaderModule(object):
 		#dutch: taal = language
 		wordList["questionLanguage"] = listTree.findtext("taal/a")
 		wordList["answerLanguage"] = listTree.findtext("taal/b")
+
+		#change locale temporary; so strptime can do it's work the way
+		#it should.
+		locale.setlocale(locale.LC_ALL, "C")
+		wordList["created"] = datetime.datetime.strptime(
+			listTree.findtext("created").rsplit(" ", 1)[0], #strip tz info
+			"%a, %d %b %Y %H:%M:%S" #since our datetime objects are naive
+		)
+		#set locale back to make sure conflicts don't arise with other
+		#modules depending on the locale.
+		locale.resetlocale()
 
 		#counter is used as word id
 		counter = 1

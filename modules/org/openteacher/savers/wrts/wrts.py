@@ -20,6 +20,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
+import locale
 
 class WrtsSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -42,6 +43,7 @@ class WrtsSaverModule(object):
 		)
 		self.requires = (
 			self._mm.mods(type="wordsStringComposer"),
+			self._mm.mods(type="metadata"),
 		)
 		self.filesWithTranslations = ("wrts.py",)
 
@@ -61,6 +63,8 @@ class WrtsSaverModule(object):
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._pyratemp = self._mm.import_("pyratemp")
+		self._metadata = self._modules.default("active", type="metadata").metadata
+
 		self.saves = {"words": ["wrts"]}
 
 		try:
@@ -77,6 +81,7 @@ class WrtsSaverModule(object):
 		self.active = False
 
 		del self._modules
+		del self._metadata
 		del self.name
 		del self._pyratemp
 		del self.saves
@@ -101,10 +106,24 @@ class WrtsSaverModule(object):
 			eval_class=EvalPseudoSandbox
 		)
 
+		#set to C so strftime is English
+		locale.setlocale(locale.LC_ALL, "C")
+		try:
+			dt = lesson.list["created"]
+		except KeyError:
+			dt = datetime.datetime.now()
 		data = {
 			"list": lesson.list,
-			"date": datetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S %z").strip() #FIXME: not datetime.now(), but the real ones!
+			#+0100 since our datetime objects are naive and most WRTS
+			#users live in the Netherlands, so this is for them at max
+			#one hour off due to DST.
+			"created": dt.strftime("%a, %d %b %Y %H:%M:%S +0100"),
+			"now": datetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S +0100"),
+			"appname": self._metadata["name"],
+			"appversion": self._metadata["version"],
 		}
+		#reset locale so other modules don't get unexpected behaviour.
+		locale.resetlocale()
 		content = t(**data)
 		with open(path, "w") as f:
 			f.write(content.encode("UTF-8"))

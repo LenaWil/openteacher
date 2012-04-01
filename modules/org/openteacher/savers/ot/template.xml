@@ -1,4 +1,4 @@
-#!	Copyright 2011, Marten de Vries
+#!	Copyright 2011-2012, Marten de Vries
 #!
 #!	This file is part of OpenTeacher.
 #!
@@ -23,7 +23,9 @@
 	<word>
 		<known>@!word["known"] or u"-"!@</known>
 		<foreign>@!word["foreign" or u"-"]!@</foreign>
-		<second>@!word["second"]!@</second>#! FIXME: what if empty?
+		<!--(if word["second"])-->
+#!	!#		<second>@!word["second"]!@</second>
+		<!--(end)-->
 		<results>@!word["results"]["wrong"]!@/@!word["results"]["right"] + word["results"]["wrong"]!@</results>
 	</word>
 	<!--(end)-->

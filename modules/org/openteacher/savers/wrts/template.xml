@@ -16,20 +16,19 @@
 #!	You should have received a copy of the GNU General Public License
 #!	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Wrts, http://www.wrts.nl/-->
+<!-- Wrts, http://www.wrts.nl/ -->
 <wrts>
-	<lijst id="00000000">
+	<lijst id="0000000">
 		<!--(if "title" in list)-->
 		<titel>@!list['title']!@</titel>
 		<!--(else)-->
 		<titel />
 		<!--(end)-->
-		<datum>
-			<downloaded>@!date!@</downloaded>
-			<created>@!date!@</created>
-			<updated>@!date!@</updated>
-		</datum>
-		<author id="000000">Created by: OpenTeacher</author>
+		<datum />
+		<downloaded>@!now!@</downloaded>
+		<created>@!created!@</created>
+		<updated>@!now!@</updated>
+		<auteur id="000000">Created by: @!appname!@ @!appversion!@</auteur>
 		<taal>
 			<!--(if "questionLanguage" in list)-->
 			<a>@!list['questionLanguage']!@</a>

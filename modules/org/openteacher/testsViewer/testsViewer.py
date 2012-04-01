@@ -46,7 +46,7 @@ class TestsModel(QtCore.QAbstractTableModel):
 
 	def retranslate(self):
 		self._headers = [
-			_("Date"),#FIXME: own translator
+			_("Date"),
 			_("Note"),
 			_("Completed"),
 		]
@@ -129,15 +129,19 @@ class NotesWidget(QtGui.QWidget):
 		try:
 			self.highestLabel.setText(unicode(max(notes))) #FIXME: is max and min ok?
 		except ValueError:
-			self.highestLabel.setText(_("-")) #FIXME: description + own translator
+			#TRANSLATORS: This is meant as 'here would normally
+			#stand a note, but today not.' If '-' isn't
+			#appropriate in you language for that, please replace.
+			#Otherwise, just copy the original.
+			self.highestLabel.setText(_("-"))
 		try:
 			self.lowestLabel.setText(unicode(min(notes)))
 		except ValueError:
-			self.lowestLabel.setText(_("-")) #FIXME: description + own translator
+			self.lowestLabel.setText(_("-"))
 		try:
 			average = noteCalculator.calculateAverageNote(list["tests"])
 		except (ZeroDivisionError, KeyError):
-			average = _("-") #FIXME: description + own translator
+			average = _("-")
 		self.averageLabel.setText(unicode(average))
 
 class DetailsWidget(QtGui.QWidget):
