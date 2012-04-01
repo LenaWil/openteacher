@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-31 16:41+0200\n"
+"POT-Creation-Date: 2012-04-01 17:14+0200\n"
 "PO-Revision-Date: 2011-09-13 07:40+0000\n"
 "Last-Translator: Richard Somlói <ricsipontaz@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
@@ -26,7 +26,11 @@ msgstr "Kattintson a gombra a kezdéshez"
 msgid "Start!"
 msgstr "Indulás!"
 
-#: repeatAnswer.py:166
+#: repeatAnswer.py:183
 #, fuzzy
 msgid "Repeat answer"
 msgstr "Válasz megismétlése"
+
+#: repeatAnswer.py:187
+msgid "Repeat mode fade duration (milliseconds)"
+msgstr ""

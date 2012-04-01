@@ -19,6 +19,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+import copy
+import datetime
+
 class Teach2000SaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(Teach2000SaverModule, self).__init__(*args, **kwargs)
@@ -76,16 +79,104 @@ class Teach2000SaverModule(object):
 		del self.saves
 
 	def save(self, type, lesson, path):
+		#copy, we're going to modify it
+		wordList = copy.deepcopy(lesson.list)
+
+		for word in wordList["items"]:
+			word["wrongCount"] = 0
+			word["rightCount"] = 0
+			for test in wordList["tests"]:
+				for result in test["results"]:
+					if result["itemId"] == word["id"]:
+						if result["result"] == "right":
+							word["rightCount"] += 1
+						else:
+							word["wrongCount"] += 1
+
+		for test in wordList["tests"]:
+			test["note"] = self._calculateNote(test)
+			test["start"] = self._startTime(test)
+			test["duration"] = self._duration(test)
+			test["answerscorrect"] = self._answersCorrect(test)
+			test["wrongonce"] = self._wrongOnce(test)
+			test["wrongtwice"] = self._wrongTwice(test)
+			test["wrongmorethantwice"] = self._wrongMoreThanTwice(test)
+
 		templatePath = self._mm.resourcePath("template.xml")
 		t = self._pyratemp.Template(open(templatePath).read())
 		data = {
-			"wordList": lesson.list
+			"wordList": wordList,
 		}
 		content = t(**data)
 		with open(path, "w") as f:
 			f.write(content.encode("UTF-8"))
 
 		lesson.path = None
+
+	def _calculateNote(self, test):
+		#dutch note, but with full float representation.
+		right = 0
+		wrong = 0
+		for result in test["results"]:
+			if result["result"] == "right":
+				right += 1
+			else:
+				wrong += 1
+		return str(right / float(right + wrong) * 9 + 1)
+
+	def _startTime(self, test):
+		try:
+			t = test["results"][0]["active"][0]["start"]
+		except (KeyError, IndexError):
+			t = datetime.datetime.now()
+		return self._composeDateTime(t)
+
+	def _composeDateTime(self, dt):
+		return dt.strftime("%Y-%m-%dT%H:%M:%S.%f")
+
+	def _duration(self, test):
+		try:
+			start = test["results"][0]["active"]["start"]
+			end = test["results"][-1]["active"]["end"]
+		except (KeyError, IndexError):
+			t = datetime.datetime.fromtimestamp(0)
+		else:
+			t = datetime.datetime.fromtimestamp(0) + (end - start)
+		#Teach2000 is written in Pascal... Blegh :P.
+		#use its epoch. (So not the unix one)
+		#strftime doesn't allow dates < 1900, so that's why the weird
+		#string formatting
+		return "1899-12-30T%s" % t.strftime("%H:%M:%S.%f")
+
+	def _answersCorrect(self, test):
+		correct = 0
+		for result in test["results"]:
+			if result["result"] == "right":
+				correct += 1
+		return correct
+
+	def _stats(self, test):
+		stats = {}
+		for result in test["results"]:
+			if result["result"] == "wrong":
+				try:
+					stats[result["itemId"]] += 1
+				except KeyError:
+					stats[result["itemId"]] = 1
+		return stats
+
+	def _wrongOnce(self, test):
+		return self._stats(test).values().count(1)
+
+	def _wrongTwice(self, test):
+		return self._stats(test).values().count(2)
+
+	def _wrongMoreThanTwice(self, test):
+		count = 0
+		for val in self._stats(test).values():
+			if val > 2:
+				count += 1
+		return count
 
 def init(moduleManager):
 	return Teach2000SaverModule(moduleManager)

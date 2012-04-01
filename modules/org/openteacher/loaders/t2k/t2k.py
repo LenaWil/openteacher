@@ -26,6 +26,8 @@ except ImportError:
 		from xml.etree import ElementTree
 	except ImportError:
 		from elementTree import ElementTree
+import datetime
+import re
 
 class Teach2000LoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -82,38 +84,106 @@ class Teach2000LoaderModule(object):
 
 	def getFileTypeOf(self, path):
 		if path.endswith(".t2k"):
-			return "words" #FIXME: .t2k can contain more types
+			#also support other formats in the future? Well, everything
+			#can be opened like it's of type 'words'...
+			return "words"
 
 	def load(self, path):
+		"""Loads a .t2k file into the OpenTeacher data structure.
+		   http://teach2000.memtrain.com/help/00513_advanced_file_format.htm"""
 		root = ElementTree.parse(open(path)).getroot()
 		wordList = {
 			"items": list(),
 			"tests": list(),
-			"title": unicode(),
-			"questionLanguage": unicode(),
-			"answerLanguage": unicode()
 		}
 
+		#create one test to save all results in that are in the t2k file
+		#(t2k doesn't have enough information to know which word was
+		#wrong in which test, so we can have only one test.)
+		test = {
+			"finished": True,
+			"results": [],
+		}
 		for item in root.findall("message_data/items/item"):
 			word = {
 				"id": int(),
 				"questions": list(),
 				"answers": list(),
-				"comment": unicode()
 			}
-			word["id"] = int(item.get("id"))
-			for question in item.findall("questions/question"):
-				word["questions"].append([question.text])
 
+			#id
+			word["id"] = int(item.get("id"))
+
+			#questions
+			word["questions"].append([])
+			for question in item.findall("questions/question"):
+				#strip BBCode for now
+				word["questions"][0].append(
+					self._stripBBCode(question.text)
+				)
+
+			#answers
+			word["answers"].append([])
 			for answer in item.findall("answers/answer"):
-				word["answers"].append([answer.text])
+				#strip BBCode for now
+				word["answers"][0].append(
+					self._stripBBCode(answer.text)
+				)
+
+			#remarks (comment in OT)
+			word["comment"] = item.findtext("remarks")
+
+			#add a result for every time this word was wrong
+			for i in range(int(item.findtext("errors"))):
+				test["results"].append({
+					"itemId": word["id"],
+					"result": "wrong",
+				})
+			#add a result for every time this word was right
+			for i in range(int(item.findtext("correctcount"))):
+				test["results"].append({
+					"itemId": word["id"],
+					"result": "right",
+				})
 
 			wordList["items"].append(word)
-			#FIXME: load tests, also results in the words!
+		#if there were results
+		if test["results"]:
+			#get the time of the first start result and the one of the
+			#last for a global idea of the time range of this 'mega'
+			#test. Duration isn't used, since it's way off anyway.
+			startTime = root.findall("message_data/testresults/testresult")[0].findtext("dt")
+			endTime = root.findall("message_data/testresults/testresult")[-1].findtext("dt")
+
+			startTime = self._parseDt(startTime)
+			endTime = self._parseDt(endTime)
+
+			#store those times in the first and last result. (which may
+			#be the same, technically, but that doesn't matter...)
+			test["results"][0]["active"] = {
+				"start": startTime,
+				"end": startTime,
+			}
+			test["results"][-1]["active"] = {
+				"start": endTime,
+				"end": endTime
+			}
+
+			#append the test to the list
+			wordList["tests"] = [test]
 		return {
 			"resources": {},
 			"list": wordList,
 		}
+
+	def _stripBBCode(self, string):
+		"""Strips all BBCode tags"""
+		return re.sub(r"\[[\w/]*\]", u"", string)
+
+	def _parseDt(self, string):
+		"""Parses a date string as found in T2K files to a datetime
+		   object."""
+		return datetime.datetime.strptime(string, "%Y-%m-%dT%H:%M:%S.%f")
 
 def init(manager):
 	return Teach2000LoaderModule(manager)

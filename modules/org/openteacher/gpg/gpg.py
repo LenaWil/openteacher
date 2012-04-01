@@ -22,13 +22,23 @@
 import gpgme
 
 class GPG(object):
+	"""This class is an abstract layer above a GPG implementation. This
+	   class uses the gpgme library, but it can easily be replaced with
+	   another implementation, or be extended."""
+
 	def __init__(self, gpghome="~/.gpg", *args, **kwargs):
 		super(GPG, self).__init__(*args, **kwargs)
 
+		#Create the GPG environment; set the included gpg home directory
+		#with keys of the OpenTeacher maintainers.
 		self._c = gpgme.Context()
 		self._c.set_engine_info(self._c.protocol, None, gpghome)
 	
 	def verify_file(self, sigio, fileio):
+		"""This method verifies file fileio with separated signature
+		   sigio. Both should be Python file-like objects."""
+
+		#call the lib to do all the work :).
 		return self._c.verify(sigio, fileio, None)[0].summary
 
 class GpgModule(object):

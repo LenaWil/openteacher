@@ -59,7 +59,8 @@ class FileDialogsModule(object):
 		if result:
 			ext = fileDialog.selectedNameFilter().split("(*")[1].split(")")[0]
 			filename = str(fileDialog.selectedFiles()[0])
-			if os.path.splitext(filename)[1] != ext:
+			extensions = ["." + e[0] for e in exts]
+ 			if os.path.splitext(filename)[1] not in extensions:
 				filename += ext
 			return unicode(filename)
 		else:

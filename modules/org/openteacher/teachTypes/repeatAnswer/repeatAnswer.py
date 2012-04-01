@@ -24,11 +24,12 @@ from PyQt4 import QtGui, QtCore
 import weakref
 
 class RepeatScreenWidget(QtGui.QWidget):
-	def __init__(self, repeatAnswerTeachWidget, modules, *args, **kwargs):
+	def __init__(self, repeatAnswerTeachWidget, compose, getFadeDuration, *args, **kwargs):
 		super(RepeatScreenWidget, self).__init__(*args, **kwargs)
 
 		self._repeatAnswerTeachWidget = repeatAnswerTeachWidget
-		self._modules = modules
+		self._compose = compose
+		self._getFadeDuration = getFadeDuration
 
 		self.showAnswerScreen = QtGui.QVBoxLayout()
 		self.answerLabel = QtGui.QLabel()
@@ -36,9 +37,8 @@ class RepeatScreenWidget(QtGui.QWidget):
 		self.setLayout(self.showAnswerScreen)
 
 	def fade(self, callback):
-		compose = self._modules.default("active", type="wordsStringComposer").compose
-		self.answerLabel.setText(compose(self.word["answers"]))
-		timer = QtCore.QTimeLine(2000, self)
+		self.answerLabel.setText(self._compose(self.word["answers"]))
+		timer = QtCore.QTimeLine(self._getFadeDuration(), self)
 		timer.setFrameRange(0, 255)
 		timer.frameChanged.connect(self.fadeAction)
 		timer.finished.connect(callback)
@@ -69,7 +69,7 @@ class StartScreenWidget(QtGui.QWidget):
 		self.startButton.setText(_("Start!"))
 
 class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
-	def __init__(self, modules, tabChanged, *args, **kwargs):
+	def __init__(self, modules, compose, getFadeDuration, tabChanged, *args, **kwargs):
 		super(RepeatAnswerTeachWidget, self).__init__(*args, **kwargs)
 
 		self._modules = modules
@@ -80,7 +80,7 @@ class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
 		self.addWidget(self.startScreen)
 
 		#make "show answer" screen
-		self.repeatScreen = RepeatScreenWidget(self, modules)
+		self.repeatScreen = RepeatScreenWidget(self, compose, getFadeDuration)
 		self.addWidget(self.repeatScreen)
 
 		#make input screen
@@ -130,6 +130,7 @@ class RepeatAnswerTeachTypeModule(object):
 			self._mm.mods(type="wordsStringComposer"),
 		)
 		self.uses = (
+			self._mm.mods(type="settings"),
 			self._mm.mods(type="translator"),
 		)
 		self.filesWithTranslations = ("repeatAnswer.py",)
@@ -139,19 +140,33 @@ class RepeatAnswerTeachTypeModule(object):
 		
 		self._activeWidgets = set()
 
+		#Register fade duration setting
+		try:
+			self._fadeDurationSetting = self._modules.default(type="settings").registerSetting(**{
+				"internal_name": "org.openteacher.teachTypes.repeatAnswer.fadeDuration",
+				"type": "number",
+				"defaultValue": 2000,
+			})
+		except IndexError:
+			self._fadeDuration = {
+				"value": 2000,
+			}
+
+		#Register for retranslating
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
 			pass
 		else:
 			translator.languageChanged.handle(self._retranslate)
+		#translate everything for the first time
 		self._retranslate()
 
 		self.dataType = "words"
 		self.active = True
 
 	def _retranslate(self):
-		#Translations
+		#Install translator for this file
 		global _
 		global ngettext
 
@@ -163,8 +178,16 @@ class RepeatAnswerTeachTypeModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
+
+		#Translate name for 'the outside world'
 		self.name = _("Repeat answer")
 
+		#Translate the setting
+		self._fadeDurationSetting.update({
+			"name": _("Repeat mode fade duration (milliseconds)"),
+		})
+
+		#Translate all instances of widgets
 		for widget in self._activeWidgets:
 			r = widget()
 			if r is not None:
@@ -179,7 +202,12 @@ class RepeatAnswerTeachTypeModule(object):
 		del self.name
 
 	def createWidget(self, tabChanged):
-		ratw = RepeatAnswerTeachWidget(self._modules, tabChanged)
+		ratw = RepeatAnswerTeachWidget(
+			self._modules,
+			self._modules.default("active", type="wordsStringComposer").compose,
+			lambda: self._fadeDurationSetting["value"],
+			tabChanged
+		)
 		self._activeWidgets.add(weakref.ref(ratw))
 		return ratw
 

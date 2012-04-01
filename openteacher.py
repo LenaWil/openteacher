@@ -24,16 +24,19 @@ import os
 
 MODULES_PATH = os.path.join(os.path.dirname(__file__), "modules")
 
-class OpenTeacher(object):
+class ModuleApplication(object):
 	def run(self):
 		mm = moduleManager.ModuleManager(MODULES_PATH)
 
+		#check if there's only one execute module
 		mods = set(mm.mods(type="execute"))
 		if len(mods) != 1:
 			raise ValueError("There has to be exactly one execute module installed.")
+		#start that module
 		mods.pop().execute()
+		#nothing crashed, so exit code's 0.
 		return 0
 
 if __name__ == "__main__":
-	openTeacher = OpenTeacher()
-	sys.exit(openTeacher.run())
+	app = ModuleApplication()
+	sys.exit(app.run())

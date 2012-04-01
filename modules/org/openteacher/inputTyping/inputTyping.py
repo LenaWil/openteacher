@@ -26,12 +26,12 @@ import weakref
 import difflib
 
 class InputTypingWidget(QtGui.QWidget):
-	def __init__(self, check, compose, *args, **kwargs):
+	def __init__(self, check, compose, getFadeTime, *args, **kwargs):
 		super(InputTypingWidget, self).__init__(*args, **kwargs)
 
 		self._check = check
 		self._compose = compose
-		self._check = check
+		self._getFadeTime = getFadeTime
 
 		self.correctLabel = QtGui.QLabel()
 
@@ -129,7 +129,7 @@ class InputTypingWidget(QtGui.QWidget):
 		})
 		self.enableUi(False)
 		if self._previousResult["result"] == "wrong":
-			timeLine = QtCore.QTimeLine(2000, self) #FIXME: setting!
+			timeLine = QtCore.QTimeLine(self._getFadeTime(), self)
 			timeLine.setFrameRange(0, 255) #256 color steps
 			timeLine.frameChanged.connect(self.fade)
 			timeLine.finished.connect(self.timerFinished)
@@ -173,6 +173,7 @@ class InputTypingModule(object):
 		self.type = "typingInput"
 		self.uses = (
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="settings"),
 		)
 		self.requires = (
 			self._mm.mods(type="ui"),
@@ -185,10 +186,19 @@ class InputTypingModule(object):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._activeWidgets = set()
 
-		#Translations
-		global _
-		global ngettext
+		#Register the fade duration setting
+		try:
+			self._fadeDurationSetting = self._modules.default(type="settings").registerSetting(**{
+				"internal_name": "org.openteacher.inputTyping.fadeDuration",
+				"type": "number",
+				"defaultValue": 2000,
+			})
+		except IndexError:
+			self._fadeDurationSetting = {
+				"value": 2000
+			}
 
+		#Translations
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -200,7 +210,7 @@ class InputTypingModule(object):
 		self.active = True
 
 	def _retranslate(self):
-		#Translations
+		#Install translator inside the whole of these file
 		global _
 		global ngettext
 
@@ -212,19 +222,28 @@ class InputTypingModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
+
+		#update all active widgets
 		for ref in self._activeWidgets:
 			wid = ref()
 			if wid is not None:
 				wid.retranslate()
+
+		#update the setting
+		self._fadeDurationSetting.update({
+			"name": _("Fade duration when wrong (milliseconds)"),
+		})
 
 	def disable(self):
 		self.active = False
 
 		del self._modules
 		del self._activeWidgets
+		del self._fadeDurationSetting
 
 	def createWidget(self):
-		it = InputTypingWidget(self._check, self._compose)
+		getFadeDuration = lambda: self._fadeDurationSetting["value"]
+		it = InputTypingWidget(self._check, self._compose, getFadeDuration)
 		self._activeWidgets.add(weakref.ref(it))
 		it.retranslate()
 		return it

@@ -27,6 +27,7 @@ class AuthorsModule(object):
 
 	def registerAuthor(self, category, name):
 		self._authors.add((category, name))
+		return lambda: self._authors.remove((category, name))
 
 	@property
 	def registeredAuthors(self):

@@ -48,13 +48,27 @@
 						<!--(end)-->
 					<!--(end)-->
 				</answers>
-				<errors>0</errors><!--FIXME: do errorcount-->
-				<testcount>0</testcount><!--FIXME: do errorcount-->
-				<correctcount>0</correctcount><!--FIXME: do correctcount-->
+				<errors>@!word["wrongCount"]!@</errors>
+				<testcount>@!word["wrongCount"] + word["rightCount"]!@</testcount>
+				<correctcount>@!word["rightCount"]!@</correctcount>
 			</item>
 			<!--(end)-->
 		</items>
-		<testresults/><!--FIXME: we can fill this now! -->
+		<testresults>
+			<!--(for test in wordList["tests"])-->
+			<testresult>
+				<score>@!test["note"]!@</score>
+				<diff>150</diff>
+				<comment />
+				<dt>@!test["start"]!@</dt>
+				<duration>@!test["duration"]!@</duration>
+				<answerscorrect>@!test["answerscorrect"]!@</answerscorrect>
+				<wrongonce>@!test["wrongonce"]!@</wrongonce>
+				<wrongtwice>@!test["wrongtwice"]!@</wrongtwice>
+				<wrongmorethantwice>@!test["wrongmorethantwice"]!@</wrongmorethantwice>
+			</testresult>
+			<!--(end)-->
+		</testresults>
 		<mapquizfile/>
 	</message_data>
 </teach2000>

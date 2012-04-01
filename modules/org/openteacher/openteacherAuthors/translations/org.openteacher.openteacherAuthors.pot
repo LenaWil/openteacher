@@ -1,0 +1,52 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenTeacher 3.x\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-04-01 17:22+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: openteacherAuthors.py:68 openteacherAuthors.py:69 openteacherAuthors.py:70
+msgid "Core developer"
+msgstr ""
+
+#: openteacherAuthors.py:73 openteacherAuthors.py:74
+msgid "Patches contributor"
+msgstr ""
+
+#: openteacherAuthors.py:77
+msgid "Debian/Ubuntu packager"
+msgstr ""
+
+#: openteacherAuthors.py:80
+msgid "Artwork"
+msgstr ""
+
+#: openteacherAuthors.py:83
+msgid "Chat channel spammer"
+msgstr ""
+
+#: openteacherAuthors.py:86 openteacherAuthors.py:87 openteacherAuthors.py:88
+#: openteacherAuthors.py:89 openteacherAuthors.py:90 openteacherAuthors.py:91
+#: openteacherAuthors.py:92 openteacherAuthors.py:93 openteacherAuthors.py:94
+#: openteacherAuthors.py:95 openteacherAuthors.py:96 openteacherAuthors.py:97
+#: openteacherAuthors.py:98 openteacherAuthors.py:99 openteacherAuthors.py:100
+#: openteacherAuthors.py:101 openteacherAuthors.py:102
+#: openteacherAuthors.py:103 openteacherAuthors.py:104
+#: openteacherAuthors.py:105 openteacherAuthors.py:106
+#: openteacherAuthors.py:107 openteacherAuthors.py:108
+#: openteacherAuthors.py:109
+#, python-format
+msgid "Translator (%s)"
+msgstr ""
