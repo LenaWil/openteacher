@@ -423,9 +423,6 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 
 		self.toolBar.setToolButtonStyle(QtCore.Qt.ToolButtonFollowStyle)
 
-		#activate statusBar
-		self.statusBar()
-		
 		# Aero glass
 		if aeroSetting:
 			self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)

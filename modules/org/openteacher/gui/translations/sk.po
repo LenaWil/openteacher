@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-31 20:57+0200\n"
+"POT-Creation-Date: 2012-04-02 19:09+0200\n"
 "PO-Revision-Date: 2011-08-02 11:12+0000\n"
 "Last-Translator: Alexander Suchan <supersasho@gmail.com>\n"
 "Language-Team: Slovak <sk@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Launchpad-Export-Date: 2011-08-03 05:11+0000\n"
 "X-Generator: Launchpad (build 13573)\n"
 
-#: gui.py:286
+#: gui.py:349
 msgid "Open from file"
 msgstr ""
 
@@ -50,55 +50,55 @@ msgstr "Načítaj lekciu"
 msgid "Recently opened:"
 msgstr "Nedávno otvorené"
 
-#: ui.py:447
+#: ui.py:444
 msgid "&File"
 msgstr "&Súbor"
 
-#: ui.py:448
+#: ui.py:445
 msgid "&New"
 msgstr "&Nový"
 
-#: ui.py:449
+#: ui.py:446
 msgid "&Open"
 msgstr "&Otvoriť"
 
-#: ui.py:450
+#: ui.py:447
 msgid "&Save"
 msgstr "&Uložiť"
 
-#: ui.py:451
+#: ui.py:448
 msgid "Save &As"
 msgstr "Uložiť &ako"
 
-#: ui.py:452
+#: ui.py:449
 msgid "&Print"
 msgstr "&Tlač"
 
-#: ui.py:453
+#: ui.py:450
 msgid "&Quit"
 msgstr "&Zavrieť"
 
-#: ui.py:455
+#: ui.py:452
 msgid "&Edit"
 msgstr "&Upraviť"
 
-#: ui.py:456
+#: ui.py:453
 msgid "&Settings"
 msgstr "&Nastavenia"
 
-#: ui.py:458
+#: ui.py:455
 msgid "&Help"
 msgstr "&Nápoveda"
 
-#: ui.py:459
+#: ui.py:456
 msgid "&Documentation"
 msgstr "&Dokumentácia"
 
-#: ui.py:460
+#: ui.py:457
 msgid "&About"
 msgstr "&O programe"
 
-#: ui.py:462
+#: ui.py:459
 msgid "Toolbar"
 msgstr "Panel nástrojov"
 

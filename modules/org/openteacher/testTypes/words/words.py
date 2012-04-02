@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2008-2011, Milan Boers
-#	Copyright 2009-2011, Marten de Vries
+#	Copyright 2009-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -19,9 +19,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-#FIXME:
-_, ngettext = unicode, unicode
-
 class WordsTestTypeModule(object):
 	QUESTION, ANSWER, GIVEN_ANSWER, CORRECT = xrange(4)
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -31,14 +28,42 @@ class WordsTestTypeModule(object):
 		
 		self.type = "testType"
 		self.dataType = "words"
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
 		self.requires = (
 			self._mm.mods(type="wordsStringComposer"),
 		)
+		self.filesWithTranslations = ("words.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
+		#install translator for the first time and make sure it's updated
+		#when the language is changed.
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.active = True
+
+	def _retranslate(self):
+		#(re)install the translator
+		global _
+		global ngettext
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 
 	def disable(self):
 		self.active = False
@@ -52,7 +77,7 @@ class WordsTestTypeModule(object):
 	@property
 	def funFacts(self):
 		return [
-			("Word most done wrong:", self._mostDoneWrong)
+			(_("Word most done wrong:"), self._mostDoneWrong)
 		]
 	
 	@property
@@ -81,15 +106,15 @@ class WordsTestTypeModule(object):
 	@property
 	def properties(self):
 		return [
-			("Title:", "title"),
-			("Question language:", "questionLanguage"),
-			("Answer language:", "answerLanguage")
+			(_("Title:"), "title"),
+			(_("Question language:"), "questionLanguage"),
+			(_("Answer language:"), "answerLanguage")
 		]
 	
 	@property
 	def header(self):
 		return [
-			_("Question"),#FIXME: own translator
+			_("Question"),
 			_("Answer"),
 			_("Given answer"),
 			_("Correct")
@@ -123,6 +148,11 @@ class WordsTestTypeModule(object):
 			try:
 				return result["givenAnswer"]
 			except KeyError:
+				#TRANSLATORS: - means 'none' here. If there's a better
+				#symbol for that in your language, please go ahead and
+				#use it. Or if both aren't sufficient, just translate
+				#the word 'none' or 'empty' or whatever you think is
+				#appropriate.
 				return _("-")
 		elif column == self.CORRECT:
 			return result["result"] == "right"

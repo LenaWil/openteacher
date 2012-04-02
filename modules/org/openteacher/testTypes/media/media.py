@@ -60,7 +60,7 @@ class MediaTestTypeModule(object):
 	@property
 	def header(self):
 		return [
-			_("Name"),#FIXME: own translator
+			_("Name"),#FIXME: retranslate
 			_("Question"),
 			_("Answer"),
 			_("Given answer"),

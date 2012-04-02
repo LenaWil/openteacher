@@ -50,7 +50,7 @@ class SettingsWidgetModule(object):
 		return SettingsWidget(*args, **kwargs)
 
 	def enable(self):
-		self.widgetType = "options"
+		self.widgetType = "option"
 
 		self.active = True
 

@@ -26,6 +26,67 @@ from PyQt4 import QtCore, QtGui
 import sys
 import platform
 
+class Action(object):
+	def __init__(self, createEvent, qtMenu, qtAction, *args, **kwargs):
+		super(Action, self).__init__(*args, **kwargs)
+
+		self._qtMenu = qtMenu
+		self._qtAction = qtAction
+
+		self.triggered = createEvent()
+		#lambda to prevent useless Qt arguments to pass
+		self._qtAction.triggered.connect(lambda: self.triggered.send())
+
+	@property
+	def text(self):
+		return unicode(self._qtAction.text())
+
+	@text.setter
+	def text(self, value):
+		self._qtAction.setText(value)
+
+	def remove(self):
+		self._qtMenu.removeAction(self._qtAction)
+
+#FIXME: make sure it's possible for the new menus to specify the place
+#to insert new actions/menus
+class Menu(object):
+	def __init__(self, event, qtMenu, *args, **kwargs):
+		super(Menu, self).__init__(*args, **kwargs)
+
+		self._createEvent = event
+		self._qtMenu = qtMenu
+
+	@property
+	def text(self):
+		return unicode(self._qtMenu.title())
+
+	@text.setter
+	def text(self, value):
+		self._qtMenu.setTitle(value)
+
+	def addAction(self):
+		qtAction = QtGui.QAction(self._qtMenu)
+		self._qtMenu.addAction(qtAction)
+		return Action(self._createEvent, self._qtMenu, qtAction)
+
+	def addMenu(self):
+		qtSubMenu = QtGui.QMenu()
+		self._qtMenu.addMenu(qtSubMenu)
+		return Menu(self._createEvent, qtSubMenu)
+
+	def remove(self):
+		self._menu.hide()
+
+class StatusViewer(object):
+	def __init__(self, statusBar, *args, **kwargs):
+		super(StatusViewer, self).__init__(*args, **kwargs)
+
+		self._statusBar = statusBar
+
+	def show(self, message):
+		self._statusBar.showMessage(message)
+
 class FileTab(object):
 	def __init__(self, moduleManager, tabWidget, wrapperWidget, widget, lastWidget, *args, **kwargs):
 		super(FileTab, self).__init__(*args, **kwargs)
@@ -112,7 +173,6 @@ class GuiModule(object):
 		self.requires = (
 			self._mm.mods(type="event"),
 			self._mm.mods(type="metadata"),
-			self._mm.mods(type="menuWrapper"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -193,10 +253,9 @@ class GuiModule(object):
 		self._fileTabs = {}
 
 		#Make menus accessable
-		wrapMenu = self._modules.default("active", type="menuWrapper").wrapMenu
-		self.fileMenu = wrapMenu(self._widget.fileMenu)
-		self.editMenu = wrapMenu(self._widget.editMenu)
-		self.helpMenu = wrapMenu(self._widget.helpMenu)
+		self.fileMenu = Menu(createEvent, self._widget.fileMenu)
+		self.editMenu = Menu(createEvent, self._widget.editMenu)
+		self.helpMenu = Menu(createEvent, self._widget.helpMenu)
 
 		#Lambda's because otherwise Qt's argument checked is passed ->
 		#error.
@@ -236,6 +295,9 @@ class GuiModule(object):
 			)
 		)
 
+		#make the statusViewer available
+		self.statusViewer = StatusViewer(self._widget.statusBar())
+
 		#set application name (handy for e.g. Phonon)
 		self._app.setApplicationName(metadata["name"])
 		self._app.setApplicationVersion(metadata["version"])
@@ -265,6 +327,7 @@ class GuiModule(object):
 		del self.fileMenu
 		del self.editMenu
 		del self.helpMenu
+		del self.statusViewer
 		del self._loadButton
 
 	def _retranslate(self):

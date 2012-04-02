@@ -51,7 +51,6 @@ class TestModeUploaderModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.requires = (
-			self._mm.mods(type="event"),
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="testModeConnection"),
 			self._mm.mods(type="testMenu"),
@@ -73,14 +72,12 @@ class TestModeUploaderModule(object):
 				self._mm.resourcePath("translations")
 			)
 		
-		ui = self._modules.default("active", type="ui")
 		self._testMenu = self._modules.default("active", type="testMenu").menu
 
-		self._action = QtGui.QAction(ui.qtParent)
-		self._action.triggered.connect(self.upload)
-		self._action.setText(_("Upload lesson")) #FIXME: retranslate...
-		self._testMenu.addAction(self._action)
-		
+		self._action = self._testMenu.addAction()
+		self._action.triggered.handle(self.upload)
+		self._action.text = _("Upload lesson") #FIXME: retranslate
+
 		self.active = True
 
 	def disable(self):

@@ -69,7 +69,7 @@ class SettingsModule(object):
 		  * long_text
 		  * number
 		  * password
-		  * options #FIXME: shouldn't this be singular? (the type of the setting value is an option)
+		  * option
 		  * language
 		  * profile
 		  ... are available.

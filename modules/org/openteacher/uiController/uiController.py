@@ -106,7 +106,7 @@ class UiControllerModule(object):
 			)
 		if path:
 			loader.load(path)
-		#FIXME: inform the user of succes...
+		self._uiModule.statusViewer.show(_("File opened succesfully."))
 
 	def save(self, path=None):
 		saver = self._modules.default("active", type="saver")
@@ -121,7 +121,7 @@ class UiControllerModule(object):
 			saver.save(path)
 		else:
 			self.saveAs()
-		#FIXME: inform the user of succes...
+		self._uiModule.statusViewer.show(_("File saved succesfully."))
 
 	def saveAs(self):
 		path = self._fileDialogs.getSavePath(
@@ -133,7 +133,6 @@ class UiControllerModule(object):
 		)
 		if path:
 			self._saver.save(path)
-		#FIXME: inform the user of succes...
 
 	def print_(self):
 		#Setup printer

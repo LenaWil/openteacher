@@ -595,13 +595,11 @@ class TestModeTeacherPanelModule(object):
 				self._mm.resourcePath("translations")
 			)
 		
-		ui = self._modules.default("active", type="ui")
 		self._testMenu = self._modules.default("active", type="testMenu").menu
 
-		self._action = QtGui.QAction(ui.qtParent)
-		self._action.triggered.connect(self.showPanel)
-		self._action.setText(_("Teacher panel")) #FIXME: retranslate...
-		self._testMenu.addAction(self._action)
+		self._action = self._testMenu.addAction()
+		self._action.triggered.handle(self.showPanel)
+		self._action.text = _("Teacher panel") #FIXME: retranslate...
 
 		self.dialogShower = self._modules.default("active", type="dialogShower")
 		

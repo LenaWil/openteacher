@@ -153,7 +153,7 @@ class TextToSpeechModule(object):
 			self._ttsVoice = self._settings.registerSetting(**{
 				"internal_name": "org.openteacher.textToSpeech.voice",
 				"name": "Voice",
-				"type": "options",
+				"type": "option",
 				"category": "Pronounciation",
 				"subcategory": "Voice",
 				"defaultValue": self.tts.getVoices()[0][1],

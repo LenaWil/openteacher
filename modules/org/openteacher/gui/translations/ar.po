@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-31 20:57+0200\n"
+"POT-Creation-Date: 2012-04-02 19:09+0200\n"
 "PO-Revision-Date: 2011-08-09 09:54+0000\n"
 "Last-Translator: elacheche <elachecheanis@gmail.com>\n"
 "Language-Team: Arabic <ar@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Launchpad-Export-Date: 2011-08-10 05:04+0000\n"
 "X-Generator: Launchpad (build 13636)\n"
 
-#: gui.py:286
+#: gui.py:349
 msgid "Open from file"
 msgstr ""
 
@@ -50,55 +50,55 @@ msgstr "تحميل درس :"
 msgid "Recently opened:"
 msgstr "ما فتح مؤخّرا:"
 
-#: ui.py:447
+#: ui.py:444
 msgid "&File"
 msgstr "&ملف"
 
-#: ui.py:448
+#: ui.py:445
 msgid "&New"
 msgstr "&جديد"
 
-#: ui.py:449
+#: ui.py:446
 msgid "&Open"
 msgstr "&إفتح"
 
-#: ui.py:450
+#: ui.py:447
 msgid "&Save"
 msgstr "&حفظ"
 
-#: ui.py:451
+#: ui.py:448
 msgid "Save &As"
 msgstr "حفظ &تحت"
 
-#: ui.py:452
+#: ui.py:449
 msgid "&Print"
 msgstr "&طباعة"
 
-#: ui.py:453
+#: ui.py:450
 msgid "&Quit"
 msgstr "&إنهاء"
 
-#: ui.py:455
+#: ui.py:452
 msgid "&Edit"
 msgstr "&حرّر"
 
-#: ui.py:456
+#: ui.py:453
 msgid "&Settings"
 msgstr "&إعدادات"
 
-#: ui.py:458
+#: ui.py:455
 msgid "&Help"
 msgstr "&مساعدة"
 
-#: ui.py:459
+#: ui.py:456
 msgid "&Documentation"
 msgstr "&الوثائق"
 
-#: ui.py:460
+#: ui.py:457
 msgid "&About"
 msgstr "&حول"
 
-#: ui.py:462
+#: ui.py:459
 msgid "Toolbar"
 msgstr "شريط الأدوات"
 

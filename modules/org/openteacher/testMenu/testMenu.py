@@ -20,7 +20,6 @@
 
 from PyQt4 import QtGui
 
-#FIXME: translate module
 class TestMenuModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestMenuModule, self).__init__(*args, **kwargs)
@@ -28,25 +27,46 @@ class TestMenuModule(object):
 
 		self.type = "testMenu"
 
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
 		self.requires = (
 			self._mm.mods(type="ui"),
-			self._mm.mods(type="menuWrapper"),
 		)
+		self.filesWithTranslations = ("testMenu.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self._ui = self._modules.default("active", type="ui")
 
-		self._qtMenu = QtGui.QMenu("Test mode")
-		self.menu = self._modules.default("active", type="menuWrapper").wrapMenu(self._qtMenu)
-		self._ui.fileMenu.addMenu(self._qtMenu)
+		ui = self._modules.default("active", type="ui")
+		self.menu = ui.fileMenu.addMenu()
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 
 		self.active = True
+
+	def _retranslate(self):
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+
+		self.menu.text = _("Test mode")
 
 	def disable(self):
 		self.active = False
 
-		self._ui.fileMenu.removeMenu(self._qtMenu)
+		self.menu.remove()
 
 		del self._qtMenu
 		del self._modules

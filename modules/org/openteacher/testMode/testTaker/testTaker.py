@@ -94,13 +94,11 @@ class TestModeTestTaker(object):
 				self._mm.resourcePath("translations")
 			)
 
-		ui = self._modules.default("active", type="ui")
 		self._testMenu = self._modules.default("active", type="testMenu").menu
 
-		self._action = QtGui.QAction(ui.qtParent)
-		self._action.triggered.connect(self.showTestTaker)
-		self._action.setText(_("Take test")) #FIXME: retranslate!
-		self._testMenu.addAction(self._action)
+		self._action = self._testMenu.addAction()
+		self._action.triggered.handle(self.showTestTaker)
+		self._action.text = _("Take test")#FIXME: retranslate
 
 		self.active = True
 

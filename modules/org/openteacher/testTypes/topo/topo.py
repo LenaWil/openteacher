@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2008-2011, Milan Boers
-#	Copyright 2009-2011, Marten de Vries
+#	Copyright 2009-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -32,12 +32,25 @@ class TopoTestTypeModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
+		self.filesWithTranslations = ("topo.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
+		#install translator for the first time and make sure it's re-
+		#installed on a language change.
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.active = True
 		
-		#setup translation
+	def _retranslate(self):
+		#(re)install the translator, for use in every method
+		#('property').
 		global _
 		global ngettext
 		
@@ -52,11 +65,11 @@ class TopoTestTypeModule(object):
 
 	def disable(self):
 		self.active = False
-	
+
 	def updateList(self, list, test):
 		self._list = list
 		self._test = test
-	
+
 	@property
 	def header(self):
 		return [

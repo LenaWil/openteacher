@@ -35,6 +35,7 @@ class TranslatorModule(object):
 		self.uses = (
 			self._mm.mods(type="settings"),
 		)
+		self.filesWithTranslations = ("translator.py",)
 
 	def enable(self):
 		self.active = True
@@ -47,13 +48,13 @@ class TranslatorModule(object):
 		try:
 			settings = self._modules.default(type="settings")
 		except IndexError, e:
-			self._languageSetting = dict()
-			self._languageSetting["value"] = None
+			self._languageSetting = {
+				"value": None,
+			}
 		else:
 			self._languageSetting = settings.registerSetting(**{
 				"internal_name": "org.openteacher.translator.language",
 				"type": "language",
-				"name": "Language", #FIXME: translate
 				"defaultValue": None,
 				"callback": {
 					"args": ("active",),
@@ -61,6 +62,19 @@ class TranslatorModule(object):
 					"method": "sendLanguageChanged",
 				}
 			})
+		#add the setting name, which needs to be translated itself
+		self._retranslate()
+		
+		#subscribe this module's _retranslate to itself
+		self.languageChanged.handle(self._retranslate)
+
+	def _retranslate(self):
+		_, ngettext = self.gettextFunctions(
+			self._mm.resourcePath("translations")
+		)
+		self._languageSetting.update({
+			"name": _("Language"),
+		})
 
 	def sendLanguageChanged(self):
 		"""A wrapper method called by the setting callback, which can't

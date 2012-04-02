@@ -82,8 +82,18 @@ class UpdatesModule(object):
 		verified = self._gpg.verify_file(asc, open(self._mm.resourcePath("update.zip")))
 		if verified != 0:
 			raise ValueError("No valid signature!")
+
 		updatesZip = zipfile.ZipFile(self._mm.resourcePath("update.zip"), "r")
-		updatesZip.extractall(self._mm.modulesPath) #FIXME: check if all paths aren't outside the path given, just in case.
+		for item in updatesZip.namelist():
+			#check if it doesn't stay inside the module dir
+			if os.path.normpath(item).startswith(os.pardir):
+				#Help, the OT Maintainers have gone mad! This is
+				#malware! :P
+				#
+				#skip this update...
+				return
+		#'all-clear'
+		updatesZip.extractall(self._mm.modulesPath)
 		os.remove(self._mm.resourcePath("update.zip"))
 
 	def update(self):

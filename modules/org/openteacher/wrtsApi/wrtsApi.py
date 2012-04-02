@@ -36,6 +36,7 @@ class WrtsApiModule(object):
 			self._mm.mods(type="loader"),
 			self._mm.mods(type="lessonTracker"),
 			self._mm.mods(type="wordsStringComposer"),
+			self._mm.mods(type="wordsStringParser"),
 		)
 		self.filesWithTranslations = ("wrtsApi.py", "ui.py")
 
@@ -51,9 +52,31 @@ class WrtsApiModule(object):
 		self._button = self._uiModule.addLessonLoadButton()
 		self._button.clicked.handle(self.importFromWrts)
 
-		self._action = QtGui.QAction(self._uiModule.qtParent)
-		self._action.triggered.connect(self.exportToWrts)
-		self._uiModule.fileMenu.addAction(self._action)
+		self._action = self._uiModule.fileMenu.addAction()
+		self._action.triggered.handle(self.exportToWrts)
+
+		try:
+			self._settings = self._modules.default(type="settings")
+		except IndexError:
+			self._emailSetting = {
+				"value": u"",
+			}
+			self._passwordSetting = {
+				"value": u"",
+			}
+			self._storeEnabled = False
+		else:
+			self._emailSetting = self._settings.registerSetting(**{
+				"internal_name": "org.openteacher.wrtsApi.email",
+				"type": "short_text",
+				"defaultValue": u"",
+			})
+			self._passwordSetting = self._settings.registerSetting(**{
+				"internal_name": "org.openteacher.wrtsApi.password",
+				"type": "password",
+				"defaultValue": u"",
+			})
+			self._storeEnabled = True
 
 		try:
 			translator = self._modules.default("active", type="translator")
@@ -63,30 +86,11 @@ class WrtsApiModule(object):
 			translator.languageChanged.handle(self._retranslate)
 		self._retranslate()
 
-		try:
-			self._settings = self._modules.default(type="settings")
-		except IndexError:
-			self._emailSetting = None
-			self._passwordSetting = None
-		else:
-			self._emailSetting = self._settings.registerSetting(
-				internal_name="org.openteacher.wrtsApi.email",
-				name=_("Email"),
-				type="short_text",
-				defaultValue=u"",
-				category=_("WRDS"),
-				subcategory=_("Login credentials"),
-			)
-			self._passwordSetting = self._settings.registerSetting(
-				internal_name="org.openteacher.wrtsApi.password",
-				name=_("Password"),
-				type="password",
-				defaultValue=u"",
-				category=_("WRDS"),
-				subcategory=_("Login credentials"),
-			)
-
-		self._wrtsConnection = self._api.WrtsConnection(self._mm)
+		parse = self._modules.default(
+			"active",
+			type="wordsStringParser"
+		).parse
+		self._wrtsConnection = self._api.WrtsConnection(parse)
 
 		self.active = True
 
@@ -107,11 +111,13 @@ class WrtsApiModule(object):
 		del self._emailSetting
 		del self._passwordSetting
 		del self._wrtsConnection
+		del self._storeEnabled
 
 	def _retranslate(self):
-		global _, ngettext
+		global _
+		global ngettext
 
-		#Translations
+		#Install translator
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -122,9 +128,24 @@ class WrtsApiModule(object):
 			)
 		self._ui._, self._ui.ngettext = _, ngettext
 
+		#Translate button + menu action
 		self._button.text = _("Import from WRDS")
-		self._action.setText(_("Export to WRDS"))
+		self._action.text = _("Export to WRDS")
 
+		#Translate settings
+		self._emailSetting.update({
+			"name": _("Email"),
+			"category": _("WRDS"),
+			"subcategory": _("Login credentials"),
+		})
+
+		self._passwordSetting.update({
+			"name": _("Password"),
+			"category": _("WRDS"),
+			"subcategory": _("Login credentials"),
+		})
+
+		#Translate all active dialogs
 		for dialog in self._activeDialogs:
 			dialog.retranslate()
 			dialog.tab.title = dialog.windowTitle()
@@ -145,19 +166,13 @@ class WrtsApiModule(object):
 
 	def _loginToWrts(self, forceLogin=False):
 		"""Returns True if login succeeded, and False if it didn't."""
-		if self._emailSetting and self._passwordSetting:
-			#settings are enabled
-			email = self._emailSetting["value"]
-			password = self._passwordSetting["value"]
+		email = self._emailSetting["value"]
+		password = self._passwordSetting["value"]
 
-			valid = email and password #not blank
-			settingsEnabled = True
-		else:
-			valid = False
-			settingsEnabled = False
+		valid = email and password #not blank
 
 		if forceLogin or not valid:
-			ld = self._ui.LoginDialog(settingsEnabled, self._uiModule.qtParent)
+			ld = self._ui.LoginDialog(self._storeEnabled, self._uiModule.qtParent)
 			self._activeDialogs.add(ld)
 
 			tab = self._uiModule.addCustomTab(ld)
@@ -173,7 +188,7 @@ class WrtsApiModule(object):
 			if not ld.result():
 				return
 
-			if ld.saveCheck and settingsEnabled:
+			if ld.saveCheck:
 				self._emailSetting["value"] = ld.email
 				self._passwordSetting["value"] = ld.password
 
@@ -219,7 +234,8 @@ class WrtsApiModule(object):
 		except self._api.ConnectionError:
 			self._noConnection()
 			return
-		#FIXME: inform the user
+
+		self._uiModule.statusViewer.show(_("Word list succesfully exported to WRDS."))
 
 	def importFromWrts(self):
 		if not self._loginToWrts():
@@ -270,7 +286,7 @@ class WrtsApiModule(object):
 			"list": list,
 			"resources": {},
 		})
-		#FIXME: inform the user?
+		self._uiModule.statusViewer.show(_("The word list was imported from WRDS successfully."))
 
 def init(moduleManager):
 	return WrtsApiModule(moduleManager)

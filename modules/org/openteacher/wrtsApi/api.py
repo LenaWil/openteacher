@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2009-2011, Marten de Vries
+#	Copyright 2009-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -35,7 +35,6 @@ class ConnectionError(IOError):
 class NotEnoughMetadataError(ValueError):
 	pass
 
-#FIXME: convert this class to pyratemp (using template engine?)?
 class RequestXml(xml.dom.minidom.Document):
 	"""The RequestXml class is used to create xml understood by the WRTS-api. The
 	   xml is used to send wordLists to WRTS."""
@@ -116,10 +115,10 @@ class WrtsConnection(object):
 		def get_method(self):
 			return "HEAD"
 
-	def __init__(self, moduleManager, *args, **kwargs):
+	def __init__(self, parse, *args, **kwargs):
 		super(WrtsConnection, self).__init__(*args, **kwargs)
 
-		self._mm = moduleManager
+		self._parse = parse
 		self.loggedIn = False
 
 	def logIn(self, email, password):
@@ -155,7 +154,7 @@ class WrtsConnection(object):
 	def importWordList(self, url):
 		"""Downloads a WRTS wordlist from URL and parses it into a WordList object. Throws LoginError/ConnectionError"""
 		xmlStream = self._openUrl(url)
-		wordListParser = WordListParser(self._mm, xmlStream)
+		wordListParser = WordListParser(self._parse, xmlStream)
 
 		#return the wordList
 		return wordListParser.list
@@ -239,10 +238,10 @@ class ListsParser(object):
 
 class WordListParser(object):
 	"""This class parses a wordlist from the WRTS-API into a WordList-instance."""
-	def __init__(self, moduleManager,xmlStream, *args, **kwargs):
+	def __init__(self, parse, xmlStream, *args, **kwargs):
 		super(WordListParser, self).__init__(*args, **kwargs)
 
-		self._mm = moduleManager
+		self._parse = parse
 		self.root = ElementTree.parse(xmlStream).getroot()
 
 	@property
@@ -269,19 +268,15 @@ class WordListParser(object):
 			#possible, so again the u"" fallback. The question is parsed
 			#by a wordsStringParser module.
 
-			#FIXME: only one
-			for module in self._mm.mods("active", type="wordsStringParser"):
-				text = wordTree.findtext("word-a", u"")
-				word["questions"] = module.parse(text)
+			text = wordTree.findtext("word-a", u"")
+			word["questions"] = self._parse(text)
 
 			#Read the answer, again keep in mind that null values are
 			#possible, so again the u"" fallback. The answer is parsed
 			#by a wordsStringParser module.
 
-			#FIXME: only one
-			for module in self._mm.mods("active", type="wordsStringParser"):
-				text = wordTree.findtext("word-b", u"")
-				word["answers"] = module.parse(text)
+			text = wordTree.findtext("word-b", u"")
+			word["answers"] = self._parse(text)
 
 			# Add the current edited word to the wordList instance
 			wordList["items"].append(word)

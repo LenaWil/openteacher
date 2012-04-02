@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-31 15:23+0200\n"
+"POT-Creation-Date: 2012-04-02 19:09+0200\n"
 "PO-Revision-Date: 2011-11-15 16:40+0000\n"
 "Last-Translator: Fitoschido <fitoschido@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -18,71 +18,79 @@ msgstr ""
 "X-Launchpad-Export-Date: 2011-11-16 05:29+0000\n"
 "X-Generator: Launchpad (build 14291)\n"
 
-#: wrtsApi.py:74
-#, fuzzy
-msgid "Email"
-msgstr "Correo electrónico: "
-
-#: wrtsApi.py:77 wrtsApi.py:85
-msgid "WRDS"
-msgstr ""
-
-#: wrtsApi.py:78 wrtsApi.py:86
-msgid "Login credentials"
-msgstr ""
-
-#: wrtsApi.py:82
-#, fuzzy
-msgid "Password"
-msgstr "Contraseña: "
-
-#: wrtsApi.py:125
+#: wrtsApi.py:132
 #, fuzzy
 msgid "Import from WRDS"
 msgstr "Importar desde WRTS"
 
-#: wrtsApi.py:126
+#: wrtsApi.py:133
 #, fuzzy
 msgid "Export to WRDS"
 msgstr "Importar desde WRTS"
 
-#: wrtsApi.py:135
+#: wrtsApi.py:137
+#, fuzzy
+msgid "Email"
+msgstr "Correo electrónico: "
+
+#: wrtsApi.py:138 wrtsApi.py:144
+msgid "WRDS"
+msgstr ""
+
+#: wrtsApi.py:139 wrtsApi.py:145
+msgid "Login credentials"
+msgstr ""
+
+#: wrtsApi.py:143
+#, fuzzy
+msgid "Password"
+msgstr "Contraseña: "
+
+#: wrtsApi.py:156
 msgid "Invalid login credentials"
 msgstr ""
 
-#: wrtsApi.py:136
+#: wrtsApi.py:157
 msgid ""
 "WRDS didn't accept the login credentials. Are you sure you entered your e-"
 "mail and password correctly?"
 msgstr ""
 
-#: wrtsApi.py:142
+#: wrtsApi.py:163
 #, fuzzy
 msgid "No WRDS connection"
 msgstr "Conexión API a Wrts"
 
-#: wrtsApi.py:143
+#: wrtsApi.py:164
 msgid ""
 "WRDS didn't accept the connection. Are you sure that your internet "
 "connection works and WRDS is online?"
 msgstr ""
 
-#: wrtsApi.py:213
+#: wrtsApi.py:228
 msgid "No word list metadata given."
 msgstr ""
 
-#: wrtsApi.py:214
+#: wrtsApi.py:229
 msgid ""
 "Please fill in the wordlist title, question language and answer language "
 "first. Then try again."
 msgstr ""
 
-#: wrtsApi.py:253
+#: wrtsApi.py:238
+msgid "Word list succesfully exported to WRDS."
+msgstr ""
+
+#: wrtsApi.py:269
 msgid "No list selected"
 msgstr ""
 
-#: wrtsApi.py:254
+#: wrtsApi.py:270
 msgid "No list was selected. Please try again."
+msgstr ""
+
+#: wrtsApi.py:289
+msgid "The word list was imported from WRDS successfully."
 msgstr ""
 
 #: ui.py:72

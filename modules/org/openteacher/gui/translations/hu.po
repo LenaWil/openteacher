@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-31 20:57+0200\n"
+"POT-Creation-Date: 2012-04-02 19:09+0200\n"
 "PO-Revision-Date: 2011-09-13 07:28+0000\n"
 "Last-Translator: Richard Somlói <ricsipontaz@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Launchpad-Export-Date: 2011-09-14 05:00+0000\n"
 "X-Generator: Launchpad (build 13921)\n"
 
-#: gui.py:286
+#: gui.py:349
 msgid "Open from file"
 msgstr ""
 
@@ -50,55 +50,55 @@ msgstr "Lecke betöltése:"
 msgid "Recently opened:"
 msgstr "Mostanában megnyitott:"
 
-#: ui.py:447
+#: ui.py:444
 msgid "&File"
 msgstr "&Fájl"
 
-#: ui.py:448
+#: ui.py:445
 msgid "&New"
 msgstr "&Új"
 
-#: ui.py:449
+#: ui.py:446
 msgid "&Open"
 msgstr "&Megnyitás"
 
-#: ui.py:450
+#: ui.py:447
 msgid "&Save"
 msgstr "Menté&s"
 
-#: ui.py:451
+#: ui.py:448
 msgid "Save &As"
 msgstr "M&entés másként"
 
-#: ui.py:452
+#: ui.py:449
 msgid "&Print"
 msgstr "&Nyomtatás"
 
-#: ui.py:453
+#: ui.py:450
 msgid "&Quit"
 msgstr "&Kilépés"
 
-#: ui.py:455
+#: ui.py:452
 msgid "&Edit"
 msgstr "Sz&erkesztés"
 
-#: ui.py:456
+#: ui.py:453
 msgid "&Settings"
 msgstr "&Beállítások"
 
-#: ui.py:458
+#: ui.py:455
 msgid "&Help"
 msgstr "&Súgó"
 
-#: ui.py:459
+#: ui.py:456
 msgid "&Documentation"
 msgstr "&Dokumentáció"
 
-#: ui.py:460
+#: ui.py:457
 msgid "&About"
 msgstr "&Névjegy"
 
-#: ui.py:462
+#: ui.py:459
 msgid "Toolbar"
 msgstr "Eszköztár"
 
