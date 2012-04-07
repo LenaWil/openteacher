@@ -261,7 +261,7 @@ class TestsView(View):
 		if role(request) != "teacher":
 			return Response(status.HTTP_401_UNAUTHORIZED)
 
-		test = Test.objects.create(**{#FIXME
+		test = Test.objects.create(**{#FIXME: check if self.CONTENT["list"] is valid. Maybe 'just' parse it?
 			"teacher": request.user,
 			"list": self.CONTENT["list"],
 		})
@@ -293,14 +293,12 @@ class TestView(View):
 
 	def _strip_answers(self, list):
 		list = json.loads(list)
-		if list.has_key("tests"):
+		if "tests" in list:
 			del list["tests"]
-		if list.has_key("items"):
+		if "items" in list:
 			for item in list["items"]:
-				try:
+				if "answers" in item:
 					del item["answers"]
-				except KeyError:
-					pass
 		return json.dumps(list)
 
 	def delete(self, request, test_id):

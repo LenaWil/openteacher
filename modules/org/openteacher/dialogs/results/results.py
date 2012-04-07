@@ -19,6 +19,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt4 import QtGui
+import weakref
 
 class ResultsDialogModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -37,23 +38,42 @@ class ResultsDialogModule(object):
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChangeDone.handle(self._retranslate)
+
+		self._dialogs = set()
+
 		self.active = True
+
+	def _retranslate(self):
+		for ref in self._dialogs:
+			dialog = ref()
+			if dialog:
+				dialog.tab.title = dialog.windowTitle()
 
 	def disable(self):
 		self.active = False
 
 		del self._modules
+		del self._dialogs
 
 	def showResults(self, list, dataType, test):
-		self.resultsWidget = self._modules.default(
+		resultsWidget = self._modules.default(
 			"active",
 			type="testViewer"
 		).createTestViewer(list, dataType, test)
 
 		uiModule = self._modules.default(type="ui")
-		self.tab = uiModule.addCustomTab(self.resultsWidget)
-		self.tab.title = self.resultsWidget.windowTitle() #FIXME: update on retranslate
-		self.tab.closeRequested.handle(self.tab.close)
+		tab = uiModule.addCustomTab(resultsWidget)
+		tab.title = resultsWidget.windowTitle()
+		tab.closeRequested.handle(tab.close)
+		resultsWidget.tab = tab
+
+		self._dialogs.add(weakref.ref(resultsWidget))
 
 def init(moduleManager):
 	return ResultsDialogModule(moduleManager)

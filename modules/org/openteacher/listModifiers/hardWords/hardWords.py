@@ -78,7 +78,9 @@ class HardWordsModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		self.name = _("Only hard words (<50% right)")
+		#TRANSLATORS: %% will automatically be converted to a single
+		#%-sign
+		self.name = _("Only hard words (<50%% right)") % ()
 
 	def disable(self):
 		self.active = False

@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -75,8 +75,7 @@ class Graph(QtGui.QFrame):
 	def _paintItem(self, p, item):
 		x = (item["start"] - self.start).total_seconds() * self._secondsPerPixel
 		width = (item["end"] - item["start"]).total_seconds() * self._secondsPerPixel
-		
-		print item["start"], item["end"]
+
 		p.drawRect(x, 0, width, self._h)
 
 	def paintEvent(self, event, *args, **kwargs):
@@ -117,7 +116,6 @@ class Graph(QtGui.QFrame):
 		p.setBrush(QtGui.QBrush())
 
 		p.end()
-		print ""
 		super(Graph, self).paintEvent(event, *args, **kwargs)
 
 	def sizeHint(self):
@@ -153,6 +151,7 @@ class ProgressViewerModule(object):
 		self.requires = (
 			self._mm.mods(type="ui"),
 		)
+		self.filesWithTranslations = ("progressViewer.py",)
 
 	def createProgressViewer(self, *args, **kwargs):
 		pv = ProgressViewer(*args, **kwargs)

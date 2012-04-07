@@ -50,6 +50,7 @@ class TeachTopoLessonModule(object):
 		self.requires = (
 			self._mm.mods(type="event"),
 			self._mm.mods(type="ui"),
+			self._mm.mods(type="buttonRegister"),
 			self._mm.mods(type="topoTeacher"),
 			self._mm.mods(type="topoEnterer"),
 			self._mm.mods(type="testsViewer"),
@@ -72,11 +73,11 @@ class TeachTopoLessonModule(object):
 			)
 
 		# Add the button to start
-		module = self._modules.default("active", type="ui")
-		self._button = module.addLessonCreateButton()
+		module = self._modules.default("active", type="buttonRegister")
+		self._button = module.registerButton("create")
 		self._button.clicked.handle(self.createLesson)
-		self._button.text = _("Create topography lesson")
-		
+		self._button.changeText.send(_("Create topography lesson"))
+
 		# Data type
 		self.dataType = "topo"
 		

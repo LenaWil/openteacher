@@ -108,6 +108,7 @@ class WordsLessonModule(object):
 			self._mm.mods(type="event"),
 			self._mm.mods(type="wordsEnterer"),
 			self._mm.mods(type="wordsTeacher"),
+			self._mm.mods(type="buttonRegister"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -123,7 +124,7 @@ class WordsLessonModule(object):
 
 		self._lessons = set()
 
-		self._button = self._uiModule.addLessonCreateButton()
+		self._button = self._modules.default("active", type="buttonRegister").registerButton("create")
 		self._button.clicked.handle(self.createLesson)
 
 		try:
@@ -153,7 +154,7 @@ class WordsLessonModule(object):
 				self._mm.resourcePath("translations")
 			)
 		
-		self._button.text = _("Create words lesson")
+		self._button.changeText.send(_("Create words lesson"))
 		for ref in self._lessons:
 			lesson = ref()
 			if lesson:
@@ -162,7 +163,7 @@ class WordsLessonModule(object):
 	def disable(self):
 		self.active = False
 
-		self._button.remove()
+		self._modules.default("active", type="buttonRegister").unregisterButton(self._button)
 
 		del self.dataType
 		del self._modules

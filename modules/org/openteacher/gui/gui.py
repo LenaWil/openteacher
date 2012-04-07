@@ -19,9 +19,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-#FIXME: sort buttons on the start tab and make the remove buttons of it
-#work.
-
 from PyQt4 import QtCore, QtGui
 import sys
 import platform
@@ -37,16 +34,18 @@ class Action(object):
 		#lambda to prevent useless Qt arguments to pass
 		self._qtAction.triggered.connect(lambda: self.triggered.send())
 
-	@property
-	def text(self):
-		return unicode(self._qtAction.text())
-
-	@text.setter
-	def text(self, value):
-		self._qtAction.setText(value)
-
 	def remove(self):
 		self._qtMenu.removeAction(self._qtAction)
+
+	text = property(
+		lambda self: unicode(self._qtAction.text()),
+		lambda self, value: self._qtAction.setText(value)
+	)
+
+	enabled = property(
+		lambda self: self._qtMenu.isEnabled(),
+		lambda self, value: self._qtAction.setEnabled(value)
+	)
 
 #FIXME: make sure it's possible for the new menus to specify the place
 #to insert new actions/menus
@@ -56,14 +55,6 @@ class Menu(object):
 
 		self._createEvent = event
 		self._qtMenu = qtMenu
-
-	@property
-	def text(self):
-		return unicode(self._qtMenu.title())
-
-	@text.setter
-	def text(self, value):
-		self._qtMenu.setTitle(value)
 
 	def addAction(self):
 		qtAction = QtGui.QAction(self._qtMenu)
@@ -76,7 +67,17 @@ class Menu(object):
 		return Menu(self._createEvent, qtSubMenu)
 
 	def remove(self):
-		self._menu.hide()
+		self._qtMenu.hide()
+
+	text = property(
+		lambda self: unicode(self._qtMenu.title()),
+		lambda self, value: self._qtMenu.setTitle(value)
+	)
+
+	enabled = property(
+		lambda self: self._qtMenu.isEnabled(),
+		lambda self, value: self._qtMenu.setEnabled(value)
+	)
 
 class StatusViewer(object):
 	def __init__(self, statusBar, *args, **kwargs):
@@ -138,32 +139,6 @@ class LessonFileTab(FileTab):
 		lambda self, value: self._widget.setCurrentWidget(value)
 	)
 
-class Button(object):
-	def __init__(self, qtButton, createEvent, removeMethod, *args, **kwargs):
-		super(Button, self).__init__(*args, **kwargs)
-
-		self.clicked = createEvent()
-
-		self._qtButton = qtButton
-		#Lambda because otherwise Qt's argument checked is passed ->
-		#error.
-		self._qtButton.clicked.connect(lambda: self.clicked.send())
-		
-		self._removeMethod = removeMethod
-
-	text = property(
-		lambda self: self._qtButton.text(),
-		lambda self, value: self._qtButton.setText(value)
-	)
-
-	icon = property(
-		lambda self: self._qtButton.icon(),
-		lambda self, icon: self._qtButton.setIcon(icon)
-	)
-
-	def remove(self):
-		self._removeMethod(self._qtButton)
-
 class GuiModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(GuiModule, self).__init__(*args, **kwargs)
@@ -172,11 +147,12 @@ class GuiModule(object):
 		self.type = "ui"
 		self.requires = (
 			self._mm.mods(type="event"),
+			self._mm.mods(type="startWidget"),
 			self._mm.mods(type="metadata"),
 		)
 		self.uses = (
+			self._mm.mods(type="buttonRegister"),
 			self._mm.mods(type="translator"),
-			self._mm.mods(type="recentlyOpenedViewer"),
 			self._mm.mods(type="settings"),
 		)
 		self.filesWithTranslations = ("gui.py", "ui.py")
@@ -184,16 +160,6 @@ class GuiModule(object):
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		createEvent = self._modules.default(type="event").createEvent
-
-		self.newEvent = createEvent()
-		self.openEvent = createEvent()
-		self.saveEvent = createEvent()
-		self.saveAsEvent = createEvent()
-		self.printEvent = createEvent()
-		self.quitEvent = createEvent()
-		self.settingsEvent = createEvent()		
-		self.aboutEvent = createEvent()
-		self.documentationEvent = createEvent()
 
 		self.tabChanged = createEvent()
 		self.applicationActivityChanged = createEvent()
@@ -221,19 +187,20 @@ class GuiModule(object):
 				self._aeroSetting = None
 		
 		self._app = QtGui.QApplication(sys.argv)
-		try:
-			recentlyOpenedViewer = self._modules.default("active", type="recentlyOpenedViewer").createViewer()
-		except IndexError:
-			recentlyOpenedViewer = None
 		
-		if self._aeroSetting != None and self._aeroSetting["value"] == True:
-			self._widget = self._ui.OpenTeacherWidget(recentlyOpenedViewer, True)
-		else:
-			self._widget = self._ui.OpenTeacherWidget(recentlyOpenedViewer, False)
+		self._widget = self._ui.OpenTeacherWidget(
+			self._modules.default("active", type="startWidget").createStartWidget(),
+			self._aeroSetting and self._aeroSetting["value"],
+		)
 
-		#add the open action as a load button too.
-		self._loadButton = self.addLessonLoadButton()
-		self._loadButton.clicked.handle(self.openEvent.send)
+		try:
+			br = self._modules.default("active", type="buttonRegister")
+		except IndexError:
+			pass
+		else:
+			#add the open action as a load button too.
+			self._loadButton = br.registerButton("load")
+			self._loadButton.clicked.handle(self._widget.openAction.activated.emit)
 
 		#load translator
 		try:
@@ -245,47 +212,30 @@ class GuiModule(object):
 		self._retranslate()
 
 		metadata = self._modules.default("active", type="metadata").metadata
-		self._widget.setWindowTitle(
-			" ".join([metadata["name"], metadata["version"]])
-		)
+		self._widget.setWindowTitle(metadata["name"])
 		self._widget.setWindowIcon(QtGui.QIcon(metadata["iconPath"]))
 
 		self._fileTabs = {}
 
 		#Make menus accessable
+		#file
 		self.fileMenu = Menu(createEvent, self._widget.fileMenu)
-		self.editMenu = Menu(createEvent, self._widget.editMenu)
-		self.helpMenu = Menu(createEvent, self._widget.helpMenu)
+		self.newAction = Action(createEvent, self._widget.fileMenu, self._widget.newAction)
+		self.openAction = Action(createEvent, self._widget.fileMenu, self._widget.openAction)
+		self.saveAction = Action(createEvent, self._widget.fileMenu, self._widget.saveAction)
+		self.saveAsAction = Action(createEvent, self._widget.fileMenu, self._widget.saveAsAction)
+		self.printAction = Action(createEvent, self._widget.fileMenu, self._widget.printAction)
+		self.quitAction = Action(createEvent, self._widget.fileMenu, self._widget.quitAction)
 
-		#Lambda's because otherwise Qt's argument checked is passed ->
-		#error.
-		self._widget.newAction.triggered.connect(
-			lambda: self.newEvent.send()
-		)
-		self._widget.openAction.triggered.connect(
-			lambda: self.openEvent.send()
-		)
-		self._widget.saveAction.triggered.connect(
-			lambda: self.saveEvent.send()
-		)
-		self._widget.saveAsAction.triggered.connect(
-			lambda: self.saveAsEvent.send()
-		)
-		self._widget.printAction.triggered.connect(
-			lambda: self.printEvent.send()
-		)
-		self._widget.quitAction.triggered.connect(
-			lambda: self.quitEvent.send()
-		)
-		self._widget.settingsAction.triggered.connect(
-			lambda: self.settingsEvent.send()
-		)
-		self._widget.aboutAction.triggered.connect(
-			lambda: self.aboutEvent.send()
-		)
-		self._widget.docsAction.triggered.connect(
-			lambda: self.documentationEvent.send()
-		)
+		#edit
+		self.editMenu = Menu(createEvent, self._widget.editMenu)
+		self.settingsAction = Action(createEvent, self._widget.editMenu, self._widget.settingsAction)
+
+		#help
+		self.helpMenu = Menu(createEvent, self._widget.helpMenu)
+		self.documentationAction = Action(createEvent, self._widget.helpMenu, self._widget.docsAction)
+		self.aboutAction = Action(createEvent, self._widget.helpMenu, self._widget.aboutAction)
+
 		self._widget.tabWidget.currentChanged.connect(
 			lambda: self.tabChanged.send()
 		)
@@ -307,28 +257,40 @@ class GuiModule(object):
 	def disable(self):
 		self.active = False
 
-		self._loadButton.remove()
-		
+		try:
+			br = self._modules.default("active", type="buttonRegister")
+		except IndexError:
+			pass
+		else:
+			#we don't unhandle the event, since PyQt4 does some weird
+			#memory stuff making it impossible to find the right item,
+			#and it's unneeded anyway.
+			br.unregisterButton(self._loadButton)
+			del self._loadButton
+
 		del self._modules
 		del self._ui
 		del self._fileTabs
-		del self.newEvent
-		del self.openEvent
-		del self.saveEvent
-		del self.saveAsEvent
-		del self.printEvent
-		del self.quitEvent
-		del self.settingsEvent
-		del self.aboutEvent
-		del self.documentationEvent
 		del self.tabChanged
 		del self.applicationActivityChanged
 		del self._widget
+
 		del self.fileMenu
+		del self.newAction
+		del self.openAction
+		del self.saveAction
+		del self.saveAsAction
+		del self.printAction
+		del self.quitAction
+
 		del self.editMenu
+		del self.settingsAction
+
 		del self.helpMenu
+		del self.documentationAction
+		del self.aboutAction
+
 		del self.statusViewer
-		del self._loadButton
 
 	def _retranslate(self):
 		global _
@@ -346,7 +308,7 @@ class GuiModule(object):
 		self._ui._, self._ui.ngettext = _, ngettext
 		self._widget.retranslate()
 
-		self._loadButton.text = _("Open from file")
+		self._loadButton.changeText.send(_("Open from file"))
 
 	def run(self):
 		"""Starts the event loop of the Qt application. 
@@ -368,18 +330,6 @@ class GuiModule(object):
 
 	def showStartTab(self):
 		self._widget.tabWidget.setCurrentWidget(self._widget.tabWidget.startWidget)
-
-	def addLessonCreateButton(self, *args, **kwargs):
-		button = self._widget.tabWidget.startWidget.addLessonCreateButton(*args, **kwargs)
-		createEvent = self._modules.default(type="event").createEvent
-
-		return Button(button, createEvent, self._widget.tabWidget.startWidget.removeLessonCreateButton)
-
-	def addLessonLoadButton(self, *args, **kwargs):
-		button = self._widget.tabWidget.startWidget.addLessonLoadButton(*args, **kwargs)
-		createEvent = self._modules.default(type="event").createEvent
-
-		return Button(button, createEvent, self._widget.tabWidget.startWidget.removeLessonLoadButton)
 
 	def addFileTab(self, enterWidget=None, teachWidget=None, resultsWidget=None, previousTabOnClose=False):
 		widget = self._ui.LessonTabWidget(enterWidget, teachWidget, resultsWidget)
@@ -430,30 +380,6 @@ class GuiModule(object):
 
 		"""
 		return self._widget
-
-	def enableNew(self, boolean):
-		self._widget.newAction.setEnabled(boolean)
-
-	def enableOpen(self, boolean):
-		self._widget.openAction.setEnabled(boolean)
-
-	def enableSave(self, boolean):
-		self._widget.saveAction.setEnabled(boolean)
-
-	def enableSaveAs(self, boolean):
-		self._widget.saveAsAction.setEnabled(boolean)
-
-	def enablePrint(self, boolean):
-		self._widget.printAction.setEnabled(boolean)
-
-	def enableSettings(self, boolean):
-		self._widget.settingsAction.setEnabled(boolean)
-
-	def enableAbout(self, boolean):
-		self._widget.aboutAction.setEnabled(boolean)
-
-	def enableDocumentation(self, boolean):
-		self._widget.docsAction.setEnabled(boolean)
 
 	@property
 	def startTabActive(self):

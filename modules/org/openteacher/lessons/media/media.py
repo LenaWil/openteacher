@@ -50,6 +50,7 @@ class MediaLessonModule(object):
 		self.requires = (
 			self._mm.mods(type="event"),
 			self._mm.mods(type="ui"),
+			self._mm.mods(type="buttonRegister"),
 			self._mm.mods(type="mediaEnterer"),
 			self._mm.mods(type="mediaTeacher"),
 			self._mm.mods(type="testsViewer"),
@@ -72,10 +73,10 @@ class MediaLessonModule(object):
 				self._mm.resourcePath("translations")
 			)
 
-		module = self._modules.default("active", type="ui")
-		self._button = module.addLessonCreateButton()
+		module = self._modules.default("active", type="buttonRegister")
+		self._button = module.registerButton("create")
 		self._button.clicked.handle(self.createLesson)
-		self._button.text = _("Create media lesson")
+		self._button.changeText.send(_("Create media lesson"))
 
 		self.lessonCreated = self._modules.default(type="event").createEvent()
 		self.lessonCreationFinished = self._modules.default(type="event").createEvent()

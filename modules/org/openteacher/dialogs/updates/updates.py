@@ -146,8 +146,8 @@ class UpdatesDialogModule(object):
 		self._Signals.finishedFetching.connect(self._showUpdatesDialog)
 
 		# Fetch updates thread
-		t = threading.Thread(target=self._checkUpdates)
-		t.start()
+		self._thread = threading.Thread(target=self._checkUpdates)
+		self._thread.start()
 
 	def _checkUpdates(self):
 		if self._rememberChoiceSetting["value"] and not self._dataStore["org.openteacher.updatesDialog.userDidUpdatesLastTime"]:
@@ -192,10 +192,22 @@ class UpdatesDialogModule(object):
 
 	def disable(self):
 		self.active = False
-		
-		del self._ud
-		del self._tab
-		del self._updatesMod
+
+		self._thread.join()
+		del self._thread
+
+		#May not be set in one case
+		try:
+			del self._ud
+			del self._tab
+		except AttributeError:
+			pass
+		#May not be set in another case
+		try:
+			del self._updatesMod
+		except AttributeError:
+			pass
+		#Always set
 		del self._dataStore
 
 def init(moduleManager):

@@ -96,9 +96,6 @@ class RecentlyOpenedViewerModule(object):
 		self._mm = moduleManager
 
 		self.requires = (
-			#FIXME: fix the circular dependency with gui and then enable
-			#this again!
-#			self._mm.mods(type="ui"),
 			self._mm.mods(type="recentlyOpened"),
 		)
 		self.uses = (
@@ -153,6 +150,11 @@ class RecentlyOpenedViewerModule(object):
 		del self._viewers
 
 	def createViewer(self):
+		"""By calling this method, you need to be able to guarantee that
+		   there's already a QApplication active. E.g. by depending on
+		   'ui', or by being the module that manages the QApplication...
+
+		"""
 		viewer = RecentlyOpenedViewer(self._modules)
 		recentlyOpened = self._recentlyOpened.getRecentlyOpened()
 		

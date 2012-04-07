@@ -45,6 +45,16 @@ class JSONShelve(dict):
 		fp.close()
 
 class DataStoreModule(object):
+	"""This module offers a data store, which allows data to be saved
+	   persistently. The store is in the 'store' property and is dict-
+	   like. Keep in mind it is JSON serialized to the hard disk, so
+	   make sure everything you save inside is JSON serializable. Also
+	   keep in mind, that all modules use the same store. So make sure
+	   you don't claim generic names. We therefore strongly recommend
+	   to use the 'reverse domain' strategy. So e.g.
+	   com.example.modName.valueName as key.
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(DataStoreModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager

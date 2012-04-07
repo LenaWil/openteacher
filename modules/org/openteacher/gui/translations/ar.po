@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-04-02 19:09+0200\n"
+"POT-Creation-Date: 2012-04-07 20:36+0200\n"
 "PO-Revision-Date: 2011-08-09 09:54+0000\n"
 "Last-Translator: elacheche <elachecheanis@gmail.com>\n"
 "Language-Team: Arabic <ar@li.org>\n"
@@ -18,89 +18,86 @@ msgstr ""
 "X-Launchpad-Export-Date: 2011-08-10 05:04+0000\n"
 "X-Generator: Launchpad (build 13636)\n"
 
-#: gui.py:349
+#: gui.py:313
 msgid "Open from file"
 msgstr ""
 
-#: ui.py:33
+#: ui.py:34
 msgid "Close Tab"
 msgstr "إغلاق علامة التبويب"
 
-#: ui.py:80
+#: ui.py:81
 msgid "Enter list"
 msgstr "أدخل قائمة"
 
-#: ui.py:82
+#: ui.py:83
 msgid "Teach me!"
 msgstr "علّمني"
 
-#: ui.py:84
+#: ui.py:85
 msgid "Show results"
 msgstr ""
 
-#: ui.py:195
-msgid "Create lesson:"
-msgstr "إنشاء درس :"
-
-#: ui.py:196
-msgid "Load lesson:"
-msgstr "تحميل درس :"
-
-#: ui.py:198
-msgid "Recently opened:"
-msgstr "ما فتح مؤخّرا:"
-
-#: ui.py:444
+#: ui.py:248
 msgid "&File"
 msgstr "&ملف"
 
-#: ui.py:445
+#: ui.py:249
 msgid "&New"
 msgstr "&جديد"
 
-#: ui.py:446
+#: ui.py:250
 msgid "&Open"
 msgstr "&إفتح"
 
-#: ui.py:447
+#: ui.py:251
 msgid "&Save"
 msgstr "&حفظ"
 
-#: ui.py:448
+#: ui.py:252
 msgid "Save &As"
 msgstr "حفظ &تحت"
 
-#: ui.py:449
+#: ui.py:253
 msgid "&Print"
 msgstr "&طباعة"
 
-#: ui.py:450
+#: ui.py:254
 msgid "&Quit"
 msgstr "&إنهاء"
 
-#: ui.py:452
+#: ui.py:256
 msgid "&Edit"
 msgstr "&حرّر"
 
-#: ui.py:453
+#: ui.py:257
 msgid "&Settings"
 msgstr "&إعدادات"
 
-#: ui.py:455
+#: ui.py:259
 msgid "&Help"
 msgstr "&مساعدة"
 
-#: ui.py:456
+#: ui.py:260
 msgid "&Documentation"
 msgstr "&الوثائق"
 
-#: ui.py:457
+#: ui.py:261
 msgid "&About"
 msgstr "&حول"
 
-#: ui.py:459
+#: ui.py:263
 msgid "Toolbar"
 msgstr "شريط الأدوات"
+
+#~ msgid "Create lesson:"
+#~ msgstr "إنشاء درس :"
+
+#~ msgid "Load lesson:"
+#~ msgstr "تحميل درس :"
+
+#~ msgid "Recently opened:"
+#~ msgstr "ما فتح مؤخّرا:"
 
 #~ msgid "Choose file to save"
 #~ msgstr "إختر ملف للحفظ"

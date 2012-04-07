@@ -68,9 +68,7 @@ class TestMenuModule(object):
 
 		self.menu.remove()
 
-		del self._qtMenu
 		del self._modules
-		del self._ui
 		del self.menu
 
 def init(moduleManager):

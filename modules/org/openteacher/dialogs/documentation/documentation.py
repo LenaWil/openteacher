@@ -136,7 +136,6 @@ class DocumentationModule(object):
 		self.active = False
 
 		del self._modules
-		del self.name
 		del self._activeDialogs
 
 def init(moduleManager):

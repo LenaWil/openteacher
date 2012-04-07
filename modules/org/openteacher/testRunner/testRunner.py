@@ -43,13 +43,20 @@ class TestRunnerModule(object):
 		self.requires = (
 			self._mm.mods(type="execute"),
 		)
+		self.uses = (
+			self._mm.mods(type="test"),
+		)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._execute = self._modules.default(type="execute")
 		self._execute.startRunning.handle(self._run)
 
+		self.active = True
+
 	def disable(self):
+		self.active = False
+
 		self._execute.startRunning.unhandle(self._run)
 		del self._execute
 		del self._modules

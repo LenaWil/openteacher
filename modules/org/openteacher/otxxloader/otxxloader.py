@@ -101,7 +101,6 @@ class OtxxLoaderModule(object):
 	def _cleanupTempPaths(self):
 		if hasattr(self, "_tempPaths"):
 			for path in self._tempPaths:
-				print "Removing ", path
 				os.remove(path)
 
 	def enable(self):

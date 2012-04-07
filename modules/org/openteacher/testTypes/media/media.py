@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2008-2011, Milan Boers
-#	Copyright 2009-2011, Marten de Vries
+#	Copyright 2009-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -32,6 +32,7 @@ class MediaTestTypeModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
+		self.filesWithTranslations = ("media.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
@@ -60,7 +61,7 @@ class MediaTestTypeModule(object):
 	@property
 	def header(self):
 		return [
-			_("Name"),#FIXME: retranslate
+			_("Name"),
 			_("Question"),
 			_("Answer"),
 			_("Given answer"),

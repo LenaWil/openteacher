@@ -86,6 +86,7 @@ class PlainTextWordsEntererModule(object):
 		self.type = "plainTextWordsEnterer"
 		self.requires = (
 			self._mm.mods(type="ui"),
+			self._mm.mods(type="buttonRegister"),
 			self._mm.mods(type="wordsStringParser"),
 			self._mm.mods(type="loader"),
 		)
@@ -101,7 +102,7 @@ class PlainTextWordsEntererModule(object):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._uiModule = self._modules.default("active", type="ui")
 
-		self._button = self._uiModule.addLessonCreateButton()
+		self._button = self._modules.default("active", type="buttonRegister").registerButton("create")
 		self._button.clicked.handle(self.createLesson)
 
 		try:
@@ -128,7 +129,7 @@ class PlainTextWordsEntererModule(object):
 				self._mm.resourcePath("translations")
 			)
 
-		self._button.text = _("Create words lesson by entering plain text")
+		self._button.changeText.send(_("Create words lesson by entering plain text"))
 		for dialog in self._activeDialogs:
 			dialog.retranslate()
 			dialog.tab.title = dialog.windowTitle()
@@ -163,7 +164,7 @@ class PlainTextWordsEntererModule(object):
 	def disable(self):
 		self.active = False
 
-		self._button.remove()
+		self._modules.default("active", type="buttonRegister").unregisterButton(self._button)
 
 		del self._references
 		del self._modules

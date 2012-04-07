@@ -58,8 +58,9 @@ class ProfileDescriptionModule(object):
 
 	def disable(self):
 		self.active = False
+
 		del self._modules
-		del self.name
+		del self.desc
 
 def init(moduleManager):
 	return ProfileDescriptionModule(moduleManager)

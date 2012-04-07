@@ -187,7 +187,6 @@ class TextToSpeechModule(object):
 
 	def disable(self):
 		del self._modules
-		del name
 		try:
 			del self.tts
 		except AttributeError:

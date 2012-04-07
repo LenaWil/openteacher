@@ -127,7 +127,7 @@ class NotesWidget(QtGui.QWidget):
 		except KeyError:
 			notes = []
 		try:
-			self.highestLabel.setText(unicode(max(notes))) #FIXME: is max and min ok?
+			self.highestLabel.setText(unicode(max(notes))) #FIXME: is max and min ok? -> NO
 		except ValueError:
 			#TRANSLATORS: This is meant as 'here would normally
 			#stand a note, but today not.' If '-' isn't
@@ -272,6 +272,7 @@ class TestsViewer(QtGui.QStackedWidget):
 		testViewer.backActivated.connect(self.showTests)
 		self.addWidget(testViewer)
 		self.setCurrentWidget(testViewer)
+		self.retranslate()
 
 	def showTests(self):
 		self.setCurrentWidget(self.testsViewerWidget)
@@ -336,7 +337,8 @@ class TestsViewerModule(object):
 
 	def createTestsViewer(self):
 		tv = TestsViewer(self._mm)#FIXME: moduleManager or pass what's needed? Also on other places...
-		self._testsViewers.add(weakref.ref(tv)) #Weak reference so gc can still get into action
+		#Weak reference so gc can still get into action
+		self._testsViewers.add(weakref.ref(tv))
 		self._retranslate()
 		return tv
 

@@ -225,7 +225,8 @@ class IntervalModule(object):
 			})
 			self._whenKnownSetting = self._settings.registerSetting(**{
 				"internal_name": "org.openteacher.lessonTypes.interval.whenKnown",
-				"name": _("% right before known"),
+				#TRANSLATORS: '%%' is automatically replaced by '%'
+				"name": _("%% right before known") % (),
 				"type": "number",
 				"category": _("Lessons"),
 				"subcategory": _("Interval"),

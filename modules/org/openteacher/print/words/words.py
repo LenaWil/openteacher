@@ -67,7 +67,6 @@ class PrintModule(object):
 		self.active = False
 
 		del self._modules
-		del self.name
 		del self.prints
 
 	def print_(self, type, lesson, printer):

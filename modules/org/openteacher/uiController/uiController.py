@@ -29,21 +29,21 @@ class UiControllerModule(object):
 		self.type = "uiController"
 		self.requires = (
 			self._mm.mods(type="ui"),
-			#FIXME: make loader, saver, lessonTracker fileDialogs, printDialog and printer into self.uses?
-			self._mm.mods(type="loader"),
-			self._mm.mods(type="saver"),
-			self._mm.mods(type="printer"),
-			self._mm.mods(type="printDialog"),
-			self._mm.mods(type="fileDialogs"),
 			self._mm.mods(type="metadata"),
 			self._mm.mods(type="execute"),
-			self._mm.mods(type="lessonTracker"),
 		)
 		self.uses = (
 			self._mm.mods(type="settingsDialog"),
 			self._mm.mods(type="about"),
 			self._mm.mods(type="documentation"),
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="loader"),
+			self._mm.mods(type="saver"),
+			self._mm.mods(type="printer"),
+			self._mm.mods(type="printDialog"),
+			self._mm.mods(type="fileDialogs"),
+			self._mm.mods(type="lessonTracker"),
+			self._mm.mods(type="dataStore"),
 		)
 		self.priorities = {
 			"codedocumentation": -1,
@@ -56,14 +56,49 @@ class UiControllerModule(object):
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
-		self._fileDialogs = self._modules.default("active", type="fileDialogs")
-		self._lessonTracker = self._modules.default("active", type="lessonTracker")
+		try:
+			self._store = self._modules.default(type="dataStore").store
+		except IndexError:
+			self._store = {}
+		try:
+			self._fileDialogs = self._modules.default("active", type="fileDialogs")
+		except IndexError:
+			self._fileDialogs = None
+		try:
+			self._printDialog = self._modules.default("active", type="printDialog")		
+		except IndexError:
+			self._printDialog = None
+		try:
+			self._lessonTracker = self._modules.default("active", type="lessonTracker")
+		except IndexError:
+			self._lessonTracker = None
 		self._saver = self._modules.default("active", type="saver")
 		self._execute = self._modules.default(type="execute")
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 
 		self._execute.startRunning.handle(self.run)
 
 		self.active = True
+
+	def _retranslate(self):
+		global _
+		global ngettext
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 
 	def disable(self):
 		self.active = False
@@ -71,9 +106,19 @@ class UiControllerModule(object):
 		self._execute.startRunning.unhandle(self.run)
 
 		del self._modules
-		del self._fileDialogs
-		del self._lessonTracker
-		del self._saver
+		if hasattr(self, "_fileDialogs"):
+			del self._fileDialogs
+		if hasattr(self, "_printDialog"):
+			del self._printDialog
+		if hasattr(self, "_lessonTracker"):
+			del self._lessonTracker
+		if hasattr(self, "_saver"):
+			del self._saver
+		if hasattr(self, "_loader"):
+			del self._loader
+		if hasattr(self, "_printer"):
+			del self._printer
+
 		del self._execute
 
 	def run(self, path=None):
@@ -95,17 +140,29 @@ class UiControllerModule(object):
 	def new(self):
 		self._uiModule.showStartTab()
 
+	@property
+	def _lastPath(self):
+		try:
+			return self._store["org.openteacher.uiController.lastPath"]
+		except KeyError:
+			return os.path.expanduser("~")
+
+	@_lastPath.setter
+	def _lastPath(self, path):
+		self._store["org.openteacher.uiController.lastPath"] = path
+
 	def open_(self, path=None):
 		loader = self._modules.default("active", type="loader")
 
 		usableExtensions = loader.usableExtensions
 		if not path:
 			path = self._fileDialogs.getLoadPath(
-				os.path.expanduser("~"), #FIXME: path should be saved & restored
+				self._lastPath,
 				usableExtensions
 			)
 		if path:
 			loader.load(path)
+			self._lastPath = path
 		self._uiModule.statusViewer.show(_("File opened succesfully."))
 
 	def save(self, path=None):
@@ -125,21 +182,19 @@ class UiControllerModule(object):
 
 	def saveAs(self):
 		path = self._fileDialogs.getSavePath(
-			os.path.expanduser("~"), #FIXME: path should be saved & restored
+			self._lastPath,
 			#sort on names (not extensions)
 			sorted(self._saver.usableExtensions, key=lambda ext: ext[1]),
 			#default (== top most) extension
 			self._saver.usableExtensions[0]
 		)
 		if path:
+			self._lastPath = path
 			self._saver.save(path)
 
 	def print_(self):
 		#Setup printer
-		qtPrinter = self._modules.default(
-			"active",
-			type="printDialog"
-		).getConfiguredPrinter()
+		qtPrinter = self._printDialog.getConfiguredPrinter()
 		if qtPrinter is None:
 			return
 
@@ -150,15 +205,15 @@ class UiControllerModule(object):
 		for module in self._mm.mods("active", type="lesson"):
 			module.lessonCreationFinished.handle(self._updateMenuItemsWrapper)
 
-		self._uiModule.newEvent.handle(self.new)
-		self._uiModule.openEvent.handle(self.open_)
-		self._uiModule.saveEvent.handle(self.save)
-		self._uiModule.saveAsEvent.handle(self.saveAs)
-		self._uiModule.printEvent.handle(self.print_)
-		self._uiModule.settingsEvent.handle(self.settings)
-		self._uiModule.aboutEvent.handle(self.about)
-		self._uiModule.documentationEvent.handle(self.documentation)
-		self._uiModule.quitEvent.handle(self.quit_)
+		self._uiModule.newAction.triggered.handle(self.new)
+		self._uiModule.openAction.triggered.handle(self.open_)
+		self._uiModule.saveAction.triggered.handle(self.save)
+		self._uiModule.saveAsAction.triggered.handle(self.saveAs)
+		self._uiModule.printAction.triggered.handle(self.print_)
+		self._uiModule.settingsAction.triggered.handle(self.settings)
+		self._uiModule.aboutAction.triggered.handle(self.about)
+		self._uiModule.documentationAction.triggered.handle(self.documentation)
+		self._uiModule.quitAction.triggered.handle(self.quit_)
 
 		self._uiModule.tabChanged.handle(self._updateMenuItems)
 
@@ -166,27 +221,28 @@ class UiControllerModule(object):
 		for module in self._mm.mods("active", type="lesson"):
 			module.lessonCreationFinished.unhandle(self._updateMenuItemsWrapper)
 
-		self._uiModule.newEvent.unhandle(self.new)
-		self._uiModule.openEvent.unhandle(self.open_)
-		self._uiModule.saveEvent.unhandle(self.save)
-		self._uiModule.saveAsEvent.unhandle(self.saveAs)
-		self._uiModule.printEvent.unhandle(self.print_)
-		self._uiModule.settingsEvent.unhandle(self.settings)
-		self._uiModule.aboutEvent.unhandle(self.about)
-		self._uiModule.documentationEvent.unhandle(self.documentation)
-		self._uiModule.quitEvent.unhandle(self.quit_)
+		self._uiModule.newAction.triggered.unhandle(self.new)
+		self._uiModule.openAction.triggered.unhandle(self.open_)
+		self._uiModule.saveAction.triggered.unhandle(self.save)
+		self._uiModule.saveAsAction.triggered.unhandle(self.saveAs)
+		self._uiModule.printAction.triggered.unhandle(self.print_)
+		self._uiModule.settingsAction.triggered.unhandle(self.settings)
+		self._uiModule.aboutAction.triggered.unhandle(self.about)
+		self._uiModule.documentationAction.triggered.unhandle(self.documentation)
+		self._uiModule.quitAction.triggered.unhandle(self.quit_)
 
 		self._uiModule.tabChanged.unhandle(self._updateMenuItems)
 
 	def _updateMenuItems(self):
 		#subscribe self to the lesson (if it's there nothing happens
-		#due to the internal implementation of event.)
+		#due to the internal implementation of event. Which is also
+		#guaranteed by a test suite test, btw. So it's by design.)
 		if hasattr(self._lessonTracker.currentLesson, "changedEvent"):
 			self._lessonTracker.currentLesson.changedEvent.handle(self._updateMenuItems)
 
 		#new, hide when already on the +-tab
 		hideNew = self._uiModule.startTabActive
-		self._uiModule.enableNew(not hideNew)
+		self._uiModule.newAction.enabled = not hideNew
 
 		#open
 		try:
@@ -195,7 +251,8 @@ class UiControllerModule(object):
 			openSupport = False
 		else:
 			openSupport = loader.openSupport
-		self._uiModule.enableOpen(openSupport)
+		openSupport = openSupport and self._fileDialogs is not None
+		self._uiModule.openAction.enabled = openSupport
 
 		#save
 		try:
@@ -204,13 +261,14 @@ class UiControllerModule(object):
 			saveSupport = False
 		else:
 			saveSupport = saver.saveSupport
-		self._uiModule.enableSaveAs(saveSupport)
+		saveSupport = saveSupport and self._fileDialogs is not None
+		self._uiModule.saveAsAction.enabled = saveSupport
 
 		try:
 			enableSave = saveSupport and self._lessonTracker.currentLesson.changed
 		except AttributeError:
 			enableSave = saveSupport #assume changed
-		self._uiModule.enableSave(enableSave)
+		self._uiModule.saveAction.enabled = enableSave
 
 		#print
 		try:
@@ -219,19 +277,20 @@ class UiControllerModule(object):
 			printSupport = False
 		else:
 			printSupport = printer.printSupport
-		self._uiModule.enablePrint(printSupport)
+		printSupport = printSupport and self._printDialog is not None
+		self._uiModule.printAction.enabled = printSupport
 
 		#settings
 		settingsSupport = len(set(self._mm.mods("active", type="settingsDialog"))) != 0
-		self._uiModule.enableSettings(settingsSupport)
+		self._uiModule.settingsAction.enabled = settingsSupport
 
 		#about
 		aboutSupport = len(set(self._mm.mods("active", type="about"))) != 0
-		self._uiModule.enableAbout(aboutSupport)
+		self._uiModule.aboutAction.enabled = aboutSupport
 
 		#documentation
 		docSupport = len(set(self._mm.mods("active", type="documentation"))) != 0
-		self._uiModule.enableDocumentation(docSupport)
+		self._uiModule.documentationAction.enabled = docSupport
 
 	def _updateMenuItemsWrapper(self, *args, **kwargs):
 		self._updateMenuItems()

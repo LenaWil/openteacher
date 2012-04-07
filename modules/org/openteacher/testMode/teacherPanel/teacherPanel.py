@@ -608,7 +608,7 @@ class TestModeTeacherPanelModule(object):
 	def disable(self):
 		self.active = False
 
-		self._testMenu.removeAction(self._action)
+		self._action.remove()
 
 		del self._testMenu
 		del self._action

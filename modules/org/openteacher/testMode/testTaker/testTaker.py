@@ -105,7 +105,7 @@ class TestModeTestTaker(object):
 	def disable(self):
 		self.active = False
 
-		self._testMenu.removeAction(self._action)
+		self._action.remove()
 
 		del self._modules
 		del self._action

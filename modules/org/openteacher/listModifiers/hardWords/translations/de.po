@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-04-07 20:36+0200\n"
 "PO-Revision-Date: 2012-02-11 14:59+0000\n"
 "Last-Translator: Alexander Haack <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
@@ -18,7 +18,9 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-02-12 05:03+0000\n"
 "X-Generator: Launchpad (build 14771)\n"
 
-#: hardWords.py:81
-#, python-format
-msgid "Only hard words (<50% right)"
+#. TRANSLATORS: %% will automatically be converted to a single
+#. %-sign
+#: hardWords.py:83
+#, fuzzy, python-format
+msgid "Only hard words (<50%% right)"
 msgstr "Nur schwere Wörter (<50% richtig)"

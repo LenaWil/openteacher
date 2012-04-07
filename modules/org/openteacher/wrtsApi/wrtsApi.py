@@ -30,15 +30,25 @@ class WrtsApiModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 			self._mm.mods(type="settings"),
+			self._mm.mods(type="lesson"),
 		)
 		self.requires = (
 			self._mm.mods(type="ui"),
+			self._mm.mods(type="buttonRegister"),
 			self._mm.mods(type="loader"),
 			self._mm.mods(type="lessonTracker"),
 			self._mm.mods(type="wordsStringComposer"),
 			self._mm.mods(type="wordsStringParser"),
 		)
 		self.filesWithTranslations = ("wrtsApi.py", "ui.py")
+
+	def _updateMenuItemsWrapper(self, *args, **kwargs):
+		self._updateMenuItems()
+
+	def _updateMenuItems(self):
+		lesson = self._lessonTracker.currentLesson
+		canExport = bool(lesson) and lesson.module.dataType == "words"
+		self._action.enabled = canExport
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
@@ -49,11 +59,17 @@ class WrtsApiModule(object):
 		self._ui = self._mm.import_("ui")
 		self._api = self._mm.import_("api")
 
-		self._button = self._uiModule.addLessonLoadButton()
+		self._button = self._modules.default("active", type="buttonRegister").registerButton("load")
 		self._button.clicked.handle(self.importFromWrts)
 
 		self._action = self._uiModule.fileMenu.addAction()
 		self._action.triggered.handle(self.exportToWrts)
+
+		self._uiModule.tabChanged.handle(self._updateMenuItems)
+		self._updateMenuItems()
+
+		for module in self._mm.mods("active", type="lesson"):
+			module.lessonCreationFinished.handle(self._updateMenuItemsWrapper)
 
 		try:
 			self._settings = self._modules.default(type="settings")
@@ -97,8 +113,12 @@ class WrtsApiModule(object):
 	def disable(self):
 		self.active = False
 
-		self._button.remove()
-		self._uiModule.fileMenu.removeAction(self._action)
+		self._action.remove()
+
+		self._uiModule.tabChanged.unhandle(self._updateMenuItems)
+
+		for module in self._mm.mods("active", type="lesson"):
+			module.lessonCreationFinished.unhandle(self._updateMenuItemsWrapper)
 
 		del self._modules
 		del self._uiModule
@@ -129,7 +149,7 @@ class WrtsApiModule(object):
 		self._ui._, self._ui.ngettext = _, ngettext
 
 		#Translate button + menu action
-		self._button.text = _("Import from WRDS")
+		self._button.changeText.send(_("Import from WRDS"))
 		self._action.text = _("Export to WRDS")
 
 		#Translate settings
@@ -212,8 +232,7 @@ class WrtsApiModule(object):
 
 	def exportToWrts(self):
 		lesson = self._lessonTracker.currentLesson
-		if not (lesson and lesson.module.dataType == "words"):
-			return #FIXME: menu item should be disabled in this situation
+
 		if not self._loginToWrts():
 			return
 

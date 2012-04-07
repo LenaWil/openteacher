@@ -28,6 +28,7 @@ class ExecuteModule(object):
 		self.type = "execute"
 		self.requires = (
 			self._mm.mods(type="event"),
+
 		)
 		self.uses = (
 			self._mm.mods(type="settings"),
@@ -36,17 +37,16 @@ class ExecuteModule(object):
 	def _getMod(self, *args, **kwargs):
 		mods = set(self._mm.mods(*args, **kwargs))
 		if len(mods) != 1:
-			raise ValueError("There has to be exactly one module installed with signature %s." % ((args, kwargs)))
+			raise ValueError("There has to be exactly one module installed with signature %s." % ((args, kwargs),))
 		return mods.pop()
 
 	def execute(self):
 		#load the settings module's dependencies (currently one)
-		self._getMod(type="dataStore")
-
 		try:
+			self._getMod(type="dataStore")
 			settings = self._getMod(type="settings")
 			settings.initialize()
-		except:
+		except ValueError:
 			profileSetting = dict()
 			profileSetting["value"] = "all"
 		else:
@@ -69,7 +69,6 @@ class ExecuteModule(object):
 			"default": profileSetting["value"],
 			"type": unicode,
 			"help": "Start OpenTeacher with the PROFILE profile.",
-			"metavar": "PROFILE",
 		})
 		args = parser.parse_args()
 
@@ -85,12 +84,14 @@ class ExecuteModule(object):
 
 		self.startRunning.send()
 		self.aboutToExit.send()
-	
+
 	def _settingChanged(self):
-		dialogShower = self._modules.default("active", type="dialogShower")
-		settingsDialog = self._modules.default("active", type="settingsDialog")
+		try:
+			dialogShower = self._modules.default("active", type="dialogShower")
+			settingsDialog = self._modules.default("active", type="settingsDialog")
+		except IndexError:
+			pass #no guarantees can be made for this module...
 		dialogShower.showMessage.send(settingsDialog.tab, "Restart OpenTeacher for this setting to take effect.")
-		
 
 def init(moduleManager):
 	return ExecuteModule(moduleManager)

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -27,13 +27,15 @@ class TextToSpeechProviderTopo(object):
 		self.requires = (
 			self._mm.mods(type="textToSpeech"),
 		)
+		self.uses = (
+			self._mm.mods(type="lessonType"),
+			self._mm.mods(type="translator"),
+			self._mm.mods(type="settings"),
+		)
+		self.filesWithTranslations = ("topo.py",)
 
-	def enable(self):
-		self._modules = set(self._mm.mods(type="modules")).pop()
+	def _retranslate(self):
 		#setup translation
-		global _
-		global ngettext
-		
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -42,26 +44,44 @@ class TextToSpeechProviderTopo(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		
+		self._pronounceSetting.update({
+			"name": _("Pronounce places"),
+			"category": _("Pronounciation"),
+			"subcategory": _("Pronounciation"),
+		})
+
+	def enable(self):
+		self._modules = set(self._mm.mods(type="modules")).pop()
+
 		for module in self._mm.mods("active", type="lessonType"):
 			module.newItem.handle(self.itemSent)
-		
-		self._settings = self._modules.default(type="settings")
-		
-		# Add settings
-		self._pronounceSetting = self._settings.registerSetting(**{
-			"internal_name": "org.openteacher.ttsProviders.topo.pronounce",
-			"name": _("Pronounce places"),
-			"type": "boolean",
-			"category": _("Pronounciation"),
-			"subcategory": _("Pronounciation"), #FIXME: retranslate
-			"defaultValue": False,
-		})
-		
+
+		#Add setting
+		try:
+			self._settings = self._modules.default(type="settings")
+		except IndexError:
+			self._pronounceSetting = {
+				"value": False,
+			}
+		else:
+			self._pronounceSetting = self._settings.registerSetting(**{
+				"internal_name": "org.openteacher.ttsProviders.topo.pronounce",
+				"type": "boolean",
+				"defaultValue": False,
+			})
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.active = True
 
 	def disable(self):
-		self._modules
+		del self._modules
 		for module in self._mm.mods("active", type="lessonType"):
 			module.newItem.unhandle(self.itemSent)
 

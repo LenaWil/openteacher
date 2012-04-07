@@ -60,14 +60,14 @@ class LessonTrackerModule(object):
 		self.active = True
 
 	def disable(self):
+		self.active = False
+
 		del self._modules
 		del self._lessons
 
 		#Keeps track of all created lessons
 		for module in self._mm.mods("active", type="lesson"):
 			module.lessonCreated.unhandle(self._lessonAdded)
-
-		self.active = False
 
 def init(moduleManager):
 	return LessonTrackerModule(moduleManager)

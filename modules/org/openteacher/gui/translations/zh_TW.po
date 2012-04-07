@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-04-02 19:09+0200\n"
+"POT-Creation-Date: 2012-04-07 20:36+0200\n"
 "PO-Revision-Date: 2011-12-11 14:59+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
@@ -18,89 +18,86 @@ msgstr ""
 "X-Launchpad-Export-Date: 2011-12-12 05:56+0000\n"
 "X-Generator: Launchpad (build 14458)\n"
 
-#: gui.py:349
+#: gui.py:313
 msgid "Open from file"
 msgstr ""
 
-#: ui.py:33
+#: ui.py:34
 msgid "Close Tab"
 msgstr "關閉分頁"
 
-#: ui.py:80
+#: ui.py:81
 msgid "Enter list"
 msgstr "輸入列表"
 
-#: ui.py:82
+#: ui.py:83
 msgid "Teach me!"
 msgstr "教我！"
 
-#: ui.py:84
+#: ui.py:85
 msgid "Show results"
 msgstr ""
 
-#: ui.py:195
-msgid "Create lesson:"
-msgstr "建立課程："
-
-#: ui.py:196
-msgid "Load lesson:"
-msgstr "載入課程："
-
-#: ui.py:198
-msgid "Recently opened:"
-msgstr "最近開啟檔案："
-
-#: ui.py:444
+#: ui.py:248
 msgid "&File"
 msgstr "檔案（&F）"
 
-#: ui.py:445
+#: ui.py:249
 msgid "&New"
 msgstr "新建(&N)..."
 
-#: ui.py:446
+#: ui.py:250
 msgid "&Open"
 msgstr "開啟 (&O)"
 
-#: ui.py:447
+#: ui.py:251
 msgid "&Save"
 msgstr "儲存(&S)..."
 
-#: ui.py:448
+#: ui.py:252
 msgid "Save &As"
 msgstr "另存新檔(&A)"
 
-#: ui.py:449
+#: ui.py:253
 msgid "&Print"
 msgstr "列印(&P)"
 
-#: ui.py:450
+#: ui.py:254
 msgid "&Quit"
 msgstr "結束(&Q)"
 
-#: ui.py:452
+#: ui.py:256
 msgid "&Edit"
 msgstr "編輯 (&E)"
 
-#: ui.py:453
+#: ui.py:257
 msgid "&Settings"
 msgstr "設置(&S)"
 
-#: ui.py:455
+#: ui.py:259
 msgid "&Help"
 msgstr "幫助(&H)"
 
-#: ui.py:456
+#: ui.py:260
 msgid "&Documentation"
 msgstr "說明文件(&D)"
 
-#: ui.py:457
+#: ui.py:261
 msgid "&About"
 msgstr "關於(&A)"
 
-#: ui.py:459
+#: ui.py:263
 msgid "Toolbar"
 msgstr "工具列"
+
+#~ msgid "Create lesson:"
+#~ msgstr "建立課程："
+
+#~ msgid "Load lesson:"
+#~ msgstr "載入課程："
+
+#~ msgid "Recently opened:"
+#~ msgstr "最近開啟檔案："
 
 #~ msgid "Choose file to save"
 #~ msgstr "選擇檔案儲存"

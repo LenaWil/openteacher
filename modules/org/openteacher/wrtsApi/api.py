@@ -75,26 +75,27 @@ class RequestXml(xml.dom.minidom.Document):
 		answerLanguageDom.appendChild(self.createTextNode(l["answerLanguage"]))
 		listDom.appendChild(answerLanguageDom)
 
-		for word in l["items"]:
-			#create word-element
-			wordDom = self.createElement("word")
+		if "items" in l:
+			for word in l["items"]:
+				#create word-element
+				wordDom = self.createElement("word")
 
-			#append question
-			questionWordDom = self.createElement("word-a")
-			questionWordDom.appendChild(self.createTextNode(
-				self._compose(word["questions"])
-			))
-			wordDom.appendChild(questionWordDom)
+				#append question
+				questionWordDom = self.createElement("word-a")
+				questionWordDom.appendChild(self.createTextNode(
+					self._compose(word["questions"])
+				))
+				wordDom.appendChild(questionWordDom)
 
-			#append answer (and second answer if one)
-			answerWordDom = self.createElement("word-b")
-			answerWordDom.appendChild(self.createTextNode(
-				self._compose(word["answers"])
-			))
-			wordDom.appendChild(answerWordDom)
+				#append answer (and second answer if one)
+				answerWordDom = self.createElement("word-b")
+				answerWordDom.appendChild(self.createTextNode(
+					self._compose(word["answers"])
+				))
+				wordDom.appendChild(answerWordDom)
 
-			#append word to wordsElement
-			wordsDom.appendChild(wordDom)
+				#append word to wordsElement
+				wordsDom.appendChild(wordDom)
 		return self.toxml(encoding="UTF-8")
 
 class WrtsConnection(object):

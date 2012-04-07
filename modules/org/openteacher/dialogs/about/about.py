@@ -344,7 +344,6 @@ class AboutDialogModule(object):
 
 		del self._modules
 		del self._activeDialogs
-		del self.name
 
 def init(moduleManager):
 	return AboutDialogModule(moduleManager)

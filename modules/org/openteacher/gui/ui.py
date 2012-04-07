@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Marten de Vries
+#	Copyright 2009 Nokia Corporation and/or its subsidiary(-ies)
 #
 #	This file is part of OpenTeacher.
 #
@@ -86,215 +87,21 @@ class LessonTabWidget(QtGui.QTabWidget):
 		self.setTabPosition(QtGui.QTabWidget.South)
 		self.setDocumentMode(True)
 
-class StartTabButton(QtGui.QPushButton):
-	def __init__(self, *args, **kwargs):
-		super(StartTabButton, self).__init__(*args, **kwargs)
-		#our setText is reimplemented and the QPushButton constructor
-		#doesn't call setText by default.
-		self.setText(self.text())
-
-		self.setSizePolicy(
-			QtGui.QSizePolicy.MinimumExpanding,
-			QtGui.QSizePolicy.MinimumExpanding
-		)
-
-	def setText(self, text):
-		self._text = text
-		self._cache = {}
-
-	def sizeHint(self):
-		fm = self.fontMetrics()
-		width = max(map(fm.width, self._text.split(" "))) + 20 #+20 to keep margin
-		height = fm.height() * len(self._splitLines().split("\n")) +10 #+10 to keep margin
-
-		return QtCore.QSize(width, height)
-
-	def _splitLines(self):
-		fm = self.fontMetrics()
-		result = u""
-		curLine = u""
-		words = unicode(self._text).split(u" ")
-		w = self.width()
-		try:
-			return self._cache[w]
-		except KeyError:
-			pass
-		i = 0
-		while True:
-			try:
-				word = words[i]
-			except IndexError:
-				break
-			if not curLine and fm.width(" " + word) >= w:
-				result += u"\n" + word
-				i += 1
-			elif fm.width(curLine + " " + word) >= w:
-				result += u"\n" + curLine
-				curLine = u""
-			else:
-				curLine += u" " + word
-				i += 1
-		result += "\n" + curLine
-		result = result.strip()
-		self._cache[w] = result
-		return result
-
-	def resizeEvent(self, *args, **kwargs):
-		result = self._splitLines()
-		super(StartTabButton, self).setText(result)
-		super(StartTabButton, self).resizeEvent(*args, **kwargs)
-
-class StartWidget(QtGui.QSplitter):
-	def __init__(self, recentlyOpenedViewer, *args, **kwargs):
-		super(StartWidget, self).__init__(*args, **kwargs)
-
-		self._createLessonCurrentRow = 0
-		self._createLessonCurrentColumn = 0
-
-		self._loadLessonCurrentRow = 0
-		self._loadLessonCurrentColumn = 0
-
-		self.createLessonLayout = QtGui.QGridLayout()
-
-		self.createLessonGroupBox = QtGui.QGroupBox()
-		self.createLessonGroupBox.setLayout(self.createLessonLayout)
-
-		self.loadLessonLayout = QtGui.QGridLayout()
-
-		self.loadLessonGroupBox = QtGui.QGroupBox()
-		self.loadLessonGroupBox.setLayout(self.loadLessonLayout)
-
-		openLayout = QtGui.QVBoxLayout()
-		openLayout.addWidget(self.createLessonGroupBox)
-		openLayout.addWidget(self.loadLessonGroupBox)
-
-		left = self.style().pixelMetric(QtGui.QStyle.PM_LayoutLeftMargin)
-		openLayout.setContentsMargins(left, 0, 0, 0)
-
-		openWidget = QtGui.QWidget(self)
-		openWidget.setLayout(openLayout)
-
-		self.addWidget(openWidget)
-
-		self.setStretchFactor(0, 7)
-
-		if recentlyOpenedViewer:
-			recentlyOpenedLayout = QtGui.QVBoxLayout()
-
-			right = self.style().pixelMetric(QtGui.QStyle.PM_LayoutRightMargin)
-			recentlyOpenedLayout.setContentsMargins(0, 0, 0, 0)
-			recentlyOpenedLayout.addWidget(recentlyOpenedViewer)
-
-			self.recentlyOpenedGroupBox = QtGui.QGroupBox()
-			self.recentlyOpenedGroupBox.setLayout(recentlyOpenedLayout)
-
-			self.addWidget(self.recentlyOpenedGroupBox)
-			self.setStretchFactor(1, 2)
-
-	def retranslate(self):
-		self.createLessonGroupBox.setTitle(_("Create lesson:"))
-		self.loadLessonGroupBox.setTitle(_("Load lesson:"))
-		try:
-			self.recentlyOpenedGroupBox.setTitle(_("Recently opened:"))
-		except AttributeError:
-			pass
-
-	def addLessonCreateButton(self):
-		button = StartTabButton()
-
-		self.createLessonLayout.addWidget(
-			button,
-			self._createLessonCurrentRow,
-			self._createLessonCurrentColumn
-		)
-
-		self._createLessonCurrentColumn += 1
-		if self._createLessonCurrentColumn == 2:
-			self._createLessonCurrentRow += 1
-			self._createLessonCurrentColumn = 0
-
-		return button
-
-	def addLessonLoadButton(self):
-		button = StartTabButton()
-
-		self.loadLessonLayout.addWidget(
-			button,
-			self._loadLessonCurrentRow,
-			self._loadLessonCurrentColumn
-		)
-
-		self._loadLessonCurrentColumn += 1
-		if self._loadLessonCurrentColumn == 2:
-			self._loadLessonCurrentRow += 1
-			self._loadLessonCurrentColumn = 0
-
-		return button
-
-	def removeLessonCreateButton(self, button):
-		i = self.createLessonLayout.indexOf(button)
-		row, column = self.createLessonLayout.getItemPosition(i)[:2]
-
-		self.createLessonLayout.removeWidget(button)
-		prevColumn = column
-		column += 1
-		if column == 2:
-			column = 0
-			row += 1
-		while row != self.createLessonLayout.rowCount():
-			item = self.createLessonLayout.itemAtPosition(row, column)
-			self.createLessonLayout.addItem(item, row, column)
-			prevColumn = column
-			column += 1
-			if column == 2:
-				column = 0
-				row += 1
-
-		self._createLessonCurrentColumn -= 1
-		if self._createLessonCurrentColumn == 0:
-			self._createLessonCurrentRow -= 1
-			self._createLessonCurrentColumn = 1
-
-	def removeLessonLoadButton(self, button):
-		i = self.loadLessonLayout.indexOf(button)
-		row, column = self.createLessonLayout.getItemPosition(i)[:2]
-
-		self.loadLessonLayout.removeWidget(button)
-		button.setParent(None)
-		prevColumn = column
-		column += 1
-		if column == 2:
-			column = 0
-			row += 1
-		while True:
-			item = self.loadLessonLayout.itemAtPosition(row, column)
-			if not item:
-				break
-			self.loadLessonLayout.addItem(item, row, column)
-			prevColumn = column
-			column += 1
-			if column == 2:
-				column = 0
-				row += 1
-
-		self._loadLessonCurrentColumn -= 1
-		if self._loadLessonCurrentColumn == 0:
-			self._loadLessonCurrentRow -= 1
-			self._loadLessonCurrentColumn = 1
-
 class FilesTabWidget(QtGui.QTabWidget):
-	def __init__(self, recentlyOpenedViewer, *args, **kwargs):
+	def __init__(self, startWidget, *args, **kwargs):
 		super(FilesTabWidget, self).__init__(*args, **kwargs)
 
-		self.startWidget = StartWidget(recentlyOpenedViewer, self)
-		
+		self.startWidget = startWidget
+
+		#super because our method does add a close button, which we
+		#don't want.
 		super(FilesTabWidget, self).addTab(
 			self.startWidget,
 			QtGui.QIcon.fromTheme("add",
 				QtGui.QIcon(ICON_PATH + "add.png"),
 			),
 			""
-		) # super because our method does add a close button
+		)
 
 		self.setDocumentMode(True)
 
@@ -315,20 +122,17 @@ class FilesTabWidget(QtGui.QTabWidget):
 
 		return i
 
-	def retranslate(self):
-		self.startWidget.retranslate()
-
 class OpenTeacherWidget(QtGui.QMainWindow):
 	activityChanged = QtCore.pyqtSignal([object])
 
-	def __init__(self, recentlyOpenedViewer=None, aeroSetting=False, *args, **kwargs):
+	def __init__(self, startWidget=None, aeroSetting=False, *args, **kwargs):
 		super(OpenTeacherWidget, self).__init__(*args, **kwargs)
 
 		self.resize(640, 480)
 
 		#tabWidget
-		self.tabWidget = FilesTabWidget(recentlyOpenedViewer, self)
-		
+		self.tabWidget = FilesTabWidget(startWidget, self)
+
 		self.setCentralWidget(self.tabWidget)
 
 		#File menu
@@ -457,8 +261,6 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 		self.aboutAction.setText(_("&About"))
 
 		self.toolBar.setWindowTitle(_("Toolbar"))
-
-		self.tabWidget.retranslate()
 
 	def changeEvent(self, event):
 		if event.type() == QtCore.QEvent.ActivationChange:

@@ -33,7 +33,7 @@ class ThemeModule(object):
 		self._uiModule = self._modules.default("active", type="ui")
 		self.active = True
 
-		self.installTheme() #FIXME
+		self.installTheme() #FIXME. I.e., make some kind of settings widget for themes, or only enable them in a custom profile.
 
 	def installTheme(self):
 		stylesheet = u"""
