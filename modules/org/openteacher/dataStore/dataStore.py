@@ -69,6 +69,8 @@ class DataStoreModule(object):
 		self.store = JSONShelve(os.path.join(self._folderPath, "store.json"))
 		atexit.register(self.store.write)
 
+		self.active = True
+
 	def _getFolderPath(self):
 		if os.name == "nt":
 			return os.path.join(os.getenv("appdata"), "OpenTeacher")

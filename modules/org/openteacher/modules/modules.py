@@ -110,16 +110,13 @@ class ModulesModule(object):
 
 		#enable modules
 		for mod in reversed(sorted_tree):
-			try:
-				active = mod.active
-			except AttributeError:
-				active = False
+			active = getattr(mod, "active", False) #False -> default
 			if self._hasPositivePriority(mod) and not active:
 				depsactive = True
 				if hasattr(mod, "requires"):
 					for dep in mod.requires:
 						depsactive = len(filter(
-							lambda x: not hasattr(x, "active") or bool(getattr(x, "active")),
+							lambda x: getattr(x, "active", False),
 							dep
 						)) != 0
 						if not depsactive:
@@ -129,16 +126,13 @@ class ModulesModule(object):
 
 		#disable modules
 		for mod in sorted_tree:
-			try:
-				active = mod.active
-			except AttributeError:
-				active = False
+			active = getattr(mod, "active", False) #False -> default
 			if not self._hasPositivePriority(mod) and active:
 				depsactive = True
 				if hasattr(mod, "requires"):
 					for dep in mod.requires:
 						depsactive = len(filter(
-							lambda x: not hasattr(x, "active") or bool(getattr(x, "active")),
+							lambda x: getattr(x, "active", False),
 							dep
 						)) != 0
 						if not depsactive:

@@ -33,6 +33,7 @@ class ExecuteModule(object):
 		self.uses = (
 			self._mm.mods(type="settings"),
 		)
+		self.active = True
 
 	def _getMod(self, *args, **kwargs):
 		mods = set(self._mm.mods(*args, **kwargs))

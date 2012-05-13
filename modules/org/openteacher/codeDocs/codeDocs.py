@@ -25,6 +25,10 @@ import os
 import types
 import mimetypes
 import sys
+import pygments
+import pygments.lexers
+import pygments.formatters
+import pygments.util
 
 class ModulesHandler(object):
 	def __init__(self, moduleManager, templates, *args, **kwargs):
@@ -121,7 +125,10 @@ class ModulesHandler(object):
 	def modules(self, *args):
 		args = list(args)
 		args[-1] = args[-1][:-len(".html")]
-		mod = self._mods["modules/" + "/".join(args)]
+		try:
+			mod = self._mods["modules/" + "/".join(args)]
+		except KeyError:
+			raise cherrypy.HTTPError(404)
 
 		attrs = dir(mod)
 		methods = filter(lambda x: self._isFunction(mod, x), attrs)
@@ -133,6 +140,19 @@ class ModulesHandler(object):
 
 		#remove special properties
 		properties = set(properties) - set(["type", "uses", "requires"])
+
+		propertyDocs = {}
+		for property in properties:
+			try:
+				propertyObj = getattr(mod.__class__, property)
+			except AttributeError:
+				#no @property
+				continue
+			try:
+				propertyDocs[property] = self._newlineToBr(propertyObj.__doc__)
+			except AttributeError:
+				#also no @property
+				continue
 
 		#uses
 		try:
@@ -153,6 +173,28 @@ class ModulesHandler(object):
 			methodDocs[method] = self._newlineToBr(methodObj.__doc__)
 			methodArgs[method] = inspect.getargspec(methodObj)[0]
 
+		fileData = []
+		for root, dirs, files in os.walk(os.path.dirname(mod.__class__.__file__)):
+			for f in sorted(files):
+				ext = os.path.splitext(f)[1]
+				if ext not in [".html", ".py", ".js", ".css", ".po", ".pot"]:
+					continue
+				path = os.path.join(root, f)
+
+				code = open(path).read()
+				lexer = pygments.lexers.get_lexer_for_filename(path)
+				formatter = pygments.formatters.HtmlFormatter(**{
+					"linenos": "table",
+					"anchorlinenos": True,
+					"lineanchors": path,
+				})
+				source = pygments.highlight(code, lexer, formatter)
+				commonLength = len(os.path.commonprefix([
+					path,
+					os.path.dirname(mod.__class__.__file__)
+				]))
+				fileData.append((path[commonLength:], source))
+
 		t = pyratemp.Template(filename=self._templates["module"])
 		return t(**{
 			"name": mod.__class__.__name__,
@@ -164,6 +206,10 @@ class ModulesHandler(object):
 			"methodDocs": methodDocs,
 			"methodArgs": methodArgs,
 			"properties": sorted(properties),
+			"propertyDocs": propertyDocs,
+			"files": fileData,
+			#last formatter is still there
+			"pygmentsStyle": formatter.get_style_defs('.source'),
 		})
 
 class CodeDocumentationModule(object):

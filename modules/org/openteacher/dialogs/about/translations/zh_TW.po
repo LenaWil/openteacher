@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-05-13 13:05+0200\n"
 "PO-Revision-Date: 2011-12-11 14:56+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
@@ -26,19 +26,19 @@ msgstr "計劃的網站"
 msgid "Full license text"
 msgstr "完整的授權條款內容"
 
-#: about.py:218
+#: about.py:220
 msgid "Thanks to all Launchpad contributors!"
 msgstr "感謝所有 Launchpad 頁獻者"
 
-#: about.py:258 about.py:259
+#: about.py:261 about.py:262
 msgid "About"
 msgstr "關於本軟體"
 
-#: about.py:260
+#: about.py:263
 msgid "License"
 msgstr "授權條款"
 
-#: about.py:261
+#: about.py:264
 msgid "Authors"
 msgstr "作者群"
 

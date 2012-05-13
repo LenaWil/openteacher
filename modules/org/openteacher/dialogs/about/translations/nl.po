@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-05-13 13:05+0200\n"
 "PO-Revision-Date: 2011-07-19 02:58+0000\n"
 "Last-Translator: Marten de Vries <Unknown>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,19 +26,19 @@ msgstr "Project website"
 msgid "Full license text"
 msgstr "Volledige licentietekst"
 
-#: about.py:218
+#: about.py:220
 msgid "Thanks to all Launchpad contributors!"
 msgstr "Alle helpers op Launchpad, bedankt!"
 
-#: about.py:258 about.py:259
+#: about.py:261 about.py:262
 msgid "About"
 msgstr "Over"
 
-#: about.py:260
+#: about.py:263
 msgid "License"
 msgstr "Licentie"
 
-#: about.py:261
+#: about.py:264
 msgid "Authors"
 msgstr "Auteurs"
 

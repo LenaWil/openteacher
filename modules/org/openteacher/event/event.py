@@ -40,6 +40,8 @@ class EventModule(object):
 		self._mm = moduleManager
 
 		self.type = "event"
+		#The event module doesn't have to be enabled.
+		self.active = True
 
 	@staticmethod
 	def createEvent(*args, **kwargs):

@@ -20,10 +20,11 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 class SettingDict(dict):
-	def __init__(self, executeCallback, *args, **kwargs):
+	def __init__(self, executeCallback, addedNow,*args, **kwargs):
 		super(SettingDict, self).__init__(*args, **kwargs)
 		
 		self._executeCallback = executeCallback
+		self.addedNow = addedNow
 
 	def __setitem__(self, name, value):
 		super(SettingDict, self).__setitem__(name, value)
@@ -50,10 +51,13 @@ class SettingsModule(object):
 			self._settings = store["org.openteacher.settings.settings"]
 		except KeyError:
 			self._settings = store["org.openteacher.settings.settings"] = {}
-		
+
 		#replace the dicts by SettingDicts
 		for key, value in self._settings.iteritems():
-			self._settings[key] = SettingDict(self._executeCallback, value)
+			#False because it was added in a previous session
+			self._settings[key] = SettingDict(self._executeCallback, False, value)
+
+		self.active = True
 
 	def registerSetting(self, internal_name, **setting):
 		"""Adds a setting. internal_name should be unique and describe
@@ -115,8 +119,12 @@ class SettingsModule(object):
 		else:
 			#use the default value
 			setting["value"] = setting.pop("defaultValue")
-		self._settings[internal_name] = SettingDict(self._executeCallback, setting)
-		return self._settings[internal_name]
+		#wrap it, True because it's added now
+		wrappedSetting = SettingDict(self._executeCallback, True, setting)
+		#store
+		self._settings[internal_name] = wrappedSetting
+
+		return wrappedSetting
 	
 	def setting(self, internal_name):
 		"""Method to return a setting from the internal name."""
@@ -125,7 +133,17 @@ class SettingsModule(object):
 
 	@property
 	def registeredSettings(self):
-		return self._settings.values()
+		"""Returns a list of all registered settings. The way to access
+		   the settings if you are providing a settings dialog/other
+		   interface like that.
+
+		"""
+		result = []
+		#only settings registered this session
+		for value in self._settings.values():
+			if getattr(value, "addedNow", False):
+				result.append(value)
+		return result
 
 	def _executeCallback(self, callback):
 		obj = self._modules.default(*callback["args"], **callback["kwargs"])

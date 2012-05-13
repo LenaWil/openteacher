@@ -70,7 +70,7 @@ class UpdatesDialogModule(object):
 	#Separate class, so the namespace isn't cluttered.
 	class _Signals(QtCore.QObject):
 		finishedFetching = QtCore.pyqtSignal()
-	#one time instance, so overwrite the class
+	#singleton, so overwrite the class
 	_Signals = _Signals()
 
 	def __init__(self, moduleManager, *args, **kwargs):

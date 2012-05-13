@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-05-13 13:05+0200\n"
 "PO-Revision-Date: 2011-09-13 07:59+0000\n"
 "Last-Translator: Richard Somlói <ricsipontaz@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
@@ -26,19 +26,19 @@ msgstr "Projekt weboldala"
 msgid "Full license text"
 msgstr "A licenc teljes szövege"
 
-#: about.py:218
+#: about.py:220
 msgid "Thanks to all Launchpad contributors!"
 msgstr "Köszönet minden Launchpad közreműködőnek!"
 
-#: about.py:258 about.py:259
+#: about.py:261 about.py:262
 msgid "About"
 msgstr "Névjegy"
 
-#: about.py:260
+#: about.py:263
 msgid "License"
 msgstr "Licenc"
 
-#: about.py:261
+#: about.py:264
 msgid "Authors"
 msgstr "Készítők"
 

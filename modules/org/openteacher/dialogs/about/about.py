@@ -213,6 +213,8 @@ class AuthorsWidget(QtGui.QWidget):
 		self.layout.addWidget(self.launchpadLabel)
 		self.setLayout(self.layout)
 
+		self.animationActive = False
+
 	def retranslate(self):
 		self.launchpadLabel.setText(
 			_("Thanks to all Launchpad contributors!")
@@ -220,12 +222,13 @@ class AuthorsWidget(QtGui.QWidget):
 
 	def startAnimation(self):
 		self.nextAuthor()
-		timeLine = QtCore.QTimeLine(8000, self)
+		timeLine = QtCore.QTimeLine(5000, self)
 		#4x 255; 2x for the alpha gradients, 2x for a pause
 		timeLine.setFrameRange(0, 1020)
 		timeLine.frameChanged.connect(self.personWidget.fade)
 		timeLine.finished.connect(self.startAnimation)
 		timeLine.start()
+		self.animationActive = True
 
 	def nextAuthor(self):
 		if self.authors is None:
@@ -265,7 +268,7 @@ class AboutDialog(QtGui.QTabWidget):
 		self.authorsWidget.retranslate()
 
 	def startAnimation(self):
-		if self.currentWidget() == self.authorsWidget:
+		if self.currentWidget() == self.authorsWidget and not self.authorsWidget.animationActive:
 			self.authorsWidget.startAnimation()
 
 class AboutDialogModule(object):

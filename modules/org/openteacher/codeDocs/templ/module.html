@@ -24,6 +24,32 @@
 		<title>Module: @!name!@</title>
 		<link rel='stylesheet' type='text/css' href='/resources/style.css' />
 		<link rel="shortcut icon" type="image/png" href="/resources/logo">
+		<script src='/resources/jquery.js' type='text/javascript'></script>
+		<script type='text/javascript'>
+			$(function() {
+				$('.source').hide();
+				//If a line number needs to be shown, show the file
+				//of which it's part.
+				var name = window.location.hash.substring(1);
+				var element = $('[name="' + name + '"]');
+				var parent = element.parents('.source')
+				parent.show();
+
+				//Connect the toggle links
+				$('.toggle').click(function() {
+					var parent = $(this).parent()
+					var source = $(".source", parent);
+					source.toggle('slow');
+					return false;
+				});
+			});
+		</script>
+		<style type='text/css'>
+			$!pygmentsStyle!$
+			#source a {
+				text-decoration: none;
+			}
+		</style>
 	</head>
 	<body>
 		<div id='header'>
@@ -95,10 +121,26 @@
 					<!--(for property in properties)-->
 						<li>
 							<strong>@!property!@</strong>
+							<!--(if property in propertyDocs and propertyDocs[property])-->
+								<br />
+								<em>$!propertyDocs[property]!$</em>
+							<!--(end)-->
 						</li>
 					<!--(end)-->
 				</ul>
 			<!--(end)-->
+			<!--(if files)-->
+				<h2>Files</h2>
+				<ul>
+					<!--(for path, source in files)-->
+					<li>
+						<a href='#' class='toggle'>@!path!@</a>
+						<div class='source'>$!source!$</div>
+					</li>
+					<!--(end)-->
+				</ul>
+			<!--(end)-->
+			</div>
 		</div>
 		<div id='footer'>
 			<a href='/'>&lt; Back to index</a><br />

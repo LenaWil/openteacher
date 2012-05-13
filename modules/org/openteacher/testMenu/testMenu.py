@@ -26,6 +26,11 @@ class TestMenuModule(object):
 		self._mm = moduleManager
 
 		self.type = "testMenu"
+		self.priorities = {
+			"student@home": -1,
+			"wordsonly": -1,
+			"selfstudy": -1,
+		}
 
 		self.uses = (
 			self._mm.mods(type="translator"),
