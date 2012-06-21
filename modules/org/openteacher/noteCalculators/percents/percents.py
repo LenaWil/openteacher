@@ -37,9 +37,11 @@ class PercentsNoteCalculatorModule(object):
 		return "%s%%" % self._calculatePercents(test)
 
 	def calculateAverageNote(self, tests):
+		#FIXME 3.1: move this code into the calculatePercents module too.
+		#because shared with at least ects and american.
 		note = 0
 		for test in tests:
-			note += self._calculate(test)
+			note += self._calculatePercents(test)
 		note /= float(len(tests))
 		return "%s%%" % int(round(note))
 

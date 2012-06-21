@@ -19,6 +19,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import argparse
+import sys
 
 class ExecuteModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -71,7 +72,10 @@ class ExecuteModule(object):
 			"type": unicode,
 			"help": "Start OpenTeacher with the PROFILE profile.",
 		})
-		args = parser.parse_args()
+		args, otherArgs = parser.parse_known_args(sys.argv)
+		#remove the args we parsed from sys.argv
+		del sys.argv[0:]
+		sys.argv.extend(otherArgs)
 
 		self._modules = self._getMod(type="modules")
 		self._modules.profile = args.profile
@@ -91,7 +95,7 @@ class ExecuteModule(object):
 			dialogShower = self._modules.default("active", type="dialogShower")
 			settingsDialog = self._modules.default("active", type="settingsDialog")
 		except IndexError:
-			pass #no guarantees can be made for this module...
+			pass #no guarantees can be made for these modules...
 		dialogShower.showMessage.send(settingsDialog.tab, "Restart OpenTeacher for this setting to take effect.")
 
 def init(moduleManager):

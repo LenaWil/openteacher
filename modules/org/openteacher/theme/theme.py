@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,6 +18,8 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+
 class ThemeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(ThemeModule, self).__init__(*args, **kwargs)
@@ -31,9 +33,11 @@ class ThemeModule(object):
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._uiModule = self._modules.default("active", type="ui")
-		self.active = True
 
-		self.installTheme() #FIXME. I.e., make some kind of settings widget for themes, or only enable them in a custom profile.
+		if "--blacknwhite" in sys.argv or "-bw" in sys.argv:
+			self.installTheme()
+
+		self.active = True
 
 	def installTheme(self):
 		stylesheet = u"""

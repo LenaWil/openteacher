@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2009-2011, Marten de Vries
+#	Copyright 2009-2012, Marten de Vries
 #	Copyright 2008-2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -25,11 +25,10 @@ import weakref
 class TestsModel(QtCore.QAbstractTableModel):
 	DATE, NOTE, COMPLETED = xrange(3)
 
-	def __init__(self, moduleManager, *args, **kwargs):
+	def __init__(self, calculateNote, *args, **kwargs):
 		super(TestsModel, self).__init__(*args, **kwargs)
-		self._mm = moduleManager
-		self._modules = set(self._mm.mods(type="modules")).pop()
 
+		self._calculateNote = calculateNote
 		self._list = {
 			"tests": [],
 			"items": [],
@@ -62,8 +61,7 @@ class TestsModel(QtCore.QAbstractTableModel):
 				except (IndexError, KeyError):
 					return u""
 			elif index.column() == self.NOTE:
-				noteCalculator = self._modules.default("active", type="noteCalculator")
-				return noteCalculator.calculateNote(test)
+				return self._calculateNote(test)
 		elif role == QtCore.Qt.CheckStateRole and index.column() == self.COMPLETED:
 			return test["finished"]
 
@@ -91,11 +89,10 @@ class TestsModel(QtCore.QAbstractTableModel):
 	list = property(_getList, _setList)
 
 class NotesWidget(QtGui.QWidget):
-	def __init__(self, moduleManager, *args, **kwargs):
+	def __init__(self, noteCalculator, *args, **kwargs):
 		super(NotesWidget, self).__init__(*args, **kwargs)
-		
-		self._mm = moduleManager
-		self._modules = set(self._mm.mods(type="modules")).pop()
+
+		self._noteCalculator = noteCalculator
 		
 		self.highestLabel = QtGui.QLabel()
 		self.averageLabel = QtGui.QLabel()
@@ -120,17 +117,15 @@ class NotesWidget(QtGui.QWidget):
 		)
 
 	def updateList(self, list):
-		noteCalculator = self._modules.default("active", type="noteCalculator")
-
 		try:
-			notes = map(noteCalculator.calculateNote, list["tests"])
+			notes = map(self._noteCalculator.calculateNote, list["tests"])
 		except KeyError:
 			notes = []
 		try:
-			self.highestLabel.setText(unicode(max(notes))) #FIXME: is max and min ok? -> NO
+			self.highestLabel.setText(unicode(max(notes))) #FIXME: is max and min ok? -> NO. Fix is easy, use percentsNoteCalculator.
 		except ValueError:
 			#TRANSLATORS: This is meant as 'here would normally
-			#stand a note, but today not.' If '-' isn't
+			#stand a note, but not today.' If '-' isn't
 			#appropriate in you language for that, please replace.
 			#Otherwise, just copy the original.
 			self.highestLabel.setText(_("-"))
@@ -139,61 +134,55 @@ class NotesWidget(QtGui.QWidget):
 		except ValueError:
 			self.lowestLabel.setText(_("-"))
 		try:
-			average = noteCalculator.calculateAverageNote(list["tests"])
+			average = self._noteCalculator.calculateAverageNote(list["tests"])
 		except (ZeroDivisionError, KeyError):
 			average = _("-")
 		self.averageLabel.setText(unicode(average))
 
 class DetailsWidget(QtGui.QWidget):
-	def __init__(self, moduleManager, *args, **kwargs):
+	def __init__(self, testTypes, *args, **kwargs):
 		super(DetailsWidget, self).__init__(*args, **kwargs)
-		
-		self._mm = moduleManager
+
+		self._testTypes = testTypes
+
 		self.labels = []
-		
 		self.layout = QtGui.QFormLayout()
-		
+
 		self.setLayout(self.layout)
 
 	def updateList(self, list, dataType):
-		for module in self._mm.mods("active", type="testType"):
-			if module.dataType == dataType:
+		for module in self._testTypes:
+			if module.dataType == dataType and hasattr(module, "properties"):
 				# Only if there are any properties in this module
-				try:
-					module.properties
-				except AttributeError:
-					pass
+				# If the labels were not made yet, make them
+				if len(self.labels) == 0:
+					for property in module.properties:
+						label = QtGui.QLabel(property[0])
+						self.layout.addRow(property[0], label)
+						label.setText(list.get(property[1], _("-")))
+						self.labels.append(label)
+				# Else, update them
 				else:
-					# If the labels were not made yet, make them
-					if len(self.labels) == 0:
-						for property in module.properties:
-							label = QtGui.QLabel(property[0])
-							self.layout.addRow(property[0], label)
-							label.setText(list.get(property[1], _("-")))
-							self.labels.append(label)
-					# Else, update them
-					else:
-						i = 0
-						for property in module.properties:
-							self.labels[i].setText(list.get(property[1], _("-")))
-							i += 1
-					break
-		
+					i = 0
+					for property in module.properties:
+						self.labels[i].setText(list.get(property[1], _("-")))
+						i += 1
+				break
+
 class TestsViewerWidget(QtGui.QSplitter):
 	testActivated = QtCore.pyqtSignal([object, object, object])
 
-	def __init__(self, moduleManager, *args, **kwargs):
+	def __init__(self, testTypes, noteCalculator, createPercentNoteViewer=None, *args, **kwargs):
 		super(TestsViewerWidget, self).__init__(QtCore.Qt.Vertical, *args, **kwargs)
 
-		self._mm = moduleManager
-		self._modules = set(self._mm.mods(type="modules")).pop()
+		self._createPercentNotesViewer = createPercentNoteViewer
 
-		self.testsModel = TestsModel(self._mm)
+		self.testsModel = TestsModel(noteCalculator.calculateNote)
 		testsView = QtGui.QTableView()
 		testsView.setModel(self.testsModel)
 		testsView.doubleClicked.connect(self.showTest)
-		self.notesWidget = NotesWidget(moduleManager)
-		self.detailsWidget = DetailsWidget(moduleManager)
+		self.notesWidget = NotesWidget(noteCalculator)
+		self.detailsWidget = DetailsWidget(testTypes)
 
 		horSplitter = QtGui.QSplitter()
 		horSplitter.addWidget(testsView)
@@ -215,18 +204,15 @@ class TestsViewerWidget(QtGui.QSplitter):
 		self.notesWidget.updateList(list)
 		self.detailsWidget.updateList(list, dataType)
 		try:
-			self.percentsNotesViewer.hide()
+			self.percentNotesViewer.hide()
 		except AttributeError:
 			pass
 		try:
-			self.percentsNotesViewer = self._modules.default(
-				"active",
-				type="percentNotesViewer"
-			).createPercentNotesViewer(list["tests"])
-		except (IndexError, KeyError):
+			self.percentNotesViewer = self._createPercentNotesViewer(list["tests"])
+		except (TypeError, KeyError):
 			pass
 		else:
-			self.addWidget(self.percentsNotesViewer)
+			self.addWidget(self.percentNotesViewer)
 
 	def retranslate(self):
 		self.notesWidget.retranslate()
@@ -235,19 +221,13 @@ class TestsViewerWidget(QtGui.QSplitter):
 class TestViewerWidget(QtGui.QWidget):
 	backActivated = QtCore.pyqtSignal()
 
-	def __init__(self, moduleManager, list, dataType, test, *args, **kwargs):
+	def __init__(self, createTestViewer, list, dataType, test, *args, **kwargs):
 		super(TestViewerWidget, self).__init__(*args, **kwargs)
-
-		self._mm = moduleManager
-		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		self.backButton = QtGui.QPushButton("")
 		self.backButton.clicked.connect(self.backActivated.emit)
 
-		testViewer = self._modules.default(
-			"active",
-			type="testViewer"
-		).createTestViewer(list, dataType, test)
+		testViewer = createTestViewer(list, dataType, test)
 
 		layout = QtGui.QVBoxLayout()
 		layout.addWidget(testViewer)
@@ -258,17 +238,17 @@ class TestViewerWidget(QtGui.QWidget):
 		self.backButton.setText(_("Back"))
 
 class TestsViewer(QtGui.QStackedWidget):
-	def __init__(self, moduleManager,  *args, **kwargs):
+	def __init__(self, testTypes, noteCalculator, createTestViewer, createPercentNotesViewer=None,  *args, **kwargs):
 		super(TestsViewer, self).__init__(*args, **kwargs)
 
-		self._mm = moduleManager
+		self._createTestViewer = createTestViewer
 
-		self.testsViewerWidget = TestsViewerWidget(self._mm)
+		self.testsViewerWidget = TestsViewerWidget(testTypes, noteCalculator, createPercentNotesViewer)
 		self.testsViewerWidget.testActivated.connect(self.showList)
 		self.addWidget(self.testsViewerWidget)
 
 	def showList(self, list, dataType, test):
-		testViewer = TestViewerWidget(self._mm, list, dataType, test)
+		testViewer = TestViewerWidget(self._createTestViewer, list, dataType, test)
 		testViewer.backActivated.connect(self.showTests)
 		self.addWidget(testViewer)
 		self.setCurrentWidget(testViewer)
@@ -292,7 +272,7 @@ class TestsViewerModule(object):
 		self.type = "testsViewer"
 		self.requires = (
 			self._mm.mods(type="ui"),
-			self._mm.mods(type="noteCalculator"),
+			self._mm.mods(type="noteCalculatorChooser"),
 			self._mm.mods(type="testViewer"),
 		)
 		self.uses = (
@@ -336,7 +316,24 @@ class TestsViewerModule(object):
 				r.retranslate()
 
 	def createTestsViewer(self):
-		tv = TestsViewer(self._mm)#FIXME: moduleManager or pass what's needed? Also on other places...
+		testTypes = self._mm.mods("active", type="testType")
+		noteCalculator = self._modules.default(
+			"active",
+			type="noteCalculatorChooser"
+		).noteCalculator
+		createTestViewer = self._modules.default(
+			"active",
+			type="testViewer"
+		).createTestViewer
+		try:
+			createPercentNotesViewer = self._modules.default(
+				"active",
+				type="percentNotesViewer"
+			).createPercentNotesViewer
+		except IndexError:
+			createPercentNotesViewer = None
+
+		tv = TestsViewer(testTypes, noteCalculator, createTestViewer, createPercentNotesViewer)
 		#Weak reference so gc can still get into action
 		self._testsViewers.add(weakref.ref(tv))
 		self._retranslate()

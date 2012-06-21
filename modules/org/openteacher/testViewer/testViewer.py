@@ -76,7 +76,7 @@ class TestViewer(QtGui.QSplitter):
 
 		#Vertical splitter
 		tableView = QtGui.QTableView()
-		testModel = TestModel(self._mm, list, dataType, test)
+		testModel = TestModel(self._mm, list, dataType, self.test)
 		tableView.setModel(testModel)
 
 		self.totalThinkingTimeLabel = QtGui.QLabel()
@@ -85,28 +85,18 @@ class TestViewer(QtGui.QSplitter):
 		vertSplitter.addWidget(tableView)
 
 		#Horizontal splitter
-		calculateNote = self._modules.default(
-			"active",
-			type="noteCalculator"
-		).calculateNote
-
 		factsLayout = QtGui.QVBoxLayout()
 		self.completedLabel = QtGui.QLabel()
-		noteDrawer = QtGui.QLabel(_("Note:") + "<br /><span style=\"font-size: 40px\">%s</span>" % calculateNote(test)) #FIXME: noteDrawer + vertical align top#FIXME:retranslate
-		factsLayout.addWidget(noteDrawer, 0, QtCore.Qt.AlignTop)
+		self.noteLabel = QtGui.QLabel()
+		factsLayout.addWidget(self.noteLabel, 0, QtCore.Qt.AlignTop)
 		for module in self._mm.mods("active", type="testType"):
-			if module.dataType == dataType:
-				try:
-					module.funFacts
-				except AttributeError:
-					pass
-				else:
-					for fact in module.funFacts:
-						if fact[1] == None:
-							label = QtGui.QLabel("%s<br />-" % fact[0])
-						else:
-							label = QtGui.QLabel("%s<br /><span style=\"font-size: 14px\">%s</span>" % (fact[0], fact[1]))
-						factsLayout.addWidget(label, 0, QtCore.Qt.AlignTop)
+			if module.dataType == dataType and hasattr(module, "funFacts"):
+				for fact in module.funFacts:
+					if fact[1] == None:
+						label = QtGui.QLabel("%s<br />-" % fact[0])
+					else:
+						label = QtGui.QLabel("%s<br /><span style=\"font-size: 14px\">%s</span>" % (fact[0], fact[1]))
+					factsLayout.addWidget(label, 0, QtCore.Qt.AlignTop)
 				break
 		factsLayout.addWidget(self.completedLabel)
 		factsLayout.addStretch()
@@ -123,7 +113,7 @@ class TestViewer(QtGui.QSplitter):
 			progressWidget = self._modules.default(
 				"active",
 				type="progressViewer"
-			).createProgressViewer(test)
+			).createProgressViewer(self.test)
 		except IndexError:
 			pass
 
@@ -135,6 +125,18 @@ class TestViewer(QtGui.QSplitter):
 
 	def retranslate(self):
 		self.setWindowTitle(_("Results"))
+
+		try:
+			calculateNote = self._modules.default(
+				"active",
+				type="noteCalculatorChooser"
+			).noteCalculator.calculateNote
+		except IndexError:
+			self.noteLabel.setText("")
+		else:
+			html = "<br /><span style=\"font-size: 40px\">%s</span>"
+			self.noteLabel.setText(_("Note:") + html % calculateNote(self.test))
+
 		try:
 			completedText = _("yes") if self.test["finished"] else _("no")
 		except KeyError:
@@ -161,14 +163,14 @@ class TestViewerModule(object):
 
 		self._mm = moduleManager
 		self.type = "testViewer"
-		self.requires = ( #FIXME: check if all really required, and if so make sure some things aren't.
+		self.requires = (
 			self._mm.mods(type="ui"),
-			self._mm.mods(type="noteCalculator"),
-			self._mm.mods(type="testType"),
-			self._mm.mods(type="progressViewer"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="noteCalculatorChooser"),
+			self._mm.mods(type="testType"),
+			self._mm.mods(type="progressViewer"),
 		)
 		self.filesWithTranslations = ("testViewer.py",)
 

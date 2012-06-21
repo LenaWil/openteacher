@@ -188,6 +188,7 @@ class ModulesHandler(object):
 					"anchorlinenos": True,
 					"lineanchors": path,
 				})
+
 				source = pygments.highlight(code, lexer, formatter)
 				commonLength = len(os.path.commonprefix([
 					path,

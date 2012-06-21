@@ -62,6 +62,11 @@ class ECTSNoteCalculatorModule(object):
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
+		self._percents = self._modules.default(
+			"active",
+			type="percentsCalculator"
+		).calculatePercents
+
 		#Connect to the languageChanged event so retranslating is done.
 		try:
 			translator = self._modules.default("active", type="translator")
