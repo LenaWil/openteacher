@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-06-22 20:34+0200\n"
 "PO-Revision-Date: 2012-03-13 12:59+0000\n"
 "Last-Translator: Aminos Amigos <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
@@ -20,28 +20,28 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-03-14 04:53+0000\n"
 "X-Generator: Launchpad (build 14933)\n"
 
-#: testViewer.py:95
-msgid "Note:"
-msgstr "ملاحظة:"
-
-#: testViewer.py:137
+#: testViewer.py:127
 msgid "Results"
 msgstr "النتائج"
 
-#: testViewer.py:139
+#: testViewer.py:138
+msgid "Note:"
+msgstr "ملاحظة:"
+
+#: testViewer.py:141
 msgid "yes"
 msgstr "نعم"
 
-#: testViewer.py:139 testViewer.py:141
+#: testViewer.py:141 testViewer.py:143
 msgid "no"
 msgstr "لا"
 
-#: testViewer.py:142
+#: testViewer.py:144
 #, python-format
 msgid "Completed: %s"
 msgstr "منتهي: %s"
 
-#: testViewer.py:146
+#: testViewer.py:148
 #, python-format
 msgid "Total thinking time: %s second"
 msgid_plural "Total thinking time: %s seconds"

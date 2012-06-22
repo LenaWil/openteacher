@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-04-07 21:34+0200\n"
+"POT-Creation-Date: 2012-06-22 20:34+0200\n"
 "PO-Revision-Date: 2011-10-21 08:57+0000\n"
 "Last-Translator: Richard Somlói <ricsipontaz@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
@@ -18,39 +18,39 @@ msgstr ""
 "X-Launchpad-Export-Date: 2011-10-22 05:25+0000\n"
 "X-Generator: Launchpad (build 14170)\n"
 
-#: testsViewer.py:49
+#: testsViewer.py:48
 msgid "Date"
 msgstr "Dátum"
 
-#: testsViewer.py:50
+#: testsViewer.py:49
 msgid "Note"
 msgstr "Megjegyzés"
 
-#: testsViewer.py:51
+#: testsViewer.py:50
 msgid "Completed"
 msgstr "Befejezve"
 
-#: testsViewer.py:113
+#: testsViewer.py:110
 msgid "Highest note:"
 msgstr "Legjobb eredmény:"
 
-#: testsViewer.py:116
+#: testsViewer.py:113
 msgid "Average note:"
 msgstr "Átlagos eredmény:"
 
-#: testsViewer.py:119
+#: testsViewer.py:116
 msgid "Lowest note:"
 msgstr "Legrosszabb eredmény:"
 
 #. TRANSLATORS: This is meant as 'here would normally
-#. stand a note, but today not.' If '-' isn't
+#. stand a note, but not today.' If '-' isn't
 #. appropriate in you language for that, please replace.
 #. Otherwise, just copy the original.
-#: testsViewer.py:136 testsViewer.py:140 testsViewer.py:144 testsViewer.py:172
-#: testsViewer.py:178
+#: testsViewer.py:131 testsViewer.py:135 testsViewer.py:139 testsViewer.py:162
+#: testsViewer.py:168
 msgid "-"
 msgstr "-"
 
-#: testsViewer.py:258
+#: testsViewer.py:238
 msgid "Back"
 msgstr "Vissza"

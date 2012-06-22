@@ -17,30 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: words.py:108
-msgid "Questions"
-msgstr ""
-
-#: words.py:108
-msgid "Answers"
-msgstr ""
-
-#: words.py:108
-msgid "Comment"
-msgstr ""
-
-#: words.py:356
-msgid "Title:"
-msgstr ""
-
-#: words.py:357
-msgid "Question language:"
-msgstr ""
-
-#: words.py:358
-msgid "Answer language:"
-msgstr ""
-
-#: words.py:359
-msgid "Remove selected row(s)"
+#: abby.py:67
+msgid "ABBY Lingvo Tutor"
 msgstr ""

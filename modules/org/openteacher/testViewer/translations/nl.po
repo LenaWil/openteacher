@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-06-22 20:34+0200\n"
 "PO-Revision-Date: 2012-03-09 23:31+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,28 +19,28 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-03-11 05:00+0000\n"
 "X-Generator: Launchpad (build 14914)\n"
 
-#: testViewer.py:95
-msgid "Note:"
-msgstr "Cijfer:"
-
-#: testViewer.py:137
+#: testViewer.py:127
 msgid "Results"
 msgstr "Resultaten"
 
-#: testViewer.py:139
+#: testViewer.py:138
+msgid "Note:"
+msgstr "Cijfer:"
+
+#: testViewer.py:141
 msgid "yes"
 msgstr "ja"
 
-#: testViewer.py:139 testViewer.py:141
+#: testViewer.py:141 testViewer.py:143
 msgid "no"
 msgstr "nee"
 
-#: testViewer.py:142
+#: testViewer.py:144
 #, python-format
 msgid "Completed: %s"
 msgstr "Voltooid: %s"
 
-#: testViewer.py:146
+#: testViewer.py:148
 #, python-format
 msgid "Total thinking time: %s second"
 msgid_plural "Total thinking time: %s seconds"

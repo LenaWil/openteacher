@@ -161,7 +161,14 @@ class UiControllerModule(object):
 				usableExtensions
 			)
 		if path:
-			loader.load(path)
+			try:
+				loader.load(path)
+			except NotImplementedError:
+				#FIXME: tell user!
+				raise
+			except Exception:
+				#FIXME: here too, file corrupt.
+				raise
 			self._lastPath = path
 		self._uiModule.statusViewer.show(_("File opened succesfully."))
 
@@ -175,7 +182,11 @@ class UiControllerModule(object):
 				self.saveAs()
 				return
 		if path:
-			saver.save(path)
+			try:
+				saver.save(path)
+			except IOError:
+				#FIXME: show error...
+				pass
 		else:
 			self.saveAs()
 		self._uiModule.statusViewer.show(_("File saved succesfully."))
