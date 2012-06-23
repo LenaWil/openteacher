@@ -25,6 +25,11 @@ import datetime
 import weakref
 
 class WordsTableItemDelegate(QtGui.QStyledItemDelegate):
+	"""A default delegate, with the difference that it installs an event
+	   filter for some non-default keys. The equals key and return key
+	   are, from the perspective of Qt, equal to the tab key.
+
+	"""
 	def eventFilter(self, object, event):
 		if (event.type() == QtCore.QEvent.KeyPress and
 		  event.key() in (QtCore.Qt.Key_Equal, QtCore.Qt.Key_Return)):
@@ -63,6 +68,11 @@ class WordsTableView(QtGui.QTableView):
 		return value
 
 	def moveCursor(self, cursorAction, modifiers):
+		"""Reimplentation of moveCursor that makes sure that tab only
+		   moves between the questions and answers column (so not the 
+		   comment column). This way, inserting words is way faster.
+
+		"""
 		if cursorAction not in (QtGui.QAbstractItemView.MoveNext, QtGui.QAbstractItemView.MovePrevious):
 			return super(WordsTableView, self).moveCursor(cursorAction, modifiers)
 		if self.model().columnCount() == 0 or self.model().rowCount() == 0:
@@ -117,16 +127,13 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 		self.endResetModel()
 
 	def sort(self, column, order):
-		try:
-			items = self.lesson.list["items"]
-		except KeyError:
-			items = []
+		items = self.lesson.list.get("items", [])
 		if column == self.QUESTIONS:
-			sortedItems = sorted(items, key=lambda word: word["questions"][0] if "questions" in word else u"")
+			sortedItems = sorted(items, key=lambda word: word.get("questions", []))
 		elif column == self.ANSWERS:
-			sortedItems = sorted(items, key=lambda word: word["answers"][0] if "answers" in word else u"")
+			sortedItems = sorted(items, key=lambda word: word.get("answers", []))
 		elif column == self.COMMENT:
-			sortedItems = sorted(items, key=lambda word: word["comment"] if "comment" in word else u"")
+			sortedItems = sorted(items, key=lambda word: word.get("comment", []))
 
 		if order == QtCore.Qt.DescendingOrder:
 			items.reverse()
@@ -176,20 +183,11 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 			word = self.lesson.list["items"][listIndex]
 
 			if index.column() == self.QUESTIONS:
-				try:
-					return self._compose(word["questions"])
-				except KeyError:
-					return u""
+				self._compose(word.get("questions", []))
 			elif index.column() == self.ANSWERS:
-				try:
-					return self._compose(word["answers"])
-				except KeyError:
-					return u""
+				self._compose(word.get("answers", []))
 			elif index.column() == self.COMMENT:
-				try:
-					return word["comment"]
-				except KeyError:
-					return u""
+				self._compose(word.get("comment", u""))
 
 	def flags(self, index):
 		return (
@@ -207,9 +205,13 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 		if "items" not in self.lesson.list:
 			self.lesson.list["items"] = []
 		while True:
+			#repeat because this does two things:
+			#- add a row if needed
+			#- enter the data in that row (and then break the loop)
 			try:
 				listIndex = self.indexes[index.row()]
 			except IndexError:
+				#insert row
 				if not unicode(value.toString()):
 					return False
 				word = {"created": datetime.datetime.now()}
@@ -226,6 +228,7 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 				self.indexes.append(self.lesson.list["items"].index(word))
 				self.endInsertRows()
 			else:
+				#set data
 				word = self.lesson.list["items"][listIndex]
 
 				if index.column() == self.QUESTIONS:

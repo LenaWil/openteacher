@@ -25,19 +25,19 @@ class Dialog(QtGui.QWidget):
 	buttonClicked = QtCore.pyqtSignal()
 	def __init__(self, imagePath, text, redText=False, *args, **kwargs):
 		super(Dialog, self).__init__(*args, **kwargs)
-		
+
 		frame = QtGui.QFrame()
 		frame.setFrameStyle(QtGui.QFrame.Panel | QtGui.QFrame.Raised)
 		frame.setMidLineWidth(2)
 		frame.setLineWidth(3)
-		
+
 		frameLayout = QtGui.QHBoxLayout()
 		frameLayout.setAlignment(QtCore.Qt.AlignHCenter)
-		
+
 		imageLabel = QtGui.QLabel("<img src=\"" + imagePath + "\" />")
 		imageLabel.setAlignment(QtCore.Qt.AlignHCenter)
 		frameLayout.addWidget(imageLabel)
-		
+
 		textLabel = QtGui.QLabel(text)
 		textLabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
 		textLabel.setWordWrap(True)
@@ -47,13 +47,13 @@ class Dialog(QtGui.QWidget):
 		else:
 			textLabel.setStyleSheet("font-weight: bold;")
 		frameLayout.addWidget(textLabel)
-		
+
 		backButton = QtGui.QPushButton("Close")
 		backButton.clicked.connect(lambda: self.buttonClicked.emit())
 		frameLayout.addWidget(backButton)
-		
+
 		frame.setLayout(frameLayout)
-		
+
 		layout = QtGui.QHBoxLayout()
 		layout.addWidget(frame)
 		self.setLayout(layout)
@@ -146,20 +146,7 @@ class DialogShowerModule(object):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		
 		_event = self._modules.default(type="event")
-		
-		#setup translation
-		global _
-		global ngettext
-		
-		try:
-			translator = self._modules.default("active", type="translator")
-		except IndexError:
-			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
-		else:
-			_, ngettext = translator.gettextFunctions(
-				self._mm.resourcePath("translations")
-			)
-		
+
 		logoImagePath = self._mm.resourcePath("images/ot240.png")
 		brokenImagePath = self._mm.resourcePath("images/otbroken240.png")
 		bigLogoImagePath = self._mm.resourcePath("images/ot2300.png")

@@ -44,6 +44,7 @@ class UiControllerModule(object):
 			self._mm.mods(type="fileDialogs"),
 			self._mm.mods(type="lessonTracker"),
 			self._mm.mods(type="dataStore"),
+			self._mm.mods(type="dialogShower"),
 		)
 		self.priorities = {
 			"codedocumentation": -1,
@@ -151,6 +152,14 @@ class UiControllerModule(object):
 	def _lastPath(self, path):
 		self._store["org.openteacher.uiController.lastPath"] = path
 
+	def _showError(self, msg):
+		tab = self._uiModule.currentFileTab or self._uiModule.startTab
+		try:
+			self._modules.default("active", type="dialogShower").showError.send(tab, msg)
+		except IndexError:
+			#fallback
+			print msg
+
 	def open_(self, path=None):
 		loader = self._modules.default("active", type="loader")
 
@@ -163,18 +172,28 @@ class UiControllerModule(object):
 		if path:
 			try:
 				loader.load(path)
-			except NotImplementedError:
-				#FIXME: tell user!
-				raise
-			except Exception:
-				#FIXME: here too, file corrupt.
-				raise
+			except NotImplementedError, e:
+				print e
+				self._showError(_("Couldn't open the file, because the file type is unknown"))
+			except IOError, e:
+				print e
+				self._showError(_("Couldn't open the file, is it still there and do we have the right to open it?"))
+			except Exception, e:
+				print e
+				self._showError(_("Couldn't open the file, it seems to be corrupted."))
 			self._lastPath = path
 		self._uiModule.statusViewer.show(_("File opened succesfully."))
 
-	def save(self, path=None):
-		saver = self._modules.default("active", type="saver")
+	def _doSave(self, path):
+		try:
+			self._saver.save(path)
+		except IOError, e:
+			print e
+			self._showError(_("Couldn't save the file, is there enough free disk space and do we have the right to write to the specified location?"))
+		else:
+			self._uiModule.statusViewer.show(_("File saved succesfully."))
 
+	def save(self, path=None):
 		if not path:
 			try:
 				path = self._lessonTracker.currentLesson.path
@@ -182,14 +201,9 @@ class UiControllerModule(object):
 				self.saveAs()
 				return
 		if path:
-			try:
-				saver.save(path)
-			except IOError:
-				#FIXME: show error...
-				pass
+			self._doSave(path)
 		else:
 			self.saveAs()
-		self._uiModule.statusViewer.show(_("File saved succesfully."))
 
 	def saveAs(self):
 		path = self._fileDialogs.getSavePath(
@@ -201,7 +215,7 @@ class UiControllerModule(object):
 		)
 		if path:
 			self._lastPath = path
-			self._saver.save(path)
+			self._doSave(path)
 
 	def print_(self):
 		#Setup printer

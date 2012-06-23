@@ -328,6 +328,10 @@ class GuiModule(object):
 	def hide(self):
 		self._widget.hide()
 
+	@property
+	def startTab(self):
+		return self._widget.tabWidget.startWidget
+
 	def showStartTab(self):
 		self._widget.tabWidget.setCurrentWidget(self._widget.tabWidget.startWidget)
 
