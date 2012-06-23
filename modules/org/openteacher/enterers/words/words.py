@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #	Copyright 2011, Cas Widdershoven
 #	Copyright 2011, Milan Boers
 #
@@ -183,11 +183,11 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 			word = self.lesson.list["items"][listIndex]
 
 			if index.column() == self.QUESTIONS:
-				self._compose(word.get("questions", []))
+				return self._compose(word.get("questions", []))
 			elif index.column() == self.ANSWERS:
-				self._compose(word.get("answers", []))
+				return self._compose(word.get("answers", []))
 			elif index.column() == self.COMMENT:
-				self._compose(word.get("comment", u""))
+				return self._compose(word.get("comment", u""))
 
 	def flags(self, index):
 		return (
