@@ -204,7 +204,7 @@ class InMindTeachTypeModule(object):
 			type="wordsStringComposer"
 		).compose
 
-	def createWidget(self, tabChanged):
+	def createWidget(self, tabChanged, letterChosen):
 		imtw = InMindTeachWidget(self._compose)
 		self._activeWidgets.add(weakref.ref(imtw))
 		self._retranslate()

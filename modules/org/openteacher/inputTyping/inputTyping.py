@@ -26,7 +26,7 @@ import weakref
 import difflib
 
 class InputTypingWidget(QtGui.QWidget):
-	def __init__(self, check, compose, getFadeTime, *args, **kwargs):
+	def __init__(self, check, compose, getFadeTime, letterChosen, *args, **kwargs):
 		super(InputTypingWidget, self).__init__(*args, **kwargs)
 
 		self._check = check
@@ -50,11 +50,20 @@ class InputTypingWidget(QtGui.QWidget):
 		mainLayout.addWidget(self.correctButton, 2, 1)
 		mainLayout.addWidget(self.skipButton, 2, 2)
 		self.setLayout(mainLayout)
+		
+		# Make character input work
+		letterChosen.handle(self.addLetter)
 
 	def retranslate(self):
 		self.checkButton.setText(_("Check!"))
 		self.correctButton.setText(_("Correct anyway"))
 		self.skipButton.setText(_("Skip"))
+	
+	def addLetter(self, letter):
+		# Only the currently visible edit
+		if self.inputLineEdit.isVisible():
+			self.inputLineEdit.insert(letter)
+			self.inputLineEdit.setFocus()
 
 	def _textEdited(self, text):
 		try:
@@ -73,6 +82,8 @@ class InputTypingWidget(QtGui.QWidget):
 		self.checkButton.clicked.connect(self.checkAnswer)
 		self.correctButton.clicked.connect(self.correctLastAnswer)
 		self.skipButton.clicked.connect(self.lessonType.skip)
+		
+		self.inputLineEdit.returnPressed.connect(self.checkAnswer)
 
 	def newWord(self, word):
 		self._start = datetime.datetime.now()
@@ -158,9 +169,14 @@ class InputTypingWidget(QtGui.QWidget):
 
 	def timerFinished(self):
 		del self._end
+		self.inputLineEdit.setStyleSheet("")
 		self.lessonType.setResult(self._previousResult)
 		self.enableUi(True)
 		self.correctLabel.clear()
+		self.inputLineEdit.setFocus()
+	
+	def showEvent(self, event):
+		self.inputLineEdit.setFocus()
 
 class InputTypingModule(object):
 	_check = property(lambda self: self._modules.default(type="wordsStringChecker").check)
@@ -241,9 +257,9 @@ class InputTypingModule(object):
 		del self._activeWidgets
 		del self._fadeDurationSetting
 
-	def createWidget(self):
+	def createWidget(self, letterChosen):
 		getFadeDuration = lambda: self._fadeDurationSetting["value"]
-		it = InputTypingWidget(self._check, self._compose, getFadeDuration)
+		it = InputTypingWidget(self._check, self._compose, getFadeDuration, letterChosen)
 		self._activeWidgets.add(weakref.ref(it))
 		it.retranslate()
 		return it

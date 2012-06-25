@@ -162,10 +162,10 @@ class ShuffleAnswerTeachTypeModule(object):
 			if r is not None:
 				r.retranslate()
 
-	def createWidget(self, tabChanged):
+	def createWidget(self, tabChanged, letterChosen):
 		typingInput = self._modules.default("active", type="typingInput")
 
-		inputWidget = typingInput.createWidget()
+		inputWidget = typingInput.createWidget(letterChosen)
 		compose = self._modules.default("active", type="wordsStringComposer").compose
 
 		satw = ShuffleAnswerTeachWidget(inputWidget, compose)

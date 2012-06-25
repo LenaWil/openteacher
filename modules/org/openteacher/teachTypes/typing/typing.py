@@ -78,9 +78,9 @@ class TypingTeachTypeModule(object):
 			)
 		self.name = _("Type answer")
 
-	def createWidget(self, tabChanged):
+	def createWidget(self, tabChanged, letterChosen):
 		typingInput = self._modules.default("active", type="typingInput")
-		return typingInput.createWidget()
+		return typingInput.createWidget(letterChosen)
 
 def init(moduleManager):
 	return TypingTeachTypeModule(moduleManager)

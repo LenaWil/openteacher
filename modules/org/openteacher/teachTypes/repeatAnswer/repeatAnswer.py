@@ -63,13 +63,15 @@ class StartScreenWidget(QtGui.QWidget):
 		self.startScreen.addWidget(self.label)
 		self.startScreen.addWidget(self.startButton)
 		self.setLayout(self.startScreen)
+		
+		self.retranslate()
 
 	def retranslate(self):
 		self.label.setText(_("Click the button to start"))
 		self.startButton.setText(_("Start!"))
 
 class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
-	def __init__(self, modules, compose, getFadeDuration, tabChanged, *args, **kwargs):
+	def __init__(self, modules, compose, getFadeDuration, tabChanged, letterChosen, *args, **kwargs):
 		super(RepeatAnswerTeachWidget, self).__init__(*args, **kwargs)
 
 		self._modules = modules
@@ -85,7 +87,7 @@ class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
 
 		#make input screen
 		typingInput = self._modules.default("active", type="typingInput")
-		self.inputWidget = typingInput.createWidget()
+		self.inputWidget = typingInput.createWidget(letterChosen)
 		self.addWidget(self.inputWidget)
 
 		tabChanged.connect(lambda: self.setCurrentWidget(self.startScreen))
@@ -106,7 +108,8 @@ class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
 
 	def newWord(self, word):
 		self.repeatScreen.word = word
-		self.startRepeat()
+		if self.isVisible():
+			self.startRepeat()
 
 class RepeatAnswerTeachTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -201,12 +204,13 @@ class RepeatAnswerTeachTypeModule(object):
 		del self.dataType
 		del self.name
 
-	def createWidget(self, tabChanged):
+	def createWidget(self, tabChanged, letterChosen):
 		ratw = RepeatAnswerTeachWidget(
 			self._modules,
 			self._modules.default("active", type="wordsStringComposer").compose,
 			lambda: self._fadeDurationSetting["value"],
-			tabChanged
+			tabChanged,
+			letterChosen
 		)
 		self._activeWidgets.add(weakref.ref(ratw))
 		return ratw

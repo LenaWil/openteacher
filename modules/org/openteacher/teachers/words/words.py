@@ -198,6 +198,7 @@ class TeachWidget(QtGui.QStackedWidget):
 
 		self._modules = modules
 		self._applicationActivityChanged = applicationActivityChanged
+		self._keyboardWidget = keyboardWidget
 
 		self._buildUi(keyboardWidget)
 		self._connectSignals()
@@ -279,6 +280,8 @@ class TeachWidget(QtGui.QStackedWidget):
 		self._applicationActivityChanged.unhandle(self._activityChanged)
 		self._updateProgress()
 		
+		self._showSettings()
+		
 		if showResults:
 			try:
 				module = self._modules.default("active", type="resultsDialog")
@@ -346,7 +349,7 @@ class TeachWidget(QtGui.QStackedWidget):
 		self._teachTypeWidgets = []
 		for module in self._modules.sort("active", type="teachType"): 
 			if module.dataType in ("all", "words"):
-				widget = module.createWidget(self.tabChanged)
+				widget = module.createWidget(self.tabChanged, self._keyboardWidget.letterChosen)
 				self._teachTypeWidgets.append(widget)
 				self._lessonWidget.teachTabWidget.addTab(widget, module.name)
 

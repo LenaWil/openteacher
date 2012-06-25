@@ -200,7 +200,7 @@ class GuiModule(object):
 		else:
 			#add the open action as a load button too.
 			self._loadButton = br.registerButton("load")
-			self._loadButton.clicked.handle(self._widget.openAction.activated.emit)
+			self._loadButton.clicked.handle(self._widget.openAction.triggered.emit)
 
 		#load translator
 		try:
