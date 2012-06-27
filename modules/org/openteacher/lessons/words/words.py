@@ -21,6 +21,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import weakref
+from PyQt4 import QtGui
 
 class Lesson(object):
 	def __init__(self, moduleManager, fileTab, module, lessonData, enterWidget, teachWidget, resultsWidget=None, *args, **kwargs):
@@ -108,6 +109,7 @@ class WordsLessonModule(object):
 			self._mm.mods(type="event"),
 			self._mm.mods(type="wordsEnterer"),
 			self._mm.mods(type="wordsTeacher"),
+			self._mm.mods(type="lessonDialogs"),
 			self._mm.mods(type="buttonRegister"),
 		)
 		self.uses = (
@@ -217,9 +219,27 @@ class WordsLessonModule(object):
 		return lesson
 	
 	def tabChanged(self):
+		#FIXME 3.1: move into separate module since this uses QtGui?
+
+		#First do checks that apply to all lessons. In case they don't
+		#show any problems, the callback with word specific checks is
+		#called.
+		def callback():
+			#words specific checks
+			for item in self.enterWidget.lesson.list["items"]:
+				if not item.get("questions", []) or not item.get("answers", []):
+					QtGui.QMessageBox.critical(
+						self.teachWidget,
+						_("Empty question or answer"),
+						_("Please enter at least one question and one answer for every word.")
+					)
+					self.fileTab.currentTab = self.enterWidget
+					break
+
+		#generic checks
 		lessonDialogsModule = self._modules.default("active", type="lessonDialogs")
-		lessonDialogsModule.onTabChanged(self.fileTab, self.enterWidget, self.teachWidget)
-	
+		lessonDialogsModule.onTabChanged(self.fileTab, self.enterWidget, self.teachWidget, callback)
+
 	@property
 	def _onscreenKeyboard(self):
 		keyboards = set(self._mm.mods("active", type="onscreenKeyboard"))

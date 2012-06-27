@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2012, Milan Boers
+#	Copyright 2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -20,6 +21,7 @@
 
 from PyQt4 import QtCore, QtGui
 
+#FIXME: translate module (& retranslate)!
 class LessonDialogsModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(LessonDialogsModule, self).__init__(*args, **kwargs)
@@ -44,6 +46,11 @@ class LessonDialogsModule(object):
 		del self._modules
 	
 	def onTabChanged(self, fileTab, enterWidget, teachWidget, func=None):
+		"""Does some checks and then decides if the tab may be left in
+		   its new position, or if it's changed back. (This function
+		   handles the changing.)
+
+		"""
 		if fileTab.currentTab == enterWidget:
 			if teachWidget.inLesson:
 				warningD = QtGui.QMessageBox()
@@ -61,7 +68,9 @@ class LessonDialogsModule(object):
 			if not "items" in enterWidget.lesson.list or len(enterWidget.lesson.list["items"]) == 0:
 				QtGui.QMessageBox.critical(teachWidget, "Not enough items", "You need to add items to your test first")
 				fileTab.currentTab = enterWidget
-			elif func != None:
+			elif func is not None:
+				#no problems doing the checks, so the lesson can start.
+				#call the callback.
 				func()
 
 def init(moduleManager):

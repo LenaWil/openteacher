@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #	Copyright 2011, Cas Widdershoven
 #	Copyright 2012, Milan Boers
 #
@@ -220,7 +220,7 @@ class TeachWidget(QtGui.QStackedWidget):
 		try:
 			lessonTypeModule = self._lessonTypeModules[i]
 		except IndexError, e:
-			#Show nicer error
+			#FIXME: Show nicer error
 			raise e
 
 		indexes = range(len(self.lesson.list["items"]))
@@ -240,7 +240,7 @@ class TeachWidget(QtGui.QStackedWidget):
 			widget.updateLessonType(self._lessonType)
 
 		self._lessonType.start()
-		
+
 		self.inLesson = True
 
 	def _activityChanged(self, activity):

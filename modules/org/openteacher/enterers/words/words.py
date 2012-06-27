@@ -219,8 +219,6 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 					word["id"] = self.lesson.list["items"][-1]["id"] +1
 				except IndexError:
 					word["id"] = 0
-				word["answers"] = ""
-				word["questions"] = ""
 				self.beginInsertRows(
 					QtCore.QModelIndex(),
 					self.rowCount(),

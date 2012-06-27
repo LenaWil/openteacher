@@ -21,7 +21,7 @@
 from PyQt4 import QtGui
 
 class EnterPlainTextDialog(QtGui.QDialog):
-	def __init__(self, parse, *args, **kwargs):
+	def __init__(self, parse, onscreenKeyboard, *args, **kwargs):
 		super(EnterPlainTextDialog, self).__init__(*args, **kwargs)
 
 		self._parse = parse
@@ -37,11 +37,23 @@ class EnterPlainTextDialog(QtGui.QDialog):
 		self._label.setWordWrap(True)
 		self._textEdit = QtGui.QTextEdit()
 
+		splitter = QtGui.QSplitter()
+		splitter.addWidget(self._textEdit)
+		splitter.setStretchFactor(0, 3)
+		if onscreenKeyboard:
+			splitter.addWidget(onscreenKeyboard)
+			splitter.setStretchFactor(1, 1)
+			onscreenKeyboard.letterChosen.handle(self._addLetter)
+
 		layout = QtGui.QVBoxLayout()
 		layout.addWidget(self._label)
-		layout.addWidget(self._textEdit)
+		layout.addWidget(splitter)
 		layout.addWidget(buttonBox)
 		self.setLayout(layout)
+
+	def _addLetter(self, letter):
+		self._textEdit.insertPlainText(letter)
+		self._textEdit.setFocus(True)
 
 	def retranslate(self):
 		self._label.setText(_("Please enter the plain text in the text edit. Separate words with a new line and questions from answers with an equals sign ('=') or a tab."))
@@ -92,8 +104,19 @@ class PlainTextWordsEntererModule(object):
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="onscreenKeyboard"),
 		)
 		self.filesWithTranslations = ("plainTextWordsEnterer.py",)
+
+	@property
+	def _onscreenKeyboard(self):
+		try:
+			return self._modules.default(
+				"active",
+				type="onscreenKeyboard"
+			).createWidget()
+		except IndexError:
+			return
 
 	def enable(self):
 		self._references = set()
@@ -140,7 +163,7 @@ class PlainTextWordsEntererModule(object):
 			type="wordsStringParser"
 		).parse
 
-		eptd = EnterPlainTextDialog(parse)
+		eptd = EnterPlainTextDialog(parse, self._onscreenKeyboard)
 		self._activeDialogs.add(eptd)
 
 		tab = self._uiModule.addCustomTab(eptd)
