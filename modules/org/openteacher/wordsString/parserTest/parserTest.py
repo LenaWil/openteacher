@@ -37,6 +37,12 @@ class WordsStringParserTestCase(unittest.TestCase):
 			u"one, two",
 			[(u"one", u"two")]
 		)
+
+	def testMultipleSemicolonWords(self):
+		self._test(
+			u"one; two",
+			[(u"one", u"two")]
+		)
 	
 	def testObligatoryWords(self):
 		self._test(
@@ -60,6 +66,42 @@ class WordsStringParserTestCase(unittest.TestCase):
 		self._test(
 			u"être",
 			[(u"être",)]
+		)
+
+	def testNumbersOnly(self):
+		self._test(
+			u"1.2.3.4.",
+			[],
+		)
+
+	def testCommasOnly(self):
+		self._test(
+			u",,,",
+			[],
+		)
+
+	def testSemicolonOnly(self):
+		self._test(
+			u";;;",
+			[],
+		)
+
+	def testNumberEscaping(self):
+		self._test(
+			u"I like to say \\1. and \\2. You too?",
+			[("I like to say \\1. and \\2. You too?",)]
+		)
+
+	def testCommaEscaping(self):
+		self._test(
+			u"one\\, two",
+			[("one\\, two",)]
+		)
+
+	def testSemicolonEscaping(self):
+		self._test(
+			u"one\\; two",
+			[("one\\; two",)]
 		)
 
 class TestModule(object):

@@ -19,6 +19,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt4 import QtGui
+import re
 
 class EnterPlainTextDialog(QtGui.QDialog):
 	def __init__(self, parse, onscreenKeyboard, *args, **kwargs):
@@ -70,13 +71,17 @@ class EnterPlainTextDialog(QtGui.QDialog):
 		text = unicode(self._textEdit.toPlainText())
 		counter = 0
 		for line in text.split("\n"):
+			if line.strip() == u"":
+				continue
 			try:
-				questionText, answerText = line.split("=")
+				questionText, answerText = re.split(r"(?<!\\)[=\t]", line, maxsplit=1)
 			except ValueError:
-				try:
-					questionText, answerText = line.split("\t")
-				except ValueError:
-					continue
+				QtGui.QMessageBox.warning(
+					self,
+					_("Missing equals sign or tab"),
+					_("Please make sure every line contains an '='-sign or tab between the questions and answers.")
+				)
+				return
 			word = {
 				"id": counter,
 				"questions": self._parse(questionText),
@@ -169,20 +174,22 @@ class PlainTextWordsEntererModule(object):
 		tab = self._uiModule.addCustomTab(eptd)
 		tab.closeRequested.handle(tab.close)
 		eptd.tab = tab
-		eptd.rejected.connect(tab.close)
-		eptd.accepted.connect(tab.close)
 
 		self._retranslate()
 
-		eptd.exec_()
+		while True:
+			eptd.exec_()
+			if not eptd.result():
+				break
+			lesson = eptd.lesson
+			if lesson:
+				self._modules.default(
+					"active",
+					type="loader"
+				).loadFromLesson("words", lesson)
+				break
 		self._activeDialogs.remove(eptd)
-		if not eptd.result():
-			return
-
-		self._modules.default(
-			"active",
-			type="loader"
-		).loadFromLesson("words", eptd.lesson)
+		tab.close()
 
 	def disable(self):
 		self.active = False

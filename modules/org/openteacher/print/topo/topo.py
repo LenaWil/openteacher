@@ -27,19 +27,35 @@ class PrintModule(object):
 		self._mm = moduleManager
 
 		self.type = "print"
-		
-	def enable(self):
-		global _
-		global ngettext
-		translator = set(self._mm.mods("active", type="translator")).pop()
-		_, ngettext = translator.gettextFunctions(
-			self._mm.resourcePath("translations")
+		self.uses = (
+			self._mm.mods(type="translator"),
 		)
 
+	def _retranslate(self):
+		global _
+		global ngettext
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		
+	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-
 		self._pyratemp = self._mm.import_("pyratemp")
 		self.prints = ["topo"]
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.active = True
 
 	def disable(self):
@@ -50,13 +66,11 @@ class PrintModule(object):
 		del self.prints
 		del self._pyratemp
 
-	def print_(self, type, list, resources, printer):
-		printer.setOutputFormat(QtGui.QPrinter.PdfFormat);
-		printer.setOutputFileName("B:\Desktop\hi.pdf");
-		
+	def print_(self, type, lesson, printer):
 		painter = QtGui.QPainter()
 		painter.begin(printer)
-		painter.drawImage(0,0,resources["mapScreenshot"])
+		image = QtGui.QImage(lesson.resources["mapScreenshot"])
+		painter.drawImage(0, 0, image)
 		painter.end()
 
 def init(moduleManager):

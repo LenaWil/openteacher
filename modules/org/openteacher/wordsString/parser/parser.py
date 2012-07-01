@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -28,23 +28,22 @@ class WordsStringParserModule(object):
 		self.type = "wordsStringParser"
 
 	def parse(self, text):
-		obligatorySegments = self._regex.split(text)
+		obligatorySegments = re.split(r"(?<!\\)[0-9]+\.", text)
 		obligatorySegments = filter(lambda x: x.strip() != u"", obligatorySegments)
 		item = []
 		for segment in obligatorySegments:
-			words = segment.split(",")
+			words = re.split(r"(?<!\\)[,;]", segment)
 			words = [word.strip() for word in words]
 			words = filter(lambda word: word != u"", words)
-			item.append(tuple(words))
+			if words:
+				item.append(tuple(words))
 		return item
 
 	def enable(self):
-		self._regex = re.compile(r"[0-9]+\.")
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self._regex
 
 def init(moduleManager):
 	return WordsStringParserModule(moduleManager)

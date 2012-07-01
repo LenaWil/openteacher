@@ -41,7 +41,7 @@ class Model(QtCore.QAbstractTableModel):
 		if not index.isValid() or role != QtCore.Qt.EditRole:
 			return False
 		value = unicode(value.toString())
-		if len(value) > 1:
+		if len(value) > 1 and not (len(value) == 2 and value[0] == "\\"):
 			return False
 		self.data[index.row()][index.column()] = value
 		self.dataChanged.emit(index, index)
