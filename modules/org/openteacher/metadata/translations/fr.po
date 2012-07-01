@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-04-01 18:49+0200\n"
+"POT-Creation-Date: 2012-07-01 16:41+0200\n"
 "PO-Revision-Date: 2012-02-13 18:55+0000\n"
 "Last-Translator: demonipuch <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
@@ -21,38 +21,38 @@ msgstr ""
 #. TRANSLATORS: OpenTeacher is a name, so please only
 #. translate or transliterate it if you've got a good reason
 #. to do so.
-#: metadata.py:57
+#: metadata.py:59
 msgid "OpenTeacher"
 msgstr "OpenTeacher"
 
-#: metadata.py:58
+#: metadata.py:60
 msgid "The easiest way to learn a new language"
 msgstr "La manière la plus simple d'apprendre une nouvelle langue"
 
-#: metadata.py:59
+#: metadata.py:61
 #, fuzzy
 msgid "3.0"
 msgstr "3.x"
 
-#: metadata.py:60
+#: metadata.py:62
 #, fuzzy
 msgid "OpenTeacher authors"
 msgstr "OpenTeacher"
 
-#: metadata.py:61
+#: metadata.py:63
 msgid "2008-2012"
 msgstr ""
 
 #. TRANSLATORS: If you want to change this to another, e.g.
 #. localized website, please contact us
 #. (openteachermaintainers@lists.launchpad.net) first.
-#: metadata.py:65
+#: metadata.py:67
 msgid "http://openteacher.org/"
 msgstr "http://openteacher.org/"
 
 #. TRANSLATORS: If you want to change this to another, e.g.
 #. localized website, please contact us
 #. (openteachermaintainers@lists.launchpad.net) first.
-#: metadata.py:70
+#: metadata.py:72
 msgid "http://openteacher.org/documentation.html"
 msgstr "http://openteacher.org/documentation.html"

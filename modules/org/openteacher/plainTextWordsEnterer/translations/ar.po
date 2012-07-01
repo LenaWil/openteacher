@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-04-07 20:36+0200\n"
+"POT-Creation-Date: 2012-06-30 21:29+0200\n"
 "PO-Revision-Date: 2012-03-13 12:57+0000\n"
 "Last-Translator: Aminos Amigos <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-03-14 04:53+0000\n"
 "X-Generator: Launchpad (build 14933)\n"
 
-#: plainTextWordsEnterer.py:47
+#: plainTextWordsEnterer.py:59
 msgid ""
 "Please enter the plain text in the text edit. Separate words with a new line "
 "and questions from answers with an equals sign ('=') or a tab."
@@ -26,10 +26,10 @@ msgstr ""
 "رجاءً أدخل النص المجرد في محرر النصوص. إفصل بين الكلمات بسطر جديد والأسئلة عن "
 "الأجوبة بعلامة يساوي (=)  أو لسان."
 
-#: plainTextWordsEnterer.py:48
+#: plainTextWordsEnterer.py:60
 msgid "Plain text words enterer"
 msgstr "مُدخِلُ النص مجرد"
 
-#: plainTextWordsEnterer.py:132
+#: plainTextWordsEnterer.py:155
 msgid "Create words lesson by entering plain text"
 msgstr "انشئ حصة كلمات بإدخال نص مجرد"

@@ -43,7 +43,7 @@ class MediaLessonModule(object):
 			"all": 667,
 		}
 		self.dataType = "media"
-		
+
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
@@ -55,6 +55,7 @@ class MediaLessonModule(object):
 			self._mm.mods(type="mediaTeacher"),
 			self._mm.mods(type="testsViewer"),
 		)
+		self.filesWithTranslations = ("media.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

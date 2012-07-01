@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-04-01 17:14+0200\n"
+"POT-Creation-Date: 2012-06-30 21:29+0200\n"
 "PO-Revision-Date: 2011-09-05 14:32+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
@@ -18,19 +18,19 @@ msgstr ""
 "X-Launchpad-Export-Date: 2011-09-06 05:04+0000\n"
 "X-Generator: Launchpad (build 13861)\n"
 
-#: repeatAnswer.py:68
+#: repeatAnswer.py:70
 msgid "Click the button to start"
 msgstr "點擊按鍵開始"
 
-#: repeatAnswer.py:69
+#: repeatAnswer.py:71
 msgid "Start!"
 msgstr "開始！"
 
-#: repeatAnswer.py:183
+#: repeatAnswer.py:186
 #, fuzzy
 msgid "Repeat answer"
 msgstr "重覆答案"
 
-#: repeatAnswer.py:187
+#: repeatAnswer.py:190
 msgid "Repeat mode fade duration (milliseconds)"
 msgstr ""

@@ -70,7 +70,7 @@ class ExecuteModule(object):
 			"nargs": "?",
 			"default": profileSetting["value"],
 			"type": unicode,
-			"help": "Start OpenTeacher with the PROFILE profile.",
+			"help": "Start OpenTeacher with the PROFILE profile. Don't know which profiles are included? I'll give away one: 'help' ;).",
 		})
 		args, otherArgs = parser.parse_known_args(sys.argv)
 		#remove the args we parsed from sys.argv

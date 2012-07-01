@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-04-01 17:14+0200\n"
+"POT-Creation-Date: 2012-06-30 21:28+0200\n"
 "PO-Revision-Date: 2011-09-27 20:20+0000\n"
 "Last-Translator: El Achèche ANIS <elachecheanis@gmail.com>\n"
 "Language-Team: French <fr@li.org>\n"
@@ -18,36 +18,36 @@ msgstr ""
 "X-Launchpad-Export-Date: 2011-09-28 06:00+0000\n"
 "X-Generator: Launchpad (build 14049)\n"
 
-#: inputTyping.py:55
+#: inputTyping.py:58
 msgid "Check!"
 msgstr "Verifier!"
 
-#: inputTyping.py:56
+#: inputTyping.py:59
 msgid "Correct anyway"
 msgstr "Correct de toute façon"
 
-#: inputTyping.py:57
+#: inputTyping.py:60
 msgid "Skip"
 msgstr ""
 
-#: inputTyping.py:107
+#: inputTyping.py:118
 #, python-format
 msgid "Corrected: %s"
 msgstr ""
 
-#: inputTyping.py:112
+#: inputTyping.py:123
 #, fuzzy
 msgid "Corrected"
 msgstr "Correct de toute façon"
 
-#: inputTyping.py:141
+#: inputTyping.py:152
 msgid "Correct answer: <b>{answers}</b> [{diff}]"
 msgstr ""
 
-#: inputTyping.py:143
+#: inputTyping.py:154
 msgid "Correct answer: <b>{answers}</b>"
 msgstr ""
 
-#: inputTyping.py:234
+#: inputTyping.py:250
 msgid "Fade duration when wrong (milliseconds)"
 msgstr ""

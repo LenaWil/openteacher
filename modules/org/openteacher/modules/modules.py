@@ -38,13 +38,16 @@ class ModulesModule(object):
 		try:
 			return mod.priorities[self.profile]
 		except (AttributeError, KeyError):
-			#return a negative priority to the sort algorithm so the
-			#module gets on top of the list. The negative integer
-			#needs to be a number, that makes sure the last
-			#installed module is on the top of the list. This just
-			#uses seconds since installation.
-			path = mod.__class__.__file__
-			return - int(os.path.getmtime(path))
+			try:
+				return mod.priorities["default"]
+			except (AttributeError, KeyError):
+				#return a negative priority to the sort algorithm so the
+				#module gets on top of the list. The negative integer
+				#needs to be a number, that makes sure the last
+				#installed module is on the top of the list. This just
+				#uses seconds since installation.
+				path = mod.__class__.__file__
+				return - int(os.path.getmtime(path))
 	
 	def sort(self, *args, **kwargs):
 		mods = set(self._mm.mods(*args, **kwargs))
@@ -66,7 +69,10 @@ class ModulesModule(object):
 		try:
 			return mod.priorities[self.profile] >= 0
 		except (AttributeError, KeyError):
-			return True #If no priorities-stuff, just enable
+			try:
+				mod.priorities["default"] >= 0
+			except (AttributeError, KeyError):
+				return True #If no priorities-stuff, just enable
 
 	def updateToProfile(self):
 		#build dependency tree by topological sorting

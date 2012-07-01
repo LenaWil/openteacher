@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-06-30 21:28+0200\n"
 "PO-Revision-Date: 2011-09-05 14:22+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
@@ -18,30 +18,30 @@ msgstr ""
 "X-Launchpad-Export-Date: 2011-09-06 05:04+0000\n"
 "X-Generator: Launchpad (build 13861)\n"
 
-#: words.py:108
+#: words.py:118
 msgid "Questions"
 msgstr "問題"
 
-#: words.py:108
+#: words.py:118
 msgid "Answers"
 msgstr "答案"
 
-#: words.py:108
+#: words.py:118
 msgid "Comment"
 msgstr "備註"
 
-#: words.py:356
+#: words.py:359
 msgid "Title:"
 msgstr "標題"
 
-#: words.py:357
+#: words.py:360
 msgid "Question language:"
 msgstr "問題的語言："
 
-#: words.py:358
+#: words.py:361
 msgid "Answer language:"
 msgstr "答案的語言："
 
-#: words.py:359
+#: words.py:362
 msgid "Remove selected row(s)"
 msgstr "刪除所選擇的行"

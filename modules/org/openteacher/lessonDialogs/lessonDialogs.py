@@ -21,8 +21,11 @@
 
 from PyQt4 import QtCore, QtGui
 
-#FIXME: translate module (& retranslate)!
 class LessonDialogsModule(object):
+	"""This module isn't retranslated, since it only has very short
+	   lasting dialogs. It's not worth the effort.
+
+	'"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(LessonDialogsModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
@@ -35,11 +38,34 @@ class LessonDialogsModule(object):
 		self.requires = (
 			self._mm.mods(type="ui"),
 		)
+		self.filesWithTranslations = ("lessonDialogs.py",)
 	
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.active = True
-	
+
+	def _retranslate(self):
+		#setup translation
+		global _, ngettext
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+
 	def disable(self):
 		self.active = False
 		
@@ -55,9 +81,9 @@ class LessonDialogsModule(object):
 			if teachWidget.inLesson:
 				warningD = QtGui.QMessageBox()
 				warningD.setIcon(QtGui.QMessageBox.Warning)
-				warningD.setWindowTitle("Warning")
+				warningD.setWindowTitle(_("Warning"))
 				warningD.setStandardButtons(QtGui.QMessageBox.Cancel | QtGui.QMessageBox.Ok)
-				warningD.setText("Are you sure you want to go back to the teach tab? This will end your lesson!")
+				warningD.setText(_("Are you sure you want to go back to the teach tab? This will end your lesson!"))
 				feedback = warningD.exec_()
 				if feedback == QtGui.QMessageBox.Ok:
 					teachWidget.stopLesson(showResults=False)
@@ -66,7 +92,11 @@ class LessonDialogsModule(object):
 		elif fileTab.currentTab == teachWidget:
 			# If there are no words
 			if not "items" in enterWidget.lesson.list or len(enterWidget.lesson.list["items"]) == 0:
-				QtGui.QMessageBox.critical(teachWidget, "Not enough items", "You need to add items to your test first")
+				QtGui.QMessageBox.critical(
+					teachWidget,
+					_("Not enough items"),
+					_("You need to add items to your test first")
+				)
 				fileTab.currentTab = enterWidget
 			elif func is not None:
 				#no problems doing the checks, so the lesson can start.

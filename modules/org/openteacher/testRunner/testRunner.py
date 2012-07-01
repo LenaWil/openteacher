@@ -27,18 +27,8 @@ class TestRunnerModule(object):
 
 		self.type = "testRunner"
 		self.priorities = {
-			"student@home": -1,
-			"student@school": -1,
-			"teacher": -1,
-			"wordsonly": -1,
-			"selfstudy": -1,
 			"testsuite": 0,
-			"codedocumentation": -1,
-			"all": -1,
-			"update-translations": -1,
-			"testserver": -1,
-			"testrunner": -1,
-			"shell": -1,
+			"default": -1,
 		}
 		self.requires = (
 			self._mm.mods(type="execute"),

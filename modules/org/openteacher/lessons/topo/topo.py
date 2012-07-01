@@ -56,6 +56,7 @@ class TeachTopoLessonModule(object):
 			self._mm.mods(type="topoEnterer"),
 			self._mm.mods(type="testsViewer"),
 		)
+		self.filesWithTranslations = ("topo.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

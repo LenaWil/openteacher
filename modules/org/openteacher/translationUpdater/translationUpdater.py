@@ -30,17 +30,8 @@ class TranslationUpdaterModule(object):
 		self.type = "translation-updater"
 
 		self.priorities = {
-			"student@home": -1,
-			"student@school": -1,
-			"teacher": -1,
-			"wordsonly": -1,
-			"selfstudy": -1,
-			"testsuite": -1,
-			"codedocumentation": -1,
-			"all": -1,
 			"update-translations": 0,
-			"testserver": -1,
-			"shell": -1,
+			"default": -1,
 		}
 		self.requires = (
 			self._mm.mods(type="metadata"),

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-04-07 20:36+0200\n"
+"POT-Creation-Date: 2012-06-30 21:28+0200\n"
 "PO-Revision-Date: 2011-12-11 15:04+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
@@ -18,18 +18,26 @@ msgstr ""
 "X-Launchpad-Export-Date: 2011-12-12 05:56+0000\n"
 "X-Generator: Launchpad (build 14458)\n"
 
-#: words.py:75
+#: words.py:76
 #, fuzzy, python-format
 msgid "Word lesson: %s"
 msgstr "單字課程 %s"
 
-#: words.py:75
+#: words.py:76
 msgid "Unnamed"
 msgstr ""
 
-#: words.py:157
+#: words.py:159
 msgid "Create words lesson"
 msgstr "建立單字課程"
+
+#: words.py:233
+msgid "Empty question or answer"
+msgstr ""
+
+#: words.py:234
+msgid "Please enter at least one question and one answer for every word."
+msgstr ""
 
 #~ msgid "Words Lesson"
 #~ msgstr "單字課程"

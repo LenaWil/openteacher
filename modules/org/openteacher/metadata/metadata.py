@@ -50,6 +50,8 @@ class MetadataModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
+		#FIXME 3.1: move some colors in here for codeDocs and
+		#moduleGraph. (The blue OT website colors.)
 		self.metadata = {
 			#TRANSLATORS: OpenTeacher is a name, so please only
 			#translate or transliterate it if you've got a good reason

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.0\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-06-22 20:34+0200\n"
+"POT-Creation-Date: 2012-07-01 16:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,30 +17,30 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: words.py:108
+#: words.py:118
 msgid "Questions"
 msgstr ""
 
-#: words.py:108
+#: words.py:118
 msgid "Answers"
 msgstr ""
 
-#: words.py:108
+#: words.py:118
 msgid "Comment"
 msgstr ""
 
-#: words.py:356
+#: words.py:359
 msgid "Title:"
 msgstr ""
 
-#: words.py:357
+#: words.py:360
 msgid "Question language:"
 msgstr ""
 
-#: words.py:358
+#: words.py:361
 msgid "Answer language:"
 msgstr ""
 
-#: words.py:359
+#: words.py:362
 msgid "Remove selected row(s)"
 msgstr ""
