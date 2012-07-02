@@ -33,7 +33,10 @@ class TestServerModule(object):
 		}
 
 	def enable(self):
-		self._server = self._mm.import_("server")
+		try:
+			self._server = self._mm.import_("server")
+		except ImportError:
+			return #leave disabled
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._execute = self._modules.default(type="execute")
 		self._execute.startRunning.handle(self._run)

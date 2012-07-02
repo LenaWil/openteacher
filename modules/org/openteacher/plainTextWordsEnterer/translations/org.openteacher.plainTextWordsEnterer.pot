@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.0\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-01 16:42+0200\n"
+"POT-Creation-Date: 2012-07-02 18:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,16 +17,26 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: plainTextWordsEnterer.py:59
+#: plainTextWordsEnterer.py:60
 msgid ""
 "Please enter the plain text in the text edit. Separate words with a new line "
 "and questions from answers with an equals sign ('=') or a tab."
 msgstr ""
 
-#: plainTextWordsEnterer.py:60
+#: plainTextWordsEnterer.py:61
 msgid "Plain text words enterer"
 msgstr ""
 
-#: plainTextWordsEnterer.py:155
+#: plainTextWordsEnterer.py:81
+msgid "Missing equals sign or tab"
+msgstr ""
+
+#: plainTextWordsEnterer.py:82
+msgid ""
+"Please make sure every line contains an '='-sign or tab between the "
+"questions and answers."
+msgstr ""
+
+#: plainTextWordsEnterer.py:160
 msgid "Create words lesson by entering plain text"
 msgstr ""

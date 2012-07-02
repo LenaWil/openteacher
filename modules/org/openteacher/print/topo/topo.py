@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -30,6 +30,7 @@ class PrintModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
+		self.filesWithTranslations = ("topo.py",)
 
 	def _retranslate(self):
 		global _
@@ -45,7 +46,6 @@ class PrintModule(object):
 		
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self._pyratemp = self._mm.import_("pyratemp")
 		self.prints = ["topo"]
 
 		try:

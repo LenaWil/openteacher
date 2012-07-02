@@ -155,6 +155,16 @@ class GuiModule(object):
 			self._mm.mods(type="translator"),
 			self._mm.mods(type="settings"),
 		)
+		self.priorities = {
+			"student@home": 0,
+			"student@school": 0,
+			"teacher": 0,
+			"wordsonly": 0,
+			"selfstudy": 0,
+			"all": 0,
+			"default": -1,
+		}
+
 		self.filesWithTranslations = ("gui.py", "ui.py")
 
 	def enable(self):

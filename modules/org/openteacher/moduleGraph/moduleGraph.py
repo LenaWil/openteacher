@@ -18,8 +18,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import pygraphviz
 import sys
+
+#pygraphviz is imported inside enable()
 
 class ModuleGraphModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -38,6 +39,12 @@ class ModuleGraphModule(object):
 		}
 
 	def enable(self):
+		global pygraphviz
+		try:
+			import pygraphviz
+		except ImportError:
+			return #remaining inactive
+		
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._metadata = self._modules.default("active", type="metadata").metadata
 		self._modules.default(type="execute").startRunning.handle(self.run)

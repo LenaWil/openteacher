@@ -18,17 +18,14 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+# cherrypy, pygments & pyratemp are imported in enable()
+
 import webbrowser
-import cherrypy
 import inspect
 import os
 import types
 import mimetypes
 import sys
-import pygments
-import pygments.lexers
-import pygments.formatters
-import pygments.util
 
 class ModulesHandler(object):
 	def __init__(self, moduleManager, templates, *args, **kwargs):
@@ -54,7 +51,6 @@ class ModulesHandler(object):
 		else:
 			return text
 
-	@cherrypy.expose
 	def resources(self, *args):
 		path = "/".join(args)
 		if path == "logo":
@@ -77,15 +73,15 @@ class ModulesHandler(object):
 		except IOError:
 			#404
 			raise cherrypy.HTTPError(404)
+	resources.exposed = True
 
-	@cherrypy.expose
 	def index(self):
 		t = pyratemp.Template(filename=self._templates["modules"])
 		return t(**{
 			"mods": sorted(self._mods.keys())
 		})
+	index.exposed = True
 
-	@cherrypy.expose
 	def priorities_html(self):
 		profiles = self._mm.mods("active", type="profileDescription")
 		profiles = sorted(profiles, key=lambda p: p.desc["name"])
@@ -100,6 +96,7 @@ class ModulesHandler(object):
 			"mods": mods,
 			"profiles": profiles,
 		})
+	priorities_html.exposed = True
 
 	def _isFunction(self, mod, x):
 		try:
@@ -121,7 +118,6 @@ class ModulesHandler(object):
 		requirements.append(selectorResults)
 		return requirements
 
-	@cherrypy.expose
 	def modules(self, *args):
 		args = list(args)
 		args[-1] = args[-1][:-len(".html")]
@@ -212,6 +208,7 @@ class ModulesHandler(object):
 			#last formatter is still there
 			"pygmentsStyle": formatter.get_style_defs('.source'),
 		})
+	modules.exposed = True
 
 class CodeDocumentationModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -259,7 +256,16 @@ class CodeDocumentationModule(object):
 		cherrypy.engine.exit()
 
 	def enable(self):
-		global pyratemp
+		global cherrypy, pygments, pyratemp
+		try:
+			import cherrypy
+			import pygments
+			import pygments.lexers
+			import pygments.formatters
+			import pygments.util
+		except ImportError:
+			return #leave disabled
+
 		pyratemp = self._mm.import_("pyratemp")
 		self._modules = set(self._mm.mods(type="modules")).pop()
 

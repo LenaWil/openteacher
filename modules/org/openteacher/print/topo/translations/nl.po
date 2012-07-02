@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-12 09:48+0200\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-07-02 17:21+0200\n"
 "PO-Revision-Date: 2011-07-12 09:49+0100\n"
 "Last-Translator: Marten de Vries <marten94@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,11 +16,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: print.py:38
-msgid "Printing module"
-msgstr "Printmodule"
+#~ msgid "Printing module"
+#~ msgstr "Printmodule"
 
-#: print.py:77
-msgid "Untitled word list"
-msgstr "Naamloze woordjeslijst"
-
+#~ msgid "Untitled word list"
+#~ msgstr "Naamloze woordjeslijst"

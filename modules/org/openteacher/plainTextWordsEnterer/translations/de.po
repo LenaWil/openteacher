@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-06-30 21:29+0200\n"
+"POT-Creation-Date: 2012-07-02 17:19+0200\n"
 "PO-Revision-Date: 2012-02-11 15:42+0000\n"
 "Last-Translator: Alexander Haack <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-02-12 05:03+0000\n"
 "X-Generator: Launchpad (build 14771)\n"
 
-#: plainTextWordsEnterer.py:59
+#: plainTextWordsEnterer.py:60
 msgid ""
 "Please enter the plain text in the text edit. Separate words with a new line "
 "and questions from answers with an equals sign ('=') or a tab."
@@ -27,10 +27,20 @@ msgstr ""
 "mit einer neuen Zeile und Fragen aus den Antworten mit einem "
 "Gleichheitszeichen ('=') oder einem Tabulator."
 
-#: plainTextWordsEnterer.py:60
+#: plainTextWordsEnterer.py:61
 msgid "Plain text words enterer"
 msgstr ""
 
-#: plainTextWordsEnterer.py:155
+#: plainTextWordsEnterer.py:81
+msgid "Missing equals sign or tab"
+msgstr ""
+
+#: plainTextWordsEnterer.py:82
+msgid ""
+"Please make sure every line contains an '='-sign or tab between the "
+"questions and answers."
+msgstr ""
+
+#: plainTextWordsEnterer.py:160
 msgid "Create words lesson by entering plain text"
 msgstr ""

@@ -46,15 +46,7 @@ class UiControllerModule(object):
 			self._mm.mods(type="dataStore"),
 			self._mm.mods(type="dialogShower"),
 		)
-		self.priorities = {
-			"student@home": 0,
-			"student@school": 0,
-			"teacher": 0,
-			"wordsonly": 0,
-			"selfstudy": 0,
-			"all": 0,
-			"default": -1,
-		}
+		#priorities are handled by gui.py...
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
