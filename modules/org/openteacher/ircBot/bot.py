@@ -192,3 +192,6 @@ on irc. Then press ctrl+c here.\n"""
 	}
 	reactor.connectSSL('irc.freenode.net', 7000, OpenTeacherBotFactory(**config), ssl.ClientContextFactory())
 	reactor.run()
+
+if __name__ == "__main__":
+	run()

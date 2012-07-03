@@ -90,7 +90,7 @@ class InputTypingWidget(QtGui.QWidget):
 		self.word = word
 		self.inputLineEdit.clear()
 
-	def diff(self, answers, givenAnswer):
+	def _diff(self, answers, givenAnswer):
 		#Check if the input looks like the answer or the second answer.
 		try:
 			similar = difflib.get_close_matches(givenAnswer, [answers])[0]
@@ -127,7 +127,21 @@ class InputTypingWidget(QtGui.QWidget):
 	def checkAnswer(self):
 		givenStringAnswer = unicode(self.inputLineEdit.text())
 
-		self._previousResult = self._check(givenStringAnswer, self.word)
+		#Collect all possible answers, and add them into a temporary
+		#word. This temporary word is then used for checking and
+		#displaying a diff.
+		#
+		#fixes bug #809964: OpenTeacher does not check for double
+		#questions
+		answers = set()
+		for item in self.lessonType.list["items"]:
+			if item["questions"] == self.word["questions"]:
+				answers = answers.union(item["answers"])
+
+		tempWord = self.word.copy()
+		tempWord["answers"] = answers
+
+		self._previousResult = self._check(givenStringAnswer, tempWord)
 		try:
 			self._end
 		except AttributeError:
@@ -146,12 +160,12 @@ class InputTypingWidget(QtGui.QWidget):
 			timeLine.finished.connect(self.timerFinished)
 			timeLine.start()
 			#show diff
-			answers = self._compose(self.word["answers"])
-			diff = self.diff(answers, givenStringAnswer)
+			composedAnswers = self._compose(tempWord["answers"])
+			diff = self._diff(composedAnswers, givenStringAnswer)
 			if diff:
-				text = _("Correct answer: <b>{answers}</b> [{diff}]").format(answers=answers, diff=diff)
+				text = _("Correct answer: <b>{answers}</b> [{diff}]").format(answers=composedAnswers, diff=diff)
 			else:
-				text = _("Correct answer: <b>{answers}</b>").format(answers=answers)
+				text = _("Correct answer: <b>{answers}</b>").format(answers=composedAnswers)
 			self.correctLabel.setText(text)
 		else:
 			#no need to start timer in the first place

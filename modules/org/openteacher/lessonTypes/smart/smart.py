@@ -27,7 +27,7 @@ class SmartLessonType(object):
 		self.newItem = createEvent()
 		self.lessonDone = createEvent()
 
-		self._list = list
+		self.list = list
 		self._indexes = indexes
 		self._test = {
 			"results": [],
@@ -92,14 +92,14 @@ class SmartLessonType(object):
 	
 	def _appendTest(self):
 		try:
-			self._list["tests"][-1]
+			self.list["tests"][-1]
 		except KeyError:
-			self._list["tests"] = [self._test]
+			self.list["tests"] = [self._test]
 		except IndexError:
-			self._list["tests"].append(self._test)
+			self.list["tests"].append(self._test)
 		else:
-			if not self._list["tests"][-1] == self._test:
-				self._list["tests"].append(self._test)
+			if not self.list["tests"][-1] == self._test:
+				self.list["tests"].append(self._test)
 
 	def _sendNext(self):		
 		try:
@@ -113,12 +113,12 @@ class SmartLessonType(object):
 			if len(self._test["results"]) != 0:
 				self._test["finished"] = True
 				try:
-					self._list["tests"]
+					self.list["tests"]
 				except KeyError:
-					self._list["tests"] = []
+					self.list["tests"] = []
 			self.lessonDone.send()
 		else:
-			self.newItem.send(self._list["items"][self._currentIndex])
+			self.newItem.send(self.list["items"][self._currentIndex])
 
 class SmartModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

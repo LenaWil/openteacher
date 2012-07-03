@@ -28,7 +28,7 @@ class IntervalLessonType(object):
 
 		self.newItem = createEvent()
 		self.lessonDone = createEvent()
-		self._list = list
+		self.list = list
 		self._indexes = indexes
 
 		self._groupSizeSetting = groupSizeSetting
@@ -63,7 +63,7 @@ class IntervalLessonType(object):
 		# Add items to the group
 		for i in xrange(size):
 			try:
-				self._list["items"][i]
+				self.list["items"][i]
 			except IndexError:
 				pass
 			else:
@@ -87,14 +87,14 @@ class IntervalLessonType(object):
 	
 	def _appendTest(self):
 		try:
-			self._list["tests"][-1]
+			self.list["tests"][-1]
 		except KeyError:
-			self._list["tests"] = [self._test]
+			self.list["tests"] = [self._test]
 		except IndexError:
-			self._list["tests"].append(self._test)
+			self.list["tests"].append(self._test)
 		else:
-			if not self._list["tests"][-1] == self._test:
-				self._list["tests"].append(self._test)
+			if not self.list["tests"][-1] == self._test:
+				self.list["tests"].append(self._test)
 
 	def _sendNext(self):
 		minQuestions = self._minQuestionsSetting["value"]
@@ -122,7 +122,7 @@ class IntervalLessonType(object):
 				# Add new one
 				try:
 					# Try if it exists
-					self._list["items"][self._group[-1] + 1]
+					self.list["items"][self._group[-1] + 1]
 				except IndexError:
 					pass
 				else:
@@ -135,9 +135,9 @@ class IntervalLessonType(object):
 			# index not in list, so end of lesson
 			if len(self._test["results"]) != 0:
 				try:
-					self._list["tests"]
+					self.list["tests"]
 				except KeyError:
-					self._list["tests"] = []
+					self.list["tests"] = []
 			self._test["finished"] = True
 			self.lessonDone.send()
 		else:
@@ -159,10 +159,10 @@ class IntervalLessonType(object):
 			
 			if len(randomGroup) > 0:
 				# There is more than one left, so ask another one than the last one
-				self.newItem.send(self._list["items"][randomGroup[r]])
+				self.newItem.send(self.list["items"][randomGroup[r]])
 			else:
 				# There is only one left, so ask that one
-				self.newItem.send(self._list["items"][self._group[0]])
+				self.newItem.send(self.list["items"][self._group[0]])
 
 	#Just send the next question and everything will be fine :)
 	skip = _sendNext
