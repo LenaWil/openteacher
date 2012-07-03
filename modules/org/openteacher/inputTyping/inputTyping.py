@@ -54,6 +54,13 @@ class InputTypingWidget(QtGui.QWidget):
 		# Make character input work
 		letterChosen.handle(self.addLetter)
 
+		#connect events
+		self.checkButton.clicked.connect(self.checkAnswer)
+		self.correctButton.clicked.connect(self.correctLastAnswer)
+		#skip button needs lessontype, so is connected later on
+
+		self.inputLineEdit.returnPressed.connect(self.checkAnswer)
+
 	def retranslate(self):
 		self.checkButton.setText(_("Check!"))
 		self.correctButton.setText(_("Correct anyway"))
@@ -78,12 +85,14 @@ class InputTypingWidget(QtGui.QWidget):
 		self.lessonType = lessonType
 
 		self.lessonType.newItem.handle(self.newWord)
-
-		self.checkButton.clicked.connect(self.checkAnswer)
-		self.correctButton.clicked.connect(self.correctLastAnswer)
+		self.lessonType.lessonDone.handle(self.lessonDone)
 		self.skipButton.clicked.connect(self.lessonType.skip)
-		
-		self.inputLineEdit.returnPressed.connect(self.checkAnswer)
+
+	def lessonDone(self):
+		self.lessonType.newItem.unhandle(self.newWord)
+		self.lessonType.lessonDone.unhandle(self.lessonDone)
+		self.skipButton.clicked.disconnect(self.lessonType.skip)
+		del self.lessonType
 
 	def newWord(self, word):
 		self._start = datetime.datetime.now()
@@ -137,6 +146,7 @@ class InputTypingWidget(QtGui.QWidget):
 		for item in self.lessonType.list["items"]:
 			if item["questions"] == self.word["questions"]:
 				answers = answers.union(item["answers"])
+		answers = list(answers)
 
 		tempWord = self.word.copy()
 		tempWord["answers"] = answers

@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -78,6 +78,11 @@ class InMindTeachWidget(QtGui.QStackedWidget):
 		self.addWidget(self.thinkWidget)
 		self.addWidget(self.answerWidget)
 
+		#connect some events
+		self.thinkWidget.viewAnswerButton.clicked.connect(self.startAnswering)
+		self.answerWidget.rightButton.clicked.connect(self.setRight)
+		self.answerWidget.wrongButton.clicked.connect(self.setWrong)
+
 	def retranslate(self):
 		self.thinkWidget.retranslate()
 		self.answerWidget.retranslate()
@@ -92,11 +97,16 @@ class InMindTeachWidget(QtGui.QStackedWidget):
 	def updateLessonType(self, lessonType):
 		self.lessonType = lessonType
 
+		#connect lesson type specific events
 		self.lessonType.newItem.handle(self.newItem)
-		self.thinkWidget.viewAnswerButton.clicked.connect(self.startAnswering)
+		self.lessonType.lessonDone.handle(self.lessonDone)
 		self.thinkWidget.skipButton.clicked.connect(self.lessonType.skip)
-		self.answerWidget.rightButton.clicked.connect(self.setRight)
-		self.answerWidget.wrongButton.clicked.connect(self.setWrong)
+
+	def lessonDone(self):
+		#forget the old lessonType to be fresh for a new lesson
+		self.lessonType.newItem.unhandle(self.newItem)
+		self.lessonType.lessonDone.unhandle(self.lessonDone)
+		self.thinkWidget.skipButton.clicked.disconnect(self.lessonType.skip)
 
 	def _constructResult(self):
 		return {

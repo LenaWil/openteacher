@@ -300,6 +300,7 @@ class TopoEntererModule(object):
 		
 		self.uses = (
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="map"),
 		)
 		self.requires = (
 			self._mm.mods(type="topoMaps"),
