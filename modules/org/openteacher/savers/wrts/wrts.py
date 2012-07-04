@@ -61,8 +61,12 @@ class WrtsSaverModule(object):
 		self.name = _("WRDS")
 
 	def enable(self):
+		global pyratemp
+		try:
+			import pyratemp
+		except ImportError:
+			return #remain inactive
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self._pyratemp = self._mm.import_("pyratemp")
 		self._metadata = self._modules.default("active", type="metadata").metadata
 
 		self.saves = {"words": ["wrts"]}
@@ -83,7 +87,6 @@ class WrtsSaverModule(object):
 		del self._modules
 		del self._metadata
 		del self.name
-		del self._pyratemp
 		del self.saves
 
 	@property
@@ -94,14 +97,14 @@ class WrtsSaverModule(object):
 		).compose
 
 	def save(self, type, lesson, path):
-		class EvalPseudoSandbox(self._pyratemp.EvalPseudoSandbox):
+		class EvalPseudoSandbox(pyratemp.EvalPseudoSandbox):
 			def __init__(self2, *args, **kwargs):
-				self._pyratemp.EvalPseudoSandbox.__init__(self2, *args, **kwargs)
+				pyratemp.EvalPseudoSandbox.__init__(self2, *args, **kwargs)
 
 				self2.register("compose", self._compose)
 
 		templatePath = self._mm.resourcePath("template.xml")
-		t = self._pyratemp.Template(
+		t = pyratemp.Template(
 			open(templatePath).read(),
 			eval_class=EvalPseudoSandbox
 		)

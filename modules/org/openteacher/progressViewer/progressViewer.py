@@ -22,6 +22,13 @@ from PyQt4 import QtCore, QtGui
 import datetime
 import weakref
 
+def total_seconds(td):
+	"""FIXME once: fix for Python 2.6 compatibility, that will
+	   become obsolete once in favour of timedelta.total_seconds()
+
+	"""
+	return int(round((td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / float(10**6)))
+
 class Graph(QtGui.QFrame):
 	def __init__(self, test, *args, **kwargs):
 		super(Graph, self).__init__(*args, **kwargs)
@@ -38,7 +45,7 @@ class Graph(QtGui.QFrame):
 
 		self.start = self._test["results"][0]["active"]["start"]
 		self.end = self._test["results"][-1]["active"]["end"]
-		self._totalSeconds = (self.end - self.start).total_seconds()
+		self._totalSeconds = total_seconds(self.end - self.start)
 
 	@property
 	def _amountOfUniqueItems(self):
@@ -73,8 +80,8 @@ class Graph(QtGui.QFrame):
 		return super(Graph, self).event(event, *args, **kwargs)
 
 	def _paintItem(self, p, item):
-		x = (item["start"] - self.start).total_seconds() * self._secondsPerPixel
-		width = (item["end"] - item["start"]).total_seconds() * self._secondsPerPixel
+		x = total_seconds(item["start"] - self.start) * self._secondsPerPixel
+		width = total_seconds(item["end"] - item["start"]) * self._secondsPerPixel
 
 		p.drawRect(x, 0, width, self._h)
 

@@ -57,8 +57,12 @@ class Teach2000SaverModule(object):
 		self.name = _("Teach2000")
 
 	def enable(self):
+		global pyratemp
+		try:
+			import pyratemp
+		except ImportError:
+			return #remain inactive
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self._pyratemp = self._mm.import_("pyratemp")
 		self.saves = {"words": ["t2k"]}
 
 		try:
@@ -74,7 +78,6 @@ class Teach2000SaverModule(object):
 	def disable(self):
 		self.active = False
 
-		del self._pyratemp
 		del self.name
 		del self.saves
 
@@ -103,7 +106,7 @@ class Teach2000SaverModule(object):
 			test["wrongmorethantwice"] = self._wrongMoreThanTwice(test)
 
 		templatePath = self._mm.resourcePath("template.xml")
-		t = self._pyratemp.Template(open(templatePath).read())
+		t = pyratemp.Template(open(templatePath).read())
 		data = {
 			"wordList": wordList,
 		}

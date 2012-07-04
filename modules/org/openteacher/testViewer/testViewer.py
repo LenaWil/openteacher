@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2009-2011, Marten de Vries
+#	Copyright 2009-2012, Marten de Vries
 #	Copyright 2008-2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -23,6 +23,13 @@ from PyQt4 import QtCore, QtGui
 import datetime
 import weakref
 
+def total_seconds(td):
+	"""FIXME once: fix for Python 2.6 compatibility, that will
+	   become obsolete once in favour of timedelta.total_seconds()
+
+	"""
+	return int(round((td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / float(10**6)))
+
 class TestModel(QtCore.QAbstractTableModel):
 	def __init__(self, moduleManager, list, dataType, test, *args, **kwargs):
 		super(TestModel, self).__init__(*args, **kwargs)
@@ -31,7 +38,7 @@ class TestModel(QtCore.QAbstractTableModel):
 
 		self._list = list
 		self._test = test
-		
+
 		for module in self._mm.mods("active", type="testType"):
 			if dataType == module.dataType:
 				self.testTable = module
@@ -144,18 +151,26 @@ class TestViewer(QtGui.QSplitter):
 		self.completedLabel.setText(_("Completed: %s") % completedText)
 
 		seconds = int(round(self._totalThinkingTime))
-		self.totalThinkingTimeLabel.setText(ngettext(
-			"Total thinking time: %s second",
-			"Total thinking time: %s seconds",
-			seconds
-		) % seconds)
+		if seconds < 180:
+			#< 3 minutes
+			self.totalThinkingTimeLabel.setText(ngettext(
+				"Total thinking time: %s second",
+				"Total thinking time: %s seconds",
+				seconds
+			) % seconds)
+		else:
+			#> 3 minutes
+			minutes = int(round(seconds / 60.0))
+			self.totalThinkingTimeLabel.setText(
+				_("Total thinking time: %s minutes") % minutes
+			)
 
 	@property
 	def _totalThinkingTime(self):
 		totalThinkingTime = datetime.timedelta()
 		for result in self.test["results"]:
 			totalThinkingTime += result["active"]["end"] - result["active"]["start"]
-		return totalThinkingTime.total_seconds()
+		return total_seconds(totalThinkingTime)
 
 class TestViewerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

@@ -324,12 +324,14 @@ class AboutDialogModule(object):
 				dialog.tab.title = dialog.windowTitle()
 
 	def enable(self):
-		self._modules = set(self._mm.mods(type="modules")).pop()
-
-		self._activeDialogs = set()
-
 		global pyratemp
-		pyratemp = self._mm.import_("pyratemp")
+		try:
+			import pyratemp
+		except ImportError:
+			return #remain inactive
+
+		self._modules = set(self._mm.mods(type="modules")).pop()
+		self._activeDialogs = set()
 
 		#load translator
 		try:

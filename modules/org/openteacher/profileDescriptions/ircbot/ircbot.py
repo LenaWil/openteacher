@@ -45,6 +45,8 @@ class ProfileDescriptionModule(object):
 		}
 
 	def enable(self):
+		if len(set(self._mm.mods(type="ircBot"))) == 0:
+			return #remain inactive
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		try:
 			translator = self._modules.default("active", type="translator")

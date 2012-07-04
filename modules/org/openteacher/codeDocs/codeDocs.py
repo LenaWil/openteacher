@@ -263,12 +263,11 @@ class CodeDocumentationModule(object):
 			import pygments.lexers
 			import pygments.formatters
 			import pygments.util
+			import pyratemp
 		except ImportError:
 			return #leave disabled
 
-		pyratemp = self._mm.import_("pyratemp")
 		self._modules = set(self._mm.mods(type="modules")).pop()
-
 		self._modules.default(type="execute").startRunning.handle(self.showDocumentation)
 
 		self.active = True

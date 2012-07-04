@@ -158,6 +158,7 @@ class DetailsWidget(QtGui.QWidget):
 				if len(self.labels) == 0:
 					for property in module.properties:
 						label = QtGui.QLabel(property[0])
+						label.setWordWrap(True)
 						self.layout.addRow(property[0], label)
 						label.setText(list.get(property[1], _("-")))
 						self.labels.append(label)

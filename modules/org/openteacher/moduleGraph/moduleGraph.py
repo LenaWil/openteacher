@@ -63,12 +63,13 @@ class ModuleGraphModule(object):
 				for demandedMod in demand:
 					graph.add_edge(mod.type, demandedMod.type, dir="forward", color=color)
 
-		graph = pygraphviz.AGraph(strict=False)
-		graph.graph_attr["label"] = "%s module map" % self._metadata["name"]
-		graph.graph_attr["labelloc"] = "t" #top
-		graph.graph_attr["fontsize"] = len(set(self._mm.mods)) * 1.25
-		graph.graph_attr["fontname"] = "Ubuntu"
-		graph.graph_attr["nodesep"] = 0.2
+		graph = pygraphviz.AGraph(**{
+			"label": "%s module map" % self._metadata["name"],
+			"labelloc": "t", #top
+			"fontsize": len(set(self._mm.mods)) * 1.25,
+			"fontname": "Ubuntu",
+			"strict": False,
+		})
 		graph.node_attr["style"] = "filled"
 		graph.node_attr["fillcolor"] = "#D1E9FA"
 		for mod in self._mm.mods:

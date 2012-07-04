@@ -30,14 +30,14 @@ class WordsHtmlGeneratorModule(object):
 		)
 
 	def generate(self, lesson, margin="0"):
-		class EvalPseudoSandbox(self._pyratemp.EvalPseudoSandbox):
+		class EvalPseudoSandbox(pyratemp.EvalPseudoSandbox):
 			def __init__(self2, *args, **kwargs):
-				self._pyratemp.EvalPseudoSandbox.__init__(self2, *args, **kwargs)
+				pyratemp.EvalPseudoSandbox.__init__(self2, *args, **kwargs)
 
 				self2.register("compose", self.compose)
 
 		templatePath = self._mm.resourcePath("template.html")
-		t = self._pyratemp.Template(
+		t = pyratemp.Template(
 			open(templatePath).read(),
 			eval_class=EvalPseudoSandbox
 		)
@@ -54,15 +54,17 @@ class WordsHtmlGeneratorModule(object):
 		).compose
 
 	def enable(self):
+		global pyratemp
+		try:
+			import pyratemp
+		except ImportError:
+			return #remain inactive
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self._pyratemp = self._mm.import_("pyratemp")
 
 		self.active = True
 
 	def disable(self):
 		self.active = False
-
-		del self._pyratemp
 
 def init(moduleManager):
 	return WordsHtmlGeneratorModule(moduleManager)

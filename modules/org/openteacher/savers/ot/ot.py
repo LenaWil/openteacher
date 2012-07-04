@@ -46,8 +46,13 @@ class OpenTeacherSaverModule(object):
 		self.filesWithTranslations = ("ot.py",)
 
 	def enable(self):
+		global pyratemp
+		try:
+			import pyratemp
+		except ImportError:
+			return #remain inactive
+
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self._pyratemp = self._mm.import_("pyratemp")
 		self.saves = {"words": ["ot"]}
 
 		try:
@@ -78,7 +83,6 @@ class OpenTeacherSaverModule(object):
 
 		del self._modules
 		del self.name
-		del self._pyratemp
 		del self.saves
 
 	@property
@@ -113,7 +117,7 @@ class OpenTeacherSaverModule(object):
 				word["second"] = u""
 
 		templatePath = self._mm.resourcePath("template.xml")
-		t = self._pyratemp.Template(open(templatePath).read())
+		t = pyratemp.Template(open(templatePath).read())
 		data = {
 			"wordList": wordList
 		}

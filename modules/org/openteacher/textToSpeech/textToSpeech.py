@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #    Copyright 2011, Milan Boers
-#    Copyright 2011, Marten de Vries
+#    Copyright 2011-2012, Marten de Vries
 #
 #    This file is part of OpenTeacher.
 #
@@ -26,6 +26,7 @@ import os
 import subprocess
 import threading
 import shlex
+import StringIO
 
 import sys
 
@@ -67,7 +68,9 @@ class TextToSpeech(object):
 			for voice in voices:
 				feedback.append((voice.name, voice.id))
 		elif os.name == "posix":
-			voices = subprocess.check_output(["espeak", "--voices"]).split("\n")
+			#This doesn't use check_output() because that would break Python 2.6 compatibility.
+			process = subprocess.Popen(["espeak", "--voices"], stdout=subprocess.PIPE)
+			voices = process.communicate()[0].split("\n")
 			for voice in voices:
 				voiceProps = shlex.split(voice)
 				try:
