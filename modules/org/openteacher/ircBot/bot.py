@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2012, Marten de Vries
+#	Copyright 2012, Milan Boers
 #
 #	This file is part of OpenTeacher.
 #
@@ -27,6 +28,8 @@ import urllib2
 import urllib
 
 class OpenTeacherBot(irc.IRCClient):
+	sessionKey = None
+	
 	factoids = {
 		".downloads": "http://openteacher.org/download.html",
 		".sf": "http://sourceforge.net/projects/openteacher",
@@ -73,12 +76,28 @@ class OpenTeacherBot(irc.IRCClient):
 		return self.factory.realname
 
 	def signedOn(self):
-		print "Signed on. Now joining channels."
+		print "Signed on. Now getting key and joining channels."
+		
+		self.setSessionKey()
+		
 		for channel in self.factory.channels:
 			self.join(channel)
 
 	def joined(self, channel):
 		print "Joined %s." % (channel,)
+	
+	def setSessionKey(self):
+		# Get a session key from appspot
+		shellSite = urllib2.urlopen("http://shell.appspot.com/")
+		
+		regex = re.compile(r'<input type="hidden" name="session" value="(.*)" />')
+		
+		for line in shellSite:
+			m = regex.search(line)
+			if m != None:
+				self.sessionKey = m.group(1)
+				return True
+		return False
 
 	def privmsg(self, user, channel, msg):
 		print "%s: %s: %s" % (user.split("!")[0], channel, msg)
@@ -124,14 +143,20 @@ class OpenTeacherBot(irc.IRCClient):
 
 			data = urllib.urlencode({
 				"statement": statement,
-				"session": "agVzaGVsbHITCxIHU2Vzc2lvbhiJzovInooGDA",
+				"session": self.sessionKey,
 			})
 			data = urllib2.urlopen("http://shell.appspot.com/shell.do?" + data).read()
 			result = data.strip().split("\n")[-1]
 			if len(result) > 350:
 				result = result[len(result) - 350:]
 			self.msg(target, result)
-
+		
+		if msg == ".reset" and user in self.factory.admins:
+			if self.setSessionKey():
+				self.msg(target, "I've been reset.")
+			else:
+				self.msg(target, "Could not reset. Is appspot down?")
+		
 		if msg == ".quit" and user in self.factory.admins:
 			self.factory.timeToQuit = True
 			self.quit()
@@ -179,7 +204,7 @@ on irc. Then press ctrl+c here.\n"""
 
 	config = {
 		"channels": [
-			"##PyTest",
+			"#openteacher",
 		],
 		"nickname": "OTbot-dev",
 		"realname": "http://openteacher.org/",
@@ -193,5 +218,4 @@ on irc. Then press ctrl+c here.\n"""
 	reactor.connectSSL('irc.freenode.net', 7000, OpenTeacherBotFactory(**config), ssl.ClientContextFactory())
 	reactor.run()
 
-if __name__ == "__main__":
-	run()
+run()
