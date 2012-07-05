@@ -17,6 +17,32 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: wordsNeverAnsweredCorrectly.py:78
-msgid "Only words you never answered correctly"
+#: uiController.py:172
+msgid ""
+"Couldn't open the file, because the file type is unknown or it can't be "
+"shown."
+msgstr ""
+
+#: uiController.py:175
+msgid ""
+"Couldn't open the file, is it still there and do we have the right to open "
+"it?"
+msgstr ""
+
+#: uiController.py:178
+msgid "Couldn't open the file, it seems to be corrupted."
+msgstr ""
+
+#: uiController.py:180
+msgid "File opened succesfully."
+msgstr ""
+
+#: uiController.py:187
+msgid ""
+"Couldn't save the file, is there enough free disk space and do we have the "
+"right to write to the specified location?"
+msgstr ""
+
+#: uiController.py:189
+msgid "File saved succesfully."
 msgstr ""

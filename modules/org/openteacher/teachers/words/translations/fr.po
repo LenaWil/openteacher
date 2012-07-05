@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-07-05 21:33+0200\n"
 "PO-Revision-Date: 2011-09-27 20:19+0000\n"
 "Last-Translator: El Achèche ANIS <elachecheanis@gmail.com>\n"
 "Language-Team: French <fr@li.org>\n"
@@ -18,42 +18,37 @@ msgstr ""
 "X-Launchpad-Export-Date: 2011-09-28 06:01+0000\n"
 "X-Generator: Launchpad (build 14049)\n"
 
-#: words.py:80 words.py:83
-msgid "Up"
-msgstr ""
-
-#: words.py:81 words.py:84
-msgid "Down"
-msgstr ""
-
-#: words.py:87
+#: words.py:58
 msgid "Don't show this screen again when I start a lesson."
 msgstr ""
 
-#: words.py:90
+#: words.py:61
 msgid "I'm ready, start the lesson!"
 msgstr ""
 
-#: words.py:93
+#: words.py:64
 msgid "Lesson settings"
 msgstr ""
 
-#: words.py:96
+#: words.py:67
 msgid "Lesson type"
 msgstr ""
 
-#: words.py:99
-msgid "Modify word"
-msgstr "Modifier le mot"
-
-#: words.py:102
-msgid "Modify word list"
+#: words.py:70
+msgid "Word modifications"
 msgstr ""
 
-#: words.py:151
+#: words.py:73
+msgid "Word list order and filters"
+msgstr ""
+
+#: words.py:122
 msgid "Change lesson settings"
 msgstr "Modifier les paramètres de leçon"
 
-#: words.py:152
+#: words.py:123
 msgid "Word:"
 msgstr "Mot:"
+
+#~ msgid "Modify word"
+#~ msgstr "Modifier le mot"

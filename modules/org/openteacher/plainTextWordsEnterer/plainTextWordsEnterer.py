@@ -183,10 +183,17 @@ class PlainTextWordsEntererModule(object):
 				break
 			lesson = eptd.lesson
 			if lesson:
-				self._modules.default(
-					"active",
-					type="loader"
-				).loadFromLesson("words", lesson)
+				try:
+					self._modules.default(
+						"active",
+						type="loader"
+					).loadFromLesson("words", lesson)
+				except NotImplementedError:
+					QtGui.QMessageBox.critical(
+						self._uiModule.qtParent,
+						_("Can't show the result"),
+						_("Can't open the resultive word list, because it can't be shown.")
+					)
 				break
 		self._activeDialogs.remove(eptd)
 		tab.close()

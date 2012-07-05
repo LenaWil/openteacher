@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-07-05 21:33+0200\n"
 "PO-Revision-Date: 2012-03-05 19:14+0000\n"
 "Last-Translator: Alexander Haack <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
@@ -18,6 +18,6 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-03-06 04:59+0000\n"
 "X-Generator: Launchpad (build 14900)\n"
 
-#: allOnce.py:131
+#: allOnce.py:134
 msgid "All once"
 msgstr "Alle einmal"

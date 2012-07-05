@@ -51,20 +51,43 @@ class RecentlyOpenedModel(QtCore.QAbstractListModel):
 		self._items = items
 		self.endResetModel()
 
-	def open(self, row):
+	def open(self, parent, row):
 		item = self._items[row]
 
-		module = self._modules.default(
-			*item["moduleArgsSelectors"],
-			**item["moduleKwargsSelectors"]
+		showError = lambda: QtGui.QMessageBox.critical(
+			parent,
+			_("Can't open anymore"),
+			_("It's not possible anymore to open this kind of list.")
 		)
-		
-		method = getattr(module, item["method"])
-		
-		method(
-			*item["args"],
-			**item["kwargs"]
-		)
+
+		try:
+			module = self._modules.default(
+				*item["moduleArgsSelectors"],
+				**item["moduleKwargsSelectors"]
+			)
+		except IndexError:
+			showError()
+			return
+
+		try:
+			method = getattr(module, item["method"])
+		except AttributeError:
+			showError()
+			return
+
+		try:
+			method(
+				*item["args"],
+				**item["kwargs"]
+			)
+		except Exception, e:
+			#for debugging purposes
+			print e
+			QtGui.QMessageBox.critical(
+				parent,
+				_("Can't open anymore"),
+				_("It's not possible anymore to open this list.")
+			)
 
 class RecentlyOpenedListView(QtGui.QListView):
 	def __init__(self, modules, *args, **kwargs):
@@ -74,7 +97,7 @@ class RecentlyOpenedListView(QtGui.QListView):
 		self.doubleClicked.connect(self._doubleClicked)
 
 	def _doubleClicked(self, index):
-		self.model().open(index.row())
+		self.model().open(self, index.row())
 
 class RecentlyOpenedViewer(QtGui.QGroupBox):
 	def __init__(self, modules, *args, **kwargs):

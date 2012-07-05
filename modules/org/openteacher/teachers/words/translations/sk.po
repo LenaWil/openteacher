@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-07-05 21:33+0200\n"
 "PO-Revision-Date: 2011-08-24 19:43+0000\n"
 "Last-Translator: Alexander Suchan <supersasho@gmail.com>\n"
 "Language-Team: Slovak <sk@li.org>\n"
@@ -18,42 +18,46 @@ msgstr ""
 "X-Launchpad-Export-Date: 2011-08-25 05:14+0000\n"
 "X-Generator: Launchpad (build 13727)\n"
 
-#: words.py:80 words.py:83
-msgid "Up"
-msgstr "Hore"
-
-#: words.py:81 words.py:84
-msgid "Down"
-msgstr "Dolu"
-
-#: words.py:87
+#: words.py:58
 msgid "Don't show this screen again when I start a lesson."
 msgstr "Nezobrazovať túto obrazovku keď začínam lekciu"
 
-#: words.py:90
+#: words.py:61
 msgid "I'm ready, start the lesson!"
 msgstr "Som pripravený, začni lekciu!"
 
-#: words.py:93
+#: words.py:64
 msgid "Lesson settings"
 msgstr "Nastavenia lekcie"
 
-#: words.py:96
+#: words.py:67
 msgid "Lesson type"
 msgstr "Typ lekcie"
 
-#: words.py:99
-msgid "Modify word"
-msgstr "Upraviť slovo"
+#: words.py:70
+msgid "Word modifications"
+msgstr ""
 
-#: words.py:102
-msgid "Modify word list"
-msgstr "Upravit zoznam slov"
+#: words.py:73
+msgid "Word list order and filters"
+msgstr ""
 
-#: words.py:151
+#: words.py:122
 msgid "Change lesson settings"
 msgstr "Zmeniť nastavenia lekcie"
 
-#: words.py:152
+#: words.py:123
 msgid "Word:"
 msgstr "Slovo:"
+
+#~ msgid "Up"
+#~ msgstr "Hore"
+
+#~ msgid "Down"
+#~ msgstr "Dolu"
+
+#~ msgid "Modify word"
+#~ msgstr "Upraviť slovo"
+
+#~ msgid "Modify word list"
+#~ msgstr "Upravit zoznam slov"

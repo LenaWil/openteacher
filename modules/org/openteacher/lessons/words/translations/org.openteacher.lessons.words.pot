@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.0\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-02 18:22+0200\n"
+"POT-Creation-Date: 2012-07-05 22:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,13 +17,13 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: words.py:76
-#, python-format
-msgid "Word lesson: %s"
+#: words.py:73
+msgid "Unnamed"
 msgstr ""
 
-#: words.py:76
-msgid "Unnamed"
+#: words.py:74
+#, python-format
+msgid "Word lesson: %s"
 msgstr ""
 
 #: words.py:159

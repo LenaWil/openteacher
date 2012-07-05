@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-06-22 20:34+0200\n"
+"POT-Creation-Date: 2012-07-05 21:33+0200\n"
 "PO-Revision-Date: 2012-03-13 12:59+0000\n"
 "Last-Translator: Aminos Amigos <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
@@ -20,28 +20,28 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-03-14 04:53+0000\n"
 "X-Generator: Launchpad (build 14933)\n"
 
-#: testViewer.py:127
+#: testViewer.py:134
 msgid "Results"
 msgstr "النتائج"
 
-#: testViewer.py:138
+#: testViewer.py:145
 msgid "Note:"
 msgstr "ملاحظة:"
 
-#: testViewer.py:141
+#: testViewer.py:148
 msgid "yes"
 msgstr "نعم"
 
-#: testViewer.py:141 testViewer.py:143
+#: testViewer.py:148 testViewer.py:150
 msgid "no"
 msgstr "لا"
 
-#: testViewer.py:144
+#: testViewer.py:151
 #, python-format
 msgid "Completed: %s"
 msgstr "منتهي: %s"
 
-#: testViewer.py:148
+#: testViewer.py:157
 #, python-format
 msgid "Total thinking time: %s second"
 msgid_plural "Total thinking time: %s seconds"
@@ -51,3 +51,8 @@ msgstr[2] "الوقت الذي أمضيته في التفكير: %s ثواني"
 msgstr[3] "الوقت الذي أمضيته في التفكير: %s ثواني"
 msgstr[4] "الوقت الذي أمضيته في التفكير: %s ثواني"
 msgstr[5] "الوقت الذي أمضيته في التفكير: %s ثانية"
+
+#: testViewer.py:165
+#, fuzzy, python-format
+msgid "Total thinking time: %s minutes"
+msgstr "الوقت الذي أمضيته في التفكير: %s ثانية"

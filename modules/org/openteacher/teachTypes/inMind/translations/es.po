@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-07-05 21:33+0200\n"
 "PO-Revision-Date: 2011-11-15 17:14+0000\n"
 "Last-Translator: Fitoschido <fitoschido@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -40,11 +40,11 @@ msgstr "Tenía razón"
 msgid "I was wrong"
 msgstr "Estaba equivocado"
 
-#: inMind.py:123
+#: inMind.py:133
 msgid "Translation: "
 msgstr "Traducción: "
 
-#: inMind.py:186
+#: inMind.py:196
 #, fuzzy
 msgid "Think answer"
 msgstr "Pensar las respuestas"

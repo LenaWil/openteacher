@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-06-22 20:34+0200\n"
+"POT-Creation-Date: 2012-07-05 21:33+0200\n"
 "PO-Revision-Date: 2012-02-11 15:47+0000\n"
 "Last-Translator: Alexander Haack <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
@@ -19,30 +19,35 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-03-10 05:04+0000\n"
 "X-Generator: Launchpad (build 14914)\n"
 
-#: testViewer.py:127
+#: testViewer.py:134
 msgid "Results"
 msgstr ""
 
-#: testViewer.py:138
+#: testViewer.py:145
 msgid "Note:"
 msgstr "Notiz:"
 
-#: testViewer.py:141
+#: testViewer.py:148
 msgid "yes"
 msgstr "Ja"
 
-#: testViewer.py:141 testViewer.py:143
+#: testViewer.py:148 testViewer.py:150
 msgid "no"
 msgstr "Nein"
 
-#: testViewer.py:144
+#: testViewer.py:151
 #, python-format
 msgid "Completed: %s"
 msgstr "Abgeschlossen: %s"
 
-#: testViewer.py:148
+#: testViewer.py:157
 #, python-format
 msgid "Total thinking time: %s second"
 msgid_plural "Total thinking time: %s seconds"
 msgstr[0] "Gesamte Bedenkzeit: %s Sekunde"
 msgstr[1] "Gesamte Bedenkzeit: %s Sekunden"
+
+#: testViewer.py:165
+#, fuzzy, python-format
+msgid "Total thinking time: %s minutes"
+msgstr "Gesamte Bedenkzeit: %s Sekunde"

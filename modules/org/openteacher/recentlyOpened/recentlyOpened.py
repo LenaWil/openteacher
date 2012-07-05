@@ -79,7 +79,7 @@ class RecentlyOpenedModule(object):
 		self.updated = self._modules.default(type="event").createEvent()
 
 		try:
-			self._sizeSetting = self._modules.default(type="setting").registerSetting(**{
+			self._sizeSetting = self._modules.default(type="settings").registerSetting(**{
 				"internal_name": "org.openteacher.recentlyOpened.size",
 				"type": "number",
 				"defaultValue": 10,

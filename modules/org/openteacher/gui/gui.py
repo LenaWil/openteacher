@@ -210,7 +210,7 @@ class GuiModule(object):
 		else:
 			#add the open action as a load button too.
 			self._loadButton = br.registerButton("load")
-			self._loadButton.clicked.handle(self._widget.openAction.triggered.emit)
+			self._loadButton.clicked.handle(lambda: self._widget.openAction.triggered.emit(False))
 
 		#load translator
 		try:
@@ -354,6 +354,8 @@ class GuiModule(object):
 		# We wrap the layout in a QVBoxLayout widget, so messages can be added on top of the tab.
 		wrapperWidget = QtGui.QWidget()
 		wrapperLayout = QtGui.QVBoxLayout()
+		#no borders
+		wrapperLayout.setContentsMargins(0, 0, 0, 0)
 
 		wrapperLayout.insertWidget(0, widget)
 		wrapperWidget.setLayout(wrapperLayout)

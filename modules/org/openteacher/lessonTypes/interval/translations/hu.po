@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-04-07 20:36+0200\n"
+"POT-Creation-Date: 2012-07-05 21:33+0200\n"
 "PO-Revision-Date: 2011-09-13 07:45+0000\n"
 "Last-Translator: Richard Somlói <ricsipontaz@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
@@ -18,24 +18,24 @@ msgstr ""
 "X-Launchpad-Export-Date: 2011-09-14 05:00+0000\n"
 "X-Generator: Launchpad (build 13921)\n"
 
-#: interval.py:210
+#: interval.py:213
 msgid "Max. size of group"
 msgstr ""
 
-#: interval.py:212 interval.py:221 interval.py:231
+#: interval.py:215 interval.py:224 interval.py:234
 msgid "Lessons"
 msgstr ""
 
-#: interval.py:213 interval.py:222 interval.py:232 interval.py:239
+#: interval.py:216 interval.py:225 interval.py:235 interval.py:242
 msgid "Interval"
 msgstr ""
 
-#: interval.py:219
+#: interval.py:222
 msgid "Min. questions asked"
 msgstr ""
 
 #. TRANSLATORS: '%%' is automatically replaced by '%'
-#: interval.py:229
+#: interval.py:232
 #, python-format
 msgid "%% right before known"
 msgstr ""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-07-05 21:33+0200\n"
 "PO-Revision-Date: 2011-08-03 00:35+0000\n"
 "Last-Translator: elacheche <elachecheanis@gmail.com>\n"
 "Language-Team: Arabic <ar@li.org>\n"
@@ -18,6 +18,6 @@ msgstr ""
 "X-Launchpad-Export-Date: 2011-08-04 05:11+0000\n"
 "X-Generator: Launchpad (build 13573)\n"
 
-#: smart.py:159
+#: smart.py:162
 msgid "Smart"
 msgstr "ذكي"

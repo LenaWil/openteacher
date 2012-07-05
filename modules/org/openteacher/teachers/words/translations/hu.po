@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-07-05 21:33+0200\n"
 "PO-Revision-Date: 2011-09-13 07:39+0000\n"
 "Last-Translator: Richard Somlói <ricsipontaz@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
@@ -18,42 +18,46 @@ msgstr ""
 "X-Launchpad-Export-Date: 2011-09-14 05:00+0000\n"
 "X-Generator: Launchpad (build 13921)\n"
 
-#: words.py:80 words.py:83
-msgid "Up"
-msgstr "Fel"
-
-#: words.py:81 words.py:84
-msgid "Down"
-msgstr "Le"
-
-#: words.py:87
+#: words.py:58
 msgid "Don't show this screen again when I start a lesson."
 msgstr "Ne jelenítse meg többször ezt ablakot lecke indításnál."
 
-#: words.py:90
+#: words.py:61
 msgid "I'm ready, start the lesson!"
 msgstr "Készen állok, kezdjük a leckét!"
 
-#: words.py:93
+#: words.py:64
 msgid "Lesson settings"
 msgstr "Lecke beállítások"
 
-#: words.py:96
+#: words.py:67
 msgid "Lesson type"
 msgstr "Lecke típus"
 
-#: words.py:99
-msgid "Modify word"
-msgstr "Szó módosítása"
+#: words.py:70
+msgid "Word modifications"
+msgstr ""
 
-#: words.py:102
-msgid "Modify word list"
-msgstr "Szólista módosítása"
+#: words.py:73
+msgid "Word list order and filters"
+msgstr ""
 
-#: words.py:151
+#: words.py:122
 msgid "Change lesson settings"
 msgstr "Leckebeállítások módosítása"
 
-#: words.py:152
+#: words.py:123
 msgid "Word:"
 msgstr "Szó:"
+
+#~ msgid "Up"
+#~ msgstr "Fel"
+
+#~ msgid "Down"
+#~ msgstr "Le"
+
+#~ msgid "Modify word"
+#~ msgstr "Szó módosítása"
+
+#~ msgid "Modify word list"
+#~ msgstr "Szólista módosítása"

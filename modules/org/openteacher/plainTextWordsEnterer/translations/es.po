@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-02 17:19+0200\n"
+"POT-Creation-Date: 2012-07-05 22:06+0200\n"
 "PO-Revision-Date: 2012-03-07 04:12+0000\n"
 "Last-Translator: Javier Blanco <j2bv16@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -43,3 +43,11 @@ msgstr ""
 #: plainTextWordsEnterer.py:160
 msgid "Create words lesson by entering plain text"
 msgstr "Crear una lección de palabras introduciendo texto plano"
+
+#: plainTextWordsEnterer.py:194
+msgid "Can't show the result"
+msgstr ""
+
+#: plainTextWordsEnterer.py:195
+msgid "Can't open the resultive word list, because it can't be shown."
+msgstr ""

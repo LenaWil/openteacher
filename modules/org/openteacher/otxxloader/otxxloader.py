@@ -38,6 +38,9 @@ class OtxxLoaderModule(object):
 		self._mm = moduleManager
 
 		self.type = "otxxLoader"
+		self.requires = (
+			self._mm.mods(type="loader"),
+		)
 		self.uses = (
 			self._mm.mods(type="recentlyOpened"),
 		)
@@ -89,7 +92,7 @@ class OtxxLoaderModule(object):
 				"args": {},
 				"kwargs": {"path": path},
 				"method": "load",
-				"moduleArgsSelectors": ("active",),
+				"moduleArgsSelectors": ["active"],
 				"moduleKwargsSelectors": {"type": "loader"},
 			})
 

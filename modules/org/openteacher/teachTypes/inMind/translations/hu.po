@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-21 21:44+0100\n"
+"POT-Creation-Date: 2012-07-05 21:33+0200\n"
 "PO-Revision-Date: 2011-09-13 07:39+0000\n"
 "Last-Translator: Richard Somlói <ricsipontaz@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
@@ -41,11 +41,11 @@ msgstr "Jól tudtam"
 msgid "I was wrong"
 msgstr "Tévedtem"
 
-#: inMind.py:123
+#: inMind.py:133
 msgid "Translation: "
 msgstr "Fordítás: "
 
-#: inMind.py:186
+#: inMind.py:196
 #, fuzzy
 msgid "Think answer"
 msgstr "Válasz kigondolása"

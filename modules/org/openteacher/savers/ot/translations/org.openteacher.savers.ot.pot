@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.0\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-02 18:22+0200\n"
+"POT-Creation-Date: 2012-07-05 22:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,6 @@ msgstr ""
 
 #. TRANSLATORS: Please don't translate 'OpenTeacher' unless you've
 #. a good reason for doing so in your language, of course.
-#: ot.py:74
+#: ot.py:79
 msgid "OpenTeacher 2.x"
 msgstr ""

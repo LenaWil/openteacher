@@ -46,6 +46,7 @@ class UiControllerModule(object):
 			self._mm.mods(type="dataStore"),
 			self._mm.mods(type="dialogShower"),
 		)
+		self.filesWithTranslations = ("uiController.py",)
 		#priorities are handled by gui.py...
 
 	def enable(self):
@@ -168,7 +169,7 @@ class UiControllerModule(object):
 				loader.load(path)
 			except NotImplementedError, e:
 				print e
-				self._showError(_("Couldn't open the file, because the file type is unknown"))
+				self._showError(_("Couldn't open the file, because the file type is unknown or it can't be shown."))
 			except IOError, e:
 				print e
 				self._showError(_("Couldn't open the file, is it still there and do we have the right to open it?"))

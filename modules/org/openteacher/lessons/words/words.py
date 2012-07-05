@@ -66,14 +66,14 @@ class Lesson(object):
 	@changed.setter
 	def changed(self, value):
 		self._changed = value
+		self._updateTabTitle()
 		self.changedEvent.send()
 
-	@changed.deleter
-	def changed(self):
-		del self._changed
+	def _updateTabTitle(self):
+		title = self.list.get("title", "") or _("Unnamed")
+		self.fileTab.title = _("Word lesson: %s") % title
 
-	def retranslate(self):
-		self.fileTab.title = _("Word lesson: %s") % self.list.get("title", _("Unnamed"))
+	retranslate = _updateTabTitle
 
 	def _lessonDone(self):
 		self.fileTab.currentTab = self._enterWidget

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-06-30 21:28+0200\n"
+"POT-Creation-Date: 2012-07-05 21:33+0200\n"
 "PO-Revision-Date: 2012-02-11 14:28+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German <de@li.org>\n"
@@ -18,13 +18,13 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-02-12 05:03+0000\n"
 "X-Generator: Launchpad (build 14771)\n"
 
-#: words.py:76
-#, python-format
-msgid "Word lesson: %s"
+#: words.py:73
+msgid "Unnamed"
 msgstr ""
 
-#: words.py:76
-msgid "Unnamed"
+#: words.py:74
+#, python-format
+msgid "Word lesson: %s"
 msgstr ""
 
 #: words.py:159

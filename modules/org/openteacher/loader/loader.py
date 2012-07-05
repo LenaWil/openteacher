@@ -19,8 +19,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-
 class Loader(object):
 	def __init__(self, loadModule, guiModule, path, *args, **kwargs):
 		super(Loader, self).__init__(*args, **kwargs)
