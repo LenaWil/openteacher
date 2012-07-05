@@ -88,6 +88,9 @@ class InputTypingWidget(QtGui.QWidget):
 		self.lessonType.lessonDone.handle(self.lessonDone)
 		self.skipButton.clicked.connect(self.lessonType.skip)
 
+		#disable correct anyway button (no items done yet)
+		self.correctButton.setEnabled(False)
+
 	def lessonDone(self):
 		self.lessonType.newItem.unhandle(self.newWord)
 		self.lessonType.lessonDone.unhandle(self.lessonDone)
@@ -132,6 +135,8 @@ class InputTypingWidget(QtGui.QWidget):
 				"givenAnswer": _("Corrected")
 			})
 		self.lessonType.correctLastAnswer(self._previousResult)
+		#disable correct anyway button
+		self.correctButton.setEnabled(False)
 
 	def checkAnswer(self):
 		givenStringAnswer = unicode(self.inputLineEdit.text())
@@ -142,11 +147,10 @@ class InputTypingWidget(QtGui.QWidget):
 		#
 		#fixes bug #809964: OpenTeacher does not check for double
 		#questions
-		answers = set()
+		answers = []
 		for item in self.lessonType.list["items"]:
 			if item["questions"] == self.word["questions"]:
-				answers = answers.union(item["answers"])
-		answers = list(answers)
+				answers.extend(item["answers"])
 
 		tempWord = self.word.copy()
 		tempWord["answers"] = answers
@@ -164,6 +168,9 @@ class InputTypingWidget(QtGui.QWidget):
 		})
 		self.enableUi(False)
 		if self._previousResult["result"] == "wrong":
+			#enable correct anyway button
+			self.correctButton.setEnabled(True)
+
 			timeLine = QtCore.QTimeLine(self._getFadeTime(), self)
 			timeLine.setFrameRange(0, 255) #256 color steps
 			timeLine.frameChanged.connect(self.fade)
@@ -178,12 +185,13 @@ class InputTypingWidget(QtGui.QWidget):
 				text = _("Correct answer: <b>{answers}</b>").format(answers=composedAnswers)
 			self.correctLabel.setText(text)
 		else:
+			#disable correct anyway button
+			self.correctButton.setEnabled(False)
 			#no need to start timer in the first place
 			self.timerFinished()
 
 	def enableUi(self, enable):
 		self.checkButton.setEnabled(enable)
-		self.correctButton.setEnabled(enable)
 		self.skipButton.setEnabled(enable)
 		self.inputLineEdit.setEnabled(enable)
 

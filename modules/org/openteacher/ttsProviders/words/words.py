@@ -24,6 +24,7 @@ class TextToSpeechProviderWords(object):
 		super(TextToSpeechProviderWords, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
+		self.type = "ttsProvider"
 		self.requires = (
 			self._mm.mods(type="wordsStringComposer"),
 			self._mm.mods(type="textToSpeech"),

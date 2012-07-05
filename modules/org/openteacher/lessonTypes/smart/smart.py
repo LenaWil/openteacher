@@ -21,7 +21,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 class SmartLessonType(object):
-	def __init__(self, createEvent, list, indexes, *args, **kwargs):
+	def __init__(self, createEvent, list, indexes, modifyItem, *args, **kwargs):
 		super(SmartLessonType, self).__init__(*args, **kwargs)
 
 		self.newItem = createEvent()
@@ -29,6 +29,8 @@ class SmartLessonType(object):
 
 		self.list = list
 		self._indexes = indexes
+		self._modifyItem = modifyItem or (lambda item: item)
+
 		self._test = {
 			"results": [],
 			"finished": False,
@@ -118,7 +120,8 @@ class SmartLessonType(object):
 					self.list["tests"] = []
 			self.lessonDone.send()
 		else:
-			self.newItem.send(self.list["items"][self._currentIndex])
+			item = self.list["items"][self._currentIndex]
+			self.newItem.send(self._modifyItem(item))
 
 class SmartModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -169,8 +172,8 @@ class SmartModule(object):
 	def _createEvent(self):
 		return self._modules.default(type="event").createEvent
 
-	def createLessonType(self, list, indexes):
-		lessonType = SmartLessonType(self._createEvent, list, indexes)
+	def createLessonType(self, *args):
+		lessonType = SmartLessonType(self._createEvent, *args)
 		lessonType.newItem.handle(self.newItem.send)
 		return lessonType
 

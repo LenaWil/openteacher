@@ -23,13 +23,14 @@
 import random
 
 class IntervalLessonType(object):
-	def __init__(self, createEvent, list, indexes, groupSizeSetting, minQuestionsSetting, whenKnownSetting, *args, **kwargs):
+	def __init__(self, createEvent, list, indexes, modifyItem, groupSizeSetting, minQuestionsSetting, whenKnownSetting, *args, **kwargs):
 		super(IntervalLessonType, self).__init__(*args, **kwargs)
 
 		self.newItem = createEvent()
 		self.lessonDone = createEvent()
 		self.list = list
 		self._indexes = indexes
+		self._modifyItem = modifyItem or (lambda item: item)
 
 		self._groupSizeSetting = groupSizeSetting
 		self._minQuestionsSetting = minQuestionsSetting
@@ -159,10 +160,12 @@ class IntervalLessonType(object):
 			
 			if len(randomGroup) > 0:
 				# There is more than one left, so ask another one than the last one
-				self.newItem.send(self.list["items"][randomGroup[r]])
+				item = self.list["items"][randomGroup[r]]
+				self.newItem.send(self._modifyItem(item))
 			else:
 				# There is only one left, so ask that one
-				self.newItem.send(self.list["items"][self._group[0]])
+				item = self.list["items"][self._group[0]]
+				self.newItem.send(self._modifyItem(item))
 
 	#Just send the next question and everything will be fine :)
 	skip = _sendNext
@@ -255,8 +258,8 @@ class IntervalModule(object):
 	def _createEvent(self):
 		return self._modules.default(type="event").createEvent
 
-	def createLessonType(self, list, indexes):
-		lessonType = IntervalLessonType(self._createEvent, list, indexes, self._groupSizeSetting, self._minQuestionsSetting, self._whenKnownSetting)
+	def createLessonType(self, list, indexes, modifyItem=None):
+		lessonType = IntervalLessonType(self._createEvent, list, indexes, modifyItem, self._groupSizeSetting, self._minQuestionsSetting, self._whenKnownSetting)
 		lessonType.newItem.handle(self.newItem.send)
 		return lessonType
 

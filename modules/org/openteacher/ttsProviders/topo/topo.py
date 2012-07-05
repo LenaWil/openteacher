@@ -23,7 +23,8 @@ class TextToSpeechProviderTopo(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TextToSpeechProviderTopo, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
-		
+
+		self.type = "ttsProvider"
 		self.requires = (
 			self._mm.mods(type="textToSpeech"),
 		)

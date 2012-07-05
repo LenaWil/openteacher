@@ -114,7 +114,7 @@ class OpenTeachingMediaSaverModule(object):
 
 		#FIXME: let media use the resources attribute in a way similar
 		#to topo. So let it put all its file names there instead of the
-		#lists property, so it becomes easy to save them. And than use
+		#lists property, so it becomes easy to save them. And then use
 		#e.g. the name or a unique id to link a resource to an item.
 		#That way, this module can be reduced a lot.
 		lesson_clone = Lesson()

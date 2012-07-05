@@ -33,31 +33,8 @@ class TeachSettingsWidget(QtGui.QWidget):
 
 		#Word modifiers
 		self.modifyWordListView = QtGui.QListView()
-		self.modifyWordUpButton = QtGui.QPushButton()
-		self.modifyWordDownButton = QtGui.QPushButton()
-
-		modifyWordButtonsLayout = QtGui.QVBoxLayout()
-		modifyWordButtonsLayout.addStretch()
-		modifyWordButtonsLayout.addWidget(self.modifyWordUpButton)
-		modifyWordButtonsLayout.addWidget(self.modifyWordDownButton)
-		modifyWordButtonsLayout.addStretch()
-		self.modifyWordLayout = QtGui.QHBoxLayout()
-		self.modifyWordLayout.addWidget(self.modifyWordListView)
-		self.modifyWordLayout.addLayout(modifyWordButtonsLayout)
-
 		#Word list modifiers
 		self.modifyWordListListView = QtGui.QListView()
-		self.modifyWordListUpButton = QtGui.QPushButton()
-		self.modifyWordListDownButton = QtGui.QPushButton()
-
-		modifyWordListButtonsLayout = QtGui.QVBoxLayout()
-		modifyWordListButtonsLayout.addStretch()
-		modifyWordListButtonsLayout.addWidget(self.modifyWordListUpButton)
-		modifyWordListButtonsLayout.addWidget(self.modifyWordListDownButton)
-		modifyWordListButtonsLayout.addStretch()
-		self.modifyWordListLayout = QtGui.QHBoxLayout()
-		self.modifyWordListLayout.addWidget(self.modifyWordListListView)
-		self.modifyWordListLayout.addLayout(modifyWordListButtonsLayout)
 		
 		self.dontShowAgainCheckBox = QtGui.QCheckBox()
 		self.startLessonButton = QtGui.QPushButton()
@@ -65,8 +42,8 @@ class TeachSettingsWidget(QtGui.QWidget):
 		self.gb = QtGui.QGroupBox()
 		self.formLayout = QtGui.QFormLayout()
 		self.formLayout.addRow(QtGui.QLabel(), self.lessonTypeComboBox)
-		self.formLayout.addRow(QtGui.QLabel(), self.modifyWordLayout)
-		self.formLayout.addRow(QtGui.QLabel(), self.modifyWordListLayout)
+		self.formLayout.addRow(QtGui.QLabel(), self.modifyWordListView)
+		self.formLayout.addRow(QtGui.QLabel(), self.modifyWordListListView)
 		self.formLayout.addRow(QtGui.QLabel(), self.dontShowAgainCheckBox)
 		self.formLayout.addRow(QtGui.QLabel(), self.startLessonButton)
 
@@ -77,12 +54,6 @@ class TeachSettingsWidget(QtGui.QWidget):
 		self.setLayout(mainLayout)
 
 	def retranslate(self):
-		self.modifyWordUpButton.setText(_("Up"))
-		self.modifyWordDownButton.setText(_("Down"))
-
-		self.modifyWordListUpButton.setText(_("Up"))
-		self.modifyWordListDownButton.setText(_("Down"))
-
 		self.dontShowAgainCheckBox.setText(
 			_("Don't show this screen again when I start a lesson.")
 		)
@@ -95,11 +66,11 @@ class TeachSettingsWidget(QtGui.QWidget):
 		self.formLayout.labelForField(self.lessonTypeComboBox).setText(
 			_("Lesson type")
 		)
-		self.formLayout.labelForField(self.modifyWordLayout).setText(
-			_("Modify word")
+		self.formLayout.labelForField(self.modifyWordListView).setText(
+			_("Word modifications")
 		)
-		self.formLayout.labelForField(self.modifyWordListLayout).setText(
-			_("Modify word list")
+		self.formLayout.labelForField(self.modifyWordListListView).setText(
+			_("Word list order and filters")
 		)
 
 class TeachLessonWidget(QtGui.QSplitter):
@@ -179,6 +150,7 @@ class ModifiersListModel(QtCore.QAbstractListModel):
 				self.modifiers[index.row()]["active"] = True
 			else:
 				self.modifiers[index.row()]["active"] = False
+			return True
 		return False
 
 	def flags(self, index):
@@ -217,21 +189,30 @@ class TeachWidget(QtGui.QStackedWidget):
 		self._applicationActivityChanged.handle(self._activityChanged)
 
 		i = self._settingsWidget.lessonTypeComboBox.currentIndex()
-		try:
-			lessonTypeModule = self._lessonTypeModules[i]
-		except IndexError, e:
-			#FIXME: Show nicer error
-			raise e
+		lessonTypeModule = self._lessonTypeModules[i]
 
 		indexes = range(len(self.lesson.list["items"]))
 
+		#fixme: save preferences in the data store/settings
 		for listModifier in self._listModifiersModel.modifiers:
 			if listModifier["active"]:
 				indexes = listModifier["module"].modifyList(
 					indexes,
 					self.lesson.list
 				)
-		self._lessonType = lessonTypeModule.createLessonType(self.lesson.list, indexes)
+
+		itemModifiers = []
+		for itemModifier in self._itemModifiersModel.modifiers:
+			if itemModifier["active"]:
+				itemModifiers.append(itemModifier["module"].modifyItem)
+
+		def modifyItem(item):
+			#function that applies all item modifiers on an item and returns
+			#the result at the end of the chain.
+			for modify in itemModifiers:
+				item = modify(item)
+			return item
+		self._lessonType = lessonTypeModule.createLessonType(self.lesson.list, indexes, modifyItem)
 
 		self._lessonType.newItem.handle(self._newItem)
 		self._lessonType.lessonDone.handle(self.stopLesson)
@@ -253,13 +234,6 @@ class TeachWidget(QtGui.QStackedWidget):
 			})
 
 	def _newItem(self, item):
-		#FIXME!!!: item modifiers should be applied wider, not only for
-		#the question label, but also for the answers at least.
-		item = copy.copy(item)
-		for itemModifier in self._itemModifiersModel.modifiers:
-			if itemModifier["active"]:
-				item = itemModifier["module"].modifyItem(item)
-
 		# Update the list
 		self.listChanged.emit(self.lesson.list)
 		self.lesson.changed = True
@@ -279,9 +253,9 @@ class TeachWidget(QtGui.QStackedWidget):
 	def stopLesson(self, showResults=True):
 		self._applicationActivityChanged.unhandle(self._activityChanged)
 		self._updateProgress()
-		
+
 		self._showSettings()
-		
+
 		if showResults:
 			try:
 				module = self._modules.default("active", type="resultsDialog")
@@ -372,8 +346,6 @@ class WordsTeacherModule(object):
 		
 		self.uses = (
 			self._mm.mods(type="translator"),
-			#FIXME from here on: should these items be in the settings
-			#dialog (since they're already on the teach settings widget)
 			self._mm.mods(type="itemModifier"),
 			self._mm.mods(type="listModifier"),
 			self._mm.mods(type="resultsDialog"),
@@ -381,8 +353,6 @@ class WordsTeacherModule(object):
 		self.requires = (
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="wordsStringComposer"),
-			#FIXME from here on: should these items be in the settings
-			#dialog (since they're already on the teach settings widget)
 			self._mm.mods(type="lessonType"),
 			self._mm.mods(type="teachType"),
 		)

@@ -123,9 +123,12 @@ class TeachTopoLessonModule(object):
 	
 	def loadFromLesson(self, lessonl):
 		lesson = self.createLesson()
+		#TRANSLATORS: used as a label in case a filename of a topo
+		#TRANSLATORS: lesson isn't available. (E.g. because it's
+		#TRANSLATORS: downloaded from some kind of web service.)
 		fileName = lessonl["path"] if "path" in lessonl else _("Import source")
 		lesson.enterWidget.mapChooser.setCurrentIndex(0)
-		
+
 		lesson.enterWidget.mapChooser.insertItem(0, fileName, unicode({'mapPath': lessonl["resources"]["mapPath"], 'knownPlaces': ''}))
 		lesson.enterWidget.mapChooser.setCurrentIndex(0)
 		

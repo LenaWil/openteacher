@@ -26,13 +26,15 @@ class AllOnceLessonType(object):
 	   - lessonDone
 
 	"""
-	def __init__(self, createEvent, list, indexes, *args, **kwargs):
+	def __init__(self, createEvent, list, indexes, modifyItem=None, *args, **kwargs):
 		super(AllOnceLessonType, self).__init__(*args, **kwargs)
 
 		self.newItem = createEvent()
 		self.lessonDone = createEvent()
 		self.list = list
 		self._indexes = indexes
+		#fallback: it simply doesn't change a thing
+		self._modifyItem = modifyItem or (lambda item: item)
 
 		self._test = {
 			"results": [],
@@ -53,7 +55,7 @@ class AllOnceLessonType(object):
 	def setResult(self, result):
 		# Add the test to the list (if it's not already there)
 		self._appendTest()
-		
+
 		self._test["results"].append(result)
 
 		self.askedItems += 1
@@ -89,7 +91,8 @@ class AllOnceLessonType(object):
 					self.list["tests"] = []
 			self.lessonDone.send()
 		else:
-			self.newItem.send(self.list["items"][i])
+			item = self.list["items"][i]
+			self.newItem.send(self._modifyItem(item))
 
 class AllOnceModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -141,8 +144,8 @@ class AllOnceModule(object):
 	def _createEvent(self):
 		return self._modules.default(type="event").createEvent
 
-	def createLessonType(self, list, indexes):
-		lessonType = AllOnceLessonType(self._createEvent, list, indexes)
+	def createLessonType(self, *args):
+		lessonType = AllOnceLessonType(self._createEvent, *args)
 		lessonType.newItem.handle(self.newItem.send)
 		return lessonType
 

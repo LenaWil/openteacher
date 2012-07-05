@@ -48,7 +48,7 @@ class ForeignKnownModule(object):
 				self._mm.resourcePath("translations")
 			)
 
-		self.name = _("Foreign - Known")
+		self.name = _("Ask foreign - known")
 		self.active = True
 
 	def disable(self):
