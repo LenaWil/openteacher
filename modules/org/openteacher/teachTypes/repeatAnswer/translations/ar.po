@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-06-30 21:29+0200\n"
+"POT-Creation-Date: 2012-07-06 15:28+0200\n"
 "PO-Revision-Date: 2011-08-03 00:18+0000\n"
-"Last-Translator: elacheche <elachecheanis@gmail.com>\n"
+"Last-Translator: El Achèche ANIS <elachecheanis@gmail.com>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-04 05:11+0000\n"
-"X-Generator: Launchpad (build 13573)\n"
+"X-Launchpad-Export-Date: 2012-07-06 05:12+0000\n"
+"X-Generator: Launchpad (build 15558)\n"
 
 #: repeatAnswer.py:70
 msgid "Click the button to start"
@@ -27,10 +27,12 @@ msgid "Start!"
 msgstr "إبدأ!"
 
 #: repeatAnswer.py:186
-#, fuzzy
 msgid "Repeat answer"
-msgstr "أعد اﻹجابة"
+msgstr ""
 
 #: repeatAnswer.py:190
 msgid "Repeat mode fade duration (milliseconds)"
 msgstr ""
+
+#~ msgid "Repeat Answer"
+#~ msgstr "أعد اﻹجابة"

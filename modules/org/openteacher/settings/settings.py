@@ -74,6 +74,7 @@ class SettingsModule(object):
 		  * number
 		  * password
 		  * option
+		  * multiOption
 		  * language
 		  * profile
 		  ... are available.
@@ -93,7 +94,7 @@ class SettingsModule(object):
 		    Where args and kwargs are the same as in the following:
 		    self._mm.mods(*args, **kwargs)
 
-		The following argument should be included when type="options":
+		The following argument should be included when type="option" or type="multiOption":
 		 * options=[]
 		  * options should have this format: ("label", data)
 

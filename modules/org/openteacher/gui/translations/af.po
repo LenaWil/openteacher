@@ -1,0 +1,91 @@
+# Afrikaans translation for openteacher
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"PO-Revision-Date: 2012-04-23 14:42+0000\n"
+"Last-Translator: computergeoffrey <Unknown>\n"
+"Language-Team: Afrikaans <af@li.org>\n"
+"Language: af\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-07-06 05:12+0000\n"
+"X-Generator: Launchpad (build 15558)\n"
+
+#: gui.py:321
+msgid "Open from file"
+msgstr "Open van lêer"
+
+#: ui.py:34
+msgid "Close Tab"
+msgstr "Sluit oortjie"
+
+#: ui.py:81
+msgid "Enter list"
+msgstr "Tik lys"
+
+#: ui.py:83
+msgid "Teach me!"
+msgstr "Leer my!"
+
+#: ui.py:85
+msgid "Show results"
+msgstr "Toon resultate"
+
+#: ui.py:248
+msgid "&File"
+msgstr "&Lêer"
+
+#: ui.py:249
+msgid "&New"
+msgstr "&Nuwe"
+
+#: ui.py:250
+msgid "&Open"
+msgstr "&Open"
+
+#: ui.py:251
+msgid "&Save"
+msgstr "&Stoor"
+
+#: ui.py:252
+msgid "Save &As"
+msgstr "Stoor &as"
+
+#: ui.py:253
+msgid "&Print"
+msgstr "&Druk"
+
+#: ui.py:254
+msgid "&Quit"
+msgstr "&Stop"
+
+#: ui.py:256
+msgid "&Edit"
+msgstr "&Redigeer"
+
+#: ui.py:257
+msgid "&Settings"
+msgstr "&Instellings"
+
+#: ui.py:259
+msgid "&Help"
+msgstr "&Hulp"
+
+#: ui.py:260
+msgid "&Documentation"
+msgstr "&Dokumentasie"
+
+#: ui.py:261
+msgid "&About"
+msgstr "&Aangaande"
+
+#: ui.py:263
+msgid "Toolbar"
+msgstr "Nutsbalk"

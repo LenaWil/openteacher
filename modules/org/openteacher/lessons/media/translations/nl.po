@@ -7,25 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-01 16:42+0200\n"
-"PO-Revision-Date: 2011-07-19 02:59+0000\n"
-"Last-Translator: Marten de Vries <Unknown>\n"
+"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"PO-Revision-Date: 2012-07-04 18:53+0000\n"
+"Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-07-20 05:32+0000\n"
-"X-Generator: Launchpad (build 13405)\n"
+"X-Launchpad-Export-Date: 2012-07-06 05:12+0000\n"
+"X-Generator: Launchpad (build 15558)\n"
 
 #: media.py:80
 msgid "Create media lesson"
 msgstr "Maak een mediales aan"
 
 #: media.py:141 media.py:168
-#, fuzzy, python-format
+#, python-format
 msgid "Media lesson: %s"
-msgstr "Mediales %s"
+msgstr "Mediales: %s"
 
 #~ msgid "Remove"
 #~ msgstr "Verwijder"
@@ -81,3 +81,6 @@ msgstr "Mediales %s"
 
 #~ msgid "Media Lesson"
 #~ msgstr "Mediales"
+
+#~ msgid "Media lesson %s"
+#~ msgstr "Mediales %s"

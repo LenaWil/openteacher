@@ -31,11 +31,16 @@ class OtxxSaverModule(object):
 		self._mm = moduleManager
 
 		self.type = "otxxSaver"
+		self.requires = (
+			self._mm.mods(type="metadata"),
+		)
 
 	def save(self, lesson, path, resourceFilenames={}, zipCompression=zipfile.ZIP_DEFLATED):
+		list = {"file-format-version": self._version}
+		list.update(lesson.list)
 		with zipfile.ZipFile(path, 'w', zipCompression) as otxxzip:
 			otxxzip.writestr("list.json", json.dumps(
-				lesson.list, #the list to save
+				list, #the list to save
 				separators=(',',':'), #compact encoding
 				default=self._serialize #serialize datetime
 			))
@@ -45,6 +50,10 @@ class OtxxSaverModule(object):
 		lesson.path = path
 		lesson.changed = False
 
+	@property
+	def _version(self):
+		return self._modules.default("active", type="metadata").metadata["version"]
+
 	def _serialize(self, obj):
 		try:
 			return obj.strftime("%Y-%m-%dT%H:%M:%S.%f")
@@ -52,10 +61,12 @@ class OtxxSaverModule(object):
 			raise TypeError("The type '%s' isn't JSON serializable." % obj.__class__)
 
 	def enable(self):
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.active = True
 
 	def disable(self):
 		self.active = False
+		del self._modules
 
 def init(moduleManager):
 	return OtxxSaverModule(moduleManager)

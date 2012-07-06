@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-05 21:33+0200\n"
-"PO-Revision-Date: 2012-02-11 15:17+0000\n"
-"Last-Translator: Alexander Haack <Unknown>\n"
+"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"PO-Revision-Date: 2012-04-16 00:49+0000\n"
+"Last-Translator: Dennis Baudys <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-12 05:03+0000\n"
-"X-Generator: Launchpad (build 14771)\n"
+"X-Launchpad-Export-Date: 2012-07-06 05:12+0000\n"
+"X-Generator: Launchpad (build 15558)\n"
 
 #: topo.py:81
 msgid "Create topography lesson"
-msgstr ""
+msgstr "Topographische Lektion erstellen"
 
 #. TRANSLATORS: used as a label in case a filename of a topo
 #. TRANSLATORS: lesson isn't available. (E.g. because it's
@@ -34,14 +34,26 @@ msgstr ""
 msgid "Topo lesson: %s"
 msgstr ""
 
-#~ msgid "Name for this place"
-#~ msgstr "Name für diesen Ort"
+#~ msgid "Map:"
+#~ msgstr "Karte:"
+
+#~ msgid "Warning"
+#~ msgstr "Warnung"
+
+#~ msgid "Add"
+#~ msgstr "Hinzufügen"
+
+#~ msgid "Check"
+#~ msgstr "Überprüfen"
 
 #~ msgid "What's this place's name?"
 #~ msgstr "Wie heißt dieser Ort?"
 
-#~ msgid "Warning"
-#~ msgstr "Warnung"
+#~ msgid "Name for this place"
+#~ msgstr "Name für diesen Ort"
+
+#~ msgid "Add a place by doubleclicking it on the map"
+#~ msgstr "Fügen Sie einen Ort durch einen Doppelklick auf der Karte ein"
 
 #~ msgid ""
 #~ "Are you sure you want to use another map? This will remove all your "
@@ -50,23 +62,17 @@ msgstr ""
 #~ "Sind Sie sicher, dass Sie eine andere Karte verwenden möchten? Dadurch "
 #~ "werden alle Ihre Orte gelöscht!"
 
-#~ msgid "Map:"
-#~ msgstr "Karte:"
-
-#~ msgid "Add a place by doubleclicking it on the map"
-#~ msgstr "Fügen Sie einen Ort durch einen Doppelklick auf der Karte ein"
+#~ msgid "Remove selected place"
+#~ msgstr "Ausgewählten Ort löschen"
 
 #~ msgid "Places in your test"
 #~ msgstr "Orte in Ihrem Test"
 
-#~ msgid "Remove selected place"
-#~ msgstr "Ausgewählten Ort löschen"
-
 #~ msgid "Add a place by name:"
 #~ msgstr "Ort bei Namen hinzufügen:"
 
-#~ msgid "Add"
-#~ msgstr "Hinzufügen"
+#~ msgid "Lesson order:"
+#~ msgstr "Reihenfolge der Lektion:"
 
 #~ msgid "Place - Name"
 #~ msgstr "Ort - Name"
@@ -74,20 +80,33 @@ msgstr ""
 #~ msgid "Name - Place"
 #~ msgstr "Name - Ort"
 
-#~ msgid "Lesson type:"
-#~ msgstr "Lektionsart:"
-
-#~ msgid "Lesson order:"
-#~ msgstr "Reihenfolge der Lektion:"
-
 #~ msgid "Which place is here?"
 #~ msgstr "Welcher Ort ist hier?"
-
-#~ msgid "Check"
-#~ msgstr "Überprüfen"
 
 #~ msgid "Please click this place:"
 #~ msgstr "Diesen Ort bitte anklicken:"
 
+#~ msgid "Lesson type:"
+#~ msgstr "Lektionsart:"
+
+#~ msgid "Not enough items"
+#~ msgstr "Zu wenige Elemente"
+
 #~ msgid "You need to add items to your test first"
 #~ msgstr "Sie müssen zuerst Elemente zu Ihrem Test hinzufügen"
+
+#~ msgid "Topo lesson %s"
+#~ msgstr "Topographische Lektion %s"
+
+#~ msgid "Topo Lesson"
+#~ msgstr "Topographische Lektion"
+
+#~ msgid "Please click this place: "
+#~ msgstr "Klicken Sie bitte hier: "
+
+#~ msgid ""
+#~ "Are you sure you want to go back to the teach tab? This will end your "
+#~ "lesson!"
+#~ msgstr ""
+#~ "Sind Sie sicher, dass Sie zurück zum Reiter »Lehren« gehen möchten? Dies "
+#~ "wird Ihre Lektion beenden!"

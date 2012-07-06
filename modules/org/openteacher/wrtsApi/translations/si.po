@@ -1,0 +1,119 @@
+# Sinhalese translation for openteacher
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"PO-Revision-Date: 2012-04-24 10:43+0000\n"
+"Last-Translator: Mohamed Rizmi <Unknown>\n"
+"Language-Team: Sinhalese <si@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-04-25 05:07+0000\n"
+"X-Generator: Launchpad (build 15139)\n"
+
+#: wrtsApi.py:152
+msgid "Import from WRDS"
+msgstr ""
+
+#: wrtsApi.py:153
+msgid "Export to WRDS"
+msgstr ""
+
+#: wrtsApi.py:157
+#, fuzzy
+msgid "Email"
+msgstr "විද්‍යුත් තැපෑල: "
+
+#: wrtsApi.py:158 wrtsApi.py:164
+msgid "WRDS"
+msgstr ""
+
+#: wrtsApi.py:159 wrtsApi.py:165
+msgid "Login credentials"
+msgstr ""
+
+#: wrtsApi.py:163
+#, fuzzy
+msgid "Password"
+msgstr "මුරපදය: "
+
+#: wrtsApi.py:176
+msgid "Invalid login credentials"
+msgstr ""
+
+#: wrtsApi.py:177
+msgid ""
+"WRDS didn't accept the login credentials. Are you sure you entered your e-"
+"mail and password correctly?"
+msgstr ""
+
+#: wrtsApi.py:183
+msgid "No WRDS connection"
+msgstr ""
+
+#: wrtsApi.py:184
+msgid ""
+"WRDS didn't accept the connection. Are you sure that your internet "
+"connection works and WRDS is online?"
+msgstr ""
+
+#: wrtsApi.py:247
+msgid "No word list metadata given."
+msgstr ""
+
+#: wrtsApi.py:248
+msgid ""
+"Please fill in the wordlist title, question language and answer language "
+"first. Then try again."
+msgstr ""
+
+#: wrtsApi.py:257
+msgid "Word list succesfully exported to WRDS."
+msgstr ""
+
+#: wrtsApi.py:288
+msgid "No list selected"
+msgstr ""
+
+#: wrtsApi.py:289
+msgid "No list was selected. Please try again."
+msgstr ""
+
+#: wrtsApi.py:314
+msgid "Can't show the result"
+msgstr ""
+
+#: wrtsApi.py:315
+msgid "Can't open the resultive word list, because it can't be shown."
+msgstr ""
+
+#: wrtsApi.py:318
+msgid "The word list was imported from WRDS successfully."
+msgstr ""
+
+#: ui.py:72
+msgid "WRDS - login please:"
+msgstr ""
+
+#: ui.py:75
+msgid "Email: "
+msgstr "විද්‍යුත් තැපෑල: "
+
+#: ui.py:78
+msgid "Password: "
+msgstr "මුරපදය: "
+
+#: ui.py:81
+msgid "Store mail address and password"
+msgstr ""
+
+#: ui.py:114
+msgid "WRDS - Please choose a list:"
+msgstr ""

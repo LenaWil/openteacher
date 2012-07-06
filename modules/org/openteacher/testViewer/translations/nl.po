@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-05 21:33+0200\n"
+"POT-Creation-Date: 2012-07-06 15:28+0200\n"
 "PO-Revision-Date: 2012-03-09 23:31+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2012-03-11 05:00+0000\n"
-"X-Generator: Launchpad (build 14914)\n"
+"X-Launchpad-Export-Date: 2012-07-06 05:13+0000\n"
+"X-Generator: Launchpad (build 15558)\n"
 
 #: testViewer.py:134
 msgid "Results"
@@ -48,6 +48,6 @@ msgstr[0] "Totale denktijd: %s seconde"
 msgstr[1] "Totale denktijd: %s secondes"
 
 #: testViewer.py:165
-#, fuzzy, python-format
+#, python-format
 msgid "Total thinking time: %s minutes"
-msgstr "Totale denktijd: %s seconde"
+msgstr ""

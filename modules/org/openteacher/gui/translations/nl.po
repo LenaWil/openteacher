@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-02 18:22+0200\n"
-"PO-Revision-Date: 2011-09-28 17:09+0000\n"
+"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"PO-Revision-Date: 2012-04-01 15:51+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-29 04:47+0000\n"
-"X-Generator: Launchpad (build 14049)\n"
+"X-Launchpad-Export-Date: 2012-07-06 05:12+0000\n"
+"X-Generator: Launchpad (build 15558)\n"
 
 #: gui.py:321
 msgid "Open from file"
-msgstr ""
+msgstr "Open vanuit bestand"
 
 #: ui.py:34
 msgid "Close Tab"
@@ -36,7 +36,7 @@ msgstr "Overhoor me!"
 
 #: ui.py:85
 msgid "Show results"
-msgstr ""
+msgstr "Laat resultaten zien"
 
 #: ui.py:248
 msgid "&File"
@@ -90,6 +90,12 @@ msgstr "&Over"
 msgid "Toolbar"
 msgstr "Toolbar"
 
+#~ msgid "Choose file to save"
+#~ msgstr "Kies een bestandsnaam voor het opslaan"
+
+#~ msgid "Choose file to open"
+#~ msgstr "Kies een bestand om te openen"
+
 #~ msgid "Create lesson:"
 #~ msgstr "Maak een les aan:"
 
@@ -98,12 +104,6 @@ msgstr "Toolbar"
 
 #~ msgid "Recently opened:"
 #~ msgstr "Recent geopend:"
-
-#~ msgid "Choose file to save"
-#~ msgstr "Kies een bestandsnaam voor het opslaan"
-
-#~ msgid "Choose file to open"
-#~ msgstr "Kies een bestand om te openen"
 
 #~ msgid "Ctrl+N"
 #~ msgstr "Ctrl+N"

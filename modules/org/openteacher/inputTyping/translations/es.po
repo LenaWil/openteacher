@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-05 21:33+0200\n"
-"PO-Revision-Date: 2011-11-15 17:11+0000\n"
-"Last-Translator: Fitoschido <fitoschido@gmail.com>\n"
+"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"PO-Revision-Date: 2012-06-25 02:08+0000\n"
+"Last-Translator: gustavoreyes <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-16 05:28+0000\n"
-"X-Generator: Launchpad (build 14291)\n"
+"X-Launchpad-Export-Date: 2012-07-06 05:12+0000\n"
+"X-Generator: Launchpad (build 15558)\n"
 
 #: inputTyping.py:65
 msgid "Check!"
@@ -28,26 +28,25 @@ msgstr "Corregir de todas formas"
 
 #: inputTyping.py:67
 msgid "Skip"
-msgstr ""
+msgstr "Omitir"
 
 #: inputTyping.py:130
 #, python-format
 msgid "Corrected: %s"
-msgstr ""
+msgstr "Corregido: %s"
 
 #: inputTyping.py:135
-#, fuzzy
 msgid "Corrected"
-msgstr "Corregir de todas formas"
+msgstr "Corregido"
 
 #: inputTyping.py:183
 msgid "Correct answer: <b>{answers}</b> [{diff}]"
-msgstr ""
+msgstr "Respuesta correcta: <b>{answers}</b> [{diff}]"
 
 #: inputTyping.py:185
 msgid "Correct answer: <b>{answers}</b>"
-msgstr ""
+msgstr "Respuesta correcta: <b>{answers}</b>"
 
 #: inputTyping.py:282
 msgid "Fade duration when wrong (milliseconds)"
-msgstr ""
+msgstr "Duración del fundido cuando incorrecta (milisegundos)"

@@ -7,38 +7,35 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-05 21:33+0200\n"
-"PO-Revision-Date: 2011-08-24 19:42+0000\n"
-"Last-Translator: Marten de Vries <Unknown>\n"
+"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"PO-Revision-Date: 2012-07-05 22:07+0000\n"
+"Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-25 05:14+0000\n"
-"X-Generator: Launchpad (build 13727)\n"
+"X-Launchpad-Export-Date: 2012-07-06 05:12+0000\n"
+"X-Generator: Launchpad (build 15558)\n"
 
 #: interval.py:213
 msgid "Max. size of group"
-msgstr ""
+msgstr "Maximumgrootte van een groep"
 
 #: interval.py:215 interval.py:224 interval.py:234
 msgid "Lessons"
-msgstr ""
+msgstr "Lessen"
 
 #: interval.py:216 interval.py:225 interval.py:235 interval.py:242
 msgid "Interval"
-msgstr ""
+msgstr "Interval"
 
 #: interval.py:222
 msgid "Min. questions asked"
-msgstr ""
+msgstr "Minimale hoeveelheid vragen"
 
 #. TRANSLATORS: '%%' is automatically replaced by '%'
 #: interval.py:232
 #, python-format
 msgid "%% right before known"
-msgstr ""
-
-#~ msgid "All once"
-#~ msgstr "Vraag alles één keer"
+msgstr "%% goed voor bekend verondersteld"

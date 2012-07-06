@@ -7,31 +7,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-05 22:06+0200\n"
-"PO-Revision-Date: 2011-09-05 14:48+0000\n"
+"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"PO-Revision-Date: 2012-03-22 07:27+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-06 05:04+0000\n"
-"X-Generator: Launchpad (build 13861)\n"
+"X-Launchpad-Export-Date: 2012-07-06 05:12+0000\n"
+"X-Generator: Launchpad (build 15558)\n"
 
 #: wrtsApi.py:152
-#, fuzzy
 msgid "Import from WRDS"
-msgstr "從 WRTS 匯入"
+msgstr ""
 
 #: wrtsApi.py:153
-#, fuzzy
 msgid "Export to WRDS"
-msgstr "從 WRTS 匯入"
+msgstr ""
 
 #: wrtsApi.py:157
-#, fuzzy
 msgid "Email"
-msgstr "電子郵件: "
+msgstr ""
 
 #: wrtsApi.py:158 wrtsApi.py:164
 msgid "WRDS"
@@ -42,9 +39,8 @@ msgid "Login credentials"
 msgstr ""
 
 #: wrtsApi.py:163
-#, fuzzy
 msgid "Password"
-msgstr "密碼： "
+msgstr ""
 
 #: wrtsApi.py:176
 msgid "Invalid login credentials"
@@ -101,9 +97,8 @@ msgid "The word list was imported from WRDS successfully."
 msgstr ""
 
 #: ui.py:72
-#, fuzzy
 msgid "WRDS - login please:"
-msgstr "登入 WRTS"
+msgstr ""
 
 #: ui.py:75
 msgid "Email: "
@@ -118,6 +113,5 @@ msgid "Store mail address and password"
 msgstr ""
 
 #: ui.py:114
-#, fuzzy
 msgid "WRDS - Please choose a list:"
-msgstr "WRTS - 請選擇列表："
+msgstr ""

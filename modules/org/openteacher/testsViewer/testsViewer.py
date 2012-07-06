@@ -89,20 +89,21 @@ class TestsModel(QtCore.QAbstractTableModel):
 	list = property(_getList, _setList)
 
 class NotesWidget(QtGui.QWidget):
-	def __init__(self, noteCalculator, *args, **kwargs):
+	def __init__(self, noteCalculator, calculatePercents, *args, **kwargs):
 		super(NotesWidget, self).__init__(*args, **kwargs)
 
 		self._noteCalculator = noteCalculator
-		
+		self._calculatePercents = calculatePercents
+
 		self.highestLabel = QtGui.QLabel()
 		self.averageLabel = QtGui.QLabel()
 		self.lowestLabel = QtGui.QLabel()
-		
+
 		self.layout = QtGui.QFormLayout()
 		self.layout.addRow(QtGui.QLabel(), self.highestLabel)
 		self.layout.addRow(QtGui.QLabel(), self.averageLabel)
 		self.layout.addRow(QtGui.QLabel(), self.lowestLabel)
-		
+
 		self.setLayout(self.layout)
 
 	def retranslate(self):
@@ -118,20 +119,22 @@ class NotesWidget(QtGui.QWidget):
 
 	def updateList(self, list):
 		try:
-			notes = map(self._noteCalculator.calculateNote, list["tests"])
+			percents = map(self._calculatePercents, list["tests"])
 		except KeyError:
-			notes = []
+			percents = []
 		try:
-			self.highestLabel.setText(unicode(max(notes))) #FIXME: is max and min ok? -> NO. Fix is easy, use percentsNoteCalculator.
-		except ValueError:
+			maxTest = list["tests"][percents.index(max(percents))]
+			self.highestLabel.setText(self._noteCalculator.calculateNote(maxTest))
+		except (KeyError, ValueError):
 			#TRANSLATORS: This is meant as 'here would normally
 			#stand a note, but not today.' If '-' isn't
 			#appropriate in you language for that, please replace.
 			#Otherwise, just copy the original.
 			self.highestLabel.setText(_("-"))
 		try:
-			self.lowestLabel.setText(unicode(min(notes)))
-		except ValueError:
+			minTest = list["tests"][percents.index(min(percents))]
+			self.lowestLabel.setText(self._noteCalculator.calculateNote(minTest))
+		except (KeyError, ValueError):
 			self.lowestLabel.setText(_("-"))
 		try:
 			average = self._noteCalculator.calculateAverageNote(list["tests"])
@@ -173,7 +176,7 @@ class DetailsWidget(QtGui.QWidget):
 class TestsViewerWidget(QtGui.QSplitter):
 	testActivated = QtCore.pyqtSignal([object, object, object])
 
-	def __init__(self, testTypes, noteCalculator, createPercentNoteViewer=None, *args, **kwargs):
+	def __init__(self, testTypes, noteCalculator, calculatePercents, createPercentNoteViewer=None, *args, **kwargs):
 		super(TestsViewerWidget, self).__init__(QtCore.Qt.Vertical, *args, **kwargs)
 
 		self._createPercentNotesViewer = createPercentNoteViewer
@@ -182,7 +185,7 @@ class TestsViewerWidget(QtGui.QSplitter):
 		testsView = QtGui.QTableView()
 		testsView.setModel(self.testsModel)
 		testsView.doubleClicked.connect(self.showTest)
-		self.notesWidget = NotesWidget(noteCalculator)
+		self.notesWidget = NotesWidget(noteCalculator, calculatePercents)
 		self.detailsWidget = DetailsWidget(testTypes)
 
 		horSplitter = QtGui.QSplitter()
@@ -239,12 +242,12 @@ class TestViewerWidget(QtGui.QWidget):
 		self.backButton.setText(_("Back"))
 
 class TestsViewer(QtGui.QStackedWidget):
-	def __init__(self, testTypes, noteCalculator, createTestViewer, createPercentNotesViewer=None,  *args, **kwargs):
+	def __init__(self, testTypes, noteCalculator, calculatePercents, createTestViewer, createPercentNotesViewer=None,  *args, **kwargs):
 		super(TestsViewer, self).__init__(*args, **kwargs)
 
 		self._createTestViewer = createTestViewer
 
-		self.testsViewerWidget = TestsViewerWidget(testTypes, noteCalculator, createPercentNotesViewer)
+		self.testsViewerWidget = TestsViewerWidget(testTypes, noteCalculator, calculatePercents, createPercentNotesViewer)
 		self.testsViewerWidget.testActivated.connect(self.showList)
 		self.addWidget(self.testsViewerWidget)
 
@@ -322,6 +325,10 @@ class TestsViewerModule(object):
 			"active",
 			type="noteCalculatorChooser"
 		).noteCalculator
+		calculatePercents = self._modules.default(
+			"active",
+			type="percentsCalculator"
+		).calculatePercents
 		createTestViewer = self._modules.default(
 			"active",
 			type="testViewer"
@@ -334,7 +341,7 @@ class TestsViewerModule(object):
 		except IndexError:
 			createPercentNotesViewer = None
 
-		tv = TestsViewer(testTypes, noteCalculator, createTestViewer, createPercentNotesViewer)
+		tv = TestsViewer(testTypes, noteCalculator, calculatePercents, createTestViewer, createPercentNotesViewer)
 		#Weak reference so gc can still get into action
 		self._testsViewers.add(weakref.ref(tv))
 		self._retranslate()

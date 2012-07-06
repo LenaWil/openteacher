@@ -261,7 +261,7 @@ class TestsView(View):
 		if role(request) != "teacher":
 			return Response(status.HTTP_401_UNAUTHORIZED)
 
-		test = Test.objects.create(**{#FIXME: check if self.CONTENT["list"] is valid. Maybe 'just' parse it?
+		test = Test.objects.create(**{
 			"teacher": request.user,
 			"list": self.CONTENT["list"],
 		})

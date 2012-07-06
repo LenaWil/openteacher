@@ -1,0 +1,56 @@
+# Sinhalese translation for openteacher
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-07-06 22:17+0200\n"
+"PO-Revision-Date: 2012-04-24 10:18+0000\n"
+"Last-Translator: Mohamed Rizmi <Unknown>\n"
+"Language-Team: Sinhalese <si@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-07-06 05:12+0000\n"
+"X-Generator: Launchpad (build 15558)\n"
+
+#: words.py:59
+msgid "I'm ready, start the lesson!"
+msgstr "මම සූදානම්, පාඩම ආරම්භ කරන්න!"
+
+#: words.py:61
+msgid "Lesson settings"
+msgstr "පාඩම් සැකසුම්"
+
+#: words.py:116
+msgid "Change lesson settings"
+msgstr "පාඩම් සැකසුම් වෙනස් කරන්න"
+
+#: words.py:117
+msgid "Word:"
+msgstr "වචනය:"
+
+#: words.py:389
+msgid "Lesson type"
+msgstr "පාඩම් වර්ගය"
+
+#: words.py:390
+msgid "Word list order and filters"
+msgstr ""
+
+#: words.py:391
+msgid "Word modifications"
+msgstr ""
+
+#: words.py:392
+msgid "Don't show this screen again when I start a lesson."
+msgstr ""
+
+#: words.py:394
+#, fuzzy
+msgid "Lesson"
+msgstr "පාඩම් වර්ගය"

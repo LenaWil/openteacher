@@ -26,52 +26,46 @@ import copy
 import weakref
 
 class TeachSettingsWidget(QtGui.QWidget):
-	def __init__(self, *args, **kwargs):
+	def __init__(self, settings, widgets, *args, **kwargs):
 		super(TeachSettingsWidget, self).__init__(*args, **kwargs)
 
-		self.lessonTypeComboBox = QtGui.QComboBox()
+		self._settings = settings
 
-		#Word modifiers
-		self.modifyWordListView = QtGui.QListView()
-		#Word list modifiers
-		self.modifyWordListListView = QtGui.QListView()
-		
-		self.dontShowAgainCheckBox = QtGui.QCheckBox()
 		self.startLessonButton = QtGui.QPushButton()
+		self.formLayout = QtGui.QFormLayout()
+
+		self._settingsKeys = ["lessonType", "listModifiers", "itemModifiers", "dontShowAgain"]
+		for key in self._settingsKeys:
+			setting = settings[key]
+			try:
+				widget = widgets[setting["type"]](setting)
+			except KeyError:
+				#shouldn't happen, just in case...
+				widget = QtGui.QLabel()
+			self.formLayout.addRow("placeholder", widget)
+		self.formLayout.addRow(self.startLessonButton)
 
 		self.gb = QtGui.QGroupBox()
-		self.formLayout = QtGui.QFormLayout()
-		self.formLayout.addRow(QtGui.QLabel(), self.lessonTypeComboBox)
-		self.formLayout.addRow(QtGui.QLabel(), self.modifyWordListView)
-		self.formLayout.addRow(QtGui.QLabel(), self.modifyWordListListView)
-		self.formLayout.addRow(QtGui.QLabel(), self.dontShowAgainCheckBox)
-		self.formLayout.addRow(QtGui.QLabel(), self.startLessonButton)
-
 		self.gb.setLayout(self.formLayout)
 
 		mainLayout = QtGui.QVBoxLayout()
 		mainLayout.addWidget(self.gb)
 		self.setLayout(mainLayout)
 
+		self.retranslate()
+
 	def retranslate(self):
-		self.dontShowAgainCheckBox.setText(
-			_("Don't show this screen again when I start a lesson.")
-		)
 		self.startLessonButton.setText(
 			_("I'm ready, start the lesson!")
 		)
-
 		self.gb.setTitle(_("Lesson settings"))
-		
-		self.formLayout.labelForField(self.lessonTypeComboBox).setText(
-			_("Lesson type")
-		)
-		self.formLayout.labelForField(self.modifyWordListView).setText(
-			_("Word modifications")
-		)
-		self.formLayout.labelForField(self.modifyWordListListView).setText(
-			_("Word list order and filters")
-		)
+		i = 0
+		for key in self._settingsKeys:
+			setting = self._settings[key]
+			w = self.formLayout.itemAt(i, QtGui.QFormLayout.LabelRole).widget()
+			w.setText(setting["name"])
+
+			i += 1
 
 class TeachLessonWidget(QtGui.QSplitter):
 	def __init__(self, keyboardWidget, *args, **kwargs):
@@ -122,59 +116,30 @@ class TeachLessonWidget(QtGui.QSplitter):
 		self.changeSettingsButton.setText(_("Change lesson settings"))
 		self.wordLabel.setText(_("Word:"))
 
-class ModifiersListModel(QtCore.QAbstractListModel):
-	def __init__(self, modifiers, *args, **kwargs):
-		super(ModifiersListModel, self).__init__(*args, **kwargs)
-		
-		self.modifiers = modifiers
-
-	def rowCount(self, parent=None):
-		return len(self.modifiers)
-
-	def data(self, index, role):
-		if not index.isValid():
-			return
-		if role == QtCore.Qt.DisplayRole:
-			return self.modifiers[index.row()]["name"]
-		elif role == QtCore.Qt.CheckStateRole:
-			if self.modifiers[index.row()]["active"]:
-				return QtCore.Qt.Checked
-			else:
-				return QtCore.Qt.Unchecked
-
-	def setData(self, index, value, role):
-		if not index.isValid():
-			return False
-		if role == QtCore.Qt.CheckStateRole:
-			if value == QtCore.Qt.Checked:
-				self.modifiers[index.row()]["active"] = True
-			else:
-				self.modifiers[index.row()]["active"] = False
-			return True
-		return False
-
-	def flags(self, index):
-		return (
-			QtCore.Qt.ItemIsEnabled |
-			QtCore.Qt.ItemIsSelectable |
-			QtCore.Qt.ItemIsUserCheckable
-		)
-
 class TeachWidget(QtGui.QStackedWidget):
 	tabChanged = QtCore.pyqtSignal()
 	lessonDone = QtCore.pyqtSignal()
 	listChanged = QtCore.pyqtSignal([object])
 
-	def __init__(self, modules, keyboardWidget, applicationActivityChanged, *args, **kwargs):
+	def __init__(self, moduleManager, modules, settings, widgets, keyboardWidget, applicationActivityChanged, *args, **kwargs):
 		super(TeachWidget, self).__init__(*args, **kwargs)
 
+		self._mm = moduleManager
 		self._modules = modules
+		self._settings = settings
 		self._applicationActivityChanged = applicationActivityChanged
 		self._keyboardWidget = keyboardWidget
 
-		self._buildUi(keyboardWidget)
+		self._buildUi(keyboardWidget, widgets)
 		self._connectSignals()
-		self._createModels()
+
+		#setup teachTypes
+		self._teachTypeWidgets = []
+		for module in self._modules.sort("active", type="teachType"): 
+			if module.dataType in ("all", "words"):
+				widget = module.createWidget(self.tabChanged, self._keyboardWidget.letterChosen)
+				self._teachTypeWidgets.append(widget)
+				self._lessonWidget.teachTabWidget.addTab(widget, module.name)
 		
 		self.inLesson = False
 
@@ -184,27 +149,36 @@ class TeachWidget(QtGui.QStackedWidget):
 	def _showSettings(self):
 		self.setCurrentWidget(self._settingsWidget)
 
+	def _modForPath(self, path):
+		for mod in self._mm.mods:
+			if mod.__class__.__file__ == path:
+				return mod
+		raise IndexError()
+
 	def _startLesson(self):
 		self.setCurrentWidget(self._lessonWidget)
 		self._applicationActivityChanged.handle(self._activityChanged)
 
-		i = self._settingsWidget.lessonTypeComboBox.currentIndex()
-		lessonTypeModule = self._lessonTypeModules[i]
+		path = self._settings["lessonType"]["value"]
+		try:
+			lessonTypeModule = self._modForPath(path)
+		except IndexError:
+			lessonTypeModule = self._modules.default("active", type="lessonType")
 
 		indexes = range(len(self.lesson.list["items"]))
-
-		#fixme: save preferences in the data store/settings
-		for listModifier in self._listModifiersModel.modifiers:
-			if listModifier["active"]:
-				indexes = listModifier["module"].modifyList(
-					indexes,
-					self.lesson.list
-				)
+		for path in self._settings["listModifiers"]["value"]:
+			try:
+				listModifier = self._modForPath(path)
+			except IndexError:
+				continue
+			indexes = listModifier.modifyList(indexes, self.lesson.list)
 
 		itemModifiers = []
-		for itemModifier in self._itemModifiersModel.modifiers:
-			if itemModifier["active"]:
-				itemModifiers.append(itemModifier["module"].modifyItem)
+		for path in self._settings["itemModifiers"]["value"]:
+			try:
+				itemModifiers.append(self._modForPath(path).modifyItem)
+			except IndexError:
+				pass
 
 		def modifyItem(item):
 			#function that applies all item modifiers on an item and returns
@@ -267,8 +241,8 @@ class TeachWidget(QtGui.QStackedWidget):
 		
 		self.lessonDone.emit()
 
-	def _buildUi(self, keyboardWidget):
-		self._settingsWidget = TeachSettingsWidget()
+	def _buildUi(self, keyboardWidget, widgets):
+		self._settingsWidget = TeachSettingsWidget(self._settings, widgets)
 		self._lessonWidget = TeachLessonWidget(keyboardWidget)
 
 		self.addWidget(self._settingsWidget)
@@ -287,45 +261,6 @@ class TeachWidget(QtGui.QStackedWidget):
 
 		#change lesson settings button
 		self._lessonWidget.changeSettingsButton.clicked.connect(self._showSettings)
-
-	def _createModels(self):
-		#lessonType
-		self._lessonTypeModules = self._modules.sort("active", type="lessonType")
-
-		for module in self._lessonTypeModules:
-			self._settingsWidget.lessonTypeComboBox.addItem(module.name)
-
-		#item modifiers
-		itemModifiers = []
-		for module in self._modules.sort("active", type="itemModifier"):
-			itemModifiers.append({
-				"name": module.name,
-				"active": False,
-				"module": module
-			})
-		self._itemModifiersModel = ModifiersListModel(itemModifiers)
-		self._settingsWidget.modifyWordListView.setModel(self._itemModifiersModel)
-
-		#list modifiers
-		listModifiers = []
-		for module in self._modules.sort("active", type="listModifier"):
-			if not module.dataType in ("all", "words"):
-				continue
-			listModifiers.append({
-				"name": module.name,
-				"active": False,
-				"module": module
-			})
-		self._listModifiersModel = ModifiersListModel(listModifiers)
-		self._settingsWidget.modifyWordListListView.setModel(self._listModifiersModel)
-
-		#teachType
-		self._teachTypeWidgets = []
-		for module in self._modules.sort("active", type="teachType"): 
-			if module.dataType in ("all", "words"):
-				widget = module.createWidget(self.tabChanged, self._keyboardWidget.letterChosen)
-				self._teachTypeWidgets.append(widget)
-				self._lessonWidget.teachTabWidget.addTab(widget, module.name)
 
 class WordsTeacherModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -349,21 +284,27 @@ class WordsTeacherModule(object):
 			self._mm.mods(type="itemModifier"),
 			self._mm.mods(type="listModifier"),
 			self._mm.mods(type="resultsDialog"),
+			self._mm.mods(type="settings"),
 		)
 		self.requires = (
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="wordsStringComposer"),
 			self._mm.mods(type="lessonType"),
 			self._mm.mods(type="teachType"),
+			self._mm.mods(type="settingsWidgets"),
 		)
 		self.filesWithTranslations = ("words.py",)
 
 	def createWordsTeacher(self):
-		tw = TeachWidget(self._modules, self._onscreenKeyboard, self._applicationActivityChanged)
+		tw = TeachWidget(self._mm, self._modules, self._settings, self._widgets, self._onscreenKeyboard, self._applicationActivityChanged)
 		self._activeWidgets.add(weakref.ref(tw))
 		self._retranslate()
 
 		return tw
+
+	@property
+	def _widgets(self):
+		return self._modules.default("active", type="settingsWidgets").widgets
 
 	@property
 	def _onscreenKeyboard(self):
@@ -383,6 +324,43 @@ class WordsTeacherModule(object):
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._activeWidgets = set()
+
+		try:
+			registerSetting = self._modules.default(type="settings").registerSetting
+		except IndexError:
+			def registerSetting(name, **kwargs):
+				kwargs["value"] = kwargs.pop("defaultValue")
+				return kwargs
+
+		modToOption = lambda mod: (mod.name, mod.__class__.__file__)
+		lessonTypeOptions = map(modToOption, self._modules.sort("active", type="lessonType"))
+		listModifierOptions = map(modToOption, self._modules.sort("active", type="listModifier"))
+		itemModifierOptions = map(modToOption, self._modules.sort("active", type="itemModifier"))
+		self._settings = {
+			"lessonType": registerSetting(**{
+				"internal_name": "org.openteacher.teachers.words.lessonType",
+				"type": "option",
+				"options": lessonTypeOptions,
+				"defaultValue": lessonTypeOptions[0][1],
+			}),
+			"listModifiers": registerSetting(**{
+				"internal_name": "org.openteacher.teachers.words.listModifiers",
+				"type": "multiOption",
+				"options": listModifierOptions,
+				"defaultValue": listModifierOptions[0][1],
+			}),
+			"itemModifiers": registerSetting(**{
+				"internal_name": "org.openteacher.teachers.words.itemModifiers",
+				"type": "multiOption",
+				"options": itemModifierOptions,
+				"defaultValue": itemModifierOptions[0][1],
+			}),
+			"dontShowAgain": registerSetting(**{
+				"internal_name": "org.openteacher.teachers.words.dontShowAgain",
+				"type": "boolean",
+				"defaultValue": False,
+			}),
+		}
 
 		try:
 			translator = self._modules.default("active", type="translator")
@@ -408,6 +386,12 @@ class WordsTeacherModule(object):
 				self._mm.resourcePath("translations")
 			)
 
+		self._settings["lessonType"]["name"] = _("Lesson type")
+		self._settings["listModifiers"]["name"] = _("Word list order and filters")
+		self._settings["itemModifiers"]["name"] = _("Word modifications")
+		self._settings["dontShowAgain"]["name"] = _("Don't show this screen again when I start a lesson.")
+		for setting in self._settings.values():
+			setting["category"] = _("Lesson")
 		for widget in self._activeWidgets:
 			r = widget()
 			if r is not None:

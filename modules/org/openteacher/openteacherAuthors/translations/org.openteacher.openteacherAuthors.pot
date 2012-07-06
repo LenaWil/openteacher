@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.0\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-05 22:06+0200\n"
+"POT-Creation-Date: 2012-07-06 22:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -47,6 +47,12 @@ msgstr ""
 #: openteacherAuthors.py:105 openteacherAuthors.py:106
 #: openteacherAuthors.py:107 openteacherAuthors.py:108
 #: openteacherAuthors.py:109 openteacherAuthors.py:110
+#: openteacherAuthors.py:111 openteacherAuthors.py:112
+#: openteacherAuthors.py:113 openteacherAuthors.py:114
+#: openteacherAuthors.py:115 openteacherAuthors.py:116
+#: openteacherAuthors.py:117 openteacherAuthors.py:118
+#: openteacherAuthors.py:119 openteacherAuthors.py:120
+#: openteacherAuthors.py:121 openteacherAuthors.py:122
 #, python-format
 msgid "Translator (%s)"
 msgstr ""

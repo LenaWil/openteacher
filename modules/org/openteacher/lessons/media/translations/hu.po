@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-01 16:42+0200\n"
+"POT-Creation-Date: 2012-07-06 15:28+0200\n"
 "PO-Revision-Date: 2011-09-13 07:58+0000\n"
 "Last-Translator: Richard Somlói <ricsipontaz@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
@@ -15,26 +15,26 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-14 05:00+0000\n"
-"X-Generator: Launchpad (build 13921)\n"
+"X-Launchpad-Export-Date: 2012-07-06 05:12+0000\n"
+"X-Generator: Launchpad (build 15558)\n"
 
 #: media.py:80
 msgid "Create media lesson"
 msgstr "Médialecke készítése"
 
 #: media.py:141 media.py:168
-#, fuzzy, python-format
+#, python-format
 msgid "Media lesson: %s"
-msgstr "Médialecke %s"
+msgstr ""
+
+#~ msgid "File URL"
+#~ msgstr "Fájl elérési útvonala"
 
 #~ msgid "Remove"
 #~ msgstr "Eltávolítás"
 
-#~ msgid "Add local media"
-#~ msgstr "Helyi média hozzáadása"
-
-#~ msgid "Add remote media"
-#~ msgstr "Távoli média hozzáadása"
+#~ msgid "Warning"
+#~ msgstr "Figyelem"
 
 #~ msgid "Name:"
 #~ msgstr "Név:"
@@ -42,24 +42,8 @@ msgstr "Médialecke %s"
 #~ msgid "Description:"
 #~ msgstr "Leírás:"
 
-#~ msgid "Select file(s)"
-#~ msgstr "Fájl(ok) kijelölése"
-
-#~ msgid "Media"
-#~ msgstr "Média"
-
-#~ msgid "File URL"
-#~ msgstr "Fájl elérési útvonala"
-
-#~ msgid ""
-#~ "Enter the URL of your website or media item.\n"
-#~ "Supported video sites: YouTube, Dailymotion, Vimeo."
-#~ msgstr ""
-#~ "Adja meg a honlapja vagy a médiaelem elérési útvonalát.\n"
-#~ "Támogatott videomegosztók: YouTube, Dailymotion, Vimeo."
-
-#~ msgid "Warning"
-#~ msgstr "Figyelem"
+#~ msgid "Media lesson %s"
+#~ msgstr "Médialecke %s"
 
 #~ msgid ""
 #~ "Are you sure you want to go back to the enter tab? This will end your "
@@ -82,3 +66,22 @@ msgstr "Médialecke %s"
 
 #~ msgid "Media Lesson"
 #~ msgstr "Médialecke"
+
+#~ msgid "Media"
+#~ msgstr "Média"
+
+#~ msgid ""
+#~ "Enter the URL of your website or media item.\n"
+#~ "Supported video sites: YouTube, Dailymotion, Vimeo."
+#~ msgstr ""
+#~ "Adja meg a honlapja vagy a médiaelem elérési útvonalát.\n"
+#~ "Támogatott videomegosztók: YouTube, Dailymotion, Vimeo."
+
+#~ msgid "Add local media"
+#~ msgstr "Helyi média hozzáadása"
+
+#~ msgid "Add remote media"
+#~ msgstr "Távoli média hozzáadása"
+
+#~ msgid "Select file(s)"
+#~ msgstr "Fájl(ok) kijelölése"

@@ -1,0 +1,56 @@
+# Japanese translation for openteacher
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"PO-Revision-Date: 2012-04-20 08:07+0000\n"
+"Last-Translator: LeeAnna Kobayashi <kobayashi.leeanna@gmail.com>\n"
+"Language-Team: Japanese <ja@li.org>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-07-06 05:12+0000\n"
+"X-Generator: Launchpad (build 15558)\n"
+
+#. TRANSLATORS: OpenTeacher is a name, so please only
+#. translate or transliterate it if you've got a good reason
+#. to do so.
+#: metadata.py:59
+msgid "OpenTeacher"
+msgstr "OpenTeacher"
+
+#: metadata.py:60
+msgid "The easiest way to learn a new language"
+msgstr "新しい言語の簡単な習い方法"
+
+#: metadata.py:61
+msgid "3.0"
+msgstr "3.0"
+
+#: metadata.py:62
+msgid "OpenTeacher authors"
+msgstr "OpenTeacher の作者"
+
+#: metadata.py:63
+msgid "2008-2012"
+msgstr "２００８年ー２０１２年"
+
+#. TRANSLATORS: If you want to change this to another, e.g.
+#. localized website, please contact us
+#. (openteachermaintainers@lists.launchpad.net) first.
+#: metadata.py:67
+msgid "http://openteacher.org/"
+msgstr ""
+
+#. TRANSLATORS: If you want to change this to another, e.g.
+#. localized website, please contact us
+#. (openteachermaintainers@lists.launchpad.net) first.
+#: metadata.py:72
+msgid "http://openteacher.org/documentation.html"
+msgstr ""

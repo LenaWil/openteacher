@@ -33,6 +33,7 @@ def main():
 		"server.ssl_certificate": os.path.join(path, "cert.pem"),
 		"server.ssl_private_key": os.path.join(path, "privatekey.pem"),
 		"server.socket_port": 8080,
+		"server.socket_host": "0.0.0.0",
 		"environment": "production",
 	})
 

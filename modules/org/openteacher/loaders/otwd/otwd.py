@@ -45,6 +45,8 @@ class OpenTeachingWordsLoaderModule(object):
 		self._mm = moduleManager
 		self.uses = (
 			self._mm.mods(type="translator"),
+		)
+		self.requires = (
 			self._mm.mods(type="otxxLoader"),
 		)
 		self.filesWithTranslations = ("otwd.py",)

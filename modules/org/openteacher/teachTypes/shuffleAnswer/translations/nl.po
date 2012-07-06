@@ -7,22 +7,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-03-31 16:41+0200\n"
-"PO-Revision-Date: 2011-08-23 15:04+0000\n"
-"Last-Translator: Marten de Vries <Unknown>\n"
+"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"PO-Revision-Date: 2012-03-22 18:51+0000\n"
+"Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-24 05:10+0000\n"
-"X-Generator: Launchpad (build 13697)\n"
+"X-Launchpad-Export-Date: 2012-07-06 05:12+0000\n"
+"X-Generator: Launchpad (build 15558)\n"
 
 #: shuffleAnswer.py:64
 msgid "Hint:"
 msgstr "Hint:"
 
 #: shuffleAnswer.py:159
-#, fuzzy
 msgid "Shuffle answer"
-msgstr "Antwoord husselen"
+msgstr "Hussel antwoord"
+
+#~ msgid "Shuffle Answer"
+#~ msgstr "Antwoord husselen"

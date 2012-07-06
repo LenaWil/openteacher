@@ -45,11 +45,17 @@ class CategoryTab(QtGui.QWidget):
 		groupBox = QtGui.QGroupBox(name)
 		groupBoxLayout = QtGui.QFormLayout()
 		for setting in inSubcategory:
-			createWidget = self._widgets[setting["type"]]
-			groupBoxLayout.addRow(
-				setting["name"],
-				createWidget(setting)
-			)
+			try:
+				createWidget = self._widgets[setting["type"]]
+			except KeyError:
+				continue
+			try:
+				groupBoxLayout.addRow(
+					setting["name"],
+					createWidget(setting)
+				)
+			except KeyError:
+				continue
 		groupBox.setLayout(groupBoxLayout)
 		return groupBox
 

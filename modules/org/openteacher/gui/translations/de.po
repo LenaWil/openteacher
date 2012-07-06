@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-02 18:22+0200\n"
-"PO-Revision-Date: 2012-02-05 09:18+0000\n"
-"Last-Translator: Daniel Winzen <d@winzen4.de>\n"
+"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"PO-Revision-Date: 2012-04-13 12:19+0000\n"
+"Last-Translator: Dennis Baudys <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-06 05:02+0000\n"
-"X-Generator: Launchpad (build 14747)\n"
+"X-Launchpad-Export-Date: 2012-07-06 05:12+0000\n"
+"X-Generator: Launchpad (build 15558)\n"
 
 #: gui.py:321
 msgid "Open from file"
-msgstr ""
+msgstr "Aus Datei öffnen"
 
 #: ui.py:34
 msgid "Close Tab"
@@ -28,7 +28,7 @@ msgstr "Reiter schließen"
 
 #: ui.py:81
 msgid "Enter list"
-msgstr ""
+msgstr "Liste eingeben"
 
 #: ui.py:83
 msgid "Teach me!"
@@ -36,7 +36,7 @@ msgstr "Bring es mir bei!"
 
 #: ui.py:85
 msgid "Show results"
-msgstr ""
+msgstr "Ergebnisse anzeigen"
 
 #: ui.py:248
 msgid "&File"
@@ -48,7 +48,7 @@ msgstr "&Neu"
 
 #: ui.py:250
 msgid "&Open"
-msgstr "&Öffnen"
+msgstr "Ö&ffnen"
 
 #: ui.py:251
 msgid "&Save"
@@ -84,7 +84,7 @@ msgstr "&Dokumentation"
 
 #: ui.py:261
 msgid "&About"
-msgstr "&Über"
+msgstr "&Info"
 
 #: ui.py:263
 msgid "Toolbar"
@@ -96,20 +96,20 @@ msgstr "Werkzeugleiste"
 #~ msgid "Choose file to open"
 #~ msgstr "Datei zum Öffnen auswählen"
 
-#~ msgid "Ctrl+N"
-#~ msgstr "Strg+N"
-
-#~ msgid "Ctrl+O"
-#~ msgstr "Strg+O"
+#~ msgid "Ctrl+P"
+#~ msgstr "Strg+P"
 
 #~ msgid "Ctrl+S"
 #~ msgstr "Strg+S"
 
+#~ msgid "Ctrl+O"
+#~ msgstr "Strg+O"
+
+#~ msgid "Ctrl+N"
+#~ msgstr "Strg+N"
+
 #~ msgid "Ctrl+Shift+S"
 #~ msgstr "Strg+Umschalt+S"
-
-#~ msgid "Ctrl+P"
-#~ msgstr "Strg+P"
 
 #~ msgid "Ctrl+Q"
 #~ msgstr "Strg+Q"

@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-01 16:41+0200\n"
-"PO-Revision-Date: 2011-09-28 17:06+0000\n"
+"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"PO-Revision-Date: 2012-04-02 17:36+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-29 04:47+0000\n"
-"X-Generator: Launchpad (build 14049)\n"
+"X-Launchpad-Export-Date: 2012-07-06 05:12+0000\n"
+"X-Generator: Launchpad (build 15558)\n"
 
 #. TRANSLATORS: OpenTeacher is a name, so please only
 #. translate or transliterate it if you've got a good reason
@@ -30,18 +30,16 @@ msgid "The easiest way to learn a new language"
 msgstr "De makkelijkste manier om een nieuwe taal te leren!"
 
 #: metadata.py:61
-#, fuzzy
 msgid "3.0"
-msgstr "3.x"
+msgstr "3.0"
 
 #: metadata.py:62
-#, fuzzy
 msgid "OpenTeacher authors"
-msgstr "OpenTeacher"
+msgstr "OpenTeacher auteurs"
 
 #: metadata.py:63
 msgid "2008-2012"
-msgstr ""
+msgstr "2008-2012"
 
 #. TRANSLATORS: If you want to change this to another, e.g.
 #. localized website, please contact us
@@ -56,3 +54,6 @@ msgstr "http://openteacher.org/"
 #: metadata.py:72
 msgid "http://openteacher.org/documentation.html"
 msgstr "http://openteacher.org/documentation.html"
+
+#~ msgid "3.x"
+#~ msgstr "3.x"

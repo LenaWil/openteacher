@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-05 21:33+0200\n"
+"POT-Creation-Date: 2012-07-06 15:28+0200\n"
 "PO-Revision-Date: 2011-10-21 08:57+0000\n"
 "Last-Translator: Richard Somlói <ricsipontaz@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2012-03-10 05:04+0000\n"
-"X-Generator: Launchpad (build 14914)\n"
+"X-Launchpad-Export-Date: 2012-07-06 05:13+0000\n"
+"X-Generator: Launchpad (build 15558)\n"
 
 #: testViewer.py:134
 msgid "Results"
@@ -48,6 +48,6 @@ msgstr[0] "Összes gondolkodási idő: %s másodperc"
 msgstr[1] "Összes gondolkodási idő: %s másodperc"
 
 #: testViewer.py:165
-#, fuzzy, python-format
+#, python-format
 msgid "Total thinking time: %s minutes"
-msgstr "Összes gondolkodási idő: %s másodperc"
+msgstr ""
