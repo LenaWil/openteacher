@@ -91,7 +91,7 @@ class OpenTeacherBot(irc.IRCClient):
 		shellSite = urllib2.urlopen("http://shell.appspot.com/")
 		
 		regex = re.compile(r'<input type="hidden" name="session" value="(.*)" />')
-		
+
 		for line in shellSite:
 			m = regex.search(line)
 			if m != None:
@@ -137,7 +137,28 @@ class OpenTeacherBot(irc.IRCClient):
 					branch.web_link,
 				)
 				self.msg(target, text.encode("UTF-8"))
-		
+
+		if msg.startswith(".pymod "):
+			mod = msg.split(" ")[1]
+			url = "http://docs.python.org/library/%s.html" % mod
+			try:
+				urllib2.urlopen(url)
+			except urllib2.HTTPError:
+				self.msg(target, "Can't find documentation for that module.")
+			else:
+				self.msg(target, url)
+
+		if msg.startswith(".google "):
+			q = msg.split(" ", 1)[1]
+			q = urllib.quote_plus(q)
+			self.msg(target, "http://google.com/search?q=%s" % q)
+
+		if msg.startswith(".answer "):
+			q = msg.split(" ", 1)[1]
+			q = urllib.quote_plus(q)
+			self.msg(target, "http://www.wolframalpha.com/input/?i=%s" % q)
+
+		#python evaluation
 		if msg.startswith(".py "):
 			statement = msg[4:]
 
@@ -150,13 +171,15 @@ class OpenTeacherBot(irc.IRCClient):
 			if len(result) > 350:
 				result = result[len(result) - 350:]
 			self.msg(target, result)
-		
+
+		#reset python shell
 		if msg == ".reset" and user in self.factory.admins:
 			if self.setSessionKey():
 				self.msg(target, "I've been reset.")
 			else:
 				self.msg(target, "Could not reset. Is appspot down?")
-		
+
+		#quit client
 		if msg == ".quit" and user in self.factory.admins:
 			self.factory.timeToQuit = True
 			self.quit()
@@ -204,7 +227,7 @@ on irc. Then press ctrl+c here.\n"""
 
 	config = {
 		"channels": [
-			"#openteacher",
+			"##PyTest",
 		],
 		"nickname": "OTbot-dev",
 		"realname": "http://openteacher.org/",
@@ -218,4 +241,5 @@ on irc. Then press ctrl+c here.\n"""
 	reactor.connectSSL('irc.freenode.net', 7000, OpenTeacherBotFactory(**config), ssl.ClientContextFactory())
 	reactor.run()
 
-run()
+if __name__ == "__main__":
+	run()

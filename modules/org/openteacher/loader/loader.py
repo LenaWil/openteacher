@@ -19,13 +19,16 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
 class Loader(object):
-	def __init__(self, loadModule, guiModule, path, *args, **kwargs):
+	def __init__(self, loadModule, guiModule, path, addToRecentlyOpened=None, *args, **kwargs):
 		super(Loader, self).__init__(*args, **kwargs)
 
 		self.loadModule = loadModule
 		self.guiModule = guiModule
 		self.path = path
+		self.addToRecentlyOpened = addToRecentlyOpened
 
 	def load(self):
 		lesson = self.loadModule.load(self.path)
@@ -33,6 +36,18 @@ class Loader(object):
 			"changed": False,
 			"path": self.path,
 		})
+
+		if self.addToRecentlyOpened:
+			# Add to recently opened
+			self.addToRecentlyOpened(**{
+				"label": lesson["list"].get("title", "") or os.path.basename(path),
+				"args": {},
+				"kwargs": {"path": self.path},
+				"method": "load",
+				"moduleArgsSelectors": ["active"],
+				"moduleKwargsSelectors": {"type": "loader"},
+			})
+
 		self.guiModule.loadFromLesson(lesson)
 
 class LoaderModule(object):
@@ -41,9 +56,11 @@ class LoaderModule(object):
 		self._mm = moduleManager
 
 		self.type = "loader"
+
 		self.uses = (
 			self._mm.mods(type="lesson"),
 			self._mm.mods(type="load"),
+			self._mm.mods(type="recentlyOpened"),
 		)
 
 	@property
@@ -80,6 +97,14 @@ class LoaderModule(object):
 	def openSupport(self):
 		return len(self.usableExtensions) != 0
 
+	@property
+	def _addToRecentlyOpened(self):
+		try:
+			recentlyOpenedModule = self._modules.default("active", type="recentlyOpened")
+		except IndexError:
+			return
+		return recentlyOpenedModule.add
+
 	def load(self, path):
 		loaders = []
 
@@ -93,7 +118,7 @@ class LoaderModule(object):
 				if not hasattr(guiModule, "loadFromLesson"):
 					continue
 				if guiModule.dataType == fileType:
-					loaders.append(Loader(loadModule, guiModule, path))
+					loaders.append(Loader(loadModule, guiModule, path, self._addToRecentlyOpened))
 
 		if len(loaders) == 0:
 			raise NotImplementedError()

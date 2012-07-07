@@ -38,12 +38,6 @@ class OtxxLoaderModule(object):
 		self._mm = moduleManager
 
 		self.type = "otxxLoader"
-		self.requires = (
-			self._mm.mods(type="loader"),
-		)
-		self.uses = (
-			self._mm.mods(type="recentlyOpened"),
-		)
 
 		atexit.register(self._cleanupTempPaths)
 
@@ -80,21 +74,6 @@ class OtxxLoaderModule(object):
 				shutil.copyfileobj(resourceFile, tf)
 				
 				resources[resourceKey] = path2
-
-		# Add to recently opened
-		try:
-			recentlyOpenedModule = self._modules.default("active", type="recentlyOpened")
-		except IndexError:
-			pass
-		else:
-			recentlyOpenedModule.add(**{
-				"label": list.get("title", os.path.basename(path)) or os.path.basename(path), #or for empty
-				"args": {},
-				"kwargs": {"path": path},
-				"method": "load",
-				"moduleArgsSelectors": ["active"],
-				"moduleKwargsSelectors": {"type": "loader"},
-			})
 
 		return {
 			"resources": resources,
