@@ -79,6 +79,8 @@ class TeachTopoLessonModule(object):
 		self._button = module.registerButton("create")
 		self._button.clicked.handle(self.createLesson)
 		self._button.changeText.send(_("Create topography lesson"))
+		#reasonable priority
+		self._button.changePriority.send(self.priorities["all"])
 
 		# Data type
 		self.dataType = "topo"

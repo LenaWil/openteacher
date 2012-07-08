@@ -44,7 +44,10 @@ class NoteCalculatorChooserModule(object):
 				self._mm.resourcePath("translations")
 			)
 
-		self._setting["name"] = _("Note notation")
+		self._setting.update({
+			"name": _("Note notation"),
+			"category": _("General"),
+		})
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

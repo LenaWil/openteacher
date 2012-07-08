@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"POT-Creation-Date: 2012-07-08 17:49+0200\n"
 "PO-Revision-Date: 2012-05-23 14:45+0000\n"
 "Last-Translator: Wang Dianjin <Unknown>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
@@ -21,3 +21,7 @@ msgstr ""
 #: recentlyOpened.py:116
 msgid "Amount of recently opened files to remember"
 msgstr "记住最近打开的文件数量"
+
+#: recentlyOpened.py:117
+msgid "General"
+msgstr ""

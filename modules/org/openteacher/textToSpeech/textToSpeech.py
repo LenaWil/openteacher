@@ -155,22 +155,17 @@ class TextToSpeechModule(object):
 			# Add settings
 			self._ttsVoice = self._settings.registerSetting(**{
 				"internal_name": "org.openteacher.textToSpeech.voice",
-				"name": "Voice",
 				"type": "option",
-				"category": "Pronounciation",
-				"subcategory": "Voice",
 				"defaultValue": self.tts.getVoices()[0][1],
 				"options": self.tts.getVoices(),
 			})
 			self._ttsSpeed = self._settings.registerSetting(**{
 				"internal_name": "org.openteacher.textToSpeech.speed",
-				"name": "Speed",
 				"type": "number",
-				"category": "Pronounciation",
-				"subcategory": "Voice",
 				"defaultValue": 120,
 				"minValue": 1,
 			})
+			self._retranslate()
 
 			# Create the say word event
 			self.say = self._modules.default(type="event").createEvent()
@@ -187,6 +182,20 @@ class TextToSpeechModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
+
+		try:
+			self._ttsVoice["name"] = _("Voice name (language)")
+			self._ttsSpeed["name"] = _("Speed")
+
+			categories = {
+				"category": _("Pronounciation"),
+				"subcategory": _("Voice"),
+			}
+			self._ttsVoice.update(categories)
+			self._ttsSpeed.update(categories)
+		except AttributeError:
+			#first time retranslate
+			pass
 
 	def disable(self):
 		del self._modules

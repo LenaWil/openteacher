@@ -53,10 +53,12 @@ class ExecuteModule(object):
 			profileSetting["value"] = "all"
 		else:
 			profileSetting = settings.registerSetting(**{
+				#FIXME: translations???
 				"internal_name": "org.openteacher.execute.startup_profile",
-				"name": "Start profile",
+				"name": "Profile",
 				"type": "profile",
 				"defaultValue": "all",
+				"category": "General",
 				"subcategory": "Profile",
 				"callback": {
 					"args": (),

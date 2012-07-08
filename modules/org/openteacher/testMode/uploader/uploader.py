@@ -71,10 +71,9 @@ class TestModeUploaderModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		
 		self._testMenu = self._modules.default("active", type="testMenu").menu
 
-		self._action = self._testMenu.addAction()
+		self._action = self._testMenu.addAction(self.priorities["all"])
 		self._action.triggered.handle(self.upload)
 		self._action.text = _("Upload lesson") #FIXME: retranslate
 

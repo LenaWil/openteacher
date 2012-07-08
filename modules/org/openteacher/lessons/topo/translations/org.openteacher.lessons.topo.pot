@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.0\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-07 21:50+0200\n"
+"POT-Creation-Date: 2012-07-08 17:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,11 +24,11 @@ msgstr ""
 #. TRANSLATORS: used as a label in case a filename of a topo
 #. TRANSLATORS: lesson isn't available. (E.g. because it's
 #. TRANSLATORS: downloaded from some kind of web service.)
-#: topo.py:129
+#: topo.py:131
 msgid "Import source"
 msgstr ""
 
-#: topo.py:149
+#: topo.py:151
 #, python-format
 msgid "Topo lesson: %s"
 msgstr ""

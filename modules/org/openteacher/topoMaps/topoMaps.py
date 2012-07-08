@@ -322,15 +322,14 @@ class TopoMapsModule(object):
 		try:
 			self._settings = self._modules.default(type="settings")
 		except IndexError, e:
-			self._openGlSetting = dict()
-			self._openGlSetting["value"] = False
+			self._openGlSetting = {"value": False}
 		else:
 			self._openGlSetting = self._settings.registerSetting(**{
 				"internal_name": "org.openteacher.lessons.topo.opengl",
-				"name": "OpenGL Rendering",
+				"name": _("OpenGL rendering"),
 				"type": "boolean",
-				"category": "Topo lesson",
-				"subcategory": "Rendering",
+				"category": _("Lesson"),
+				"subcategory": _("Topography"),
 				"defaultValue": False,
 				"advanced": True,
 			})

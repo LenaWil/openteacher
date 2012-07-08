@@ -78,6 +78,8 @@ class MediaLessonModule(object):
 		self._button = module.registerButton("create")
 		self._button.clicked.handle(self.createLesson)
 		self._button.changeText.send(_("Create media lesson"))
+		#reasonable priority
+		self._button.changePriority.send(self.priorities["all"])
 
 		self.lessonCreated = self._modules.default(type="event").createEvent()
 		self.lessonCreationFinished = self._modules.default(type="event").createEvent()

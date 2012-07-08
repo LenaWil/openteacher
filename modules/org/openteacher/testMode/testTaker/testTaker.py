@@ -96,7 +96,7 @@ class TestModeTestTaker(object):
 
 		self._testMenu = self._modules.default("active", type="testMenu").menu
 
-		self._action = self._testMenu.addAction()
+		self._action = self._testMenu.addAction(self.priorities["all"])
 		self._action.triggered.handle(self.showTestTaker)
 		self._action.text = _("Take test")#FIXME: retranslate
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"POT-Creation-Date: 2012-07-08 17:49+0200\n"
 "PO-Revision-Date: 2012-02-05 09:29+0000\n"
 "Last-Translator: Daniel Winzen <d@winzen4.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -17,6 +17,22 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-07-06 05:12+0000\n"
 "X-Generator: Launchpad (build 15558)\n"
+
+#: textToSpeech.py:187
+msgid "Voice name (language)"
+msgstr ""
+
+#: textToSpeech.py:188
+msgid "Speed"
+msgstr ""
+
+#: textToSpeech.py:191
+msgid "Pronounciation"
+msgstr ""
+
+#: textToSpeech.py:192
+msgid "Voice"
+msgstr ""
 
 #~ msgid "Text to speech"
 #~ msgstr "Text zu Sprache"

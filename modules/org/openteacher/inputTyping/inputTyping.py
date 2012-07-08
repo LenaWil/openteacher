@@ -280,6 +280,8 @@ class InputTypingModule(object):
 		#update the setting
 		self._fadeDurationSetting.update({
 			"name": _("Fade duration when wrong (milliseconds)"),
+			"category": _("Lesson"),
+			"subcategory": _("Words lesson"),
 		})
 
 	def disable(self):

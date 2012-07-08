@@ -40,29 +40,21 @@ class SymbolsModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		
-		try:
-			translator = self._modules.default("active", type="translator")
-		except IndexError:
-			pass
-		else:
-			translator.languageChanged.handle(self._retranslate)
-		self._retranslate()
 
 		self.internalName = "org.openteacher.chars.symbols"
 		self.updated = self._modules.default(type="event").createEvent()
 		
 		defaultSetting = [
-				[u"à", u"á", u"â", u"ä", u"ã", u"å"],
-				[u"À", u"Á", u"Â", u"Ä", u"Ã", u"Å"],
-				[u"è", u"é", u"ê", u"ë", u"Ç", u"ç"],
-				[u"È", u"É", u"Ê", u"Ë", u"Ñ", u"ñ"],
-				[u"ì", u"í", u"î", u"ï", u"Û", u"û"],
-				[u"Ì", u"Í", u"Î", u"Ï", u"Ú", u"ú"],
-				[u"ò", u"ó", u"ô", u"ö", u"Ü", u"ü"],
-				[u"Ò", u"Ó", u"Ô", u"Ö", u"Ù", u"ß"],
-				[u"\,", u"\;", u"\=", u"", u"", u""],
-			]
+			[u"à", u"á", u"â", u"ä", u"ã", u"å"],
+			[u"À", u"Á", u"Â", u"Ä", u"Ã", u"Å"],
+			[u"è", u"é", u"ê", u"ë", u"Ç", u"ç"],
+			[u"È", u"É", u"Ê", u"Ë", u"Ñ", u"ñ"],
+			[u"ì", u"í", u"î", u"ï", u"Û", u"û"],
+			[u"Ì", u"Í", u"Î", u"Ï", u"Ú", u"ú"],
+			[u"ò", u"ó", u"ô", u"ö", u"Ü", u"ü"],
+			[u"Ò", u"Ó", u"Ô", u"Ö", u"Ù", u"ß"],
+			[u"\,", u"\;", u"\=", u"", u"", u""],
+		]
 		
 		try:
 			self._settings = self._modules.default(type="settings")
@@ -71,7 +63,6 @@ class SymbolsModule(object):
 		else:
 			self._setting = self._settings.registerSetting(**{
 				"internal_name": "org.openteacher.chars.symbols.data",
-				"name": self.name,
 				"type": "character_table",
 				"defaultValue": defaultSetting,
 				"callback": {
@@ -81,7 +72,14 @@ class SymbolsModule(object):
 				}
 			})
 			self.data = self._setting["value"]
-		
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.active = True
 
 	def _retranslate(self):
@@ -94,10 +92,12 @@ class SymbolsModule(object):
 				self._mm.resourcePath("translations")
 			)
 		self.name = _("Symbols")
-		try:
-			self._setting["name"] = self._name
-		except AttributeError:
-			pass
+		if hasattr(self, "_setting"):
+			self._setting.update({
+				"name": self.name,
+				"category": _("Lesson"),
+				"subcategory": _("Words lesson")
+			})
 
 	def disable(self):
 		self.active = False

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"POT-Creation-Date: 2012-07-08 17:49+0200\n"
 "PO-Revision-Date: 2012-04-21 20:12+0000\n"
 "Last-Translator: LeeAnna Kobayashi <kobayashi.leeanna@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
@@ -22,6 +22,6 @@ msgstr ""
 msgid "Pronounce words"
 msgstr "単語の発音して"
 
-#: words.py:51 words.py:52
+#: words.py:51
 msgid "Pronounciation"
 msgstr "発音"

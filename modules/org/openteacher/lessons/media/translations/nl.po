@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"POT-Creation-Date: 2012-07-08 17:49+0200\n"
 "PO-Revision-Date: 2012-07-04 18:53+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "Create media lesson"
 msgstr "Maak een mediales aan"
 
-#: media.py:141 media.py:168
+#: media.py:143 media.py:170
 #, python-format
 msgid "Media lesson: %s"
 msgstr "Mediales: %s"

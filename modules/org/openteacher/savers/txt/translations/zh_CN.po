@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"POT-Creation-Date: 2012-07-08 17:49+0200\n"
 "PO-Revision-Date: 2012-05-23 14:39+0000\n"
 "Last-Translator: Wang Dianjin <Unknown>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
@@ -23,13 +23,20 @@ msgid "Plain text"
 msgstr "普通文本"
 
 #: txt.py:58
-msgid "Minimum space between words"
+#, fuzzy
+msgid "Minimum amount of spaces between words"
 msgstr "单词间最小空格"
 
 #: txt.py:59
-msgid "Saving"
-msgstr "正在保存"
+msgid "Input and output"
+msgstr ""
 
 #: txt.py:60
-msgid "Txt"
-msgstr "文本"
+msgid ".txt saving"
+msgstr ""
+
+#~ msgid "Saving"
+#~ msgstr "正在保存"
+
+#~ msgid "Txt"
+#~ msgstr "文本"

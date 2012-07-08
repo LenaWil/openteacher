@@ -202,28 +202,26 @@ class MediaDisplayModule(object):
 		try:
 			self._settings = self._modules.default(type="settings")
 		except IndexError:
-			self._html5VideoSetting = dict()
-			self._html5VideoSetting["value"] = False
-			self._html5AudioSetting = dict()
-			self._html5AudioSetting["value"] = False
+			self._html5VideoSetting = {"value": False}
+			self._html5AudioSetting = {"value": False}
 		else:
 			# Settings (used in mediaTypes)
 			self._html5VideoSetting = self._settings.registerSetting(**{
 				"internal_name": "org.openteacher.lessons.media.videohtml5",
-				"name": "Use HTML5 for video",
+				"name": _("Use HTML5 for video"),
 				"type": "boolean",
-				"category": "Media Lesson",
-				"subcategory": "Output",
+				"category": _("Lesson"),
+				"subcategory": _("Media"),
 				"defaultValue": False,
 				"advanced": True,
 			})
 			
 			self._html5AudioSetting = self._settings.registerSetting(**{
 				"internal_name": "org.openteacher.lessons.media.audiohtml5",
-				"name": "Use HTML5 for audio",
+				"name": _("Use HTML5 for audio"),
 				"type": "boolean",
-				"category": "Media Lesson",
-				"subcategory": "Output",
+				"category": _("Lesson"),
+				"subcategory": _("Media"),
 				"defaultValue": False,
 				"advanced": True,
 			})

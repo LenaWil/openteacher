@@ -49,7 +49,6 @@ class TextToSpeechProviderWords(object):
 		self._pronounceSetting.update({
 			"name": _("Pronounce words"),
 			"category": _("Pronounciation"),
-			"subcategory": _("Pronounciation"),
 		})
 
 	def enable(self):

@@ -33,8 +33,6 @@ class Button(object):
 	   - changeIcon(icon_path) -> user to gui
 	   #piority is a number; 0 is high, inifinity low.
 	   - changePriority(priority) -> user to gui
-	   #can be: category, 
-	   - changeCategory(category) -> user to gui
 
 	"""
 	def __init__(self, category, createEvent, *args, **kwargs):

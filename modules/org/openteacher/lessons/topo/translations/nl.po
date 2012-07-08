@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"POT-Creation-Date: 2012-07-08 17:49+0200\n"
 "PO-Revision-Date: 2012-07-04 18:52+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,11 +25,11 @@ msgstr "Maak een topografieles aan"
 #. TRANSLATORS: used as a label in case a filename of a topo
 #. TRANSLATORS: lesson isn't available. (E.g. because it's
 #. TRANSLATORS: downloaded from some kind of web service.)
-#: topo.py:129
+#: topo.py:131
 msgid "Import source"
 msgstr "Importeerbron"
 
-#: topo.py:149
+#: topo.py:151
 #, python-format
 msgid "Topo lesson: %s"
 msgstr "Topografieles: %s"

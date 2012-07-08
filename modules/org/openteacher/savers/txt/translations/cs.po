@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"POT-Creation-Date: 2012-07-08 17:49+0200\n"
 "PO-Revision-Date: 2012-05-11 22:25+0000\n"
 "Last-Translator: Jakub Šnapka <snapka@seznam.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -23,13 +23,20 @@ msgid "Plain text"
 msgstr "Neformátovaný text"
 
 #: txt.py:58
-msgid "Minimum space between words"
+#, fuzzy
+msgid "Minimum amount of spaces between words"
 msgstr "Minimální prostor mezi slovíčky"
 
 #: txt.py:59
-msgid "Saving"
-msgstr "Ukládání"
+msgid "Input and output"
+msgstr ""
 
 #: txt.py:60
-msgid "Txt"
-msgstr "Txt"
+msgid ".txt saving"
+msgstr ""
+
+#~ msgid "Saving"
+#~ msgstr "Ukládání"
+
+#~ msgid "Txt"
+#~ msgstr "Txt"

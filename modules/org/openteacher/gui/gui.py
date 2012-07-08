@@ -36,6 +36,7 @@ class Action(object):
 
 	def remove(self):
 		self._qtMenu.removeAction(self._qtAction)
+		self._qtMenu.menuActions.remove(self._qtAction)
 
 	text = property(
 		lambda self: unicode(self._qtAction.text()),
@@ -47,23 +48,35 @@ class Action(object):
 		lambda self, value: self._qtAction.setEnabled(value)
 	)
 
-#FIXME: make sure it's possible for the new menus to specify the place
-#to insert new actions/menus
 class Menu(object):
 	def __init__(self, event, qtMenu, *args, **kwargs):
 		super(Menu, self).__init__(*args, **kwargs)
 
 		self._createEvent = event
 		self._qtMenu = qtMenu
+		self._qtMenu.menuActions = set()
 
-	def addAction(self):
+	def _actionAfter(self, priority):
+		actions = sorted(
+			self._qtMenu.menuActions,
+			key=lambda a: getattr(a, "menuPriority", 0)
+		)
+		for action in actions:
+			if getattr(action, "menuPriority", 0) > priority:
+				return action
+		#explicit is better than implicit
+		return None
+
+	def addAction(self, priority):
 		qtAction = QtGui.QAction(self._qtMenu)
-		self._qtMenu.addAction(qtAction)
+		qtAction.menuPriority = priority
+		self._qtMenu.insertAction(self._actionAfter(priority), qtAction)
+		self._qtMenu.menuActions.add(qtAction)
 		return Action(self._createEvent, self._qtMenu, qtAction)
 
-	def addMenu(self):
+	def addMenu(self, priority):
 		qtSubMenu = QtGui.QMenu()
-		self._qtMenu.addMenu(qtSubMenu)
+		self._qtMenu.insertMenu(self._actionAfter(priority), qtSubMenu)
 		return Menu(self._createEvent, qtSubMenu)
 
 	def remove(self):
@@ -211,6 +224,8 @@ class GuiModule(object):
 			#add the open action as a load button too.
 			self._loadButton = br.registerButton("load")
 			self._loadButton.clicked.handle(lambda: self._widget.openAction.triggered.emit(False))
+			#always the first load button.
+			self._loadButton.changePriority.send(0)
 
 		#load translator
 		try:

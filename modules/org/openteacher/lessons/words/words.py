@@ -128,6 +128,8 @@ class WordsLessonModule(object):
 
 		self._button = self._modules.default("active", type="buttonRegister").registerButton("create")
 		self._button.clicked.handle(self.createLesson)
+		#reasonable priority
+		self._button.changePriority.send(self.priorities["all"])
 
 		try:
 			translator = self._modules.default("active", type="translator")

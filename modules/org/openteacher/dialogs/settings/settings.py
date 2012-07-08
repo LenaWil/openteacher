@@ -35,10 +35,11 @@ class CategoryTab(QtGui.QWidget):
 		vbox = QtGui.QVBoxLayout()
 
 		categories = self.byKey("subcategory", inCategory)
-		for name in categories.keys():			
+		for name in sorted(categories.keys()):			
 			w = self.createSubcategoryGroupBox(name, categories[name])
 			vbox.addWidget(w)
 
+		vbox.addStretch()
 		self.setLayout(vbox)
 
 	def createSubcategoryGroupBox(self, name, inSubcategory):
@@ -124,7 +125,7 @@ class SettingsDialog(QtGui.QTabWidget):
 
 		self.clear()
 		categories = self.byKey("category", settings)
-		for name in categories.keys():
+		for name in sorted(categories.keys()):
 			self.createCategoryTab(self.widgets, name, categories[name])
 
 	def advanced(self):

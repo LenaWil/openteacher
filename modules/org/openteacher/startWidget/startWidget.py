@@ -24,7 +24,7 @@ import weakref
 class StartWidgetButton(QtGui.QPushButton):
 	def __init__(self, *args, **kwargs):
 		super(StartWidgetButton, self).__init__(*args, **kwargs)
-		#our setText is reimplemented and the QPushButton constructor
+		#our setText is reimplemented, the QPushButton constructor
 		#doesn't call setText by default.
 		self.setText(self.text())
 
@@ -79,31 +79,66 @@ class StartWidgetButton(QtGui.QPushButton):
 		super(StartWidgetButton, self).setText(result)
 		super(StartWidgetButton, self).resizeEvent(*args, **kwargs)
 
-#FIXME: give this class an implementation that doesn't suck. Also, make
-#sure that the priority event of the buttons is handled and that button
-#register users actually send it... (just the module priority is
-#sufficient, there.)
+class ButtonsGroupBox(QtGui.QGroupBox):
+	def __init__(self, *args, **kwargs):
+		super(ButtonsGroupBox, self).__init__(*args, **kwargs)
+
+		self._buttons = {}
+		self._layout = QtGui.QGridLayout()
+		self.setLayout(self._layout)
+
+	def _updateLayout(self):
+		#empty layout
+		while True:
+			item = self._layout.takeAt(0)
+			if not item:
+				break
+			item.widget().setParent(None)
+		i = 0
+		j = 0
+		for button, desc in sorted(self._buttons.iteritems(), key=lambda data: data[1]["priority"]):
+			qtButton = StartWidgetButton(desc["text"])
+			qtButton.setIcon(QtGui.QIcon(desc["icon"]))
+			qtButton.clicked.connect(button.clicked.send)
+			self._layout.addWidget(qtButton, i, j)
+			j += 1
+			if j > 1:
+				j = 0
+				i += 1
+
+	def addButton(self, button):
+		self._buttons[button] = {
+			"text": "",
+			"icon": "",
+			"priority": 0,
+		}
+		button.changeText.handle(lambda t: self._updateText(button, t))
+		button.changeIcon.handle(lambda i: self._updateIcon(button, i))
+		button.changePriority.handle(lambda p: self._updatePriority(button, p))
+		self._updateLayout()
+
+	def removeButton(self, button):
+		del self._buttons[button]
+		self._updateLayout()
+
+	def _updateText(self, button, text):
+		self._buttons[button]["text"] = text
+		self._updateLayout()
+
+	def _updateIcon(self, button, icon):
+		self._buttons[button]["icon"] = icon
+		self._updateLayout()
+
+	def _updatePriority(self, button, priority):
+		self._buttons[button]["priority"] = priority
+		self._updateLayout()
+
 class StartWidget(QtGui.QSplitter):
 	def __init__(self, recentlyOpenedViewer, *args, **kwargs):
 		super(StartWidget, self).__init__(*args, **kwargs)
 
-		self._buttons = {}
-
-		self._createLessonCurrentRow = 0
-		self._createLessonCurrentColumn = 0
-
-		self._loadLessonCurrentRow = 0
-		self._loadLessonCurrentColumn = 0
-
-		self.createLessonLayout = QtGui.QGridLayout()
-
-		self.createLessonGroupBox = QtGui.QGroupBox()
-		self.createLessonGroupBox.setLayout(self.createLessonLayout)
-
-		self.loadLessonLayout = QtGui.QGridLayout()
-
-		self.loadLessonGroupBox = QtGui.QGroupBox()
-		self.loadLessonGroupBox.setLayout(self.loadLessonLayout)
+		self.createLessonGroupBox = ButtonsGroupBox()
+		self.loadLessonGroupBox = ButtonsGroupBox()
 
 		openLayout = QtGui.QVBoxLayout()
 		openLayout.addWidget(self.createLessonGroupBox)
@@ -144,102 +179,15 @@ class StartWidget(QtGui.QSplitter):
 
 	def addButton(self, button):
 		if button.category == "create":
-			qtButton = self._addLessonCreateButton()
+			self.createLessonGroupBox.addButton(button)
 		elif button.category == "load":
-			qtButton = self._addLessonLoadButton()
-		self._buttons[button] = qtButton
-		qtButton.clicked.connect(lambda: button.clicked.send())
-		button.changeText.handle(qtButton.setText)
-		button.changeIcon.handle(lambda i: qtButton.setIcon(QtGui.QIcon(i)))
+			self.loadLessonGroupBox.addButton(button)
 
 	def removeButton(self, button):
 		if button.category == "create":
-			self._removeLessonCreateButton(self._buttons[button])
+			self.createLessonGroupBox.removeButton(button)
 		elif button.category == "load":
-			self._removeLessonLoadButton(self._buttons[button])
-
-	def _addLessonCreateButton(self):
-		button = StartWidgetButton()
-
-		self.createLessonLayout.addWidget(
-			button,
-			self._createLessonCurrentRow,
-			self._createLessonCurrentColumn
-		)
-
-		self._createLessonCurrentColumn += 1
-		if self._createLessonCurrentColumn == 2:
-			self._createLessonCurrentRow += 1
-			self._createLessonCurrentColumn = 0
-
-		return button
-
-	def _addLessonLoadButton(self):
-		button = StartWidgetButton()
-
-		self.loadLessonLayout.addWidget(
-			button,
-			self._loadLessonCurrentRow,
-			self._loadLessonCurrentColumn
-		)
-
-		self._loadLessonCurrentColumn += 1
-		if self._loadLessonCurrentColumn == 2:
-			self._loadLessonCurrentRow += 1
-			self._loadLessonCurrentColumn = 0
-
-		return button
-
-	def _removeLessonCreateButton(self, button):
-		i = self.createLessonLayout.indexOf(button)
-		row, column = self.createLessonLayout.getItemPosition(i)[:2]
-
-		self.createLessonLayout.removeWidget(button)
-		prevColumn = column
-		column += 1
-		if column == 2:
-			column = 0
-			row += 1
-		while row != self.createLessonLayout.rowCount():
-			item = self.createLessonLayout.itemAtPosition(row, column)
-			self.createLessonLayout.addItem(item, row, column)
-			prevColumn = column
-			column += 1
-			if column == 2:
-				column = 0
-				row += 1
-
-		self._createLessonCurrentColumn -= 1
-		if self._createLessonCurrentColumn == 0:
-			self._createLessonCurrentRow -= 1
-			self._createLessonCurrentColumn = 1
-
-	def _removeLessonLoadButton(self, button):
-		i = self.loadLessonLayout.indexOf(button)
-		row, column = self.createLessonLayout.getItemPosition(i)[:2]
-
-		self.loadLessonLayout.removeWidget(button)
-		button.setParent(None)
-		prevColumn = column
-		column += 1
-		if column == 2:
-			column = 0
-			row += 1
-		while True:
-			item = self.loadLessonLayout.itemAtPosition(row, column)
-			if not item:
-				break
-			self.loadLessonLayout.addItem(item, row, column)
-			prevColumn = column
-			column += 1
-			if column == 2:
-				column = 0
-				row += 1
-
-		self._loadLessonCurrentColumn -= 1
-		if self._loadLessonCurrentColumn == 0:
-			self._loadLessonCurrentRow -= 1
-			self._loadLessonCurrentColumn = 1
+			self.loadLessonGroupBox.removeButton(button)
 
 class StartWidgetModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

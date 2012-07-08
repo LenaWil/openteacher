@@ -597,7 +597,7 @@ class TestModeTeacherPanelModule(object):
 		
 		self._testMenu = self._modules.default("active", type="testMenu").menu
 
-		self._action = self._testMenu.addAction()
+		self._action = self._testMenu.addAction(self.priorities["all"])
 		self._action.triggered.handle(self.showPanel)
 		self._action.text = _("Teacher panel") #FIXME: retranslate...
 

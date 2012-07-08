@@ -61,8 +61,11 @@ class WrtsApiModule(object):
 
 		self._button = self._modules.default("active", type="buttonRegister").registerButton("load")
 		self._button.clicked.handle(self.importFromWrts)
+		#FIXME 3.1: get from self.prioritiies when they're set.
+		self._button.changePriority.send(100)
 
-		self._action = self._uiModule.fileMenu.addAction()
+		#FIXME 3.1: get from module priority
+		self._action = self._uiModule.fileMenu.addAction(100)
 		self._action.triggered.handle(self.exportToWrts)
 
 		self._uiModule.tabChanged.handle(self._updateMenuItems)
@@ -153,17 +156,14 @@ class WrtsApiModule(object):
 		self._action.text = _("Export to WRDS")
 
 		#Translate settings
-		self._emailSetting.update({
-			"name": _("Email"),
-			"category": _("WRDS"),
-			"subcategory": _("Login credentials"),
-		})
-
-		self._passwordSetting.update({
-			"name": _("Password"),
-			"category": _("WRDS"),
-			"subcategory": _("Login credentials"),
-		})
+		self._emailSetting["name"] = _("Email")
+		self._passwordSetting["name"] = _("Password")
+		categories = {
+			"category": _("Input and output"),
+			"subcategory": _("WRDS Login credentials"),
+		}
+		self._emailSetting.update(categories)
+		self._passwordSetting.update(categories)
 
 		#Translate all active dialogs
 		for dialog in self._activeDialogs:

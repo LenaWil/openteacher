@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"POT-Creation-Date: 2012-07-08 17:49+0200\n"
 "PO-Revision-Date: 2012-06-25 02:08+0000\n"
 "Last-Translator: gustavoreyes <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -50,3 +50,11 @@ msgstr "Respuesta correcta: <b>{answers}</b>"
 #: inputTyping.py:282
 msgid "Fade duration when wrong (milliseconds)"
 msgstr "Duración del fundido cuando incorrecta (milisegundos)"
+
+#: inputTyping.py:283
+msgid "Lesson"
+msgstr ""
+
+#: inputTyping.py:284
+msgid "Words lesson"
+msgstr ""

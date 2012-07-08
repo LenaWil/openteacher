@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"POT-Creation-Date: 2012-07-08 17:49+0200\n"
 "PO-Revision-Date: 2012-05-23 14:11+0000\n"
 "Last-Translator: Wang Dianjin <Unknown>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
@@ -33,3 +33,11 @@ msgstr "重复答案"
 #: repeatAnswer.py:190
 msgid "Repeat mode fade duration (milliseconds)"
 msgstr "重复模式淡去时长(毫秒)"
+
+#: repeatAnswer.py:191
+msgid "Lesson"
+msgstr ""
+
+#: repeatAnswer.py:192
+msgid "Words lesson"
+msgstr ""

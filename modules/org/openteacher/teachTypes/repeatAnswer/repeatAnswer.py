@@ -140,7 +140,7 @@ class RepeatAnswerTeachTypeModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		
+
 		self._activeWidgets = set()
 
 		#Register fade duration setting
@@ -188,6 +188,8 @@ class RepeatAnswerTeachTypeModule(object):
 		#Translate the setting
 		self._fadeDurationSetting.update({
 			"name": _("Repeat mode fade duration (milliseconds)"),
+			"category": _("Lesson"),
+			"subcategory": _("Words lesson"),
 		})
 
 		#Translate all instances of widgets

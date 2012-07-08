@@ -55,9 +55,9 @@ class TxtSaverModule(object):
 			)
 		self.name = _("Plain text")
 		self._maxLenSetting.update({
-				"name": _("Minimum space between words"),
-				"category": _("Saving"),
-				"subcategory": _("Txt"),
+				"name": _("Minimum amount of spaces between words"),
+				"category": _("Input and output"),
+				"subcategory": _(".txt saving"),
 		})
 
 	def enable(self):

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-06 16:19+0200\n"
+"POT-Creation-Date: 2012-07-08 17:49+0200\n"
 "PO-Revision-Date: 2012-03-25 07:44+0000\n"
 "Last-Translator: Yannis Kaskamanidis <ttnfy17@yahoo.gr>\n"
 "Language-Team: Greek <el@li.org>\n"
@@ -43,14 +43,14 @@ msgid ""
 "questions and answers."
 msgstr ""
 
-#: plainTextWords.py:160
+#: plainTextWords.py:162
 msgid "Create words lesson by entering plain text"
 msgstr "Δημιουργία μαθήματος με εισαγωγή απλού κειμένου"
 
-#: plainTextWords.py:194
+#: plainTextWords.py:196
 msgid "Can't show the result"
 msgstr ""
 
-#: plainTextWords.py:195
+#: plainTextWords.py:197
 msgid "Can't open the resultive word list, because it can't be shown."
 msgstr ""

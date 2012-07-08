@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"POT-Creation-Date: 2012-07-08 17:49+0200\n"
 "PO-Revision-Date: 2012-04-16 00:51+0000\n"
 "Last-Translator: Dennis Baudys <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
@@ -18,29 +18,30 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-07-06 05:12+0000\n"
 "X-Generator: Launchpad (build 15558)\n"
 
-#: wrtsApi.py:152
+#: wrtsApi.py:155
 msgid "Import from WRDS"
 msgstr "Von WRDS importieren"
 
-#: wrtsApi.py:153
+#: wrtsApi.py:156
 msgid "Export to WRDS"
 msgstr "Nach WRDS exportieren"
 
-#: wrtsApi.py:157
+#: wrtsApi.py:159
 msgid "Email"
 msgstr "E-Mail"
 
-#: wrtsApi.py:158 wrtsApi.py:164
-msgid "WRDS"
-msgstr "WRDS"
-
-#: wrtsApi.py:159 wrtsApi.py:165
-msgid "Login credentials"
-msgstr "Anmeldedaten"
-
-#: wrtsApi.py:163
+#: wrtsApi.py:160
 msgid "Password"
 msgstr "Passwort"
+
+#: wrtsApi.py:162
+msgid "Input and output"
+msgstr ""
+
+#: wrtsApi.py:163
+#, fuzzy
+msgid "WRDS Login credentials"
+msgstr "Anmeldedaten"
 
 #: wrtsApi.py:176
 msgid "Invalid login credentials"
@@ -121,3 +122,6 @@ msgstr "E-Mail-Adresse und Passwort speichern"
 #: ui.py:114
 msgid "WRDS - Please choose a list:"
 msgstr "WRDS – Bitte eine Liste auswählen:"
+
+#~ msgid "WRDS"
+#~ msgstr "WRDS"

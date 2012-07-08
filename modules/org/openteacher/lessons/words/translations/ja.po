@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"POT-Creation-Date: 2012-07-08 17:49+0200\n"
 "PO-Revision-Date: 2012-04-26 03:43+0000\n"
 "Last-Translator: LeeAnna Kobayashi <kobayashi.leeanna@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
@@ -27,14 +27,14 @@ msgstr "名称未設定"
 msgid "Word lesson: %s"
 msgstr "単語レッスン:%s"
 
-#: words.py:159
+#: words.py:161
 msgid "Create words lesson"
 msgstr "単語のレッスン作成"
 
-#: words.py:233
+#: words.py:235
 msgid "Empty question or answer"
 msgstr ""
 
-#: words.py:234
+#: words.py:236
 msgid "Please enter at least one question and one answer for every word."
 msgstr ""

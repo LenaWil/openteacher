@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"POT-Creation-Date: 2012-07-08 17:49+0200\n"
 "PO-Revision-Date: 2011-08-01 15:47+0000\n"
 "Last-Translator: Alexander Suchan <supersasho@gmail.com>\n"
 "Language-Team: Slovak <sk@li.org>\n"
@@ -49,4 +49,12 @@ msgstr ""
 
 #: inputTyping.py:282
 msgid "Fade duration when wrong (milliseconds)"
+msgstr ""
+
+#: inputTyping.py:283
+msgid "Lesson"
+msgstr ""
+
+#: inputTyping.py:284
+msgid "Words lesson"
 msgstr ""

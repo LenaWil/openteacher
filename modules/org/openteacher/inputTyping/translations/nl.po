@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"POT-Creation-Date: 2012-07-08 17:49+0200\n"
 "PO-Revision-Date: 2012-04-01 15:52+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,3 +50,11 @@ msgstr "Goed antwoord: <b>{answers}</b>"
 #: inputTyping.py:282
 msgid "Fade duration when wrong (milliseconds)"
 msgstr "Lengte van het vervagen wanner fout geantwoord (milliseconden)"
+
+#: inputTyping.py:283
+msgid "Lesson"
+msgstr ""
+
+#: inputTyping.py:284
+msgid "Words lesson"
+msgstr ""

@@ -48,7 +48,6 @@ class TextToSpeechProviderTopo(object):
 		self._pronounceSetting.update({
 			"name": _("Pronounce places"),
 			"category": _("Pronounciation"),
-			"subcategory": _("Pronounciation"),
 		})
 
 	def enable(self):

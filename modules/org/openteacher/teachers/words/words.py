@@ -390,8 +390,13 @@ class WordsTeacherModule(object):
 		self._settings["listModifiers"]["name"] = _("Word list order and filters")
 		self._settings["itemModifiers"]["name"] = _("Word modifications")
 		self._settings["dontShowAgain"]["name"] = _("Don't show this screen again when I start a lesson.")
+
 		for setting in self._settings.values():
-			setting["category"] = _("Lesson")
+			setting.update({
+				"category": _("Words lesson"),
+				"subcategory": _("Lesson settings")
+			})
+
 		for widget in self._activeWidgets:
 			r = widget()
 			if r is not None:

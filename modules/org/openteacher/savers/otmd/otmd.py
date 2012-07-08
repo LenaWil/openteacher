@@ -64,7 +64,7 @@ class OpenTeachingMediaSaverModule(object):
 		self.name = _("Open Teaching Media")
 		self._compressionSetting.update({
 			"name": "Enable compression",
-			"category": "Media Lesson",
+			"category": "Input and output",
 			"subcategory": ".otmd saving",
 		})
 

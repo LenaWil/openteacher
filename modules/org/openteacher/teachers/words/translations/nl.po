@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-06 22:17+0200\n"
+"POT-Creation-Date: 2012-07-08 17:49+0200\n"
 "PO-Revision-Date: 2011-12-10 14:18+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "I'm ready, start the lesson!"
 msgstr "Ik ben klaar, start de les!"
 
-#: words.py:61
+#: words.py:61 words.py:397
 msgid "Lesson settings"
 msgstr "Lesinstellingen"
 
@@ -50,7 +50,10 @@ msgstr ""
 msgid "Don't show this screen again when I start a lesson."
 msgstr "Laat dit scherm niet zien als ik een les start."
 
-#: words.py:394
+#: words.py:396
+msgid "Words lesson"
+msgstr ""
+
 #, fuzzy
-msgid "Lesson"
-msgstr "Lestype"
+#~ msgid "Lesson"
+#~ msgstr "Lestype"

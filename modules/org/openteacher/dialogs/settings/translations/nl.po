@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-06 22:17+0200\n"
+"POT-Creation-Date: 2012-07-08 17:49+0200\n"
 "PO-Revision-Date: 2011-07-19 02:59+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,15 +18,15 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-07-06 05:12+0000\n"
 "X-Generator: Launchpad (build 15558)\n"
 
-#: settings.py:97
+#: settings.py:98
 msgid "Settings"
 msgstr "Instellingen"
 
-#: settings.py:98
+#: settings.py:99
 msgid "Simple mode"
 msgstr "Simpele modus"
 
-#: settings.py:99
+#: settings.py:100
 msgid "Advanced mode"
 msgstr "Uitgebreide modus"
 

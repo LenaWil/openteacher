@@ -132,6 +132,8 @@ class PlainTextWordsEntererModule(object):
 
 		self._button = self._modules.default("active", type="buttonRegister").registerButton("create")
 		self._button.clicked.handle(self.createLesson)
+		#FIXME 3.1: get from self.priorities when they're defined.
+		self._button.changePriority.send(1000)
 
 		try:
 			translator = self._modules.default("active", type="translator")

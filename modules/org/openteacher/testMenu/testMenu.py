@@ -44,7 +44,8 @@ class TestMenuModule(object):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		ui = self._modules.default("active", type="ui")
-		self.menu = ui.fileMenu.addMenu()
+		#FIXME 3.1: get from module priority
+		self.menu = ui.fileMenu.addMenu(200)
 
 		try:
 			translator = self._modules.default("active", type="translator")

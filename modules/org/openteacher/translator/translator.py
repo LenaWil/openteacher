@@ -74,6 +74,8 @@ class TranslatorModule(object):
 		)
 		self._languageSetting.update({
 			"name": _("Language"),
+			"category": _("General"),
+			"subcategory": _("Locale"),
 		})
 
 	def sendLanguageChanged(self):

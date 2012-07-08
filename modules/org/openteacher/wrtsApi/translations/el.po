@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"POT-Creation-Date: 2012-07-08 17:49+0200\n"
 "PO-Revision-Date: 2012-03-25 06:41+0000\n"
 "Last-Translator: Yannis Kaskamanidis <ttnfy17@yahoo.gr>\n"
 "Language-Team: Greek <el@li.org>\n"
@@ -18,29 +18,30 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-07-06 05:12+0000\n"
 "X-Generator: Launchpad (build 15558)\n"
 
-#: wrtsApi.py:152
+#: wrtsApi.py:155
 msgid "Import from WRDS"
 msgstr ""
 
-#: wrtsApi.py:153
+#: wrtsApi.py:156
 msgid "Export to WRDS"
 msgstr ""
 
-#: wrtsApi.py:157
+#: wrtsApi.py:159
 msgid "Email"
 msgstr "Email"
 
-#: wrtsApi.py:158 wrtsApi.py:164
-msgid "WRDS"
-msgstr ""
-
-#: wrtsApi.py:159 wrtsApi.py:165
-msgid "Login credentials"
-msgstr "Στοιχεία σύνδεσης"
-
-#: wrtsApi.py:163
+#: wrtsApi.py:160
 msgid "Password"
 msgstr "Κωδικός πρόσβασης"
+
+#: wrtsApi.py:162
+msgid "Input and output"
+msgstr ""
+
+#: wrtsApi.py:163
+#, fuzzy
+msgid "WRDS Login credentials"
+msgstr "Στοιχεία σύνδεσης"
 
 #: wrtsApi.py:176
 msgid "Invalid login credentials"

@@ -114,6 +114,7 @@ class RecentlyOpenedModule(object):
 
 		self._sizeSetting.update({
 			"name": _("Amount of recently opened files to remember"),
+			"category": _("General"),
 		})
 
 	def disable(self):

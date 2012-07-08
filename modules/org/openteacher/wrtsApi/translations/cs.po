@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-06 15:28+0200\n"
+"POT-Creation-Date: 2012-07-08 17:49+0200\n"
 "PO-Revision-Date: 2012-05-11 22:38+0000\n"
 "Last-Translator: Jakub Šnapka <snapka@seznam.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -18,29 +18,30 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-07-06 05:12+0000\n"
 "X-Generator: Launchpad (build 15558)\n"
 
-#: wrtsApi.py:152
+#: wrtsApi.py:155
 msgid "Import from WRDS"
 msgstr "Importovat z WRDS"
 
-#: wrtsApi.py:153
+#: wrtsApi.py:156
 msgid "Export to WRDS"
 msgstr "Exportovat do WRDS"
 
-#: wrtsApi.py:157
+#: wrtsApi.py:159
 msgid "Email"
 msgstr "Email"
 
-#: wrtsApi.py:158 wrtsApi.py:164
-msgid "WRDS"
-msgstr "WRDS"
-
-#: wrtsApi.py:159 wrtsApi.py:165
-msgid "Login credentials"
-msgstr "Přihlašovací údaje"
-
-#: wrtsApi.py:163
+#: wrtsApi.py:160
 msgid "Password"
 msgstr "Heslo"
+
+#: wrtsApi.py:162
+msgid "Input and output"
+msgstr ""
+
+#: wrtsApi.py:163
+#, fuzzy
+msgid "WRDS Login credentials"
+msgstr "Přihlašovací údaje"
 
 #: wrtsApi.py:176
 msgid "Invalid login credentials"
@@ -120,3 +121,6 @@ msgstr "Uložit emailovou adresu a heslo"
 #: ui.py:114
 msgid "WRDS - Please choose a list:"
 msgstr "WRDS - vyberte prosím seznam:"
+
+#~ msgid "WRDS"
+#~ msgstr "WRDS"
