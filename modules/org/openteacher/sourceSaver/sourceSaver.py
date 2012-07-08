@@ -49,18 +49,18 @@ class SourceSaverModule(object):
 		moduleBase = os.path.dirname(__file__)
 		while not moduleBase.endswith("modules"):
 			moduleBase = os.path.normpath(os.path.join(moduleBase, ".."))
+		originalBase = os.path.normpath(os.path.join(moduleBase, ".."))
 
 		#make /tmp/uuid-here/modules
 		os.mkdir(os.path.join(copyBase, "modules"))
-		#copy openteacher.py and moduleManager.py to /tmp/uuid-here
-		shutil.copy(
-			os.path.join(moduleBase, "../openteacher.py"),
-			os.path.join(copyBase, "openteacher.py")
-		)
-		shutil.copy(
-			os.path.join(moduleBase, "../moduleManager.py"),
-			os.path.join(copyBase, "moduleManager.py")
-		)
+		#copy python files from the original base dir to /tmp/uuid-here
+		for f in os.listdir(originalBase):
+			if not os.path.isfile(f) or not f.endswith(".py"):
+				continue
+			shutil.copy(
+				os.path.join(originalBase, f),
+				os.path.join(copyBase, f)
+			)
 		#copy all modules available in self._mm.mods
 		for mod in self._mm.mods:
 			dir = os.path.dirname(mod.__class__.__file__)
