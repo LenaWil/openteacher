@@ -62,7 +62,12 @@ class PyDistInterfaceModule(object):
 
 		source = self._modules.default(type="sourceSaver").saveSource()
 		exe = os.path.join(source, os.path.basename(sys.argv[0]))
-		pythonPath = os.path.join(dataPath, "Python{0}{1}").format(*sys.version_info)
+		if target == "windows":
+			pythonPath = os.path.join(dataPath, "Python{0}{1}").format(*sys.version_info)
+		elif target == "macosx":
+			pythonpath = os.path.join(dataPath, "Python")
+		else:
+			raise ValueError("Wrong target: should be 'windows' or 'macosx'.")
 
 		pd = pydist.PyDist(source)
 		lib = pd.createPythonLibrary(**{
@@ -92,8 +97,8 @@ class PyDistInterfaceModule(object):
 				"libLocation": lib,
 				"pythonPath": pythonPath,
 				"iconPath": self._generateIcns(self._metadata["iconPath"]),
-				"qtLibsPath": os.path.join(dataPath, "qtLibs"),
-				"qtMenuPath": os.path.join(dataPath, "qtMenu"),
+				"qtLibsPath": os.path.join(dataPath, "QtLibs"),
+				"qtMenuPath": os.path.join(dataPath, "qt_menu.nib"),
 				"compile": False
 			})
 			return pd.macDistDir

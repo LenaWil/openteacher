@@ -462,7 +462,7 @@ os.execve(pyexecutable, sys.argv, os.environ)
 				importedModules = line.split(" import ")[1]
 				importedModules = importedModules.split(',')
 				for importedModule in importedModules:
-					importedModule = importedModule.strip(' ').strip('\n')
+					importedModule = importedModule.strip(' ').strip('\n\r')
 					if importedModule not in self.qtLibs:
 						self.qtLibs.append(importedModule)
 			else:
