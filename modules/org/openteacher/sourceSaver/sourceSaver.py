@@ -70,7 +70,7 @@ class SourceSaverModule(object):
 				"modules",
 				dir[commonLen:].strip(os.sep)
 			)
-			shutil.copytree(dir, dest)
+			shutil.copytree(dir, dest, ignore=shutil.ignore_patterns("*.pyc"))
 		return copyBase
 
 	def disable(self):
