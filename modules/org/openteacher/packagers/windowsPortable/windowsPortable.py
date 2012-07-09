@@ -20,6 +20,7 @@
 
 import zipfile
 import sys
+import os
 
 class WindowsPortablePackagerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -38,18 +39,21 @@ class WindowsPortablePackagerModule(object):
 
 	def _run(self):
 		try:
-			zipLoc = sys.argv[1]
+			dataZipLoc = sys.argv[1]
+			zipLoc = sys.argv[2]
 		except IndexError:
-			sys.stderr.write("Please specify a filename to write to as the last command line argument.\n")
+			sys.stderr.write("Please specify the data tar file and the resultive portable app zip file name as last command line parameters. (e.g. windowsdata.tar openteacher-portable.zip)\n")
 			return
 		#build to exe, dll etc.
-		resultDir = self._pydist.build("windows")
+		resultDir = self._pydist.build(dataZipLoc, "windows")
 
 		#create zip file
 		with zipfile.ZipFile(zipLoc, "w", zipfile.ZIP_DEFLATED) as f:
-			for root, dirs, files in os.listdir(resultDir):
+			for root, dirs, files in os.walk(resultDir):
+				commonLength = len(os.path.commonprefix([root, resultDir]))
 				for file in files:
-					f.write(os.path.join(root, f))
+					zipPath = os.path.join(root[commonLength:], file)
+					f.write(os.path.join(root, file), zipPath)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

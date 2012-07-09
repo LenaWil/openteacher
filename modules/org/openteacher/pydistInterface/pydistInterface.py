@@ -24,6 +24,7 @@ import atexit
 import shutil
 import tempfile
 import subprocess
+import tarfile
 
 #pydist is imported in enable()
 
@@ -47,55 +48,52 @@ class PyDistInterfaceModule(object):
 			else:
 				os.unlink(thing)
 
-	def build(self, target):
-		#FIXME: put all files into one tar file where you link to.
+	def build(self, dataZip, target):
+		dataPath = tempfile.mkdtemp()
+		self._temp.add(dataPath)
+		with tarfile.open(dataZip) as f:
+			members = []
+			#filter members trying to get out of the temp dir. (Just to
+			#be sure.)
+			for m in f.getmembers():
+				if not os.path.normpath(m.name).startswith(os.pardir):
+					members.append(m)
+			f.extractall(dataPath, members)
+
 		source = self._modules.default(type="sourceSaver").saveSource()
 		exe = os.path.join(source, os.path.basename(sys.argv[0]))
-		if target == "windows":
-			pythonPath = "C:\Python{0}{1}".format(*sys.version_info)
-		elif target == "macosx":
-			pythonPath = "/opt/local/Library/Frameworks/Python.framework/Versions/{0}.{1}".format(*sys.version_info)
-		else:
-			raise ValueError("target should be 'windows' or 'macosx'!")
+		pythonPath = os.path.join(dataPath, "Python{0}{1}").format(*sys.version_info)
 
 		pd = pydist.PyDist(source)
 		lib = pd.createPythonLibrary(**{
 			"exe": exe,
-			"pythonLib": pythonPath,
+			"pythonLib": os.path.join(pythonPath, "Lib"),
 			"includes": [],
 			"compile": False,
 		})
 		#mark for removal atexit
 		self._temp.add(lib)
+		self._temp.add(os.path.join(os.path.dirname(source), "dist"))
 
 		if target == "windows":
-			if os.path.isfile(os.path.join(os.environ["SYSTEMROOT"], "SysWOW64\python27.dll")):
-				winDllPath = os.path.join(os.environ["SYSTEMROOT"], "SysWOW64\python27.dll")
-			elif os.path.join(os.environ["SYSTEMROOT"], "System32\python27.dll"):
-				winDllPath = os.path.join(os.environ["SYSTEMROOT"], "System32\python27.dll")
-			else:
-				raise Exception("No python DLL found.")
 			pd.createWindowsPackage(**{
 				"exe": exe,
 				"libLocation": lib,
 				"pythonPath": pythonPath,
-				"winDllPath": winDllPath,
+				"dllPath": os.path.join(dataPath, "python{0}{1}.dll").format(*sys.version_info),
 				"console": False,
 				"compile": False,
 			})
 			return pd.winDistDir
 		elif target == "macosx":
-			qtLibsPath = "/opt/local/lib"
-			if not os.path.isfile(qtLibsPath):
-				raise ValueError("Dir doesn't exist...")
-			pdf.createOSXPackage(**{
+			pd.createOSXPackage(**{
 				"exe": exe,
 				"name": self._metadata["name"],
 				"libLocation": lib,
 				"pythonPath": pythonPath,
 				"iconPath": self._generateIcns(self._metadata["iconPath"]),
-				"qtLibsPath": qtLibsPathh,
-				"qtMenuPath": "qtmenu.nib", #orsomethinglikethat.
+				"qtLibsPath": os.path.join(dataPath, "qtLibs"),
+				"qtMenuPath": os.path.join(dataPath, "qtMenu"),
 				"compile": False
 			})
 			return pd.macDistDir

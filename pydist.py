@@ -32,7 +32,7 @@ class PyDist():
 		self.src = src
 		self.verbose = verbose
 		
-		self.distdir = os.path.join(os.path.dirname(self.src), "dist\\" + str(time.strftime("%Y%m%d%H%M%S", time.gmtime())))
+		self.distdir = os.path.join(os.path.dirname(self.src), "dist/" + str(time.strftime("%Y%m%d%H%M%S", time.gmtime())))
 		self.winDistDir = os.path.join(self.distdir, "win32")
 		self.macDistDir = os.path.join(self.distdir, "macos")
 		
@@ -75,37 +75,37 @@ class PyDist():
 		
 		print "Copying library..."
 		# Copy library
-		shutil.copytree(libLocation, os.path.join(self.winDistDir, "python\Lib"))
+		shutil.copytree(libLocation, os.path.join(self.winDistDir, "python/Lib"))
 		
 		if len(self.dlls) > 0:
 			print "Copying DLLs..."
 			# Create directory
-			os.mkdir(os.path.join(self.winDistDir, "python\DLLs"))
+			os.mkdir(os.path.join(self.winDistDir, "python/DLLs"))
 			# Copy DLLs
 			for dll in self.dlls:
-				shutil.copyfile(dll, os.path.join(self.winDistDir, "python\DLLs\\" + os.path.basename(dll)))
+				shutil.copyfile(dll, os.path.join(self.winDistDir, "python/DLLs/" + os.path.basename(dll)))
 		
 		if len(self.qtLibs) > 0:
 			print "Copying Qt files..."
 			# Create directory
-			os.makedirs(os.path.join(self.winDistDir, "python\Lib\site-packages\PyQt4"))
+			os.makedirs(os.path.join(self.winDistDir, "python/Lib/site-packages/PyQt4"))
 			
 			# Copy Qt files
 			if "all" in self.qtLibs:
-				shutil.copytree(os.path.join(pythonPath, "lib\site-packages\PyQt4"), os.path.join(self.winDistDir, "python\Lib\site-packages\PyQt4"))
+				shutil.copytree(os.path.join(pythonPath, "Lib/site-packages/PyQt4"), os.path.join(self.winDistDir, "python/Lib/site-packages/PyQt4"))
 			else:
 				for qtLib in self.qtLibs:
-					shutil.copyfile(os.path.join(pythonPath, "lib\site-packages\PyQt4\\" + qtLib + ".pyd"), os.path.join(self.winDistDir, "python\Lib\site-packages\PyQt4\\" + qtLib + ".pyd"))
-					shutil.copyfile(os.path.join(pythonPath, "lib\site-packages\PyQt4\\" + qtLib + "4.dll"), os.path.join(self.winDistDir, "python\Lib\site-packages\PyQt4\\" + qtLib + "4.dll"))
+					shutil.copyfile(os.path.join(pythonPath, "Lib/site-packages/PyQt4/" + qtLib + ".pyd"), os.path.join(self.winDistDir, "python/Lib/site-packages/PyQt4/" + qtLib + ".pyd"))
+					shutil.copyfile(os.path.join(pythonPath, "Lib/site-packages/PyQt4/" + qtLib + "4.dll"), os.path.join(self.winDistDir, "python/Lib/site-packages/PyQt4/" + qtLib + "4.dll"))
 			
-			#shutil.copyfile(os.path.join(pythonPath, "lib\site-packages\PyQt4\qt.conf"), os.path.join(self.winDistDir, "python\qt.conf"))
-			shutil.copyfile(os.path.join(pythonPath, "lib\site-packages\sip.pyd"), os.path.join(self.winDistDir, "python\Lib\site-packages\sip.pyd"))
-			shutil.copyfile(os.path.join(pythonPath, "lib\site-packages\PyQt4\__init__.py"), os.path.join(self.winDistDir, "python\Lib\site-packages\PyQt4\__init__.py"))
-			shutil.copyfile(os.path.join(pythonPath, "lib\site-packages\PyQt4\libeay32.dll"), os.path.join(self.winDistDir, "python\Lib\site-packages\PyQt4\libeay32.dll"))
-			shutil.copyfile(os.path.join(pythonPath, "lib\site-packages\PyQt4\phonon4.dll"), os.path.join(self.winDistDir, "python\Lib\site-packages\PyQt4\phonon4.dll"))
-			shutil.copyfile(os.path.join(pythonPath, "lib\site-packages\PyQt4\QtOpenGL.pyd"), os.path.join(self.winDistDir, "python\Lib\site-packages\PyQt4\QtOpenGL.pyd"))
-			shutil.copyfile(os.path.join(pythonPath, "lib\site-packages\PyQt4\QtOpenGL4.dll"), os.path.join(self.winDistDir, "python\Lib\site-packages\PyQt4\QtOpenGL4.dll"))
-			shutil.copyfile(os.path.join(pythonPath, "lib\site-packages\PyQt4\ssleay32.dll"), os.path.join(self.winDistDir, "python\Lib\site-packages\PyQt4\ssleay32.dll"))
+			#shutil.copyfile(os.path.join(pythonPath, "Lib/site-packages/PyQt4/qt.conf"), os.path.join(self.winDistDir, "python/qt.conf"))
+			shutil.copyfile(os.path.join(pythonPath, "Lib/site-packages/sip.pyd"), os.path.join(self.winDistDir, "python/Lib/site-packages/sip.pyd"))
+			shutil.copyfile(os.path.join(pythonPath, "Lib/site-packages/PyQt4/__init__.py"), os.path.join(self.winDistDir, "python/Lib/site-packages/PyQt4/__init__.py"))
+			shutil.copyfile(os.path.join(pythonPath, "Lib/site-packages/PyQt4/libeay32.dll"), os.path.join(self.winDistDir, "python/Lib/site-packages/PyQt4/libeay32.dll"))
+			shutil.copyfile(os.path.join(pythonPath, "Lib/site-packages/PyQt4/phonon4.dll"), os.path.join(self.winDistDir, "python/Lib/site-packages/PyQt4/phonon4.dll"))
+			shutil.copyfile(os.path.join(pythonPath, "Lib/site-packages/PyQt4/QtOpenGL.pyd"), os.path.join(self.winDistDir, "python/Lib/site-packages/PyQt4/QtOpenGL.pyd"))
+			shutil.copyfile(os.path.join(pythonPath, "Lib/site-packages/PyQt4/QtOpenGL4.dll"), os.path.join(self.winDistDir, "python/Lib/site-packages/PyQt4/QtOpenGL4.dll"))
+			shutil.copyfile(os.path.join(pythonPath, "Lib/site-packages/PyQt4/ssleay32.dll"), os.path.join(self.winDistDir, "python/Lib/site-packages/PyQt4/ssleay32.dll"))
 			
 		print "Copying source..."
 		# Copy source
@@ -123,7 +123,7 @@ class PyDist():
 		
 		# Startup script
 		print "Writing startup script..."
-		startupScript = open(self.winDistDir + "\start.py", "w")
+		startupScript = open(self.winDistDir + "/start.py", "w")
 		exeName = os.path.splitext(os.path.basename(exe))[0]
 		if compile:
 			if console:
@@ -134,9 +134,9 @@ import os
 path = os.path.dirname(__file__)
 
 try:
-	subprocess.Popen('"' + os.path.join(path, 'python\python.exe') + '" "' + os.path.join(path, 'src\\""" + exeName + """.pyc') + '" ' + sys.argv[1])
+	subprocess.Popen('"' + os.path.join(path, 'python/python.exe') + '" "' + os.path.join(path, 'src/""" + exeName + """.pyc') + '" ' + sys.argv[1])
 except IndexError:
-	subprocess.Popen('"' + os.path.join(path, 'python\python.exe') + '" "' + os.path.join(path, 'src\\""" + exeName + """.pyc') + '"')""")
+	subprocess.Popen('"' + os.path.join(path, 'python/python.exe') + '" "' + os.path.join(path, 'src/""" + exeName + """.pyc') + '"')""")
 			else:
 				startupScript.write("""import subprocess
 import sys
@@ -145,9 +145,9 @@ import os
 path = os.path.dirname(__file__)
 
 try:
-	subprocess.Popen('"' + os.path.join(path, 'python\pythonw.exe') + '" "' + os.path.join(path, 'src\\""" + exeName + """.pyc') + '" ' + sys.argv[1])
+	subprocess.Popen('"' + os.path.join(path, 'python/pythonw.exe') + '" "' + os.path.join(path, 'src/""" + exeName + """.pyc') + '" ' + sys.argv[1])
 except IndexError:
-	subprocess.Popen('"' + os.path.join(path, 'python\pythonw.exe') + '" "' + os.path.join(path, 'src\\""" + exeName + """.pyc') + '"')""")
+	subprocess.Popen('"' + os.path.join(path, 'python/pythonw.exe') + '" "' + os.path.join(path, 'src/""" + exeName + """.pyc') + '"')""")
 		else:
 			if console:
 				startupScript.write("""import subprocess
@@ -157,9 +157,9 @@ import os
 path = os.path.dirname(__file__)
 
 try:
-	subprocess.Popen('"' + os.path.join(path, 'python\python.exe') + '" "' + os.path.join(path, 'src\\""" + exeName + """.py') + '" ' + sys.argv[1])
+	subprocess.Popen('"' + os.path.join(path, 'python/python.exe') + '" "' + os.path.join(path, 'src/""" + exeName + """.py') + '" ' + sys.argv[1])
 except IndexError:
-	subprocess.Popen('"' + os.path.join(path, 'python\python.exe') + '" "' + os.path.join(path, 'src\\""" + exeName + """.py') + '"')""")
+	subprocess.Popen('"' + os.path.join(path, 'python/python.exe') + '" "' + os.path.join(path, 'src/""" + exeName + """.py') + '"')""")
 			else:
 				startupScript.write("""import subprocess
 import sys
@@ -168,9 +168,9 @@ import os
 path = os.path.dirname(__file__)
 
 try:
-	subprocess.Popen('"' + os.path.join(path, 'python\pythonw.exe') + '" "' + os.path.join(path, 'src\\""" + exeName + """.py') + '" ' + sys.argv[1])
+	subprocess.Popen('"' + os.path.join(path, 'python/pythonw.exe') + '" "' + os.path.join(path, 'src/""" + exeName + """.py') + '" ' + sys.argv[1])
 except IndexError:
-	subprocess.Popen('"' + os.path.join(path, 'python\pythonw.exe') + '" "' + os.path.join(path, 'src\\""" + exeName + """.py') + '"')""")
+	subprocess.Popen('"' + os.path.join(path, 'python/pythonw.exe') + '" "' + os.path.join(path, 'src/""" + exeName + """.py') + '"')""")
 		startupScript.close()
 		
 		print "Writing startup executable..."
@@ -235,23 +235,23 @@ except IndexError:
 			os.makedirs(os.path.join(frameworksDir, "python/lib/python2.7/site-packages/PyQt4"))
 			for qtLib in self.qtLibs:
 				shutil.copyfile(self._followMacSymLink(os.path.join(qtLibsPath, "lib" + qtLib + ".4.dylib")), os.path.join(frameworksDir, "lib/lib" + qtLib + ".4.dylib"))
-				shutil.copyfile(os.path.join(pythonPath, "lib/python2.7/site-packages/PyQt4/" + qtLib + ".so"), os.path.join(frameworksDir, "python/lib/python2.7/site-packages/PyQt4/" + qtLib + ".so"))
+				shutil.copyfile(os.path.join(pythonPath, "Lib/python2.7/site-packages/PyQt4/" + qtLib + ".so"), os.path.join(frameworksDir, "python/lib/python2.7/site-packages/PyQt4/" + qtLib + ".so"))
 			# __init__.py
-			shutil.copyfile(os.path.join(pythonPath, "lib/python2.7/site-packages/PyQt4/__init__.py"), os.path.join(frameworksDir, "python/lib/python2.7/site-packages/PyQt4/__init__.py"))
+			shutil.copyfile(os.path.join(pythonPath, "Lib/python2.7/site-packages/PyQt4/__init__.py"), os.path.join(frameworksDir, "python/lib/python2.7/site-packages/PyQt4/__init__.py"))
 			# Menu "file"
 			shutil.copytree(qtMenuPath, os.path.join(frameworksDir, "lib/qt_menu.nib"))
 			# Other files
-			shutil.copyfile(os.path.join(pythonPath, "lib/python2.7/site-packages/sip.so"), os.path.join(frameworksDir, "python/lib/python2.7/site-packages/sip.so"))
+			shutil.copyfile(os.path.join(pythonPath, "Lib/python2.7/site-packages/sip.so"), os.path.join(frameworksDir, "python/lib/python2.7/site-packages/sip.so"))
 			shutil.copyfile(self._followMacSymLink(os.path.join(qtLibsPath, "libQtDBus.4.dylib")), os.path.join(frameworksDir, "lib/libQtDBus.4.dylib"))
 			shutil.copyfile(self._followMacSymLink(os.path.join(qtLibsPath, "libdbus-1.3.dylib")), os.path.join(frameworksDir, "lib/libdbus-1.3.dylib"))
 			shutil.copyfile(self._followMacSymLink(os.path.join(qtLibsPath, "libQtXml.4.dylib")), os.path.join(frameworksDir, "lib/libQtXml.4.dylib"))
-			shutil.copyfile(os.path.join(pythonPath, "lib/python2.7/site-packages/PyQt4/QtXml.so"), os.path.join(frameworksDir, "python/lib/python2.7/site-packages/PyQt4/QtXml.so"))
+			shutil.copyfile(os.path.join(pythonPath, "Lib/python2.7/site-packages/PyQt4/QtXml.so"), os.path.join(frameworksDir, "python/lib/python2.7/site-packages/PyQt4/QtXml.so"))
 			shutil.copyfile(self._followMacSymLink(os.path.join(qtLibsPath, "db46/libdb-4.6.dylib")), os.path.join(frameworksDir, "lib/libdb-4.6.dylib"))
 			shutil.copyfile(self._followMacSymLink(os.path.join(qtLibsPath, "libcrypto.1.0.0.dylib")), os.path.join(frameworksDir, "lib/libcrypto.1.0.0.dylib"))
 			shutil.copyfile(self._followMacSymLink(os.path.join(qtLibsPath, "libssl.1.0.0.dylib")), os.path.join(frameworksDir, "lib/libssl.1.0.0.dylib"))
 			shutil.copyfile(self._followMacSymLink(os.path.join(qtLibsPath, "libpng14.14.dylib")), os.path.join(frameworksDir, "lib/libpng14.14.dylib"))
 			shutil.copyfile(self._followMacSymLink(os.path.join(qtLibsPath, "libphonon.4.dylib")), os.path.join(frameworksDir, "lib/libphonon.4.dylib"))
-			shutil.copyfile(os.path.join(pythonPath, "lib/python2.7/site-packages/PyQt4/phonon.so"), os.path.join(frameworksDir, "python/lib/python2.7/site-packages/PyQt4/phonon.so"))
+			shutil.copyfile(os.path.join(pythonPath, "Lib/python2.7/site-packages/PyQt4/phonon.so"), os.path.join(frameworksDir, "python/lib/python2.7/site-packages/PyQt4/phonon.so"))
 		
 		print "Writing startup script..."
 		# Startup script
@@ -343,7 +343,7 @@ os.execve(pyexecutable, sys.argv, os.environ)
 			excludedExtensions = self.excludedExtensions
 		# If this folder not already exists
 		for dir in os.walk(fromDir):
-			dirName = dir[0].split(fromDir)[1].strip('\\')
+			dirName = dir[0].split(fromDir)[1].strip(os.sep)
 			
 			if not os.path.exists(os.path.dirname(os.path.join(toDir, dirName))):
 				# Create this directory
@@ -543,17 +543,17 @@ if __name__ == "__main__":
 	if configFile.find("windows") != None:
 		if configFile.find("windows/pythonpath") != None:
 			winPythonPath = configFile.find("windows/pythonpath").text
-		elif os.path.exists("C:\Python27"):
-			winPythonPath = "C:\Python27"
+		elif os.path.exists("C:/Python27"):
+			winPythonPath = "C:/Python27"
 		else:
 			raise Exception("No python path for Windows found. Please specify the pythonpath in the config file.")
 		
 		if configFile.find("windows/dllpath") != None:
 			winDllPath = configFile.find("windows/dllpath").text
-		elif os.path.isfile(os.path.join(os.environ["SYSTEMROOT"], "SysWOW64\python27.dll")):
-			winDllPath = os.path.join(os.environ["SYSTEMROOT"], "SysWOW64\python27.dll")
-		elif os.path.join(os.environ["SYSTEMROOT"], "System32\python27.dll"):
-			winDllPath = os.path.join(os.environ["SYSTEMROOT"], "System32\python27.dll")
+		elif os.path.isfile(os.path.join(os.environ["SYSTEMROOT"], "SysWOW64/python27.dll")):
+			winDllPath = os.path.join(os.environ["SYSTEMROOT"], "SysWOW64/python27.dll")
+		elif os.path.join(os.environ["SYSTEMROOT"], "System32/python27.dll"):
+			winDllPath = os.path.join(os.environ["SYSTEMROOT"], "System32/python27.dll")
 		else:
 			raise Exception("No python dll found. Please specify the dllpath in the config file.")
 		
@@ -579,9 +579,9 @@ if __name__ == "__main__":
 	if configFile.find("pythonlib") != None:
 		pythonLib = configFile.find("pythonlib").text
 	elif configFile.find("windows") != None:
-		pythonLib = os.path.join(winPythonPath, "lib")
+		pythonLib = os.path.join(winPythonPath, "Lib")
 	elif configFile.find("macosx") != None:
-		pythonLib = os.path.join(winPythonPath, "lib")
+		pythonLib = os.path.join(winPythonPath, "Lib")
 	
 	console = configFile.find("console") != None and configFile.find("console").text == "true"
 	compile = configFile.find("compile") != None and configFile.find("compile").text == "true"
