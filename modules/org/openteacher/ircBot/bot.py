@@ -153,6 +153,16 @@ class OpenTeacherBot(irc.IRCClient):
 			q = urllib.quote_plus(q)
 			self.msg(target, "http://google.com/search?q=%s" % q)
 
+		if msg.startswith(".qt "):
+			cls = msg.split(" ")[1]
+			url = "http://qt-project.org/doc/%s.html" % cls
+			try:
+				urllib2.urlopen(url)
+			except urllib2.HTTPError:
+				self.msg(target, "Can't find documentation for that class.")
+			else:
+				self.msg(target, url)
+
 		if msg.startswith(".answer "):
 			q = msg.split(" ", 1)[1]
 			q = urllib.quote_plus(q)
