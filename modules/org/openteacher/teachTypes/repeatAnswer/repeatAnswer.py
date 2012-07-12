@@ -206,7 +206,7 @@ class RepeatAnswerTeachTypeModule(object):
 		del self.dataType
 		del self.name
 
-	def createWidget(self, tabChanged, letterChosen):
+	def createWidget(self, tabChanged, letterChosen, addSideWidget, removeSideWidget):
 		ratw = RepeatAnswerTeachWidget(
 			self._modules,
 			self._modules.default("active", type="wordsStringComposer").compose,

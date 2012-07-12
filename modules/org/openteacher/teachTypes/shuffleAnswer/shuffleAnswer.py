@@ -162,7 +162,7 @@ class ShuffleAnswerTeachTypeModule(object):
 			if r is not None:
 				r.retranslate()
 
-	def createWidget(self, tabChanged, letterChosen):
+	def createWidget(self, tabChanged, letterChosen, addSideWidget, removeSideWidget):
 		typingInput = self._modules.default("active", type="typingInput")
 
 		inputWidget = typingInput.createWidget(letterChosen)

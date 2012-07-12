@@ -84,6 +84,10 @@ class TeachLessonWidget(QtGui.QSplitter):
 			self.keyboardWidget = keyboardWidget
 		self.teachTabWidget = QtGui.QTabWidget()
 		self.progressBar = QtGui.QProgressBar()
+		
+		self.sideWidget = QtGui.QWidget()
+		self.sideLayout = QtGui.QStackedLayout()
+		self.sideWidget.setLayout(self.sideLayout)
 
 		leftLayout = QtGui.QVBoxLayout()
 		leftLayout.addWidget(self.wordLabel)
@@ -106,18 +110,27 @@ class TeachLessonWidget(QtGui.QSplitter):
 		rightWidget = QtGui.QWidget()
 		rightWidget.setLayout(rightLayout)
 
+		self.addWidget(self.sideWidget)
 		self.addWidget(leftWidget)
 		self.addWidget(rightWidget)
 
-		self.setStretchFactor(0, 255)
-		self.setStretchFactor(1, 1)
+		self.setStretchFactor(1, 255)
+		self.setStretchFactor(2, 1)
 
 	def retranslate(self):
 		self.changeSettingsButton.setText(_("Change lesson settings"))
 		self.wordLabel.setText(_("Word:"))
+		
+	def addSideWidget(self, widget):
+		self.sideLayout.addWidget(widget)
+		self.setStretchFactor(0, 1)
+		
+	def removeSideWidget(self):
+		self.sideLayout.removeWidget(self.sideLayout.currentWidget())
+		self.setStretchFactor(0, 0)
 
 class TeachWidget(QtGui.QStackedWidget):
-	tabChanged = QtCore.pyqtSignal()
+	tabChanged = QtCore.pyqtSignal([object])
 	lessonDone = QtCore.pyqtSignal()
 	listChanged = QtCore.pyqtSignal([object])
 
@@ -137,7 +150,7 @@ class TeachWidget(QtGui.QStackedWidget):
 		self._teachTypeWidgets = []
 		for module in self._modules.sort("active", type="teachType"): 
 			if module.dataType in ("all", "words"):
-				widget = module.createWidget(self.tabChanged, self._keyboardWidget.letterChosen)
+				widget = module.createWidget(self.tabChanged, self._keyboardWidget.letterChosen, self._lessonWidget.addSideWidget, self._lessonWidget.removeSideWidget)
 				self._teachTypeWidgets.append(widget)
 				self._lessonWidget.teachTabWidget.addTab(widget, module.name)
 		
@@ -254,7 +267,7 @@ class TeachWidget(QtGui.QStackedWidget):
 
 	def _connectSignals(self):
 		#tab changed
-		self._lessonWidget.teachTabWidget.currentChanged.connect(self.tabChanged.emit)
+		self._lessonWidget.teachTabWidget.currentChanged.connect(lambda i: self.tabChanged.emit(self._lessonWidget.teachTabWidget.currentWidget()))
 
 		#start lesson button
 		self._settingsWidget.startLessonButton.clicked.connect(self._startLesson)
