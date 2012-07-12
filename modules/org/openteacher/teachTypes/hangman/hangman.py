@@ -115,6 +115,7 @@ class HangmanTeachWidget(QtGui.QWidget):
 		guess = self.inputLineEdit.text()
 		if guess in self.guesses:
 			self.inputLineEdit.setText(_('You have already tried this character / word'))
+			return
 		wordLabelList = list(self.wordLabel.text())
 		if len(guess) == 1:
 			results = self.word.guessCharacter(guess)
@@ -169,6 +170,28 @@ class HangmanTeachWidget(QtGui.QWidget):
 			},
 		})
 		
+		
+		if win:
+			self.timerFinished()
+		else:
+			self.triedLabel.setText(_("You lose, the answer was: " + self.word._word))
+			timeLine = QtCore.QTimeLine(2000, self)
+			timeLine.setFrameRange(0, 255) #256 color steps
+			timeLine.frameChanged.connect(self.fade)
+			timeLine.finished.connect(self.timerFinished)
+			timeLine.start()
+			self.inputLineEdit.setEnabled(False)
+			
+		
+	def fade(self, step):
+		stylesheet = "QLabel {color: rgb(%s, %s, %s, %s)}" % (255, 00, 00, 255-step)
+		self.triedLabel.setStyleSheet(stylesheet)
+
+	def timerFinished(self):
+		self.inputLineEdit.setEnabled(True)
+		del self._end
+		self.triedLabel.setStyleSheet("")
+		
 		self.guesses = []
 		self.wrongCharacters = []
 		
@@ -178,8 +201,6 @@ class HangmanTeachWidget(QtGui.QWidget):
 		self.hgraph.mistakes = 0
 		self.hgraph.update()
 		
-		del self._end
-		self.inputLineEdit.setStyleSheet("")
 		self.lessonType.setResult(self._previousResult)
 		
 
