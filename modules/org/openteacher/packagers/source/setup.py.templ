@@ -1,0 +1,53 @@
+#<!--(raw)-->!<!--(end)--> /usr/bin/env python
+# -*- coding: utf-8 -*-
+
+#	Copyright 2010, David D Lowe
+#	Copyright 2010-2012, Marten de Vries
+#
+#	This file is part of OpenTeacher.
+#
+#	OpenTeacher is free software: you can redistribute it and/or modify
+#	it under the terms of the GNU General Public License as published by
+#	the Free Software Foundation, either version 3 of the License, or
+#	(at your option) any later version.
+#
+#	OpenTeacher is distributed in the hope that it will be useful,
+#	but WITHOUT ANY WARRANTY; without even the implied warranty of
+#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#	GNU General Public License for more details.
+#
+#	You should have received a copy of the GNU General Public License
+#	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
+
+from distutils.core import setup
+
+setup(
+	name = "@!name!@",
+	version = "@!version!@",
+	description = "@!short_description!@",
+	author = "@!authors!@",
+	author_email = "@!email!@",
+	url = "@!website!@",
+	license = 'GNU GPL',
+	packages = ["@!package!@"],
+	package_data = {"@!package!@": [
+		<!--(for path in package_data)-->
+		"@!path!@",
+		<!--(end)-->
+	]},
+	scripts = ["bin/@!package!@"],
+	#a list of classifiers can be found at http://pypi.python.org/pypi?:action=list_classifiers
+	classifiers = [
+		"Development Status :: 5 - Production/Stable", 
+		"Intended Audience :: End Users/Desktop",
+		"Intended Audience :: Education",
+		"License :: OSI Approved :: GNU General Public License (GPL)",
+		"Operating System :: POSIX :: Linux",
+		"Operating System :: Microsoft :: Windows",
+		"Operating System :: MacOS :: MacOS X",
+		"Environment :: X11 Applications :: Qt",
+		"Programming Language :: Python",
+		"Topic :: Education :: Testing",
+	],
+	long_description = """@!description!@"""
+)

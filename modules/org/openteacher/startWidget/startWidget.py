@@ -99,7 +99,11 @@ class ButtonsGroupBox(QtGui.QGroupBox):
 		for button, desc in sorted(self._buttons.iteritems(), key=lambda data: data[1]["priority"]):
 			qtButton = StartWidgetButton(desc["text"])
 			qtButton.setIcon(QtGui.QIcon(desc["icon"]))
-			qtButton.clicked.connect(button.clicked.send)
+			#lambda to remove some qt argument. The second lambda so it
+			#works as expected in a for-loop.
+			qtButton.clicked.connect(
+				(lambda button: lambda: button.clicked.send())(button)
+			)
 			self._layout.addWidget(qtButton, i, j)
 			j += 1
 			if j > 1:

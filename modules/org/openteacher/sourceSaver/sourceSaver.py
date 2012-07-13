@@ -55,7 +55,7 @@ class SourceSaverModule(object):
 		os.mkdir(os.path.join(copyBase, "modules"))
 		#copy python files from the original base dir to /tmp/uuid-here
 		for f in os.listdir(originalBase):
-			if not os.path.isfile(f) or not f.endswith(".py"):
+			if not os.path.isfile(os.path.join(originalBase, f)) or not f.endswith(".py"):
 				continue
 			shutil.copy(
 				os.path.join(originalBase, f),
@@ -70,7 +70,7 @@ class SourceSaverModule(object):
 				"modules",
 				dir[commonLen:].strip(os.sep)
 			)
-			shutil.copytree(dir, dest, ignore=shutil.ignore_patterns("*.pyc"))
+			shutil.copytree(dir, dest, ignore=shutil.ignore_patterns("*.pyc", "*~"))
 		return copyBase
 
 	def disable(self):

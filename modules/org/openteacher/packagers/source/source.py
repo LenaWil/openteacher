@@ -21,6 +21,7 @@
 import tarfile
 import sys
 import os
+import shutil
 
 class SourcePackagerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -31,6 +32,7 @@ class SourcePackagerModule(object):
 
 		self.requires = (
 			self._mm.mods(type="execute"),
+			self._mm.mods(type="metadata"),
 			self._mm.mods(type="sourceSaver"),
 		)
 		self.priorities = {
@@ -39,8 +41,14 @@ class SourcePackagerModule(object):
 		}
 
 	def enable(self):
+		global pyratemp
+		try:
+			import pyratemp
+		except ImportError:
+			return #fail silently: stay inactive
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._modules.default(type="execute").startRunning.handle(self._run)
+		self._metadata = self._modules.default("active", type="metadata").metadata
 
 		self.active = True
 
@@ -52,14 +60,61 @@ class SourcePackagerModule(object):
 			return
 
 		sourcePath = self._modules.default("active", type="sourceSaver").saveSource()
+
+		#move into python package
+		packageName = os.path.basename(sys.argv[0])
+		if packageName.endswith(".py"):
+			packageName = packageName[:-3]
+		packagePath = os.path.join(sourcePath, packageName)
+		os.mkdir(packagePath)
+		for item in os.listdir(sourcePath):
+			if item != packageName:
+				os.rename(
+					os.path.join(sourcePath, item),
+					os.path.join(packagePath, item)
+				)
+
+		#write __init__.py
+		open(os.path.join(packagePath, "__init__.py"), "a").close()
+
+		#find all files for package_data
+		modulePath = os.path.join(packagePath, "modules")
+		def getDifference(root):
+			return root[len(os.path.commonprefix([packagePath, root])) +1:]
+
+		packageData = []
+		for root, dirs, files in os.walk(modulePath):
+			if len(files) == 0:
+				continue
+			root = getDifference(root)
+			for file in files:
+				packageData.append(os.path.join(root, file))
+
+		data = self._metadata.copy()
+		data.update({
+			"package": packageName,
+			"package_data": packageData,
+		})
+
+		os.mkdir(os.path.join(sourcePath, "bin"))
+		with open(os.path.join(sourcePath, "bin", packageName), "w") as f:
+			templ = pyratemp.Template(filename=self._mm.resourcePath("runner.templ"))
+			#ascii since the file doesn't have a encoding directive
+			f.write(templ(name=packageName).encode("ascii"))
+
+		with open(os.path.join(sourcePath, "setup.py"), "w") as f:
+			templ = pyratemp.Template(filename=self._mm.resourcePath("setup.py.templ"))
+			f.write(templ(**data).encode("UTF-8"))
+
 		with tarfile.open(path, "w:gz") as f:
 			for item in os.listdir(sourcePath):
-				f.add(item)
+				f.add(os.path.join(sourcePath, item), item)
 
 	def disable(self):
 		self.active = False
 
 		del self._modules
+		del self._metadata
 
 def init(moduleManager):
 	return SourcePackagerModule(moduleManager)

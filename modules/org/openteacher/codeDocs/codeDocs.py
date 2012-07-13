@@ -33,17 +33,25 @@ class ModulesHandler(object):
 
 		self._mm = moduleManager
 		self._mods = {}
+
 		for mod in self._mm.mods:
 			#get the path of the module
-			id = os.path.dirname(mod.__class__.__file__)
+			path = os.path.dirname(mod.__class__.__file__)
 			#make sure the path is relative to the modules root for easier recognition
-			common = os.path.commonprefix([sys.argv[0], id])
-			id = id[len(common):]
-			self._mods[id] = mod
+			self._mods[self._pathToUrl(path)] = mod
 		self._templates = templates
 
-	def _emptyMethod(self):
-		pass
+	def _pathToUrl(self, path):
+		sourceBase = os.path.dirname(__file__)
+		while not sourceBase.endswith("modules"):
+			sourceBase = os.path.normpath(os.path.join(sourceBase, ".."))
+		sourceBase = os.path.normpath(os.path.join(sourceBase, ".."))		
+
+		if sourceBase != os.curdir:
+			common = os.path.commonprefix([sourceBase, path])
+			url = path[len(common) +1:]
+			return url
+		return path
 
 	def _newlineToBr(self, text):
 		if text:
@@ -88,7 +96,7 @@ class ModulesHandler(object):
 
 		mods = {}
 		for mod in self._mm.mods("priorities"):
-			mods[mod.__class__.__file__] = mod
+			mods[self._pathToUrl(os.path.dirname(mod.__class__.__file__))] = mod
 		mods = sorted(mods.iteritems())
 
 		t = pyratemp.Template(filename=self._templates["priorities"])
@@ -112,7 +120,7 @@ class ModulesHandler(object):
 			requiredMods = set(selector)
 			for requiredMod in requiredMods:
 				selectorResults.add((
-					os.path.split(requiredMod.__class__.__file__)[0],
+					self._pathToUrl(os.path.dirname(requiredMod.__class__.__file__)),
 					requiredMod.__class__.__name__
 				))
 		requirements.append(selectorResults)
@@ -249,7 +257,7 @@ class CodeDocumentationModule(object):
 		print "Type 'quit' and press enter to stop the server"
 		while True:
 			try:
-				if raw_input("> ") in ("q", "Q", "quit", "Quit"):
+				if raw_input("> ").lower() in ("q", "quit"):
 					break
 			except KeyboardInterrupt:
 				break

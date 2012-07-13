@@ -90,7 +90,9 @@ class ButtonRegisterModule(object):
 
 	def unregisterButton(self, b):
 		"""Tell 'the world' the button b isn't in use anymore. User
-		   responsibility to call this on disable."""
+		   responsibility to call this on disable.
+
+		"""
 		self.removeButton.send(b)
 
 def init(moduleManager):

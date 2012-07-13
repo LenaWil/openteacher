@@ -76,6 +76,14 @@ class MetadataModule(object):
 			"licenseIntro": open(self._mm.resourcePath("license_intro.txt")).read(),
 			"license": open(self._mm.resourcePath("license.txt")).read(),
 			"comicPath": self._mm.resourcePath("comic.png"),
+			"short_description": "OpenTeacher is an open source vocabulary training application that helps you learn a foreign language!",
+			"description": """Enter a list of words in both a known and a foreign language, and OpenTeacher tests you.
+
+OpenTeacher 3.0 has the following features:
+
+ * blabla
+ * some other features
+OpenTeacher is available for Linux, Windows and Mac OS X."""
 		}
 		self.metadata["userAgent"] = "%s/%s (+%s)" % (
 			self.metadata["name"],

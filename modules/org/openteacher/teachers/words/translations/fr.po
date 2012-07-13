@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-08 17:49+0200\n"
+"POT-Creation-Date: 2012-07-13 13:53+0200\n"
 "PO-Revision-Date: 2012-04-06 09:32+0000\n"
 "Last-Translator: EmmanuelLeNormand <manu@ubuntu-fr.org>\n"
 "Language-Team: French <fr@li.org>\n"
@@ -22,35 +22,35 @@ msgstr ""
 msgid "I'm ready, start the lesson!"
 msgstr "Je suis prêt, démarrez la leçon!"
 
-#: words.py:61 words.py:397
+#: words.py:61 words.py:410
 msgid "Lesson settings"
 msgstr "Paramètres de la leçon"
 
-#: words.py:116
+#: words.py:121
 msgid "Change lesson settings"
 msgstr "Modifier les paramètres de leçon"
 
-#: words.py:117
+#: words.py:122
 msgid "Word:"
 msgstr "Mot:"
 
-#: words.py:389
+#: words.py:402
 msgid "Lesson type"
 msgstr "Type de leçon"
 
-#: words.py:390
+#: words.py:403
 msgid "Word list order and filters"
 msgstr ""
 
-#: words.py:391
+#: words.py:404
 msgid "Word modifications"
 msgstr ""
 
-#: words.py:392
+#: words.py:405
 msgid "Don't show this screen again when I start a lesson."
 msgstr "Ne pas afficher cet écran quand je commence une leçon."
 
-#: words.py:396
+#: words.py:409
 msgid "Words lesson"
 msgstr ""
 

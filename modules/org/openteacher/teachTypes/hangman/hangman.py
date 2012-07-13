@@ -215,17 +215,7 @@ class TypingTeachTypeModule(object):
 			self._mm.mods(type="translator"),
 		)
 
-		self.priorities = {
-			"student@home": 465,
-			"student@school": 465,
-			"teacher": 465,
-			"wordsonly": 465,
-			"selfstudy": 465,
-			"testsuite": 465,
-			"codedocumentation": 465,
-			"all": 465,
-		}
-		self.filesWithTranslations = ("typing.py",)
+		self.filesWithTranslations = ("hangman.py",)
 		
 		self.graphics = self._mm.import_("graphics")
 		self.word = self._mm.import_("word")
