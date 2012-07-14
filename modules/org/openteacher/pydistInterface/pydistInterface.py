@@ -25,6 +25,7 @@ import shutil
 import tempfile
 import subprocess
 import tarfile
+import platform
 
 #pydist is imported in enable()
 
@@ -110,6 +111,8 @@ class PyDistInterfaceModule(object):
 		return icnsPath
 
 	def enable(self):
+		if platform.system() != "Windows":
+			return #leave this windows-only mod disabled
 		global pydist
 		try:
 			import pydist
