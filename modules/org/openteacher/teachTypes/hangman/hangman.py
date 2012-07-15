@@ -262,7 +262,7 @@ class TypingTeachTypeModule(object):
 		if widget == self.widget:
 			self.addSideWidget(self.graphicWidget)
 		else:
-			self.removeSideWidget()
+			self.removeSideWidget(self.graphicWidget)
 
 	def createWidget(self, tabChanged, letterChosen, addSideWidget, removeSideWidget):
 		self.graphicWidget = self.graphics.HangmanGraphics()

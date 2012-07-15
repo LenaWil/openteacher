@@ -84,10 +84,6 @@ class TeachLessonWidget(QtGui.QSplitter):
 			self.keyboardWidget = keyboardWidget
 		self.teachTabWidget = QtGui.QTabWidget()
 		self.progressBar = QtGui.QProgressBar()
-		
-		self.sideWidget = QtGui.QWidget()
-		self.sideLayout = QtGui.QStackedLayout()
-		self.sideWidget.setLayout(self.sideLayout)
 
 		leftLayout = QtGui.QVBoxLayout()
 		leftLayout.addWidget(self.wordLabel)
@@ -110,24 +106,21 @@ class TeachLessonWidget(QtGui.QSplitter):
 		rightWidget = QtGui.QWidget()
 		rightWidget.setLayout(rightLayout)
 
-		self.addWidget(self.sideWidget)
 		self.addWidget(leftWidget)
 		self.addWidget(rightWidget)
 
-		self.setStretchFactor(1, 255)
-		self.setStretchFactor(2, 1)
+		self.setStretchFactor(0, 255)
+		self.setStretchFactor(1, 1)
 
 	def retranslate(self):
 		self.changeSettingsButton.setText(_("Change lesson settings"))
 		self.wordLabel.setText(_("Word:"))
 		
 	def addSideWidget(self, widget):
-		self.sideLayout.addWidget(widget)
-		self.setStretchFactor(0, 1)
+		self.insertWidget(0, widget)
 		
-	def removeSideWidget(self):
-		self.sideLayout.removeWidget(self.sideLayout.currentWidget())
-		self.setStretchFactor(0, 0)
+	def removeSideWidget(self, widget):
+		self.widget(self.indexOf(widget)).setParent(None)
 
 class TeachWidget(QtGui.QStackedWidget):
 	tabChanged = QtCore.pyqtSignal([object])
