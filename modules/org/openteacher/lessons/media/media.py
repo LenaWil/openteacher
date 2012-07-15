@@ -3,6 +3,7 @@
 
 #	Copyright 2011-2012, Milan Boers
 #	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2012, Cas Widdershoven
 #
 #	This file is part of OpenTeacher.
 #
@@ -19,8 +20,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
+import os, weakref
 
+#FIXME (>3.1): give media lessons a title
 """
 The module
 """
@@ -59,36 +61,37 @@ class MediaLessonModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-
-		#setup translation
-		global _
-		global ngettext
-
-		#load translator
-		try:
-			translator = self._modules.default("active", type="translator")
-		except IndexError:
-			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
-		else:
-			_, ngettext = translator.gettextFunctions(
-				self._mm.resourcePath("translations")
-			)
+		
+		self._lessons = set()
 
 		module = self._modules.default("active", type="buttonRegister")
 		self._button = module.registerButton("create")
 		self._button.clicked.handle(self.createLesson)
-		self._button.changeText.send(_("Create media lesson"))
 		#reasonable priority
 		self._button.changePriority.send(self.priorities["all"])
 
 		self.lessonCreated = self._modules.default(type="event").createEvent()
 		self.lessonCreationFinished = self._modules.default(type="event").createEvent()
+
+		#setup translation
+		global _
+		global ngettext
+
+		#load translator	
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 		
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
+		del self._lessons
 		del self._button
 		del self.dataType
 		del self.lessonCreated
@@ -108,6 +111,7 @@ class MediaLessonModule(object):
 		)
 
 		lesson = Lesson(self._modules, self.fileTab, self.enterWidget, self.teachWidget, self.resultsWidget, self.counter)
+		self._lessons.add(weakref.ref(lesson))
 		self.lessonCreated.send(lesson)
 
 		#so it can set the changed property
@@ -141,6 +145,26 @@ class MediaLessonModule(object):
 		
 		# Update title
 		self.fileTab.title = _("Media lesson: %s") % os.path.basename(lesson.path)
+		
+	def _retranslate(self):
+		#Translations
+		global _
+		global ngettext
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+			
+		self._button.changeText.send(_("Create media lesson"))
+		for ref in self._lessons:
+			lesson = ref()
+			if lesson:
+				lesson.retranslate()
 
 """
 Lesson object (that means: this techwidget+enterwidget)
@@ -170,6 +194,9 @@ class Lesson(object):
 		self.fileTab.title = _("Media lesson: %s") % counter
 
 		self.changedEvent = self._modules.default(type="event").createEvent()
+		
+	def retranslate(self):
+		self.fileTab.title = _("Media lesson: %s") % counter
 
 	@property
 	def changed(self):

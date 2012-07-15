@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Cas Widdershoven
+#	Copyright 2011-2012, Cas Widdershoven
 #	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
