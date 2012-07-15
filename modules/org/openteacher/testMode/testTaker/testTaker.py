@@ -77,6 +77,7 @@ class TestModeTestTaker(object):
 			self._mm.mods(type="testModeConnection"),
 			self._mm.mods(type="testMenu"),
 		)
+		self.filesWithTranslations = ("testTaker.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

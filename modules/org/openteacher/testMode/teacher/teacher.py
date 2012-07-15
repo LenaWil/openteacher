@@ -24,7 +24,7 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 
 import copy
-
+#FIXME: translate/retranslate!
 class TeachWidget(QtGui.QWidget):
 	lessonDone = QtCore.pyqtSignal()
 	listChanged = QtCore.pyqtSignal([object])

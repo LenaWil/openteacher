@@ -365,11 +365,12 @@ class TopoTeacherModule(object):
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="topoMaps"),
 		)
+		self.filesWithTranslations = ("topo.py",)
 	
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.active = True
-		
+		#FIXME: retranslate!
 		#setup translation
 		global _
 		global ngettext

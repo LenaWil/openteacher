@@ -76,7 +76,7 @@ class TestModeTestSelecterModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestModeTestSelecterModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
-		
+		#FIXME: translate + retranslate!
 		self.type = "testModeTestSelecter"
 		self.priorities = {
 			"student@home": -1,

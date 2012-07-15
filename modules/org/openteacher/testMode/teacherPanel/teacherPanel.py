@@ -578,6 +578,7 @@ class TestModeTeacherPanelModule(object):
 			self._mm.mods(type="wordsStringComposer"),
 			self._mm.mods(type="dialogShower"),
 		)
+		self.filesWithTranslations = ("teacherPanel.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

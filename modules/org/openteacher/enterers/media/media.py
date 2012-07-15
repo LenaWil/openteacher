@@ -338,11 +338,12 @@ class MediaEntererModule(object):
 			self._mm.mods(type="mediaDisplay"),
 			self._mm.mods(type="ui"),
 		)
+		self.filesWithTranslations = ("media.py",)
 	
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.active = True
-		
+		#FIXME: retranslate!
 		#setup translation
 		global _
 		global ngettext

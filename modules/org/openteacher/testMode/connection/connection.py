@@ -224,6 +224,7 @@ class TestModeConnectionModule(object):
 			self._mm.mods(type="event"),
 			self._mm.mods(type="ui"),
 		)
+		self.filesWithTranslations = ("connection.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -306,8 +306,10 @@ class TopoEntererModule(object):
 			self._mm.mods(type="topoMaps"),
 			self._mm.mods(type="ui"),
 		)
+		self.filesWithTranslations = ("topo.py",)
 	
 	def enable(self):
+		#FIXME: retranslate!
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.active = True
 		

@@ -55,6 +55,7 @@ class TestModeUploaderModule(object):
 			self._mm.mods(type="testModeConnection"),
 			self._mm.mods(type="testMenu"),
 		)
+		self.filesWithTranslations = ("uploader.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
