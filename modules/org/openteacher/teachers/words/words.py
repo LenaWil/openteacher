@@ -120,7 +120,7 @@ class TeachLessonWidget(QtGui.QSplitter):
 		self.insertWidget(0, widget)
 		
 	def removeSideWidget(self, widget):
-		self.widget(self.indexOf(widget)).setParent(None)
+		widget.setParent(None)
 
 class TeachWidget(QtGui.QStackedWidget):
 	tabChanged = QtCore.pyqtSignal([object])
