@@ -1,0 +1,46 @@
+# Frisian translation for openteacher
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-07-15 13:43+0200\n"
+"PO-Revision-Date: 2012-07-15 13:12+0000\n"
+"Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
+"Language-Team: Frisian <fy@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-07-16 05:25+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
+
+#: words.py:118
+msgid "Questions"
+msgstr "Fragen"
+
+#: words.py:118
+msgid "Answers"
+msgstr "Antwurden"
+
+#: words.py:118
+msgid "Comment"
+msgstr "Taljochting"
+
+#: words.py:359
+msgid "Title:"
+msgstr "Titel:"
+
+#: words.py:360
+msgid "Question language:"
+msgstr "Taal fan de fragen"
+
+#: words.py:361
+msgid "Answer language:"
+msgstr "Taal fan de antwurden"
+
+#: words.py:362
+msgid "Remove selected row(s)"
+msgstr "Ferwiderje de selektearde rige(n)"
