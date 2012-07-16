@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 #	Copyright 2011-2012, Cas Widdershoven
+#	Copyright 2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -22,22 +23,31 @@ from PyQt4 import QtCore, QtGui, QtWebKit
 import os
 
 class WebBrowserWidget(QtGui.QWidget):
-	def __init__(self, mm, *args, **kwargs):
+	def __init__(self, resourcePath, startPage, *args, **kwargs):
 		super(WebBrowserWidget, self).__init__(*args, **kwargs)
 		
 		vbox = QtGui.QVBoxLayout()
 		
 		hidelo = QtGui.QHBoxLayout()
-		hideSelfButton = QtGui.QPushButton("Hide the browser!")
-		hideOthersButton = QtGui.QPushButton("Hide the others; make space for the browser")
-		hidelo.addWidget(hideSelfButton)
-		hidelo.addWidget(hideOthersButton)
+		self.hideSelfButton = QtGui.QPushButton()
+		self.hideOthersButton = QtGui.QPushButton()
+		hidelo.addWidget(self.hideSelfButton)
+		hidelo.addWidget(self.hideOthersButton)
 		
 		urllo = QtGui.QHBoxLayout()
 		
-		previousButton = QtGui.QPushButton(QtGui.QIcon(mm.resourcePath("back.png")), "")
-		nextButton = QtGui.QPushButton(QtGui.QIcon(mm.resourcePath("forward.png")), "")
-		reloadButton = QtGui.QPushButton(QtGui.QIcon(mm.resourcePath("reload.png")), "")
+		previousButton = QtGui.QPushButton(QtGui.QIcon.fromTheme(
+			"back",
+			QtGui.QIcon(resourcePath("back.png"))
+		), "")
+		nextButton = QtGui.QPushButton(QtGui.QIcon.fromTheme(
+			"forward",
+			QtGui.QIcon(resourcePath("forward.png"))
+		), "")
+		reloadButton = QtGui.QPushButton(QtGui.QIcon.fromTheme(
+			"reload",
+			QtGui.QIcon(resourcePath("reload.png"))
+		), "")
 		self.urlbar = QtGui.QLineEdit()
 		
 		urllo.addWidget(previousButton)
@@ -54,21 +64,32 @@ class WebBrowserWidget(QtGui.QWidget):
 		
 		self.setLayout(vbox)
 		
-		hideSelfButton.clicked.connect(self.hideSelf)
-		hideOthersButton.clicked.connect(self.hideOthers)
+		self.hideSelfButton.clicked.connect(self.hideSelf)
+		self.hideOthersButton.clicked.connect(self.hideOthers)
 		previousButton.clicked.connect(self.webview.back)
 		nextButton.clicked.connect(self.webview.forward)
 		reloadButton.clicked.connect(self.webview.reload)
 		self.urlbar.returnPressed.connect(self.loadUrl)
-		self.webview.load(QtCore.QUrl("http://google.com"))
+		self.webview.urlChanged.connect(
+			lambda url: self.urlbar.setText(url.toString())
+		)
+
+		self.webview.load(QtCore.QUrl(startPage))
+
+		#finally
+		self.retranslate()
+
+	def retranslate(self):
+		self.hideSelfButton.setText(_("Hide the browser!"))
+		self.hideOthersButton.setText(_("Hide the others; make space for the browser"))
 		
 	def loadUrl(self, *args):
 		if not unicode(self.urlbar.text()).startswith(u"http://"):
-			self.url = QtCore.QUrl(u"http://" + self.urlbar.text())
+			self.url = QtCore.QUrl(u"http://" + self.urlbar.text(), QtCore.QUrl.TolerantMode)
 		else:
-			self.url = QtCore.QUrl(self.urlbar.text())
+			self.url = QtCore.QUrl(self.urlbar.text(), QtCore.QUrl.TolerantMode)
 		self.webview.load(self.url)
-		
+
 	def hideSelf(self):
 		sizes = self.parentWidget().sizes()
 		sizes[self.parentWidget().indexOf(self)] = 0
@@ -95,18 +116,27 @@ class HiddenBrowserModule(object):
 		
 		self.type = "webbrowser"
 		
+		self.requires = (
+			self._mm.mods(type="ui"),
+			self._mm.mods(type="metadata"),
+		)
 		self.uses = (
-			self._mm.mods(type="wordsTeacher"),
 			self._mm.mods(type="settings"),
 			self._mm.mods(type="lesson"),
-			)
+			self._mm.mods(type="translator"),
+		)
 		self.filesWithTranslations = ("hiddenBrowser.py",)
 		
 	def _lessonAdded(self, lesson):
 		self._lessons.add(lesson)
 		if self._enabled["value"]:
-			lesson._teachWidget._lessonWidget.addSideWidget(self.browser)
-		
+			try:
+				#FIXME (3.1?): don't access private properties (teachWidget & lessonWidget)
+				lesson._teachWidget._lessonWidget.addSideWidget(self.browser)
+			except AttributeError:
+				#not every lesson teachWidget has an addSideWidget
+				pass
+	
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		
@@ -134,8 +164,7 @@ class HiddenBrowserModule(object):
 			self._enabled = {
 				"value": False,
 			}
-			
-		self.browser = WebBrowserWidget(self._mm)
+		metadata = self._modules.default("active", type="metadata").metadata
 		
 		#Register for retranslating
 		try:
@@ -146,6 +175,8 @@ class HiddenBrowserModule(object):
 			translator.languageChanged.handle(self._retranslate)
 		#translate everything for the first time
 		self._retranslate()
+
+		self.browser = WebBrowserWidget(self._mm.resourcePath, metadata["website"])
 		
 		self._lessons = set()
 		
@@ -168,17 +199,30 @@ class HiddenBrowserModule(object):
 		self._enabled.update({
 			"name": _("Enable hidden browser (hide it by moving the slider)"),
 		})
+		try:
+			self.browser.retranslate()
+		except AttributeError:
+			#first time it's not there
+			pass
 	
 	def updateActive(self, *args, **kwargs):
 		if self._enabled["value"]:
 			#Add the web browser to every lesson
 			for lesson in self._lessons:
-				lesson._teachWidget._lessonWidget.addSideWidget(self.browser)
+				try:
+					lesson._teachWidget._lessonWidget.addSideWidget(self.browser)
+				except AttributeError:
+					#in case the lesson doesn't support sideWidgets
+					pass
 		else:
 			#Remove the web browser from every lesson
 			for lesson in self._lessons:
-				lesson._teachWidget._lessonWidget.removeSideWidget(self.browser)
-		
+				try:
+					lesson._teachWidget._lessonWidget.removeSideWidget(self.browser)
+				except AttributeError:
+					#in case the lesson doesn't support sideWidgets
+					pass
+	
 	def disable(self):
 		self.active = False
 		

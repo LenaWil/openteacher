@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-15 13:43+0200\n"
+"POT-Creation-Date: 2012-07-16 12:48+0200\n"
 "PO-Revision-Date: 2012-07-04 18:49+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-07-16 05:25+0000\n"
 "X-Generator: Launchpad (build 15614)\n"
-"Language: \n"
 
 #: words.py:73
 msgid "Unnamed"
@@ -37,8 +37,7 @@ msgstr "Lege vraag of antwoord"
 
 #: words.py:236
 msgid "Please enter at least one question and one answer for every word."
-msgstr ""
-"Vul alstublieft ten minste één vraag en één woord in bij ieder woord."
+msgstr "Vul alstublieft ten minste één vraag en één woord in bij ieder woord."
 
 #~ msgid "Title:"
 #~ msgstr "Titel:"
@@ -94,6 +93,5 @@ msgstr ""
 #~ msgid "Words Lesson"
 #~ msgstr "Woordjesles"
 
-#, python-format
 #~ msgid "Word lesson %s"
 #~ msgstr "Woordjesles %s"

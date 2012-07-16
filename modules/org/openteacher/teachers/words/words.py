@@ -85,6 +85,8 @@ class TeachLessonWidget(QtGui.QSplitter):
 		self.teachTabWidget = QtGui.QTabWidget()
 		self.progressBar = QtGui.QProgressBar()
 
+		self.sideWidget = QtGui.QSplitter(QtCore.Qt.Vertical)
+	
 		leftLayout = QtGui.QVBoxLayout()
 		leftLayout.addWidget(self.wordLabel)
 		leftLayout.addWidget(self.questionLabel)
@@ -106,6 +108,7 @@ class TeachLessonWidget(QtGui.QSplitter):
 		rightWidget = QtGui.QWidget()
 		rightWidget.setLayout(rightLayout)
 
+		self.addWidget(self.sideWidget)
 		self.addWidget(leftWidget)
 		self.addWidget(rightWidget)
 
@@ -115,9 +118,9 @@ class TeachLessonWidget(QtGui.QSplitter):
 	def retranslate(self):
 		self.changeSettingsButton.setText(_("Change lesson settings"))
 		self.wordLabel.setText(_("Word:"))
-		
+
 	def addSideWidget(self, widget):
-		self.insertWidget(0, widget)
+		self.sideWidget.insertWidget(0, widget)
 		
 	def removeSideWidget(self, widget):
 		widget.setParent(None)

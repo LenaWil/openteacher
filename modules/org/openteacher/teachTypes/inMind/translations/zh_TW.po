@@ -7,43 +7,43 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-15 13:43+0200\n"
+"POT-Creation-Date: 2012-07-16 12:48+0200\n"
 "PO-Revision-Date: 2011-09-05 14:27+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-07-16 05:25+0000\n"
 "X-Generator: Launchpad (build 15614)\n"
-"Language: \n"
 
-#: inMind.py:43
+#: inMind.py:44
 msgid ""
 "Think about the answer, and press the 'View answer' button when you're done."
 msgstr "思考答案，當你想好後按 \"顯示答案\""
 
-#: inMind.py:44
+#: inMind.py:45
 msgid "View answer"
 msgstr "顯示答案"
 
-#: inMind.py:45
+#: inMind.py:46
 msgid "Skip"
 msgstr ""
 
-#: inMind.py:66
+#: inMind.py:67
 msgid "I was right"
 msgstr "我答對了"
 
-#: inMind.py:67
+#: inMind.py:68
 msgid "I was wrong"
 msgstr "我答錯了"
 
-#: inMind.py:133
+#: inMind.py:134
 msgid "Translation: "
 msgstr "翻譯： "
 
-#: inMind.py:196
+#: inMind.py:197
 msgid "Think answer"
 msgstr ""
 

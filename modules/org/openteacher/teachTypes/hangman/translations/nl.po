@@ -6,37 +6,38 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-07-15 13:43+0200\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-07-16 12:48+0200\n"
 "PO-Revision-Date: 2012-07-15 11:54+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-07-16 05:26+0000\n"
 "X-Generator: Launchpad (build 15614)\n"
 
-#: hangman.py:103
+#: hangman.py:102
 msgid "Check!"
 msgstr "Controleer!"
 
-#: hangman.py:117
+#: hangman.py:116
 msgid "You have already tried this character / word"
 msgstr "U hebt dit teken / woord al geprobeerd"
 
-#: hangman.py:133
+#: hangman.py:132
 msgid "Mistakes:  "
 msgstr "Fouten:  "
 
-#: hangman.py:155
+#: hangman.py:154
 msgid "hanged man"
 msgstr "galgje verloren"
 
-#: hangman.py:177
+#: hangman.py:176
 msgid "You lose, the answer was: "
 msgstr "Je verliest, het antwoord was: "
 
-#: hangman.py:256
+#: hangman.py:255
 msgid "Play hangman"
 msgstr "Speel galgje"

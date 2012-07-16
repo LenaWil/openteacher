@@ -7,45 +7,45 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-15 13:43+0200\n"
+"POT-Creation-Date: 2012-07-16 12:48+0200\n"
 "PO-Revision-Date: 2012-04-16 00:13+0000\n"
 "Last-Translator: Dennis Baudys <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-07-16 05:25+0000\n"
 "X-Generator: Launchpad (build 15614)\n"
-"Language: de\n"
 
-#: inMind.py:43
+#: inMind.py:44
 msgid ""
 "Think about the answer, and press the 'View answer' button when you're done."
 msgstr ""
 "Denken Sie über die Antwort nach und drücken Sie auf den Knopf »Antwort "
 "anzeigen«, wenn Sie bereit sind."
 
-#: inMind.py:44
+#: inMind.py:45
 msgid "View answer"
 msgstr "Antwort anzeigen"
 
-#: inMind.py:45
+#: inMind.py:46
 msgid "Skip"
 msgstr "Überspringen"
 
-#: inMind.py:66
+#: inMind.py:67
 msgid "I was right"
 msgstr "Ich hatte recht"
 
-#: inMind.py:67
+#: inMind.py:68
 msgid "I was wrong"
 msgstr "Ich hatte unrecht"
 
-#: inMind.py:133
+#: inMind.py:134
 msgid "Translation: "
 msgstr "Übersetzung: "
 
-#: inMind.py:196
+#: inMind.py:197
 msgid "Think answer"
 msgstr "Antwort ausdenken"
 

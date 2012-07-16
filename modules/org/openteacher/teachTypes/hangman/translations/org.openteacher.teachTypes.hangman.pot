@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.0\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-15 13:43+0200\n"
+"POT-Creation-Date: 2012-07-16 12:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,26 +17,26 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: hangman.py:103
+#: hangman.py:102
 msgid "Check!"
 msgstr ""
 
-#: hangman.py:117
+#: hangman.py:116
 msgid "You have already tried this character / word"
 msgstr ""
 
-#: hangman.py:133
+#: hangman.py:132
 msgid "Mistakes:  "
 msgstr ""
 
-#: hangman.py:155
+#: hangman.py:154
 msgid "hanged man"
 msgstr ""
 
-#: hangman.py:177
+#: hangman.py:176
 msgid "You lose, the answer was: "
 msgstr ""
 
-#: hangman.py:256
+#: hangman.py:255
 msgid "Play hangman"
 msgstr ""

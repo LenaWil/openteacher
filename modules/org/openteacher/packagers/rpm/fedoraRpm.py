@@ -68,7 +68,7 @@ class RpmPackagerModule(object):
 			"setup.py", "bdist_rpm",
 			"--group", "Applications/Productivity",
 			"--packager", "%s <%s>" % (self._metadata["authors"], self._metadata["email"]),
-			"--requires", "PyQt4, espeak, python-tornado, python-django, python-django-guardian, python-cherrypy, python-graphviz, gettext",
+			"--requires", "PyQt4, espeak, python-django, python-django-guardian, python-cherrypy, python-graphviz, gettext",
 #FIXME: rpm bug? (not respecting the build directory?)
 #			"--icon", os.path.join(sourcePath, "icon.xpm"),
 		])
