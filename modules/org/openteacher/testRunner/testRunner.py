@@ -19,6 +19,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
+import sys
 
 class TestRunnerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -58,7 +59,13 @@ class TestRunnerModule(object):
 			newTests = unittest.TestLoader().loadTestsFromTestCase(module.TestCase)
 			testSuite.addTests(newTests)
 			module.disable()
-		unittest.TextTestRunner().run(testSuite)
+		result = unittest.TextTestRunner().run(testSuite)
+
+		#exit self so the exit code is passed. Not really nice in the
+		#module structure idea, but worth it because an exit code is
+		#nice for a bzr hook that doesn't let you commit unless the test
+		#suite passes.
+		sys.exit(0 if result.wasSuccessful() else 1)
 
 def init(moduleManager):
 	return TestRunnerModule(moduleManager)

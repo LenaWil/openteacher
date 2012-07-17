@@ -38,15 +38,15 @@ class WebBrowserWidget(QtGui.QWidget):
 		
 		previousButton = QtGui.QPushButton(QtGui.QIcon.fromTheme(
 			"back",
-			QtGui.QIcon(resourcePath("back.png"))
+			QtGui.QIcon(resourcePath("icons/back.png"))
 		), "")
 		nextButton = QtGui.QPushButton(QtGui.QIcon.fromTheme(
 			"forward",
-			QtGui.QIcon(resourcePath("forward.png"))
+			QtGui.QIcon(resourcePath("icons/forward.png"))
 		), "")
 		reloadButton = QtGui.QPushButton(QtGui.QIcon.fromTheme(
 			"reload",
-			QtGui.QIcon(resourcePath("reload.png"))
+			QtGui.QIcon(resourcePath("icons/reload.png"))
 		), "")
 		self.urlbar = QtGui.QLineEdit()
 		

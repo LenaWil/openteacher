@@ -40,7 +40,7 @@ class ProfileDescriptionModule(object):
 			)
 		self.desc = {
 			"name": "package-source",
-			"niceName": _("Packages the source of this installation into a tarball."),
+			"niceName": _("Packages the source of this installation into a zip file."),
 			"advanced": True,
 		}
 
