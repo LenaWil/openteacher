@@ -7,36 +7,32 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-16 12:48+0200\n"
-"PO-Revision-Date: 2012-03-25 06:54+0000\n"
+"POT-Creation-Date: 2012-07-16 12:52+0200\n"
+"PO-Revision-Date: 2012-07-16 07:38+0000\n"
 "Last-Translator: Yannis Kaskamanidis <ttnfy17@yahoo.gr>\n"
 "Language-Team: Greek <el@li.org>\n"
-"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-16 05:25+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-07-17 05:08+0000\n"
+"X-Generator: Launchpad (build 15627)\n"
+"Language: el\n"
 
 #: wrtsApi.py:155
-#, fuzzy
 msgid "Import from WRDS"
-msgstr "Εισαγωγή από WRTS"
+msgstr ""
 
 #: wrtsApi.py:156
-#, fuzzy
 msgid "Export to WRDS"
-msgstr "Εισαγωγή από WRTS"
+msgstr ""
 
 #: wrtsApi.py:159
-#, fuzzy
 msgid "Email"
-msgstr "Email: "
+msgstr "Email"
 
 #: wrtsApi.py:160
-#, fuzzy
 msgid "Password"
-msgstr "Κωδικός πρόσβασης: "
+msgstr "Κωδικός πρόσβασης"
 
 #: wrtsApi.py:162
 msgid "Input and output"
@@ -48,7 +44,7 @@ msgstr ""
 
 #: wrtsApi.py:176
 msgid "Invalid login credentials"
-msgstr ""
+msgstr "Λανθασμένα στοιχεία σύνδεσης"
 
 #: wrtsApi.py:177
 msgid ""
@@ -57,9 +53,8 @@ msgid ""
 msgstr ""
 
 #: wrtsApi.py:183
-#, fuzzy
 msgid "No WRDS connection"
-msgstr "API σύνδεσης του WRTS"
+msgstr ""
 
 #: wrtsApi.py:184
 msgid ""
@@ -69,13 +64,15 @@ msgstr ""
 
 #: wrtsApi.py:247
 msgid "No word list metadata given."
-msgstr ""
+msgstr "Δεν υπάρχουν μεταδεδομένα της λίστας των λέξεων"
 
 #: wrtsApi.py:248
 msgid ""
 "Please fill in the wordlist title, question language and answer language "
 "first. Then try again."
 msgstr ""
+"Παρακαλώ συμπληρώστε τον τίτλο της λίστας, τη γλώσσα ερώτησης και τη γλώσσα "
+"απάντησης πρώτα. Έπειτα προσπαθήστε πάλι."
 
 #: wrtsApi.py:257
 msgid "Word list succesfully exported to WRDS."
@@ -83,11 +80,11 @@ msgstr ""
 
 #: wrtsApi.py:288
 msgid "No list selected"
-msgstr ""
+msgstr "Δεν επιλέχθηκε λίστα"
 
 #: wrtsApi.py:289
 msgid "No list was selected. Please try again."
-msgstr ""
+msgstr "Δεν επιλέχθηκε λίστα. Παρακαλώ προσπαθήστε πάλι."
 
 #: wrtsApi.py:314
 msgid "Can't show the result"
@@ -102,9 +99,8 @@ msgid "The word list was imported from WRDS successfully."
 msgstr ""
 
 #: ui.py:72
-#, fuzzy
 msgid "WRDS - login please:"
-msgstr "WRTS - σύνδεση παρακαλώ:"
+msgstr ""
 
 #: ui.py:75
 msgid "Email: "
@@ -116,9 +112,8 @@ msgstr "Κωδικός πρόσβασης: "
 
 #: ui.py:81
 msgid "Store mail address and password"
-msgstr ""
+msgstr "Αποθήκευση email και κωδικού πρόσβασης"
 
 #: ui.py:114
-#, fuzzy
 msgid "WRDS - Please choose a list:"
-msgstr "WRTS - παρακαλώ επιλέξτε μια λίστα:"
+msgstr ""

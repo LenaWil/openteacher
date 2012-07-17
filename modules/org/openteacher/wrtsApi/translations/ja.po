@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-16 12:48+0200\n"
-"PO-Revision-Date: 2012-04-21 20:48+0000\n"
+"POT-Creation-Date: 2012-07-16 12:52+0200\n"
+"PO-Revision-Date: 2012-04-21 20:34+0000\n"
 "Last-Translator: LeeAnna Kobayashi <kobayashi.leeanna@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-16 05:25+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-07-17 05:08+0000\n"
+"X-Generator: Launchpad (build 15627)\n"
+"Language: ja\n"
 
 #: wrtsApi.py:155
 msgid "Import from WRDS"
@@ -27,14 +27,12 @@ msgid "Export to WRDS"
 msgstr ""
 
 #: wrtsApi.py:159
-#, fuzzy
 msgid "Email"
-msgstr "メール: "
+msgstr "メール"
 
 #: wrtsApi.py:160
-#, fuzzy
 msgid "Password"
-msgstr "パスワード: "
+msgstr "パスワード"
 
 #: wrtsApi.py:162
 msgid "Input and output"
@@ -72,7 +70,7 @@ msgstr ""
 msgid ""
 "Please fill in the wordlist title, question language and answer language "
 "first. Then try again."
-msgstr ""
+msgstr "単語リストのタイトル、質問の言語、答えの言語をまず入力してから再試行して下さい。"
 
 #: wrtsApi.py:257
 msgid "Word list succesfully exported to WRDS."
@@ -80,11 +78,11 @@ msgstr ""
 
 #: wrtsApi.py:288
 msgid "No list selected"
-msgstr ""
+msgstr "リスト選択されていない"
 
 #: wrtsApi.py:289
 msgid "No list was selected. Please try again."
-msgstr ""
+msgstr "リストは選択されていない。もう一度やり直してください。"
 
 #: wrtsApi.py:314
 msgid "Can't show the result"
@@ -112,7 +110,7 @@ msgstr "パスワード: "
 
 #: ui.py:81
 msgid "Store mail address and password"
-msgstr ""
+msgstr "メールアドとパスワード保存して"
 
 #: ui.py:114
 msgid "WRDS - Please choose a list:"
