@@ -22,6 +22,7 @@
 import os
 import tempfile
 import atexit
+import weakref
 
 class TeachTopoLessonModule(object):
 	"""The module"""
@@ -60,25 +61,13 @@ class TeachTopoLessonModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-
-		#setup translation
-		global _
-		global ngettext
 		
-		try:
-			translator = self._modules.default("active", type="translator")
-		except IndexError:
-			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
-		else:
-			_, ngettext = translator.gettextFunctions(
-				self._mm.resourcePath("translations")
-			)
+		self._lessons = set()
 
 		# Add the button to start
 		module = self._modules.default("active", type="buttonRegister")
 		self._button = module.registerButton("create")
 		self._button.clicked.handle(self.createLesson)
-		self._button.changeText.send(_("Create topography lesson"))
 		#reasonable priority
 		self._button.changePriority.send(self.priorities["all"])
 
@@ -88,16 +77,50 @@ class TeachTopoLessonModule(object):
 		# Signals
 		self.lessonCreated = self._modules.default(type="event").createEvent()
 		self.lessonCreationFinished = self._modules.default(type="event").createEvent()
+
+		#setup translation
+		global _
+		global ngettext
+
+		#load translator	
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 		
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
+		del self._lessons
 		del self._button
 		del self.dataType
 		del self.lessonCreated
 		del self.lessonCreationFinished
+		
+	def _retranslate(self):
+		#Translations
+		global _
+		global ngettext
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+			
+		self._button.changeText.send(_("Create topography lesson"))
+		for ref in self._lessons:
+			lesson = ref()
+			if lesson:
+				lesson.retranslate()
 	
 	def createLesson(self):
 		module = self._modules.default("active", type="ui")
@@ -113,6 +136,7 @@ class TeachTopoLessonModule(object):
 		)
 
 		lesson = Lesson(self._modules, self.fileTab, enterWidget, teachWidget, resultsWidget, self.counter)
+		self._lessons.add(weakref.ref(lesson))
 		self.lessonCreated.send(lesson)
 
 		#so they can send changedEvents
@@ -165,7 +189,7 @@ class Lesson(object):
 		self.resultsWidget = resultsWidget
 
 		self.fileTab = fileTab
-		self.fileTab.title = ("Topo lesson: %s") % counter
+		self.fileTab.title = _("Topo lesson: %s") % counter
 
 		self.stopped = self._modules.default(type="event").createEvent()
 		
@@ -230,6 +254,9 @@ class Lesson(object):
 	def _removeTempFiles(self):
 		for file in self._tempFiles:
 			os.remove(file)
+			
+	def retranslate(self):
+		self.fileTab.title = _("Topo lesson: %s") % counter
 
 def init(moduleManager):
 	return TeachTopoLessonModule(moduleManager)
