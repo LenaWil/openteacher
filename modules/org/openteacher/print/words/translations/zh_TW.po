@@ -1,13 +1,13 @@
 # Chinese (Traditional) translation for openteacher
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openteacher package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-07-12 10:48+0200\n"
+"POT-Creation-Date: 2012-07-17 16:30+0200\n"
 "PO-Revision-Date: 2012-07-18 09:39+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
@@ -17,26 +17,6 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-07-19 04:56+0000\n"
 "X-Generator: Launchpad (build 15637)\n"
 
-#: ui.py:27
-msgid "Email: "
-msgstr "電子郵件: "
-
-#: ui.py:30
-msgid "Password: "
-msgstr "密碼： "
-
-#: ui.py:57
-msgid "WRTS - login please:"
-msgstr "登入 WRTS"
-
-#: ui.py:91
-msgid "WRTS - Please choose a list:"
-msgstr "WRTS - 請選擇列表："
-
-#: wrtsApi.py:33
-msgid "Wrts API connection"
-msgstr "Wrts API 連結"
-
-#: wrtsApi.py:43
-msgid "Import from WRTS"
-msgstr "從 WRTS 匯入"
+#: words.py:83
+msgid "Untitled word list"
+msgstr "無標題的單字列表"
