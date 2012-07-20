@@ -79,6 +79,8 @@ class OpenTeacherAuthorsModule(object):
 
 		#Artwork
 		r.add(a.registerAuthor(_("Artwork"), u"Yordi de Graaf"))
+		r.add(a.registerAuthor(_("Artwork"), u"Oxygen icon theme"))
+		r.add(a.registerAuthor(_("Topography maps"), u"Wikimedia Commons"))
 
 		#IRC channel spammers
 		r.add(a.registerAuthor(_("Chat channel spammer"), u"Stefan de Vries"))
