@@ -252,10 +252,10 @@ class CodeDocumentationModule(object):
 		cherrypy.tree.mount(root)
 		cherrypy.config.update({
 			"server.socket_host": "0.0.0.0",
-#			"environment": "production",
+			"environment": "production",
 		})
 		cherrypy.engine.start()
-#		webbrowser.open("http://localhost:8080/")
+		webbrowser.open("http://localhost:8080/")
 		print "Serving at http://localhost:8080/"
 		print "Type 'quit' and press enter to stop the server"
 		while True:
