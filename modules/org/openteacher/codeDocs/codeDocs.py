@@ -42,6 +42,8 @@ class ModulesHandler(object):
 		self._templates = templates
 
 	def _pathToUrl(self, path):
+		path = os.path.normpath(path)
+
 		sourceBase = os.path.dirname(__file__)
 		while not sourceBase.endswith("modules"):
 			sourceBase = os.path.normpath(os.path.join(sourceBase, ".."))
@@ -70,7 +72,7 @@ class ModulesHandler(object):
 			)
 			#check if the path is valid (i.e. is in the resources
 			#directory.)
-			if not path.startswith(self._templates["resources"]):
+			if not path.startswith(os.path.normpath(self._templates["resources"])):
 				#404
 				raise cherrypy.HTTPError(404)
 		mimetype = mimetypes.guess_type(path, strict=False)[0]
@@ -249,10 +251,11 @@ class CodeDocumentationModule(object):
 
 		cherrypy.tree.mount(root)
 		cherrypy.config.update({
-			"environment": "production",
+			"server.socket_host": "0.0.0.0",
+#			"environment": "production",
 		})
 		cherrypy.engine.start()
-		webbrowser.open("http://localhost:8080/")
+#		webbrowser.open("http://localhost:8080/")
 		print "Serving at http://localhost:8080/"
 		print "Type 'quit' and press enter to stop the server"
 		while True:
