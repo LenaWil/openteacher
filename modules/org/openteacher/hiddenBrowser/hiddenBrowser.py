@@ -91,6 +91,11 @@ class WebBrowserWidget(QtGui.QWidget):
 		self.webview.load(self.url)
 
 	def hideSelf(self):
+		#FIXME (3.1): Make sure this works via a nice module interface,
+		#because this breaks as soon as a very small change is made. (It
+		#already did once...)
+
+		#show other side widgets
 		sizes = self.parentWidget().sizes()
 		sizes[self.parentWidget().indexOf(self)] = 0
 		if sum(sizes):
@@ -100,14 +105,29 @@ class WebBrowserWidget(QtGui.QWidget):
 				sizes[i] = 1
 			sizes[self.parentWidget().indexOf(self)] = 0
 			self.parentWidget().setSizes(sizes)
-		
+
+		#show other widgets
+		sizes = self.parentWidget().parentWidget().sizes()
+		for i in range(len(sizes)):
+			sizes[i] = 1
+		self.parentWidget().parentWidget().setSizes(sizes)
+
 	def hideOthers(self):
+		#hide other side widgets
 		sizes = self.parentWidget().sizes()
 		size = sizes[self.parentWidget().indexOf(self)]
 		for i in range(len(sizes)):
 			sizes[i] = 0
 		sizes[self.parentWidget().indexOf(self)] = size
 		self.parentWidget().setSizes(sizes)
+
+		#hide other widgets
+		sizes = self.parentWidget().parentWidget().sizes()
+		size = sizes[self.parentWidget().parentWidget().indexOf(self.parentWidget())]
+		for i in range(len(sizes)):
+			sizes[i] = 0
+		sizes[self.parentWidget().parentWidget().indexOf(self.parentWidget())] = size
+		self.parentWidget().parentWidget().setSizes(sizes)
 
 class HiddenBrowserModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

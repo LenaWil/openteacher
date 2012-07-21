@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-20 22:05+0200\n"
+"POT-Creation-Date: 2012-07-21 11:30+0200\n"
 "PO-Revision-Date: 2012-07-02 19:46+0000\n"
 "Last-Translator: Eduardo Alberto Calvo <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-07-21 05:25+0000\n"
 "X-Generator: Launchpad (build 15654)\n"
-"Language: es\n"
 
 #: words.py:73
 msgid "Unnamed"
@@ -40,7 +40,6 @@ msgid "Please enter at least one question and one answer for every word."
 msgstr ""
 "Por favor ingrese al menos una pregunta y una respuesta para cada palabra."
 
-#, python-format
 #~ msgid "Word lesson %s"
 #~ msgstr "Lección de palabras %s"
 

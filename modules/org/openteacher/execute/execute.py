@@ -29,11 +29,12 @@ class ExecuteModule(object):
 		self.type = "execute"
 		self.requires = (
 			self._mm.mods(type="event"),
-
 		)
 		self.uses = (
 			self._mm.mods(type="settings"),
+			self._mm.mods(type="translator"),
 		)
+		self.filesWithTranslations = ("execute.py",)
 		self.active = True
 
 	def _getMod(self, *args, **kwargs):
@@ -49,17 +50,12 @@ class ExecuteModule(object):
 			settings = self._getMod(type="settings")
 			settings.initialize()
 		except ValueError:
-			profileSetting = dict()
-			profileSetting["value"] = "all"
+			self._profileSetting = {"value": "all"}
 		else:
-			profileSetting = settings.registerSetting(**{
-				#FIXME: translations???
+			self._profileSetting = settings.registerSetting(**{
 				"internal_name": "org.openteacher.execute.startup_profile",
-				"name": "Profile",
 				"type": "profile",
 				"defaultValue": "all",
-				"category": "General",
-				"subcategory": "Profile",
 				"callback": {
 					"args": (),
 					"kwargs": {"type": "execute"},
@@ -70,7 +66,7 @@ class ExecuteModule(object):
 		parser = argparse.ArgumentParser()
 		parser.add_argument("-p", "--profile", **{
 			"nargs": "?",
-			"default": profileSetting["value"],
+			"default": self._profileSetting["value"],
 			"type": unicode,
 			"help": "Start OpenTeacher with the PROFILE profile. Don't know which profiles are included? I'll give away one: 'help' ;).",
 		})
@@ -89,8 +85,33 @@ class ExecuteModule(object):
 
 		self._modules.updateToProfile()
 
+		#setup translation
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.startRunning.send()
 		self.aboutToExit.send()
+
+	def _retranslate(self):
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+
+		self._profileSetting.update({
+			"name": _("Profile"),
+			"category": _("General"),
+			"subcategory": _("Profile"),
+		})
 
 	def _settingChanged(self):
 		try:
