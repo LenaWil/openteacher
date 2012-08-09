@@ -1,0 +1,26 @@
+# Finnish translation for openteacher
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-07-21 11:30+0200\n"
+"PO-Revision-Date: 2012-08-08 23:49+0000\n"
+"Last-Translator: Teemu Paavola <tteeemu@gmail.com>\n"
+"Language-Team: Finnish <fi@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-08-09 05:09+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
+
+#: shuffleAnswer.py:64
+msgid "Hint:"
+msgstr "Vinkki:"
+
+#: shuffleAnswer.py:159
+msgid "Shuffle answer"
+msgstr "Arvo vastaus"
