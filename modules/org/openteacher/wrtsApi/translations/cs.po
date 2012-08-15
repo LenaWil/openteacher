@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-08-15 15:49+0200\n"
+"POT-Creation-Date: 2012-08-15 22:15+0200\n"
 "PO-Revision-Date: 2012-07-16 07:39+0000\n"
 "Last-Translator: Jakub Šnapka <snapka@seznam.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -106,15 +106,18 @@ msgid "WRDS - login please:"
 msgstr "WRDS - přihlaste se prosím:"
 
 #: ui.py:75
-msgid "Email: "
+#, fuzzy
+msgid "Email:"
 msgstr "Email: "
 
 #: ui.py:78
-msgid "Password: "
+#, fuzzy
+msgid "Password:"
 msgstr "Heslo: "
 
 #: ui.py:81
-msgid "Store mail address and password"
+#, fuzzy
+msgid "Remember email address and password"
 msgstr "Uložit emailovou adresu a heslo"
 
 #: ui.py:114

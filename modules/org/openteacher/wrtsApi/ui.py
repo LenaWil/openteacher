@@ -72,13 +72,13 @@ class LoginDialog(QtGui.QDialog):
 		self.setWindowTitle(_("WRDS - login please:"))
 
 		self.flayout.itemAt(0, QtGui.QFormLayout.LabelRole).widget().setText(
-			_("Email: ")
+			_("Email:")
 		)
 		self.flayout.itemAt(1, QtGui.QFormLayout.LabelRole).widget().setText(
-			_("Password: ")
+			_("Password:")
 		)
 		try:
-			self.saveCheckbox.setText(_("Store mail address and password"))
+			self.saveCheckbox.setText(_("Remember email address and password"))
 		except AttributeError:
 			pass
 

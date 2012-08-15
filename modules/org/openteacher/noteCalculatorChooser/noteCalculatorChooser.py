@@ -49,13 +49,17 @@ class NoteCalculatorChooserModule(object):
 			"category": _("General"),
 		})
 
-	def enable(self):
-		self._modules = set(self._mm.mods(type="modules")).pop()
-
+	def _updateOptions(self):
 		noteCalculators = map(
 			lambda mod: (mod.name, mod.__class__.__file__),
 			sorted(self._mm.mods("active", type="noteCalculator"), key=lambda m: m.name)
 		)
+
+		self._setting["options"] = noteCalculators
+
+	def enable(self):
+		self._modules = set(self._mm.mods(type="modules")).pop()
+
 		default = self._modules.default("active", type="noteCalculator").__class__.__file__
 		try:
 			settings = self._modules.default(type="settings")
@@ -66,7 +70,6 @@ class NoteCalculatorChooserModule(object):
 				"internal_name": "org.openteacher.noteCalculatorChooser.noteCalculator",
 				"type": "option",
 				"defaultValue": default,
-				"options": noteCalculators,
 			})
 
 		#Connect to the languageChanged event so retranslating is done.
@@ -76,7 +79,9 @@ class NoteCalculatorChooserModule(object):
 			pass
 		else:
 			translator.languageChanged.handle(self._retranslate)
+			translator.languageChangeDone.handle(self._updateOptions)
 		self._retranslate()
+		self._updateOptions()
 
 		self.active = True
 

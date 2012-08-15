@@ -22,10 +22,9 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4 import QtOpenGL
 
-"""
-Abstract class for the map widgets
-"""
 class Map(QtGui.QGraphicsView):
+	"""Abstract class for the map widgets"""
+
 	def __init__(self,*args, **kwargs):
 		super(Map, self).__init__(*args, **kwargs)
 		
@@ -52,10 +51,9 @@ class Map(QtGui.QGraphicsView):
 		else:
 			self.scale(0.9,0.9)
 
-"""
-A place on the map for the inverted order
-"""
 class TeachPlaceOnMap(QtGui.QGraphicsRectItem):
+	"""A place on the map for the inverted order"""
+
 	def __init__(self, place, *args, **kwargs):
 		super(TeachPlaceOnMap, self).__init__(*args, **kwargs)
 		
@@ -67,10 +65,9 @@ class TeachPlaceOnMap(QtGui.QGraphicsRectItem):
 		
 		self.place = place
 
-"""
-The graphics scene of the map where you enter
-"""
 class EnterMapScene(QtGui.QGraphicsScene):
+	"""The graphics scene of the map where you enter"""
+
 	def __init__(self, enterMap, *args, **kwargs):
 		super(EnterMapScene, self).__init__(*args, **kwargs)
 		
@@ -100,10 +97,9 @@ class EnterMapScene(QtGui.QGraphicsScene):
 				# And add the place
 				self.enterMap.enterWidget.addPlace(place)
 
-"""
-The map on the enter tab
-"""
 class EnterMap(Map):
+	"""The map on the enter tab"""
+
 	def __init__(self, enterWidget, *args, **kwargs):
 		super(EnterMap, self).__init__(*args, **kwargs)
 		# Make it scrollable and draggable
@@ -114,10 +110,11 @@ class EnterMap(Map):
 		self.placesList = []
 		self.placesGroup = QtGui.QGraphicsItemGroup()
 	
-	"""
-	Override base class _setPicture with one that uses an EnterMapScene instead of QGraphicsScene
-	"""
 	def _setPicture(self, filepath):
+		"""Override base class _setPicture with one that uses an
+		   EnterMapScene instead of QGraphicsScene
+
+		"""
 		# Create a new scene
 		self.scene = EnterMapScene(self)
 		# Set the pixmap of the scene
@@ -167,15 +164,15 @@ class EnterMap(Map):
 	
 	def getScreenshot(self):
 		image = QtGui.QImage(self.scene.width(), self.scene.height(), QtGui.QImage.Format_RGB32)
+		image.fill(QtGui.QColor(QtCore.Qt.white).rgb())
 		painter = QtGui.QPainter(image)
 		self.scene.render(painter)
 		painter.end()
 		return image
 
-"""
-Scene for the TeachPictureMap
-"""
 class TeachPictureScene(QtGui.QGraphicsScene):
+	"""Scene for the TeachPictureMap"""
+
 	def __init__(self, pictureMap, *args, **kwargs):
 		super(TeachPictureScene, self).__init__(*args, **kwargs)
 		
@@ -187,10 +184,9 @@ class TeachPictureScene(QtGui.QGraphicsScene):
 		if clickedObject.__class__ == TeachPlaceOnMap:
 			self.pictureMap.teachWidget.lesson.checkAnswer(clickedObject.place)
 
-"""
-The map on the teach tab
-"""
 class TeachPictureMap(Map):
+	"""The map on the teach tab"""
+
 	def __init__(self, teachWidget, *args, **kwargs):
 		super(TeachPictureMap, self).__init__(*args, **kwargs)
 		
@@ -201,23 +197,20 @@ class TeachPictureMap(Map):
 		# Make sure everything is redrawn every time
 		self.setViewportUpdateMode(0)
 	
-	"""
-	Sets the arrow on the map to the right position
-	"""
 	def setArrow(self, x, y):
+		"""Sets the arrow on the map to the right position"""
+
 		self.centerOn(x-15,y-50)
 		self.crosshair.setPos(x-15,y-50)
 	
-	"""
-	Removes the arrow
-	"""
 	def removeArrow(self):
+		"""Removes the arrow"""
+
 		self.scene.removeItem(self.crosshair)
-	
-	"""
-	Overriding the base class _setPicture method with one using the TeachPictureScene
-	"""
+
 	def _setPicture(self,picture):
+		"""Overriding the base class _setPicture method with one using the TeachPictureScene"""
+
 		# Create a new scene
 		self.scene = TeachPictureScene(self)
 		# Set the pixmap of the scene
@@ -226,10 +219,9 @@ class TeachPictureMap(Map):
 		# Set the scene
 		self.setScene(self.scene)
 	
-	"""
-	Shows all the places without names
-	"""
 	def showPlaceRects(self):
+		"""Shows all the places without names"""
+
 		placesList = []
 		
 		for place in self.teachWidget.places["items"]:

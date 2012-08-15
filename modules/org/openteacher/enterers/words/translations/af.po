@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-08-15 15:50+0200\n"
+"POT-Creation-Date: 2012-08-15 22:15+0200\n"
 "PO-Revision-Date: 2012-04-23 14:49+0000\n"
 "Last-Translator: computergeoffrey <Unknown>\n"
 "Language-Team: Afrikaans <af@li.org>\n"
@@ -18,30 +18,30 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-07-22 04:53+0000\n"
 "X-Generator: Launchpad (build 15654)\n"
 
-#: words.py:118
+#: words.py:130
 msgid "Questions"
 msgstr "Vrae"
 
-#: words.py:118
+#: words.py:130
 msgid "Answers"
 msgstr "Antwoorde"
 
-#: words.py:118
+#: words.py:130
 msgid "Comment"
 msgstr "Kommentaar"
 
-#: words.py:359
+#: words.py:372
 msgid "Title:"
 msgstr "Titel:"
 
-#: words.py:360
+#: words.py:373
 msgid "Question language:"
 msgstr ""
 
-#: words.py:361
+#: words.py:374
 msgid "Answer language:"
 msgstr ""
 
-#: words.py:362
+#: words.py:375
 msgid "Remove selected row(s)"
 msgstr ""

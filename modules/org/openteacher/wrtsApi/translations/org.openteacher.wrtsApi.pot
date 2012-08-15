@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.0\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-08-15 16:09+0200\n"
+"POT-Creation-Date: 2012-08-15 22:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,15 +100,15 @@ msgid "WRDS - login please:"
 msgstr ""
 
 #: ui.py:75
-msgid "Email: "
+msgid "Email:"
 msgstr ""
 
 #: ui.py:78
-msgid "Password: "
+msgid "Password:"
 msgstr ""
 
 #: ui.py:81
-msgid "Store mail address and password"
+msgid "Remember email address and password"
 msgstr ""
 
 #: ui.py:114

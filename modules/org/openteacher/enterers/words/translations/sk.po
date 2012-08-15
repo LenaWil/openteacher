@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-08-15 15:50+0200\n"
+"POT-Creation-Date: 2012-08-15 22:15+0200\n"
 "PO-Revision-Date: 2011-08-24 19:43+0000\n"
 "Last-Translator: Alexander Suchan <supersasho@gmail.com>\n"
 "Language-Team: Slovak <sk@li.org>\n"
@@ -18,30 +18,30 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-07-22 04:53+0000\n"
 "X-Generator: Launchpad (build 15654)\n"
 
-#: words.py:118
+#: words.py:130
 msgid "Questions"
 msgstr "Otázka"
 
-#: words.py:118
+#: words.py:130
 msgid "Answers"
 msgstr "Odpovede"
 
-#: words.py:118
+#: words.py:130
 msgid "Comment"
 msgstr "Komentár"
 
-#: words.py:359
+#: words.py:372
 msgid "Title:"
 msgstr "Názov:"
 
-#: words.py:360
+#: words.py:373
 msgid "Question language:"
 msgstr "Otázky v jazyku:"
 
-#: words.py:361
+#: words.py:374
 msgid "Answer language:"
 msgstr "Odpovede v jazyku:"
 
-#: words.py:362
+#: words.py:375
 msgid "Remove selected row(s)"
 msgstr "Odstrániť označené riadky"

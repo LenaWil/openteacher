@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-08-15 15:49+0200\n"
+"POT-Creation-Date: 2012-08-15 22:15+0200\n"
 "PO-Revision-Date: 2012-07-16 07:51+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: German <de@li.org>\n"
@@ -107,15 +107,18 @@ msgid "WRDS - login please:"
 msgstr "WRDS – Bitte Benutzernamen eingeben:"
 
 #: ui.py:75
-msgid "Email: "
+#, fuzzy
+msgid "Email:"
 msgstr "E-Mail: "
 
 #: ui.py:78
-msgid "Password: "
+#, fuzzy
+msgid "Password:"
 msgstr "Passwort: "
 
 #: ui.py:81
-msgid "Store mail address and password"
+#, fuzzy
+msgid "Remember email address and password"
 msgstr "E-Mail-Adresse und Passwort speichern"
 
 #: ui.py:114

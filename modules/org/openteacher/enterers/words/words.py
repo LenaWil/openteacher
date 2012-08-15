@@ -31,8 +31,7 @@ class WordsTableItemDelegate(QtGui.QStyledItemDelegate):
 
 	"""
 	def eventFilter(self, object, event):
-		if (event.type() == QtCore.QEvent.KeyPress and
-		  event.key() in (QtCore.Qt.Key_Equal, QtCore.Qt.Key_Return)):
+		if (event.type() == QtCore.QEvent.KeyPress and event.key() in (QtCore.Qt.Key_Equal, QtCore.Qt.Key_Return)):
 			event = QtGui.QKeyEvent(
 				event.type(),
 				QtCore.Qt.Key_Tab,
@@ -57,15 +56,28 @@ class WordsTableView(QtGui.QTableView):
 		self.setAlternatingRowColors(True)
 		self.setSortingEnabled(True)
 
-	def setModel(self, model):
-		value = super(WordsTableView, self).setModel(model)
+	def setModel(self, *args, **kwargs):
+		try:
+			self.model().modelReset.disconnect(self._modelReset)
+		except AttributeError:
+			#first time.
+			pass
+		
+		data = super(WordsTableView, self).setModel(*args, **kwargs)
+
+		self.model().modelReset.connect(self._modelReset)
+		#setting the model is 'resetting' too.
+		self._modelReset()
+
+		return data
+
+	def _modelReset(self):
 		#If the model is empty, let the user start editing
 		#(model has always one starting row.)
 		if self.model().rowCount() == 1:
 			i = self.model().createIndex(0, 0)
 			self.setCurrentIndex(i)
 			self.edit(i)
-		return value
 
 	def moveCursor(self, cursorAction, modifiers):
 		"""Reimplentation of moveCursor that makes sure that tab only
@@ -187,7 +199,7 @@ class WordsTableModel(QtCore.QAbstractTableModel):
 			elif index.column() == self.ANSWERS:
 				return self._compose(word.get("answers", []))
 			elif index.column() == self.COMMENT:
-				return self._compose(word.get("comment", u""))
+				return word.get("comment", u"")
 
 	def flags(self, index):
 		return (
@@ -336,8 +348,9 @@ class EnterWidget(QtGui.QSplitter):
 
 		if keyboardWidget is not None:
 			self._keyboardWidget = keyboardWidget
-		self._removeSelectedRowsButton = QtGui.QPushButton()
-		self._removeSelectedRowsButton.setShortcut(QtGui.QKeySequence.Delete)
+		self._removeSelectedRowsButton = QtGui.QPushButton(self)
+		shortcut = QtGui.QShortcut(QtGui.QKeySequence.Delete, self)
+		shortcut.activated.connect(self._removeSelectedRowsButton.animateClick)
 
 		rightLayout = QtGui.QVBoxLayout()
 		try:
@@ -345,7 +358,7 @@ class EnterWidget(QtGui.QSplitter):
 		except AttributeError:
 			pass
 		rightLayout.addWidget(self._removeSelectedRowsButton)
-		
+
 		rightLayoutWidget = QtGui.QWidget()
 		rightLayoutWidget.setLayout(rightLayout)
 

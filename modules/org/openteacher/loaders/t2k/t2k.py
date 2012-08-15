@@ -116,7 +116,7 @@ class Teach2000LoaderModule(object):
 
 			#questions
 			word["questions"].append([])
-			for question in item.findall("questions/question"):
+			for question in item.findall(".//question"):
 				#strip BBCode for now
 				word["questions"][0].append(
 					self._stripBBCode(question.text)
@@ -124,7 +124,7 @@ class Teach2000LoaderModule(object):
 
 			#answers
 			word["answers"].append([])
-			for answer in item.findall("answers/answer"):
+			for answer in item.findall(".//answer"):
 				#strip BBCode for now
 				word["answers"][0].append(
 					self._stripBBCode(answer.text)
@@ -134,13 +134,13 @@ class Teach2000LoaderModule(object):
 			word["comment"] = item.findtext("remarks")
 
 			#add a result for every time this word was wrong
-			for i in range(int(item.findtext("errors"))):
+			for i in range(int(item.findtext("errors") or 0)):
 				test["results"].append({
 					"itemId": word["id"],
 					"result": "wrong",
 				})
 			#add a result for every time this word was right
-			for i in range(int(item.findtext("correctcount"))):
+			for i in range(int(item.findtext("correctcount") or 0)):
 				test["results"].append({
 					"itemId": word["id"],
 					"result": "right",
@@ -152,22 +152,25 @@ class Teach2000LoaderModule(object):
 			#get the time of the first start result and the one of the
 			#last for a global idea of the time range of this 'mega'
 			#test. Duration isn't used, since it's way off anyway.
-			startTime = root.findall("message_data/testresults/testresult")[0].findtext("dt")
-			endTime = root.findall("message_data/testresults/testresult")[-1].findtext("dt")
+			try:
+				startTime = root.findall("message_data/testresults/testresult")[0].findtext("dt")
+				endTime = root.findall("message_data/testresults/testresult")[-1].findtext("dt")
+			except IndexError:
+				pass
+			else:
+				startTime = self._parseDt(startTime)
+				endTime = self._parseDt(endTime)
 
-			startTime = self._parseDt(startTime)
-			endTime = self._parseDt(endTime)
-
-			#store those times in the first and last result. (which may
-			#be the same, technically, but that doesn't matter...)
-			test["results"][0]["active"] = {
-				"start": startTime,
-				"end": startTime,
-			}
-			test["results"][-1]["active"] = {
-				"start": endTime,
-				"end": endTime
-			}
+				#store those times in the first and last result. (which may
+				#be the same, technically, but that doesn't matter...)
+				test["results"][0]["active"] = {
+					"start": startTime,
+					"end": startTime,
+				}
+				test["results"][-1]["active"] = {
+					"start": endTime,
+					"end": endTime
+				}
 
 			#append the test to the list
 			wordList["tests"] = [test]

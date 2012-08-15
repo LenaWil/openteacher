@@ -30,41 +30,16 @@ class PrintModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ("topo.py",)
 
-	def _retranslate(self):
-		global _
-		global ngettext
-		try:
-			translator = self._modules.default("active", type="translator")
-		except IndexError:
-			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
-		else:
-			_, ngettext = translator.gettextFunctions(
-				self._mm.resourcePath("translations")
-			)
-		
 	def enable(self):
-		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.prints = ["topo"]
-
-		try:
-			translator = self._modules.default("active", type="translator")
-		except IndexError:
-			pass
-		else:
-			translator.languageChanged.handle(self._retranslate)
-		self._retranslate()
 
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
-		del self._modules
-		del self.name
 		del self.prints
-		del self._pyratemp
 
 	def print_(self, type, lesson, printer):
 		painter = QtGui.QPainter()

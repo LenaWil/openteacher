@@ -45,7 +45,7 @@ class CategoryTab(QtGui.QWidget):
 	def createSubcategoryGroupBox(self, name, inSubcategory):
 		groupBox = QtGui.QGroupBox(name)
 		groupBoxLayout = QtGui.QFormLayout()
-		for setting in inSubcategory:
+		for setting in sorted(inSubcategory, key=lambda s: s["name"]):
 			try:
 				createWidget = self._widgets[setting["type"]]
 			except KeyError:

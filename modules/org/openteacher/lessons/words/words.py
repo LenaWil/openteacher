@@ -55,7 +55,7 @@ class Lesson(object):
 		self._teachWidget.updateLesson(self)
 
 		self._teachWidget.lessonDone.connect(self._lessonDone)
-		self._teachWidget.listChanged.connect(self._listChanged)
+		self._teachWidget.listChanged.connect(self._updateResultsWidgetWrapper)
 
 		self.retranslate()
 
@@ -67,6 +67,7 @@ class Lesson(object):
 	def changed(self, value):
 		self._changed = value
 		self._updateTabTitle()
+		self._updateResultsWidget()
 		self.changedEvent.send()
 
 	def _updateTabTitle(self):
@@ -78,9 +79,12 @@ class Lesson(object):
 	def _lessonDone(self):
 		self.fileTab.currentTab = self._enterWidget
 
-	def _listChanged(self, list):
+	def _updateResultsWidgetWrapper(self, list):
+		self._updateResultsWidget()
+
+	def _updateResultsWidget(self):
 		try:
-			self._resultsWidget.updateList(list, "words")
+			self._resultsWidget.updateList(self.list, "words")
 		except AttributeError:
 			pass
 
@@ -219,7 +223,7 @@ class WordsLessonModule(object):
 		self.lessonCreationFinished.send()
 
 		return lesson
-	
+
 	def tabChanged(self):
 		#FIXME 3.1: move into separate module since this uses QtGui?
 
