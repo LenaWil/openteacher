@@ -21,7 +21,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 class SmartLessonType(object):
-	def __init__(self, createEvent, list, indexes, modifyItem, *args, **kwargs):
+	def __init__(self, createEvent, list, indexes, modifyItem=None, *args, **kwargs):
 		super(SmartLessonType, self).__init__(*args, **kwargs)
 
 		self.newItem = createEvent()
@@ -172,8 +172,8 @@ class SmartModule(object):
 	def _createEvent(self):
 		return self._modules.default(type="event").createEvent
 
-	def createLessonType(self, *args):
-		lessonType = SmartLessonType(self._createEvent, *args)
+	def createLessonType(self, *args, **kwargs):
+		lessonType = SmartLessonType(self._createEvent, *args, **kwargs)
 		lessonType.newItem.handle(self.newItem.send)
 		return lessonType
 

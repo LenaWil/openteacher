@@ -46,25 +46,29 @@ class TestsWidget(QtGui.QWidget):
 	def __init__(self, connection, upload, testSelecter, *args, **kwargs):
 		super(TestsWidget, self).__init__(*args, **kwargs)
 		
-		# fixme: create event when test is created so it can be added here
+		# fixme > 3.0 maybe: create event when test is created so it can be added here
 		
 		self.connection = connection
 		
 		# Setup layout
 		layout = QtGui.QVBoxLayout()
-		
-		layout.addWidget(QtGui.QLabel("Tests"))
+
+		self.testsLabel = QtGui.QLabel()
+		layout.addWidget(self.testsLabel)
 		
 		testSelecter.testChosen.connect(self.testSelected.emit)
-		
 		layout.addWidget(testSelecter)
-		
-		addLessonButton = QtGui.QPushButton("Add lesson")
-		addLessonButton.clicked.connect(upload)
-		
-		layout.addWidget(addLessonButton)
-		
+
+		self.addLessonButton = QtGui.QPushButton()
+		self.addLessonButton.clicked.connect(upload)
+
+		layout.addWidget(self.addLessonButton)
+
 		self.setLayout(layout)
+
+	def retranslate(self):
+		self.testsLabel.setText(_("Tests"))
+		self.addLessonButton.setText(_("Add lesson"))
 
 class PersonAdderWidget(QtGui.QWidget):
 	"""The widget you see when you press 'Add student'"""
@@ -79,33 +83,38 @@ class PersonAdderWidget(QtGui.QWidget):
 
 		"""
 		super(PersonAdderWidget, self).__init__(*args, **kwargs)
-		
+
 		self.connection = connection
 		self.info = info
 		self.studentsView = studentsView
 		self.studentsInTest = studentsList
-		
+
 		layout = QtGui.QVBoxLayout()
-		
-		label = QtGui.QLabel("Select a student/group:")
-		layout.addWidget(label)
-		
+
+		self.label = QtGui.QLabel()
+		layout.addWidget(self.label)
+
 		layout.addWidget(self.studentsView)
-		
+
 		buttonLayout = QtGui.QHBoxLayout()
-		
-		addButton = QtGui.QPushButton("Add person/group")
-		addButton.clicked.connect(self._addPersons)
-		buttonLayout.addWidget(addButton)
-		
-		backButton = QtGui.QPushButton("Back")
-		backButton.clicked.connect(self.back.emit)
-		buttonLayout.addWidget(backButton)
+
+		self.addButton = QtGui.QPushButton()
+		self.addButton.clicked.connect(self._addPersons)
+		buttonLayout.addWidget(self.addButton)
+
+		self.backButton = QtGui.QPushButton()
+		self.backButton.clicked.connect(self.back.emit)
+		buttonLayout.addWidget(self.backButton)
 		
 		layout.addLayout(buttonLayout)
 		
 		self.setLayout(layout)
-	
+
+	def retranslate(self):
+		self.label.setText(_("Select a student/group:"))
+		self.addButton.setText(_("Add person/group"))
+		self.backButton.setText(_("Back"))
+
 	# Adds the current person or group of the studentsView to the studentsList, but keeps unique
 	def _addPersons(self):
 		students = self.studentsView.getCurrentStudents()
@@ -168,19 +177,22 @@ class StudentsInTestWidget(QtGui.QListWidget):
 			studentInfo = self.connection.get(studentInTest["student"])
 			# Remember this, so the server can rest next time
 			self.studentInfos.append(studentInfo)
-			
-			
+
+
 			# Set appended text
-			appender = "(DNP)"
+			appender = _("(did not participate)")
 			# Look if answers have already been checked
 			if studentInfo["id"] in checkedAnswersIds:
 				checkedAnswers = self.answerChecker.getCheckedAnswer(self.testInfo["id"], studentInfo["id"])
 				appender = "(" + str(checkedAnswers["note"]) + ")"
 			elif studentInfo["id"] in answersIds:
-				appender = "(Handed in)"
-			
+				appender = _("(Handed in)")
+
 			self.addItem(studentInfo["username"] + " " + appender)
-	
+
+	def retranslate(self):
+		self.update()
+
 	def getCurrentStudentInTest(self):
 		return self.studentInTests[self.currentRow()]
 
@@ -189,27 +201,36 @@ class TestInfoWidget(QtGui.QWidget):
 	takenTestSelected = QtCore.pyqtSignal(dict)
 	def __init__(self, connection, info, list, answerChecker, *args, **kwargs):
 		super(TestInfoWidget, self).__init__(*args, **kwargs)
-		
+
 		layout = QtGui.QVBoxLayout()
-		
 		fl = QtGui.QFormLayout()
-		fl.addRow("Questions:", PropertyLabel(str(len(list["items"]))))
+
+		self.questionsLabel = QtGui.QLabel()
+
+		fl.addRow(self.questionsLabel, PropertyLabel(str(len(list["items"]))))
 		layout.addLayout(fl)
-		
-		layout.addWidget(QtGui.QLabel("People in this test:"))
-		
+
+		self.studentsInTestLabel = QtGui.QLabel()
 		self.studentsInTest = StudentsInTestWidget(connection, info, answerChecker)
 		self.studentsInTest.currentItemChanged.connect(self.selectedStudentChanged)
-		
+
+		layout.addWidget(self.studentsInTestLabel)
 		layout.addWidget(self.studentsInTest)
-		
-		self.addPersonButton = QtGui.QPushButton("Add person")
+
+		self.addPersonButton = QtGui.QPushButton()
 		layout.addWidget(self.addPersonButton)
-		
+
 		self.setLayout(layout)
-	
+
 	def selectedStudentChanged(self, current, previous):
 		self.takenTestSelected.emit(self.studentsInTest.getCurrentStudentInTest())
+
+	def retranslate(self):
+		self.questionsLabel.setText(_("Questions:"))
+		self.studentsInTestLabel.setText(_("People in this test:"))
+		self.addPersonButton.setText(_("Add person"))
+
+		self.studentsInTest.retranslate()
 
 class TestActionWidget(QtGui.QStackedWidget):
 	# Parameter = dictionary as parsed tests/<id>/students/<id>
@@ -234,6 +255,10 @@ class TestActionWidget(QtGui.QStackedWidget):
 	def _personAdded(self):
 		self.setCurrentWidget(self.testInfoWidget)
 
+	def retranslate(self):
+		self.testInfoWidget.retranslate()
+		self.personAdderWidget.retranslate()
+
 class TestWidget(QtGui.QWidget):
 	"""Widget that shows the currently selected test (second column)"""
 
@@ -247,25 +272,26 @@ class TestWidget(QtGui.QWidget):
 		self.info = info
 		self.list = self.info["list"]
 		self.answerChecker = answerChecker
-		
+
+		self.testLabel = QtGui.QLabel()
+
 		layout = QtGui.QVBoxLayout()
-		
-		layout.addWidget(QtGui.QLabel("Test"))
+		layout.addWidget(self.testLabel)
 		
 		name = QtGui.QLabel()
 		name.setStyleSheet("font-size: 18px;")
 		layout.addWidget(name)
 		
-		testActionWidget = TestActionWidget(connection, studentsView, self.info, self.list, answerChecker)
-		testActionWidget.takenTestSelected.connect(self.takenTestSelected.emit)
-		
-		layout.addWidget(testActionWidget)
-		
-		self.checkButton = QtGui.QPushButton("(Re)check answers")
+		self.testActionWidget = TestActionWidget(self.connection, studentsView, self.info, self.list, self.answerChecker)
+		self.testActionWidget.takenTestSelected.connect(self.takenTestSelected.emit)
+
+		layout.addWidget(self.testActionWidget)
+
+		self.checkButton = QtGui.QPushButton()
 		self.checkButton.clicked.connect(self.checkAnswers)
 		layout.addWidget(self.checkButton)
-		
-		self.publishButton = QtGui.QPushButton("(Re)publish answers")
+
+		self.publishButton = QtGui.QPushButton()
 		self.publishButton.clicked.connect(self.publishAnswers)
 		
 		# If no answers in the test are checked, the publish button should be disabled.
@@ -273,14 +299,23 @@ class TestWidget(QtGui.QWidget):
 		checkedAnswers = self.connection.get(info["checked_answers"])
 		if len(checkedAnswers) == 0:
 			self.publishButton.setEnabled(False)
-		
+
 		layout.addWidget(self.publishButton)
-		
+
 		self.setLayout(layout)
-		
+
 		# Fill widget with contents
 		name.setText(self.list["title"])
-	
+
+		self.retranslate()
+
+	def retranslate(self):
+		self.testLabel.setText(_("Test"))
+		self.checkButton.setText(_("(Re)check answers"))
+		self.publishButton.setText(_("(Re)publish answers"))
+
+		self.testActionWidget.retranslate()
+
 	def checkAnswers(self):
 		givenAnswers = self.connection.get(self.info["answers"])
 		rightAnswers = self.list
@@ -289,13 +324,13 @@ class TestWidget(QtGui.QWidget):
 		# Enable publish button
 		self.publishButton.setEnabled(True)
 		# Show message
-		self.message.emit("Student's answers have been checked!")
-	
+		self.message.emit(_("Student's answers have been checked!"))
+
 	def publishAnswers(self):
 		# Publish results
 		self.answerChecker.publishAnswers(self.info["id"])
 		# Show message
-		self.message.emit("Student's results have been (re)published!")
+		self.message.emit(_("Student's results have been (re)published!"))
 
 class AnswerChecker(QtCore.QObject):
 	answersChanged = QtCore.pyqtSignal()
@@ -388,37 +423,41 @@ class TakenTestWidget(QtGui.QWidget):
 		self.studentInTest = studentInTest
 		self.student = connection.get(studentInTest["student"])
 		self.test = connection.get(studentInTest["test"])
-		
+
+		self.personLabel = QtGui.QLabel()
+
 		layout = QtGui.QVBoxLayout()
-		
-		layout.addWidget(QtGui.QLabel("Person"))
-			
+		layout.addWidget(self.personLabel)
+
 		name = QtGui.QLabel(self.student["username"])
 		name.setStyleSheet("font-size: 18px;")
 		layout.addWidget(name)
-		
+
 		# Get the checked answers
 		self.checkedAnswers = self.answerChecker.getCheckedAnswer(self.test["id"], self.student["id"])
-		
+
 		if self.checkedAnswers == None:
-			l = QtGui.QLabel("Answers of this student have not been checked yet. Click the \"Check answers\" button in the second column.")
-			l.setWordWrap(True)
-			l.setSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Expanding)
-			layout.addWidget(l)
+			self.l = QtGui.QLabel()
+			self.l.setWordWrap(True)
+			self.l.setSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Expanding)
+			layout.addWidget(self.l)
 		else:
 			list = json.loads(self.checkedAnswers["list"])
 			# Add checked answer to the answer checker
 			answerChecker.update(self.test["id"], {"list": self.checkedAnswers["list"], "note": self.checkedAnswers["note"], "answer_id": self.student["id"]})
-						
+
 			fl = QtGui.QFormLayout()
+			self.answersRightLabelLabel = QtGui.QLabel()
 			self.answersRightLabel = PropertyLabel()
-			fl.addRow("Answers right:", self.answersRightLabel)
+			fl.addRow(self.answersRightLabelLabel, self.answersRightLabel)
+			self.answersWrongLabelLabel = QtGui.QLabel()
 			self.answersWrongLabel = PropertyLabel()
-			fl.addRow("Answers wrong:", self.answersWrongLabel)
+			fl.addRow(self.answersWrongLabelLabel, self.answersWrongLabel)
+			self.markLabelLabel = QtGui.QLabel()
 			self.markLabel = PropertyLabel()
-			fl.addRow("OpenTeacher mark:", self.markLabel)
+			fl.addRow(self.markLabelLabel, self.markLabel)
 			layout.addLayout(fl)
-			
+
 			self.table = QtGui.QTableWidget(3,3)
 			# Fill table
 			self.questionIds = []
@@ -428,14 +467,14 @@ class TakenTestWidget(QtGui.QWidget):
 					if result["itemId"] == item["id"]:
 						itemResult = result
 						break
-				
+
 				resultWidget = QtGui.QTableWidgetItem()
 				if itemResult["result"] == "right":
 					resultWidget.setCheckState(QtCore.Qt.Checked)
 				else:
 					resultWidget.setCheckState(QtCore.Qt.Unchecked)
 				resultWidget.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-				
+
 				self.table.setItem(len(self.questionIds), 0, resultWidget)
 				qItem = QtGui.QTableWidgetItem(compose(item["questions"]))
 				qItem.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
@@ -443,41 +482,62 @@ class TakenTestWidget(QtGui.QWidget):
 				aItem = QtGui.QTableWidgetItem(itemResult["givenAnswer"])
 				aItem.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 				self.table.setItem(len(self.questionIds), 2, aItem)
-				
+
 				self.questionIds.append(item["id"])
-			
+
 			self.table.verticalHeader().setVisible(False)
 			self.table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
 			self.table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
 			self.table.resizeRowsToContents()
-			
+
 			self.table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
 			self.table.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
-			
+
+			#other headers are set in retranslate()
 			self.table.setHorizontalHeaderItem(0, QtGui.QTableWidgetItem(""))
-			self.table.setHorizontalHeaderItem(1, QtGui.QTableWidgetItem("Question"))
-			self.table.setHorizontalHeaderItem(2, QtGui.QTableWidgetItem("Given answer"))
 			self.table.cellClicked.connect(self.questionSelected)
-			
+
 			layout.addWidget(self.table)
-			
-			self.correctButton = QtGui.QPushButton("Correct")
+
+			self.correctButton = QtGui.QPushButton()
 			self.correctButton.setEnabled(False)
 			self.correctButton.clicked.connect(self.correctAnswer)
-			
+
 			layout.addWidget(self.correctButton)
-			
+
+			self.finalMarkLabelLabel = QtGui.QLabel()
 			self.finalMarkLabel = PropertyLabel()
 			self.finalMarkLabel.setStyleSheet("font-size: 18px;")
-			
+
 			fm = QtGui.QFormLayout()
-			fm.addRow("Final mark:", self.finalMarkLabel)
+			fm.addRow(self.finalMarkLabelLabel, self.finalMarkLabel)
 			layout.addLayout(fm)
-			
+
 			self.fillLabels()
-		
+
 		self.setLayout(layout)
-	
+
+		self.retranslate()
+
+	def retranslate(self):
+		self.personLabel.setText(_("Person"))
+		if hasattr(self, "l"):
+			self.l.setText(_("Answers of this student have not been checked yet. Click the 'Check answers' button in the second column."))
+		if hasattr(self, "answersRightLabelLabel"):
+			self.answersRightLabelLabel.setText(_("Answers right:"))
+		if hasattr(self, "answersWrongLabelLabel"):
+			self.answersWrongLabelLabel.setText(_("Answers wrong:"))
+		if hasattr(self, "markLabelLabel"):
+			#FIXME > 3.0: use metadata["name"]
+			self.markLabelLabel.setText(_("OpenTeacher mark:"))
+		if hasattr(self, "finalMarkLabelLabel"):
+			self.finalMarkLabelLabel.setText(_("Final mark:"))
+		if hasattr(self, "table"):
+			self.table.setHorizontalHeaderItem(1, QtGui.QTableWidgetItem(_("Question")))
+			self.table.setHorizontalHeaderItem(2, QtGui.QTableWidgetItem(_("Given answer")))
+		if hasattr(self, "correctButton"):
+			self.correctButton.setText(_("Correct"))
+
 	def fillLabels(self):
 		checkedAnswer = self.answerChecker.getCheckedAnswer(self.test["id"], self.student["id"])
 		list = json.loads(checkedAnswer["list"])
@@ -547,7 +607,15 @@ class TeacherPanel(QtGui.QSplitter):
 		except AttributeError:
 			pass
 		self.insertWidget(2, takenTestWidget)
-		
+
+	def retranslate(self):
+		for i in range(self.count()):
+			widget = self.widget(i)
+			if widget.__class__ == QtGui.QWidget:
+				#splitter handle
+				continue
+			widget.retranslate()
+
 class TestModeTeacherPanelModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestModeTeacherPanelModule, self).__init__(*args, **kwargs)
@@ -582,7 +650,25 @@ class TestModeTeacherPanelModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
+
+		self._testMenu = self._modules.default("active", type="testMenu").menu
+
+		self._action = self._testMenu.addAction(self.priorities["all"])
+		self._action.triggered.handle(self.showPanel)
+
+		self.dialogShower = self._modules.default("active", type="dialogShower")
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 		
+		self.active = True
+
+	def _retranslate(self):
 		#setup translation
 		global _
 		global ngettext
@@ -595,16 +681,12 @@ class TestModeTeacherPanelModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		
-		self._testMenu = self._modules.default("active", type="testMenu").menu
 
-		self._action = self._testMenu.addAction(self.priorities["all"])
-		self._action.triggered.handle(self.showPanel)
-		self._action.text = _("Teacher panel") #FIXME: retranslate...
-
-		self.dialogShower = self._modules.default("active", type="dialogShower")
-		
-		self.active = True
+		self._action.text = _("Teacher panel")
+		if hasattr(self, "tab"):
+			self.tab.title = _("Teacher Panel")
+		if hasattr(self, "teacherPanel"):
+			self.teacherPanel.retranslate()
 
 	def disable(self):
 		self.active = False
@@ -638,11 +720,12 @@ class TestModeTeacherPanelModule(object):
 			self.teacherPanel = TeacherPanel(self.connection, studentsView, testSelecter, upload, answerChecker, compose)
 			
 			self.tab = uiModule.addCustomTab(self.teacherPanel)
-			self.tab.title = _("Teacher Panel") #FIXME: retranslate etc.
 			self.tab.closeRequested.handle(self.tab.close)
+			#set tab title by retranslating
+			self._retranslate()
 			
 			self.teacherPanel.message.connect(self.showMessage)
-	
+
 	def showMessage(self, text):
 		self.dialogShower.showMessage.send(self.tab, text)
 

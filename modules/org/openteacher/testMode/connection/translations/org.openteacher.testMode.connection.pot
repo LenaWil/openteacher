@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.0\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-21 11:30+0200\n"
+"POT-Creation-Date: 2012-08-15 16:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,22 +17,30 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: connection.py:51
+#: connection.py:63
 msgid "Server IP or hostname:"
 msgstr ""
 
-#: connection.py:53
+#: connection.py:64
 msgid "Connect"
 msgstr ""
 
-#: connection.py:69
+#: connection.py:95
 msgid "Username:"
 msgstr ""
 
-#: connection.py:73
+#: connection.py:96
 msgid "Password:"
 msgstr ""
 
-#: connection.py:75 connection.py:172
+#: connection.py:97 connection.py:142
 msgid "Login"
+msgstr ""
+
+#: connection.py:160
+msgid "Could not connect to the server. Possibly wrong hostname."
+msgstr ""
+
+#: connection.py:231
+msgid "Could not login. Wrong username or password."
 msgstr ""

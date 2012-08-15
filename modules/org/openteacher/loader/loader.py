@@ -40,7 +40,7 @@ class Loader(object):
 		if self.addToRecentlyOpened:
 			# Add to recently opened
 			self.addToRecentlyOpened(**{
-				"label": lesson["list"].get("title", "") or os.path.basename(path),
+				"label": lesson["list"].get("title", "") or os.path.basename(self.path),
 				"args": {},
 				"kwargs": {"path": self.path},
 				"method": "load",

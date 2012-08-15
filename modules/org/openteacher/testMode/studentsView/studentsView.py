@@ -105,9 +105,6 @@ class TestModeStudentsView(object):
 			"all": 546,
 		}
 
-		self.uses = (
-			self._mm.mods(type="translator"),
-		)
 		self.requires = (
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="event"),

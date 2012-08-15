@@ -52,18 +52,37 @@ class TestModeUploaderModule(object):
 		)
 		self.requires = (
 			self._mm.mods(type="ui"),
+			self._mm.mods(type="fileDialogs"),
 			self._mm.mods(type="testModeConnection"),
 			self._mm.mods(type="testMenu"),
+			self._mm.mods(type="load", loads={"otwd": ["words"]})
 		)
 		self.filesWithTranslations = ("uploader.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		
+		self._fileDialogs = self._modules.default("active", type="fileDialogs")
+
+		self._testMenu = self._modules.default("active", type="testMenu").menu
+
+		self._action = self._testMenu.addAction(self.priorities["all"])
+		self._action.triggered.handle(self.upload)
+
 		#setup translation
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.active = True
+
+	def _retranslate(self):
 		global _
 		global ngettext
-		
+
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -72,16 +91,16 @@ class TestModeUploaderModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		self._testMenu = self._modules.default("active", type="testMenu").menu
 
-		self._action = self._testMenu.addAction(self.priorities["all"])
-		self._action.triggered.handle(self.upload)
-		self._action.text = _("Upload lesson") #FIXME: retranslate
-
-		self.active = True
+		self._action.text = _("Upload lesson")
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
+		del self._fileDialogs
+		del self._testMenu
+		del self._action
 	
 	def upload(self):
 		# First, login
@@ -94,26 +113,29 @@ class TestModeUploaderModule(object):
 	def upload_(self, loginid):
 		# Check if this is indeed from the request I sent out
 		if loginid == self.loginid:
-			# Get filename
-			uiModule = self._modules.default("active", type="ui")
-			result = uiModule.getLoadPath(os.path.expanduser("~"), ["otwd"])
-			
-			# Load the list
 			loadModule = self._modules.default("active", type="load", loads={"otwd": ["words"]})
-			list = loadModule.load(result)
-			
+
+			# Get filename
+			result = self._fileDialogs.getLoadPath(os.path.expanduser("~"), [("otwd", loadModule.name)])
+
+			# Load the list
+			list = loadModule.load(result)["list"]
+
 			# Save it to a json string
-			#FIXME: serialize is private now, and that's good so let's update this.
-			saveModule = self._modules.default("active", type="save", saves={"words": ["otwd"]})
 			listJson = json.dumps(
 				list, #the list to save
 				separators=(',',':'), #compact encoding
-				default=saveModule.serialize
+				default=self._serialize
 			)
 			
-			postData = {"list": listJson}
-			fb = self.connection.post("tests",postData)
+			fb = self.connection.post("tests",{"list": listJson})
 			print fb
+
+	def _serialize(self, obj):
+		try:
+			return obj.strftime("%Y-%m-%dT%H:%M:%S.%f")
+		except AttributeError:
+			raise TypeError("The type '%s' isn't JSON serializable." % obj.__class__)
 
 def init(moduleManager):
 	return TestModeUploaderModule(moduleManager)

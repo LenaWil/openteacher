@@ -7,48 +7,62 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-21 11:30+0200\n"
+"POT-Creation-Date: 2012-08-15 15:49+0200\n"
 "PO-Revision-Date: 2012-07-15 12:28+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-07-22 04:53+0000\n"
 "X-Generator: Launchpad (build 15654)\n"
-"Language: nl\n"
 
-#: topo.py:74
+#: topo.py:67
+msgid "From hard disk..."
+msgstr ""
+
+#: topo.py:81
 msgid "Warning"
 msgstr "Waarschuwing"
 
-#: topo.py:76
+#: topo.py:83
 msgid ""
 "Are you sure you want to use another map? This will remove all your places!"
 msgstr ""
 "Weet je zeker dat je een andere kaart wil gebruiken? Het verwijdert al je "
 "plaatsen!"
 
-#: topo.py:164
+#: topo.py:232
 msgid "Map:"
 msgstr "Kaart:"
 
-#: topo.py:177
+#: topo.py:233
 msgid "Add a place by doubleclicking it on the map"
 msgstr "Voeg een plaats toe door er dubbel op te klikken op de kaart"
 
-#: topo.py:188
+#: topo.py:234
 msgid "Places in your test"
 msgstr "Plaatsen in je toets"
 
-#: topo.py:190
+#: topo.py:235
 msgid "Remove selected place"
 msgstr "Verwijder de geselecteerde plaats"
 
-#: topo.py:203
+#: topo.py:236
 msgid "Add a place by name:"
 msgstr "Voeg een plaats toe door de naam te geven"
 
-#: topo.py:205
+#: topo.py:237
 msgid "Add"
 msgstr "Toevoegen"
+
+#: topo.py:276
+msgid "Place not found"
+msgstr ""
+
+#: topo.py:277
+msgid ""
+"Sorry, this place is not in the list of known places. Please add it manually "
+"by doubleclicking on the right location in the map."
+msgstr ""

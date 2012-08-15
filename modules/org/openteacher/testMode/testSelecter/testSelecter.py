@@ -22,6 +22,7 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 import uuid
 import os
+import weakref
 
 try:
 	import json
@@ -33,19 +34,20 @@ class TestSelecter(QtGui.QListWidget):
 	testChosen = QtCore.pyqtSignal(dict)
 	def __init__(self, connection, filter=False, *args, **kwargs):
 		super(TestSelecter, self).__init__(*args, **kwargs)
-		
+
 		self.connection = connection
 		# Are tests you already handed in answers for filtered out?
 		self.filter = filter
 		self.currentRowChanged.connect(self._currentRowChanged)
-		
-		self._addTests()
-	
+
+		#retranslate fills the list
+		self.retranslate()
+
 	def _addTests(self):
 		# Get all tests
 		self.testsInfo = self.connection.get("tests")
 		self.testsInfos = []
-		
+
 		for test in self.testsInfo:
 			if self.filter:
 				# Get urls of all answers for this test
@@ -55,20 +57,24 @@ class TestSelecter(QtGui.QListWidget):
 				
 				if str(self.connection.userId) in answersIds:
 					break
-			
+
 			# Get name of this test
 			testInfo = self.connection.get(test["url"])
 			testInfo["list"] = json.loads(testInfo["list"])
 			self.testsInfos.append(testInfo)
-			
+
 			if "title" in testInfo["list"]:
 				self.addItem(testInfo["list"]["title"])
 			else:
-				self.addItem("Unnamed")
-	
+				self.addItem(_("Unnamed"))
+
+	def retranslate(self):
+		self.clear()
+		self._addTests()
+
 	def _currentRowChanged(self, index):
 		self.testChosen.emit(self.testsInfos[index])
-	
+
 	def getCurrentTest(self):
 		return self.testsInfos[self.currentRow()]
 
@@ -76,7 +82,7 @@ class TestModeTestSelecterModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestModeTestSelecterModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
-		#FIXME: translate + retranslate!
+
 		self.type = "testModeTestSelecter"
 		self.priorities = {
 			"student@home": -1,
@@ -97,11 +103,32 @@ class TestModeTestSelecterModule(object):
 			self._mm.mods(type="event"),
 			self._mm.mods(type="testModeConnection"),
 		)
+		self.filesWithTranslations = ("testSelecter.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		
+		self.connection = self._modules.default("active", type="testModeConnection").getConnection()
+		self._selecters = set()
+
 		#setup translation
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.active = True
+
+	def _retranslate(self):
+		for ref in self._selecters:
+			selecter = ref()
+			if selecter is not None:
+				selecter.retranslate()
+
+	def getTestSelecter(self, filter=False):
 		global _
 		global ngettext
 		
@@ -113,16 +140,17 @@ class TestModeTestSelecterModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		
-		self.connection = self._modules.default("active", type="testModeConnection").getConnection()
-		
-		self.active = True
-	
-	def getTestSelecter(self, filter=False):
-		return TestSelecter(self.connection, filter)
+
+		ts = TestSelecter(self.connection, filter)
+		self._selecters.add(weakref.ref(ts))
+		return ts
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
+		del self.connection
+		del self._selecters
 
 def init(moduleManager):
 	return TestModeTestSelecterModule(moduleManager)

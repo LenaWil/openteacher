@@ -7,21 +7,120 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-21 11:30+0200\n"
+"POT-Creation-Date: 2012-08-15 15:49+0200\n"
 "PO-Revision-Date: 2012-07-15 12:34+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-07-22 04:53+0000\n"
 "X-Generator: Launchpad (build 15654)\n"
-"Language: nl\n"
 
-#: teacherPanel.py:603
+#: teacherPanel.py:70
+msgid "Tests"
+msgstr ""
+
+#: teacherPanel.py:71
+msgid "Add lesson"
+msgstr ""
+
+#: teacherPanel.py:114
+msgid "Select a student/group:"
+msgstr ""
+
+#: teacherPanel.py:115
+msgid "Add person/group"
+msgstr ""
+
+#: teacherPanel.py:116
+msgid "Back"
+msgstr ""
+
+#: teacherPanel.py:183
+msgid "(did not participate)"
+msgstr ""
+
+#: teacherPanel.py:189
+msgid "(Handed in)"
+msgstr ""
+
+#: teacherPanel.py:229
+msgid "Questions:"
+msgstr ""
+
+#: teacherPanel.py:230
+msgid "People in this test:"
+msgstr ""
+
+#: teacherPanel.py:231
+msgid "Add person"
+msgstr ""
+
+#: teacherPanel.py:313
+msgid "Test"
+msgstr ""
+
+#: teacherPanel.py:314
+msgid "(Re)check answers"
+msgstr ""
+
+#: teacherPanel.py:315
+msgid "(Re)publish answers"
+msgstr ""
+
+#: teacherPanel.py:327
+msgid "Student's answers have been checked!"
+msgstr ""
+
+#: teacherPanel.py:333
+msgid "Student's results have been (re)published!"
+msgstr ""
+
+#: teacherPanel.py:523
+msgid "Person"
+msgstr ""
+
+#: teacherPanel.py:525
+msgid ""
+"Answers of this student have not been checked yet. Click the 'Check answers' "
+"button in the second column."
+msgstr ""
+
+#: teacherPanel.py:527
+msgid "Answers right:"
+msgstr ""
+
+#: teacherPanel.py:529
+msgid "Answers wrong:"
+msgstr ""
+
+#: teacherPanel.py:532
+#, fuzzy
+msgid "OpenTeacher mark:"
+msgstr "Docentenpaneel"
+
+#: teacherPanel.py:534
+msgid "Final mark:"
+msgstr ""
+
+#: teacherPanel.py:536
+msgid "Question"
+msgstr ""
+
+#: teacherPanel.py:537
+msgid "Given answer"
+msgstr ""
+
+#: teacherPanel.py:539
+msgid "Correct"
+msgstr ""
+
+#: teacherPanel.py:685
 msgid "Teacher panel"
 msgstr "Docentenpaneel"
 
-#: teacherPanel.py:641
+#: teacherPanel.py:687
 msgid "Teacher Panel"
 msgstr "Docentenpaneel"

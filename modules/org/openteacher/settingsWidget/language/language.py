@@ -34,7 +34,13 @@ class SettingsWidget(QtGui.QComboBox):
 		self.insertSeparator(1)
 
 		self.highlighted.connect(self._valueChanged)
-		self.setCurrentIndex(self.findData(setting["value"]))
+		i = self.findData(setting["value"])
+		if i == -1:
+			#this can be the case when the setting is 'System default',
+			#because that text is translated itself.
+			self.setCurrentIndex(0)
+		else:
+			self.setCurrentIndex(i)
 
 	def _valueChanged(self, index):
 		item = self.model().item(index)

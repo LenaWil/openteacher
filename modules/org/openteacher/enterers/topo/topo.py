@@ -23,11 +23,11 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 
 import os
+import weakref
 
-"""
-List widget of all the places
-"""
 class EnterPlacesWidget(QtGui.QListWidget):
+	"""List widget of all the places"""
+
 	def __init__(self, enterWidget, *args, **kwargs):
 		super(EnterPlacesWidget, self).__init__(*args, **kwargs)
 		
@@ -40,31 +40,38 @@ class EnterPlacesWidget(QtGui.QListWidget):
 		for place in self.enterWidget.list["items"]:
 			self.addItem(place["name"] + " (" + unicode(place["x"]) + "," + unicode(place["y"]) + ")")
 
-"""
-The dropdown menu for choosing the map
-"""
 class EnterMapChooser(QtGui.QComboBox):
+	"""The dropdown menu for choosing the map"""
+
 	def __init__(self, parent, mapWidget, *args, **kwargs):
 		super(EnterMapChooser, self).__init__(*args, **kwargs)
 		
 		self.mapWidget = mapWidget
 		self.enterWidget = parent
-		
+
 		# Ask if user wants to remove added places when changing map
 		self.ask = True
-		
+
 		# Fill the MapChooser with the maps
 		self._fillBox()
 		# Change the map
 		self._otherMap()
-		
+
 		self.currentIndexChanged.connect(self._otherMap)
+
+		self.retranslate()
+
+	def retranslate(self):
+		#update the last combobox item
+		self.removeItem(self.count() -1)
+		self.addItem(_("From hard disk..."), unicode({}))
 
 	def _fillBox(self):
 		for module in base._modules.sort("active", type="map"):
 			self.addItem(module.mapName, unicode({'mapName': module.mapName, 'mapPath': module.mapPath, 'knownPlaces': module.knownPlaces}))
-		
-		self.addItem("From hard disk...", unicode({}))
+
+		#the from harddisk item (retranslated)
+		self.addItem("", unicode({}))
 		
 	def _otherMap(self):
 		if self.ask:
@@ -108,32 +115,29 @@ class EnterMapChooser(QtGui.QComboBox):
 				self.prevIndex = self.currentIndex()
 		else:
 			self.ask = True
-	
+
 	@property
 	def currentMap(self):
 		return eval(unicode(self.itemData(self.currentIndex()).toString()))
 
-"""
-The add-place-by-name edit
-"""
 class EnterPlaceByName(QtGui.QLineEdit):
+	"""The add-place-by-name edit"""
+
 	def __init__(self, *args, **kwargs):
 		super(EnterPlaceByName, self).__init__(*args, **kwargs)
 	
-	"""
-	Gets list of names from the knownPlaces dict list
-	"""
 	def _getNames(self, list):
+		"""Gets list of names from the knownPlaces dict list"""
+
 		feedback = []
 		for item in list:
 			for name in item["names"]:
 				feedback.append(name)
 		return feedback
 	
-	"""
-	Updates the list of names
-	"""
 	def updateKnownPlaces(self, knownPlaces):
+		"""Updates the list of names"""
+
 		self.completer = QtGui.QCompleter(self._getNames(knownPlaces))
 		self.completer.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
 		self.setCompleter(self.completer)
@@ -141,13 +145,11 @@ class EnterPlaceByName(QtGui.QLineEdit):
 class DummyLesson(object):
 	pass
 
-"""
-The enter tab
-"""
 class EnterWidget(QtGui.QSplitter):
+	"""The enter tab"""
+
 	def __init__(self, *args, **kwargs):
 		super(EnterWidget, self).__init__(*args, **kwargs)
-		#self.places = List()
 		self.list = {
 			"items": list(),
 			"tests": list()
@@ -161,89 +163,99 @@ class EnterWidget(QtGui.QSplitter):
 		leftSide = QtGui.QVBoxLayout()
 		
 		#left side - top
-		mapLabel = QtGui.QLabel(_("Map:"))
+		self.mapLabel = QtGui.QLabel()
 		
 		#left side - middle
 		self.enterMap = base._modules.default("active", type="topoMaps").getEnterMap(self)
 		
 		#left side - top
 		self.mapChooser = EnterMapChooser(self, self.enterMap)
-		
+
 		chooseMap = QtGui.QHBoxLayout()
-		chooseMap.addWidget(mapLabel)
+		chooseMap.addWidget(self.mapLabel)
 		chooseMap.addWidget(self.mapChooser)
 		
 		#left side - bottom
-		explanationLabel = QtGui.QLabel(_("Add a place by doubleclicking it on the map"))
-		
+		self.explanationLabel = QtGui.QLabel()
+
 		#left side
 		leftSide.addLayout(chooseMap)
 		leftSide.addWidget(self.enterMap)
-		leftSide.addWidget(explanationLabel)
+		leftSide.addWidget(self.explanationLabel)
 		
 		#right side
 		rightSide = QtGui.QVBoxLayout()
 		
 		#right side - top
-		placesLabel = QtGui.QLabel(_("Places in your test"))
-		
-		removePlace = QtGui.QPushButton(_("Remove selected place"))
-		removePlace.clicked.connect(self.removePlace)
+		self.placesLabel = QtGui.QLabel()
+
+		self.removePlaceButton = QtGui.QPushButton()
+		self.removePlaceButton.clicked.connect(self.removePlace)
 		
 		rightTop = QtGui.QHBoxLayout()
-		rightTop.addWidget(placesLabel)
-		rightTop.addWidget(removePlace)
+		rightTop.addWidget(self.placesLabel)
+		rightTop.addWidget(self.removePlaceButton)
 		
 		#right side - middle
 		self.currentPlaces = EnterPlacesWidget(self)
 		
 		#right side - bottom
 		addPlace = QtGui.QHBoxLayout()
-		
-		addPlaceName = QtGui.QLabel(_("Add a place by name:"))
-		
-		addPlaceButton = QtGui.QPushButton(_("Add"))
-		
-		addPlaceButton.clicked.connect(lambda: self.addPlaceByName(self.addPlaceEdit.text()))
+
+		self.addPlaceName = QtGui.QLabel()
+		self.addPlaceButton = QtGui.QPushButton()
+
+		self.addPlaceButton.clicked.connect(lambda: self.addPlaceByName(self.addPlaceEdit.text()))
 		self.addPlaceEdit.returnPressed.connect(lambda: self.addPlaceByName(self.addPlaceEdit.text()))
-		
+
 		addPlace.addWidget(self.addPlaceEdit)
-		addPlace.addWidget(addPlaceButton)
-		
+		addPlace.addWidget(self.addPlaceButton)
+
 		#right side
 		rightSide.addLayout(rightTop)
 		rightSide.addWidget(self.currentPlaces)
-		rightSide.addWidget(addPlaceName)
+		rightSide.addWidget(self.addPlaceName)
 		rightSide.addLayout(addPlace)
-		
+
 		#total layout
 		leftSideWidget = QtGui.QWidget()
 		leftSideWidget.setLayout(leftSide)
 		rightSideWidget = QtGui.QWidget()
 		rightSideWidget.setLayout(rightSide)
-		
+
 		self.addWidget(leftSideWidget)
 		self.addWidget(rightSideWidget)
-	
-	"""
-	Updates the widgets on the EnterWidget after the list of places has changed
-	"""
+
+		self.retranslate()
+
+	def retranslate(self):
+		self.mapLabel.setText(_("Map:"))
+		self.explanationLabel.setText(_("Add a place by doubleclicking it on the map"))
+		self.placesLabel.setText(_("Places in your test"))
+		self.removePlaceButton.setText(_("Remove selected place"))
+		self.addPlaceName.setText(_("Add a place by name:"))
+		self.addPlaceButton.setText(_("Add"))
+
+		self.mapChooser.retranslate()
+
 	def updateWidgets(self):
+		"""Updates the widgets on the EnterWidget after the list of
+		   places has changed
+
+		"""
 		self.enterMap.update()
 		self.currentPlaces.update()
-	
-	"""
-	Add a place to the list
-	"""
+
 	def addPlace(self,place):
+		"""Add a place to the list"""
+
 		self.list["items"].append(place)
 		self.lesson.changed = True
 		self.updateWidgets()
-	
-	"""
-	Add a place by looking at the list of known places
-	"""
+
 	def addPlaceByName(self, name):
+		"""Add a place by looking at the list of known places"""
+
 		for placeDict in self.mapChooser.currentMap["knownPlaces"]:
 			if name in placeDict["names"]:
 				try:
@@ -259,17 +271,20 @@ class EnterWidget(QtGui.QSplitter):
 				self.updateWidgets()
 				return
 		else:
-			QtGui.QMessageBox(QtGui.QMessageBox.Warning, "Place not found", "Sorry, this place is not in the list of known places. Please add it manually by doubleclicking on the right location in the map.").exec_()
-		
+			QtGui.QMessageBox(
+				QtGui.QMessageBox.Warning,
+				_("Place not found"),
+				_("Sorry, this place is not in the list of known places. Please add it manually by doubleclicking on the right location in the map.")
+			).exec_()
+
 		self.addPlaceEdit.setText("")
 		self.addPlaceEdit.setFocus()
 
 		self.lesson.changed = True
 		
-	"""
-	Remove a place from the list
-	"""
 	def removePlace(self):
+		"""Remove a place from the list"""
+
 		for placeItem in self.currentPlaces.selectedItems():
 			for place in self.list["items"]:
 				if placeItem.text() == unicode(place["name"] + " (" + unicode(place["x"]) + "," + unicode(place["y"]) + ")"):
@@ -309,11 +324,21 @@ class TopoEntererModule(object):
 		self.filesWithTranslations = ("topo.py",)
 	
 	def enable(self):
-		#FIXME: retranslate!
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.active = True
-		
+		self._widgets = set()
+
 		#setup translation
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.active = True
+
+	def _retranslate(self):
 		global _
 		global ngettext
 		
@@ -325,12 +350,22 @@ class TopoEntererModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
+
+		for ref in self._widgets:
+			widget = ref()
+			if widget is not None:
+				widget.retranslate()
 	
 	def disable(self):
 		self.active = False
+
+		del self._modules
+		del self._widgets
 	
 	def createTopoEnterer(self):
-		return EnterWidget()
+		ew = EnterWidget()
+		self._widgets.add(weakref.ref(ew))
+		return ew
 
 def init(moduleManager):
 	return TopoEntererModule(moduleManager)

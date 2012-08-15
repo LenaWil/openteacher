@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Milan Boers
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #	Copyright 2011, Cas Widdershoven
 #
 #	This file is part of OpenTeacher.
@@ -24,7 +24,8 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 
 import copy
-#FIXME: translate/retranslate!
+import weakref
+
 class TeachWidget(QtGui.QWidget):
 	lessonDone = QtCore.pyqtSignal()
 	listChanged = QtCore.pyqtSignal([object])
@@ -46,15 +47,20 @@ class TeachWidget(QtGui.QWidget):
 		self.questions = QtGui.QFormLayout()
 		
 		scrollArea.setLayout(self.questions)
-		
+
 		layout.addWidget(scrollArea)
-		
-		handInButton = QtGui.QPushButton("Hand in answers")
-		handInButton.clicked.connect(self.lessonDone.emit)
-		layout.addWidget(handInButton)
-		
+
+		self.handInButton = QtGui.QPushButton()
+		self.handInButton.clicked.connect(self.lessonDone.emit)
+		layout.addWidget(self.handInButton)
+
 		self.setLayout(layout)
-		
+
+		self.retranslate()
+
+	def retranslate(self):
+		self.handInButton.setText(_("Hand in answers"))
+
 	def updateList(self, list):
 		self.list = list
 	
@@ -105,10 +111,11 @@ class TestModeTeacherModule(object):
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="wordsStringComposer"),
 		)
+		self.filesWithTranslations = ("teacher.py",)
 
 	def createWordsTeacher(self):		
 		tw = TeachWidget(self._mm, self._onscreenKeyboard, self._applicationActivityChanged)
-		#self._activeWidgets.add(weakref.ref(tw))
+		self._activeWidgets.add(weakref.ref(tw))
 		self._retranslate()
 
 		return tw
@@ -130,7 +137,7 @@ class TestModeTeacherModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		#self._activeWidgets = set()
+		self._activeWidgets = set()
 
 		try:
 			translator = self._modules.default("active", type="translator")
@@ -156,16 +163,16 @@ class TestModeTeacherModule(object):
 				self._mm.resourcePath("translations")
 			)
 
-		#for widget in self._activeWidgets:
-		#	r = widget()
-		#	if r is not None:
-		#		r.retranslate()
+		for widget in self._activeWidgets:
+			r = widget()
+			if r is not None:
+				r.retranslate()
 
 	def disable(self):
 		self.active = False
 
 		del self._modules
-		#del self._activeWidgets
+		del self._activeWidgets
 
 def init(moduleManager):
 	return TestModeTeacherModule(moduleManager)

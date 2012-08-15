@@ -112,18 +112,15 @@ class OpenTeachingMediaSaverModule(object):
 		if self._compressionSetting["value"]:
 			compression = zipfile.ZIP_DEFLATED
 
-		#FIXME: let media use the resources attribute in a way similar
-		#to topo. So let it put all its file names there instead of the
-		#lists property, so it becomes easy to save them. And then use
-		#e.g. the name or a unique id to link a resource to an item.
-		#That way, this module can be reduced a lot.
+		#prepare lesson structure for saving
 		lesson_clone = Lesson()
 		lesson_clone.list = copy.deepcopy(lesson.list)
 		lesson_clone.resources = {}
 		for item in lesson_clone.list["items"]:
 			if not item["remote"]:
-				lesson_clone.resources[os.path.basename(item["filename"])] = item["filename"]
-				item["filename"] = os.path.basename(item["filename"])
+				zipName = os.path.join("resources", os.path.basename(item["filename"]))
+				lesson_clone.resources[zipName] = item["filename"]
+				item["filename"] = zipName
 
 		resourceFilenames = {}
 		for resourceName in lesson_clone.resources:

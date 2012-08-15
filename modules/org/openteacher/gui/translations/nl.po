@@ -7,18 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-21 11:30+0200\n"
+"POT-Creation-Date: 2012-08-15 15:49+0200\n"
 "PO-Revision-Date: 2012-08-03 18:33+0000\n"
 "Last-Translator: Willem Sonke <Unknown>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-08-04 05:25+0000\n"
 "X-Generator: Launchpad (build 15742)\n"
-"Language: \n"
 
-#: gui.py:336
+#: gui.py:344
 msgid "Open from file"
 msgstr "Open vanuit bestand"
 
@@ -26,67 +26,67 @@ msgstr "Open vanuit bestand"
 msgid "Close Tab"
 msgstr "Sluit tab"
 
-#: ui.py:81
+#: ui.py:97
 msgid "Enter list"
 msgstr "Voeg toe"
 
-#: ui.py:83
+#: ui.py:98
 msgid "Teach me!"
 msgstr "Overhoor me!"
 
-#: ui.py:85
+#: ui.py:99
 msgid "Show results"
 msgstr "Laat resultaten zien"
 
-#: ui.py:248
+#: ui.py:273
 msgid "&File"
 msgstr "&Bestand"
 
-#: ui.py:249
+#: ui.py:274
 msgid "&New"
 msgstr "&Nieuw"
 
-#: ui.py:250
+#: ui.py:275
 msgid "&Open"
 msgstr "&Open"
 
-#: ui.py:251
+#: ui.py:276
 msgid "&Save"
 msgstr "&Opslaan"
 
-#: ui.py:252
+#: ui.py:277
 msgid "Save &As"
 msgstr "Opslaan &als"
 
-#: ui.py:253
+#: ui.py:278
 msgid "&Print"
 msgstr "&Print"
 
-#: ui.py:254
+#: ui.py:279
 msgid "&Quit"
 msgstr "A&fsluiten"
 
-#: ui.py:256
+#: ui.py:281
 msgid "&Edit"
 msgstr "B&ewerken"
 
-#: ui.py:257
+#: ui.py:282
 msgid "&Settings"
 msgstr "&Instellingen"
 
-#: ui.py:259
+#: ui.py:284
 msgid "&Help"
 msgstr "&Help"
 
-#: ui.py:260
+#: ui.py:285
 msgid "&Documentation"
 msgstr "&Documentatie"
 
-#: ui.py:261
+#: ui.py:286
 msgid "&About"
 msgstr "&Over"
 
-#: ui.py:263
+#: ui.py:288
 msgid "Toolbar"
 msgstr "Toolbar"
 

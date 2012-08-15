@@ -23,66 +23,92 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 
 import datetime
+import weakref
 
 class Order:
 	Normal, Inversed = xrange(2)
 
-"""
-The dropdown menu to choose lesson type
-"""
 class TeachLessonTypeChooser(QtGui.QComboBox):
+	"""The dropdown menu to choose lesson type"""
+
 	def __init__(self, teachWidget, *args, **kwargs):
 		super(TeachLessonTypeChooser, self).__init__(*args, **kwargs)
 		
 		self.teachWidget = teachWidget
 		
-		self.currentIndexChanged.connect(self.changeLessonType)
-		
-		self._lessonTypeModules = list(
-			base._mm.mods("active", type="lessonType")
-		)
-		
+		self.retranslate()
+
+	def retranslate(self):
+		try:
+			self.currentIndexChanged.disconnect(self.changeLessonType)
+		except TypeError:
+			#not yet connected (first pass)
+			pass
+
+		#save status
+		i = self.currentIndex()
+
+		#update data
+		self.clear()
+		self._lessonTypeModules = base._modules.sort("active", type="lessonType")
 		for lessontype in self._lessonTypeModules:
 			self.addItem(lessontype.name, lessontype)
-	
-	"""
-	What happens when you change the lesson type
-	"""
+
+		#restore status
+		if i != -1:
+			self.setCurrentIndex(i)
+
+		#re-connect signal
+		self.currentIndexChanged.connect(self.changeLessonType)
+
 	def changeLessonType(self, index):
+		"""What happens when you change the lesson type"""
+
 		if self.teachWidget.inLesson:
 			self.teachWidget.restartLesson()
 	
-	"""
-	Get the current lesson type
-	"""
 	@property
 	def currentLessonType(self):
+		"""Get the current lesson type"""
+
 		return self._lessonTypeModules[self.currentIndex()]
 
-"""
-The dropdown menu to choose lesson order
-"""
 class TeachLessonOrderChooser(QtGui.QComboBox):
+	"""The dropdown menu to choose lesson order"""
+
 	def __init__(self, teachWidget, *args, **kwargs):
 		super(TeachLessonOrderChooser, self).__init__(*args, **kwargs)
 		
-		self.currentIndexChanged.connect(self.changeLessonOrder)
 		self.teachWidget = teachWidget
-		
+		self.retranslate()
+
+	def retranslate(self):
+		try:
+			self.currentIndexChanged.disconnect(self.changeLessonOrder)
+		except TypeError:
+			#not yet connected (first pass)
+			pass
+
+		i = self.currentIndex()
+		self.clear()
+
 		self.addItem(_("Place - Name"), 0)
 		self.addItem(_("Name - Place"), 1)
-	
-	"""
-	What happens when you change the lesson order
-	"""
+
+		if i != -1:
+			self.setCurrentIndex(i)
+
+		self.currentIndexChanged.connect(self.changeLessonOrder)
+
 	def changeLessonOrder(self, index):
+		"""What happens when you change the lesson order"""
+
 		if self.teachWidget.inLesson:
 			self.teachWidget.restartLesson()
 
-"""
-The lesson itself
-"""
 class TeachTopoLesson(object):
+	"""The lesson itself"""
+
 	def __init__(self, itemList, mapPath, teachWidget, *args, **kwargs):
 		super(TeachTopoLesson, self).__init__(*args, **kwargs)
 		
@@ -110,10 +136,9 @@ class TeachTopoLesson(object):
 		
 		self.teachWidget.setWidgets(self.order)
 	
-	"""
-	Check whether the given answer was right or wrong
-	"""
 	def checkAnswer(self, answer=None):
+		"""Check whether the given answer was right or wrong"""
+
 		# Set endThinkingTime if it hasn't been set yet (this is in Name - Place mode)
 		try:
 			self.endThinkingTime
@@ -161,11 +186,10 @@ class TeachTopoLesson(object):
 				})
 		
 		self.teachWidget.listChanged.emit(self.itemList)
-			
-	"""
-	What happens when the next question should be asked
-	"""
+
 	def nextQuestion(self, item):
+		"""What happens when the next question should be asked"""
+
 		#set the next question
 		self.currentItem = item
 		if self.order == Order.Inversed:
@@ -182,10 +206,9 @@ class TeachTopoLesson(object):
 		except AttributeError:
 			pass
 	
-	"""
-	Ends the lesson
-	"""
 	def endLesson(self, showResults=True):
+		"""Ends the lesson"""
+
 		self.teachWidget.inLesson = False
 		
 		# Update and go to results widget, only if the test is progressing
@@ -203,11 +226,10 @@ class TeachTopoLesson(object):
 					pass
 		
 		self.teachWidget.lessonDone.emit()
-	
-	"""
-	Updates the progress bar
-	"""
+
 	def _updateProgressBar(self):
+		"""Updates the progress bar"""
+
 		self.teachWidget.progress.setMaximum(self.lessonType.totalItems+1)
 		self.teachWidget.progress.setValue(self.lessonType.askedItems)
 	
@@ -215,10 +237,9 @@ class TeachTopoLesson(object):
 	def order(self):
 		return self.teachWidget.lessonOrderChooser.currentIndex()
 
-"""
-The teach tab
-"""
 class TeachWidget(QtGui.QWidget):
+	"""The teach tab"""
+
 	lessonDone = QtCore.pyqtSignal()
 	listChanged = QtCore.pyqtSignal([object])
 	def __init__(self, *args, **kwargs):
@@ -229,17 +250,17 @@ class TeachWidget(QtGui.QWidget):
 		## GUI Drawing
 		# Top
 		top = QtGui.QHBoxLayout()
-		
-		label = QtGui.QLabel(_("Lesson type:"))
+
+		self.lessonTypeLabel = QtGui.QLabel()
 		self.lessonTypeChooser = TeachLessonTypeChooser(self)
 		
-		top.addWidget(label)
+		top.addWidget(self.lessonTypeLabel)
 		top.addWidget(self.lessonTypeChooser)
-		
-		label = QtGui.QLabel(_("Lesson order:"))
+
+		self.lessonOrderLabel = QtGui.QLabel()
 		self.lessonOrderChooser = TeachLessonOrderChooser(self)
-		
-		top.addWidget(label)
+
+		top.addWidget(self.lessonOrderLabel)
 		top.addWidget(self.lessonOrderChooser)
 		
 		# Middle
@@ -248,15 +269,15 @@ class TeachWidget(QtGui.QWidget):
 		# Bottom
 		bottom = QtGui.QHBoxLayout()
 		
-		self.label = QtGui.QLabel(_("Which place is here?"))
+		self.label = QtGui.QLabel()
 		self.answerfield = QtGui.QLineEdit()
-		self.checkanswerbutton = QtGui.QPushButton(_("Check"))
+		self.checkanswerbutton = QtGui.QPushButton()
 		self.answerfield.returnPressed.connect(self._checkAnswerButtonClick)
 		self.answerfield.textEdited.connect(self._answerChanged)
 		
 		self.checkanswerbutton.clicked.connect(self._checkAnswerButtonClick)
 		
-		self.questionLabel = QtGui.QLabel(_("Please click this place:"))
+		self.questionLabel = QtGui.QLabel()
 		
 		self.progress = QtGui.QProgressBar()
 		
@@ -273,35 +294,43 @@ class TeachWidget(QtGui.QWidget):
 		layout.addLayout(bottom)
 		
 		self.setLayout(layout)
-	
-	"""
-	Starts the lesson
-	"""
+
+		self.retranslate()
+
+	def retranslate(self):
+		self.lessonTypeLabel.setText(_("Lesson type:"))
+		self.lessonOrderLabel.setText(_("Lesson order:"))
+		self.label.setText(_("Which place is here?"))
+		self.checkanswerbutton.setText(_("Check"))
+		self.questionLabel.setText(_("Please click this place:"))
+
+		self.lessonTypeChooser.retranslate()
+		self.lessonOrderChooser.retranslate()
+
 	def initiateLesson(self, places, mapPath):
+		"""Starts the lesson"""
+
 		self.places = places
 		self.mapPath = mapPath
 		
 		self.lesson = TeachTopoLesson(places, mapPath, self)
 		self.answerfield.setFocus()
-	
-	"""
-	Restarts the lesson
-	"""
+
 	def restartLesson(self):
+		"""Restarts the lesson"""
+
 		self.initiateLesson(self.places, self.mapPath)
 	
-	"""
-	Stops the lesson
-	"""
 	def stopLesson(self, showResults=True):
+		"""Stops the lesson"""
+
 		self.lesson.endLesson(showResults)
 		
 		del self.lesson
 	
-	"""
-	What happens when the answer in the textbox has changed
-	"""
 	def _answerChanged(self):
+		"""What happens when the answer in the textbox has changed"""
+
 		try:
 			self.lesson.endThinkingTime
 		except AttributeError:
@@ -310,10 +339,9 @@ class TeachWidget(QtGui.QWidget):
 			if self.answerfield.text() == "":
 				del self.lesson.endThinkingTime
 	
-	"""
-	What happens when you click the check answer button
-	"""
 	def _checkAnswerButtonClick(self):
+		"""What happens when you click the check answer button"""
+
 		# Check the answer
 		self.lesson.checkAnswer()
 		# Clear the answer field
@@ -321,10 +349,11 @@ class TeachWidget(QtGui.QWidget):
 		# Focus the answer field
 		self.answerfield.setFocus()
 	
-	"""
-	Sets the bottom widgets to either the in-order version (False) or the inversed-order (True)
-	"""
 	def setWidgets(self, order):
+		"""Sets the bottom widgets to either the in-order version (False) or
+		   the inversed-order (True)
+
+		"""
 		if order == Order.Inversed:
 			self.label.setVisible(False)
 			self.answerfield.setVisible(False)
@@ -369,9 +398,21 @@ class TopoTeacherModule(object):
 	
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.active = True
-		#FIXME: retranslate!
+
+		self._widgets = set()
+
 		#setup translation
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.active = True
+
+	def _retranslate(self):
 		global _
 		global ngettext
 		
@@ -383,12 +424,26 @@ class TopoTeacherModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-	
+
+		for ref in self._widgets:
+			widget = ref()
+			if widget is not None:
+				#FIXME (>3.0): use the languageChangeDone event instead?
+				#(and only for the stuff that depends on other modules?)
+				#update next event loop iteration, because it depends on
+				#some other modules.
+				QtCore.QTimer.singleShot(0, widget.retranslate)
+
 	def disable(self):
 		self.active = False
+
+		del self._modules
+		del self._widgets
 	
 	def createTopoTeacher(self):
-		return TeachWidget()
+		tw = TeachWidget()
+		self._widgets.add(weakref.ref(tw))
+		return tw
 
 def init(moduleManager):
 	return TopoTeacherModule(moduleManager)

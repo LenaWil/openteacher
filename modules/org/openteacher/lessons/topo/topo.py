@@ -187,9 +187,8 @@ class Lesson(object):
 		self.enterWidget = enterWidget
 		self.teachWidget = teachWidget
 		self.resultsWidget = resultsWidget
-
 		self.fileTab = fileTab
-		self.fileTab.title = _("Topo lesson: %s") % counter
+		self.counter = counter
 
 		self.stopped = self._modules.default(type="event").createEvent()
 		
@@ -202,6 +201,8 @@ class Lesson(object):
 		self.teachWidget.listChanged.connect(self.teachListChanged)
 
 		self.changedEvent = self._modules.default(type="event").createEvent()
+
+		self.retranslate()
 
 	@property
 	def changed(self):
@@ -256,7 +257,7 @@ class Lesson(object):
 			os.remove(file)
 			
 	def retranslate(self):
-		self.fileTab.title = _("Topo lesson: %s") % counter
+		self.fileTab.title = _("Topo lesson: %s") % self.counter
 
 def init(moduleManager):
 	return TeachTopoLessonModule(moduleManager)

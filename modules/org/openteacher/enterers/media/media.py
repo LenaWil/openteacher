@@ -23,12 +23,13 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 
 import os
+import weakref
 
-
-"""
-The model for the list widget with media items (this construction because without model Qt produces a bug)
-"""
 class EnterItemListModel(QtCore.QAbstractListModel):
+	"""The model for the list widget with media items (this construction
+	   because without model Qt produces a bug)
+
+	"""
 	def __init__(self,items,*args,**kwargs):
 		super(EnterItemListModel, self).__init__(*args, **kwargs)
 		
@@ -59,10 +60,9 @@ class EnterItemListModel(QtCore.QAbstractListModel):
 	def textAtIndex(self,index):
 		return self.listData[index]
 
-"""
-The list widget with media items
-"""
 class EnterItemList(QtGui.QListView):
+	"""The list widget with media items"""
+
 	def __init__(self,enterWidget,*args,**kwargs):
 		super(EnterItemList, self).__init__(*args, **kwargs)
 		
@@ -85,10 +85,9 @@ class EnterItemList(QtGui.QListView):
 class DummyLesson(object):
 	pass
 
-"""
-The enter tab
-"""
 class EnterWidget(QtGui.QSplitter):
+	"""The enter tab"""
+
 	def __init__(self,*args, **kwargs):
 		super(EnterWidget, self).__init__(*args, **kwargs)
 		self.list = {
@@ -98,51 +97,51 @@ class EnterWidget(QtGui.QSplitter):
 		self.lesson = DummyLesson()
 		
 		self.enterItemList = EnterItemList(self)
-		
-		removeButton = QtGui.QPushButton(_("Remove"))
-		removeButton.clicked.connect(self.removeItem)
-		addLocalButton = QtGui.QPushButton(_("Add local media"))
-		addLocalButton.clicked.connect(self.addLocalItems)
-		addRemoteButton = QtGui.QPushButton(_("Add remote media"))
-		addRemoteButton.clicked.connect(self.addRemoteItems)
+
+		self.removeButton = QtGui.QPushButton()
+		self.removeButton.clicked.connect(self.removeItem)
+		self.addLocalButton = QtGui.QPushButton()
+		self.addLocalButton.clicked.connect(self.addLocalItems)
+		self.addRemoteButton = QtGui.QPushButton()
+		self.addRemoteButton.clicked.connect(self.addRemoteItems)
 		
 		leftBottom = QtGui.QHBoxLayout()
-		leftBottom.addWidget(removeButton)
-		leftBottom.addWidget(addLocalButton)
-		leftBottom.addWidget(addRemoteButton)
-		
+		leftBottom.addWidget(self.removeButton)
+		leftBottom.addWidget(self.addLocalButton)
+		leftBottom.addWidget(self.addRemoteButton)
+
 		left = QtGui.QVBoxLayout()
 		left.addWidget(self.enterItemList)
 		left.addLayout(leftBottom)
 		leftW = QtGui.QWidget()
 		leftW.setLayout(left)
-		
+
 		self.mediaDisplay = base._modules.default("active", type="mediaDisplay").createDisplay(False)
-		
-		namel = QtGui.QLabel(_("Name:"))
-		
+
+		self.namel = QtGui.QLabel()
+
 		self.enterName = QtGui.QLineEdit()
 		self.enterName.textChanged.connect(self.changeName)
 		self.enterName.setEnabled(False)
-		
-		questionl = QtGui.QLabel(_("Question:"))
-		
+
+		self.questionl = QtGui.QLabel()
+
 		self.enterQuestion = QtGui.QLineEdit()
 		self.enterQuestion.textChanged.connect(self.changeQuestion)
 		self.enterQuestion.setEnabled(False)
-		
-		answerl = QtGui.QLabel(_("Answer:"))
-		
+
+		self.answerl = QtGui.QLabel()
+
 		self.enterAnswer = QtGui.QLineEdit()
 		self.enterAnswer.textChanged.connect(self.changeAnswer)
 		self.enterAnswer.setEnabled(False)
 		
 		desceditL = QtGui.QVBoxLayout()
-		desceditL.addWidget(namel)
+		desceditL.addWidget(self.namel)
 		desceditL.addWidget(self.enterName)
-		desceditL.addWidget(questionl)
+		desceditL.addWidget(self.questionl)
 		desceditL.addWidget(self.enterQuestion)
-		desceditL.addWidget(answerl)
+		desceditL.addWidget(self.answerl)
 		desceditL.addWidget(self.enterAnswer)
 		
 		desceditW = QtGui.QWidget()
@@ -165,11 +164,20 @@ class EnterWidget(QtGui.QSplitter):
 		layout.addWidget(splitter)
 		
 		self.setLayout(layout)
-	
-	"""
-	Add items from the local disk to the list
-	"""
+		self.retranslate()
+
+	def retranslate(self):
+		self.removeButton.setText(_("Remove"))
+		self.addLocalButton.setText(_("Add local media"))
+		self.addRemoteButton.setText(_("Add remote media"))
+
+		self.namel.setText(_("Name:"))
+		self.questionl.setText(_("Question:"))
+		self.answerl.setText(_("Answer:"))
+
 	def addLocalItems(self):
+		"""Add items from the local disk to the list"""
+
 		extensions = []
 		for module in base._modules.sort("active", type="mediaType"):
 			try:
@@ -183,14 +191,18 @@ class EnterWidget(QtGui.QSplitter):
 			extensionsStr += "*" + extension + " "
 		extensionsStr += ")"
 		
-		filenames = QtGui.QFileDialog.getOpenFileNames(self,_("Select file(s)"),QtCore.QDir.homePath(),_("Media") + " " + extensionsStr)
+		filenames = QtGui.QFileDialog.getOpenFileNames(
+			self,
+			_(_("Select file(s)")),
+			QtCore.QDir.homePath(),
+			_("Media") + " " + extensionsStr
+		)
 		for filename in filenames:
 			self.addItem(str(filename), False)
 	
-	"""
-	Add items from the internet to the list
-	"""
 	def addRemoteItems(self):
+		"""Add items from the internet to the list"""
+
 		sitenames = []
 		for module in base._modules.sort("active", type="mediaType"):
 			try:
@@ -204,20 +216,22 @@ class EnterWidget(QtGui.QSplitter):
 			sitenamesStr += sitename + ", "
 		sitenamesStr = sitenamesStr[:-2]
 		
-		url, dialog = QtGui.QInputDialog.getText(self, _("File URL"), _("Enter the URL of your website or media item.\nSupported video sites: " + sitenamesStr + "."))
+		url, dialog = QtGui.QInputDialog.getText(
+			self,
+			_("File URL"),
+			_("Enter the URL of your website or media item.\nSupported video sites: " + sitenamesStr + ".")
+		)
 		if dialog:
 			self.addItem(str(url), True)
 	
-	"""
-	Updates all the widgets if the list has changed
-	"""
 	def updateWidgets(self):
+		"""Updates all the widgets if the list has changed"""
+
 		self.enterItemList.update()
 	
-	"""
-	Add an item to the list
-	"""
 	def addItem(self,filename,remote=False,name=None,question=None,answer=None):
+		"""Add an item to the list"""
+
 		# Check if file is supported
 		for module in base._modules.sort("active", type="mediaType"):
 			if module.supports(filename):
@@ -252,12 +266,15 @@ class EnterWidget(QtGui.QSplitter):
 				self.updateWidgets()
 				break
 		else:
-			QtGui.QMessageBox.critical(self, _("Unsupported file type"), _("This type of file is not supported:\n" + filename))
+			QtGui.QMessageBox.critical(
+				self,
+				_("Unsupported file type"),
+				_("This type of file is not supported:\n") + filename
+			)
 
-	"""
-	Remove an item from the list
-	"""
 	def removeItem(self):
+		"""Remove an item from the list"""
+
 		if self.activeitem in self.list["items"]:
 			self.list["items"].remove(self.activeitem)
 			self.updateWidgets()
@@ -272,10 +289,9 @@ class EnterWidget(QtGui.QSplitter):
 
 			self.list.changed = True
 
-	"""
-	Change the active item
-	"""
 	def setActiveItem(self,item):
+		"""Change the active item"""
+
 		self.activeitem = item
 		self.enterName.setEnabled(True)
 		self.enterName.setText(item["name"])
@@ -294,18 +310,15 @@ class EnterWidget(QtGui.QSplitter):
 			self.updateWidgets()
 			self.lesson.changed = True	
 	
-	"""
-	Change the question of the active item
-	"""
 	def changeQuestion(self):
+		"""Change the question of the active item"""
+
 		if self.activeitem["question"] != unicode(self.enterQuestion.text()):
 			self.activeitem["question"] = unicode(self.enterQuestion.text())
 			self.lesson.changed = True
 	
-	"""
-	Change the description of the active item
-	"""
 	def changeAnswer(self):
+		"""Change the description of the active item"""
 		if self.activeitem["answer"] != unicode(self.enterAnswer.text()):
 			self.activeitem["answer"] = unicode(self.enterAnswer.text())
 			self.lesson.changed = True
@@ -342,12 +355,24 @@ class MediaEntererModule(object):
 	
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.active = True
-		#FIXME: retranslate!
+
+		self._widgets = set()
+
 		#setup translation
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.active = True
+
+	def _retranslate(self):
 		global _
 		global ngettext
-		
+
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -356,12 +381,22 @@ class MediaEntererModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
+
+		for ref in self._widgets:
+			widget = ref()
+			if widget is not None:
+				widget.retranslate()
 	
 	def disable(self):
 		self.active = False
+
+		del self._modules
+		del self._widgets
 	
 	def createMediaEnterer(self):
-		return EnterWidget()
+		ew = EnterWidget()
+		self._widgets.add(weakref.ref(ew))
+		return ew
 
 def init(moduleManager):
 	return MediaEntererModule(moduleManager)

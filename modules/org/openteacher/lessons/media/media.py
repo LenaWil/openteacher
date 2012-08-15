@@ -23,10 +23,10 @@
 import os, weakref
 
 #FIXME (>3.1): give media lessons a title
-"""
-The module
-"""
+
 class MediaLessonModule(object):
+	"""The module"""
+
 	def __init__(self, mm,*args,**kwargs):
 		super(MediaLessonModule, self).__init__(*args, **kwargs)
 		
@@ -166,10 +166,9 @@ class MediaLessonModule(object):
 			if lesson:
 				lesson.retranslate()
 
-"""
-Lesson object (that means: this techwidget+enterwidget)
-"""
 class Lesson(object):
+	"""Lesson object (that means: this techwidget+enterwidget)"""
+
 	def __init__(self, modules, fileTab, enterWidget, teachWidget, resultsWidget, counter, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
 		
@@ -179,6 +178,7 @@ class Lesson(object):
 		self.teachWidget = teachWidget
 		self.resultsWidget = resultsWidget
 		self.fileTab = fileTab
+		self.counter = counter
 		
 		self.stopped = self._modules.default(type="event").createEvent()
 		
@@ -191,12 +191,12 @@ class Lesson(object):
 		self.teachWidget.lessonDone.connect(self.toEnterTab)
 		self.teachWidget.listChanged.connect(self.teachListChanged)
 
-		self.fileTab.title = _("Media lesson: %s") % counter
-
 		self.changedEvent = self._modules.default(type="event").createEvent()
-		
+
+		self.retranslate()
+
 	def retranslate(self):
-		self.fileTab.title = _("Media lesson: %s") % counter
+		self.fileTab.title = _("Media lesson: %s") % self.counter
 
 	@property
 	def changed(self):

@@ -48,13 +48,20 @@ class ConnectWidget(QtGui.QWidget):
 		self.setLayout(self.connectLayout)
 		
 		self.serverField = QtGui.QLineEdit()
-		self.connectLayout.addRow(_("Server IP or hostname:"), self.serverField)
+		self.serverLabel = QtGui.QLabel()
+		self.connectLayout.addRow(self.serverLabel, self.serverField)
 		
-		connectButton = QtGui.QPushButton(_("Connect"))
-		connectButton.clicked.connect(lambda: self.connection.connect(str(self.serverField.text())))
-		self.connectLayout.addRow(connectButton)
+		self.connectButton = QtGui.QPushButton()
+		self.connectButton.clicked.connect(lambda: self.connection.connect(str(self.serverField.text())))
+		self.connectLayout.addRow(self.connectButton)
 		
-		self.serverField.returnPressed.connect(connectButton.click)
+		self.serverField.returnPressed.connect(self.connectButton.click)
+
+		self.retranslate()
+
+	def retranslate(self):
+		self.serverLabel.setText(_("Server IP or hostname:"))
+		self.connectButton.setText(_("Connect"))
 
 class LoginWidget(QtGui.QWidget):
 	def __init__(self, connection, loginid, *args, **kwargs):
@@ -64,19 +71,30 @@ class LoginWidget(QtGui.QWidget):
 		
 		self.loginLayout = QtGui.QFormLayout()
 		self.setLayout(self.loginLayout)
-		
+
+		self.usernameLabel = QtGui.QLabel()
 		self.usernameField = QtGui.QLineEdit()
-		self.loginLayout.addRow(_("Username:"), self.usernameField)
-		
+		self.loginLayout.addRow(self.usernameLabel, self.usernameField)
+
+		self.passwordLabel = QtGui.QLabel()
 		self.passwordField = QtGui.QLineEdit()
 		self.passwordField.setEchoMode(QtGui.QLineEdit.Password)
-		self.loginLayout.addRow(_("Password:"), self.passwordField)
-		
-		self.checkButton = QtGui.QPushButton(_("Login"))
-		self.checkButton.clicked.connect(lambda : connection.checkLogin(str(self.usernameField.text()), str(self.passwordField.text()), loginid))
+		self.loginLayout.addRow(self.passwordLabel, self.passwordField)
+
+		self.checkButton = QtGui.QPushButton()
+		self.checkButton.clicked.connect(lambda: connection.checkLogin(
+			str(self.usernameField.text()),
+			str(self.passwordField.text()),
+			loginid
+		))
 		self.loginLayout.addRow(self.checkButton)
-		
+
 		self.passwordField.returnPressed.connect(self.checkButton.click)
+
+	def retranslate(self):
+		self.usernameLabel.setText(_("Username:"))
+		self.passwordLabel.setText(_("Password:"))
+		self.checkButton.setText(_("Login"))
 
 class ConnectLoginWidget(QtGui.QWidget):
 	def __init__(self, connection, loginid, *args, **kwargs):
@@ -91,9 +109,15 @@ class ConnectLoginWidget(QtGui.QWidget):
 		
 		self.loginWidget = LoginWidget(connection, loginid)
 		self.layout.addWidget(self.loginWidget)
-	
+
+		self.retranslate()
+
 	def afterConnect(self):
 		self.layout.setCurrentWidget(self.loginWidget)
+
+	def retranslate(self):
+		self.connectWidget.retranslate()
+		self.loginWidget.retranslate()
 
 class Connection(object):
 	def __init__(self, modules, *args, **kwargs):
@@ -111,21 +135,29 @@ class Connection(object):
 		self.server = None
 		self.serverName = None
 		self.auth = False
-	
-	# "Connected" to the server and logged in?
+
+	def retranslate(self):
+		if hasattr(self, "loginTab"):
+			self.connectLoginWidget.retranslate()
+			self.loginTab.title = _("Login")
+
 	@property
 	def connectedLoggedIn(self):
+		"""'Connected' to the server and logged in?"""
+
 		return self.server != None and self.auth == True
 	
-	# "Connect" to server
 	def connect(self, hostname):
+		"""'Connect' to server"""
+
 		try:
-			# Replace hostname by IP (so DNS is not needed at every request. Will speed things up.)
+			#Replace hostname by IP (so DNS is not needed at every
+			#request. Will speed things up.)
 			hostname = socket.gethostbyname(hostname)
 		except socket.gaierror:
 			# Could not connect
 			dialogShower = self._modules.default(type="dialogShower")
-			dialogShower.showError.send(self.loginTab, "Could not connect to the server. Possibly wrong hostname.")
+			dialogShower.showError.send(self.loginTab, _("Could not connect to the server. Possibly wrong hostname."))
 		else:
 			# Everything OK, Connected
 			self.server = hostname
@@ -135,8 +167,9 @@ class Connection(object):
 			
 			self.connected.send()
 	
-	# Get path
 	def get(self, path):
+		"""Get path"""
+
 		try:
 			req = json.load(self.opener.open("https://%s:8080/%s" % (self.server, path)))
 			return req
@@ -159,9 +192,12 @@ class Connection(object):
 			return json.load(self.opener.open(request))
 		except urllib2.HTTPError, e:
 			return e
-	
-	# Method to log in. You need to send a uuid along, so your loggedIn doesn't react to other requests.
+
 	def login(self, loginid):
+		"""Method to log in. You need to send a uuid along, so your
+		   loggedIn doesn't react to other requests.
+
+		"""
 		if self.connectedLoggedIn:
 			self._afterLogin(loginid)
 		else:
@@ -169,12 +205,16 @@ class Connection(object):
 			
 			module = self._modules.default("active", type="ui")
 			self.loginTab = module.addCustomTab(self.connectLoginWidget)
-			self.loginTab.title = _("Login") #FIXME: retranslate etc.
+			#set tab title by retranslating
+			self.retranslate()
 
 			self.loginTab.closeRequested.handle(self.loginTab.close)
 	
-	# Checks if login is right (and implicitly fetches the token) (te be used only inside this module)
 	def checkLogin(self, username, passwd, loginid):
+		"""Checks if login is right (and implicitly fetches the token)
+		   (to be used only inside this module)
+
+		"""
 		index = "https://%s:8080/" % self.server
 		
 		loginCreds = u"%s:%s" % (username, passwd)
@@ -183,19 +223,19 @@ class Connection(object):
 		
 		self.opener.addheaders = [("Authorization", "Basic %s" % loginCreds)]
 		
-		#fixme: check password
 		me = self.get("users/me")
-		
+
 		if type(me) == urllib2.HTTPError:
 			# User was not logged in
 			dialogShower = self._modules.default("active", type="dialogShower")
-			dialogShower.showError.send(self.loginTab, "Could not login. Wrong username or password.")
+			dialogShower.showError.send(self.loginTab, _("Could not login. Wrong username or password."))
 		else:
 			self.userId = int(os.path.basename(me))
 			self._afterLogin(loginid)
 	
 	def _afterLogin(self, loginid):
-		# Logged in, set var to server
+		"""Logged in, set var to server"""
+
 		self.auth = True
 		self.loginTab.close()
 		self.loggedIn.send(loginid)
@@ -204,7 +244,7 @@ class TestModeConnectionModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestModeConnectionModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
-		
+
 		self.type = "testModeConnection"
 		self.priorities = {
 			"student@home": -1,
@@ -216,7 +256,7 @@ class TestModeConnectionModule(object):
 			"codedocumentation": 444,
 			"all": 444,
 		}
-		
+
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
@@ -226,13 +266,11 @@ class TestModeConnectionModule(object):
 		)
 		self.filesWithTranslations = ("connection.py",)
 
-	def enable(self):
-		self._modules = set(self._mm.mods(type="modules")).pop()
-		
-		#setup translation
+	def _retranslate(self):
+		#Translations
 		global _
 		global ngettext
-		
+
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -241,9 +279,23 @@ class TestModeConnectionModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
+
+		self.connection.retranslate()
+
+	def enable(self):
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		
 		self.connection = Connection(self._modules)
-		
+
+		#setup translation
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.active = True
 
 	def disable(self):

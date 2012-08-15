@@ -144,8 +144,8 @@ class AllOnceModule(object):
 	def _createEvent(self):
 		return self._modules.default(type="event").createEvent
 
-	def createLessonType(self, *args):
-		lessonType = AllOnceLessonType(self._createEvent, *args)
+	def createLessonType(self, *args, **kwargs):
+		lessonType = AllOnceLessonType(self._createEvent, *args, **kwargs)
 		lessonType.newItem.handle(self.newItem.send)
 		return lessonType
 

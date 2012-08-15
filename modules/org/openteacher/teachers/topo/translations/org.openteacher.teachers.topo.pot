@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.0\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-07-21 11:30+0200\n"
+"POT-Creation-Date: 2012-08-15 16:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,34 +17,34 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: topo.py:72
+#: topo.py:95
 msgid "Place - Name"
 msgstr ""
 
-#: topo.py:73
+#: topo.py:96
 msgid "Name - Place"
 msgstr ""
 
-#: topo.py:173
+#: topo.py:197
 msgid "Please click this place: "
 msgstr ""
 
-#: topo.py:233
+#: topo.py:301
 msgid "Lesson type:"
 msgstr ""
 
-#: topo.py:239
+#: topo.py:302
 msgid "Lesson order:"
 msgstr ""
 
-#: topo.py:251
+#: topo.py:303
 msgid "Which place is here?"
 msgstr ""
 
-#: topo.py:253
+#: topo.py:304
 msgid "Check"
 msgstr ""
 
-#: topo.py:259
+#: topo.py:305
 msgid "Please click this place:"
 msgstr ""

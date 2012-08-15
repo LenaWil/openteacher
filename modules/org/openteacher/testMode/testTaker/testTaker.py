@@ -39,20 +39,24 @@ class TestChooser(QtGui.QWidget):
 		
 		layout = QtGui.QVBoxLayout()
 		
-		comm = QtGui.QLabel("Select the test you want to take")
-		layout.addWidget(comm)
-		
+		self.comm = QtGui.QLabel()
+		layout.addWidget(self.comm)
+
 		layout.addWidget(testSelecter)
 		
-		button = QtGui.QPushButton("Take test")
-		button.clicked.connect(lambda: self.testChosen.emit(self.testSelecter.getCurrentTest()))
-		layout.addWidget(button)
+		self.button = QtGui.QPushButton()
+		self.button.clicked.connect(lambda: self.testChosen.emit(self.testSelecter.getCurrentTest()))
+		layout.addWidget(self.button)
 		
 		self.setLayout(layout)
 
-class TestModeTestTaker(object):
+	def retranslate(self):
+		self.comm.setText(_("Select the test you want to take"))
+		self.button.setText(_("Take test"))
+
+class TestModeTestTakerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(TestModeTestTaker, self).__init__(*args, **kwargs)
+		super(TestModeTestTakerModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 		
 		self.type = "testModeTestTaker"
@@ -82,7 +86,23 @@ class TestModeTestTaker(object):
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
+		self._testMenu = self._modules.default("active", type="testMenu").menu
+
+		self._action = self._testMenu.addAction(self.priorities["all"])
+		self._action.triggered.handle(self.showTestTaker)
+
 		#setup translation
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.active = True
+
+	def _retranslate(self):
 		global _
 		global ngettext
 
@@ -95,13 +115,13 @@ class TestModeTestTaker(object):
 				self._mm.resourcePath("translations")
 			)
 
-		self._testMenu = self._modules.default("active", type="testMenu").menu
-
-		self._action = self._testMenu.addAction(self.priorities["all"])
-		self._action.triggered.handle(self.showTestTaker)
-		self._action.text = _("Take test")#FIXME: retranslate
-
-		self.active = True
+		self._action.text = _("Take test")
+		if hasattr(self, "testChooser"):
+			self.testChooser.retranslate()
+		if hasattr(self, "testChooseTab"):
+			self.testChooseTab.title = _("Choose test")
+		if hasattr(self, "teachTab"):
+			self.teachTab.title = _("Taking test")
 
 	def disable(self):
 		self.active = False
@@ -123,20 +143,19 @@ class TestModeTestTaker(object):
 		# Check if this is indeed from the request I sent out
 		if loginid == self.loginid:
 			uiModule = self._modules.default("active", type="ui")
-			
+
 			#teachWidget = self._modules.default("active", type="wordsTestTeacher").createWordsTeacher()
 			testSelecter = self._modules.default("active", type="testModeTestSelecter").getTestSelecter(True)
-			testChooser = TestChooser(testSelecter)
-			testChooser.testChosen.connect(self.takeTest)
-			
-			self.testChooseTab = uiModule.addCustomTab(testChooser)
-			self.testChooseTab.title = _("Choose test") #FIXME: retranslate etc.
+			self.testChooser = TestChooser(testSelecter)
+			self.testChooser.testChosen.connect(self.takeTest)
+
+			self.testChooseTab = uiModule.addCustomTab(self.testChooser)
 			self.testChooseTab.closeRequested.handle(self.testChooseTab.close)
-	
-	"""
-	testInfo: dictionary with info from /tests/<id>
-	"""
+			self._retranslate()
+
 	def takeTest(self, testInfo):
+		"""testInfo: dictionary with info from /tests/<id>"""
+
 		# Close the test chooser.
 		self.testChooseTab.close()
 		
@@ -146,13 +165,14 @@ class TestModeTestTaker(object):
 		uiModule = self._modules.default("active", type="ui")
 		
 		self.teachTab = uiModule.addCustomTab(self.teachWidget)
-		self.teachTab.title = _("Taking test") #FIXME: retranslate etc.
 		self.teachTab.closeRequested.handle(self.teachTab.close)
-		
+		self._retranslate()
+
 		self.teachWidget.lessonDone.connect(lambda: self.handIn(testInfo["answers"]))
-	
-	# Hand in the test
+
 	def handIn(self, answersUrl):
+		"""Hand in the test"""
+
 		answeredList = self.teachWidget.getAnsweredList()
 		dialogShower = self._modules.default("active", type="dialogShower")
 		
@@ -161,12 +181,12 @@ class TestModeTestTaker(object):
 		# Check if there was an error.
 		if type(r) == urllib2.HTTPError:
 			# Show error message
-			dialogShower.showError.send(self.teachTab, "An error occured. The server could not be reached. Check your network connection.")
+			dialogShower.showError.send(self.teachTab, _("An error occured. The server could not be reached. Check your network connection."))
 		else:
 			# Show thank you message
-			dialogShower.showBigMessage.send("Your answers have successfully been handed in!")
+			dialogShower.showBigMessage.send(_("Your answers have successfully been handed in!"))
 			# Close the teach widget
 			self.teachTab.close()
 	
 def init(moduleManager):
-	return TestModeTestTaker(moduleManager)
+	return TestModeTestTakerModule(moduleManager)

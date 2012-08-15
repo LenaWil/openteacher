@@ -23,32 +23,52 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 
 import datetime
+import weakref
 
-"""
-The dropdown menu to choose lesson type
-"""
 class TeachLessonTypeChooser(QtGui.QComboBox):
+	"""The dropdown menu to choose lesson type"""
+
+	currentIndexChanged = QtCore.pyqtSignal([int])
+
 	def __init__(self,*args,**kwargs):
 		super(TeachLessonTypeChooser, self).__init__(*args, **kwargs)
-		
-		self._lessonTypeModules = list(
-			base._mm.mods("active", type="lessonType")
-		)
-		
+
+		self.retranslate()
+
+	def retranslate(self):
+		#disconnect the signal, so we can change some stuff without
+		#other classes notice
+		try:
+			super(TeachLessonTypeChooser, self).currentIndexChanged.disconnect(self.currentIndexChanged.emit)
+		except TypeError:
+			#not yet connected (first pass)
+			pass
+
+		#save status
+		i = self.currentIndex()
+
+		#update data
+		self.clear()
+		self._lessonTypeModules = base._modules.sort("active", type="lessonType")
 		for lessontype in self._lessonTypeModules:
 			self.addItem(lessontype.name, lessontype)
-	
-	"""
-	Get the current lesson type
-	"""
+
+		#restore status
+		if i != -1:
+			self.setCurrentIndex(i)
+
+		#re-connect signal
+		super(TeachLessonTypeChooser, self).currentIndexChanged.connect(self.currentIndexChanged.emit)
+
 	@property
 	def currentLessonType(self):
+		"""Get the current lesson type"""
+
 		return self._lessonTypeModules[self.currentIndex()]
 
-"""
-The teach tab
-"""
 class TeachWidget(QtGui.QWidget):
+	"""The teach tab"""
+
 	lessonDone = QtCore.pyqtSignal()
 	listChanged = QtCore.pyqtSignal([object])
 	def __init__(self,*args, **kwargs):
@@ -60,11 +80,11 @@ class TeachWidget(QtGui.QWidget):
 		
 		top = QtGui.QHBoxLayout()
 		
-		label = QtGui.QLabel(_("Lesson type:"))
+		self.label = QtGui.QLabel()
 		self.lessonTypeChooser = TeachLessonTypeChooser()
 		self.lessonTypeChooser.currentIndexChanged.connect(self.changeLessonType)
-		
-		top.addWidget(label)
+
+		top.addWidget(self.label)
 		top.addWidget(self.lessonTypeChooser)
 		
 		self.nameLabel = QtGui.QLabel()
@@ -78,15 +98,15 @@ class TeachWidget(QtGui.QWidget):
 		
 		self.answerField = QtGui.QLineEdit()
 		self.answerField.returnPressed.connect(self.checkAnswerButtonClick)
-		
-		checkButton = QtGui.QPushButton(_("Check"))
-		checkButton.clicked.connect(self.checkAnswerButtonClick)
+
+		self.checkButton = QtGui.QPushButton()
+		self.checkButton.clicked.connect(self.checkAnswerButtonClick)
 		
 		self.progress = QtGui.QProgressBar()
 		
 		bottomL = QtGui.QHBoxLayout()
 		bottomL.addWidget(self.answerField)
-		bottomL.addWidget(checkButton)
+		bottomL.addWidget(self.checkButton)
 		bottomL.addWidget(self.progress)
 		
 		layout = QtGui.QVBoxLayout()
@@ -97,47 +117,48 @@ class TeachWidget(QtGui.QWidget):
 		layout.addLayout(bottomL)
 		
 		self.setLayout(layout)
-	
-	"""
-	Starts the lesson
-	"""
+		self.retranslate()
+
+	def retranslate(self):
+		self.label.setText(_("Lesson type:"))
+		self.checkButton.setText(_("Check"))
+
+		self.lessonTypeChooser.retranslate()
+
 	def initiateLesson(self, items):
+		"""Starts the lesson"""
+
 		self.items = items
 		self.lesson = TeachMediaLesson(items, self)
 		self.answerField.setFocus()
 	
-	"""
-	Restarts the lesson
-	"""
 	def restartLesson(self):
+		"""Restarts the lesson"""
+
 		self.initiateLesson(self.items)
 	
-	"""
-	What happens when you change the lesson type
-	"""
 	def changeLessonType(self, index):
+		"""What happens when you change the lesson type"""
+
 		if self.inLesson:
 			self.restartLesson()
 	
-	"""
-	Stops the lesson
-	"""
 	def stopLesson(self, showResults=True):
+		"""Stops the lesson"""
+
 		self.lesson.endLesson(showResults)
 		del self.lesson
 	
-	"""
-	What happens when you click the check answer button
-	"""
 	def checkAnswerButtonClick(self):
+		"""What happens when you click the check answer button"""
+
 		self.lesson.checkAnswer()
 		self.answerField.clear()
 		self.answerField.setFocus()
 
-"""
-The lesson itself (being teached)
-"""
 class TeachMediaLesson(object):	
+	"""The lesson itself (being teached)"""
+
 	def __init__(self,itemList,teachWidget,*args,**kwargs):
 		super(TeachMediaLesson, self).__init__(*args, **kwargs)
 		
@@ -156,10 +177,9 @@ class TeachMediaLesson(object):
 		# Reset the progress bar
 		self.teachWidget.progress.setValue(0)
 	
-	"""
-	Check whether the given answer was right or wrong
-	"""
 	def checkAnswer(self):
+		"""Check whether the given answer was right or wrong"""
+
 		# Set the end of the thinking time
 		self.endThinkingTime = datetime.datetime.now()
 		
@@ -189,10 +209,9 @@ class TeachMediaLesson(object):
 		
 		self.teachWidget.listChanged.emit(self.itemList)
 			
-	"""
-	What happens when the next question should be asked
-	"""
 	def nextQuestion(self, item):
+		"""What happens when the next question should be asked"""
+
 		# set the next question
 		self.currentItem = item
 		# set the question field
@@ -209,10 +228,9 @@ class TeachMediaLesson(object):
 		except AttributeError:
 			pass
 	
-	"""
-	Ends the lesson
-	"""
 	def endLesson(self, showResults=True):
+		"""Ends the lesson"""
+
 		self.teachWidget.inLesson = False
 
 		# stop media
@@ -234,14 +252,11 @@ class TeachMediaLesson(object):
 		
 		self.teachWidget.lessonDone.emit()
 	
-	
-	"""
-	Updates the progress bar
-	"""
 	def _updateProgressBar(self):
+		"""Updates the progress bar"""
+
 		self.teachWidget.progress.setMaximum(self.lessonType.totalItems+1)
 		self.teachWidget.progress.setValue(self.lessonType.askedItems)
-
 
 class MediaTeacherModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -276,9 +291,21 @@ class MediaTeacherModule(object):
 	
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.active = True
-		#FIXME: retranslate!
+
+		self._widgets = set()
+
 		#setup translation
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.active = True
+
+	def _retranslate(self):
 		global _
 		global ngettext
 		
@@ -290,12 +317,26 @@ class MediaTeacherModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-	
+
+		for ref in self._widgets:
+			widget = ref()
+			if widget is not None:
+				#FIXME (>3.0): use the languageChangeDone event instead?
+				#(and only for the stuff that depends on other modules?)
+				#update next event loop iteration, because it depends on
+				#some other modules.
+				QtCore.QTimer.singleShot(0, widget.retranslate)
+
 	def disable(self):
 		self.active = False
+
+		del self._modules
+		del self._widgets
 	
 	def createMediaTeacher(self):
-		return TeachWidget()
+		tw = TeachWidget()
+		self._widgets.add(weakref.ref(tw))
+		return tw
 
 def init(moduleManager):
 	return MediaTeacherModule(moduleManager)

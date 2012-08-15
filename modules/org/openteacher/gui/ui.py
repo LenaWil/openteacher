@@ -77,21 +77,46 @@ class LessonTabWidget(QtGui.QTabWidget):
 	def __init__(self, enterWidget, teachWidget, resultsWidget, *args, **kwargs):
 		super(LessonTabWidget, self).__init__(*args, **kwargs)
 
+		self.enterWidget = enterWidget
+		self.teachWidget = teachWidget
+		self.resultsWidget = resultsWidget
+
 		if enterWidget:
-			self.addTab(enterWidget, _("Enter list"))
+			self.addTab(self.enterWidget, "")
 		if teachWidget:
-			self.addTab(teachWidget, _("Teach me!"))
+			self.addTab(self.teachWidget, "")
 		if resultsWidget:
-			self.addTab(resultsWidget, _("Show results"))
+			self.addTab(self.resultsWidget, "")
 
 		self.setTabPosition(QtGui.QTabWidget.South)
 		self.setDocumentMode(True)
+
+		self.retranslate()
+
+	def retranslate(self):
+		self.setTabText(self.indexOf(self.enterWidget), _("Enter list"))
+		self.setTabText(self.indexOf(self.teachWidget), _("Teach me!"))
+		self.setTabText(self.indexOf(self.resultsWidget), _("Show results"))
 
 class FilesTabWidget(QtGui.QTabWidget):
 	def __init__(self, startWidget, *args, **kwargs):
 		super(FilesTabWidget, self).__init__(*args, **kwargs)
 
-		self.startWidget = startWidget
+
+		#FIXME > 3.0: make sure the following isn't duplicate anymore.
+		##START DUPLICATE CODE gui.py
+		# We wrap the layout in a QVBoxLayout widget, so messages can be added on top of the tab.
+		wrapperWidget = QtGui.QWidget()
+		wrapperLayout = QtGui.QVBoxLayout()
+		#no borders
+		wrapperLayout.setContentsMargins(0, 0, 0, 0)
+
+		wrapperLayout.insertWidget(0, startWidget)
+		wrapperWidget.setLayout(wrapperLayout)
+		##END DUPLICATE CODE gui.py
+
+		self.startWidget = wrapperWidget
+		self.startWidget._wrapperWidget = wrapperWidget
 
 		#super because our method does add a close button, which we
 		#don't want.

@@ -147,6 +147,10 @@ class LessonFileTab(FileTab):
 		self.tabChanged = self._modules.default(type="event").createEvent()
 		self._widget.currentChanged.connect(lambda: self.tabChanged.send())
 
+	def retranslate(self):
+		"""Called by the uiController module."""
+		self._widget.retranslate()
+
 	currentTab = property(
 		lambda self: self._widget.currentWidget(),
 		lambda self, value: self._widget.setCurrentWidget(value)
@@ -227,15 +231,6 @@ class GuiModule(object):
 			#always the first load button.
 			self._loadButton.changePriority.send(0)
 
-		#load translator
-		try:
-			translator = self._modules.default("active", type="translator")
-		except IndexError:
-			pass
-		else:
-			translator.languageChanged.handle(self._retranslate)
-		self._retranslate()
-
 		metadata = self._modules.default("active", type="metadata").metadata
 		self._widget.setWindowTitle(metadata["name"])
 		self._widget.setWindowIcon(QtGui.QIcon(metadata["iconPath"]))
@@ -276,6 +271,15 @@ class GuiModule(object):
 		#set application name (handy for e.g. Phonon)
 		self._app.setApplicationName(metadata["name"])
 		self._app.setApplicationVersion(metadata["version"])
+
+		#load translator
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 
 		self.active = True
 
@@ -332,6 +336,10 @@ class GuiModule(object):
 
 		self._ui._, self._ui.ngettext = _, ngettext
 		self._widget.retranslate()
+		
+		for fileTab in self._fileTabs.values():
+			if fileTab.__class__ == LessonFileTab:
+				fileTab.retranslate()
 
 		self._loadButton.changeText.send(_("Open from file"))
 
@@ -362,6 +370,7 @@ class GuiModule(object):
 
 	def addFileTab(self, enterWidget=None, teachWidget=None, resultsWidget=None, previousTabOnClose=False):
 		widget = self._ui.LessonTabWidget(enterWidget, teachWidget, resultsWidget)
+		
 
 		return self.addCustomTab(widget, previousTabOnClose)
 
