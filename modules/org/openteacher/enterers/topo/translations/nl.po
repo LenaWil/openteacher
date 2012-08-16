@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-08-15 15:49+0200\n"
-"PO-Revision-Date: 2012-07-15 12:28+0000\n"
+"POT-Creation-Date: 2012-08-15 22:15+0200\n"
+"PO-Revision-Date: 2012-08-15 14:40+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-22 04:53+0000\n"
-"X-Generator: Launchpad (build 15654)\n"
+"X-Launchpad-Export-Date: 2012-08-16 04:53+0000\n"
+"X-Generator: Launchpad (build 15810)\n"
+"Language: nl\n"
 
 #: topo.py:67
 msgid "From hard disk..."
-msgstr ""
+msgstr "Van de harde schijf..."
 
 #: topo.py:81
 msgid "Warning"
@@ -59,10 +59,13 @@ msgstr "Toevoegen"
 
 #: topo.py:276
 msgid "Place not found"
-msgstr ""
+msgstr "Plaats niet gevonden"
 
 #: topo.py:277
 msgid ""
 "Sorry, this place is not in the list of known places. Please add it manually "
 "by doubleclicking on the right location in the map."
 msgstr ""
+"Sorry, deze plaats komt niet voor in de lijst met bekende plaatsen. Voeg "
+"haar alstublieft handmatig toe door dubbel te klikken op de juiste locatie "
+"op de kaart."
