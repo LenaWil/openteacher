@@ -94,8 +94,10 @@ class Graph(QtGui.QFrame):
 		w = self.width()
 		self._h = self.height()
 
-		self._secondsPerPixel = w / self._totalSeconds
-
+		try:
+			self._secondsPerPixel = w / self._totalSeconds
+		except ZeroDivisionError:
+			self._secondsPerPixel = 0
 		colors = {}
 		baseColor = self.palette().highlight().color()
 		steps = 0
