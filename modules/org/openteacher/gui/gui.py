@@ -214,7 +214,15 @@ class GuiModule(object):
 				self._aeroSetting = None
 		
 		self._app = QtGui.QApplication(sys.argv)
-		
+
+		#try to load translations for Qt itself
+		qtTranslator = QtCore.QTranslator()
+		qtTranslator.load(
+			"qt_" + QtCore.QLocale.system().name(),
+			QtCore.QLibraryInfo.location(QtCore.QLibraryInfo.TranslationsPath)
+		)
+		self._app.installTranslator(qtTranslator);
+
 		self._widget = self._ui.OpenTeacherWidget(
 			self._modules.default("active", type="startWidget").createStartWidget(),
 			self._aeroSetting and self._aeroSetting["value"],

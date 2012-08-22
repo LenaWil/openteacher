@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-08-22 14:50+0200\n"
+"POT-Creation-Date: 2012-08-22 18:03+0200\n"
 "PO-Revision-Date: 2012-04-07 23:13+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,14 +18,14 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-08-16 04:53+0000\n"
 "X-Generator: Launchpad (build 15810)\n"
 
-#: startWidget.py:177
+#: startWidget.py:176
 msgid "Create lesson:"
 msgstr "Maak een les aan:"
 
-#: startWidget.py:178
+#: startWidget.py:177
 msgid "Load lesson:"
 msgstr "Laad een les:"
 
-#: startWidget.py:180
+#: startWidget.py:179
 msgid "Recently opened:"
 msgstr "Recent geopend:"

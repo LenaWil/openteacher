@@ -162,7 +162,6 @@ class StartWidget(QtGui.QSplitter):
 			recentlyOpenedLayout = QtGui.QVBoxLayout()
 
 			right = self.style().pixelMetric(QtGui.QStyle.PM_LayoutRightMargin)
-			recentlyOpenedLayout.setContentsMargins(0, 0, 0, 0)
 			recentlyOpenedLayout.addWidget(recentlyOpenedViewer)
 
 			self.recentlyOpenedGroupBox = QtGui.QGroupBox()

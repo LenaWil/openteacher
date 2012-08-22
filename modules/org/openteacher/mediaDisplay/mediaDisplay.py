@@ -24,10 +24,10 @@ from PyQt4 import QtWebKit
 from PyQt4.phonon import Phonon
 
 
-"""
-The video player and web viewer combination widget with controls
-"""
 class MediaControlDisplay(QtGui.QWidget):
+	"""The video player and web viewer combination widget with controls
+
+	"""
 	def __init__(self,autoplay=True,*args, **kwargs):
 		super(MediaControlDisplay, self).__init__(*args, **kwargs)
 		
@@ -175,29 +175,17 @@ class MediaDisplayModule(object):
 		self.requires = (
 			self._mm.mods(type="ui"),
 		)
-		
 		self.uses = (
 			self._mm.mods(type="translator"),
 			self._mm.mods(type="settings"),
 		)
-	
+
+		self.filesWithTranslations = ("mediaDisplay.py",)
+
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.active = True
-		
-		#setup translation
-		global _
-		global ngettext
-		
-		try:
-			translator = self._modules.default("active", type="translator")
-		except IndexError:
-			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
-		else:
-			_, ngettext = translator.gettextFunctions(
-				self._mm.resourcePath("translations")
-			)
-		
+
 		# Add settings
 		try:
 			self._settings = self._modules.default(type="settings")
@@ -208,24 +196,48 @@ class MediaDisplayModule(object):
 			# Settings (used in mediaTypes)
 			self._html5VideoSetting = self._settings.registerSetting(**{
 				"internal_name": "org.openteacher.lessons.media.videohtml5",
-				"name": _("Use HTML5 for video"),
 				"type": "boolean",
-				"category": _("Lesson"),
-				"subcategory": _("Media"),
 				"defaultValue": False,
 				"advanced": True,
 			})
 			
 			self._html5AudioSetting = self._settings.registerSetting(**{
 				"internal_name": "org.openteacher.lessons.media.audiohtml5",
-				"name": _("Use HTML5 for audio"),
 				"type": "boolean",
-				"category": _("Lesson"),
-				"subcategory": _("Media"),
 				"defaultValue": False,
 				"advanced": True,
 			})
-	
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+	def _retranslate(self):
+		#setup translation
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+
+		self._html5VideoSetting.update({
+			"name": _("Use HTML5 for video"),
+			"category": _("Lesson"),
+			"subcategory": _("Media"),
+		})
+		self._html5AudioSetting.update({
+			"name": _("Use HTML5 for audio"),
+			"category": _("Lesson"),
+			"subcategory": _("Media"),
+		})
+
 	def disable(self):
 		self.active = False
 		del self._settings

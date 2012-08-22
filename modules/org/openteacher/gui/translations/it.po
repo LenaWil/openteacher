@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-08-22 14:50+0200\n"
+"POT-Creation-Date: 2012-08-22 18:03+0200\n"
 "PO-Revision-Date: 2012-07-05 07:52+0000\n"
 "Last-Translator: Leonardo Corato <leocor@gmail.com>\n"
 "Language-Team: Italian <it@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-08-16 04:52+0000\n"
 "X-Generator: Launchpad (build 15810)\n"
 
-#: gui.py:344
+#: gui.py:352
 msgid "Open from file"
 msgstr "Apri da file"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-08-22 14:50+0200\n"
+"POT-Creation-Date: 2012-08-22 18:03+0200\n"
 "PO-Revision-Date: 2012-05-11 22:24+0000\n"
 "Last-Translator: Jakub Šnapka <snapka@seznam.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -21,3 +21,15 @@ msgstr ""
 #: otmd.py:64
 msgid "Open Teaching Media"
 msgstr "Otevřít výukové médium"
+
+#: otmd.py:66
+msgid "Enable compression"
+msgstr ""
+
+#: otmd.py:67
+msgid "Input and output"
+msgstr ""
+
+#: otmd.py:68
+msgid ".otmd saving"
+msgstr ""

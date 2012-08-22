@@ -292,12 +292,37 @@ class TopoMapsModule(object):
 			self._mm.mods(type="translator"),
 			self._mm.mods(type="settings"),
 		)
+		self.filesWithTranslations = ("topoMaps.py",)
 	
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.active = True
-		
+
+		# Add settings
+		try:
+			self._settings = self._modules.default(type="settings")
+		except IndexError, e:
+			self._openGlSetting = {"value": False}
+		else:
+			self._openGlSetting = self._settings.registerSetting(**{
+				"internal_name": "org.openteacher.lessons.topo.opengl",
+				"type": "boolean",
+				"defaultValue": False,
+				"advanced": True,
+			})
+
 		#setup translation
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.active = True
+
+	def _retranslate(self):
+		#install _ and ngettext
 		global _
 		global ngettext
 		
@@ -310,24 +335,15 @@ class TopoMapsModule(object):
 				self._mm.resourcePath("translations")
 			)
 
-		# Add settings
-		try:
-			self._settings = self._modules.default(type="settings")
-		except IndexError, e:
-			self._openGlSetting = {"value": False}
-		else:
-			self._openGlSetting = self._settings.registerSetting(**{
-				"internal_name": "org.openteacher.lessons.topo.opengl",
-				"name": _("OpenGL rendering"),
-				"type": "boolean",
-				"category": _("Lesson"),
-				"subcategory": _("Topography"),
-				"defaultValue": False,
-				"advanced": True,
-			})
-	
+		self._openGlSetting.update({
+			"name": _("OpenGL rendering"),
+			"category": _("Lesson"),
+			"subcategory": _("Topography"),
+		})
+
 	def disable(self):
 		self.active = False
+
 		del self._settings
 		del self._openGlSetting
 

@@ -32,6 +32,7 @@ class NoteCalculatorChooserModule(object):
 			self._mm.mods(type="translator"),
 			self._mm.mods(type="settings"),
 		)
+		self.filesWithTranslations = ("noteCalculatorChooser.py",)
 
 	def _retranslate(self):
 		#Load translations

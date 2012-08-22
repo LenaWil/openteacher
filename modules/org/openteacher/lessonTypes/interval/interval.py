@@ -186,16 +186,7 @@ class IntervalModule(object):
 		self.filesWithTranslations = ("interval.py",)
 
 	def enable(self):
-		#Translations
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		try:
-			translator = self._modules.default("active", type="translator")
-		except IndexError:
-			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
-		else:
-			_, ngettext = translator.gettextFunctions(
-				self._mm.resourcePath("translations")
-			)
 
 		# Settings
 		try:
@@ -205,39 +196,63 @@ class IntervalModule(object):
 			self._minQuestionsSetting = {"value": 2}
 			self.__groupSizeSetting = {"value": 4}
 		else:
-			categories = {
-				"category": _("Lesson type"),
-				"subcategory": _("Interval"),
-			}
 			self._groupSizeSetting = self._settings.registerSetting(**{
 				"internal_name": "org.openteacher.lessonTypes.interval.groupSize",
-				"name": _("Maximum size of group"),
 				"type": "number",
 				"defaultValue": 4,
 				"minValue": 1,
 			})
-			self._groupSizeSetting.update(categories)
 			self._minQuestionsSetting = self._settings.registerSetting(**{
 				"internal_name": "org.openteacher.lessonTypes.interval.minQuestions",
-				"name": _("Minimum amount of questions asked"),
 				"type": "number",
 				"defaultValue": 2,
 				"minValue": 1,
 			})
-			self._minQuestionsSetting.update(categories)
 			self._whenKnownSetting = self._settings.registerSetting(**{
 				"internal_name": "org.openteacher.lessonTypes.interval.whenKnown",
-				"name": _("Percent right before known") % (),
 				"type": "number",
 				"defaultValue":80,
 				"minValue": 0,
 				"maxValue": 99,
 			})
-			self._whenKnownSetting.update(categories)
 
 		self.newItem = self._createEvent()
-		self.name = _("Interval")
+
+		#register _retranslate()
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.active = True
+
+	def _retranslate(self):
+		#install translator
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+
+		self.name = _("Interval")
+
+		#settings
+		categories = {
+			"category": _("Lesson type"),
+			"subcategory": _("Interval"),
+		}
+		self._groupSizeSetting["name"] = _("Maximum size of group")
+		self._groupSizeSetting.update(categories)
+		self._minQuestionsSetting["name"] = _("Minimum amount of questions asked")
+		self._minQuestionsSetting.update(categories)
+		self._whenKnownSetting["name"] = _("Percent right before known")
+		self._whenKnownSetting.update(categories)
 
 	def disable(self):
 		self.active = False

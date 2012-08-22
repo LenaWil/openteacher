@@ -89,29 +89,15 @@ class RecentlyOpenedModel(QtCore.QAbstractListModel):
 				_("It's not possible anymore to open this list.")
 			)
 
-class RecentlyOpenedListView(QtGui.QListView):
+class RecentlyOpenedViewer(QtGui.QListView):
 	def __init__(self, modules, *args, **kwargs):
-		super(RecentlyOpenedListView, self).__init__(*args, **kwargs)
+		super(RecentlyOpenedViewer, self).__init__(*args, **kwargs)
 
 		self.setModel(RecentlyOpenedModel(modules))
 		self.doubleClicked.connect(self._doubleClicked)
 
 	def _doubleClicked(self, index):
 		self.model().open(self, index.row())
-
-class RecentlyOpenedViewer(QtGui.QGroupBox):
-	def __init__(self, modules, *args, **kwargs):
-		super(RecentlyOpenedViewer, self).__init__(*args, **kwargs)
-
-		self.listView = RecentlyOpenedListView(modules)
-
-		layout = QtGui.QVBoxLayout()
-		layout.addWidget(self.listView)
-		self.setFlat(True)
-		self.setLayout(layout)
-
-	def retranslate(self):
-		self.setTitle(_("Recently opened:"))
 
 class RecentlyOpenedViewerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -161,11 +147,6 @@ class RecentlyOpenedViewerModule(object):
 				self._mm.resourcePath("translations")
 			)
 
-		for viewer in self._viewers:
-			ref = viewer()
-			if ref is not None:
-				ref.retranslate()
-
 	def disable(self):
 		self.active = False
 
@@ -181,7 +162,7 @@ class RecentlyOpenedViewerModule(object):
 		viewer = RecentlyOpenedViewer(self._modules)
 		recentlyOpened = self._recentlyOpened.getRecentlyOpened()
 		
-		viewer.listView.model().update(recentlyOpened)
+		viewer.model().update(recentlyOpened)
 		self._viewers.add(weakref.ref(viewer))
 		return viewer
 
@@ -190,7 +171,7 @@ class RecentlyOpenedViewerModule(object):
 		for viewer in self._viewers:
 			ref = viewer()
 			if ref is not None:
-				ref.listView.model().update(data)
+				ref.model().update(data)
 
 def init(moduleManager):
 	return RecentlyOpenedViewerModule(moduleManager)

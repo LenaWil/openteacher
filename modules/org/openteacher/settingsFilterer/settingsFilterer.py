@@ -25,14 +25,18 @@ class SettingsFiltererModule(object):
 		self._mm = moduleManager
 
 		self.type = "settingsFilterer"
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
+		self.filesWithTranslations = ("settingsFilterer.py",)
 
 	def byKey(self, key, items):
 		catItems = dict()
 		for item in items:
 			if not key in item:
-				if "Miscellaneous" not in catItems:
-					catItems["Miscellaneous"] = []
-				catItems["Miscellaneous"].append(item)
+				if _("Miscellaneous") not in catItems:
+					catItems[_("Miscellaneous")] = []
+				catItems[_("Miscellaneous")].append(item)
 			else:
 				if item[key] not in catItems:
 					catItems[item[key]] = []
@@ -40,7 +44,31 @@ class SettingsFiltererModule(object):
 		return catItems
 
 	def enable(self):
+		self._modules = set(self._mm.mods(type="modules")).pop()
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
 		self.active = True
+
+	def _retranslate(self):
+		#install _ and ngettext
+		global _
+		global ngettext
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 
 	def disable(self):
 		self.active = False

@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-08-22 14:50+0200\n"
-"PO-Revision-Date: 2012-03-31 15:16+0000\n"
-"Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
+"POT-Creation-Date: 2012-08-22 18:03+0200\n"
+"PO-Revision-Date: 2012-08-22 18:08+0100\n"
+"Last-Translator: Marten de Vries <marten94@gmail.com>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -21,3 +21,16 @@ msgstr ""
 #: otmd.py:64
 msgid "Open Teaching Media"
 msgstr "Vrij Leren Media"
+
+#: otmd.py:66
+msgid "Enable compression"
+msgstr "Compressie aanzetten"
+
+#: otmd.py:67
+msgid "Input and output"
+msgstr "Invoer en uitvoer"
+
+#: otmd.py:68
+msgid ".otmd saving"
+msgstr ".otmd opslaan"
+

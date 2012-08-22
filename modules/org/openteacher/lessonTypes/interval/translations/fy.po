@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-08-22 14:50+0200\n"
+"POT-Creation-Date: 2012-08-22 19:32+0200\n"
 "PO-Revision-Date: 2012-07-15 13:46+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Frisian <fy@li.org>\n"
@@ -18,22 +18,22 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-08-16 04:52+0000\n"
 "X-Generator: Launchpad (build 15810)\n"
 
-#: interval.py:209
-msgid "Lesson type"
-msgstr "Lestype"
-
-#: interval.py:210 interval.py:239
+#: interval.py:243 interval.py:248
 msgid "Interval"
 msgstr "Ynterval"
 
-#: interval.py:214
+#: interval.py:247
+msgid "Lesson type"
+msgstr "Lestype"
+
+#: interval.py:250
 msgid "Maximum size of group"
 msgstr "Maksimumgrutte fan de groep"
 
-#: interval.py:222
+#: interval.py:252
 msgid "Minimum amount of questions asked"
 msgstr "Minimumtal fragen om te freegje"
 
-#: interval.py:230
+#: interval.py:254
 msgid "Percent right before known"
 msgstr "Prosint goed foar bekend achtsje"
