@@ -1,0 +1,46 @@
+# Chinese (Traditional) translation for openteacher
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-08-22 19:57+0200\n"
+"PO-Revision-Date: 2012-08-24 16:50+0000\n"
+"Last-Translator: Louie Chen <louie23@gmail.com>\n"
+"Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-08-28 07:35+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
+
+#: connection.py:63
+msgid "Server IP or hostname:"
+msgstr "伺服器 IP 或主機名稱："
+
+#: connection.py:64
+msgid "Connect"
+msgstr "連接"
+
+#: connection.py:95
+msgid "Username:"
+msgstr "使用者名稱："
+
+#: connection.py:96
+msgid "Password:"
+msgstr "密碼："
+
+#: connection.py:97 connection.py:142
+msgid "Login"
+msgstr "登入"
+
+#: connection.py:160
+msgid "Could not connect to the server. Possibly wrong hostname."
+msgstr "無法連線到伺服器。也許主機名稱錯誤"
+
+#: connection.py:231
+msgid "Could not login. Wrong username or password."
+msgstr "無法登入。錯誤使用者名稱或密碼"

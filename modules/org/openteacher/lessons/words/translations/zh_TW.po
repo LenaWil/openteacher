@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-08-22 14:50+0200\n"
-"PO-Revision-Date: 2012-07-18 08:42+0000\n"
+"POT-Creation-Date: 2012-08-22 19:57+0200\n"
+"PO-Revision-Date: 2012-08-22 17:54+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-16 04:52+0000\n"
-"X-Generator: Launchpad (build 15810)\n"
+"X-Launchpad-Export-Date: 2012-08-28 07:34+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
+"Language: \n"
 
 #: words.py:74
 msgid "Unnamed"
@@ -25,7 +25,7 @@ msgstr "未命名的"
 #: words.py:75
 #, python-format
 msgid "Word lesson: %s"
-msgstr ""
+msgstr "單字課程：%s"
 
 #: words.py:165
 msgid "Create words lesson"
@@ -33,12 +33,13 @@ msgstr "建立單字課程"
 
 #: words.py:239
 msgid "Empty question or answer"
-msgstr ""
+msgstr "空白的問題或答案"
 
 #: words.py:240
 msgid "Please enter at least one question and one answer for every word."
 msgstr "每個單字請至少輸入一個問題及一個答案"
 
+#, python-format
 #~ msgid "Word lesson %s"
 #~ msgstr "單字課程 %s"
 
