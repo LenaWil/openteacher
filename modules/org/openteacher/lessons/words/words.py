@@ -92,6 +92,28 @@ class Lesson(object):
 		self.fileTab.close()
 		self.stopped.send()
 
+	def tabChanged(self):
+		#FIXME 3.1: move into separate module since this uses QtGui?
+
+		#First do checks that apply to all lessons. In case they don't
+		#show any problems, the callback with word specific checks is
+		#called.
+		def callback():
+			#words specific checks
+			for item in self._enterWidget.lesson.list["items"]:
+				if not item.get("questions", []) or not item.get("answers", []):
+					QtGui.QMessageBox.critical(
+						self._teachWidget,
+						_("Empty question or answer"),
+						_("Please enter at least one question and one answer for every word.")
+					)
+					self.fileTab.currentTab = self._enterWidget
+					break
+
+		#generic checks
+		lessonDialogsModule = self._modules.default("active", type="lessonDialogs")
+		lessonDialogsModule.onTabChanged(self.fileTab, self._enterWidget, self._teachWidget, callback)
+
 class WordsLessonModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(WordsLessonModule, self).__init__(*args, **kwargs)
@@ -214,37 +236,15 @@ class WordsLessonModule(object):
 			widgets.append(resultsWidget)
 
 		self.fileTab = self._uiModule.addFileTab(*widgets)
-		self.fileTab.tabChanged.handle(self.tabChanged)
 
 		lesson = Lesson(self._mm, self.fileTab, self, lessonData, *widgets)
+		self.fileTab.tabChanged.handle(lesson.tabChanged)
 		self._lessons.add(weakref.ref(lesson))
 
 		self.lessonCreated.send(lesson)
 		self.lessonCreationFinished.send()
 
 		return lesson
-
-	def tabChanged(self):
-		#FIXME 3.1: move into separate module since this uses QtGui?
-
-		#First do checks that apply to all lessons. In case they don't
-		#show any problems, the callback with word specific checks is
-		#called.
-		def callback():
-			#words specific checks
-			for item in self.enterWidget.lesson.list["items"]:
-				if not item.get("questions", []) or not item.get("answers", []):
-					QtGui.QMessageBox.critical(
-						self.teachWidget,
-						_("Empty question or answer"),
-						_("Please enter at least one question and one answer for every word.")
-					)
-					self.fileTab.currentTab = self.enterWidget
-					break
-
-		#generic checks
-		lessonDialogsModule = self._modules.default("active", type="lessonDialogs")
-		lessonDialogsModule.onTabChanged(self.fileTab, self.enterWidget, self.teachWidget, callback)
 
 	@property
 	def _onscreenKeyboard(self):
