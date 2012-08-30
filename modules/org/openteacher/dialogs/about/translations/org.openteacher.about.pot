@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.0\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-08-22 19:57+0200\n"
+"POT-Creation-Date: 2012-08-30 17:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,26 +17,26 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: about.py:47
+#: about.py:41
 msgid "Project website"
 msgstr ""
 
-#: about.py:122
+#: about.py:89
 msgid "Full license text"
 msgstr ""
 
-#: about.py:220
+#: about.py:187
 msgid "Thanks to all Launchpad contributors!"
 msgstr ""
 
-#: about.py:261 about.py:262
+#: about.py:228 about.py:229
 msgid "About"
 msgstr ""
 
-#: about.py:263
+#: about.py:230
 msgid "License"
 msgstr ""
 
-#: about.py:264
+#: about.py:231
 msgid "Authors"
 msgstr ""

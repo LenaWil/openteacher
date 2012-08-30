@@ -48,6 +48,9 @@ class ForeignKnownModule(object):
 				self._mm.resourcePath("translations")
 			)
 
+		#TRANSLATORS: This is an option. When checked, OT asks the
+		#TRANSLATORS: answers and expects from you to give the
+		#TRANSLATORS: corresponding questions.
 		self.name = _("Ask foreign - known")
 		self.active = True
 

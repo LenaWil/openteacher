@@ -35,45 +35,12 @@ class AboutTextLabel(QtGui.QLabel):
 		self.setAlignment(QtCore.Qt.AlignCenter)
 
 	def retranslate(self):
-		firstLine, secondLine = self._splitLineCloseToMiddle(
-			self._metadata["slogan"]
-		)
-
 		t = pyratemp.Template(open(self._templatePath).read())
 		data = self._metadata.copy()
 		data.update({
-			"firstLine": firstLine,
-			"secondLine": secondLine,
 			"websiteText": _("Project website"),
 		})
 		self.setText(t(**data))
-
-	def _splitLineCloseToMiddle(self, line):
-		"""Used to split the slogan at the space closest to the middle of it."""
-
-		#determine the middle and find the closest spaces
-		middle = len(line) /2
-		distanceFromLeft = line[:middle].find(" ")
-		distanceFromRight = line[middle:].find(" ")
-
-		#Check if spaces were found
-		if distanceFromLeft == -1 and distanceFromRight == -1:
-			return (line, "")
-		elif distanceFromLeft == -1:
-			pos = middle + distanceFromRight
-			return (line[:pos], line[pos:])
-		elif distanceFromRight == -1:
-			pos = middle - distanceFromLeft
-			return (line[:pos], line[pos:])
-		else:
-			#left is closest
-			if distanceFromLeft < distanceFromRight:
-				pos = middle - distanceFromLeft
-				return (line[:pos], line[pos:])
-			#right is closest
-			else:
-				pos = middle + distanceFromRight
-				return (line[:pos], line[pos:])
 
 class AboutImageLabel(QtGui.QLabel):
 	def __init__(self, metadata, *args, **kwargs):

@@ -57,7 +57,6 @@ class MetadataModule(object):
 			#translate or transliterate it if you've got a good reason
 			#to do so.
 			"name": _("OpenTeacher"),
-			"slogan": _("The easiest way to learn a new language"),
 			"version": _("3.0"),
 			"authors": _("OpenTeacher authors"),
 			"copyrightYears": _("2008-2012"),
@@ -76,6 +75,8 @@ class MetadataModule(object):
 			"licenseIntro": open(self._mm.resourcePath("license_intro.txt")).read(),
 			"license": open(self._mm.resourcePath("license.txt")).read(),
 			"comicPath": self._mm.resourcePath("comic.png"),
+			#Not translated because this is for the packaging only,
+			#packages are normally translated in other ways.
 			"short_description": "OpenTeacher is an open source vocabulary training application that helps you learn a foreign language!",
 			"description": """Enter a list of words in both a known and a foreign language, and OpenTeacher tests you.
 
