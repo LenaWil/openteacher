@@ -257,7 +257,10 @@ class Lesson(object):
 			os.remove(file)
 			
 	def retranslate(self):
-		self.fileTab.title = _("Topo lesson: %s") % self.counter
+		try:
+			self.fileTab.title = _("Topo lesson: %s") % os.path.basename(self.path)
+		except AttributeError:
+			self.fileTab.title = _("Topo lesson: %s") % self.counter
 
 def init(moduleManager):
 	return TeachTopoLessonModule(moduleManager)

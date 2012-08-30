@@ -167,7 +167,7 @@ class MediaLessonModule(object):
 				lesson.retranslate()
 
 class Lesson(object):
-	"""Lesson object (that means: this techwidget+enterwidget)"""
+	"""Lesson object (that means: this teachwidget+enterwidget)"""
 
 	def __init__(self, modules, fileTab, enterWidget, teachWidget, resultsWidget, counter, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
@@ -196,7 +196,10 @@ class Lesson(object):
 		self.retranslate()
 
 	def retranslate(self):
-		self.fileTab.title = _("Media lesson: %s") % self.counter
+		try:
+			self.fileTab.title = _("Media lesson: %s") % os.path.basename(self.path)
+		except AttributeError:
+			self.fileTab.title = _("Media lesson: %s") % self.counter
 
 	@property
 	def changed(self):
