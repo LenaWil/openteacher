@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2012-08-30 17:48+0200\n"
-"PO-Revision-Date: 2012-05-11 22:16+0000\n"
-"Last-Translator: Jakub Šnapka <snapka@seznam.cz>\n"
+"PO-Revision-Date: 2012-08-30 14:43+0000\n"
+"Last-Translator: Jan Havran <Unknown>\n"
 "Language-Team: Czech <cs@li.org>\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:34+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-08-31 05:07+0000\n"
+"X-Generator: Launchpad (build 15887)\n"
+"Language: cs\n"
 
 #: plainTextWords.py:60
 msgid ""
@@ -32,13 +32,15 @@ msgstr "Vstup neformátovaných slovíček"
 
 #: plainTextWords.py:81
 msgid "Missing equals sign or tab"
-msgstr ""
+msgstr "Chybějící znak rovnítka nebo tabulátoru"
 
 #: plainTextWords.py:82
 msgid ""
 "Please make sure every line contains an '='-sign or tab between the "
 "questions and answers."
 msgstr ""
+"Ujistěte se, prosím, jestli každý řádek obsahuje znaménko '=' nebo tabulátor "
+"mezi otázkami a odpověďmi."
 
 #: plainTextWords.py:162
 msgid "Create words lesson by entering plain text"
@@ -46,7 +48,7 @@ msgstr "Vytvořte lekci slovíček vložením neformátovaného textu"
 
 #: plainTextWords.py:196
 msgid "Can't show the result"
-msgstr ""
+msgstr "Nelze zobrazit výsledek"
 
 #: plainTextWords.py:197
 msgid "Can't open the resultive word list, because it can't be shown."

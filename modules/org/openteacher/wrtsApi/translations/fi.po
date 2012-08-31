@@ -7,36 +7,32 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-08-15 22:15+0200\n"
-"PO-Revision-Date: 2012-08-09 00:06+0000\n"
+"POT-Creation-Date: 2012-08-30 17:48+0200\n"
+"PO-Revision-Date: 2012-08-30 11:55+0000\n"
 "Last-Translator: Teemu Paavola <tteeemu@gmail.com>\n"
 "Language-Team: Finnish <fi@li.org>\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-10 05:09+0000\n"
-"X-Generator: Launchpad (build 15761)\n"
+"X-Launchpad-Export-Date: 2012-08-31 05:07+0000\n"
+"X-Generator: Launchpad (build 15887)\n"
+"Language: fi\n"
 
 #: wrtsApi.py:155
-#, fuzzy
 msgid "Import from WRDS"
-msgstr "Tuo WRTS:stä"
+msgstr ""
 
 #: wrtsApi.py:156
-#, fuzzy
 msgid "Export to WRDS"
-msgstr "Tuo WRTS:stä"
+msgstr ""
 
 #: wrtsApi.py:159
-#, fuzzy
 msgid "Email"
-msgstr "Sähköposti: "
+msgstr ""
 
 #: wrtsApi.py:160
-#, fuzzy
 msgid "Password"
-msgstr "Salasana: "
+msgstr ""
 
 #: wrtsApi.py:162
 msgid "Input and output"
@@ -57,9 +53,8 @@ msgid ""
 msgstr ""
 
 #: wrtsApi.py:183
-#, fuzzy
 msgid "No WRDS connection"
-msgstr "WRTS API-yhteys"
+msgstr ""
 
 #: wrtsApi.py:184
 msgid ""
@@ -102,25 +97,21 @@ msgid "The word list was imported from WRDS successfully."
 msgstr ""
 
 #: ui.py:72
-#, fuzzy
 msgid "WRDS - login please:"
-msgstr "WRTS - kirjautuminen:"
+msgstr ""
 
 #: ui.py:75
-#, fuzzy
 msgid "Email:"
-msgstr "Sähköposti: "
+msgstr ""
 
 #: ui.py:78
-#, fuzzy
 msgid "Password:"
-msgstr "Salasana: "
+msgstr ""
 
 #: ui.py:81
 msgid "Remember email address and password"
 msgstr ""
 
 #: ui.py:114
-#, fuzzy
 msgid "WRDS - Please choose a list:"
-msgstr "WRTS - Valitse lista:"
+msgstr ""
