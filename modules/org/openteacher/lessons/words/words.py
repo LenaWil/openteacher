@@ -93,11 +93,12 @@ class Lesson(object):
 		self.stopped.send()
 
 	def tabChanged(self):
-		#FIXME 3.1: move into separate module since this uses QtGui?
+		"""First do checks that apply to all lessons. In case they don't
+		   show any problems, the callback with word specific checks is
+		   called.
 
-		#First do checks that apply to all lessons. In case they don't
-		#show any problems, the callback with word specific checks is
-		#called.
+		"""
+		#FIXME 3.1: move into separate module since this uses QtGui?
 		def callback():
 			#words specific checks
 			for item in self._enterWidget.lesson.list["items"]:

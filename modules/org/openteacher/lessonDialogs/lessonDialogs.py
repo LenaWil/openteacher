@@ -83,7 +83,7 @@ class LessonDialogsModule(object):
 				warningD.setIcon(QtGui.QMessageBox.Warning)
 				warningD.setWindowTitle(_("Warning"))
 				warningD.setStandardButtons(QtGui.QMessageBox.Cancel | QtGui.QMessageBox.Ok)
-				warningD.setText(_("Are you sure you want to go back to the teach tab? This will end your lesson!"))
+				warningD.setText(_("Are you sure you want to go back to the enter tab? This will end your lesson!"))
 				feedback = warningD.exec_()
 				if feedback == QtGui.QMessageBox.Ok:
 					teachWidget.stopLesson(showResults=False)

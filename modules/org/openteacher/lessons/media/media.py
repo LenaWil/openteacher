@@ -20,7 +20,10 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, weakref
+import os
+import weakref
+
+from PyQt4 import QtGui
 
 #FIXME (>3.1): give media lessons a title
 
@@ -235,10 +238,32 @@ class Lesson(object):
 	
 	def toEnterTab(self):
 		self.fileTab.currentTab = self.enterWidget
-	
+
 	def tabChanged(self):
+		"""First do checks that apply to all lessons. In case they don't
+		   show any problems, the callback with media specific checks is
+		   called.
+
+		"""
+		#FIXME 3.1: move into separate module since this uses QtGui?
+		def callback():
+			#media specific checks
+			for item in self.enterWidget.list["items"]:
+				if not item.get("question", "") or not item.get("answer", ""):
+					QtGui.QMessageBox.critical(
+						self.teachWidget,
+						_("Empty question or answer"),
+						_("Please enter at least one question and one answer for every item.")
+					)
+					self.fileTab.currentTab = self.enterWidget
+					return
+
+			#everything ok, initiate lesson.
+			self.teachWidget.initiateLesson(self.enterWidget.list)
+
+		#generic checks
 		lessonDialogsModule = self._modules.default("active", type="lessonDialogs")
-		lessonDialogsModule.onTabChanged(self.fileTab, self.enterWidget, self.teachWidget, lambda: self.teachWidget.initiateLesson(self.enterWidget.list))
+		lessonDialogsModule.onTabChanged(self.fileTab, self.enterWidget, self.teachWidget, callback)
 
 def init(moduleManager):
 	return MediaLessonModule(moduleManager)
