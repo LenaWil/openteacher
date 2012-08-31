@@ -7,18 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-08-30 17:48+0200\n"
+"POT-Creation-Date: 2012-08-31 21:54+0200\n"
 "PO-Revision-Date: 2012-04-13 12:19+0000\n"
 "Last-Translator: Dennis Baudys <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-08-31 05:06+0000\n"
 "X-Generator: Launchpad (build 15887)\n"
-"Language: de\n"
 
-#: gui.py:352
+#: gui.py:353
 msgid "Open from file"
 msgstr "Aus Datei öffnen"
 
@@ -38,55 +38,55 @@ msgstr "Bring es mir bei!"
 msgid "Show results"
 msgstr "Ergebnisse anzeigen"
 
-#: ui.py:273
+#: ui.py:282
 msgid "&File"
 msgstr "&Datei"
 
-#: ui.py:274
+#: ui.py:283
 msgid "&New"
 msgstr "&Neu"
 
-#: ui.py:275
+#: ui.py:284
 msgid "&Open"
 msgstr "Ö&ffnen"
 
-#: ui.py:276
+#: ui.py:285
 msgid "&Save"
 msgstr "&Speichern"
 
-#: ui.py:277
+#: ui.py:286
 msgid "Save &As"
 msgstr "Speichern &unter"
 
-#: ui.py:278
+#: ui.py:287
 msgid "&Print"
 msgstr "&Drucken"
 
-#: ui.py:279
+#: ui.py:288
 msgid "&Quit"
 msgstr "&Beenden"
 
-#: ui.py:281
+#: ui.py:290
 msgid "&Edit"
 msgstr "&Bearbeiten"
 
-#: ui.py:282
+#: ui.py:291
 msgid "&Settings"
 msgstr "&Einstellungen"
 
-#: ui.py:284
+#: ui.py:293
 msgid "&Help"
 msgstr "&Hilfe"
 
-#: ui.py:285
+#: ui.py:294
 msgid "&Documentation"
 msgstr "&Dokumentation"
 
-#: ui.py:286
+#: ui.py:295
 msgid "&About"
 msgstr "&Info"
 
-#: ui.py:288
+#: ui.py:297
 msgid "Toolbar"
 msgstr "Werkzeugleiste"
 

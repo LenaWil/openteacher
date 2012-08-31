@@ -150,10 +150,13 @@ class FilesTabWidget(QtGui.QTabWidget):
 class OpenTeacherWidget(QtGui.QMainWindow):
 	activityChanged = QtCore.pyqtSignal([object])
 
-	def __init__(self, startWidget=None, aeroSetting=False, *args, **kwargs):
+	def __init__(self, startWidget=None, requestClose=lambda: None, aeroSetting=False, *args, **kwargs):
 		super(OpenTeacherWidget, self).__init__(*args, **kwargs)
 
 		self.resize(640, 480)
+
+		#used to ask for permission before closing the window.
+		self._requestClose = requestClose
 
 		#tabWidget
 		self.tabWidget = FilesTabWidget(startWidget, self)
@@ -268,6 +271,12 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 			self.toolBar.setStyleSheet("border: 0;")
 			# Make menu bar transparent
 			self.menuBar().setStyleSheet("QMenuBar { background-color:transparent; } QMenuBar::item { background-color: transparent; }")
+
+	def closeEvent(self, event):
+		if self._requestClose():
+			event.accept()
+		else:
+			event.ignore()
 
 	def retranslate(self):
 		self.fileMenu.setTitle(_("&File"))

@@ -33,6 +33,10 @@ class LessonTrackerModule(object):
 		)
 
 	@property
+	def lessons(self):
+		return iter(self._lessons.values())
+
+	@property
 	def currentLesson(self):
 		uiModule = self._modules.default("active", type="ui")
 		try:

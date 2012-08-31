@@ -182,7 +182,10 @@ class Lesson(object):
 		self.resultsWidget = resultsWidget
 		self.fileTab = fileTab
 		self.counter = counter
-		
+
+		#default
+		self._changed = False
+
 		self.stopped = self._modules.default(type="event").createEvent()
 		
 		self.module = self
@@ -222,14 +225,26 @@ class Lesson(object):
 		return self.enterWidget.list
 	
 	def stop(self):
-		# Stop lesson if in one
-		if self.teachWidget.inLesson:
-			self.teachWidget.stopLesson()
+		#close current lesson (if one). Just reuse all the logic.
+		self.fileTab.currentTab = self.enterWidget
+		self.tabChanged()
+		if self.fileTab.currentTab == self.teachWidget:
+			#the tab change wasn't allowed.
+			return False
+
+		#ask if the user wants to save
+		if self.changed:
+			lessonDialogsModule = self._modules.default("active", type="lessonDialogs")
+			if not lessonDialogsModule.okToClose(parent=self.fileTab.currentTab):
+				return False
+
+		#really stop
 		self.fileTab.close()
 		# Stop media playing
 		self.enterWidget.mediaDisplay.stop()
 		self.teachWidget.mediaDisplay.stop()
 		self.stopped.send()
+		return True
 	
 	def teachListChanged(self, list):
 		# Update results widget

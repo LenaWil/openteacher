@@ -225,6 +225,7 @@ class GuiModule(object):
 
 		self._widget = self._ui.OpenTeacherWidget(
 			self._modules.default("active", type="startWidget").createStartWidget(),
+			self._onCloseRequested,
 			self._aeroSetting and self._aeroSetting["value"],
 		)
 
@@ -351,17 +352,25 @@ class GuiModule(object):
 
 		self._loadButton.changeText.send(_("Open from file"))
 
-	def run(self):
+	def run(self, onCloseRequested):
 		"""Starts the event loop of the Qt application. 
 		   Can only be called once.
 
 		"""
+		self._closeCallback = onCloseRequested
+
 		self._widget.show()
 		self._app.exec_()
 
 		#Prevents segmentation fault
 		del self._app
 		QtCore.qApp = None
+
+	def _onCloseRequested(self):
+		#if not running, there's nothing that can be closed, so don't
+		#check if the method exists. (The callback is assigned in
+		#run().)
+		return self._closeCallback()
 
 	def interrupt(self):
 		self._app.closeAllWindows()
@@ -413,6 +422,13 @@ class GuiModule(object):
 			return self._fileTabs[self._widget.tabWidget.currentWidget()]
 		except KeyError:
 			return
+
+	@currentFileTab.setter
+	def currentFileTab(self, value):
+		#reverse dictionary lookup.
+		for widget, fileTab in self._fileTabs.iteritems():
+			if fileTab == value:
+				self._widget.tabWidget.setCurrentWidget(widget)
 
 	def addStyleSheetRules(self, rules):
 		self._app.setStyleSheet(self._app.styleSheet() + "\n\n" + rules)

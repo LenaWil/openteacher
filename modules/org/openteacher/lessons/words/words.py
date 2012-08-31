@@ -43,6 +43,8 @@ class Lesson(object):
 		self.list = lessonData["list"]
 		if "changed" in lessonData:
 			self.changed = lessonData["changed"]
+		else:
+			self.changed = False
 		if "path" in lessonData:
 			self.path = lessonData["path"]
 
@@ -89,8 +91,23 @@ class Lesson(object):
 			pass
 
 	def stop(self):
+		#close current lesson (if one). Just reuse all the logic.
+		self.fileTab.currentTab = self._enterWidget
+		self.tabChanged()
+		if self.fileTab.currentTab == self._teachWidget:
+			#the tab change wasn't allowed.
+			return False
+
+		#ask if the user wants to save
+		if self.changed:
+			lessonDialogsModule = self._modules.default("active", type="lessonDialogs")
+			if not lessonDialogsModule.okToClose(parent=self.fileTab.currentTab):
+				return False
+
+		#it's ok, just close.
 		self.fileTab.close()
 		self.stopped.send()
+		return True
 
 	def tabChanged(self):
 		"""First do checks that apply to all lessons. In case they don't

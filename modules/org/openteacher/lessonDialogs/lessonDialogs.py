@@ -70,7 +70,21 @@ class LessonDialogsModule(object):
 		self.active = False
 		
 		del self._modules
-	
+
+	def okToClose(self, parent=None):
+		"""Returns True if the user wants to save first, otherwise
+		   returns False.
+
+		"""
+		result = QtGui.QMessageBox.question(
+			parent,
+			_("Unsaved data"),
+			_("There are unsaved items or results. Are you sure you want to close?"),
+			QtGui.QMessageBox.Yes | QtGui.QMessageBox.No,
+			QtGui.QMessageBox.No
+		)
+		return result == QtGui.QMessageBox.Yes
+
 	def onTabChanged(self, fileTab, enterWidget, teachWidget, func=None):
 		"""Does some checks and then decides if the tab may be left in
 		   its new position, or if it's changed back. (This function

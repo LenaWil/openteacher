@@ -7,43 +7,43 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-08-30 17:48+0200\n"
+"POT-Creation-Date: 2012-08-31 21:54+0200\n"
 "PO-Revision-Date: 2012-08-24 17:19+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-08-31 05:08+0000\n"
 "X-Generator: Launchpad (build 15887)\n"
-"Language: \n"
 
-#: uiController.py:172
+#: uiController.py:183
 msgid ""
 "Couldn't open the file, because the file type is unknown or it can't be "
 "shown."
 msgstr "無法開啟檔案，因為檔案種類無法辨試或不能顯示。"
 
-#: uiController.py:175
+#: uiController.py:186
 msgid ""
 "Couldn't open the file, is it still there and do we have the right to open "
 "it?"
 msgstr "無法開啟檔案，檔案還在那裡而且我們有權限開啟它？"
 
-#: uiController.py:178
+#: uiController.py:189
 msgid "Couldn't open the file, it seems to be corrupted."
 msgstr "無法開啟檔案，它似乎已毀損"
 
-#: uiController.py:180
+#: uiController.py:191
 msgid "File opened succesfully."
 msgstr "成功開啟檔案"
 
-#: uiController.py:187
+#: uiController.py:198
 msgid ""
 "Couldn't save the file, is there enough free disk space and do we have the "
 "right to write to the specified location?"
 msgstr "無法儲存檔案，是否有足夠空間而且我們有權限寫入指定位置？"
 
-#: uiController.py:189
+#: uiController.py:200
 msgid "File saved succesfully."
 msgstr "成功儲存檔案"

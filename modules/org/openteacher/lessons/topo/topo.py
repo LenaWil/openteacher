@@ -190,6 +190,9 @@ class Lesson(object):
 		self.fileTab = fileTab
 		self.counter = counter
 
+		#default
+		self._changed = False
+
 		self.stopped = self._modules.default(type="event").createEvent()
 		
 		self.module = self
@@ -235,11 +238,23 @@ class Lesson(object):
 		}
 	
 	def stop(self):
-		# Stop lesson if in one
-		if self.teachWidget.inLesson:
-			self.teachWidget.stopLesson()
+		#close current lesson (if one). Just reuse all the logic.
+		self.fileTab.currentTab = self.enterWidget
+		self.tabChanged()
+		if self.fileTab.currentTab == self.teachWidget:
+			#the tab change wasn't allowed.
+			return False
+
+		#ask if the user wants to save
+		if self.changed:
+			lessonDialogsModule = self._modules.default("active", type="lessonDialogs")
+			if not lessonDialogsModule.okToClose(parent=self.fileTab.currentTab):
+				return False
+
 		self.fileTab.close()
 		self.stopped.send()
+
+		return True
 	
 	def toEnterTab(self):
 		self.fileTab.currentTab = self.enterWidget

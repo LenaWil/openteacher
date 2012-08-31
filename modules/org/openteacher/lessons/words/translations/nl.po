@@ -7,38 +7,37 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-08-30 17:48+0200\n"
+"POT-Creation-Date: 2012-08-31 21:54+0200\n"
 "PO-Revision-Date: 2012-07-04 18:49+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-08-31 05:07+0000\n"
 "X-Generator: Launchpad (build 15887)\n"
-"Language: \n"
 
-#: words.py:74
+#: words.py:76
 msgid "Unnamed"
 msgstr "Naamloos"
 
-#: words.py:75
+#: words.py:77
 #, python-format
 msgid "Word lesson: %s"
 msgstr "Woordjesles: %s"
 
-#: words.py:165
-msgid "Create words lesson"
-msgstr "Maak woordjesles aan"
-
-#: words.py:239
+#: words.py:125
 msgid "Empty question or answer"
 msgstr "Lege vraag of antwoord"
 
-#: words.py:240
+#: words.py:126
 msgid "Please enter at least one question and one answer for every word."
-msgstr ""
-"Vul alstublieft ten minste één vraag en één woord in bij ieder woord."
+msgstr "Vul alstublieft ten minste één vraag en één woord in bij ieder woord."
+
+#: words.py:205
+msgid "Create words lesson"
+msgstr "Maak woordjesles aan"
 
 #~ msgid "Title:"
 #~ msgstr "Titel:"
@@ -94,6 +93,5 @@ msgstr ""
 #~ msgid "Words Lesson"
 #~ msgstr "Woordjesles"
 
-#, python-format
 #~ msgid "Word lesson %s"
 #~ msgstr "Woordjesles %s"

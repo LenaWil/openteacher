@@ -130,8 +130,19 @@ class UiControllerModule(object):
 			except (NotImplementedError, IOError):
 				pass
 
-		self._uiModule.run()
+		self._uiModule.run(self._onCloseRequested)
 		self._disconnectEvents()
+
+	def _onCloseRequested(self):
+		for lesson in self._lessonTracker.lessons:
+			#set the file tab focussed
+			self._uiModule.currentFileTab = lesson.fileTab
+			#try to close it
+			if not lesson.stop():
+				#not ready to stop, don't allow it.
+				return False
+		#ready to stop, allow it.
+		return True
 
 	def new(self):
 		self._uiModule.showStartTab()
