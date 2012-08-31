@@ -18,6 +18,8 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+import textwrap
+
 class ProfilesHelpModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(ProfilesHelpModule, self).__init__(*args, **kwargs)
@@ -47,7 +49,8 @@ class ProfilesHelpModule(object):
 
 		def printProfileList(profiles):
 			for profile in sorted(profiles, key=lambda p: p["name"]):
-				print "- {name}: {niceName}".format(**profile)
+				text = "- {name}: {niceName}".format(**profile)
+				print textwrap.fill(text, 80, subsequent_indent=3 * " ")
 
 		print "Profile overview:"
 		print ""
