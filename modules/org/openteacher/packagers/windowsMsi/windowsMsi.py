@@ -29,15 +29,9 @@ import string
 
 wxs = """
 <?xml version="1.0" encoding="UTF-8" ?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <Product Name="OpenTeacher" Id="6795c2ff-d23f-4a2c-a130-0556d4314254" UpgradeCode="6fbe08a3-4545-45b8-b6d1-4eaf00083835" Language="1033" Codepage="1252" Version="3.0.0" Manufacturer="OpenTeacher Maintainers">
 	<Package Id="*" Keywords="Installer" Manufacturer="OpenTeacher Maintainers" InstallerVersion="100" Languages="1033" Compressed="yes" />
-
-	<!-- check for .NET 2.0 -->
-	<PropertyRef Id="NETFRAMEWORK20" />
-	<Condition Message="OpenTeacher requires .NET Framework 2.0. Please install the .NET Framework and then run this installer again.">
-	    <![CDATA[Installed OR NETFRAMEWORK20]]>
-	</Condition>
 
 	<!-- files -->
 	<Media Id="1" Cabinet="OpenTeacher.cab" EmbedCab="yes" />
@@ -237,7 +231,7 @@ class WindowsMsiPackagerModule(object):
                 wixPath = "C:/Program Files/Windows Installer XML v3.5/bin/"
 
                 subprocess.check_call(wixPath + "candle.exe OpenTeacher.wxs")
-                subprocess.check_call(wixPath + "light.exe -ext WixUtilExtension -ext WixUIExtension -ext WiXNetFxExtension OpenTeacher.wixobj")
+                subprocess.check_call(wixPath + "light.exe -ext WixUtilExtension -ext WixUIExtension OpenTeacher.wixobj")
 
                 os.chdir(cwd)
 
