@@ -29,7 +29,7 @@ class ProfileDescriptionModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ("packageRpm.py",)
+		self.filesWithTranslations = ("packageWindowsMsi.py",)
 
 	def _retranslate(self):
 		try:
@@ -41,16 +41,16 @@ class ProfileDescriptionModule(object):
 				self._mm.resourcePath("translations")
 			)
 		self.desc = {
-			"name": "package-rpm",
-			"niceName": _("Packages this installation into a .rpm package."),
+			"name": "package-windows-msi",
+			"niceName": _("Packages this installation into a Microsoft Installer (.msi) file."),
 			"advanced": True,
 		}
 
 	def enable(self):
-		if len(set(self._mm.mods(type="rpmPackager"))) == 0:
+		if len(set(self._mm.mods(type="windowsMsiPackager"))) == 0:
 			return #remain inactive
-		if platform.linux_distribution()[0] != "Fedora":
-			return #fedora only module, remain inactive
+		if platform.system() != "Windows":
+			return #remain inactive, this is a windows-only mod.
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		try:
 			translator = self._modules.default("active", type="translator")

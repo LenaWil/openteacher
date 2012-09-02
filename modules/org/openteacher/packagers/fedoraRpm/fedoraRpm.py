@@ -26,8 +26,6 @@ import glob
 import platform
 from PyQt4 import QtGui
 
-#FIXME: TESTME!
-
 class RpmPackagerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(RpmPackagerModule, self).__init__(*args, **kwargs)
@@ -45,8 +43,8 @@ class RpmPackagerModule(object):
 		}
 
 	def enable(self):
-		if platform.system() != "Linux":
-			return #linux only module, remain inactive
+		if platform.linux_distribution()[0] != "Fedora":
+			return #fedora only module, remain inactive
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._metadata= self._modules.default("active", type="metadata").metadata
 		self._modules.default(type="execute").startRunning.handle(self._run)
@@ -60,7 +58,7 @@ class RpmPackagerModule(object):
 			sys.stderr.write("Please specify a path for the rpm file (ending in .rpm) as the last command line argument.\n")
 			return
 		sourcePath = self._modules.default("active", type="sourceWithSetupSaver").saveSource()
-		QtGui.QImage(self._metadata["iconPath"]).save(os.path.join(sourcePath, "icon.xpm"))
+
 		oldCwd = os.getcwd()
 		os.chdir(sourcePath)
 		subprocess.check_call([
@@ -68,13 +66,13 @@ class RpmPackagerModule(object):
 			"setup.py", "bdist_rpm",
 			"--group", "Applications/Productivity",
 			"--packager", "%s <%s>" % (self._metadata["authors"], self._metadata["email"]),
-			"--requires", "PyQt4, espeak, python-django, python-django-guardian, python-cherrypy, python-graphviz, gettext",
-#FIXME: rpm bug? (not respecting the build directory?)
-#			"--icon", os.path.join(sourcePath, "icon.xpm"),
+			#temporarily not needed: python-django, python-django-guardian
+			#add if packaged somewhere in the future: python-graphviz
+			"--requires", "PyQt4, espeak, rpm-build, python-cherrypy, gettext"
 		])
 		os.chdir(oldCwd)
 		shutil.copy(
-			glob.glob(os.path.join(sourcePath, "dist/*.rpm"))[0],
+			glob.glob(os.path.join(sourcePath, "dist/*.noarch.rpm"))[0],
 			path
 		)
 
