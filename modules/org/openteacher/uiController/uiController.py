@@ -20,6 +20,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 
 class UiControllerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -117,18 +118,17 @@ class UiControllerModule(object):
 
 		del self._execute
 
-	def run(self, path=None):
+	def run(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._uiModule = self._modules.default("active", type="ui")
 
 		self._connectEvents()
 		self._updateMenuItems()
 
-		if path:
-			try:
-				self.open_(path)
-			except (NotImplementedError, IOError):
-				pass
+		try:
+			self.open_(sys.argv[1])
+		except IndexError:
+			pass
 
 		self._uiModule.run(self._onCloseRequested)
 		self._disconnectEvents()

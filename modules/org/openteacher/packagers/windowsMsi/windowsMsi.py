@@ -30,18 +30,18 @@ import string
 wxs = """
 <?xml version="1.0" encoding="UTF-8" ?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-    <Product Name="OpenTeacher" Id="6795c2ff-d23f-4a2c-a130-0556d4314254" UpgradeCode="6fbe08a3-4545-45b8-b6d1-4eaf00083835" Language="1033" Codepage="1252" Version="3.0.0" Manufacturer="OpenTeacher Maintainers">
+	<Product Name="OpenTeacher" Id="6795c2ff-d23f-4a2c-a130-0556d4314254" UpgradeCode="6fbe08a3-4545-45b8-b6d1-4eaf00083835" Language="1033" Codepage="1252" Version="3.0.0" Manufacturer="OpenTeacher Maintainers">
 	<Package Id="*" Keywords="Installer" Manufacturer="OpenTeacher Maintainers" InstallerVersion="100" Languages="1033" Compressed="yes" />
 
 	<!-- files -->
 	<Media Id="1" Cabinet="OpenTeacher.cab" EmbedCab="yes" />
 	<Directory Id="TARGETDIR" Name="SourceDir">
-	    <Directory Id="ProgramFilesFolder" Name="PFiles">
+		<Directory Id="ProgramFilesFolder" Name="PFiles">
 		<Directory Id="INSTALLDIR" Name="OpenTeacher">
-		    <Component Id="MainFiles" Guid="{uuid1}">
+			<Component Id="MainFiles" Guid="{uuid1}">
 			<File Id="openteacher.exe" KeyPath="yes" Name="openteacher.exe" Source="openteacher.exe" DiskId="1">
-			    <Shortcut Id="StartmenuShortcut" Directory="ProgramMenuDir" Name="OpenTeacher" WorkingDirectory="INSTALLDIR" Icon="openteacher.ico" Advertise="yes" />
-			    <Shortcut Id="DesktopShortcut" Directory="DesktopFolder" Name="OpenTeacher" WorkingDirectory="INSTALLDIR" Icon="openteacher.ico" Advertise="yes" />
+				<Shortcut Id="StartmenuShortcut" Directory="ProgramMenuDir" Name="OpenTeacher" WorkingDirectory="INSTALLDIR" Icon="openteacher.ico" Advertise="yes" />
+				<Shortcut Id="DesktopShortcut" Directory="DesktopFolder" Name="OpenTeacher" WorkingDirectory="INSTALLDIR" Icon="openteacher.ico" Advertise="yes" />
 			</File>
 			<File Id="openteacher.ico" Name="openteacher.ico" Source="openteacher.ico" DiskId="1" />
 			<File Id="start.py" Name="start.py" Source="start.py" DiskId="1" />
@@ -49,72 +49,72 @@ wxs = """
 			<!-- File associations -->
 			<!-- otwd -->
 			<ProgId Id="OpenTeacher.otwd" Description="Open Teaching Words" Icon="openteacher.ico">
-			    <Extension Id="otwd" ContentType="application/x-openteachingwords">
+				<Extension Id="otwd" ContentType="application/x-openteachingwords">
 				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%%1&quot;" />
-			    </Extension>
+				</Extension>
 			</ProgId>
 			<!-- ottp -->
 			<ProgId Id="OpenTeacher.ottp" Description="Open Teaching Topography" Icon="openteacher.ico">
-			    <Extension Id="ottp" ContentType="application/x-openteachingtopography">
+				<Extension Id="ottp" ContentType="application/x-openteachingtopography">
 				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%%1&quot;" />
-			    </Extension>
+				</Extension>
 			</ProgId>
 			<!-- otmd -->
 			<ProgId Id="OpenTeacher.otmd" Description="Open Teaching Media" Icon="openteacher.ico">
-			    <Extension Id="otmd" ContentType="application/x-openteachingmedia">
+				<Extension Id="otmd" ContentType="application/x-openteachingmedia">
 				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%%1&quot;" />
-			    </Extension>
+				</Extension>
 			</ProgId>
 			<!-- ot -->
 			<ProgId Id="OpenTeacher.ot" Description="Open Teacher 2.x" Icon="openteacher.ico">
-			    <Extension Id="ot" ContentType="application/x-openteacher">
+				<Extension Id="ot" ContentType="application/x-openteacher">
 				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%%1&quot;" />
-			    </Extension>
+				</Extension>
 			</ProgId>
 			<!-- t2k -->
 			<ProgId Id="OpenTeacher.t2k" Description="Teach 2000" Icon="openteacher.ico">
-			    <Extension Id="t2k" ContentType="application/x-teach2000">
+				<Extension Id="t2k" ContentType="application/x-teach2000">
 				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%%1&quot;" />
-			    </Extension>
+				</Extension>
 			</ProgId>
 			<!-- wrts -->
 			<ProgId Id="OpenTeacher.wrts" Description="WRTS" Icon="openteacher.ico">
-			    <Extension Id="wrts" ContentType="application/x-wrts">
+				<Extension Id="wrts" ContentType="application/x-wrts">
 				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%%1&quot;" />
-			    </Extension>
+				</Extension>
 			</ProgId>
-		    </Component>
-		    {files}
+			</Component>
+			{files}
 		</Directory>
-	    </Directory>
-	    <Directory Id="ProgramMenuFolder" Name="Programs">
+		</Directory>
+		<Directory Id="ProgramMenuFolder" Name="Programs">
 		<Directory Id="ProgramMenuDir" Name="OpenTeacher">
-		    <Component Id="ProgramMenuDir" Guid="{uuid2}">
+			<Component Id="ProgramMenuDir" Guid="{uuid2}">
 			<RemoveFolder Id="ProgramMenuDir" On="uninstall" />
 			<RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="" KeyPath="yes" /> 
 			<!-- Uninstall shortcut -->
 			<Shortcut Id="UninstallShortcut" Name="Uninstall OpenTeacher" Target="[SystemFolder]msiexec.exe" Arguments="/x [ProductCode]" Description="Uninstalls OpenTeacher" />
-		    </Component>
+			</Component>
 		</Directory>
-	    </Directory>
-	    <Directory Id="DesktopFolder" Name="Desktop" />
+		</Directory>
+		<Directory Id="DesktopFolder" Name="Desktop" />
 	</Directory>
 	<Feature Id="Complete" Level="1">
-	    <ComponentRef Id="MainFiles" />
-	    <ComponentRef Id="ProgramMenuDir" />
-	    {components}
+		<ComponentRef Id="MainFiles" />
+		<ComponentRef Id="ProgramMenuDir" />
+		{components}
 	</Feature>
 
 	<!-- UI -->
 	<UI>
-	    <UIRef Id="WixUI_InstallDir" />
-	    <UIRef Id="WixUI_ErrorProgressText" />
-	    <Publish
+		<UIRef Id="WixUI_InstallDir" />
+		<UIRef Id="WixUI_ErrorProgressText" />
+		<Publish
 		Dialog="ExitDialog"
 		Control="Finish"
 		Event="DoAction"
 		Value="LaunchApplication"
-	    >WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
+		>WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
 	</UI>
 	<Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
 	<WixVariable Id="WixUIBannerBmp" Value="topbanner.bmp" />
@@ -128,7 +128,7 @@ wxs = """
 
 	<Property Id="ARPPRODUCTICON" Value="openteacher.ico" />
 	<Icon Id="openteacher.ico" SourceFile="openteacher.ico" />
-    </Product>
+	</Product>
 </Wix>
 """
 
@@ -147,39 +147,39 @@ class WindowsMsiPackagerModule(object):
 			"default": -1,
 		}
 
-                self._ids = {}
-                self._idCounter = itertools.count()
+		self._ids = {}
+		self._idCounter = itertools.count()
 
-        def _toId(self, path):
-                if path not in self._ids:
-                        self._ids[path] = "generated_%s" % next(self._idCounter)
-                return self._ids[path]
+		def _toId(self, path):
+			if path not in self._ids:
+					self._ids[path] = "generated_%s" % next(self._idCounter)
+			return self._ids[path]
 
-        def _gatherFiles(self, root):
-                """gather all files in the python and src directories. Output as xml ready to insert into the main snippet"""
+	def _gatherFiles(self, root):
+			"""gather all files in the python and src directories. Output as xml ready to insert into the main snippet"""
 
-                components = '<ComponentRef Id="%sComponent" />' % self._toId(root)
+			components = '<ComponentRef Id="%sComponent" />' % self._toId(root)
 
-                result = '<Directory Id="{id}Directory" Name="{name}">'.format(id=self._toId(root), name=os.path.basename(root))
-                result += '<Component Id="{id}Component" Guid="{uuid}">'.format(id=self._toId(root), uuid=uuid.uuid4())
+			result = '<Directory Id="{id}Directory" Name="{name}">'.format(id=self._toId(root), name=os.path.basename(root))
+			result += '<Component Id="{id}Component" Guid="{uuid}">'.format(id=self._toId(root), uuid=uuid.uuid4())
 
-                for file in os.listdir(root):
-                        if not os.path.isfile(os.path.join(root, file)):
-                            continue
-                        result += '<File Id="{id}" Source="{source}" Name="{name}" DiskId="1" />'.format(
-                            id=self._toId(os.path.join(root, file)),
-                            source=os.path.join(root, file),
-                            name=file,
-                        )
-                result += '</Component>'
-                for dir in os.listdir(root):
-                        if not os.path.isdir(os.path.join(root, dir)):
-                            continue
-                        components2, result2 = self._gatherFiles(os.path.join(root, dir))
-                        components += components2
-                        result += result2
-                result += '</Directory>'
-                return components, result
+			for file in os.listdir(root):
+					if not os.path.isfile(os.path.join(root, file)):
+						continue
+					result += '<File Id="{id}" Source="{source}" Name="{name}" DiskId="1" />'.format(
+						id=self._toId(os.path.join(root, file)),
+						source=os.path.join(root, file),
+						name=file,
+					)
+			result += '</Component>'
+			for dir in os.listdir(root):
+					if not os.path.isdir(os.path.join(root, dir)):
+						continue
+					components2, result2 = self._gatherFiles(os.path.join(root, dir))
+					components += components2
+					result += result2
+			result += '</Directory>'
+			return components, result
 
 	def _run(self):
 		try:
@@ -210,30 +210,30 @@ class WindowsMsiPackagerModule(object):
 		)
 
 		#Build msi
-                cwd = os.getcwd()
-                os.chdir(resultDir)
-                #complete the template and write it to the hard disk
+		cwd = os.getcwd()
+		os.chdir(resultDir)
+		#complete the template and write it to the hard disk
 
-                components, files = self._gatherFiles("python")
-                components2, files2 = self._gatherFiles("src")
+		components, files = self._gatherFiles("python")
+		components2, files2 = self._gatherFiles("src")
 
-                components += components2
-                files += files2
+		components += components2
+		files += files2
 
-                with open("OpenTeacher.wxs", "w") as f:
-                    f.write(wxs.strip().format(
-                        files=files,
-                        components=components,
-                        uuid1=uuid.uuid4(),
-                        uuid2=uuid.uuid4()
-                    ))
+		with open("OpenTeacher.wxs", "w") as f:
+			f.write(wxs.strip().format(
+				files=files,
+				components=components,
+				uuid1=uuid.uuid4(),
+				uuid2=uuid.uuid4()
+			))
 
-                wixPath = "C:/Program Files/Windows Installer XML v3.5/bin/"
+		wixPath = "C:/Program Files/Windows Installer XML v3.5/bin/"
 
-                subprocess.check_call(wixPath + "candle.exe OpenTeacher.wxs")
-                subprocess.check_call(wixPath + "light.exe -ext WixUtilExtension -ext WixUIExtension OpenTeacher.wixobj")
+		subprocess.check_call(wixPath + "candle.exe OpenTeacher.wxs")
+		subprocess.check_call(wixPath + "light.exe -ext WixUtilExtension -ext WixUIExtension OpenTeacher.wixobj")
 
-                os.chdir(cwd)
+		os.chdir(cwd)
 
 		shutil.copy(
 			os.path.join(resultDir, "OpenTeacher.msi"),

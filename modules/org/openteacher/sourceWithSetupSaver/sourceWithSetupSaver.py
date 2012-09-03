@@ -22,6 +22,8 @@ import sys
 import os
 import shutil
 
+from PyQt4 import QtCore, QtGui
+
 class SourceWithSetupSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(SourceWithSetupSaverModule, self).__init__(*args, **kwargs)
@@ -65,18 +67,48 @@ class SourceWithSetupSaverModule(object):
 			for file in files:
 				packageData.append(os.path.join(root, file))
 
+		imagePaths = [
+			"linux/application-x-%s.png" % packageName,
+			"linux/application-x-teach2000.png",
+			"linux/application-x-wrts.png",
+			"linux/application-x-openteachingwords.png",
+			"linux/application-x-openteachingtopography.png",
+			"linux/application-x-openteachingmedia.png",
+		]
+
 		data = self._metadata.copy()
 		data.update({
 			"package": packageName,
 			"package_data": packageData,
+			"image_paths": repr(imagePaths)
 		})
 
+		#bin/package
 		os.mkdir(os.path.join(sourcePath, "bin"))
 		with open(os.path.join(sourcePath, "bin", packageName), "w") as f:
 			templ = pyratemp.Template(filename=self._mm.resourcePath("runner.templ"))
 			#ascii since the file doesn't have a encoding directive
 			f.write(templ(name=packageName).encode("ascii"))
 
+		#linux/package.desktop
+		os.mkdir(os.path.join(sourcePath, "linux"))
+		with open(os.path.join(sourcePath, "linux", packageName + ".desktop"), "w") as f:
+			templ = pyratemp.Template(filename=self._mm.resourcePath("desktop.templ"))
+			f.write(templ(package=packageName, **self._metadata).encode("UTF-8"))
+
+		#linux/package.xml
+		shutil.copy(
+			self._mm.resourcePath("mimetypes.xml"),
+			os.path.join(sourcePath, "linux", packageName + ".xml")
+		)
+
+		#generate icons
+		image = QtGui.QImage(self._metadata["iconPath"])
+		image = image.scaled(128, 128, QtCore.Qt.KeepAspectRatio)
+		for path in ["linux/openteacher.png"] + imagePaths:
+			image.save(os.path.join(sourcePath, path))
+
+		#setup.py
 		with open(os.path.join(sourcePath, "setup.py"), "w") as f:
 			templ = pyratemp.Template(filename=self._mm.resourcePath("setup.py.templ"))
 			f.write(templ(**data).encode("UTF-8"))

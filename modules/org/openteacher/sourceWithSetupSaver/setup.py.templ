@@ -35,6 +35,18 @@ setup(
 		"@!path!@",
 		<!--(end)-->
 	]},
+	data_files = [
+		("share/applications", [
+			"linux/@!package!@.desktop"
+		]),
+		("share/icons/hicolor/128x128/mimetypes", $!image_paths!$),
+		("share/icons/hicolor/128x128/apps", [
+			"linux/@!package!@.png"
+		]),
+		("share/mime/packages", [
+			"linux/@!package!@.xml"
+		])
+	],
 	scripts = ["bin/@!package!@"],
 	#a list of classifiers can be found at http://pypi.python.org/pypi?:action=list_classifiers
 	classifiers = [

@@ -77,13 +77,14 @@ class MetadataModule(object):
 			"comicPath": self._mm.resourcePath("comic.png"),
 			#Not translated because this is for the packaging only,
 			#packages are normally translated in other ways.
-			"short_description": "OpenTeacher is an open source vocabulary training application that helps you learn a foreign language!",
+			"short_description": "Your personal tutor",
 			"description": """Enter a list of words in both a known and a foreign language, and OpenTeacher tests you.
 
 OpenTeacher 3.0 has the following features:
 
  * blabla
  * some other features
+
 OpenTeacher is available for Linux, Windows and Mac OS X."""
 		}
 		self.metadata["userAgent"] = "%s/%s (+%s)" % (
