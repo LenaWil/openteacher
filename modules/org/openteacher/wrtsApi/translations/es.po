@@ -8,35 +8,35 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2012-08-31 21:56+0200\n"
-"PO-Revision-Date: 2012-07-16 07:49+0000\n"
-"Last-Translator: Adolfo Jayme Barrientos <fitoschido@gmail.com>\n"
+"PO-Revision-Date: 2012-09-02 19:11+0000\n"
+"Last-Translator: Rose <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-09-01 05:23+0000\n"
+"X-Launchpad-Export-Date: 2012-09-03 05:31+0000\n"
 "X-Generator: Launchpad (build 15890)\n"
 "Language: es\n"
 
 #: wrtsApi.py:155
 msgid "Import from WRDS"
-msgstr ""
+msgstr "Importar desde WRDS"
 
 #: wrtsApi.py:156
 msgid "Export to WRDS"
-msgstr ""
+msgstr "Exportar a WRDS"
 
 #: wrtsApi.py:159
 msgid "Email"
-msgstr ""
+msgstr "Correo electrónico"
 
 #: wrtsApi.py:160
 msgid "Password"
-msgstr ""
+msgstr "Contraseña"
 
 #: wrtsApi.py:162
 msgid "Input and output"
-msgstr ""
+msgstr "Entrada y salida"
 
 #: wrtsApi.py:163
 msgid "WRDS Login credentials"
@@ -78,15 +78,15 @@ msgstr ""
 
 #: wrtsApi.py:288
 msgid "No list selected"
-msgstr ""
+msgstr "No existe una lista seleccionada"
 
 #: wrtsApi.py:289
 msgid "No list was selected. Please try again."
-msgstr ""
+msgstr "Ninguna lista fue seleccionada. Por favor, inténtelo de nuevo."
 
 #: wrtsApi.py:314
 msgid "Can't show the result"
-msgstr ""
+msgstr "No se puede mostrar el resultado"
 
 #: wrtsApi.py:315
 msgid "Can't open the resultive word list, because it can't be shown."
@@ -102,16 +102,16 @@ msgstr ""
 
 #: ui.py:75
 msgid "Email:"
-msgstr ""
+msgstr "Correo electrónico:"
 
 #: ui.py:78
 msgid "Password:"
-msgstr ""
+msgstr "Contraseña"
 
 #: ui.py:81
 msgid "Remember email address and password"
-msgstr ""
+msgstr "Recordar dirección de correo electrónico y contraseña"
 
 #: ui.py:114
 msgid "WRDS - Please choose a list:"
-msgstr ""
+msgstr "WRDS - Por favor elija una lista:"

@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-08-31 21:56+0200\n"
-"PO-Revision-Date: 2012-09-02 14:45+0000\n"
+"PO-Revision-Date: 2012-09-02 20:25+0000\n"
 "Last-Translator: Hector A. Mantellini <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,24 +16,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-09-03 05:31+0000\n"
 "X-Generator: Launchpad (build 15890)\n"
-"Language: es\n"
 
-#: interval.py:243 interval.py:248
-msgid "Interval"
-msgstr "Intervalo"
+#: progressViewer.py:63
+msgid "Pause"
+msgstr "Pausa"
 
-#: interval.py:247
-msgid "Lesson type"
-msgstr "Tipo de lección"
+#: progressViewer.py:70
+msgid "Thinking"
+msgstr "Pensando"
 
-#: interval.py:250
-msgid "Maximum size of group"
-msgstr "Tamaño máximo de grupo"
-
-#: interval.py:252
-msgid "Minimum amount of questions asked"
-msgstr "Cantidad mínimo de preguntas"
-
-#: interval.py:254
-msgid "Percent right before known"
-msgstr ""
+#: progressViewer.py:74
+msgid "Answering"
+msgstr "Respondiendo"

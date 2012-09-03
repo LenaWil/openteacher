@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2012-08-31 21:56+0200\n"
-"PO-Revision-Date: 2012-07-02 19:59+0000\n"
-"Last-Translator: Eduardo Alberto Calvo <Unknown>\n"
+"PO-Revision-Date: 2012-09-02 15:13+0000\n"
+"Last-Translator: Rose <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-09-01 05:22+0000\n"
+"X-Launchpad-Export-Date: 2012-09-03 05:31+0000\n"
 "X-Generator: Launchpad (build 15890)\n"
 "Language: es\n"
 
 #: topo.py:119
 msgid "Create topography lesson"
-msgstr "Crear lección de topografía"
+msgstr "Crear lección topográfico"
 
 #. TRANSLATORS: used as a label in case a filename of a topo
 #. TRANSLATORS: lesson isn't available. (E.g. because it's
@@ -32,7 +32,7 @@ msgstr "Importar fuente"
 #: topo.py:175 topo.py:276 topo.py:278
 #, python-format
 msgid "Topo lesson: %s"
-msgstr ""
+msgstr "Lección topográfico: % s"
 
 #~ msgid "What's this place's name?"
 #~ msgstr "¿Cuál es el nombre de este sitio?"
