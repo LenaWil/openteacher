@@ -83,6 +83,7 @@ wxs = """
 				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%%1&quot;" />
 				</Extension>
 			</ProgId>
+			<CreateFolder/>
 			</Component>
 			{files}
 		</Directory>
@@ -94,6 +95,7 @@ wxs = """
 			<RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="" KeyPath="yes" /> 
 			<!-- Uninstall shortcut -->
 			<Shortcut Id="UninstallShortcut" Name="Uninstall OpenTeacher" Target="[SystemFolder]msiexec.exe" Arguments="/x [ProductCode]" Description="Uninstalls OpenTeacher" />
+			<CreateFolder/>
 			</Component>
 		</Directory>
 		</Directory>
@@ -150,10 +152,10 @@ class WindowsMsiPackagerModule(object):
 		self._ids = {}
 		self._idCounter = itertools.count()
 
-		def _toId(self, path):
-			if path not in self._ids:
-					self._ids[path] = "generated_%s" % next(self._idCounter)
-			return self._ids[path]
+	def _toId(self, path):
+		if path not in self._ids:
+				self._ids[path] = "generated_%s" % next(self._idCounter)
+		return self._ids[path]
 
 	def _gatherFiles(self, root):
 			"""gather all files in the python and src directories. Output as xml ready to insert into the main snippet"""
@@ -171,7 +173,7 @@ class WindowsMsiPackagerModule(object):
 						source=os.path.join(root, file),
 						name=file,
 					)
-			result += '</Component>'
+			result += '<CreateFolder/></Component>'
 			for dir in os.listdir(root):
 					if not os.path.isdir(os.path.join(root, dir)):
 						continue
@@ -220,7 +222,7 @@ class WindowsMsiPackagerModule(object):
 		components += components2
 		files += files2
 
-		with open("OpenTeacher.wxs", "w") as f:
+		with open("OpenTeacher.wxs", "wb") as f:
 			f.write(wxs.strip().format(
 				files=files,
 				components=components,
@@ -228,7 +230,7 @@ class WindowsMsiPackagerModule(object):
 				uuid2=uuid.uuid4()
 			))
 
-		wixPath = "C:/Program Files/Windows Installer XML v3.5/bin/"
+		wixPath = os.path.join(os.environ["ProgramFiles"], "Windows Installer XML v3.5/bin/")
 
 		subprocess.check_call(wixPath + "candle.exe OpenTeacher.wxs")
 		subprocess.check_call(wixPath + "light.exe -ext WixUtilExtension -ext WixUIExtension OpenTeacher.wixobj")

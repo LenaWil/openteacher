@@ -50,30 +50,36 @@ class PyDistInterfaceModule(object):
 				os.unlink(thing)
 
 	def build(self, dataZip, target):
+		"""
 		dataPath = tempfile.mkdtemp()
 		self._temp.add(dataPath)
 		with tarfile.open(dataZip) as f:
-			members = []
 			#filter members trying to get out of the temp dir. (Just to
 			#be sure.)
-			for m in f.getmembers():
-				if not os.path.normpath(m.name).startswith(os.pardir):
-					members.append(m)
-			f.extractall(dataPath, members)
-
+			#for m in f.getmembers():
+			#	if not os.path.normpath(m.name).startswith(os.pardir):
+			#		members.append(m)
+			f.extractall(dataPath)
+		"""
 		source = self._modules.default(type="sourceSaver").saveSource()
 		exe = os.path.join(source, os.path.basename(sys.argv[0]))
+		
+		"""
 		if target == "windows":
 			pythonPath = os.path.join(dataPath, "Python{0}{1}").format(*sys.version_info)
 		elif target == "macosx":
-			pythonpath = os.path.join(dataPath, "Python")
+			pythonPath = os.path.join(dataPath, "Python")
 		else:
 			raise ValueError("Wrong target: should be 'windows' or 'macosx'.")
-
+		dllPath = os.path.join(dataPath, "python{0}{1}.dll").format(*sys.version_info)
+		"""
+		pythonPath = "C:\Python27"
+		dllPath = os.path.join(os.environ["SYSTEMROOT"], "SysWOW64\python27.dll")
 		pd = pydist.PyDist(source)
+		
 		lib = pd.createPythonLibrary(**{
 			"exe": exe,
-			"pythonLib": os.path.join(pythonPath, "Lib"),
+			"pythonLib": os.path.join(pythonPath, "lib"),
 			"includes": [],
 			"compile": False,
 		})
@@ -86,10 +92,18 @@ class PyDistInterfaceModule(object):
 				"exe": exe,
 				"libLocation": lib,
 				"pythonPath": pythonPath,
-				"dllPath": os.path.join(dataPath, "python{0}{1}.dll").format(*sys.version_info),
+				"dllPath": dllPath,
 				"console": False,
 				"compile": False,
 			})
+			# hardcoded OT-specific copies
+			shutil.copy(os.path.join(pythonPath, "Lib/site-packages/PyWin32.chw"), os.path.join(pd.winDistDir, 'python/Lib/site-packages'))
+			shutil.copy(os.path.join(pythonPath, "Lib/site-packages/pywin32.pth"), os.path.join(pd.winDistDir, 'python/Lib/site-packages'))
+			shutil.copy(os.path.join(pythonPath, "Lib/site-packages/pywin32-216-py2.7.egg-info"), os.path.join(pd.winDistDir, 'python/Lib/site-packages'))
+			shutil.copy(os.path.join(pythonPath, "Lib/site-packages/sip.pyd"), os.path.join(pd.winDistDir, 'python/Lib/site-packages'))
+			
+			shutil.copy(os.path.join(os.environ["SYSTEMROOT"], "SysWOW64\pythoncom27.dll"), os.path.join(pd.winDistDir, 'python/Lib/site-packages/win32'))
+			shutil.copy(os.path.join(os.environ["SYSTEMROOT"], "SysWOW64\pywintypes27.dll"), os.path.join(pd.winDistDir, 'python/Lib/site-packages/win32'))
 			return pd.winDistDir
 		elif target == "macosx":
 			pd.createOSXPackage(**{
