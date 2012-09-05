@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2012-08-31 21:56+0200\n"
-"PO-Revision-Date: 2012-09-03 16:39+0000\n"
+"PO-Revision-Date: 2012-09-04 11:51+0000\n"
 "Last-Translator: emerling <emerling@ubuntu.org.ve>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-09-04 05:00+0000\n"
-"X-Generator: Launchpad (build 15890)\n"
+"X-Launchpad-Export-Date: 2012-09-05 04:59+0000\n"
+"X-Generator: Launchpad (build 15901)\n"
 "Language: es\n"
 
 #: symbols.py:94
@@ -28,4 +28,4 @@ msgstr "Lección"
 
 #: symbols.py:99
 msgid "Words lesson"
-msgstr ""
+msgstr "Lección de palabras"

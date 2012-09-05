@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-08-31 21:56+0200\n"
-"PO-Revision-Date: 2012-09-04 11:55+0000\n"
+"PO-Revision-Date: 2012-09-04 11:46+0000\n"
 "Last-Translator: Hector A. Mantellini <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,18 +17,6 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-09-05 04:59+0000\n"
 "X-Generator: Launchpad (build 15901)\n"
 
-#: mediaDisplay.py:231
-msgid "Use HTML5 for video"
-msgstr "Utilice HTML5 para video"
-
-#: mediaDisplay.py:232 mediaDisplay.py:237
-msgid "Lesson"
-msgstr "Lección"
-
-#: mediaDisplay.py:233 mediaDisplay.py:238
-msgid "Media"
-msgstr "Media"
-
-#: mediaDisplay.py:236
-msgid "Use HTML5 for audio"
-msgstr "Utilice HTML5 para audio"
+#: german.py:92
+msgid "German"
+msgstr "Alemán"
