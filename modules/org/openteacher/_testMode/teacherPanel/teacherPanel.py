@@ -536,6 +536,7 @@ class TakenTestWidget(QtGui.QWidget):
 			self.table.setHorizontalHeaderItem(1, QtGui.QTableWidgetItem(_("Question")))
 			self.table.setHorizontalHeaderItem(2, QtGui.QTableWidgetItem(_("Given answer")))
 		if hasattr(self, "correctButton"):
+			#TRANSLATORS: The name of a button clicked if an answer is correct.
 			self.correctButton.setText(_("Correct"))
 
 	def fillLabels(self):

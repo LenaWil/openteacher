@@ -117,6 +117,7 @@ class WordsTestTypeModule(object):
 			_("Question"),
 			_("Answer"),
 			_("Given answer"),
+			#TRANSLATORS: a label of a table column that tells if the user had the answer correct by showing a checkbox.
 			_("Correct")
 		]
 	

@@ -120,7 +120,9 @@ class TeachWidget(QtGui.QWidget):
 		self.retranslate()
 
 	def retranslate(self):
+		#TRANSLATORS: lesson types are e.g. 'smart', 'all once' and 'interval'
 		self.label.setText(_("Lesson type:"))
+		#TRANSLATORS: a button which the user presses to tell the computer it should check his/her answer.
 		self.checkButton.setText(_("Check"))
 
 		self.lessonTypeChooser.retranslate()

@@ -65,6 +65,7 @@ class MediaTestTypeModule(object):
 			_("Question"),
 			_("Answer"),
 			_("Given answer"),
+			#TRANSLATORS: the label of a table column that shows if the user answered a word in the same row correctly.
 			_("Correct")
 		]
 	

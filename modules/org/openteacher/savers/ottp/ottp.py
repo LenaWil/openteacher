@@ -60,6 +60,8 @@ class OpenTeachingTopoSaverModule(object):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._otxxSaver = self._modules.default("active", type="otxxSaver")
 
+		#TRANSLATORS: This is one of the file formats OpenTeacher
+		#TRANSLATORS: saves to.
 		self.saves = {"topo": ["ottp"]}
 
 		try:

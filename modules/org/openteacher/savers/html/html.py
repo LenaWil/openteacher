@@ -68,10 +68,11 @@ class HtmlSaverModule(object):
 				self._mm.resourcePath("translations")
 			)
 		#TRANSLATORS: This is the name of an internet standard. Please
-		#just use the English name of it, unless the standard is known
-		#under another name in your language (or you have a very good
-		#reason yourself for translating it). For more information about
-		#HTML: http://en.wikipedia.org/wiki/HTML
+		#TRANSLATORS: just use the English name of it, unless the
+		#TRANSLATORS: standard is known under another name in your
+		#TRANSLATORS: language (or you have a very good reason yourself
+		#TRANSLATORS: for translating it). For more information about
+		#TRANSLATORS: HTML: http://en.wikipedia.org/wiki/HTML
 		self.name = _("Hyper Text Markup Language")
 
 	def disable(self):

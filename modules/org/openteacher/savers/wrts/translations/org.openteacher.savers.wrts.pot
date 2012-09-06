@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.0\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-09-05 18:17+0200\n"
+"POT-Creation-Date: 2012-09-06 17:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #. TRANSLATORS: WRDS is the name of a web service. Also known as
-#. WRTS (the Dutch name). International website: http://wrds.eu/
-#: wrts.py:61
+#. TRANSLATORS: WRTS (the Dutch name). International website:
+#. http://wrds.eu/
+#: wrts.py:62
 msgid "WRDS"
 msgstr ""

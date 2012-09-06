@@ -75,7 +75,9 @@ class OpenTeacherSaverModule(object):
 				self._mm.resourcePath("translations")
 			)
 		#TRANSLATORS: Please don't translate 'OpenTeacher' unless you've
-		#a good reason for doing so in your language, of course.
+		#TRANSLATORS: a good reason for doing so in your language, of
+		#TRANSLATORS: course. This is used to describe the file format
+		#TRANSLATORS: of the OpenTeacher 2.x series in a file dialog.
 		self.name = _("OpenTeacher 2.x")
 
 	def disable(self):

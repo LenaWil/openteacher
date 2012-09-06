@@ -56,10 +56,11 @@ class PdfSaverModule(object):
 				self._mm.resourcePath("translations")
 			)
 		#TRANSLATORS: This is the name of a document exchange standard.
-		#Please just use the English name of it, unless the standard is
-		#known under another name in your language (or you have a very
-		#good reason yourself for translating it). For more information
-		#about PDF: http://en.wikipedia.org/wiki/PDF
+		#TRANSLATORS: Please just use the English name of it, unless the
+		#TRANSLATORS: standard is known under another name in your
+		#TRANSLATORS: language (or you have a very good reason yourself
+		#TRANSLATORS: for translating it). For more information on PDF:
+		#TRANSLATORS: http://en.wikipedia.org/wiki/PDF
 		self.name = _("Portable Document Format")
 
 	def enable(self):

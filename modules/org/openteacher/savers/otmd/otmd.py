@@ -61,10 +61,16 @@ class OpenTeachingMediaSaverModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
+
+		#TRANSLATORS: This is one of the file formats OpenTeacher
+		#TRANSLATORS: saves to.
 		self.name = _("Open Teaching Media")
 		self._compressionSetting.update({
+			#TRANSLATORS: name of a setting
 			"name": _("Enable compression"),
+			#TRANSLATORS: setting category.
 			"category": _("Input and output"),
+			#TRANSLATORS: setting subcategory; .otmd is a file extension.
 			"subcategory": _(".otmd saving"),
 		})
 

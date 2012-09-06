@@ -74,6 +74,7 @@ class TopoTestTypeModule(object):
 	def header(self):
 		return [
 			_("Place name"),
+			#TRANSLATORS: A label of a table column that indicates of the answer of the user was correct.
 			_("Correct")
 		]
 	

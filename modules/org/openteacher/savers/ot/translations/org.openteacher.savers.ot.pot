@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.0\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-09-05 18:18+0200\n"
+"POT-Creation-Date: 2012-09-06 17:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #. TRANSLATORS: Please don't translate 'OpenTeacher' unless you've
-#. a good reason for doing so in your language, of course.
-#: ot.py:79
+#. TRANSLATORS: a good reason for doing so in your language, of
+#. TRANSLATORS: course. This is used to describe the file format
+#. TRANSLATORS: of the OpenTeacher 2.x series in a file dialog.
+#: ot.py:81
 msgid "OpenTeacher 2.x"
 msgstr ""

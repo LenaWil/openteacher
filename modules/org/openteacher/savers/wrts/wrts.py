@@ -57,7 +57,8 @@ class WrtsSaverModule(object):
 				self._mm.resourcePath("translations")
 			)
 		#TRANSLATORS: WRDS is the name of a web service. Also known as
-		#WRTS (the Dutch name). International website: http://wrds.eu/
+		#TRANSLATORS: WRTS (the Dutch name). International website:
+		#http://wrds.eu/
 		self.name = _("WRDS")
 
 	def enable(self):

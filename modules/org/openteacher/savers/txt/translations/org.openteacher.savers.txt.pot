@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.0\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-09-05 18:18+0200\n"
+"POT-Creation-Date: 2012-09-06 17:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,18 +17,20 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: txt.py:56
+#. TRANSLATORS: This is one of the file types OpenTeacher can
+#. TRANSLATORS: export to.
+#: txt.py:58
 msgid "Plain text"
 msgstr ""
 
-#: txt.py:58
+#: txt.py:60
 msgid "Minimum amount of spaces between words"
 msgstr ""
 
-#: txt.py:59
+#: txt.py:61
 msgid "Input and output"
 msgstr ""
 
-#: txt.py:60
+#: txt.py:62
 msgid ".txt saving"
 msgstr ""

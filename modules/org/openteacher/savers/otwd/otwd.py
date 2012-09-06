@@ -53,6 +53,8 @@ class OpenTeachingWordsSaverModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
+		#TRANSLATORS: This is one of the file formats OpenTeacher
+		#TRANSLATORS: saves to.
 		self.name = _("Open Teaching Words")
 
 	def enable(self):		

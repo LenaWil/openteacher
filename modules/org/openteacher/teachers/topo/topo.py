@@ -301,6 +301,7 @@ class TeachWidget(QtGui.QWidget):
 		self.lessonTypeLabel.setText(_("Lesson type:"))
 		self.lessonOrderLabel.setText(_("Lesson order:"))
 		self.label.setText(_("Which place is here?"))
+		#TRANSLATORS: A button the user clicks to let the computer check the given answer.
 		self.checkanswerbutton.setText(_("Check"))
 		self.questionLabel.setText(_("Please click this place:"))
 

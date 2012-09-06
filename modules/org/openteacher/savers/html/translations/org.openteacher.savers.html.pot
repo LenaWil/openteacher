@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.0\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-09-05 18:18+0200\n"
+"POT-Creation-Date: 2012-09-06 17:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,10 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #. TRANSLATORS: This is the name of an internet standard. Please
-#. just use the English name of it, unless the standard is known
-#. under another name in your language (or you have a very good
-#. reason yourself for translating it). For more information about
-#. HTML: http://en.wikipedia.org/wiki/HTML
-#: html.py:75
+#. TRANSLATORS: just use the English name of it, unless the
+#. TRANSLATORS: standard is known under another name in your
+#. TRANSLATORS: language (or you have a very good reason yourself
+#. TRANSLATORS: for translating it). For more information about
+#. TRANSLATORS: HTML: http://en.wikipedia.org/wiki/HTML
+#: html.py:76
 msgid "Hyper Text Markup Language"
 msgstr ""

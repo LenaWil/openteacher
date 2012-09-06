@@ -62,6 +62,9 @@ class WrtsLoaderModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
+		#TRANSLATORS: WRDS is the name of a web service. Also known as
+		#TRANSLATORS: WRTS (the Dutch name). International website:
+		#http://wrds.eu/
 		self.name = _("WRDS")
 
 	def enable(self):

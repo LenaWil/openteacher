@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.0\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-09-05 18:18+0200\n"
+"POT-Creation-Date: 2012-09-06 17:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,10 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #. TRANSLATORS: This is the name of an image format. Please just
-#. use the English name of it, unless the format is known under
-#. another name in your language (or you have a very good reason
-#. yourself for translating it). For more information about PNG:
-#. http://en.wikipedia.org/wiki/Portable_Network_Graphics
-#: png.py:59
+#. TRANSLATORS: use the English name of it, unless the format is
+#. TRANSLATORS: known under another name in your language (or you
+#. TRANSLATORS: have a very good reason yourself for translating
+#. TRANSLATORS: it). For more information on PNG:
+#. TRANSLATORS: http://en.wikipedia.org/wiki/Portable_Network_Graphics
+#: png.py:60
 msgid "Portable Network Graphics"
 msgstr ""

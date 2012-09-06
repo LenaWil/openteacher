@@ -52,10 +52,11 @@ class PngSaverModule(object):
 				self._mm.resourcePath("translations")
 			)
 		#TRANSLATORS: This is the name of an image format. Please just
-		#use the English name of it, unless the format is known under
-		#another name in your language (or you have a very good reason
-		#yourself for translating it). For more information about PNG:
-		#http://en.wikipedia.org/wiki/Portable_Network_Graphics
+		#TRANSLATORS: use the English name of it, unless the format is
+		#TRANSLATORS: known under another name in your language (or you
+		#TRANSLATORS: have a very good reason yourself for translating
+		#TRANSLATORS: it). For more information on PNG:
+		#TRANSLATORS: http://en.wikipedia.org/wiki/Portable_Network_Graphics
 		self.name = _("Portable Network Graphics")
 
 	def enable(self):		

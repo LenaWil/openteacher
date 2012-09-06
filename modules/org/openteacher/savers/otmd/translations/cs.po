@@ -7,29 +7,34 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-09-05 18:17+0200\n"
+"POT-Creation-Date: 2012-09-06 17:17+0200\n"
 "PO-Revision-Date: 2012-05-11 22:24+0000\n"
 "Last-Translator: Jakub Šnapka <snapka@seznam.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-09-06 04:50+0000\n"
 "X-Generator: Launchpad (build 15909)\n"
-"Language: cs\n"
 
-#: otmd.py:64
+#. TRANSLATORS: This is one of the file formats OpenTeacher
+#. TRANSLATORS: saves to.
+#: otmd.py:67
 msgid "Open Teaching Media"
 msgstr "Otevřít výukové médium"
 
-#: otmd.py:66
+#. TRANSLATORS: name of a setting
+#: otmd.py:70
 msgid "Enable compression"
 msgstr ""
 
-#: otmd.py:67
+#. TRANSLATORS: setting category.
+#: otmd.py:72
 msgid "Input and output"
 msgstr ""
 
-#: otmd.py:68
+#. TRANSLATORS: setting subcategory; .otmd is a file extension.
+#: otmd.py:74
 msgid ".otmd saving"
 msgstr ""

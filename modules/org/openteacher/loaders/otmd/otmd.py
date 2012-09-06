@@ -55,6 +55,8 @@ class OpenTeachingMediaLoaderModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
+		#TRANSLATORS: This is one of the file formats OpenTeacher
+		#TRANSLATORS: can read.
 		self.name = _("Open Teaching Media")
 
 	def enable(self):

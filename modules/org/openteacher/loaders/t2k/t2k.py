@@ -60,6 +60,8 @@ class Teach2000LoaderModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
+		#TRANSLATORS: This is the name of an application. For more info
+		#TRANSLATORS: about Teach2000: http://www.teach2000.org/
 		self.name = _("Teach2000")
 
 	def enable(self):

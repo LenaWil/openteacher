@@ -64,6 +64,7 @@ class AbbyLoaderModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
+		#TRANSLATORS: This is the name of a file format OT can read.
 		self.name = _("ABBY Lingvo Tutor")
 
 	def enable(self):

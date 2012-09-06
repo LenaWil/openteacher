@@ -53,6 +53,8 @@ class TxtSaverModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
+		#TRANSLATORS: This is one of the file types OpenTeacher can
+		#TRANSLATORS: export to.
 		self.name = _("Plain text")
 		self._maxLenSetting.update({
 				"name": _("Minimum amount of spaces between words"),
