@@ -42,7 +42,7 @@ class ProfileDescriptionModule(object):
 			)
 		self.desc = {
 			"name": "package-windows-portable",
-			"niceName": _("Packages this installation into a zip file which is extracted usable as portable app in windows."),
+			"niceName": _("Packages this installation into a zip file which, when extracted, is usable as portable app in Windows."),
 			"advanced": True,
 		}
 
