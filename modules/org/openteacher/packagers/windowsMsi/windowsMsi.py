@@ -30,9 +30,9 @@ import string
 wxs = """
 <?xml version="1.0" encoding="UTF-8" ?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Name="OpenTeacher" Id="6795c2ff-d23f-4a2c-a130-0556d4314254" UpgradeCode="6fbe08a3-4545-45b8-b6d1-4eaf00083835" Language="1033" Codepage="1252" Version="3.0.0" Manufacturer="OpenTeacher Maintainers">
+	<Product Name="OpenTeacher" Id="*" UpgradeCode="6fbe08a3-4545-45b8-b6d1-4eaf00083835" Language="1033" Codepage="1252" Version="3.0.0.1" Manufacturer="OpenTeacher Maintainers">
 	<Package Id="*" Keywords="Installer" Manufacturer="OpenTeacher Maintainers" InstallerVersion="100" Languages="1033" Compressed="yes" />
-
+	
 	<!-- files -->
 	<Media Id="1" Cabinet="OpenTeacher.cab" EmbedCab="yes" />
 	<Directory Id="TARGETDIR" Name="SourceDir">
