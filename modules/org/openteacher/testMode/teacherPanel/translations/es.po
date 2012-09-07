@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-08-30 17:48+0200\n"
-"PO-Revision-Date: 2012-09-04 21:40+0000\n"
-"Last-Translator: Rose <Unknown>\n"
+"PO-Revision-Date: 2012-09-06 16:00+0000\n"
+"Last-Translator: Miguel A. Alvarado V. <alvaradoma@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-09-05 04:59+0000\n"
-"X-Generator: Launchpad (build 15901)\n"
+"X-Launchpad-Export-Date: 2012-09-07 05:08+0000\n"
+"X-Generator: Launchpad (build 15914)\n"
 
 #: teacherPanel.py:70
 msgid "Tests"
@@ -39,11 +39,11 @@ msgstr "Volver"
 
 #: teacherPanel.py:183
 msgid "(did not participate)"
-msgstr "(no participar)"
+msgstr "(no participó)"
 
 #: teacherPanel.py:189
 msgid "(Handed in)"
-msgstr "(Entregada en)"
+msgstr "(Entregado)"
 
 #: teacherPanel.py:229
 msgid "Questions:"
@@ -55,7 +55,7 @@ msgstr "Personas en esta prueba:"
 
 #: teacherPanel.py:231
 msgid "Add person"
-msgstr ""
+msgstr "Agregar persona"
 
 #: teacherPanel.py:313
 msgid "Test"
@@ -63,19 +63,19 @@ msgstr "Prueba"
 
 #: teacherPanel.py:314
 msgid "(Re)check answers"
-msgstr "(Re) Comprobar las respuestas"
+msgstr "(Re)comprobar respuestas"
 
 #: teacherPanel.py:315
 msgid "(Re)publish answers"
-msgstr ""
+msgstr "(Re)publicar respuestas"
 
 #: teacherPanel.py:327
 msgid "Student's answers have been checked!"
-msgstr ""
+msgstr "Las respuestas de los estudiantes han sido revisadas!"
 
 #: teacherPanel.py:333
 msgid "Student's results have been (re)published!"
-msgstr ""
+msgstr "Los resultados de los estudiantes han sido (re)publicados!"
 
 #: teacherPanel.py:523
 msgid "Person"
@@ -86,8 +86,8 @@ msgid ""
 "Answers of this student have not been checked yet. Click the 'Check answers' "
 "button in the second column."
 msgstr ""
-"Las respuestas de este estudiante no ha sido revisada todavía. Haga clic en "
-"el botón \"Comprobar respuestas\" en la segunda columna."
+"Las respuestas de este estudiando no han sido revisadas aún. Haga clic en el "
+"botón \"Comprobar respuestas\" en la segunda columna."
 
 #: teacherPanel.py:527
 msgid "Answers right:"
@@ -99,28 +99,28 @@ msgstr "Respuestas incorrectas:"
 
 #: teacherPanel.py:532
 msgid "OpenTeacher mark:"
-msgstr ""
+msgstr "Marca OpenTeacher:"
 
 #: teacherPanel.py:534
 msgid "Final mark:"
-msgstr ""
+msgstr "Marca final:"
 
 #: teacherPanel.py:536
 msgid "Question"
-msgstr ""
+msgstr "Interrogativo"
 
 #: teacherPanel.py:537
 msgid "Given answer"
-msgstr ""
+msgstr "Respuesta dada"
 
 #: teacherPanel.py:539
 msgid "Correct"
-msgstr ""
+msgstr "Correcto"
 
 #: teacherPanel.py:685
 msgid "Teacher panel"
-msgstr ""
+msgstr "Panel de Profesor"
 
 #: teacherPanel.py:687
 msgid "Teacher Panel"
-msgstr ""
+msgstr "Panel de Profesor"
