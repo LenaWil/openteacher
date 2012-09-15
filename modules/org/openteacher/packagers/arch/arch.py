@@ -22,6 +22,7 @@ import subprocess
 import os
 import sys
 import shutil
+import glob
 
 class ArchPackagerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
