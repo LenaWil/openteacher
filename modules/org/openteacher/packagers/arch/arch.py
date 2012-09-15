@@ -74,6 +74,8 @@ class ArchPackagerModule(object):
 		subprocess.check_call(["makepkg"])
 		os.chdir(cwd)
 
+		shutil.copy(glob.glob("*.pkg.tar.xz")[0], path)
+
 	def disable(self):
 		self.active = False
 
