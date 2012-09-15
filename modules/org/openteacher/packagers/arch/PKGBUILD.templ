@@ -6,7 +6,7 @@ pkgdesc="@!short_description!@"
 arch=('any')
 url="@!website!@"
 license=('GPL')
-depends=('python2' 'python2-qt' 'phonon' 'python-opengl' 'python2-cherrypy' 'gettext' 'espeak')
+depends=('python2' 'python2-qt' 'phonon' 'python-opengl' 'python2-cherrypy' 'gettext' 'espeak' 'desktop-file-utils' 'hicolor-icon-theme' 'xdg-utils')
 
 build() {
   cd "$startdir"
@@ -21,4 +21,18 @@ build() {
 check() {
   cd "$startdir/openteacher"
   python2 openteacher.py -p testsuite
+}
+
+post_install() {
+  update-desktop-database -q
+  gtk-update-icon-cache -q -t -f usr/share/icons/hicolor
+  xdg-icon-resource forceupdate --theme hicolor &> /dev/null
+}
+
+#same function
+post_upgrade() {
+	post_install
+}
+post_remove () {
+	post_install
 }
