@@ -61,11 +61,20 @@ class ArchPackagerModule(object):
 			return
 		sourcePath = self._modules.default("active", type="sourceWithSetupSaver").saveSource()
 
+		#gather all source files
+		sourceFiles = []
+		for root, dirs, files in os.walk(sourcePath):
+			commonLength = len(os.path.commonprefix([root, sourcePath])) + 1
+			root = root[commonLength:]
+			for file in files:
+				sourceFiles.append("'%s'" % os.path.join(root, file))
+		sourceFiles = " ".join(sourceFiles)
+
 		with open(os.path.join(sourcePath, "PKGBUILD"), "w") as f:
 			templ = pyratemp.Template(filename=self._mm.resourcePath("PKGBUILD.templ"))
 			data = {
 				"package_release": package_release,
-				"name_lower": self._metadata["name"].lower(),
+				"files": sourceFiles,
 			}
 			data.update(self._metadata)
 			f.write(templ(**data))

@@ -1,5 +1,5 @@
 # Maintainer: @!authors!@ <@!email!@>
-pkgname="@!name_lower!@"
+pkgname="@!name.lower()!@"
 pkgver=@!version!@
 pkgrel=@!package_release!@
 pkgdesc="@!short_description!@"
@@ -7,7 +7,7 @@ arch=('any')
 url="@!website!@"
 license=('GPL')
 depends=('python2' 'python2-qt' 'phonon' 'python-opengl' 'python2-cherrypy' 'gettext' 'espeak')
-source=('setup.py' 'linux' 'openteacher' 'bin')
+source=(@!files!@)
 
 build() {
   cd "$startdir"
