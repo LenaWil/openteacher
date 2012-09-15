@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-09-06 17:18+0200\n"
+"POT-Creation-Date: 2012-09-15 21:51+0200\n"
 "PO-Revision-Date: 2012-06-25 22:51+0000\n"
 "Last-Translator: gustavoreyes <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-09-07 05:08+0000\n"
 "X-Generator: Launchpad (build 15914)\n"
-"Language: es\n"
 
 #. TRANSLATORS: This is the name of a file format OT can read.
 #: abby.py:68
