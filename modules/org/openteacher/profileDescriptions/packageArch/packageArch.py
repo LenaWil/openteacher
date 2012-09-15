@@ -18,7 +18,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import platform
+import os
 
 class ProfileDescriptionModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -49,8 +49,8 @@ class ProfileDescriptionModule(object):
 	def enable(self):
 		if len(set(self._mm.mods(type="archPackager"))) == 0:
 			return #remain inactive
-		if not platform.linux_distribution()[0].strip() == "arch":
-			return #rpm based distro only module, remain inactive
+		if not os.path.isfile("/usr/bin/pacman"):
+			return #arch only module, remain inactive
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		try:
 			translator = self._modules.default("active", type="translator")

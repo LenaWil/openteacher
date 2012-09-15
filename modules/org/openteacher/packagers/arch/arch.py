@@ -20,7 +20,6 @@
 
 import subprocess
 import os
-import platform
 import sys
 
 class ArchPackagerModule(object):
@@ -45,9 +44,8 @@ class ArchPackagerModule(object):
 			import pyratemp
 		except ImportError:
 			return #leave disabled
-		if not platform.linux_distribution()[0].strip() == "arch":
-			pass
-#			return #arch linux only module, remain inactive
+		if not os.path.isfile("/usr/bin/pacman"):
+			return #arch linux only module, remain inactive
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._metadata= self._modules.default("active", type="metadata").metadata
 		self._modules.default(type="execute").startRunning.handle(self._run)
