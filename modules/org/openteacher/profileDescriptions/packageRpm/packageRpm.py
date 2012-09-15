@@ -49,8 +49,8 @@ class ProfileDescriptionModule(object):
 	def enable(self):
 		if len(set(self._mm.mods(type="rpmPackager"))) == 0:
 			return #remain inactive
-		if platform.linux_distribution()[0] != "Fedora":
-			return #fedora only module, remain inactive
+		if not platform.linux_distribution()[0].strip() in ("Fedora", "openSUSE"):
+			return #rpm based distro only module, remain inactive
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		try:
 			translator = self._modules.default("active", type="translator")
