@@ -11,12 +11,12 @@ msgstr ""
 "PO-Revision-Date: 2011-10-04 04:43+0000\n"
 "Last-Translator: El Achèche ANIS <elachecheanis@gmail.com>\n"
 "Language-Team: Arabic <ar@li.org>\n"
-"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-09-07 05:07+0000\n"
-"X-Generator: Launchpad (build 15914)\n"
+"X-Launchpad-Export-Date: 2012-09-16 04:50+0000\n"
+"X-Generator: Launchpad (build 15944)\n"
+"Language: ar\n"
 
 #: media.py:150 media.py:206 media.py:208
 #, python-format
@@ -75,12 +75,12 @@ msgstr ""
 #~ msgid "Lesson type:"
 #~ msgstr "نوع الدرس"
 
+#, python-format
 #~ msgid "Media lesson %s"
 #~ msgstr "درس بإستعمال الوسائط %s"
 
 #~ msgid ""
-#~ "Are you sure you want to go back to the enter tab? This will end your "
-#~ "lesson!"
+#~ "Are you sure you want to go back to the enter tab? This will end your lesson!"
 #~ msgstr ""
 #~ "هل أنت متأكد بأنك تريد العودة إلى تبويبة الدّخول؟ سينجرّ عن هذا إتمام الدرس!"
 
