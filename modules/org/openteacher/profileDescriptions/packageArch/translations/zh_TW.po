@@ -1,4 +1,4 @@
-# Brazilian Portuguese translation for openteacher
+# Chinese (Traditional) translation for openteacher
 # Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openteacher package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-09-15 21:51+0200\n"
-"PO-Revision-Date: 2012-09-18 00:54+0000\n"
-"Last-Translator: Adriano Steffler <Unknown>\n"
-"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"PO-Revision-Date: 2012-09-18 15:55+0000\n"
+"Last-Translator: Louie Chen <louie23@gmail.com>\n"
+"Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-09-19 04:52+0000\n"
 "X-Generator: Launchpad (build 15966)\n"
 
-#: cyrillic.py:66
-msgid "Cyrillic"
-msgstr "Cirílico"
+#: packageArch.py:45
+msgid "Packages this installation into a .pkg.tar.xz (Arch) package."
+msgstr "將安裝資料打包成 .pkg.tar.xz (Arch) 檔"

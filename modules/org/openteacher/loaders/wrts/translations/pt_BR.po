@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-09-15 21:51+0200\n"
-"PO-Revision-Date: 2012-09-18 00:54+0000\n"
+"PO-Revision-Date: 2012-09-19 03:25+0000\n"
 "Last-Translator: Adriano Steffler <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,6 +17,9 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-09-19 04:52+0000\n"
 "X-Generator: Launchpad (build 15966)\n"
 
-#: cyrillic.py:66
-msgid "Cyrillic"
-msgstr "Cirílico"
+#. TRANSLATORS: WRDS is the name of a web service. Also known as
+#. TRANSLATORS: WRTS (the Dutch name). International website:
+#. http://wrds.eu/
+#: wrts.py:68
+msgid "WRDS"
+msgstr "WRDS"

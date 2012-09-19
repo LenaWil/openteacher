@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-09-15 21:51+0200\n"
-"PO-Revision-Date: 2012-09-18 00:54+0000\n"
+"PO-Revision-Date: 2012-09-19 01:53+0000\n"
 "Last-Translator: Adriano Steffler <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,6 +17,10 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-09-19 04:52+0000\n"
 "X-Generator: Launchpad (build 15966)\n"
 
-#: cyrillic.py:66
-msgid "Cyrillic"
-msgstr "Cirílico"
+#: execute.py:111 execute.py:113
+msgid "Profile"
+msgstr "Perfil"
+
+#: execute.py:112
+msgid "General"
+msgstr "Geral"
