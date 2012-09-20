@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-09-15 21:51+0200\n"
-"PO-Revision-Date: 2012-09-19 01:54+0000\n"
+"PO-Revision-Date: 2012-09-19 16:55+0000\n"
 "Last-Translator: Adriano Steffler <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,22 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-09-20 04:51+0000\n"
 "X-Generator: Launchpad (build 15985)\n"
 
-#. TRANSLATORS: This is the name of a file format OT can read.
-#: abby.py:68
-msgid "ABBY Lingvo Tutor"
-msgstr "ABBY Lingvo Tutor"
+#: topoMaps.py:83
+msgid "Name for this place"
+msgstr "Nome para este local"
+
+#: topoMaps.py:83
+msgid "What's this place's name?"
+msgstr "Qual é o nome deste local?"
+
+#: topoMaps.py:339
+msgid "OpenGL rendering"
+msgstr "Renderização OpenGL"
+
+#: topoMaps.py:340
+msgid "Lesson"
+msgstr "Lição"
+
+#: topoMaps.py:341
+msgid "Topography"
+msgstr "Topografia"

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-09-15 21:51+0200\n"
-"PO-Revision-Date: 2012-09-19 01:54+0000\n"
+"PO-Revision-Date: 2012-09-19 16:52+0000\n"
 "Last-Translator: Adriano Steffler <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,20 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-09-20 04:51+0000\n"
 "X-Generator: Launchpad (build 15985)\n"
 
-#. TRANSLATORS: This is the name of a file format OT can read.
-#: abby.py:68
-msgid "ABBY Lingvo Tutor"
-msgstr "ABBY Lingvo Tutor"
+#. TRANSLATORS: This is one of the file types OpenTeacher can
+#. TRANSLATORS: export to.
+#: txt.py:58
+msgid "Plain text"
+msgstr "Texto sem formatação"
+
+#: txt.py:60
+msgid "Minimum amount of spaces between words"
+msgstr "Quantidade mínima de espaços entre as palavras"
+
+#: txt.py:61
+msgid "Input and output"
+msgstr "Entrada e saída"
+
+#: txt.py:62
+msgid ".txt saving"
+msgstr "Salvar em .txt"

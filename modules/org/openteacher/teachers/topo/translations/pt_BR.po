@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-09-15 21:51+0200\n"
-"PO-Revision-Date: 2012-09-19 01:54+0000\n"
+"PO-Revision-Date: 2012-09-19 16:57+0000\n"
 "Last-Translator: Adriano Steffler <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,35 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-09-20 04:51+0000\n"
 "X-Generator: Launchpad (build 15985)\n"
 
-#. TRANSLATORS: This is the name of a file format OT can read.
-#: abby.py:68
-msgid "ABBY Lingvo Tutor"
-msgstr "ABBY Lingvo Tutor"
+#: topo.py:95
+msgid "Place - Name"
+msgstr "Local - Nome"
+
+#: topo.py:96
+msgid "Name - Place"
+msgstr "Nome - Local"
+
+#: topo.py:197
+msgid "Please click this place: "
+msgstr "Por favor, clique neste local: "
+
+#: topo.py:301
+msgid "Lesson type:"
+msgstr "Tipo de lição:"
+
+#: topo.py:302
+msgid "Lesson order:"
+msgstr "Ordem da lição:"
+
+#: topo.py:303
+msgid "Which place is here?"
+msgstr "Que local é aqui?"
+
+#. TRANSLATORS: A button the user clicks to let the computer check the given answer.
+#: topo.py:305
+msgid "Check"
+msgstr "Verificar"
+
+#: topo.py:306
+msgid "Please click this place:"
+msgstr "Por favor, clique neste local:"
