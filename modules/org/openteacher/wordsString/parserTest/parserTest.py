@@ -104,6 +104,12 @@ class WordsStringParserTestCase(unittest.TestCase):
 			[("one\\; two",)]
 		)
 
+	def testMultipleDigitObligatoryNumber(self):
+		self._test(
+			u"9999999999999999999. one 2222222222222222222222222222. two",
+			[("one",), ("two",)]
+		)
+
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestModule, self).__init__(*args, **kwargs)

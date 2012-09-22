@@ -24,6 +24,9 @@ class WordsStringComposerModule(object):
 		self._mm = moduleManager
 
 		self.type = "wordsStringComposer"
+		self.priorities = {
+			"default": 10,
+		}
 
 	def enable(self):
 		self.active = True

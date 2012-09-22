@@ -62,7 +62,7 @@ class WordsStringCheckerTestCase(unittest.TestCase):
 
 	def testWordsInWeirdOrder(self):
 		self._test(u"naar(binnen), jegens, tot", self.word2, "right")
-	
+
 	def testFullNotationAndDontIncludeAnNonObligatoryWord(self):
 		self._test(u"1. in, naar(binnen) 2. jegens", self.word2, "right")
 

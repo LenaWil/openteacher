@@ -26,6 +26,9 @@ class WordsStringParserModule(object):
 		self._mm = moduleManager
 
 		self.type = "wordsStringParser"
+		self.priorities = {
+			"default": 10,
+		}
 
 	def parse(self, text):
 		obligatorySegments = re.split(r"(?<!\\)[0-9]+\.", text)

@@ -70,7 +70,7 @@ class ModulesModule(object):
 			return mod.priorities[self.profile] >= 0
 		except (AttributeError, KeyError):
 			try:
-				mod.priorities["default"] >= 0
+				return mod.priorities["default"] >= 0
 			except (AttributeError, KeyError):
 				return True #If no priorities-stuff, just enable
 

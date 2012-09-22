@@ -19,6 +19,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import urllib2
+import sys
 
 class GetTranslationAuthorsModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
