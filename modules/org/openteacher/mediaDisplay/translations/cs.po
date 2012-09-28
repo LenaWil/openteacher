@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-09-22 15:41+0200\n"
-"PO-Revision-Date: 2012-09-27 08:49+0000\n"
+"PO-Revision-Date: 2012-09-27 08:51+0000\n"
 "Last-Translator: Jan Havran <Unknown>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,12 +16,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-09-28 04:49+0000\n"
 "X-Generator: Launchpad (build 16043)\n"
-"Language: cs\n"
 
-#: packageWindowsPortable.py:45
-msgid ""
-"Packages this installation into a zip file which, when extracted, is usable "
-"as portable app in Windows."
+#: mediaDisplay.py:231
+msgid "Use HTML5 for video"
+msgstr "Použít HTML5 pro video"
+
+#: mediaDisplay.py:232 mediaDisplay.py:237
+msgid "Lesson"
+msgstr "Lekce"
+
+#: mediaDisplay.py:233 mediaDisplay.py:238
+msgid "Media"
 msgstr ""
-"Zabalí tuto instalaci do zip souboru, který je po rozbalení použitelný jako "
-"přenositelná verze mezi Windows."
+
+#: mediaDisplay.py:236
+msgid "Use HTML5 for audio"
+msgstr "Použít HTML5 pro zvuk"
