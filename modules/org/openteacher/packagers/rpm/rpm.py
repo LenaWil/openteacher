@@ -26,6 +26,17 @@ import glob
 import platform
 from PyQt4 import QtGui
 
+SETUP_CFG = """
+[install]
+prefix = /usr
+""".strip()
+
+POST_CHANGES = """
+/usr/bin/update-mime-database %{_datadir}/mime &> /dev/null || :
+/usr/bin/update-desktop-database &> /dev/null || :
+/usr/bin/gtk-update-icon-cache -f %{_datadir}/icons/hicolor &>/dev/null || :
+""".strip()
+
 class RpmPackagerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(RpmPackagerModule, self).__init__(*args, **kwargs)
@@ -64,7 +75,10 @@ class RpmPackagerModule(object):
 
 		#set install prefix to /usr
 		with open(os.path.join(sourcePath, "setup.cfg"), "w") as f:
-			f.write("[install]\nprefix = /usr")
+			f.write(SETUP_CFG)
+
+		with open(os.path.join(sourcePath, "post-changes.sh"), "w") as f:
+			f.write(POST_CHANGES)
 
 		#determine requirements based on distribution
 		if self._platform == "Fedora":
@@ -84,6 +98,8 @@ class RpmPackagerModule(object):
 			#temporarily not needed: python-django, python-django-guardian
 			#add if packaged somewhere in the future: python-graphviz
 			"--requires", requirements,
+			"--post-install", "post-changes.sh",
+			"--post-uninstall", "post-changes.sh",
 		])
 		os.chdir(oldCwd)
 		shutil.copy(

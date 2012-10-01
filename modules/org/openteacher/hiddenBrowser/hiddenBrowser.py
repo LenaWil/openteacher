@@ -113,6 +113,8 @@ class WebBrowserWidget(QtGui.QWidget):
 		self.parentWidget().parentWidget().setSizes(sizes)
 
 	def hideOthers(self):
+		#FIXME 3.1: see hideSelf.
+
 		#hide other side widgets
 		sizes = self.parentWidget().sizes()
 		size = sizes[self.parentWidget().indexOf(self)]
@@ -156,17 +158,17 @@ class HiddenBrowserModule(object):
 			except AttributeError:
 				#not every lesson teachWidget has an addSideWidget
 				pass
-	
+
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		
+
 		try:
 			#Keeps track of all created lessons
 			for module in self._mm.mods("active", type="lesson"):
 				module.lessonCreated.handle(self._lessonAdded)
 		except IndexError:
 			pass
-		
+
 		try:
 			self._enabled = self._modules.default(type="settings").registerSetting(**{
 				"internal_name": "org.openteacher.hiddenBrowser.enabled",
@@ -196,12 +198,15 @@ class HiddenBrowserModule(object):
 		#translate everything for the first time
 		self._retranslate()
 
+		#FIXME 3.1: This object is now built even if the webview is
+		#never shown. Since building it is quite heavy (e.g. a Java
+		#VM starts if installed), that should be delayed.
 		self.browser = WebBrowserWidget(self._mm.resourcePath, metadata["website"])
 		
 		self._lessons = set()
 		
 		self.active = True
-		
+
 	def _retranslate(self):
 		#Install translator for this file
 		global _

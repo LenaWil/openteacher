@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-09-22 15:41+0200\n"
+"POT-Creation-Date: 2012-10-01 15:36+0200\n"
 "PO-Revision-Date: 2012-09-20 10:51+0000\n"
 "Last-Translator: Adriano Steffler <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-09-23 04:50+0000\n"
 "X-Generator: Launchpad (build 15985)\n"
-"Language: pt_BR\n"
 
 #: hiddenBrowser.py:83
 msgid "Hide the browser!"
@@ -26,6 +26,6 @@ msgstr "Ocultar o navegador!"
 msgid "Hide the others; make space for the browser"
 msgstr "Ocultar os outros; abrir espaço para o navegador"
 
-#: hiddenBrowser.py:220
+#: hiddenBrowser.py:225
 msgid "Enable hidden browser (hide it by moving the slider)"
 msgstr "Ativar navegador oculto (oculte-o movendo o controle deslizante)"

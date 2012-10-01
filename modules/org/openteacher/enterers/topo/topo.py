@@ -87,14 +87,16 @@ class EnterMapChooser(QtGui.QComboBox):
 					self.setCurrentIndex(self.prevIndex)
 					return
 			if self.currentMap == {}:
-				_uiModule = set(base._mm.mods("active", type="ui")).pop()
-				path = _uiModule.getLoadPath(
+				_fileDialogsMod = base._modules.default("active", type="fileDialogs")
+				#FIXME > 3.1: Make sure that the dialog doesn't call
+				#these types 'lessons'. (So make it more flexible.)
+				path = _fileDialogsMod.getLoadPath(
 					QtCore.QDir.homePath(),
-					["gif", "jpg", "jpeg", "png", "bmp", "svg"]
+					[("gif", ""), ("jpg", ""), ("jpeg", ""), ("png", ""), ("bmp", ""), ("svg", "")]
 				)
 				if path:
 					name = os.path.splitext(os.path.basename(path))[0]
-					
+
 					self.setCurrentIndex(0)
 					self.insertItem(0, name, unicode({'mapPath': path, 'knownPlaces': ''}))
 					self.setCurrentIndex(0)
@@ -319,6 +321,7 @@ class TopoEntererModule(object):
 		)
 		self.requires = (
 			self._mm.mods(type="topoMaps"),
+			self._mm.mods(type="fileDialogs"),
 			self._mm.mods(type="ui"),
 		)
 		self.filesWithTranslations = ("topo.py",)

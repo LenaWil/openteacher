@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-09-22 15:41+0200\n"
+"POT-Creation-Date: 2012-10-01 15:36+0200\n"
 "PO-Revision-Date: 2012-09-02 16:56+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-09-23 04:49+0000\n"
 "X-Generator: Launchpad (build 15985)\n"
-"Language: \n"
 
 #: media.py:150 media.py:206 media.py:208
 #, python-format
@@ -71,7 +71,8 @@ msgstr ""
 #~ msgstr "Waarschuwing"
 
 #~ msgid ""
-#~ "Are you sure you want to go back to the enter tab? This will end your lesson!"
+#~ "Are you sure you want to go back to the enter tab? This will end your "
+#~ "lesson!"
 #~ msgstr ""
 #~ "Weet u zeker dat je terug wilt naar de invoertab? Dat beëindigt uw les!"
 
@@ -90,6 +91,5 @@ msgstr ""
 #~ msgid "Media Lesson"
 #~ msgstr "Mediales"
 
-#, python-format
 #~ msgid "Media lesson %s"
 #~ msgstr "Mediales %s"
