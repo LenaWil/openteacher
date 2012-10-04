@@ -48,15 +48,11 @@ class JavascriptParserModule(object):
 			raise Exception(self._engine.uncaughtException().toString())
 
 	def parse(self, text):
-		v = self._engine.evaluate("parse(%s)" % json.dumps(text))
+		statement = "JSON.stringify(parse(%s))" % json.dumps(text)
+		jsonResult = unicode(self._engine.evaluate(statement).toString())
 		self._checkForErrors()
 
-		result = []
-		for jsArray in self._jsArrayIter(v):
-			iterable = self._jsArrayIter(jsArray)
-			data = (unicode(v.toString()) for v in iterable)
-			result.append(tuple(data))
-		return result
+		return map(tuple, json.loads(jsonResult))
 
 	def enable(self):
 		self._engine = QtScript.QScriptEngine()

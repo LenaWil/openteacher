@@ -44,10 +44,11 @@ class JavascriptCheckerModule(object):
 			raise Exception(self._engine.uncaughtException().toString())
 
 	def check(self, givenAnswer, word):
-		v = self._engine.evaluate("check(%s, %s)" % (json.dumps(givenAnswer), json.dumps(word)))
+		statement = "JSON.stringify(check(%s, %s))" % (json.dumps(givenAnswer), json.dumps(word))
+		jsonResult = unicode(self._engine.evaluate(statement).toString())
 		self._checkForErrors()
 
-		return {"result": unicode(v.property("result").toString())}
+		return json.loads(jsonResult)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
