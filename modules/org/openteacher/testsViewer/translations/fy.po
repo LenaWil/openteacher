@@ -1,0 +1,55 @@
+# Frisian translation for openteacher
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-10-01 15:36+0200\n"
+"PO-Revision-Date: 2012-10-03 18:39+0000\n"
+"Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
+"Language-Team: Frisian <fy@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-10-04 05:44+0000\n"
+"X-Generator: Launchpad (build 16061)\n"
+
+#: testsViewer.py:48
+msgid "Date"
+msgstr "Datum"
+
+#: testsViewer.py:49
+msgid "Note"
+msgstr "Sifer"
+
+#: testsViewer.py:50
+msgid "Completed"
+msgstr "Foltôge"
+
+#: testsViewer.py:111
+msgid "Highest note:"
+msgstr "Heechste sifer:"
+
+#: testsViewer.py:114
+msgid "Average note:"
+msgstr "Trochsnee sifer:"
+
+#: testsViewer.py:117
+msgid "Lowest note:"
+msgstr "Leechste sifer:"
+
+#. TRANSLATORS: This is meant as 'here would normally
+#. stand a note, but not today.' If '-' isn't
+#. appropriate in you language for that, please replace.
+#. Otherwise, just copy the original.
+#: testsViewer.py:133 testsViewer.py:138 testsViewer.py:142 testsViewer.py:166
+#: testsViewer.py:172
+msgid "-"
+msgstr "-"
+
+#: testsViewer.py:242
+msgid "Back"
+msgstr "Werom"
