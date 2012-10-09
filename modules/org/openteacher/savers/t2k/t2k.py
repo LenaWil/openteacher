@@ -85,10 +85,10 @@ class Teach2000SaverModule(object):
 		#copy, we're going to modify it
 		wordList = copy.deepcopy(lesson.list)
 
-		for word in wordList["items"]:
+		for word in wordList.get("items", []):
 			word["wrongCount"] = 0
 			word["rightCount"] = 0
-			for test in wordList["tests"]:
+			for test in wordList.get("tests", []):
 				for result in test["results"]:
 					if result["itemId"] == word["id"]:
 						if result["result"] == "right":
@@ -96,7 +96,7 @@ class Teach2000SaverModule(object):
 						else:
 							word["wrongCount"] += 1
 
-		for test in wordList["tests"]:
+		for test in wordList.get("tests", []):
 			test["note"] = self._calculateNote(test)
 			test["start"] = self._startTime(test)
 			test["duration"] = self._duration(test)

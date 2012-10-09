@@ -385,13 +385,13 @@ class EnterWidget(QtGui.QSplitter):
 		except AttributeError:
 			pass
 
-		self._titleTextBox.textChanged.connect(
+		self._titleTextBox.textEdited.connect(
 			self._wordsTableModel.updateTitle
 		)
-		self._questionLanguageTextBox.textChanged.connect(
+		self._questionLanguageTextBox.textEdited.connect(
 			self._wordsTableModel.updateQuestionLanguage
 		)
-		self._answerLanguageTextBox.textChanged.connect(
+		self._answerLanguageTextBox.textEdited.connect(
 			self._wordsTableModel.updateAnswerLanguage
 		)
 

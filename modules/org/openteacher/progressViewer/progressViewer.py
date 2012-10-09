@@ -90,12 +90,15 @@ class Graph(QtGui.QFrame):
 		p.begin(self)
 		
 		p.setPen(QtCore.Qt.NoPen)
-		
+
 		w = self.width()
 		self._h = self.height()
 
 		try:
-			self._secondsPerPixel = w / self._totalSeconds
+			#float, because one pixel might be more than one second.
+			#When int was used, secondsPerPixel could become 0 showing
+			#nothing in that case.
+			self._secondsPerPixel = float(w) / self._totalSeconds
 		except ZeroDivisionError:
 			self._secondsPerPixel = 0
 		colors = {}

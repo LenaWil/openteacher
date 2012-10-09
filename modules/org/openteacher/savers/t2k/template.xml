@@ -1,4 +1,4 @@
-#!	Copyright 2011, Marten de Vries
+#!	Copyright 2011-2012, Marten de Vries
 #!	Copyright 2011, Milan Boers
 #!
 #!	This file is part of OpenTeacher.
@@ -24,7 +24,7 @@
 		<font_question>Arial</font_question>
 		<font_answer>Lucida Sans Unicode</font_answer>
 		<items>
-			<!--(for word in wordList["items"])-->
+			<!--(for word in wordList.get("items", []))-->
 			<item id="@!word['id']!@">
 				<questions>
 					<!--(if len(word["questions"]) == 1)-->
@@ -55,7 +55,7 @@
 			<!--(end)-->
 		</items>
 		<testresults>
-			<!--(for test in wordList["tests"])-->
+			<!--(for test in wordList.get("tests", []))-->
 			<testresult>
 				<score>@!test["note"]!@</score>
 				<diff>150</diff>

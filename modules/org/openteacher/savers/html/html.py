@@ -89,7 +89,7 @@ class HtmlSaverModule(object):
 		).generate(lesson, margin="0.5em")
 
 		with open(path, 'w') as htmlfile:
-			htmlfile.write(html)
+			htmlfile.write(html.encode("UTF-8"))
 
 		lesson.path = None
 

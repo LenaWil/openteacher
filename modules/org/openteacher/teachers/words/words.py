@@ -104,7 +104,7 @@ class TeachLessonWidget(QtGui.QSplitter):
 		except AttributeError:
 			pass
 		rightLayout.addWidget(self.changeSettingsButton)
-		
+
 		rightWidget = QtGui.QWidget()
 		rightWidget.setLayout(rightLayout)
 
@@ -189,12 +189,18 @@ class TeachWidget(QtGui.QStackedWidget):
 			except IndexError:
 				pass
 
+		#FIXME > 3.0: maybe the item modifiers should also be applied
+		#in the results dialog?
 		def modifyItem(item):
-			#function that applies all item modifiers on an item and returns
-			#the result at the end of the chain.
+			#function that applies all item modifiers on an item and
+			#returns the result at the end of the chain. Before that is
+			#done, it makes a copy of the item since the item modifiers
+			#may modify the item in place.
+			result = item.copy()
 			for modify in itemModifiers:
-				item = modify(item)
-			return item
+				result = modify(result)
+			return result
+
 		self._lessonType = lessonTypeModule.createLessonType(self.lesson.list, indexes, modifyItem)
 
 		self._lessonType.newItem.handle(self._newItem)
@@ -216,10 +222,16 @@ class TeachWidget(QtGui.QStackedWidget):
 				"end": datetime.datetime.now()
 			})
 
-	def _newItem(self, item):
-		# Update the list
+	def _tellListAndLessonChange(self):
+		"""Updates the GUI after some modifications have been made."""
+
 		self.listChanged.emit(self.lesson.list)
 		self.lesson.changed = True
+
+	def _newItem(self, item):
+		#update GUI to changes made since the last time _newItem was
+		#called.
+		self._tellListAndLessonChange()
 
 		compose = self._modules.default("active", type="wordsStringComposer").compose
 		self._lessonWidget.questionLabel.setText(compose(item["questions"]))
@@ -234,6 +246,9 @@ class TeachWidget(QtGui.QStackedWidget):
 		self._lessonWidget.progressBar.setValue(self._lessonType.askedItems)
 
 	def stopLesson(self, showResults=True):
+		#first update the GUI since modifications have been made.
+		self._tellListAndLessonChange()
+
 		self._applicationActivityChanged.unhandle(self._activityChanged)
 		self._updateProgress()
 
@@ -245,7 +260,7 @@ class TeachWidget(QtGui.QStackedWidget):
 				module.showResults(self.lesson.list, "words", self.lesson.list["tests"][-1])
 			except IndexError:
 				pass
-		
+
 		self.inLesson = False
 		
 		self.lessonDone.emit()

@@ -87,7 +87,8 @@ class SmartLessonType(object):
 			pass
 
 		try:
-			if self._indexes[1] == self._previousIndex: #2 became 1 because of the new word
+			#2 became 1 because of the new word
+			if self._indexes[1] == self._previousIndex:
 				del self._indexes[1]
 		except IndexError:
 			pass
@@ -103,7 +104,7 @@ class SmartLessonType(object):
 			if not self.list["tests"][-1] == self._test:
 				self.list["tests"].append(self._test)
 
-	def _sendNext(self):		
+	def _sendNext(self):
 		try:
 			self._previousIndex = self._currentIndex
 		except AttributeError:

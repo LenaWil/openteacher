@@ -143,16 +143,17 @@ class RepeatAnswerTeachTypeModule(object):
 
 		self._activeWidgets = set()
 
+		DEFAULT_VALUE = 3000
 		#Register fade duration setting
 		try:
 			self._fadeDurationSetting = self._modules.default(type="settings").registerSetting(**{
 				"internal_name": "org.openteacher.teachTypes.repeatAnswer.fadeDuration",
 				"type": "number",
-				"defaultValue": 2000,
+				"defaultValue": DEFAULT_VALUE,
 			})
 		except IndexError:
 			self._fadeDuration = {
-				"value": 2000,
+				"value": DEFAULT_VALUE,
 			}
 
 		#Register for retranslating

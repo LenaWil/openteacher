@@ -148,9 +148,13 @@ class InputTypingWidget(QtGui.QWidget):
 		#fixes bug #809964: OpenTeacher does not check for double
 		#questions
 		answers = []
-		for item in self.lessonType.list["items"]:
+		for item in self.lessonType.list.get("items", []):
 			if item["questions"] == self.word["questions"]:
 				answers.extend(item["answers"])
+			if item["answers"] == self.word["questions"]:
+				#handy in the case that the word list is reversed.
+				#FIXME > 3.0: maybe this needs a cleaner solution...
+				answers.extend(item["questions"])
 
 		tempWord = self.word.copy()
 		tempWord["answers"] = answers
@@ -235,15 +239,16 @@ class InputTypingModule(object):
 		self._activeWidgets = set()
 
 		#Register the fade duration setting
+		DEFAULT_VALUE = 4000
 		try:
 			self._fadeDurationSetting = self._modules.default(type="settings").registerSetting(**{
 				"internal_name": "org.openteacher.inputTyping.fadeDuration",
 				"type": "number",
-				"defaultValue": 2000,
+				"defaultValue": DEFAULT_VALUE,
 			})
 		except IndexError:
 			self._fadeDurationSetting = {
-				"value": 2000
+				"value": DEFAULT_VALUE,
 			}
 
 		#Translations

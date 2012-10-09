@@ -98,10 +98,10 @@ class OpenTeacherSaverModule(object):
 		#Copy, because we're going to modify it
 		wordList = copy.deepcopy(lesson.list)
 
-		for word in wordList["items"]:
+		for word in wordList.get("items", []):
 			#results
 			word["results"] = {"right": 0, "wrong": 0}
-			for test in wordList["tests"]:
+			for test in wordList.get("tests", []):
 				for result in test["results"]:
 					if result["itemId"] == word["id"]:
 						try:
@@ -112,7 +112,6 @@ class OpenTeacherSaverModule(object):
 			word["known"] = self._compose(word["questions"])
 			if len(word["answers"]) == 1 and len(word["answers"][0]) > 1:
 				word["foreign"] = word["answers"][0][0]
-				print self._compose([word["answers"][0][1:]])
 				word["second"] = self._compose([word["answers"][0][1:]])
 			else:
 				word["foreign"] = self._compose(word["answers"])
