@@ -29,6 +29,15 @@ class WordsNeverAnsweredCorrectlyModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.filesWithTranslations = ("wordsNeverAnsweredCorrectly.py",)
+		x = 832
+		self.priorities = {
+			"all": x,
+			"selfstudy": x,
+			"student@home": x,
+			"student@school": x,
+			"teacher": x,
+			"wordsonly": x,
+		}
 
 	def modifyList(self, indexes, list):
 		self._list = list

@@ -41,8 +41,6 @@ class Teach2000LoaderModule(object):
 			"teacher": 648,
 			"wordsonly": 648,
 			"selfstudy": 648,
-			"testsuite": 648,
-			"codedocumentation": 648,
 			"all": 648,
 		}
 		
@@ -92,7 +90,9 @@ class Teach2000LoaderModule(object):
 
 	def load(self, path):
 		"""Loads a .t2k file into the OpenTeacher data structure.
-		   http://teach2000.memtrain.com/help/00513_advanced_file_format.htm"""
+		   http://teach2000.memtrain.com/help/00513_advanced_file_format.htm
+
+		"""
 		root = ElementTree.parse(open(path)).getroot()
 		wordList = {
 			"items": list(),
@@ -133,13 +133,14 @@ class Teach2000LoaderModule(object):
 				)
 
 			#remarks (comment in OT)
-			word["comment"] = item.findtext("remarks")
+			comment = item.findtext("remarks")
+			if comment:
+				word["comment"] = comment
 
 			#add a result for every time this word was wrong
 			for i in range(int(item.findtext("errors") or 0)):
 				test["results"].append({
-					"itemId": word["id"],
-					"result": "wrong",
+					"itemId": word["id"], "result": "wrong",
 				})
 			#add a result for every time this word was right
 			for i in range(int(item.findtext("correctcount") or 0)):

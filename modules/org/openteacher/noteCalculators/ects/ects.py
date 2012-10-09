@@ -33,6 +33,16 @@ class ECTSNoteCalculatorModule(object):
 		)
 		self.filesWithTranslations = ("ects.py",)
 
+		x = 935
+		self.priorities = {
+			"all": x,
+			"selfstudy": x,
+			"student@home": x,
+			"student@school": x,
+			"teacher": x,
+			"wordsonly": x,
+		}
+
 	def _convert(self, percents):
 		if percents >= 70:
 			return "A"

@@ -29,6 +29,16 @@ class DutchNoteCalculatorModule(object):
 		)
 		self.filesWithTranslations = ("dutch.py",)
 
+		x = 935
+		self.priorities = {
+			"all": x,
+			"selfstudy": x,
+			"student@home": x,
+			"student@school": x,
+			"teacher": x,
+			"wordsonly": x,
+		}
+
 	def _formatNote(self, note):
 		if note == 10:
 			#makes sure '10,0' isn't returned, since that's not a valid

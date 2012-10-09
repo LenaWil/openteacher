@@ -30,6 +30,15 @@ class FrenchNoteCalculatorModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
+		x = 935
+		self.priorities = {
+			"all": x,
+			"selfstudy": x,
+			"student@home": x,
+			"student@school": x,
+			"teacher": x,
+			"wordsonly": x,
+		}
 
 	def _calculate(self, test):
 		results = map(lambda x: 1 if x["result"] == "right" else 0, test["results"])

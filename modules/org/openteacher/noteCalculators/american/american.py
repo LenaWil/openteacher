@@ -34,6 +34,16 @@ class AmericanNoteCalculatorModule(object):
 		)
 		self.filesWithTranslations = ("american.py",)
 
+		x = 935
+		self.priorities = {
+			"all": x,
+			"selfstudy": x,
+			"student@home": x,
+			"student@school": x,
+			"teacher": x,
+			"wordsonly": x,
+		}
+
 	def _convert(self, percents):
 		if percents >= 97:
 			return "A+"

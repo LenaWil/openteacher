@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Cas Widdershoven
+#	Copyright 2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -215,7 +216,18 @@ class TypingTeachTypeModule(object):
 		)
 
 		self.filesWithTranslations = ("hangman.py",)
-		
+
+		x = 890
+		self.priorities = {
+			"all": x,
+			"selfstudy": -x,
+			"student@home": x,
+			"student@school": -x,
+			"teacher": -x,
+			"wordsonly": -x,
+		}
+
+		#FIXME > 3.0: imports should be handled in enable()
 		self.graphics = self._mm.import_("graphics")
 		self.word = self._mm.import_("word")
 

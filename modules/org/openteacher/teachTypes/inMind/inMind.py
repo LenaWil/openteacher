@@ -146,15 +146,15 @@ class InMindTeachTypeModule(object):
 		self._mm = moduleManager
 
 		self.type = "teachType"
+
+		x = 514
 		self.priorities = {
-			"student@home": 744,
-			"student@school": 744,
-			"teacher": 744,
-			"wordsonly": 744,
-			"selfstudy": 744,
-			"testsuite": 744,
-			"codedocumentation": 744,
-			"all": 744,
+			"all": x,
+			"selfstudy": x,
+			"student@home": x,
+			"student@school": x,
+			"teacher": x,
+			"wordsonly": x,
 		}
 		self.uses = (
 			self._mm.mods(type="translator"),

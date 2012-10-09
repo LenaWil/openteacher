@@ -33,6 +33,16 @@ class PercentsNoteCalculatorModule(object):
 		)
 		self.filesWithTranslations = ("percents.py",)
 
+		x = 735
+		self.priorities = {
+			"all": x,
+			"selfstudy": x,
+			"student@home": x,
+			"student@school": x,
+			"teacher": x,
+			"wordsonly": x,
+		}
+
 	def calculateNote(self, test):
 		return "%s%%" % self._calculatePercents(test)
 

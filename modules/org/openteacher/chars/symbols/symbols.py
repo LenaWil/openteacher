@@ -33,6 +33,15 @@ class SymbolsModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.filesWithTranslations = ("symbols.py",)
+		x = 155
+		self.priorities = {
+			"all": x,
+			"selfstudy": x,
+			"student@home": x,
+			"student@school": x,
+			"teacher": x,
+			"wordsonly": x,
+		}
 
 	def sendUpdated(self):
 		"""Wrapper for the settings callback"""

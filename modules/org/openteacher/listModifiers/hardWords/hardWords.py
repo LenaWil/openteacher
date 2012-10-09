@@ -29,6 +29,15 @@ class HardWordsModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.filesWithTranslations = ("hardWords.py",)
+		x = 823
+		self.priorities = {
+			"all": x,
+			"selfstudy": x,
+			"student@home": x,
+			"student@school": x,
+			"teacher": x,
+			"wordsonly": x,
+		}
 
 	def modifyList(self, indexes, list):
 		self._list = list

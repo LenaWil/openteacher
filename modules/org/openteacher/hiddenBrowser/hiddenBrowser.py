@@ -148,7 +148,16 @@ class HiddenBrowserModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.filesWithTranslations = ("hiddenBrowser.py",)
-		
+		x = 940
+		self.priorities = {
+			"all": x,
+			"selfstudy": -x,
+			"student@home": x,
+			"student@school": -x,
+			"teacher": -x,
+			"wordsonly": -x,
+		}
+
 	def _lessonAdded(self, lesson):
 		self._lessons.add(lesson)
 		if self._enabled["value"]:
