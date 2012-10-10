@@ -112,8 +112,10 @@ class TeachLessonWidget(QtGui.QSplitter):
 		self.addWidget(leftWidget)
 		self.addWidget(rightWidget)
 
-		self.setStretchFactor(0, 255)
-		self.setStretchFactor(1, 1)
+		#set stretch factor for widget indexes
+		self.setStretchFactor(0, 1)
+		self.setStretchFactor(1, 255)
+		self.setStretchFactor(2, 1)
 
 	def retranslate(self):
 		self.changeSettingsButton.setText(_("Change lesson settings"))
@@ -121,7 +123,7 @@ class TeachLessonWidget(QtGui.QSplitter):
 
 	def addSideWidget(self, widget):
 		self.sideWidget.insertWidget(0, widget)
-		
+
 	def removeSideWidget(self, widget):
 		widget.setParent(None)
 
