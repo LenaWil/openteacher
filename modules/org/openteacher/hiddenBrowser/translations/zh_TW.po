@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-04 11:49+0200\n"
+"POT-Creation-Date: 2012-10-10 20:48+0200\n"
 "PO-Revision-Date: 2012-09-11 08:26+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
@@ -26,6 +26,6 @@ msgstr "隱藏瀏覽器"
 msgid "Hide the others; make space for the browser"
 msgstr "隱藏其他物件，將空間留給瀏覽器"
 
-#: hiddenBrowser.py:225
+#: hiddenBrowser.py:234
 msgid "Enable hidden browser (hide it by moving the slider)"
 msgstr "將隱藏的瀏覽器打開（再次隱藏則按隱藏瀏覽器開關）"

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<!--
+	Copyright 2012, Marten de Vries
+
+	This file is part of OpenTeacher.
+
+	OpenTeacher is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	OpenTeacher is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html>
+	<head>
+		<meta charset='UTF-8' />
+		<meta name='viewport' content='widget=device-width, initial-scale=1' />
+
+		<link type='text/css' rel='stylesheet' href='css/themes/default/jquery.mobile-1.2.0.css' />
+		<script type='text/javascript' src='scr/jquery-1.8.2.js'></script>
+		<script type='text/javascript' src='scr/jquery.mobile-1.2.0.js'></script>
+		<script type='text/javascript' src='scr/taboverride.js'></script>
+		<script type='text/javascript' src='scr/jquery.taboverride.js'></script>
+		<script type='text/javascript' src='translations/index.js'></script>
+		<script type='text/javascript' src='scr/logic.js'></script>
+		<script type='text/javascript' src='scr/gui.js'></script>
+	</head>
+	<body>
+		<!-- enter page -->
+		<div data-role='page' id='enter-page'>
+			<div data-role='header' data-id='header' data-position='fixed'>
+	<h1 id='enter-list-header'></h1>
+	<a href="#options-dialog" data-icon="gear" class="options-dialog-link ui-btn-right"></a>
+</div>
+
+			<div data-role='content'>
+				<label id='word-list-label' for='list-textarea'></label>
+				<textarea id='list-textarea'></textarea>
+			</div>
+			<div id='missing-separator-popup' data-role='popup' style='max-width:400px;'>
+				<div data-role='header' data-theme='b'>
+					<h1 id='missing-separator-header'></h1>
+				</div>
+				<div data-role='content'>
+					<strong id='missing-separator-title'></strong>
+					<p id='missing-separator-msg'></p>
+					<div class='ui-grid-b'>
+						<div class='ui-block-a'></div>
+						<div class='ui-block-b'></div>
+						<div class='ui-block-c'>
+							<button id='missing-separator-ok-button'></button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div data-role='footer' data-id='footer' data-position='fixed'>
+	<div class='navbar' data-role='navbar'>
+		<ul>
+			<li><a id='enter-page-link' href='#enter-page' class='ui-btn-active ui-state-persist' data-icon='data-plus'></a></li>
+			<li><a id='teach-page-link' href='#teach-page'  data-icon='check'></a></li>
+			<li><a id='list-management-dialog-link' href='#list-management-dialog' data-icon='gear'></a></li>
+		</ul>
+	</div>
+</div>
+
+		</div>
+
+		<!-- teach page -->
+		<div data-role='page' id='teach-page'>
+			<div data-role='header' data-id='header' data-position='fixed'>
+	<h1 id='teach-me-header'></h1>
+	<a href="#options-dialog" data-icon="gear" class="options-dialog-link ui-btn-right"></a>
+</div>
+
+			<div data-role='content'>
+				<label id='question-label-label' for='answer-label'></label><br />
+				<label id='question-label' style='font-size: 28pt;'>een</label><br />
+
+				<label id='answer-box-label' for='answer-box'></label>
+				<input id='answer-box' type='text' value='one' />
+
+				<button id='check-button'></button>
+				<div class='ui-grid-a'>
+					<div class='ui-block-a'>
+						<button id='skip-button' data-mini='true'></button>
+					</div>
+					<div class='ui-block-b'>
+						<button id='correct-anyway-button' data-mini='true'></button>
+					</div>
+				</div>
+				<!-- hackish progress bar -->
+				<input id='progress-bar' type='range' value='0' min='0' max='100' data-highlight='true' />
+			</div>
+			<div data-role='footer' data-id='footer' data-position='fixed'>
+	<div class='navbar' data-role='navbar'>
+		<ul>
+			<li><a id='enter-page-link' href='#enter-page'  data-icon='data-plus'></a></li>
+			<li><a id='teach-page-link' href='#teach-page' class='ui-btn-active ui-state-persist' data-icon='check'></a></li>
+			<li><a id='list-management-dialog-link' href='#list-management-dialog' data-icon='gear'></a></li>
+		</ul>
+	</div>
+</div>
+
+		</div>
+
+		<!-- list management dialog -->
+		<div data-role='dialog' id='list-management-dialog'>
+			<div data-role='header' data-theme='b'>
+				<h1 id='list-management-header'></h1>
+			</div>
+			<div data-role='content'>
+				<button id='new-list-button'></button>
+				<button id='load-list-button'></button>
+				<button id='save-list-button'></button>
+<!--				<br />
+
+				<button id='import-from-file-button'></button>
+				<button id='export-to-file-button'></button>-->
+			</div>
+		</div>
+
+		<!-- save dialog -->
+		<div data-role='dialog' id='save-dialog'>
+			<div data-role='header' data-theme='b'>
+				<h1 id='save-header'></h1>
+			</div>
+			<div data-role='content'>
+				<p id='save-explanation'></p>
+				<label id='save-name-box-label' for='save-name-box'></label>
+				<input type='text' id='save-name-box' />
+				<button id='save-done-button'></button>
+			</div>
+			<div id='overwrite-popup' data-role='popup' style='max-width: 400px'>
+				<div data-role='header' data-theme='b'>
+					<h1 id='overwrite-header'></h1>
+				</div>
+				<div data-role='content'>
+					<strong id='overwrite-title'></strong>
+					<p id='overwrite-msg'></p>
+					<div class='ui-grid-b'>
+						<div class='ui-block-a'></div>
+						<div class='ui-block-b'>
+							<button data-theme='b' id='overwrite-yes-button'></button>
+						</div>
+						<div class='ui-block-c'>
+							<button id='overwrite-no-button'></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- load dialog -->
+		<div data-role='dialog' id='load-dialog'>
+			<div data-role='header' data-theme='b'>
+				<h1 id='load-header'></h1>
+			</div>
+			<div data-role='content'>
+				<p id='load-explanation'></p>
+				<ul id='load-listview' data-filter="true" data-role='listview'>
+				</ul>
+			</div>
+		</div>
+
+		<!-- options dialog -->
+		<div data-role='dialog' id='options-dialog'>
+			<div data-role='header' data-theme='b'>
+				<h1 id='options-header'></h1>
+			</div>
+			<div data-role='content'>
+				<label id='language-select-label' for='language-select'></label>
+				<select id='language-select'>
+				</select>
+			</div>
+		</div>
+	</body>
+</html>

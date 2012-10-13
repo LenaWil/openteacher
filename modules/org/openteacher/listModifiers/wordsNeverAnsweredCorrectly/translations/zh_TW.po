@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-04 11:49+0200\n"
+"POT-Creation-Date: 2012-10-10 20:48+0200\n"
 "PO-Revision-Date: 2011-09-05 14:35+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
@@ -18,6 +18,6 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-10-02 05:35+0000\n"
 "X-Generator: Launchpad (build 16061)\n"
 
-#: wordsNeverAnsweredCorrectly.py:78
+#: wordsNeverAnsweredCorrectly.py:87
 msgid "Only words you never answered correctly"
 msgstr "只顯示從來沒答對的單字"

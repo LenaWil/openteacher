@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-04 11:49+0200\n"
+"POT-Creation-Date: 2012-10-10 20:48+0200\n"
 "PO-Revision-Date: 2012-06-15 12:42+0000\n"
 "Last-Translator: Yannis Kaskamanidis <ttnfy17@yahoo.gr>\n"
 "Language-Team: Greek <el@li.org>\n"
@@ -39,22 +39,22 @@ msgstr "Διορθώθηκαν: %s"
 msgid "Corrected"
 msgstr "Διορθώθηκαν"
 
-#: inputTyping.py:183
+#: inputTyping.py:187
 msgid "Correct answer: <b>{answers}</b> [{diff}]"
 msgstr "Σωστή απάντηση: <b>{answers}</b> [{diff}]"
 
-#: inputTyping.py:185
+#: inputTyping.py:189
 msgid "Correct answer: <b>{answers}</b>"
 msgstr "Σωστή απάντηση: <b>{answers}</b>"
 
-#: inputTyping.py:282
+#: inputTyping.py:287
 msgid "Fade duration when wrong (milliseconds)"
 msgstr "Διάρκεια εξασθένισης όταν υπάρχει λάθος (σε milliseconds)"
 
-#: inputTyping.py:283
+#: inputTyping.py:288
 msgid "Lesson"
 msgstr ""
 
-#: inputTyping.py:284
+#: inputTyping.py:289
 msgid "Words lesson"
 msgstr ""

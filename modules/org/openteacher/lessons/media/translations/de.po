@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-01 15:36+0200\n"
+"POT-Creation-Date: 2012-10-10 20:48+0200\n"
 "PO-Revision-Date: 2012-10-05 15:09+0000\n"
 "Last-Translator: Dennis Baudys <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-10-06 05:12+0000\n"
 "X-Generator: Launchpad (build 16061)\n"
-"Language: de\n"
 
 #: media.py:150 media.py:206 media.py:208
 #, python-format
@@ -78,7 +78,6 @@ msgstr ""
 #~ msgid "Not enough items"
 #~ msgstr "Nicht genügend Elemente"
 
-#, python-format
 #~ msgid "Media lesson %s"
 #~ msgstr "Medien Lektion %s"
 
@@ -89,7 +88,8 @@ msgstr ""
 #~ msgstr "Medien-Lektion"
 
 #~ msgid ""
-#~ "Are you sure you want to go back to the enter tab? This will end your lesson!"
+#~ "Are you sure you want to go back to the enter tab? This will end your "
+#~ "lesson!"
 #~ msgstr ""
 #~ "Sind Sie sich sicher dass Sie zum anderen Register wechseln möchten? Dies "
 #~ "wird Ihren Unterricht beenden!"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-04 11:49+0200\n"
+"POT-Creation-Date: 2012-10-10 20:48+0200\n"
 "PO-Revision-Date: 2012-09-20 10:35+0000\n"
 "Last-Translator: Adriano Steffler <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -18,26 +18,26 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-10-02 05:36+0000\n"
 "X-Generator: Launchpad (build 16061)\n"
 
-#: hangman.py:102
+#: hangman.py:103
 msgid "Check!"
 msgstr "Verificar!"
 
-#: hangman.py:116
+#: hangman.py:117
 msgid "You have already tried this character / word"
 msgstr "Você já tentou este caractere/esta palavra"
 
-#: hangman.py:132
+#: hangman.py:133
 msgid "Mistakes:  "
 msgstr "Erros:  "
 
-#: hangman.py:154
+#: hangman.py:155
 msgid "hanged man"
 msgstr "Forca"
 
-#: hangman.py:176
+#: hangman.py:177
 msgid "You lose, the answer was: "
 msgstr "Você perdeu, a resposta era: "
 
-#: hangman.py:255
+#: hangman.py:267
 msgid "Play hangman"
 msgstr "Jogar forca"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-04 11:49+0200\n"
+"POT-Creation-Date: 2012-10-13 20:02+0200\n"
 "PO-Revision-Date: 2012-02-05 09:30+0000\n"
 "Last-Translator: Daniel Winzen <d@winzen4.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -23,6 +23,6 @@ msgid "System default"
 msgstr "Systemvorgabe"
 
 #. TRANSLATORS: replace 'English' with the native name of the language you're translating to
-#: language.py:75
+#: language.py:77
 msgid "I speak English"
 msgstr "Ich spreche Deutsch"

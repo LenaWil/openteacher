@@ -1,0 +1,145 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenTeacher 3.0\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-10-13 20:02+0200\n"
+"PO-Revision-Date: 2012-10-10 22:19+0100\n"
+"Last-Translator: Marten de Vries <marten94@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: scr/gui.js:125 scr/gui.js:317
+msgid "List management"
+msgstr "Lijstbeheer"
+
+#: scr/gui.js:126
+msgid "New list"
+msgstr "Nieuwe lijst"
+
+#: scr/gui.js:127 scr/gui.js:145
+msgid "Load list"
+msgstr "Laad lijst"
+
+#: scr/gui.js:128 scr/gui.js:133
+msgid "Save list"
+msgstr "Sla lijst op"
+
+#: scr/gui.js:129
+msgid "Import from file"
+msgstr "Importeren vanuit bestand"
+
+#: scr/gui.js:130
+msgid "Export to file"
+msgstr "Exporteren naar bestand"
+
+#: scr/gui.js:134
+msgid "Please choose a name for the current list, so it can be saved."
+msgstr ""
+
+#: scr/gui.js:135
+msgid "Name:"
+msgstr ""
+
+#: scr/gui.js:136
+msgid "Done"
+msgstr ""
+
+#: scr/gui.js:138
+msgid "Warning"
+msgstr ""
+
+#: scr/gui.js:139
+msgid "There is already a list named like that."
+msgstr ""
+
+#: scr/gui.js:140
+msgid "If you continue, it will be overwritten. Continue?"
+msgstr ""
+
+#: scr/gui.js:141
+msgid "Yes"
+msgstr ""
+
+#: scr/gui.js:142
+msgid "No"
+msgstr ""
+
+#: scr/gui.js:146
+msgid "Please choose the list you want to load."
+msgstr ""
+
+#: scr/gui.js:198 scr/gui.js:312
+msgid "Options"
+msgstr "Opties"
+
+#: scr/gui.js:199
+msgid "Language:"
+msgstr "Taal:"
+
+#: scr/gui.js:221 scr/gui.js:315
+msgid "Enter list"
+msgstr "Lijst invoeren"
+
+#: scr/gui.js:222
+msgid "Word list:"
+msgstr "Woordjeslijst:"
+
+#: scr/gui.js:223
+msgid ""
+"Welcome = Welkom\n"
+"to = bij\n"
+"OpenTeacher mobile = OpenTeacher mobile\n"
+msgstr ""
+
+#: scr/gui.js:225
+msgid "Error"
+msgstr ""
+
+#: scr/gui.js:226
+msgid "Missing equals sign or tab"
+msgstr ""
+
+#: scr/gui.js:227
+msgid ""
+"Please make sure every line contains an '='-sign or tab between the "
+"questions and answers."
+msgstr ""
+
+#: scr/gui.js:228
+msgid "Ok"
+msgstr ""
+
+#: scr/gui.js:280 scr/gui.js:316
+msgid "Teach me!"
+msgstr "Overhoor me!"
+
+#: scr/gui.js:281
+msgid "Question:"
+msgstr "Vraag:"
+
+#: scr/gui.js:282
+msgid "Answer:"
+msgstr "Antwoord:"
+
+#: scr/gui.js:283
+msgid "Check!"
+msgstr "Controleer!"
+
+#: scr/gui.js:284
+msgid "Skip"
+msgstr "Overslaan"
+
+#: scr/gui.js:285
+msgid "Correct anyway"
+msgstr "Toch goed"
+
+#~ msgid "OpenTeacher"
+#~ msgstr "OpenTeacher"

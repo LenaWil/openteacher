@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-04 11:50+0200\n"
+"POT-Creation-Date: 2012-10-10 20:48+0200\n"
 "PO-Revision-Date: 2011-10-04 22:53+0000\n"
 "Last-Translator: El Achèche ANIS <elachecheanis@gmail.com>\n"
 "Language-Team: Arabic <ar@li.org>\n"
@@ -18,14 +18,14 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-10-02 05:36+0000\n"
 "X-Generator: Launchpad (build 16061)\n"
 
-#: symbols.py:94
+#: symbols.py:103
 msgid "Symbols"
 msgstr "الرموز"
 
-#: symbols.py:98
+#: symbols.py:107
 msgid "Lesson"
 msgstr ""
 
-#: symbols.py:99
+#: symbols.py:108
 msgid "Words lesson"
 msgstr ""

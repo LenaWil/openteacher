@@ -1,0 +1,1 @@
+var translationIndex = ({"en": {"name": "I speak English"}, "nl": {"url": "translations/nl.json", "name": "Ik spreek Nederlands"}});

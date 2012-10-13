@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-04 11:49+0200\n"
+"POT-Creation-Date: 2012-10-10 20:48+0200\n"
 "PO-Revision-Date: 2012-09-17 19:32+0000\n"
 "Last-Translator: Adriano Steffler <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -39,22 +39,22 @@ msgstr "Corrigido: %s"
 msgid "Corrected"
 msgstr "Corrigido"
 
-#: inputTyping.py:183
+#: inputTyping.py:187
 msgid "Correct answer: <b>{answers}</b> [{diff}]"
 msgstr "Corrigir a resposta: <b>{respostas}</b> [{diff}]"
 
-#: inputTyping.py:185
+#: inputTyping.py:189
 msgid "Correct answer: <b>{answers}</b>"
 msgstr "Corrigir a resposta: <b>{respostas}</b>"
 
-#: inputTyping.py:282
+#: inputTyping.py:287
 msgid "Fade duration when wrong (milliseconds)"
 msgstr "Duração do desvanecimento quando estiver errada (em milissegundos)"
 
-#: inputTyping.py:283
+#: inputTyping.py:288
 msgid "Lesson"
 msgstr "Lição"
 
-#: inputTyping.py:284
+#: inputTyping.py:289
 msgid "Words lesson"
 msgstr "Lição de palavras"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-04 11:49+0200\n"
+"POT-Creation-Date: 2012-10-10 20:48+0200\n"
 "PO-Revision-Date: 2012-07-17 14:36+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -26,7 +26,7 @@ msgstr "Verberg de browser!"
 msgid "Hide the others; make space for the browser"
 msgstr "Verberg al het andere; maak ruimte voor de browser"
 
-#: hiddenBrowser.py:225
+#: hiddenBrowser.py:234
 msgid "Enable hidden browser (hide it by moving the slider)"
 msgstr ""
 "Schakel de verborgen browser in (verberg hem door de zijkant te slepen met "

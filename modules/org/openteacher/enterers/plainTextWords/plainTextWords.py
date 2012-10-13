@@ -19,13 +19,12 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt4 import QtGui
-import re
 
 class EnterPlainTextDialog(QtGui.QDialog):
-	def __init__(self, parse, onscreenKeyboard, *args, **kwargs):
+	def __init__(self, parseList, onscreenKeyboard, *args, **kwargs):
 		super(EnterPlainTextDialog, self).__init__(*args, **kwargs)
 
-		self._parse = parse
+		self._parseList = parseList
 
 		buttonBox = QtGui.QDialogButtonBox(
 			QtGui.QDialogButtonBox.Cancel | QtGui.QDialogButtonBox.Ok,
@@ -67,33 +66,15 @@ class EnterPlainTextDialog(QtGui.QDialog):
 
 	@property
 	def lesson(self):
-		list = {"items": [], "tests": []}
 		text = unicode(self._textEdit.toPlainText())
-		counter = 0
-		for line in text.split("\n"):
-			if line.strip() == u"":
-				continue
-			try:
-				questionText, answerText = re.split(r"(?<!\\)[=\t]", line, maxsplit=1)
-			except ValueError:
-				QtGui.QMessageBox.warning(
-					self,
-					_("Missing equals sign or tab"),
-					_("Please make sure every line contains an '='-sign or tab between the questions and answers.")
-				)
-				return
-			word = {
-				"id": counter,
-				"questions": self._parse(questionText),
-				"answers": self._parse(answerText),
-			}	
-			list["items"].append(word)
-
-			counter += 1
-		return {
-			"resources": {},
-			"list": list,
-		}
+		try:
+			return self._parseList(text)
+		except ValueError:
+			QtGui.QMessageBox.warning(
+				self,
+				_("Missing equals sign or tab"),
+				_("Please make sure every line contains an '='-sign or tab between the questions and answers.")
+			)
 
 class PlainTextWordsEntererModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -104,7 +85,7 @@ class PlainTextWordsEntererModule(object):
 		self.requires = (
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="buttonRegister"),
-			self._mm.mods(type="wordsStringParser"),
+			self._mm.mods(type="wordListStringParser"),
 			self._mm.mods(type="loader"),
 		)
 		self.uses = (
@@ -165,12 +146,12 @@ class PlainTextWordsEntererModule(object):
 			dialog.tab.title = dialog.windowTitle()
 
 	def createLesson(self):
-		parse = self._modules.default(
+		parseList = self._modules.default(
 			"active",
-			type="wordsStringParser"
-		).parse
+			type="wordListStringParser"
+		).parseList
 
-		eptd = EnterPlainTextDialog(parse, self._onscreenKeyboard)
+		eptd = EnterPlainTextDialog(parseList, self._onscreenKeyboard)
 		self._activeDialogs.add(eptd)
 
 		tab = self._uiModule.addCustomTab(eptd)

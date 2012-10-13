@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-04 11:50+0200\n"
+"POT-Creation-Date: 2012-10-13 20:02+0200\n"
 "PO-Revision-Date: 2012-03-13 12:57+0000\n"
 "Last-Translator: Aminos Amigos <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-10-02 05:36+0000\n"
 "X-Generator: Launchpad (build 16061)\n"
 
-#: plainTextWords.py:60
+#: plainTextWords.py:59
 msgid ""
 "Please enter the plain text in the text edit. Separate words with a new line "
 "and questions from answers with an equals sign ('=') or a tab."
@@ -26,28 +26,28 @@ msgstr ""
 "رجاءً أدخل النص المجرد في محرر النصوص. إفصل بين الكلمات بسطر جديد والأسئلة عن "
 "الأجوبة بعلامة يساوي (=)  أو لسان."
 
-#: plainTextWords.py:61
+#: plainTextWords.py:60
 msgid "Plain text words enterer"
 msgstr "مُدخِلُ النص مجرد"
 
-#: plainTextWords.py:81
+#: plainTextWords.py:75
 msgid "Missing equals sign or tab"
 msgstr ""
 
-#: plainTextWords.py:82
+#: plainTextWords.py:76
 msgid ""
 "Please make sure every line contains an '='-sign or tab between the "
 "questions and answers."
 msgstr ""
 
-#: plainTextWords.py:162
+#: plainTextWords.py:143
 msgid "Create words lesson by entering plain text"
 msgstr "انشئ حصة كلمات بإدخال نص مجرد"
 
-#: plainTextWords.py:196
+#: plainTextWords.py:177
 msgid "Can't show the result"
 msgstr ""
 
-#: plainTextWords.py:197
+#: plainTextWords.py:178
 msgid "Can't open the resultive word list, because it can't be shown."
 msgstr ""

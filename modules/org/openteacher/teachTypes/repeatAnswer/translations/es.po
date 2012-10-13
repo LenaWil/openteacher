@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-04 11:49+0200\n"
+"POT-Creation-Date: 2012-10-10 20:48+0200\n"
 "PO-Revision-Date: 2012-09-02 14:40+0000\n"
 "Last-Translator: Hector A. Mantellini <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -26,19 +26,19 @@ msgstr "Pulse el botón para comenzar"
 msgid "Start!"
 msgstr "¡Comenzar!"
 
-#: repeatAnswer.py:186
+#: repeatAnswer.py:187
 msgid "Repeat answer"
 msgstr "Repetir la pregunta"
 
-#: repeatAnswer.py:190
+#: repeatAnswer.py:191
 msgid "Repeat mode fade duration (milliseconds)"
 msgstr "Duración del fundido Modo repetición (milisegundos)"
 
-#: repeatAnswer.py:191
+#: repeatAnswer.py:192
 msgid "Lesson"
 msgstr "Lección"
 
-#: repeatAnswer.py:192
+#: repeatAnswer.py:193
 msgid "Words lesson"
 msgstr "Palabra de lección"
 

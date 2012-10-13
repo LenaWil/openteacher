@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-04 11:49+0200\n"
+"POT-Creation-Date: 2012-10-10 20:48+0200\n"
 "PO-Revision-Date: 2012-07-15 13:30+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Frisian <fy@li.org>\n"
@@ -26,18 +26,18 @@ msgstr "Klik de knop om te begjinne"
 msgid "Start!"
 msgstr "Begjin!"
 
-#: repeatAnswer.py:186
+#: repeatAnswer.py:187
 msgid "Repeat answer"
 msgstr "Herhelje antwurd"
 
-#: repeatAnswer.py:190
+#: repeatAnswer.py:191
 msgid "Repeat mode fade duration (milliseconds)"
 msgstr "Duer fan it ferdizenje yn de herhelje-modus (millisekondes)"
 
-#: repeatAnswer.py:191
+#: repeatAnswer.py:192
 msgid "Lesson"
 msgstr "Les"
 
-#: repeatAnswer.py:192
+#: repeatAnswer.py:193
 msgid "Words lesson"
 msgstr "Wurdsjesles"

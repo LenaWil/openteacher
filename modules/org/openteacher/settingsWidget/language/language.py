@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -52,6 +52,8 @@ class SettingsWidgetModule(object):
 		self._mm = moduleManager
 
 		self.type = "settingsWidget"
+		self.subType = "languageChooser"
+
 		self.requires = (
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="translator"),
@@ -59,7 +61,7 @@ class SettingsWidgetModule(object):
 		self.filesWithTranslations = ("language.py",)
 
 	@property
-	def _languages(self):
+	def languages(self):
 		translator = self._modules.default("active", type="translator")
 		files = os.listdir(self._mm.resourcePath("translations"))
 		files = filter(lambda x: x.endswith(".po"), files)
@@ -76,7 +78,7 @@ class SettingsWidgetModule(object):
 		return languages
 
 	def createWidget(self, *args, **kwargs):
-		return SettingsWidget(self._languages, *args, **kwargs)
+		return SettingsWidget(self.languages, *args, **kwargs)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

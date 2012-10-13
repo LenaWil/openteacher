@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-04 11:49+0200\n"
+"POT-Creation-Date: 2012-10-10 20:48+0200\n"
 "PO-Revision-Date: 2012-08-08 23:48+0000\n"
 "Last-Translator: Teemu Paavola <tteeemu@gmail.com>\n"
 "Language-Team: Finnish <fi@li.org>\n"
@@ -26,18 +26,18 @@ msgstr "Paina nappia aloittaaksesi"
 msgid "Start!"
 msgstr "Aloita!"
 
-#: repeatAnswer.py:186
+#: repeatAnswer.py:187
 msgid "Repeat answer"
 msgstr "Toista vastaus"
 
-#: repeatAnswer.py:190
+#: repeatAnswer.py:191
 msgid "Repeat mode fade duration (milliseconds)"
 msgstr "Toistotilan häivytyksen kesto (millisekunteja)"
 
-#: repeatAnswer.py:191
+#: repeatAnswer.py:192
 msgid "Lesson"
 msgstr "Oppitunti"
 
-#: repeatAnswer.py:192
+#: repeatAnswer.py:193
 msgid "Words lesson"
 msgstr "Sanojen opettelu"

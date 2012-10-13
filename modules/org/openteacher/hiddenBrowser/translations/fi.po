@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-04 11:49+0200\n"
+"POT-Creation-Date: 2012-10-10 20:48+0200\n"
 "PO-Revision-Date: 2012-08-09 00:16+0000\n"
 "Last-Translator: Teemu Paavola <tteeemu@gmail.com>\n"
 "Language-Team: Finnish <fi@li.org>\n"
@@ -26,6 +26,6 @@ msgstr "Piilota selain!"
 msgid "Hide the others; make space for the browser"
 msgstr "Piilota kaikki muut; tee tilaa selaimelle"
 
-#: hiddenBrowser.py:225
+#: hiddenBrowser.py:234
 msgid "Enable hidden browser (hide it by moving the slider)"
 msgstr "Salli piilotettu selain (piilota se liikuttamalla liukusäädintä)"

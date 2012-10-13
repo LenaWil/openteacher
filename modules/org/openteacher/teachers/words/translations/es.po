@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-04 11:49+0200\n"
+"POT-Creation-Date: 2012-10-10 20:48+0200\n"
 "PO-Revision-Date: 2012-09-02 14:38+0000\n"
 "Last-Translator: Hector A. Mantellini <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -22,34 +22,34 @@ msgstr ""
 msgid "I'm ready, start the lesson!"
 msgstr "Estoy listo, ¡comenzar la lección!"
 
-#: words.py:61 words.py:406
+#: words.py:61 words.py:423
 msgid "Lesson settings"
 msgstr "Configuración de lección"
 
-#: words.py:119
+#: words.py:121
 msgid "Change lesson settings"
 msgstr "Cambiar configuración de la lección"
 
-#: words.py:120
+#: words.py:122
 msgid "Word:"
 msgstr "Palabra:"
 
-#: words.py:398
+#: words.py:415
 msgid "Lesson type"
 msgstr "Tipo de lección"
 
-#: words.py:399
+#: words.py:416
 msgid "Word list order and filters"
 msgstr "Orden de lista de palabras y filtros"
 
-#: words.py:400
+#: words.py:417
 msgid "Word modifications"
 msgstr "Palabras modificadas"
 
-#: words.py:401
+#: words.py:418
 msgid "Don't show this screen again when I start a lesson."
 msgstr "No mostrar esta pantalla de nuevo al iniciar una lección."
 
-#: words.py:405
+#: words.py:422
 msgid "Words lesson"
 msgstr "Palabra de lección"
