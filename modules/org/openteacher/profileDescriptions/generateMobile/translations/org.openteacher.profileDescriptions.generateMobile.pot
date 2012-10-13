@@ -17,12 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. TRANSLATORS: This is the name of a document exchange standard.
-#. TRANSLATORS: Please just use the English name of it, unless the
-#. TRANSLATORS: standard is known under another name in your
-#. TRANSLATORS: language (or you have a very good reason yourself
-#. TRANSLATORS: for translating it). For more information on PDF:
-#. TRANSLATORS: http://en.wikipedia.org/wiki/PDF
-#: pdf.py:64
-msgid "Portable Document Format"
+#: generateMobile.py:45
+msgid "Generates the html files of OpenTeacher mobile."
 msgstr ""

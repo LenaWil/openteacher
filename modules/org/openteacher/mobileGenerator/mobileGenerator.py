@@ -141,6 +141,8 @@ class MobileGeneratorModule(object):
 		with open(os.path.join(path, "index.html"), "w") as f:
 			f.write(result)
 
+		print "Writing OpenTeacher mobile to '%s' is now done." % path
+
 	def disable(self):
 		self.active = False
 
