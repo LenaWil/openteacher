@@ -58,15 +58,15 @@ var parseList = function (string) {
 		}
 
 		return {
-			"id": id,
-			"questions": parse(questionText),
-			"answers": parse(answerText)
+			id: id,
+			questions: parse(questionText),
+			answers: parse(answerText)
 		};
 	};
 
 	list = {
-		"items": [],
-		"tests": []
+		items: [],
+		tests: []
 	};
 	counter = 0;
 	lines = string.split("\n");

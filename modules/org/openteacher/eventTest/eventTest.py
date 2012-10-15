@@ -21,13 +21,21 @@
 import unittest
 
 class TestCase(unittest.TestCase):
+	@property
+	def _mods(self):
+		a = (
+			set(self._mm.mods(type="event")) |
+			set(self._mm.mods("active", type="javaScriptEvent"))
+		)
+		return a
+
 	def testSendEmptyEvent(self):
-		for e in self._mm.mods(type="event"):
+		for e in self._mods:
 			a = e.createEvent()
 			self.assertIsNone(a.send())
 
 	def testEvent(self):
-		for e in self._mm.mods(type="event"):
+		for e in self._mods:
 			def callback():
 				called["true"] = True
 				return 1
@@ -38,7 +46,7 @@ class TestCase(unittest.TestCase):
 			self.assertTrue(called["true"])
 
 	def testMultipleEvents(self):
-		for e in self._mm.mods(type="event"):
+		for e in self._mods:
 			def callback():
 				counter["value"] += 1
 			counter = {"value": 0}
@@ -52,7 +60,7 @@ class TestCase(unittest.TestCase):
 	def testAddRemoveEvent(self):
 		callback = lambda: None
 		callback2 = lambda: None
-		for e in self._mm.mods(type="event"):
+		for e in self._mods:
 			a = e.createEvent()
 			a.handle(callback)
 			a.handle(callback)
@@ -60,28 +68,38 @@ class TestCase(unittest.TestCase):
 			with self.assertRaises(KeyError):
 				a.unhandle(callback)
 
-	def testArguments(self):
-		testArgs = (1, "s")
-		testKwargs = {"a":1, "b": 2}
-		def callback(*args, **kwargs):
+	def testArgs(self):
+		testArgs = (1, "s",)
+		def callback(*args):
 			self.assertEquals(args, testArgs)
-			self.assertEquals(kwargs, testKwargs)
 
-		for e in self._mm.mods(type="event"):
+		for e in self._mods:
 			a = e.createEvent()
 			a.handle(callback)
-			a.send(*testArgs, **testKwargs)
+			a.send(*testArgs)
+
+	def testKwargs(self):
+		testKwargs = {"a":1, "b": 2}
+		def callback(**kwargs):
+			self.assertEquals(kwargs, testKwargs)
+
+		#ATTENTION: native event only, since it requires keyword args
+		#which aren't supported in JS...
+		for e in self._mm.mods("active", type="event"):
+			a = e.createEvent()
+			a.handle(callback)
+			a.send(**testKwargs)
 
 	def testRegisteringHandlerInsideHandler(self):
 		"""Expected behaviour is that it'll not call the newly
 		   registered handler, but that it won't crash either."""
 		def callback():
-			a.handle(callback3)
+			a.handle(callback2)
 
-		def callback3():
-			raise Exception("Shouldn't get here...")
+		def callback2():
+			self.assertTrue(False, "Shouldn't get here...")
 
-		for e in self._mm.mods(type="event"):
+		for e in self._mods:
 			a = e.createEvent()
 			a.handle(callback)
 			a.send()
@@ -94,6 +112,7 @@ class TestModule(object):
 		self.type = "test"
 		self.uses = (
 			self._mm.mods(type="event"),
+			self._mm.mods(type="javaScriptEvent"),
 		)
 
 	def enable(self):

@@ -23,13 +23,27 @@
 		<meta name='viewport' content='widget=device-width, initial-scale=1' />
 
 		<link type='text/css' rel='stylesheet' href='css/themes/default/jquery.mobile-1.2.0.css' />
+
 		<script type='text/javascript' src='scr/jquery-1.8.2.js'></script>
 		<script type='text/javascript' src='scr/jquery.mobile-1.2.0.js'></script>
 		<script type='text/javascript' src='scr/taboverride.js'></script>
 		<script type='text/javascript' src='scr/jquery.taboverride.js'></script>
+
 		<script type='text/javascript' src='translations/index.js'></script>
 		<script type='text/javascript' src='scr/logic.js'></script>
 		<script type='text/javascript' src='scr/gui.js'></script>
+
+		<style type='text/css'>
+			#missing-separator-popup, #overwrite-popup {
+				max-width: 400px;
+			}
+			#result-dialog a {
+				display: none;
+			}
+			#question-label {
+				font-size: 28pt;
+			}
+		</style>
 	</head>
 	<body>
 		<!-- enter page -->
@@ -37,9 +51,9 @@
 			$!enterTabHeader!$
 			<div data-role='content'>
 				<label id='word-list-label' for='list-textarea'></label>
-				<textarea id='list-textarea'></textarea>
+				<textarea id='list-textarea' autocorrect='off' autocapitalize='off' spellcheck='false'></textarea>
 			</div>
-			<div id='missing-separator-popup' data-role='popup' style='max-width:400px;'>
+			<div id='missing-separator-popup' data-role='popup'>
 				<div data-role='header' data-theme='b'>
 					<h1 id='missing-separator-header'></h1>
 				</div>
@@ -63,10 +77,10 @@
 			$!teachTabHeader!$
 			<div data-role='content'>
 				<label id='question-label-label' for='answer-label'></label><br />
-				<label id='question-label' style='font-size: 28pt;'>een</label><br />
+				<label id='question-label'></label><br />
 
 				<label id='answer-box-label' for='answer-box'></label>
-				<input id='answer-box' type='text' value='one' />
+				<input id='answer-box' type='text' />
 
 				<button id='check-button'></button>
 				<div class='ui-grid-a'>
@@ -81,6 +95,17 @@
 				<input id='progress-bar' type='range' value='0' min='0' max='100' data-highlight='true' />
 			</div>
 			$!teachTabFooter!$
+		</div>
+
+		<div id='result-dialog' data-role='dialog'>
+			<div data-role='header' data-theme='b'>
+				<h1 id='result-header'></h1>
+			</div>
+			<div data-role='content'>
+				<strong id='result-title'></strong><br />
+				<span id='result-msg'></span>
+				<button id='result-ok-button'></button>
+			</div>
 		</div>
 
 		<!-- list management dialog -->
@@ -110,7 +135,7 @@
 				<input type='text' id='save-name-box' />
 				<button id='save-done-button'></button>
 			</div>
-			<div id='overwrite-popup' data-role='popup' style='max-width: 400px'>
+			<div id='overwrite-popup' data-role='popup'>
 				<div data-role='header' data-theme='b'>
 					<h1 id='overwrite-header'></h1>
 				</div>

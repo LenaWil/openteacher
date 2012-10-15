@@ -18,37 +18,31 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import unittest
-from PyQt4 import QtScript
-
-class TestCase(unittest.TestCase):
-	def testCodeValidity(self):
-		for mod in self._mm.mods("active", "javaScriptImplementation"):
-			engine = QtScript.QScriptEngine()
-			engine.evaluate(mod.code)
-			self.assertFalse(engine.hasUncaughtException())
-
-class TestModule(object):
+class JavascriptLessonTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(TestModule, self).__init__(*args, **kwargs)
+		super(JavascriptLessonTypeModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "test"
+		self.type = "javaScriptLessonType"
+		self.javaScriptImplementation = True
+
 		self.requires = (
-			self._mm.mods(type="ui"),
-		)
-		self.uses = (
-			self._mm.mods("javaScriptImplementation"),
+			self._mm.mods(type="javaScriptEvent"),
 		)
 
 	def enable(self):
-		self.TestCase = TestCase
-		self.TestCase._mm = self._mm
+		self._modules = set(self._mm.mods(type="modules")).pop()
+		self.code = self._modules.default("active", type="javaScriptEvent").code
+		with open(self._mm.resourcePath("lessonType.js")) as f:
+			self.code += f.read()
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self.TestCase
+
+		del self._modules
+		del self.code
 
 def init(moduleManager):
-	return TestModule(moduleManager)
+	return JavascriptLessonTypeModule(moduleManager)

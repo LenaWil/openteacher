@@ -32,15 +32,28 @@ class MobileGeneratorModule(object):
 		self._mm = moduleManager
 
 		self.type = "mobileGenerator"
-		self.requires = (
+
+		self.requires = [
 			self._mm.mods(type="execute"),
 			self._mm.mods(subType="languageChooser"),
-			self._mm.mods("javaScriptImplementation", type="wordsStringParser"),
-			self._mm.mods("javaScriptImplementation", type="wordsStringComposer"),
-			self._mm.mods("javaScriptImplementation", type="wordsStringChecker"),
-			self._mm.mods("javaScriptImplementation", type="wordListStringParser"),
-			self._mm.mods("javaScriptImplementation", type="wordListStringComposer"),
-		)
+		]
+		self._logicModTypes = [
+			#wordsString
+			"wordsStringParser",
+			"wordsStringComposer",
+			"wordsStringChecker",
+
+			#wordListString
+			"wordListStringParser",
+			"wordListStringComposer",
+
+			#else
+			"javaScriptLessonType",
+		]
+		for type in self._logicModTypes:
+			self.requires.append(self._mm.mods("javaScriptImplementation", type=type))
+		self.requires = tuple(self.requires)
+
 		self.priorities = {
 			"default": -1,
 			"generate-mobile": 0,
@@ -115,7 +128,7 @@ class MobileGeneratorModule(object):
 
 		#generate logic.js
 		logic = ""
-		for type in ["wordsStringParser", "wordsStringComposer", "wordsStringChecker", "wordListStringParser", "wordListStringComposer"]:
+		for type in self._logicModTypes:
 			mod = self._modules.default("active", "javaScriptImplementation", type=type)
 			#add to logic code var with an additional tab before every
 			#line

@@ -26,14 +26,14 @@
 
 	listManagementDialog = (function () {
 		var newList, askWhichListToLoad, loadList, askSaveName,
-			saveList, getLists, saveLists;
+			saveList, getLessons, saveLessons;
 
-		getLists = function () {
-			return JSON.parse(localStorage.lists || "{}");
+		getLessons = function () {
+			return JSON.parse(localStorage.lessons || "{}");
 		};
 
-		saveLists = function (lists) {
-			localStorage.lists = JSON.stringify(lists);
+		saveLessons = function (lessons) {
+			localStorage.lessons = JSON.stringify(lessons);
 		};
 
 		newList = function () {
@@ -42,12 +42,12 @@
 		};
 
 		loadList = function (name) {
-			var list;
+			var lesson;
 
-			//load the list associated list
-			list = getLists()[name];
-			//and load that list into the enter tab
-			enterTab.fromList(list);
+			//load the associated lesson
+			lesson = getLessons()[name];
+			//and load that lesson into the enter tab
+			enterTab.fromLesson(lesson);
 			//then, switch to the enter tab.
 			$.mobile.changePage($("#enter-page"));
 		};
@@ -58,15 +58,15 @@
 			html = "";
 
 			//fill the list view again with newly retrieved lists.
-			lists = getLists();
+			lists = getLessons();
 			for (name in lists) {
 				if (lists.hasOwnProperty(name)) {
 					html += "<li><a href='#'>" + name + "</a></li>";
 				}
 			}
 
-			listView = $("#load-listview")
-			listView.html(html)
+			listView = $("#load-listview");
+			listView.html(html);
 			try {
 				listView.listview("refresh");
 			} catch (e) {}
@@ -78,14 +78,14 @@
 		};
 
 		saveList = function (force) {
-			var lists, nameBox, name, list;
+			var lessons, nameBox, name, lesson;
 
 			nameBox = $("#save-name-box");
 			name = nameBox.val();
 
-			lists = getLists();
+			lessons = getLessons();
 
-			if (lists.hasOwnProperty(name) && !force) {
+			if (lessons.hasOwnProperty(name) && !force) {
 				//ask if the user wants to overwrite
 				$("#overwrite-popup").popup("open");
 				return;
@@ -94,12 +94,15 @@
 			nameBox.val("");
 
 			//do saving
-			lists[name] = enterTab.toList();
-			saveLists(lists);
+			lesson = enterTab.toLesson();
+			if (lesson) {
+				lessons[name] = lesson;
+				saveLessons(lessons);
+			}
 
 			//update ui
 			history.go(-2);
-		}
+		};
 		return {
 			setupUi: function () {
 				$("#new-list-button").click(newList);
@@ -146,7 +149,6 @@
 				$("#load-explanation").text(_("Please choose the list you want to load."));
 			}
 		};
-		
 	}());
 
 	optionsDialog = (function () {
@@ -227,19 +229,19 @@
 				$("#missing-separator-msg").text(_("Please make sure every line contains an '='-sign or tab between the questions and answers."));
 				$("#missing-separator-ok-button").text(_("Ok"));
 			},
-			fromList: function (list) {
+			fromLesson: function (lesson) {
 				var text;
 
-				text = logic.composeList(list);
+				text = logic.composeList(lesson);
 				$("#list-textarea").val(text);
 			},
-			toList: function () {
-				var text, list;
+			toLesson: function () {
+				var text, lesson;
 
 				text = $("#list-textarea").val();
 
 				try {
-					list = logic.parseList(text);
+					lesson = logic.parseList(text);
 				} catch (exc) {
 					if (exc.name === "SeparatorError") {
 						$("#missing-separator-popup").popup("open");
@@ -247,13 +249,92 @@
 					}
 					throw exc;
 				}
-				return list;
+				return lesson;
 			}
 		};
 	}());
 
 	teachTab = (function () {
-		var sliderToProgressBar;
+		var onCheck, onSkip, onCorrectAnyway, lessonDone, newItem,
+			sliderToProgressBar, lessonType, currentItem, calculateNote,
+			noteMessage, backToEnterTab;
+
+		onCheck = function () {
+			var text, result;
+
+			text = $("#answer-box").val();
+			result = logic.check(text, currentItem);
+			if (result.result === "right") {
+				$("#correct-anyway-button").button("disable");
+			} else {
+				$("#correct-anyway-button").button("enable");
+			}
+
+			lessonType.setResult(result);
+		};
+
+		onSkip = function () {
+			lessonType.skip();
+		};
+
+		onCorrectAnyway = function () {
+			lessonType.correctLastAnswer({"result": "right"});
+			$("#correct-anyway-button").button("disable");
+		};
+
+		calculateNote = function (test) {
+			var good, total, i, result;
+
+			good = 0;
+			total = test.results.length;
+			for (i = 0; i < test.results.length; i += 1) {
+				result = test.results[i];
+				if (result.result === "right") {
+					good += 1;
+				}
+			}
+			return Math.round(good / total * 100).toString() + "%";
+		};
+
+		lessonDone = function () {
+			var test, note;
+
+			test = lessonType.list.tests[lessonType.list.tests.length - 1];
+			note = calculateNote(test);
+
+			//free lesson objects
+			lessonType = undefined;
+			currentItem = undefined;
+
+			//show results
+			$("#result-msg").text(noteMessage.replace("%s", note));
+			$.mobile.changePage($("#result-dialog"));
+		};
+
+		newItem = function (item) {
+			var slider;
+
+			currentItem = item;
+
+			//set question
+			$("#question-label").text(logic.compose(item.questions));
+
+			//empty answer box
+			$("#answer-box").val("");
+
+			//update progress bar
+			slider = $("#progress-bar");
+			slider.attr("max", lessonType.totalItems);
+			slider.val(lessonType.askedItems);
+			try {
+				slider.slider("refresh");
+			} catch (e) {}
+
+			//focus to input box when jqm is fully set up.
+			setTimeout(function () {
+				$("#answer-box").focus();
+			}, 0);
+		};
 
 		sliderToProgressBar = function () {
 			//It's a hack. But it works.
@@ -272,20 +353,57 @@
 				.css("cursor", "auto");
 		};
 
+		backToEnterTab = function () {
+			$.mobile.changePage($("#enter-page"));
+		};
+		$(document).on("pageinit", sliderToProgressBar);
+
 		return {
 			setupUi: function () {
-				sliderToProgressBar();
+				$("#check-button").click(onCheck);
+				$("#skip-button").click(onSkip);
+				$("#correct-anyway-button").click(onCorrectAnyway);
+
+				$("#result-ok-button").click(backToEnterTab);
+				$("#teach-page").keydown(function (event) {
+					if (event.which === 13) {
+						//enter key
+						$("#check-button").click();
+					}
+				});
 			},
+
 			retranslate: function (_) {
+				//ui itself
 				$("#teach-me-header").text(_("Teach me!"));
 				$("#question-label-label").text(_("Question:"));
 				$("#answer-box-label").text(_("Answer:"));
 				$("#check-button").text(_("Check!"));
 				$("#skip-button").text(_("Skip"));
 				$("#correct-anyway-button").text(_("Correct anyway"));
+
+				//result popup
+				$("#result-header").text(_("Test completed!"));
+				$("#result-title").text(_("Test completed!"));
+				$("#result-ok-button").text(_("Ok"));
+				noteMessage = _("Your note: %s");
 			},
-			doLesson: function (list) {
-				//FIXME
+
+			doLesson: function (lesson) {
+				var i, indexes;
+
+				indexes = [];
+				for (i = 0; i < lesson.list.items.length; i += 1) {
+					indexes.push(i);
+				}
+				lessonType = new logic.LessonType(lesson.list, indexes);
+				lessonType.newItem.handle(newItem);
+				lessonType.lessonDone.handle(lessonDone);
+				lessonType.start();
+
+				try {
+					$("#correct-anyway-button").button("disable");
+				} catch (e) {}
 			}
 		};
 	}());
@@ -357,12 +475,12 @@
 			//up things until that's done, because they might depend
 			//on the translations.
 			retranslate(function () {
-				//setup UI
-				enterTab.setupUi();
-				teachTab.setupUi();
-				listManagementDialog.setupUi();
-
 				if (!setupDone) {
+					//setup UI
+					enterTab.setupUi();
+					teachTab.setupUi();
+					listManagementDialog.setupUi();
+
 					//start with a new word list
 					enterTab.newList();
 
@@ -376,13 +494,13 @@
 		};
 
 		startLesson = function () {
-			var list;
+			var lesson;
 
-			list = enterTab.toList();
-			if (!list) {
+			lesson = enterTab.toLesson();
+			if (!lesson) {
 				return false;
 			}
-			teachTab.doLesson(list);
+			teachTab.doLesson(lesson);
 			return true;
 		};
 
