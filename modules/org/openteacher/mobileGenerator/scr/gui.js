@@ -26,7 +26,8 @@
 
 	listManagementDialog = (function () {
 		var newList, askWhichListToLoad, loadList, askSaveName,
-			saveList, getLessons, saveLessons;
+			saveList, getLessons, saveLessons, askWhichListToRemove,
+			removeList;
 
 		getLessons = function () {
 			return JSON.parse(localStorage.lessons || "{}");
@@ -39,6 +40,37 @@
 		newList = function () {
 			$.mobile.changePage($("#enter-page"));
 			enterTab.newList();
+		};
+
+		removeList = function(name) {
+			var lessons;
+
+			lessons = getLessons();
+			delete lessons[name];
+			saveLessons(lessons);
+
+			history.go(-2);
+		};
+
+		askWhichListToRemove = function () {
+			var html, lists, name, listView;
+
+			html = "";
+
+			//fill the list view again with newly retrieved lists.
+			lists = getLessons();
+			for (name in lists) {
+				if (lists.hasOwnProperty(name)) {
+					html += "<li><a href='#'>" + name + "</a></li>";
+				}
+			}
+
+			listView = $("#remove-listview");
+			listView.html(html);
+			try {
+				listView.listview("refresh");
+			} catch (e) {}
+			$.mobile.changePage($("#remove-dialog"));
 		};
 
 		loadList = function (name) {
@@ -108,6 +140,7 @@
 				$("#new-list-button").click(newList);
 				$("#load-list-button").click(askWhichListToLoad);
 				$("#save-list-button").click(askSaveName);
+				$("#remove-list-button").click(askWhichListToRemove);
 
 				$("#save-done-button").click(function () {
 					saveList(false);
@@ -122,6 +155,10 @@
 				$("#load-listview").on("click", "a", function () {
 					loadList($(this).text());
 				});
+				//same for remove
+				$("#remove-listview").on("click", "a", function () {
+					removeList($(this).text());
+				});
 			},
 			retranslate: function (_) {
 				//base dialog
@@ -129,8 +166,7 @@
 				$("#new-list-button").text(_("New list"));
 				$("#load-list-button").text(_("Load list"));
 				$("#save-list-button").text(_("Save list"));
-//				$("#import-from-file-button").text(_("Import from file"));
-//				$("#export-to-file-button").text(_("Export to file"));
+				$("#remove-list-button").text(_("Remove list"));
 
 				//save dialog (& overwrite popup)
 				$("#save-header").text(_("Save list"));
@@ -147,6 +183,12 @@
 				//load dialog
 				$("#load-header").text(_("Load list"));
 				$("#load-explanation").text(_("Please choose the list you want to load."));
+				$("#load-listview").attr("data-filter-placeholder", _("Filter lists..."));
+
+				//remove dialog
+				$("#remove-header").text(_("Remove list"));
+				$("#remove-explanation").text(_('Please choose the list you want to remove.'));
+				$("#remove-listview").attr("data-filter-placeholder", _("Filter lists..."));
 			}
 		};
 	}());
@@ -257,21 +299,54 @@
 	teachTab = (function () {
 		var onCheck, onSkip, onCorrectAnyway, lessonDone, newItem,
 			sliderToProgressBar, lessonType, currentItem, calculateNote,
-			noteMessage, backToEnterTab;
+			noteMessage, backToEnterTab, animationEnd;
 
 		onCheck = function () {
-			var text, result;
+			var answerBox, text, result, correctionLabel, goodAnswer,
+				diff, diffText, i;
 
-			text = $("#answer-box").val();
+			answerBox = $("#answer-box");
+			text = answerBox.val();
 			result = logic.check(text, currentItem);
 			if (result.result === "right") {
 				$("#correct-anyway-button").button("disable");
+				lessonType.setResult(result);
 			} else {
 				$("#correct-anyway-button").button("enable");
+
+				correctionLabel = $("#correction-label");
+
+				goodAnswer = logic.compose(currentItem.answers);
+				diff = JsDiff.diffChars(text, goodAnswer);
+				if (diff.length > 4) {
+					//differs too much
+					correctionLabel.html(goodAnswer);
+				} else {
+					//diff is close enough, show it.
+					diffText = "";
+					for (i = 0; i < diff.length; i += 1) {
+						if (diff[i].added) {
+							diffText += "<span style='color: green; text-decoration: underline;'>" + diff[i].value + "</span>";
+						} else if (diff[i].removed) {
+							diffText += "<span style='color: red; text-decoration: underline;'>" + diff[i].value + "</span>";
+						} else {
+							diffText += diff[i].value;
+						}
+					}
+					correctionLabel.html(diffText);
+				}
+				answerBox.hide();
+				correctionLabel.show().fadeOut(4000, function () {
+					animationEnd(answerBox, correctionLabel, result);
+				});
 			}
+		};
+
+		animationEnd = function (answerBox, correctionLabel, result) {
+			answerBox.show();
 
 			lessonType.setResult(result);
-		};
+		}
 
 		onSkip = function () {
 			lessonType.skip();
@@ -412,15 +487,6 @@
 		var setupDone, main, doRetranslate, retranslate, tabChange,
 			startLesson;
 
-		//setup for a local environment
-		$.ajaxSetup({
-			beforeSend: function (xhr) {
-				if (xhr.overrideMimeType) {
-					xhr.overrideMimeType("application/json");
-				}
-			}
-		});
-
 		setupDone = false;
 
 		doRetranslate = function (_) {
@@ -525,6 +591,15 @@
 				}
 			}
 		};
+
+		//setup for a local environment
+		$.ajaxSetup({
+			beforeSend: function (xhr) {
+				if (xhr.overrideMimeType) {
+					xhr.overrideMimeType("application/json");
+				}
+			}
+		});
 
 		//initialization of pages (retranslating etc.)
 		$(document).on("pageinit", main);

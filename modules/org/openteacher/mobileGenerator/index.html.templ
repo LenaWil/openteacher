@@ -28,6 +28,7 @@
 		<script type='text/javascript' src='scr/jquery.mobile-1.2.0.js'></script>
 		<script type='text/javascript' src='scr/taboverride.js'></script>
 		<script type='text/javascript' src='scr/jquery.taboverride.js'></script>
+		<script type='text/javascript' src='scr/jsdiff.js'></script>
 
 		<script type='text/javascript' src='translations/index.js'></script>
 		<script type='text/javascript' src='scr/logic.js'></script>
@@ -42,6 +43,9 @@
 			}
 			#question-label {
 				font-size: 28pt;
+			}
+			#correction-label {
+				font-size: 24pt;
 			}
 		</style>
 	</head>
@@ -80,6 +84,7 @@
 				<label id='question-label'></label><br />
 
 				<label id='answer-box-label' for='answer-box'></label>
+				<label id='correction-label'></label>
 				<input id='answer-box' type='text' />
 
 				<button id='check-button'></button>
@@ -117,6 +122,7 @@
 				<button id='new-list-button'></button>
 				<button id='load-list-button'></button>
 				<button id='save-list-button'></button>
+				<button id='remove-list-button'></button>
 <!--				<br />
 
 				<button id='import-from-file-button'></button>
@@ -163,6 +169,18 @@
 			<div data-role='content'>
 				<p id='load-explanation'></p>
 				<ul id='load-listview' data-filter="true" data-role='listview'>
+				</ul>
+			</div>
+		</div>
+
+		<!-- remove dialog -->
+		<div data-role='dialog' id='remove-dialog'>
+			<div data-role='header' data-theme='b'>
+				<h1 id='remove-header'></h1>
+			</div>
+			<div data-role='content'>
+				<p id='remove-explanation'></p>
+				<ul id='remove-listview' data-filter="true" data-role='listview'>
 				</ul>
 			</div>
 		</div>
