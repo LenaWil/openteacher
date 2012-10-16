@@ -25,6 +25,8 @@ try:
 	import simplejson as json
 except ImportError:
 	import json
+import urllib2
+import urllib
 
 class MobileGeneratorModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -83,8 +85,9 @@ class MobileGeneratorModule(object):
 		#get path to save to
 		try:
 			path = sys.argv[1]
+			minify = True if sys.argv[2] == "true" else False
 		except IndexError:
-			print >> sys.stderr, "Please specify a path to safe the mobile site to as last command line argument."
+			print >> sys.stderr, "Please specify a path to safe the mobile site to and 'true' if you want to minify as last command line arguments. (e.g. -p generate-mobile mobile-debug false)"
 			return
 		#ask if overwrite
 		if os.path.isdir(path):
@@ -93,9 +96,22 @@ class MobileGeneratorModule(object):
 				return
 			shutil.rmtree(path)
 
-		#copy static resources
+		#copy css
 		shutil.copytree(self._mm.resourcePath("css"), os.path.join(path, "css"))
-		shutil.copytree(self._mm.resourcePath("scr"), os.path.join(path, "scr"))
+		if minify:
+			#minify
+			for root, dirs, files in os.walk(os.path.join(path, "css")):
+				for file in files:
+					csspath = os.path.join(root, file)
+					if not csspath.endswith(".css"):
+						continue
+					with open(csspath, "r") as g:
+						data = g.read()
+					minifiedData = urllib2.urlopen("http://reducisaurus.appspot.com/css", urllib.urlencode({
+						"file": data,
+					})).read()
+					with open(csspath, "w") as f:
+						f.write(minifiedData)
 
 		#generate translation json files from po files
 		translationIndex = {}
@@ -119,25 +135,59 @@ class MobileGeneratorModule(object):
 			}
 
 			with open(os.path.join(path, "translations", jsonname), "w") as f:
-				json.dump(data, f, encoding="UTF-8")
+				json.dump(data, f, separators=(",", ":"), encoding="UTF-8")
 
 		translationIndex["en"] = {"name": self.languages["C"]}
 		with open(os.path.join(path, "translations", "index.js"), "w") as f:
-			data = json.dumps(translationIndex, f, encoding="UTF-8")
-			f.write("var translationIndex = (%s);" % data)
+			data = json.dumps(translationIndex, separators=(",", ":"), encoding="UTF-8")
+			f.write("var translationIndex=%s;" % data)
 
-		#generate logic.js
-		logic = ""
+		#generate logic javascript
+		logic = u""
 		for type in self._logicModTypes:
 			mod = self._modules.default("active", "javaScriptImplementation", type=type)
 			#add to logic code var with an additional tab before every
 			#line
 			logic += "\n\n\n\t" + "\n".join(map(lambda s: "\t" + s, mod.code.split("\n"))).strip()
 		logic = logic.strip()
-
 		template = pyratemp.Template(filename=self._mm.resourcePath("logic.js.templ"))
-		with open(os.path.join(path, "scr", "logic.js"), "w") as f:
-			f.write(template(code=logic))
+		logicCode = template(code=logic)
+
+		#copy scripts
+		scripts = [
+			"jquery-1.8.2.js",
+			"jquery.mobile-1.2.0.js",
+			"taboverride.js",
+			"jquery.taboverride.js",
+			"jsdiff.js",
+			"gui.js"
+		]
+
+		os.mkdir(os.path.join(path, "scr"))
+		if minify:
+			#combine scripts
+			data = logicCode
+			for script in scripts:
+				data += unicode(open(os.path.join(self._mm.resourcePath("scr"), script)).read(), encoding="UTF-8")
+			#minify
+			minifiedData = urllib2.urlopen("http://closure-compiler.appspot.com/compile", urllib.urlencode({
+				"compilation_level": "SIMPLE_OPTIMIZATIONS",
+				"output_info": "compiled_code",
+				"js_code": data.encode("UTF-8"),
+			})).read()
+			with open(os.path.join(path, "scr/js.js"), "w") as f:
+				f.write(minifiedData)
+			scripts = ["js.js"]
+		else:
+			#copy scripts
+			for script in scripts:
+				shutil.copy(
+					os.path.join(self._mm.resourcePath("scr"), script),
+					os.path.join(path, "scr", script)
+				)
+			with open(os.path.join(path, "scr", "logic.js"), "w") as f:
+				f.write(logicCode)
+			scripts.insert(0, "logic.js")
 
 		#generate html
 		headerTemplate = pyratemp.Template(filename=self._mm.resourcePath("header.html.templ"))
@@ -145,6 +195,7 @@ class MobileGeneratorModule(object):
 
 		template = pyratemp.Template(filename=self._mm.resourcePath("index.html.templ"))
 		result = template(**{
+			"scripts": scripts,
 			"enterTabHeader": headerTemplate(titleHeader="<h1 id='enter-list-header'></h1>"),
 			"teachTabHeader": headerTemplate(titleHeader="<h1 id='teach-me-header'></h1>"),
 			"enterTabFooter": footerTemplate(tab="enter"),
@@ -153,6 +204,18 @@ class MobileGeneratorModule(object):
 		#write html to index.html
 		with open(os.path.join(path, "index.html"), "w") as f:
 			f.write(result)
+
+		#copy config.xml (phonegap config)
+		shutil.copy(
+			self._mm.resourcePath("config.xml"),
+			os.path.join(path, "config.xml")
+		)
+
+		#copy COPYING
+		shutil.copy(
+			self._mm.resourcePath("COPYING.txt"),
+			os.path.join(path, "COPYING.txt")
+		)
 
 		print "Writing OpenTeacher mobile to '%s' is now done." % path
 

@@ -24,15 +24,10 @@
 
 		<link type='text/css' rel='stylesheet' href='css/themes/default/jquery.mobile-1.2.0.css' />
 
-		<script type='text/javascript' src='scr/jquery-1.8.2.js'></script>
-		<script type='text/javascript' src='scr/jquery.mobile-1.2.0.js'></script>
-		<script type='text/javascript' src='scr/taboverride.js'></script>
-		<script type='text/javascript' src='scr/jquery.taboverride.js'></script>
-		<script type='text/javascript' src='scr/jsdiff.js'></script>
-
 		<script type='text/javascript' src='translations/index.js'></script>
-		<script type='text/javascript' src='scr/logic.js'></script>
-		<script type='text/javascript' src='scr/gui.js'></script>
+		<!--(for script in scripts)-->
+		<script type='text/javascript' src='scr/@!script!@'></script>
+		<!--(end)-->
 
 		<style type='text/css'>
 			#missing-separator-popup, #overwrite-popup {
@@ -194,6 +189,7 @@
 				<label id='language-select-label' for='language-select'></label>
 				<select id='language-select'>
 				</select>
+				<a href='COPYING.txt' rel='external' id='copyright-info-link'></button>
 			</div>
 		</div>
 	</body>

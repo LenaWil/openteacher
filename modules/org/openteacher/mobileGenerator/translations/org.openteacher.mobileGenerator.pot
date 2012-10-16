@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.0\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-16 14:07+0200\n"
+"POT-Creation-Date: 2012-10-16 20:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: scr/gui.js:165 scr/gui.js:510
+#: scr/gui.js:165 scr/gui.js:502
 msgid "List management"
 msgstr ""
 
@@ -81,7 +81,7 @@ msgstr ""
 msgid "Please choose the list you want to remove."
 msgstr ""
 
-#: scr/gui.js:242 scr/gui.js:505
+#: scr/gui.js:242 scr/gui.js:497
 msgid "Options"
 msgstr ""
 
@@ -89,68 +89,72 @@ msgstr ""
 msgid "Language:"
 msgstr ""
 
-#: scr/gui.js:265 scr/gui.js:508
+#: scr/gui.js:244
+msgid "Copyright info"
+msgstr ""
+
+#: scr/gui.js:266 scr/gui.js:500
 msgid "Enter list"
 msgstr ""
 
-#: scr/gui.js:266
+#: scr/gui.js:267
 msgid "Word list:"
 msgstr ""
 
-#: scr/gui.js:267
+#: scr/gui.js:268
 msgid ""
 "Welcome = Welkom\n"
 "to = bij\n"
 "OpenTeacher mobile = OpenTeacher mobile\n"
 msgstr ""
 
-#: scr/gui.js:269
+#: scr/gui.js:270
 msgid "Error"
 msgstr ""
 
-#: scr/gui.js:270
+#: scr/gui.js:271
 msgid "Missing equals sign or tab"
 msgstr ""
 
-#: scr/gui.js:271
+#: scr/gui.js:272
 msgid ""
 "Please make sure every line contains an '='-sign or tab between the "
 "questions and answers."
 msgstr ""
 
-#: scr/gui.js:272 scr/gui.js:463
+#: scr/gui.js:273 scr/gui.js:464
 msgid "Ok"
 msgstr ""
 
-#: scr/gui.js:453 scr/gui.js:509
+#: scr/gui.js:454 scr/gui.js:501
 msgid "Teach me!"
 msgstr ""
 
-#: scr/gui.js:454
+#: scr/gui.js:455
 msgid "Question:"
 msgstr ""
 
-#: scr/gui.js:455
+#: scr/gui.js:456
 msgid "Answer:"
 msgstr ""
 
-#: scr/gui.js:456
+#: scr/gui.js:457
 msgid "Check!"
 msgstr ""
 
-#: scr/gui.js:457
+#: scr/gui.js:458
 msgid "Skip"
 msgstr ""
 
-#: scr/gui.js:458
+#: scr/gui.js:459
 msgid "Correct anyway"
 msgstr ""
 
-#: scr/gui.js:461 scr/gui.js:462
+#: scr/gui.js:462 scr/gui.js:463
 msgid "Test completed!"
 msgstr ""
 
-#: scr/gui.js:464
+#: scr/gui.js:465
 #, python-format
 msgid "Your note: %s"
 msgstr ""

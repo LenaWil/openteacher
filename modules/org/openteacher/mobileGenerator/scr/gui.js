@@ -241,6 +241,7 @@
 			retranslate: function (_) {
 				$("#options-header").text(_("Options"));
 				$("#language-select-label").text(_("Language:"));
+				$("#copyright-info-link").text(_("Copyright info"));
 			},
 			getLanguage: getLanguage
 		};
