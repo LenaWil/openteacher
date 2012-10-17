@@ -7,49 +7,49 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-10 20:48+0200\n"
+"POT-Creation-Date: 2012-10-01 15:35+0200\n"
 "PO-Revision-Date: 2012-10-01 13:35+0000\n"
 "Last-Translator: Pierre Slamich <pierre.slamich@gmail.com>\n"
 "Language-Team: French <fr@li.org>\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-02 05:35+0000\n"
-"X-Generator: Launchpad (build 16061)\n"
+"X-Launchpad-Export-Date: 2012-10-17 04:44+0000\n"
+"X-Generator: Launchpad (build 16152)\n"
+"Language: fr\n"
 
 #: words.py:59
 msgid "I'm ready, start the lesson!"
 msgstr "Je suis prêt, démarrez la leçon!"
 
-#: words.py:61 words.py:423
+#: words.py:61 words.py:406
 msgid "Lesson settings"
 msgstr "Paramètres de la leçon"
 
-#: words.py:121
+#: words.py:119
 msgid "Change lesson settings"
 msgstr "Modifier les paramètres de leçon"
 
-#: words.py:122
+#: words.py:120
 msgid "Word:"
 msgstr "Mot :"
 
-#: words.py:415
+#: words.py:398
 msgid "Lesson type"
 msgstr "Type de leçon"
 
-#: words.py:416
+#: words.py:399
 msgid "Word list order and filters"
 msgstr "Ordre et filtres de la liste de mots"
 
-#: words.py:417
+#: words.py:400
 msgid "Word modifications"
 msgstr "Modifications de mots"
 
-#: words.py:418
+#: words.py:401
 msgid "Don't show this screen again when I start a lesson."
 msgstr "Ne pas afficher cet écran quand je commence une leçon."
 
-#: words.py:422
+#: words.py:405
 msgid "Words lesson"
 msgstr "Leçon de mots"

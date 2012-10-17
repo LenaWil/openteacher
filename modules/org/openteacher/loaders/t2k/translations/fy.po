@@ -6,20 +6,19 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-10 20:47+0200\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-10-01 15:35+0200\n"
 "PO-Revision-Date: 2012-10-03 15:45+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Frisian <fy@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-04 05:44+0000\n"
-"X-Generator: Launchpad (build 16061)\n"
+"X-Launchpad-Export-Date: 2012-10-17 04:45+0000\n"
+"X-Generator: Launchpad (build 16152)\n"
 
 #. TRANSLATORS: This is the name of an application. For more info
 #. TRANSLATORS: about Teach2000: http://www.teach2000.org/
-#: t2k.py:63
+#: t2k.py:65
 msgid "Teach2000"
 msgstr "Teach2000"

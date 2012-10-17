@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-10 20:48+0200\n"
+"POT-Creation-Date: 2012-10-01 15:36+0200\n"
 "PO-Revision-Date: 2012-04-24 10:18+0000\n"
 "Last-Translator: Mohamed Rizmi <Unknown>\n"
 "Language-Team: Sinhalese <si@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-02 05:35+0000\n"
-"X-Generator: Launchpad (build 16061)\n"
+"X-Launchpad-Export-Date: 2012-10-17 04:44+0000\n"
+"X-Generator: Launchpad (build 16152)\n"
+"Language: \n"
 
 #: inputTyping.py:65
 msgid "Check!"
@@ -39,22 +39,22 @@ msgstr ""
 msgid "Corrected"
 msgstr ""
 
-#: inputTyping.py:187
+#: inputTyping.py:183
 msgid "Correct answer: <b>{answers}</b> [{diff}]"
 msgstr ""
 
-#: inputTyping.py:189
+#: inputTyping.py:185
 msgid "Correct answer: <b>{answers}</b>"
 msgstr ""
 
-#: inputTyping.py:287
+#: inputTyping.py:282
 msgid "Fade duration when wrong (milliseconds)"
 msgstr ""
 
-#: inputTyping.py:288
+#: inputTyping.py:283
 msgid "Lesson"
 msgstr ""
 
-#: inputTyping.py:289
+#: inputTyping.py:284
 msgid "Words lesson"
 msgstr ""
