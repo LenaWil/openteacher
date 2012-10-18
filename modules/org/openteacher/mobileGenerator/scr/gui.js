@@ -256,7 +256,8 @@
 
 		return {
 			newList: function () {
-				$("#list-textarea").val(newText).textinput();
+				//keyup so jqm adjusts the textarea size.
+				$("#list-textarea").val(newText).keyup();
 			},
 			setupUi: function () {
 				$("#list-textarea").tabOverride();
@@ -309,12 +310,13 @@
 			answerBox = $("#answer-box");
 			text = answerBox.val();
 			result = logic.check(text, currentItem);
+
+			//disable the button for now, it stays that way or it's
+			//re-enabled *after* the animation
+			$("#correct-anyway-button").button("disable");
 			if (result.result === "right") {
-				$("#correct-anyway-button").button("disable");
 				lessonType.setResult(result);
 			} else {
-				$("#correct-anyway-button").button("enable");
-
 				correctionLabel = $("#correction-label");
 
 				goodAnswer = logic.compose(currentItem.answers);
@@ -345,6 +347,7 @@
 
 		animationEnd = function (answerBox, correctionLabel, result) {
 			answerBox.show();
+			$("#correct-anyway-button").button("enable");
 
 			lessonType.setResult(result);
 		}

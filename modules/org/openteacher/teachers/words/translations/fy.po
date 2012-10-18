@@ -7,49 +7,48 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-01 15:35+0200\n"
+"POT-Creation-Date: 2012-10-18 14:53+0200\n"
 "PO-Revision-Date: 2012-07-15 13:18+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Frisian <fy@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-10-17 04:44+0000\n"
 "X-Generator: Launchpad (build 16152)\n"
-"Language: \n"
 
 #: words.py:59
 msgid "I'm ready, start the lesson!"
 msgstr "Ik bin der klear foar, start de les!"
 
-#: words.py:61 words.py:406
+#: words.py:61 words.py:427
 msgid "Lesson settings"
 msgstr "Lesynstellings"
 
-#: words.py:119
+#: words.py:121
 msgid "Change lesson settings"
 msgstr "Lesynstellings feroarje"
 
-#: words.py:120
+#: words.py:122
 msgid "Word:"
 msgstr "Wurd:"
 
-#: words.py:398
+#: words.py:419
 msgid "Lesson type"
 msgstr "Lestype"
 
-#: words.py:399
+#: words.py:420
 msgid "Word list order and filters"
 msgstr "Wurdsjeslistfolchoarder en -filters"
 
-#: words.py:400
+#: words.py:421
 msgid "Word modifications"
 msgstr "Wurdoanpassings"
 
-#: words.py:401
-msgid "Don't show this screen again when I start a lesson."
-msgstr "Lit dit skerm net mear sjen wannear't ik de les begjin."
-
-#: words.py:405
+#: words.py:426
 msgid "Words lesson"
 msgstr "Wurdsjesles"
+
+#~ msgid "Don't show this screen again when I start a lesson."
+#~ msgstr "Lit dit skerm net mear sjen wannear't ik de les begjin."

@@ -34,7 +34,7 @@ class TeachSettingsWidget(QtGui.QWidget):
 		self.startLessonButton = QtGui.QPushButton()
 		self.formLayout = QtGui.QFormLayout()
 
-		self._settingsKeys = ["lessonType", "listModifiers", "itemModifiers", "dontShowAgain"]
+		self._settingsKeys = ["lessonType", "listModifiers", "itemModifiers"]#, "dontShowAgain"]
 		for key in self._settingsKeys:
 			setting = settings[key]
 			try:
@@ -135,6 +135,9 @@ class TeachWidget(QtGui.QStackedWidget):
 	def __init__(self, moduleManager, modules, settings, widgets, keyboardWidget, applicationActivityChanged, *args, **kwargs):
 		super(TeachWidget, self).__init__(*args, **kwargs)
 
+		#FIXME > 3.0: get rid of the module manager in this widget, move
+		#that logic to the module class and pass to the constructor
+		#instead.
 		self._mm = moduleManager
 		self._modules = modules
 		self._settings = settings
@@ -381,11 +384,12 @@ class WordsTeacherModule(object):
 				"options": itemModifierOptions,
 				"defaultValue": itemModifierOptions[0][1],
 			}),
-			"dontShowAgain": registerSetting(**{
-				"internal_name": "org.openteacher.teachers.words.dontShowAgain",
-				"type": "boolean",
-				"defaultValue": False,
-			}),
+#FIXME: make this actually work... :S
+#			"dontShowAgain": registerSetting(**{
+#				"internal_name": "org.openteacher.teachers.words.dontShowAgain",
+#				"type": "boolean",
+#				"defaultValue": False,
+#			}),
 		}
 
 		try:
@@ -415,7 +419,7 @@ class WordsTeacherModule(object):
 		self._settings["lessonType"]["name"] = _("Lesson type")
 		self._settings["listModifiers"]["name"] = _("Word list order and filters")
 		self._settings["itemModifiers"]["name"] = _("Word modifications")
-		self._settings["dontShowAgain"]["name"] = _("Don't show this screen again when I start a lesson.")
+#		self._settings["dontShowAgain"]["name"] = _("Don't show this screen again when I start a lesson.")
 
 		for setting in self._settings.values():
 			setting.update({

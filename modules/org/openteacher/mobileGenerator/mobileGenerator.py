@@ -28,6 +28,8 @@ except ImportError:
 import urllib2
 import urllib
 
+from PyQt4 import QtCore, QtGui
+
 class MobileGeneratorModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(MobileGeneratorModule, self).__init__(*args, **kwargs)
@@ -38,6 +40,7 @@ class MobileGeneratorModule(object):
 		self.requires = [
 			self._mm.mods(type="execute"),
 			self._mm.mods(subType="languageChooser"),
+			self._mm.mods(type="metadata"),
 		]
 		self._logicModTypes = [
 			#wordsString
@@ -80,6 +83,34 @@ class MobileGeneratorModule(object):
 		if "languages" not in cache:
 			cache["languages"] = self._modules.default("active", subType="languageChooser").languages
 		return cache["languages"]
+
+	def _buildSplash(self, width, height, iconPath):
+		#build splash.png
+		image = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32)
+		painter = QtGui.QPainter(image)
+
+		#it currently is 128x128, but this way a new future icon render/
+		#new icon won't mess up this code.
+		icon = QtGui.QImage(iconPath).scaled(128, 128)
+		painter.setBrush(QtGui.QColor(209, 233, 250))
+		painter.drawRect(0, 0, image.width(), image.height())
+
+		#horizontally centered, vertically at 1/4
+		painter.drawImage(QtCore.QPointF(
+			(image.width() - icon.width()) / 2.0,
+			image.height() / 4.0,
+		), icon)
+
+		#text, at 2/3
+		painter.setFont(QtGui.QFont("Ubuntu", 32))
+		painter.drawText(QtCore.QRectF(
+			0,
+			image.height() / 3.0 * 2.0, image.width(),
+			image.height() / 3.0
+		), QtCore.Qt.AlignHCenter, "OpenTeacher")
+
+		painter.end()
+		return image
 
 	def _run(self):
 		#get path to save to
@@ -215,6 +246,20 @@ class MobileGeneratorModule(object):
 		shutil.copy(
 			self._mm.resourcePath("COPYING.txt"),
 			os.path.join(path, "COPYING.txt")
+		)
+
+		#graphics
+		iconPath = self._modules.default("active", type="metadata").metadata["iconPath"]
+
+		#copy icon.png
+		shutil.copy(
+			iconPath,
+			os.path.join(path, "icon.png")
+		)
+
+		#splash screen
+		self._buildSplash(320, 480, iconPath).save(
+			os.path.join(path, "splash.png")
 		)
 
 		print "Writing OpenTeacher mobile to '%s' is now done." % path

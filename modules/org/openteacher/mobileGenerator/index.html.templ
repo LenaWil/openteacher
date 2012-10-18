@@ -20,15 +20,12 @@
 <html>
 	<head>
 		<meta charset='UTF-8' />
+
 		<meta name='viewport' content='widget=device-width, initial-scale=1' />
+		<meta name='apple-mobile-web-app-capable' content='yes' />
+		<link rel='icon' type='image/png' href='openteacher.png' />
 
 		<link type='text/css' rel='stylesheet' href='css/themes/default/jquery.mobile-1.2.0.css' />
-
-		<script type='text/javascript' src='translations/index.js'></script>
-		<!--(for script in scripts)-->
-		<script type='text/javascript' src='scr/@!script!@'></script>
-		<!--(end)-->
-
 		<style type='text/css'>
 			#missing-separator-popup, #overwrite-popup {
 				max-width: 400px;
@@ -43,6 +40,11 @@
 				font-size: 24pt;
 			}
 		</style>
+
+		<script type='text/javascript' src='translations/index.js'></script>
+		<!--(for script in scripts)-->
+		<script type='text/javascript' src='scr/@!script!@'></script>
+		<!--(end)-->
 	</head>
 	<body>
 		<!-- enter page -->
@@ -163,7 +165,7 @@
 			</div>
 			<div data-role='content'>
 				<p id='load-explanation'></p>
-				<ul id='load-listview' data-filter="true" data-role='listview'>
+				<ul id='load-listview' data-filter='true' data-role='listview'>
 				</ul>
 			</div>
 		</div>
@@ -175,7 +177,7 @@
 			</div>
 			<div data-role='content'>
 				<p id='remove-explanation'></p>
-				<ul id='remove-listview' data-filter="true" data-role='listview'>
+				<ul id='remove-listview' data-filter='true' data-role='listview'>
 				</ul>
 			</div>
 		</div>

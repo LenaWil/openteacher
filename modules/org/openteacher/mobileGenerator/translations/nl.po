@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.0\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-16 20:18+0200\n"
+"POT-Creation-Date: 2012-10-18 14:44+0200\n"
 "PO-Revision-Date: 2012-10-16 20:18+0100\n"
 "Last-Translator: Marten de Vries <marten94@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,8 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: scr/gui.js:165
-#: scr/gui.js:502
+#: scr/gui.js:165 scr/gui.js:505
 msgid "List management"
 msgstr "Lijstbeheer"
 
@@ -25,24 +24,23 @@ msgstr "Lijstbeheer"
 msgid "New list"
 msgstr "Nieuwe lijst"
 
-#: scr/gui.js:167
-#: scr/gui.js:184
+#: scr/gui.js:167 scr/gui.js:184
 msgid "Load list"
 msgstr "Laad lijst"
 
-#: scr/gui.js:168
-#: scr/gui.js:172
+#: scr/gui.js:168 scr/gui.js:172
 msgid "Save list"
 msgstr "Sla lijst op"
 
-#: scr/gui.js:169
-#: scr/gui.js:189
+#: scr/gui.js:169 scr/gui.js:189
 msgid "Remove list"
 msgstr "Verwijder lijst"
 
 #: scr/gui.js:173
 msgid "Please choose a name for the current list, so it can be saved."
-msgstr "Kies alstublieft een naam voor de huidige lijst, zodat die opgeslagen kan worden."
+msgstr ""
+"Kies alstublieft een naam voor de huidige lijst, zodat die opgeslagen kan "
+"worden."
 
 #: scr/gui.js:174
 msgid "Name:"
@@ -76,8 +74,7 @@ msgstr "Nee"
 msgid "Please choose the list you want to load."
 msgstr "Kies alstublieft de lijst die u wilt laden."
 
-#: scr/gui.js:186
-#: scr/gui.js:191
+#: scr/gui.js:186 scr/gui.js:191
 msgid "Filter lists..."
 msgstr "Filter lijsten..."
 
@@ -85,8 +82,7 @@ msgstr "Filter lijsten..."
 msgid "Please choose the list you want to remove."
 msgstr "Kies alstublieft de lijst die u wilt verwijderen."
 
-#: scr/gui.js:242
-#: scr/gui.js:497
+#: scr/gui.js:242 scr/gui.js:500
 msgid "Options"
 msgstr "Opties"
 
@@ -98,16 +94,15 @@ msgstr "Taal:"
 msgid "Copyright info"
 msgstr "Copyrightinformatie"
 
-#: scr/gui.js:266
-#: scr/gui.js:500
+#: scr/gui.js:267 scr/gui.js:503
 msgid "Enter list"
 msgstr "Lijst invoeren"
 
-#: scr/gui.js:267
+#: scr/gui.js:268
 msgid "Word list:"
 msgstr "Woordjeslijst:"
 
-#: scr/gui.js:268
+#: scr/gui.js:269
 msgid ""
 "Welcome = Welkom\n"
 "to = bij\n"
@@ -117,54 +112,55 @@ msgstr ""
 "to = bij\n"
 "OpenTeacher mobile = OpenTeacher mobile\n"
 
-#: scr/gui.js:270
+#: scr/gui.js:271
 msgid "Error"
 msgstr "Probleem"
 
-#: scr/gui.js:271
+#: scr/gui.js:272
 msgid "Missing equals sign or tab"
 msgstr "Missend gelijkheidsteken of tab"
 
-#: scr/gui.js:272
-msgid "Please make sure every line contains an '='-sign or tab between the questions and answers."
-msgstr "Zorg er alstublieft voor dat iedereen lijn een '='-teken of een tab bevat tussen de vragen en antwoorden."
-
 #: scr/gui.js:273
-#: scr/gui.js:464
+msgid ""
+"Please make sure every line contains an '='-sign or tab between the "
+"questions and answers."
+msgstr ""
+"Zorg er alstublieft voor dat iedereen lijn een '='-teken of een tab bevat "
+"tussen de vragen en antwoorden."
+
+#: scr/gui.js:274 scr/gui.js:467
 msgid "Ok"
 msgstr "Ok"
 
-#: scr/gui.js:454
-#: scr/gui.js:501
+#: scr/gui.js:457 scr/gui.js:504
 msgid "Teach me!"
 msgstr "Overhoor me!"
 
-#: scr/gui.js:455
+#: scr/gui.js:458
 msgid "Question:"
 msgstr "Vraag:"
 
-#: scr/gui.js:456
+#: scr/gui.js:459
 msgid "Answer:"
 msgstr "Antwoord:"
 
-#: scr/gui.js:457
+#: scr/gui.js:460
 msgid "Check!"
 msgstr "Controleer!"
 
-#: scr/gui.js:458
+#: scr/gui.js:461
 msgid "Skip"
 msgstr "Overslaan"
 
-#: scr/gui.js:459
+#: scr/gui.js:462
 msgid "Correct anyway"
 msgstr "Toch goed"
 
-#: scr/gui.js:462
-#: scr/gui.js:463
+#: scr/gui.js:465 scr/gui.js:466
 msgid "Test completed!"
 msgstr "Overhoring compleet!"
 
-#: scr/gui.js:465
+#: scr/gui.js:468
 #, python-format
 msgid "Your note: %s"
 msgstr "Uw cijfer: %s"

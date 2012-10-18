@@ -19,6 +19,8 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import code
+import sys
+import __builtin__
 
 BANNER_TEMPL = """Welcome to the {appname} {appversion} interactive Python shell!
 
@@ -42,6 +44,23 @@ class ShellModule(object):
 		)
 
 	def _run(self):
+		def f(s):
+			d = {}
+			for c in (65, 97):
+				for i in range(26):
+					d[chr(i+c)] = chr((i+13) % 26 + c)
+
+			return "".join([d.get(c, c) for c in s])
+
+		realImport = __builtin__.__import__
+		def myImport(name, *args, **kwargs):
+			firstTime = f("guvf") not in sys.modules
+			result = realImport(name, *args, **kwargs)
+			if name == f("guvf") and firstTime:
+				print f("Clguba zbqhyrf ner pbby, BcraGrnpure zbqhyrf ner orggre!")
+			return result
+		__builtin__.__import__ = myImport
+
 		banner = BANNER_TEMPL.format(**{
 			"appname": self._metadata["name"],
 			"appversion": self._metadata["version"],
