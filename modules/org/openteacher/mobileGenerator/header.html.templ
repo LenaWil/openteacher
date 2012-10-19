@@ -15,7 +15,14 @@
 #!	You should have received a copy of the GNU General Public License
 #!	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 #!
-<div data-role='header' data-position='fixed' data-id='header'>
+<div data-role='header' data-id='header'>
 	$!titleHeader!$
 	<a href="#options-dialog" data-icon="gear" class="options-dialog-link ui-btn-right"></a>
+	<div class='navbar' data-role='navbar'>
+		<ul>
+			<li><a href='#enter-page' class='enter-page-link<!--(if tab == "enter")--> ui-btn-active ui-state-persist<!--(end)-->' data-icon='data-plus'></a></li>
+			<li><a href='#teach-page' class='teach-page-link<!--(if tab == "teach")--> ui-btn-active ui-state-persist<!--(end)-->' data-icon='check'></a></li>
+			<li><a id='list-management-dialog-link' href='#list-management-dialog' data-icon='gear'></a></li>
+		</ul>
+	</div>
 </div>

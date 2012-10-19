@@ -222,15 +222,12 @@ class MobileGeneratorModule(object):
 
 		#generate html
 		headerTemplate = pyratemp.Template(filename=self._mm.resourcePath("header.html.templ"))
-		footerTemplate = pyratemp.Template(filename=self._mm.resourcePath("footer.html.templ"))
 
 		template = pyratemp.Template(filename=self._mm.resourcePath("index.html.templ"))
 		result = template(**{
 			"scripts": scripts,
-			"enterTabHeader": headerTemplate(titleHeader="<h1 id='enter-list-header'></h1>"),
-			"teachTabHeader": headerTemplate(titleHeader="<h1 id='teach-me-header'></h1>"),
-			"enterTabFooter": footerTemplate(tab="enter"),
-			"teachTabFooter": footerTemplate(tab="teach"),
+			"enterTabHeader": headerTemplate(titleHeader="<h1 id='enter-list-header'></h1>", tab="enter"),
+			"teachTabHeader": headerTemplate(titleHeader="<h1 id='teach-me-header'></h1>", tab="teach"),
 		})
 		#write html to index.html
 		with open(os.path.join(path, "index.html"), "w") as f:

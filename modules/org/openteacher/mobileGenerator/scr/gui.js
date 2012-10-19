@@ -500,8 +500,8 @@
 			$(".options-dialog-link .ui-btn-text").text(_("Options"));
 
 			//footer menu
-			$("#enter-page-link .ui-btn-text").text(_("Enter list"));
-			$("#teach-page-link .ui-btn-text").text(_("Teach me!"));
+			$(".enter-page-link .ui-btn-text").text(_("Enter list"));
+			$(".teach-page-link .ui-btn-text").text(_("Teach me!"));
 			$("#list-management-dialog-link .ui-btn-text").text(_("List management"));
 
 			//retranslate all tabs & dialogs
@@ -587,8 +587,8 @@
 				if (!success) {
 					//set the enter tab as active again on the navbar
 					//(jqm doesn't seem to do that on preventDefault())
-					$("#teach-page-link").removeClass("ui-btn-active ui-state-persist");
-					$("#enter-page-link").addClass("ui-btn-active ui-state-persist");
+					$(".teach-page-link").removeClass("ui-btn-active ui-state-persist");
+					$(".enter-page-link").addClass("ui-btn-active ui-state-persist");
 
 					//not going to that page
 					event.preventDefault();
