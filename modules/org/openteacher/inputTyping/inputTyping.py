@@ -151,9 +151,12 @@ class InputTypingWidget(QtGui.QWidget):
 		for item in self.lessonType.list.get("items", []):
 			if item["questions"] == self.word["questions"]:
 				answers.extend(item["answers"])
-			if item["answers"] == self.word["questions"]:
+			elif item["answers"] == self.word["questions"]:
 				#handy in the case that the word list is reversed.
 				#FIXME > 3.0: maybe this needs a cleaner solution...
+				#
+				#uses elif so 'six = six' (english - french) doesn't
+				#result in 1. six 2. six
 				answers.extend(item["questions"])
 
 		tempWord = self.word.copy()
