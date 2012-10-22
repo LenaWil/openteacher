@@ -1,5 +1,6 @@
 /*
 	Copyright 2012, Marten de Vries
+	Copyright 2012, Milan Boers
 
 	This file is part of OpenTeacher.
 
@@ -22,9 +23,9 @@
 
 (function () {
 	"use strict";
-	var gui, listManagementDialog, optionsDialog, enterTab, teachTab;
+	var gui, menuDialog, optionsDialog, enterTab, teachTab;
 
-	listManagementDialog = (function () {
+	menuDialog = (function () {
 		var newList, askWhichListToLoad, loadList, askSaveName,
 			saveList, getLessons, saveLessons, askWhichListToRemove,
 			removeList;
@@ -162,11 +163,12 @@
 			},
 			retranslate: function (_) {
 				//base dialog
-				$("#list-management-header").text(_("List management"));
+				$("#menu-header").text(_("Menu"));
 				$("#new-list-button").text(_("New list"));
 				$("#load-list-button").text(_("Load list"));
 				$("#save-list-button").text(_("Save list"));
 				$("#remove-list-button").text(_("Remove list"));
+				$("#options-button .ui-btn-text").text(_("Options"));
 
 				//save dialog (& overwrite popup)
 				$("#save-header").text(_("Save list"));
@@ -497,17 +499,17 @@
 			//header menu
 			//.ui-btn-text because it seems close to impossible to
 			//refresh a button based on a <a>-tag...
-			$(".options-dialog-link .ui-btn-text").text(_("Options"));
+			$(".menu-dialog-link .ui-btn-text").text(_("Menu"));
 
-			//footer menu
+			//tabs
 			$(".enter-page-link .ui-btn-text").text(_("Enter list"));
 			$(".teach-page-link .ui-btn-text").text(_("Teach me!"));
-			$("#list-management-dialog-link .ui-btn-text").text(_("List management"));
+			//$("#list-management-dialog-link .ui-btn-text").text(_("List management"));
 
 			//retranslate all tabs & dialogs
 			enterTab.retranslate(_);
 			teachTab.retranslate(_);
-			listManagementDialog.retranslate(_);
+			menuDialog.retranslate(_);
 			optionsDialog.retranslate(_);
 
 			try {
@@ -539,6 +541,16 @@
 				});
 			}
 		};
+		
+		function onDeviceReady() {
+			// Connect buttons to functions
+			document.addEventListener("menubutton", onMenuKeyDown, false);
+		}
+		
+		function onMenuKeyDown() {
+			// Make the menu button on Android work
+			$.mobile.changePage('#menu-dialog','pop',false,true);
+		}
 
 		main = function () {
 			//translate the GUI for the first time. Delay the other set
@@ -549,14 +561,17 @@
 					//setup UI
 					enterTab.setupUi();
 					teachTab.setupUi();
-					listManagementDialog.setupUi();
+					menuDialog.setupUi();
 
 					//start with a new word list
 					enterTab.newList();
 
 					//make sure the options dialog is ready to be shown
 					optionsDialog.setupSettings();
-
+					
+					//do what needs to be done after the device is ready
+					document.addEventListener("deviceready", onDeviceReady, false);
+					
 					//this part of main() is supposed to only run once.
 					setupDone = true;
 				}

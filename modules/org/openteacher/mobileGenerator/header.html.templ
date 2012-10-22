@@ -1,4 +1,5 @@
 #!	Copyright 2012, Marten de Vries
+#!	Copyright 2012, Milan Boers
 #!
 #!	This file is part of OpenTeacher.
 #!
@@ -17,12 +18,11 @@
 #!
 <div data-role='header' data-id='header'>
 	$!titleHeader!$
-	<a href="#options-dialog" data-icon="gear" class="options-dialog-link ui-btn-right"></a>
+	<a href="#menu-dialog" data-icon="gear" class="menu-dialog-link ui-btn-right"></a>
 	<div class='navbar' data-role='navbar'>
 		<ul>
-			<li><a href='#enter-page' class='enter-page-link<!--(if tab == "enter")--> ui-btn-active ui-state-persist<!--(end)-->' data-icon='data-plus'></a></li>
-			<li><a href='#teach-page' class='teach-page-link<!--(if tab == "teach")--> ui-btn-active ui-state-persist<!--(end)-->' data-icon='check'></a></li>
-			<li><a id='list-management-dialog-link' href='#list-management-dialog' data-icon='gear'></a></li>
+			<li><a href='#enter-page' class='enter-page-link<!--(if tab == "enter")--> ui-btn-active ui-state-persist<!--(end)-->' data-transition='none' data-icon='data-plus'></a></li>
+			<li><a href='#teach-page' class='teach-page-link<!--(if tab == "teach")--> ui-btn-active ui-state-persist<!--(end)-->' data-transition='none' data-icon='check'></a></li>
 		</ul>
 	</div>
 </div>

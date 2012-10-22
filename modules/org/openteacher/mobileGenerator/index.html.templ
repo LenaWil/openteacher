@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <!--
 	Copyright 2012, Marten de Vries
+	Copyright 2012, Milan Boers
 
 	This file is part of OpenTeacher.
 
@@ -21,8 +22,9 @@
 	<head>
 		<meta charset='UTF-8' />
 
-		<meta name='viewport' content='widget=device-width, initial-scale=1' />
+		<meta name='viewport' content='width=device-width, initial-scale=1' />
 		<meta name='apple-mobile-web-app-capable' content='yes' />
+		<title>OpenTeacher Mobile</title>
 		<link rel='icon' type='image/png' href='openteacher.png' />
 
 		<link type='text/css' rel='stylesheet' href='css/themes/default/jquery.mobile-1.2.0.css' />
@@ -39,9 +41,24 @@
 			#correction-label {
 				font-size: 24pt;
 			}
+			#enter-page {
+				position: relative;
+			}
+			#enter-page .ui-content {
+				margin: 0;
+				padding: 0;
+				width: 100%;
+			}
+			#list-textarea {
+				width: 100%;
+				height: 350px;
+				margin: 0;
+				border-radius: 0px;
+			}
 		</style>
 
 		<script type='text/javascript' src='translations/index.js'></script>
+		<script type='text/javascript' src='cordova.js'></script>
 		<!--(for script in scripts)-->
 		<script type='text/javascript' src='scr/@!script!@'></script>
 		<!--(end)-->
@@ -51,8 +68,7 @@
 		<div data-role='page' id='enter-page'>
 			$!enterTabHeader!$
 			<div data-role='content'>
-				<label id='word-list-label' for='list-textarea'></label>
-				<textarea id='list-textarea' autocorrect='off' autocapitalize='off' spellcheck='false'></textarea>
+				<textarea id='list-textarea' spellcheck='false'></textarea>
 			</div>
 			<div id='missing-separator-popup' data-role='popup'>
 				<div data-role='header' data-theme='b'>
@@ -76,7 +92,7 @@
 		<div data-role='page' id='teach-page'>
 			$!teachTabHeader!$
 			<div data-role='content'>
-				<label id='question-label-label' for='answer-label'></label><br />
+				<label id='question-label-label'></label><br />
 				<label id='question-label'></label><br />
 
 				<label id='answer-box-label' for='answer-box'></label>
@@ -96,8 +112,9 @@
 				<input id='progress-bar' type='range' value='0' min='0' max='100' data-highlight='true' />
 			</div>
 		</div>
-
-		<div id='result-dialog' data-role='dialog'>
+		
+		<!-- result dialog -->
+		<div data-role='dialog' id='result-dialog'>
 			<div data-role='header' data-theme='b'>
 				<h1 id='result-header'></h1>
 			</div>
@@ -105,23 +122,6 @@
 				<strong id='result-title'></strong><br />
 				<span id='result-msg'></span>
 				<button id='result-ok-button'></button>
-			</div>
-		</div>
-
-		<!-- list management dialog -->
-		<div data-role='dialog' id='list-management-dialog'>
-			<div data-role='header' data-theme='b'>
-				<h1 id='list-management-header'></h1>
-			</div>
-			<div data-role='content'>
-				<button id='new-list-button'></button>
-				<button id='load-list-button'></button>
-				<button id='save-list-button'></button>
-				<button id='remove-list-button'></button>
-<!--				<br />
-
-				<button id='import-from-file-button'></button>
-				<button id='export-to-file-button'></button>-->
 			</div>
 		</div>
 
@@ -136,10 +136,7 @@
 				<input type='text' id='save-name-box' />
 				<button id='save-done-button'></button>
 			</div>
-			<div id='overwrite-popup' data-role='popup'>
-				<div data-role='header' data-theme='b'>
-					<h1 id='overwrite-header'></h1>
-				</div>
+			<div data-role='popup' id='overwrite-popup'>
 				<div data-role='content'>
 					<strong id='overwrite-title'></strong>
 					<p id='overwrite-msg'></p>
@@ -189,7 +186,21 @@
 				<label id='language-select-label' for='language-select'></label>
 				<select id='language-select'>
 				</select>
-				<a href='COPYING.txt' rel='external' id='copyright-info-link'></button>
+				<a href='COPYING.txt' rel='external' id='copyright-info-link'></a>
+			</div>
+		</div>
+		
+		<!-- menu dialog -->
+		<div data-role='dialog' id='menu-dialog'>
+			<div data-role='header' data-theme='b'>
+				<h1 id='menu-header'></h1>
+			</div>
+			<div data-role='content'>
+				<button id='new-list-button'></button>
+				<button id='load-list-button'></button>
+				<button id='save-list-button'></button>
+				<button id='remove-list-button'></button>
+				<a href='#options-dialog' id='options-button' data-role='button'></a>
 			</div>
 		</div>
 	</body>
