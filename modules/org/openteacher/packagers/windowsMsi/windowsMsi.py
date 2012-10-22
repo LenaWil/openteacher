@@ -50,37 +50,37 @@ wxs = """
 			<!-- otwd -->
 			<ProgId Id="OpenTeacher.otwd" Description="Open Teaching Words" Icon="openteacher.ico">
 				<Extension Id="otwd" ContentType="application/x-openteachingwords">
-				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%%1&quot;" />
+				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%1&quot;" />
 				</Extension>
 			</ProgId>
 			<!-- ottp -->
 			<ProgId Id="OpenTeacher.ottp" Description="Open Teaching Topography" Icon="openteacher.ico">
 				<Extension Id="ottp" ContentType="application/x-openteachingtopography">
-				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%%1&quot;" />
+				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%1&quot;" />
 				</Extension>
 			</ProgId>
 			<!-- otmd -->
 			<ProgId Id="OpenTeacher.otmd" Description="Open Teaching Media" Icon="openteacher.ico">
 				<Extension Id="otmd" ContentType="application/x-openteachingmedia">
-				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%%1&quot;" />
+				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%1&quot;" />
 				</Extension>
 			</ProgId>
 			<!-- ot -->
 			<ProgId Id="OpenTeacher.ot" Description="Open Teacher 2.x" Icon="openteacher.ico">
 				<Extension Id="ot" ContentType="application/x-openteacher">
-				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%%1&quot;" />
+				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%1&quot;" />
 				</Extension>
 			</ProgId>
 			<!-- t2k -->
 			<ProgId Id="OpenTeacher.t2k" Description="Teach 2000" Icon="openteacher.ico">
 				<Extension Id="t2k" ContentType="application/x-teach2000">
-				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%%1&quot;" />
+				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%1&quot;" />
 				</Extension>
 			</ProgId>
 			<!-- wrts -->
 			<ProgId Id="OpenTeacher.wrts" Description="WRTS" Icon="openteacher.ico">
 				<Extension Id="wrts" ContentType="application/x-wrts">
-				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%%1&quot;" />
+				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%1&quot;" />
 				</Extension>
 			</ProgId>
 			<CreateFolder/>
