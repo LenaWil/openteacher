@@ -57,6 +57,8 @@ class GetTranslationAuthorsModule(object):
 		lp = Launchpad.login_anonymously("Get OpenTeacher translators", "production", "~/.launchpadlib/cache/")
 		series = lp.projects["openteacher"].getSeries(name="3.x")
 		for template in series.getTranslationTemplates():
+			if not template.active:
+				continue
 			for translationFile in template.translation_files:
 				links.append(translationFile.web_link + "/+details")
 			print "processing template"

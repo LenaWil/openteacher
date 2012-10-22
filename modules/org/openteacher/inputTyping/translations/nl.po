@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-18 14:53+0200\n"
+"POT-Creation-Date: 2012-10-22 20:57+0200\n"
 "PO-Revision-Date: 2012-07-15 11:49+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,22 +39,22 @@ msgstr "Verbeterd: %s"
 msgid "Corrected"
 msgstr "Verbeterd"
 
-#: inputTyping.py:187
+#: inputTyping.py:190
 msgid "Correct answer: <b>{answers}</b> [{diff}]"
 msgstr "Goed antwoord: <b>{answers}</b> [{diff}]"
 
-#: inputTyping.py:189
+#: inputTyping.py:192
 msgid "Correct answer: <b>{answers}</b>"
 msgstr "Goed antwoord: <b>{answers}</b>"
 
-#: inputTyping.py:287
+#: inputTyping.py:290
 msgid "Fade duration when wrong (milliseconds)"
 msgstr "Lengte van het vervagen wanner fout geantwoord (milliseconden)"
 
-#: inputTyping.py:288
+#: inputTyping.py:291
 msgid "Lesson"
 msgstr "Les"
 
-#: inputTyping.py:289
+#: inputTyping.py:292
 msgid "Words lesson"
 msgstr "Woordjesles"

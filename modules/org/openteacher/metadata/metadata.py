@@ -78,12 +78,21 @@ class MetadataModule(object):
 			#Not translated because this is for the packaging only,
 			#packages are normally translated in other ways.
 			"short_description": "Your personal tutor",
-			"description": """Enter a list of words in both a known and a foreign language, and OpenTeacher tests you.
+			"description": """OpenTeacher is an opensource application that helps you learning a variety
+of subjects. You just enter the questions and the answers, or download them from
+the internet, and OpenTeacher tests you.
 
 OpenTeacher 3.0 has the following features:
-
- * blabla
- * some other features
+ * Viewing both recent and past results of tests with graphs
+ * Smart question asking and interval training
+ * Reverse rehearsal (the answer is asked, and you need to give the question)
+ * Read and write Teach2000, WRDS and OpenTeacher 2.x files and read ABBYY
+   Lingvo Tutor files
+ * Save and open your online WRDS vocabulary lists
+ * Print your word lists or topography maps
+ * (Partly) available in Arabic, Brazilian Portuguese, Simplified Chinese,
+   Traditional Chinese, Czech, Dutch, Finnish, French, Frisian, German, Greek,
+   Japanese and Spanish
 
 OpenTeacher is available for Linux, Windows and Mac OS X."""
 		}
