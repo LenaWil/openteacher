@@ -20,6 +20,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 
 class Loader(object):
 	def __init__(self, loadModule, guiModule, path, addToRecentlyOpened=None, *args, **kwargs):
@@ -31,6 +32,9 @@ class Loader(object):
 		self.addToRecentlyOpened = addToRecentlyOpened
 
 	def load(self):
+		if isinstance(self.path, unicode):
+			#recently opened case
+			self.path = self.path.encode(sys.getfilesystemencoding())
 		lesson = self.loadModule.load(self.path)
 		lesson.update({
 			"changed": False,
@@ -42,7 +46,7 @@ class Loader(object):
 			self.addToRecentlyOpened(**{
 				"label": lesson["list"].get("title", "") or os.path.basename(self.path),
 				"args": {},
-				"kwargs": {"path": self.path},
+				"kwargs": {"path": unicode(self.path, sys.getfilesystemencoding())},
 				"method": "load",
 				"moduleArgsSelectors": ["active"],
 				"moduleKwargsSelectors": {"type": "loader"},

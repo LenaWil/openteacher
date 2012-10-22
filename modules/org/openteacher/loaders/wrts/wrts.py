@@ -102,18 +102,21 @@ class WrtsLoaderModule(object):
 		}
 
 		#dutch: titel = title
-		wordList["title"] = listTree.findtext("titel")
+		wordList["title"] = listTree.findtext("titel") or u""
 		#dutch: taal = language
-		wordList["questionLanguage"] = listTree.findtext("taal/a")
-		wordList["answerLanguage"] = listTree.findtext("taal/b")
+		wordList["questionLanguage"] = listTree.findtext("taal/a") or u""
+		wordList["answerLanguage"] = listTree.findtext("taal/b") or u""
 
 		#change locale temporary; so strptime can do it's work the way
 		#it should.
 		locale.setlocale(locale.LC_ALL, "C")
-		wordList["created"] = datetime.datetime.strptime(
-			listTree.findtext("created").rsplit(" ", 1)[0], #strip tz info
-			"%a, %d %b %Y %H:%M:%S" #since our datetime objects are naive
-		)
+		try:
+			wordList["created"] = datetime.datetime.strptime(
+				listTree.findtext("created").rsplit(" ", 1)[0], #strip tz info
+				"%a, %d %b %Y %H:%M:%S" #since our datetime objects are naive
+			)
+		except ValueError:
+			pass
 		#set locale back to make sure conflicts don't arise with other
 		#modules depending on the locale.
 		locale.resetlocale()
@@ -132,8 +135,8 @@ class WrtsLoaderModule(object):
 			word["id"] = counter
 
 			wsp = self._modules.default("active", type="wordsStringParser")
-			word["questions"] = wsp.parse(wordTree.findtext("a"))
-			word["answers"] = wsp.parse(wordTree.findtext("b"))
+			word["questions"] = wsp.parse(wordTree.findtext("a") or u"")
+			word["answers"] = wsp.parse(wordTree.findtext("b") or u"")
 
 			wordList["items"].append(word)
 

@@ -105,8 +105,8 @@ class AbbyLoaderModule(object):
 		for wordTree in root.findall("card"):
 			word = {
 				"id": int(wordTree.find("./word").get("wordId")),
-				"questions": wsp.parse(wordTree.findtext("word")),
-				"answers": [[a.text for a in wordTree.findall("meanings/meaning/translations/word")]],
+				"questions": wsp.parse(wordTree.findtext("word") or u""),
+				"answers": [[a.text or u"" for a in wordTree.findall("meanings/meaning/translations/word")]],
 			}
 			wordList["items"].append(word)
 

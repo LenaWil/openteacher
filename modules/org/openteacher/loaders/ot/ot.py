@@ -101,9 +101,9 @@ class OpenTeacherLoaderModule(object):
 		root = ElementTree.parse(open(path)).getroot()
 
 		#Stores the title, question language and answer language
-		wordList["title"] = root.findtext("title")
-		wordList["questionLanguage"] = root.findtext("question_language")
-		wordList["answerLanguage"] = root.findtext("answer_language")
+		wordList["title"] = root.findtext("title") or u""
+		wordList["questionLanguage"] = root.findtext("question_language") or u""
+		wordList["answerLanguage"] = root.findtext("answer_language") or u""
 
 		#create one test, which is used for all results, because .ot
 		#doesn't support multiple tests.
@@ -120,18 +120,18 @@ class OpenTeacherLoaderModule(object):
 			}
 
 			#Parses the question
-			known = treeWord.findtext("known")
+			known = treeWord.findtext("known") or u""
 			listWord["questions"] = self._modules.default(
 				"active",
 				type="wordsStringParser"
 			).parse(known)
 
 			#Parses the answers
-			second = treeWord.findtext("second")
+			second = treeWord.findtext("second") or u""
 			if second is not None:
-				foreign = treeWord.findtext("foreign") + ", " + second
+				foreign = (treeWord.findtext("foreign") or u"") + ", " + second
 			else:
-				foreign = treeWord.findtext("foreign")
+				foreign = treeWord.findtext("foreign") or u""
 			#remove so the test is also reliable the next time
 			del second
 			listWord["answers"] = self._modules.default(
@@ -140,7 +140,7 @@ class OpenTeacherLoaderModule(object):
 			).parse(foreign)
 
 			#Parses the results, all are saved in the test made above.
-			wrong, total = treeWord.findtext("results").split("/")
+			wrong, total = (treeWord.findtext("results") or "0/0").split("/")
 			wrong = int(wrong)
 			total = int(total)
 			right = total - wrong

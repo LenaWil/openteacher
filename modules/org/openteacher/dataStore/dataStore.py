@@ -26,9 +26,9 @@ import atexit
 class JSONShelve(dict):
 	def __init__(self, filepath, *args, **kwargs):
 		super(JSONShelve, self).__init__(*args, **kwargs)
-		
+
 		self.filepath = filepath
-		
+
 		if os.path.exists(self.filepath):
 			fp = open(self.filepath, 'r')
 			d = json.load(fp)
@@ -38,7 +38,7 @@ class JSONShelve(dict):
 			fp.close()
 		else:
 			pass
-	
+
 	def write(self):
 		fp = open(self.filepath, 'w+')
 		json.dump(self, fp)
