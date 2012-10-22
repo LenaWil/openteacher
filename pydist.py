@@ -127,7 +127,15 @@ class PyDist():
 			shutil.copyfile(os.path.join(pythonPath, "lib/site-packages/PyQt4/QtOpenGL.pyd"), os.path.join(self.winDistDir, "python/Lib/site-packages/PyQt4/QtOpenGL.pyd"))
 			shutil.copyfile(os.path.join(pythonPath, "lib/site-packages/PyQt4/QtOpenGL4.dll"), os.path.join(self.winDistDir, "python/Lib/site-packages/PyQt4/QtOpenGL4.dll"))
 			shutil.copyfile(os.path.join(pythonPath, "lib/site-packages/PyQt4/ssleay32.dll"), os.path.join(self.winDistDir, "python/Lib/site-packages/PyQt4/ssleay32.dll"))
+			shutil.copytree(os.path.join(pythonPath, "lib/site-packages/PyQt4/plugins/imageformats"), os.path.join(self.winDistDir, "python/Lib/site-packages/PyQt4/plugins/imageformats"))
 			
+			# Create qt.conf
+			with open(os.path.join(self.winDistDir, "python/qt.conf"), 'w') as f:
+				f.write("""[Paths]
+Prefix = Lib/site-packages/PyQt4
+Binaries = 
+Plugins = plugins""")
+
 		print "Copying source..."
 		# Copy source
 		shutil.copytree(self.src, os.path.join(self.winDistDir, "src"), ignore=self._ignoredSourceFiles)
