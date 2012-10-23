@@ -163,8 +163,8 @@ class OpenTeacherBot(irc.IRCClient):
 			else:
 				self.msg(target, url)
 
-		if msg.startswith(".answer "):
-			q = msg.split(" ", 1)[1]
+		if msg.startswith(".answer ") or msg.startswith(".ask") or msg.startswith(".question"):
+			q = msg.split(" ", 1)[1].replace(self.nickname, "")
 			q = urllib.quote_plus(q)
 			self.msg(target, "http://www.wolframalpha.com/input/?i=%s" % q)
 
