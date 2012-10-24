@@ -1,0 +1,124 @@
+# Russian translation for openteacher
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-08-30 17:48+0200\n"
+"PO-Revision-Date: 2012-10-24 03:59+0000\n"
+"Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
+"Language-Team: Russian <ru@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-10-24 05:24+0000\n"
+"X-Generator: Launchpad (build 16179)\n"
+
+#: teacherPanel.py:70
+msgid "Tests"
+msgstr "Тесты"
+
+#: teacherPanel.py:71
+msgid "Add lesson"
+msgstr "Добавить урок:"
+
+#: teacherPanel.py:114
+msgid "Select a student/group:"
+msgstr "Выбрать учащегося/группу:"
+
+#: teacherPanel.py:115
+msgid "Add person/group"
+msgstr "Добавить человека/группу:"
+
+#: teacherPanel.py:116
+msgid "Back"
+msgstr "Назад"
+
+#: teacherPanel.py:183
+msgid "(did not participate)"
+msgstr ""
+
+#: teacherPanel.py:189
+msgid "(Handed in)"
+msgstr ""
+
+#: teacherPanel.py:229
+msgid "Questions:"
+msgstr "Вопросы:"
+
+#: teacherPanel.py:230
+msgid "People in this test:"
+msgstr ""
+
+#: teacherPanel.py:231
+msgid "Add person"
+msgstr "Добавить человека"
+
+#: teacherPanel.py:313
+msgid "Test"
+msgstr "Тест"
+
+#: teacherPanel.py:314
+msgid "(Re)check answers"
+msgstr ""
+
+#: teacherPanel.py:315
+msgid "(Re)publish answers"
+msgstr ""
+
+#: teacherPanel.py:327
+msgid "Student's answers have been checked!"
+msgstr ""
+
+#: teacherPanel.py:333
+msgid "Student's results have been (re)published!"
+msgstr ""
+
+#: teacherPanel.py:523
+msgid "Person"
+msgstr ""
+
+#: teacherPanel.py:525
+msgid ""
+"Answers of this student have not been checked yet. Click the 'Check answers' "
+"button in the second column."
+msgstr ""
+
+#: teacherPanel.py:527
+msgid "Answers right:"
+msgstr "Верные ответы:"
+
+#: teacherPanel.py:529
+msgid "Answers wrong:"
+msgstr "Неверные ответы:"
+
+#: teacherPanel.py:532
+msgid "OpenTeacher mark:"
+msgstr ""
+
+#: teacherPanel.py:534
+msgid "Final mark:"
+msgstr ""
+
+#: teacherPanel.py:536
+msgid "Question"
+msgstr "Вопрос"
+
+#: teacherPanel.py:537
+msgid "Given answer"
+msgstr ""
+
+#: teacherPanel.py:539
+msgid "Correct"
+msgstr "Правильно"
+
+#: teacherPanel.py:685
+msgid "Teacher panel"
+msgstr "Панель преподавателя"
+
+#: teacherPanel.py:687
+msgid "Teacher Panel"
+msgstr "Панель преподавателя"
