@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Milan Boers
 #	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
@@ -19,32 +18,16 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
-class OpenTeachingTopoSaverModule(object):
+class ProfileDescriptionModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(OpenTeachingTopoSaverModule, self).__init__(*args, **kwargs)
+		super(ProfileDescriptionModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "save"
-		self.priorities = {
-			"student@home": 196,
-			"student@school": 196,
-			"teacher": 196,
-			"wordsonly": -1,
-			"selfstudy": 196,
-			"testsuite": 196,
-			"codedocumentation": 196,
-			"all": 196,
-		}
-		self.requires = (
-			self._mm.mods(type="otxxSaver"),
-		)
+		self.type = "profileDescription"
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.saves = {"topo": ["ottp"]}
-		self.filesWithTranslations = ("ottp.py",)
+		self.filesWithTranslations = ("kgmConverter.py",)
 
 	def _retranslate(self):
 		try:
@@ -55,14 +38,16 @@ class OpenTeachingTopoSaverModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		#TRANSLATORS: This is one of the file formats OpenTeacher
-		#TRANSLATORS: saves to.
-		self.name = _("Open Teaching Topography")
+		self.desc = {
+			"name": "convert-kgm",
+			"niceName": _("Converts a KGeography .kgm file into a .ottp file."),
+			"advanced": True,
+		}
 
 	def enable(self):
+		if len(set(self._mm.mods(type="kgmConverter"))) == 0:
+			return #remain inactive
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self._otxxSaver = self._modules.default("active", type="otxxSaver")
-
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -75,13 +60,8 @@ class OpenTeachingTopoSaverModule(object):
 
 	def disable(self):
 		self.active = False
-
 		del self._modules
-		del self.name
-
-	def save(self, type, lesson, path):
-		resourceFilenames = {"mapPath": "map.image"}
-		self._otxxSaver.save(lesson, path, resourceFilenames)
+		del self.desc
 
 def init(moduleManager):
-	return OpenTeachingTopoSaverModule(moduleManager)
+	return ProfileDescriptionModule(moduleManager)
