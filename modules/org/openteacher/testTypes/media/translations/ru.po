@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-10-01 15:36+0200\n"
-"PO-Revision-Date: 2012-10-24 03:29+0000\n"
+"POT-Creation-Date: 2012-10-01 15:35+0200\n"
+"PO-Revision-Date: 2012-10-24 19:47+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,6 +17,23 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-10-25 05:55+0000\n"
 "X-Generator: Launchpad (build 16179)\n"
 
-#: settingsFilterer.py:37 settingsFilterer.py:38 settingsFilterer.py:39
-msgid "Miscellaneous"
-msgstr "Прочие"
+#: media.py:64
+msgid "Name"
+msgstr "Название"
+
+#: media.py:65
+msgid "Question"
+msgstr "Вопрос"
+
+#: media.py:66
+msgid "Answer"
+msgstr "Ответ"
+
+#: media.py:67
+msgid "Given answer"
+msgstr "Данный ответ"
+
+#. TRANSLATORS: the label of a table column that shows if the user answered a word in the same row correctly.
+#: media.py:69
+msgid "Correct"
+msgstr "Правильно"

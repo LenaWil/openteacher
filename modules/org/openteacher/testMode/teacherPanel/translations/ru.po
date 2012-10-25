@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-08-30 17:48+0200\n"
-"PO-Revision-Date: 2012-10-24 03:59+0000\n"
+"PO-Revision-Date: 2012-10-24 20:59+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-24 05:24+0000\n"
+"X-Launchpad-Export-Date: 2012-10-25 05:55+0000\n"
 "X-Generator: Launchpad (build 16179)\n"
 
 #: teacherPanel.py:70
@@ -39,7 +39,7 @@ msgstr "Назад"
 
 #: teacherPanel.py:183
 msgid "(did not participate)"
-msgstr ""
+msgstr "(не участвовал)"
 
 #: teacherPanel.py:189
 msgid "(Handed in)"
@@ -63,11 +63,11 @@ msgstr "Тест"
 
 #: teacherPanel.py:314
 msgid "(Re)check answers"
-msgstr ""
+msgstr "(Пере)проверить ответы"
 
 #: teacherPanel.py:315
 msgid "(Re)publish answers"
-msgstr ""
+msgstr "(Пере)опубликовать ответы"
 
 #: teacherPanel.py:327
 msgid "Student's answers have been checked!"
@@ -97,11 +97,11 @@ msgstr "Неверные ответы:"
 
 #: teacherPanel.py:532
 msgid "OpenTeacher mark:"
-msgstr ""
+msgstr "Оценка OpenTeacher:"
 
 #: teacherPanel.py:534
 msgid "Final mark:"
-msgstr ""
+msgstr "Финальная оценка:"
 
 #: teacherPanel.py:536
 msgid "Question"
@@ -109,7 +109,7 @@ msgstr "Вопрос"
 
 #: teacherPanel.py:537
 msgid "Given answer"
-msgstr ""
+msgstr "Данный ответ"
 
 #: teacherPanel.py:539
 msgid "Correct"

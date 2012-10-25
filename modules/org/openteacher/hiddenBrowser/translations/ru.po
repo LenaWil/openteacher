@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-10-01 15:36+0200\n"
-"PO-Revision-Date: 2012-10-24 03:29+0000\n"
+"PO-Revision-Date: 2012-10-24 20:30+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,6 +17,14 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-10-25 05:55+0000\n"
 "X-Generator: Launchpad (build 16179)\n"
 
-#: settingsFilterer.py:37 settingsFilterer.py:38 settingsFilterer.py:39
-msgid "Miscellaneous"
-msgstr "Прочие"
+#: hiddenBrowser.py:83
+msgid "Hide the browser!"
+msgstr "Скрыть браузер!"
+
+#: hiddenBrowser.py:84
+msgid "Hide the others; make space for the browser"
+msgstr "Скрыть остальное, чтобы освободить место для браузера"
+
+#: hiddenBrowser.py:225
+msgid "Enable hidden browser (hide it by moving the slider)"
+msgstr "Включить скрытый браузер (скрыть его путем перемещения ползунка)"
