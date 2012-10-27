@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-10-01 15:35+0200\n"
-"PO-Revision-Date: 2012-10-22 17:28+0000\n"
+"PO-Revision-Date: 2012-10-26 22:44+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-23 05:09+0000\n"
-"X-Generator: Launchpad (build 16179)\n"
+"X-Launchpad-Export-Date: 2012-10-27 05:18+0000\n"
+"X-Generator: Launchpad (build 16194)\n"
 
 #: topo.py:67
 msgid "From hard disk..."
@@ -29,6 +29,7 @@ msgstr "Внимание"
 msgid ""
 "Are you sure you want to use another map? This will remove all your places!"
 msgstr ""
+"Вы действительно хотите использовать другую карту? Это удалит все ваши места!"
 
 #: topo.py:234
 msgid "Map:"
@@ -36,19 +37,19 @@ msgstr "Карта:"
 
 #: topo.py:235
 msgid "Add a place by doubleclicking it on the map"
-msgstr ""
+msgstr "Добавьте место двойным щелчком по карте"
 
 #: topo.py:236
 msgid "Places in your test"
-msgstr ""
+msgstr "Места в вашем тесте"
 
 #: topo.py:237
 msgid "Remove selected place"
-msgstr ""
+msgstr "Удалить выделенные места"
 
 #: topo.py:238
 msgid "Add a place by name:"
-msgstr ""
+msgstr "Добавить место по названию"
 
 #: topo.py:239
 msgid "Add"
@@ -56,10 +57,12 @@ msgstr "Добавить"
 
 #: topo.py:278
 msgid "Place not found"
-msgstr ""
+msgstr "Место не найдено"
 
 #: topo.py:279
 msgid ""
 "Sorry, this place is not in the list of known places. Please add it manually "
 "by doubleclicking on the right location in the map."
 msgstr ""
+"К сожалению, этого места нет в списке известных мест. Пожалуйста, добавьте "
+"его вручную, дважды щелкнув на нужном месте карты."

@@ -6,17 +6,16 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-22 20:57+0200\n"
-"PO-Revision-Date: 2012-10-21 21:03+0000\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-10-01 15:36+0200\n"
+"PO-Revision-Date: 2012-10-26 22:34+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-22 04:48+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-10-27 05:18+0000\n"
+"X-Generator: Launchpad (build 16194)\n"
 
 #: inputTyping.py:65
 msgid "Check!"
@@ -24,7 +23,7 @@ msgstr "Проверить!"
 
 #: inputTyping.py:66
 msgid "Correct anyway"
-msgstr ""
+msgstr "Всё равно верно"
 
 #: inputTyping.py:67
 msgid "Skip"
@@ -33,28 +32,28 @@ msgstr "Пропустить"
 #: inputTyping.py:130
 #, python-format
 msgid "Corrected: %s"
-msgstr ""
+msgstr "Исправлено: %s"
 
 #: inputTyping.py:135
 msgid "Corrected"
-msgstr ""
+msgstr "Исправлено"
 
-#: inputTyping.py:190
+#: inputTyping.py:183
 msgid "Correct answer: <b>{answers}</b> [{diff}]"
 msgstr "Правильный ответ: <b>{answers}</b> [{diff}]"
 
-#: inputTyping.py:192
+#: inputTyping.py:185
 msgid "Correct answer: <b>{answers}</b>"
 msgstr "Правильный ответ: <b>{answers}</b>"
 
-#: inputTyping.py:290
+#: inputTyping.py:282
 msgid "Fade duration when wrong (milliseconds)"
-msgstr ""
+msgstr "Продолжительность исчезновения при ошибке (миллисекунд)"
 
-#: inputTyping.py:291
+#: inputTyping.py:283
 msgid "Lesson"
 msgstr "Урок"
 
-#: inputTyping.py:292
+#: inputTyping.py:284
 msgid "Words lesson"
 msgstr "Словарный урок"
