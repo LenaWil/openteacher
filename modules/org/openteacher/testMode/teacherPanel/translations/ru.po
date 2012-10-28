@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-08-30 17:48+0200\n"
-"PO-Revision-Date: 2012-10-24 20:59+0000\n"
+"PO-Revision-Date: 2012-10-27 13:26+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-25 05:55+0000\n"
-"X-Generator: Launchpad (build 16179)\n"
+"X-Launchpad-Export-Date: 2012-10-28 04:55+0000\n"
+"X-Generator: Launchpad (build 16194)\n"
 
 #: teacherPanel.py:70
 msgid "Tests"
@@ -43,7 +43,7 @@ msgstr "(не участвовал)"
 
 #: teacherPanel.py:189
 msgid "(Handed in)"
-msgstr ""
+msgstr "(Передано)"
 
 #: teacherPanel.py:229
 msgid "Questions:"
@@ -51,7 +51,7 @@ msgstr "Вопросы:"
 
 #: teacherPanel.py:230
 msgid "People in this test:"
-msgstr ""
+msgstr "Принимающие участие в тесте:"
 
 #: teacherPanel.py:231
 msgid "Add person"
@@ -71,21 +71,23 @@ msgstr "(Пере)опубликовать ответы"
 
 #: teacherPanel.py:327
 msgid "Student's answers have been checked!"
-msgstr ""
+msgstr "Ответы этого студента были проверены."
 
 #: teacherPanel.py:333
 msgid "Student's results have been (re)published!"
-msgstr ""
+msgstr "Ответы этого студента были (пере)опубликованы."
 
 #: teacherPanel.py:523
 msgid "Person"
-msgstr ""
+msgstr "Участник"
 
 #: teacherPanel.py:525
 msgid ""
 "Answers of this student have not been checked yet. Click the 'Check answers' "
 "button in the second column."
 msgstr ""
+"Ответы этого студента не были проверены. Нажмите кнопку \"Проверить ответы\" "
+"во второй колонке."
 
 #: teacherPanel.py:527
 msgid "Answers right:"

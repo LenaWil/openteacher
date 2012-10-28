@@ -8,18 +8,18 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-10-01 15:36+0200\n"
-"PO-Revision-Date: 2012-10-24 19:53+0000\n"
+"PO-Revision-Date: 2012-10-27 13:31+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-25 05:55+0000\n"
-"X-Generator: Launchpad (build 16179)\n"
+"X-Launchpad-Export-Date: 2012-10-28 04:55+0000\n"
+"X-Generator: Launchpad (build 16194)\n"
 
 #: topo.py:49
 msgid "Pronounce places"
-msgstr ""
+msgstr "Произношение мест"
 
 #: topo.py:50
 msgid "Pronounciation"

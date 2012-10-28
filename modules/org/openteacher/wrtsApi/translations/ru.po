@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-10-01 15:36+0200\n"
-"PO-Revision-Date: 2012-10-24 20:13+0000\n"
+"PO-Revision-Date: 2012-10-27 17:59+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-25 05:55+0000\n"
-"X-Generator: Launchpad (build 16179)\n"
+"X-Launchpad-Export-Date: 2012-10-28 04:55+0000\n"
+"X-Generator: Launchpad (build 16194)\n"
 
 #: wrtsApi.py:155
 msgid "Import from WRDS"
@@ -39,17 +39,19 @@ msgstr "Ввод и вывод"
 
 #: wrtsApi.py:163
 msgid "WRDS Login credentials"
-msgstr ""
+msgstr "Учётные данные WRDS"
 
 #: wrtsApi.py:176
 msgid "Invalid login credentials"
-msgstr ""
+msgstr "Неверные учётные данные"
 
 #: wrtsApi.py:177
 msgid ""
 "WRDS didn't accept the login credentials. Are you sure you entered your e-"
 "mail and password correctly?"
 msgstr ""
+"WRDS не принимает учетные данные для входа. Вы уверены, что вы ввели свой "
+"​​адрес электронной почты и пароль правильно?"
 
 #: wrtsApi.py:183
 msgid "No WRDS connection"
@@ -60,6 +62,8 @@ msgid ""
 "WRDS didn't accept the connection. Are you sure that your internet "
 "connection works and WRDS is online?"
 msgstr ""
+"Не удаётся подключиться к WRDS. Вы уверены, что ваше интернет-соединение "
+"работает и WRDS находится онлайн?"
 
 #: wrtsApi.py:247
 msgid "No word list metadata given."
@@ -92,6 +96,8 @@ msgstr "Не удалось показать результат"
 #: wrtsApi.py:315
 msgid "Can't open the resultive word list, because it can't be shown."
 msgstr ""
+"Не удалось открыть результирующий список  слов, потому что он не может быть "
+"показан."
 
 #: wrtsApi.py:318
 msgid "The word list was imported from WRDS successfully."
