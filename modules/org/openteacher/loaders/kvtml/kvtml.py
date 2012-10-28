@@ -25,8 +25,6 @@ except ImportError:
 		from xml.etree import ElementTree
 	except ImportError:
 		from elementTree import ElementTree
-import locale
-import datetime
 
 class KvtmlLoaderModule(object):
 	"""Loads .kvtml files (the format of various KDE programs)"""
