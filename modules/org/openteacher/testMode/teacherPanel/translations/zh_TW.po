@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-08-30 17:48+0200\n"
+"POT-Creation-Date: 2012-10-28 12:38+0100\n"
 "PO-Revision-Date: 2012-08-24 17:34+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-08-31 05:08+0000\n"
 "X-Generator: Launchpad (build 15887)\n"
-"Language: \n"
 
 #: teacherPanel.py:70
 msgid "Tests"
@@ -112,14 +112,15 @@ msgstr "問題"
 msgid "Given answer"
 msgstr "給予答案"
 
-#: teacherPanel.py:539
+#. TRANSLATORS: The name of a button clicked if an answer is correct.
+#: teacherPanel.py:540
 msgid "Correct"
 msgstr "正確"
 
-#: teacherPanel.py:685
+#: teacherPanel.py:686
 msgid "Teacher panel"
 msgstr "教師面板"
 
-#: teacherPanel.py:687
+#: teacherPanel.py:688
 msgid "Teacher Panel"
 msgstr "教師面板"

@@ -63,17 +63,7 @@ class TxtSaverModule(object):
 		})
 
 	def enable(self):
-		#Translations
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		try:
-			translator = self._modules.default("active", type="translator")
-		except IndexError:
-			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
-		else:
-			_, ngettext = translator.gettextFunctions(
-				self._mm.resourcePath("translations")
-			)
-
 		self.saves = {"words": ["txt"]}
 
 		try:
@@ -90,6 +80,7 @@ class TxtSaverModule(object):
 				"advanced": True,
 			})
 
+		#Translations
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-18 14:53+0200\n"
+"POT-Creation-Date: 2012-10-28 12:38+0100\n"
 "PO-Revision-Date: 2012-05-08 05:59+0000\n"
 "Last-Translator: LeeAnna Kobayashi <kobayashi.leeanna@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-10-17 04:44+0000\n"
 "X-Generator: Launchpad (build 16152)\n"
 
-#: gui.py:343
+#: gui.py:349
 msgid "Open from file"
 msgstr "ファイルから開く"
 
@@ -38,54 +38,62 @@ msgstr "教えて！"
 msgid "Show results"
 msgstr "結果を見せて"
 
-#: ui.py:282
+#: ui.py:296
 msgid "&File"
 msgstr "&ファイル"
 
-#: ui.py:283
+#: ui.py:297
 msgid "&New"
 msgstr ""
 
-#: ui.py:284
+#: ui.py:298
 msgid "&Open"
 msgstr "開く"
 
-#: ui.py:285
+#: ui.py:299
 msgid "&Save"
 msgstr "保存"
 
-#: ui.py:286
+#: ui.py:300
 msgid "Save &As"
 msgstr "別名で保存"
 
-#: ui.py:287
+#: ui.py:301
 msgid "&Print"
 msgstr "印刷"
 
-#: ui.py:288
+#: ui.py:302
 msgid "&Quit"
 msgstr "終了"
 
-#: ui.py:290
+#: ui.py:304
 msgid "&Edit"
 msgstr ""
 
-#: ui.py:291
+#: ui.py:305
 msgid "&Settings"
 msgstr "設定"
 
-#: ui.py:293
+#: ui.py:307
+msgid "&View"
+msgstr ""
+
+#: ui.py:308
+msgid "Fullscreen"
+msgstr ""
+
+#: ui.py:310
 msgid "&Help"
 msgstr "ヘルプ"
 
-#: ui.py:294
+#: ui.py:311
 msgid "&Documentation"
 msgstr "ドキュメンテーション"
 
-#: ui.py:295
+#: ui.py:312
 msgid "&About"
 msgstr "情報"
 
-#: ui.py:297
+#: ui.py:314
 msgid "Toolbar"
 msgstr "ツールバー"

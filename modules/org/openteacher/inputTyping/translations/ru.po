@@ -6,11 +6,12 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-10-01 15:36+0200\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-10-28 12:39+0100\n"
 "PO-Revision-Date: 2012-10-26 22:34+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -38,22 +39,22 @@ msgstr "Исправлено: %s"
 msgid "Corrected"
 msgstr "Исправлено"
 
-#: inputTyping.py:183
+#: inputTyping.py:190
 msgid "Correct answer: <b>{answers}</b> [{diff}]"
 msgstr "Правильный ответ: <b>{answers}</b> [{diff}]"
 
-#: inputTyping.py:185
+#: inputTyping.py:192
 msgid "Correct answer: <b>{answers}</b>"
 msgstr "Правильный ответ: <b>{answers}</b>"
 
-#: inputTyping.py:282
+#: inputTyping.py:290
 msgid "Fade duration when wrong (milliseconds)"
 msgstr "Продолжительность исчезновения при ошибке (миллисекунд)"
 
-#: inputTyping.py:283
+#: inputTyping.py:291
 msgid "Lesson"
 msgstr "Урок"
 
-#: inputTyping.py:284
+#: inputTyping.py:292
 msgid "Words lesson"
 msgstr "Словарный урок"

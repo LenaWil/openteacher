@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-18 14:53+0200\n"
+"POT-Creation-Date: 2012-10-28 12:39+0100\n"
 "PO-Revision-Date: 2012-03-25 06:44+0000\n"
 "Last-Translator: Yannis Kaskamanidis <ttnfy17@yahoo.gr>\n"
 "Language-Team: Greek <el@li.org>\n"
@@ -26,8 +26,9 @@ msgid "OpenTeacher"
 msgstr "OpenTeacher"
 
 #: metadata.py:60
-msgid "3.0"
-msgstr ""
+#, fuzzy
+msgid "3.1"
+msgstr "3.x"
 
 #: metadata.py:61
 msgid "OpenTeacher authors"
@@ -50,9 +51,6 @@ msgstr "http://openteacher.org/"
 #: metadata.py:71
 msgid "http://openteacher.org/documentation.html"
 msgstr "http://openteacher.org/documentation.html"
-
-#~ msgid "3.x"
-#~ msgstr "3.x"
 
 #~ msgid "The easiest way to learn a new language"
 #~ msgstr "Ο πιο εύκολος τρόπος για να μάθετε μια ξένη γλώσσα"

@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenTeacher 3.0\n"
+"Project-Id-Version: OpenTeacher 3.1\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-22 20:58+0200\n"
+"POT-Creation-Date: 2012-10-28 12:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgid "OpenTeacher"
 msgstr ""
 
 #: metadata.py:60
-msgid "3.0"
+msgid "3.1"
 msgstr ""
 
 #: metadata.py:61

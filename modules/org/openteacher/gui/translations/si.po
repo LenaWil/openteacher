@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-18 14:53+0200\n"
+"POT-Creation-Date: 2012-10-28 12:38+0100\n"
 "PO-Revision-Date: 2012-04-24 10:24+0000\n"
 "Last-Translator: Mohamed Rizmi <Unknown>\n"
 "Language-Team: Sinhalese <si@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-10-17 04:44+0000\n"
 "X-Generator: Launchpad (build 16152)\n"
 
-#: gui.py:343
+#: gui.py:349
 msgid "Open from file"
 msgstr ""
 
@@ -38,54 +38,62 @@ msgstr "මට උගන්වන්න!"
 msgid "Show results"
 msgstr "ප්‍රතිඑල පෙන්වන්න"
 
-#: ui.py:282
+#: ui.py:296
 msgid "&File"
 msgstr "ගොනුව (&F)"
 
-#: ui.py:283
+#: ui.py:297
 msgid "&New"
 msgstr "නව (&N)"
 
-#: ui.py:284
+#: ui.py:298
 msgid "&Open"
 msgstr "විවෘත කරන්න (&O)"
 
-#: ui.py:285
+#: ui.py:299
 msgid "&Save"
 msgstr "සුරකින්න (&S)"
 
-#: ui.py:286
+#: ui.py:300
 msgid "Save &As"
 msgstr "ලෙස සුරකින්න (&A)"
 
-#: ui.py:287
+#: ui.py:301
 msgid "&Print"
 msgstr "මුද්‍රණය කරන්න (&P)"
 
-#: ui.py:288
+#: ui.py:302
 msgid "&Quit"
 msgstr "ඉවත්වන්න (&Q)"
 
-#: ui.py:290
+#: ui.py:304
 msgid "&Edit"
 msgstr "සකසන්න (&E)"
 
-#: ui.py:291
+#: ui.py:305
 msgid "&Settings"
 msgstr "සැකසුම් (&S)"
 
-#: ui.py:293
+#: ui.py:307
+msgid "&View"
+msgstr ""
+
+#: ui.py:308
+msgid "Fullscreen"
+msgstr ""
+
+#: ui.py:310
 msgid "&Help"
 msgstr "සහාය (&H)"
 
-#: ui.py:294
+#: ui.py:311
 msgid "&Documentation"
 msgstr ""
 
-#: ui.py:295
+#: ui.py:312
 msgid "&About"
 msgstr "පිළිබඳව (&A)"
 
-#: ui.py:297
+#: ui.py:314
 msgid "Toolbar"
 msgstr ""

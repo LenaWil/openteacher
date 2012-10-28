@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-18 14:53+0200\n"
+"POT-Creation-Date: 2012-10-28 12:38+0100\n"
 "PO-Revision-Date: 2012-07-18 08:41+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-10-17 04:44+0000\n"
 "X-Generator: Launchpad (build 16152)\n"
 
-#: gui.py:343
+#: gui.py:349
 msgid "Open from file"
 msgstr "從檔案開啟"
 
@@ -38,55 +38,63 @@ msgstr "教我！"
 msgid "Show results"
 msgstr "顯示結果"
 
-#: ui.py:282
+#: ui.py:296
 msgid "&File"
 msgstr "檔案（&F）"
 
-#: ui.py:283
+#: ui.py:297
 msgid "&New"
 msgstr "新建(&N)..."
 
-#: ui.py:284
+#: ui.py:298
 msgid "&Open"
 msgstr "開啟 (&O)"
 
-#: ui.py:285
+#: ui.py:299
 msgid "&Save"
 msgstr "儲存(&S)..."
 
-#: ui.py:286
+#: ui.py:300
 msgid "Save &As"
 msgstr "另存新檔(&A)"
 
-#: ui.py:287
+#: ui.py:301
 msgid "&Print"
 msgstr "列印(&P)"
 
-#: ui.py:288
+#: ui.py:302
 msgid "&Quit"
 msgstr "結束(&Q)"
 
-#: ui.py:290
+#: ui.py:304
 msgid "&Edit"
 msgstr "編輯 (&E)"
 
-#: ui.py:291
+#: ui.py:305
 msgid "&Settings"
 msgstr "設置(&S)"
 
-#: ui.py:293
+#: ui.py:307
+msgid "&View"
+msgstr ""
+
+#: ui.py:308
+msgid "Fullscreen"
+msgstr ""
+
+#: ui.py:310
 msgid "&Help"
 msgstr "幫助(&H)"
 
-#: ui.py:294
+#: ui.py:311
 msgid "&Documentation"
 msgstr "說明文件(&D)"
 
-#: ui.py:295
+#: ui.py:312
 msgid "&About"
 msgstr "關於(&A)"
 
-#: ui.py:297
+#: ui.py:314
 msgid "Toolbar"
 msgstr "工具列"
 

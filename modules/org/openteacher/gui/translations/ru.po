@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-22 20:58+0200\n"
+"POT-Creation-Date: 2012-10-28 12:38+0100\n"
 "PO-Revision-Date: 2012-10-21 20:39+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-10-22 04:48+0000\n"
 "X-Generator: Launchpad (build 16165)\n"
 
-#: gui.py:343
+#: gui.py:349
 msgid "Open from file"
 msgstr "Открыть из файла"
 
@@ -38,54 +38,62 @@ msgstr "Научи меня!"
 msgid "Show results"
 msgstr "Показать результаты"
 
-#: ui.py:282
+#: ui.py:296
 msgid "&File"
 msgstr "&Файл"
 
-#: ui.py:283
+#: ui.py:297
 msgid "&New"
 msgstr "Со&здать"
 
-#: ui.py:284
+#: ui.py:298
 msgid "&Open"
 msgstr "&Открыть"
 
-#: ui.py:285
+#: ui.py:299
 msgid "&Save"
 msgstr "&Сохранить"
 
-#: ui.py:286
+#: ui.py:300
 msgid "Save &As"
 msgstr "Сохранить &как"
 
-#: ui.py:287
+#: ui.py:301
 msgid "&Print"
 msgstr "&Печать"
 
-#: ui.py:288
+#: ui.py:302
 msgid "&Quit"
 msgstr "&Выход"
 
-#: ui.py:290
+#: ui.py:304
 msgid "&Edit"
 msgstr "&Правка"
 
-#: ui.py:291
+#: ui.py:305
 msgid "&Settings"
 msgstr "&Параметры"
 
-#: ui.py:293
+#: ui.py:307
+msgid "&View"
+msgstr ""
+
+#: ui.py:308
+msgid "Fullscreen"
+msgstr ""
+
+#: ui.py:310
 msgid "&Help"
 msgstr "&Справка"
 
-#: ui.py:294
+#: ui.py:311
 msgid "&Documentation"
 msgstr "&Документация"
 
-#: ui.py:295
+#: ui.py:312
 msgid "&About"
 msgstr "&О программе"
 
-#: ui.py:297
+#: ui.py:314
 msgid "Toolbar"
 msgstr "Панель инструментов"
