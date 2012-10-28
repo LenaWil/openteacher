@@ -31,8 +31,10 @@ class Action(object):
 		self._qtAction = qtAction
 
 		self.triggered = createEvent()
+		self.toggled = createEvent()
 		#lambda to prevent useless Qt arguments to pass
 		self._qtAction.triggered.connect(lambda: self.triggered.send())
+		self._qtAction.toggled.connect(self.toggled.send)
 
 	def remove(self):
 		self._qtMenu.removeAction(self._qtAction)
@@ -250,6 +252,10 @@ class GuiModule(object):
 		self.editMenu = Menu(createEvent, self._widget.editMenu)
 		self.settingsAction = Action(createEvent, self._widget.editMenu, self._widget.settingsAction)
 
+		#view
+		self.viewMenu = Menu(createEvent, self._widget.viewMenu)
+		self.fullscreenAction = Action(createEvent, self._widget.viewMenu, self._widget.fullscreenAction)
+
 		#help
 		self.helpMenu = Menu(createEvent, self._widget.helpMenu)
 		self.documentationAction = Action(createEvent, self._widget.helpMenu, self._widget.docsAction)
@@ -364,6 +370,12 @@ class GuiModule(object):
 
 	def interrupt(self):
 		self._app.closeAllWindows()
+
+	def setFullscreen(self, bool):
+		if bool:
+			self._widget.showFullScreen()
+		else:
+			self._widget.showNormal()
 
 	def hide(self):
 		self._widget.hide()

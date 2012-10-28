@@ -244,15 +244,23 @@ class UiControllerModule(object):
 		for module in self._mm.mods("active", type="lesson"):
 			module.lessonCreationFinished.handle(self._updateMenuItemsWrapper)
 
+		#file
 		self._uiModule.newAction.triggered.handle(self.new)
 		self._uiModule.openAction.triggered.handle(self.open_)
 		self._uiModule.saveAction.triggered.handle(self.save)
 		self._uiModule.saveAsAction.triggered.handle(self.saveAs)
 		self._uiModule.printAction.triggered.handle(self.print_)
+		self._uiModule.quitAction.triggered.handle(self.quit_)
+
+		#edit
 		self._uiModule.settingsAction.triggered.handle(self.settings)
+
+		#view
+		self._uiModule.fullscreenAction.toggled.handle(self.fullscreen)
+
+		#help
 		self._uiModule.aboutAction.triggered.handle(self.about)
 		self._uiModule.documentationAction.triggered.handle(self.documentation)
-		self._uiModule.quitAction.triggered.handle(self.quit_)
 
 		self._uiModule.tabChanged.handle(self._updateMenuItems)
 
@@ -336,6 +344,9 @@ class UiControllerModule(object):
 
 	def settings(self):
 		self._modules.default("active", type="settingsDialog").show()
+
+	def fullscreen(self, bool):
+		self._uiModule.setFullscreen(bool)
 
 	def about(self):
 		self._modules.default("active", type="about").show()

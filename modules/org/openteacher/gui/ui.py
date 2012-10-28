@@ -223,9 +223,21 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 		#Edit
 		self.editMenu = self.menuBar().addMenu("")
 		self.settingsAction = self.editMenu.addAction(
-			QtGui.QIcon(ICON_PATH + "settings.png"),
+			QtGui.QIcon.fromTheme("preferences-system",
+				QtGui.QIcon(ICON_PATH + "settings.png")
+			),
 			""
 		)
+
+		#View
+		self.viewMenu = self.menuBar().addMenu("")
+		self.fullscreenAction = self.viewMenu.addAction(
+			QtGui.QIcon.fromTheme("view-fullscreen",
+				QtGui.QIcon(ICON_PATH + "fullscreen.png")
+			),
+			""
+		)
+		self.fullscreenAction.setCheckable(True)
 
 		#Help
 		self.helpMenu = self.menuBar().addMenu("")
@@ -237,7 +249,9 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 			""
 		)
 		self.aboutAction = self.helpMenu.addAction(
-			QtGui.QIcon(ICON_PATH + "about.png"),
+			QtGui.QIcon.fromTheme("help-about",
+				QtGui.QIcon(ICON_PATH + "about.png")
+			),
 			""
 		)
 
@@ -289,6 +303,9 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 
 		self.editMenu.setTitle(_("&Edit"))
 		self.settingsAction.setText(_("&Settings"))
+
+		self.viewMenu.setTitle(_("&View"))
+		self.fullscreenAction.setText(_("Fullscreen"))
 
 		self.helpMenu.setTitle(_("&Help"))
 		self.docsAction.setText(_("&Documentation"))
