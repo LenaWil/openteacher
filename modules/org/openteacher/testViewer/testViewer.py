@@ -169,7 +169,8 @@ class TestViewer(QtGui.QSplitter):
 	def _totalThinkingTime(self):
 		totalThinkingTime = datetime.timedelta()
 		for result in self.test["results"]:
-			totalThinkingTime += result["active"]["end"] - result["active"]["start"]
+			if "active" in result:
+				totalThinkingTime += result["active"]["end"] - result["active"]["start"]
 		return total_seconds(totalThinkingTime)
 
 class TestViewerModule(object):

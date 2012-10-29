@@ -119,10 +119,11 @@ class Graph(QtGui.QFrame):
 				colors[result["itemId"]] = QtGui.QBrush(color)
 				p.setBrush(colors[result["itemId"]])
 
-			self._paintItem(p, result["active"])
+			if "active" in result:
+				self._paintItem(p, result["active"])
 
 		p.setBrush(self.palette().dark())
-		for pause in self._test["pauses"]:
+		for pause in self._test.get("pauses", []):
 			self._paintItem(p, pause)
 
 		p.setBrush(QtGui.QBrush())

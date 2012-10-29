@@ -135,7 +135,9 @@ class Teach2000SaverModule(object):
 		return self._composeDateTime(t)
 
 	def _composeDateTime(self, dt):
-		return dt.strftime("%Y-%m-%dT%H:%M:%S.%f")
+		#chop off the last three millisecond decimals, because Teach2000
+		#can't handle that kind of precision. That's bad.
+		return dt.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3]
 
 	def _duration(self, test):
 		try:

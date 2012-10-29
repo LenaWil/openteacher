@@ -87,8 +87,9 @@ class PaukerLoaderModule(object):
 		del self.loads
 
 	def getFileTypeOf(self, path):
-		if path.endswith(".pau") or path.endswith(".xml.gz") or path.endswith(".pau.gz"):
-			return "words"
+		for ext in self.loads.keys():
+			if path.endswith(ext):
+				return "words"
 
 	@property
 	def _parse(self):
