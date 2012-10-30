@@ -279,9 +279,8 @@ class WrtsApiModule(object):
 		if not ldc.result():
 			return
 
-		try:
-			listUrl = self._wrtsConnection.listsParser.getWordListUrl(ldc.selectedRowIndex)
-		except IndexError:
+		selectedRowIndices = ldc.selectedRowIndices
+		if len(selectedRowIndices) == 0:
 			#No list selected, report.
 			QtGui.QMessageBox.warning(
 				self._uiModule.qtParent,
@@ -289,33 +288,36 @@ class WrtsApiModule(object):
 				_("No list was selected. Please try again.")
 			)
 			return
-		try:
-			list = self._wrtsConnection.importWordList(listUrl)
-		except self._api.LoginError:
-			self._invalidLogin()
-			return
-		except self._api.ConnectionError:
-			self._noConnection()
-			return
+		for index in selectedRowIndices:
+			listUrl = self._wrtsConnection.listsParser.getWordListUrl(index)
+			try:
+				list = self._wrtsConnection.importWordList(listUrl)
+			except self._api.LoginError:
+				self._invalidLogin()
+				return
+			except self._api.ConnectionError:
+				self._noConnection()
+				return
 
-		try:
-			self._modules.default(
-				"active",
-				type="loader"
-			).loadFromLesson("words", {
-				"list": list,
-				"resources": {},
-			})
-		except NotImplementedError:
-			#FIXME 3.1: make this into a separate module? It's shared
-			#with plainTextWordsEnterer.
-			QtGui.QMessageBox.critical(
-				self._uiModule.qtParent,
-				_("Can't show the result"),
-				_("Can't open the resultive word list, because it can't be shown.")
-			)
-		else:
-			self._uiModule.statusViewer.show(_("The word list was imported from WRDS successfully."))
+			try:
+				self._modules.default(
+					"active",
+					type="loader"
+				).loadFromLesson("words", {
+					"list": list,
+					"resources": {},
+				})
+			except NotImplementedError:
+				#FIXME 3.1: make this into a separate module? It's shared
+				#with plainTextWordsEnterer.
+				QtGui.QMessageBox.critical(
+					self._uiModule.qtParent,
+					_("Can't show the result"),
+					_("Can't open the resultive word list, because it can't be shown.")
+				)
+				return
+		#if everything went well
+		self._uiModule.statusViewer.show(_("The word list was imported from WRDS successfully."))
 
 def init(moduleManager):
 	return WrtsApiModule(moduleManager)

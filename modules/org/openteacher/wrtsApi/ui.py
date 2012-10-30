@@ -93,6 +93,8 @@ class ListChoiceDialog(QtGui.QDialog):
 		self.listView = QtGui.QListView()
 		listModel = ReadOnlyStringListModel(list)
 		self.listView.setModel(listModel)
+		self.listView.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
+		self.listView.doubleClicked.connect(self.accept)
 
 		buttonBox = QtGui.QDialogButtonBox(
 			QtGui.QDialogButtonBox.Cancel | QtGui.QDialogButtonBox.Ok,
@@ -107,8 +109,8 @@ class ListChoiceDialog(QtGui.QDialog):
 		self.setLayout(layout)
 
 	@property
-	def selectedRowIndex(self):
-		return self.listView.selectedIndexes()[0].row()
+	def selectedRowIndices(self):
+		return [i.row() for i in self.listView.selectedIndexes()]
 
 	def retranslate(self):
 		self.setWindowTitle(_("WRDS - Please choose a list:"))
