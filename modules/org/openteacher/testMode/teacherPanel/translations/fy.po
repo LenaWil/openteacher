@@ -1,0 +1,126 @@
+# Frisian translation for openteacher
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-08-30 17:48+0200\n"
+"PO-Revision-Date: 2012-10-30 19:15+0000\n"
+"Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
+"Language-Team: Frisian <fy@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-10-31 05:14+0000\n"
+"X-Generator: Launchpad (build 16218)\n"
+
+#: teacherPanel.py:70
+msgid "Tests"
+msgstr "Toetsen"
+
+#: teacherPanel.py:71
+msgid "Add lesson"
+msgstr "Les tafoegje"
+
+#: teacherPanel.py:114
+msgid "Select a student/group:"
+msgstr "Selektear in learling/groep"
+
+#: teacherPanel.py:115
+msgid "Add person/group"
+msgstr "Foegje in persoan/groep yn"
+
+#: teacherPanel.py:116
+msgid "Back"
+msgstr "Werom"
+
+#: teacherPanel.py:183
+msgid "(did not participate)"
+msgstr "(Naam net diel)"
+
+#: teacherPanel.py:189
+msgid "(Handed in)"
+msgstr "(Ynleverd)"
+
+#: teacherPanel.py:229
+msgid "Questions:"
+msgstr "Fragen:"
+
+#: teacherPanel.py:230
+msgid "People in this test:"
+msgstr "Persoanen yn dizze toets:"
+
+#: teacherPanel.py:231
+msgid "Add person"
+msgstr "Persoan tafoegje"
+
+#: teacherPanel.py:313
+msgid "Test"
+msgstr "Toets"
+
+#: teacherPanel.py:314
+msgid "(Re)check answers"
+msgstr "Antwurden (opnij) kontrolearje"
+
+#: teacherPanel.py:315
+msgid "(Re)publish answers"
+msgstr "Antwurden (opnij) publisearje"
+
+#: teacherPanel.py:327
+msgid "Student's answers have been checked!"
+msgstr "De antwurden fan de learling binne net kontrolearre!"
+
+#: teacherPanel.py:333
+msgid "Student's results have been (re)published!"
+msgstr "De resultaten binne (opnij) publisearre."
+
+#: teacherPanel.py:523
+msgid "Person"
+msgstr "Persoan"
+
+#: teacherPanel.py:525
+msgid ""
+"Answers of this student have not been checked yet. Click the 'Check answers' "
+"button in the second column."
+msgstr ""
+"De antwurden fan dizze learling binne net kontrollearre. Klik de 'Antwurden "
+"kontrolearje'-knop yn de twadde kolom."
+
+#: teacherPanel.py:527
+msgid "Answers right:"
+msgstr "Goede antwurden:"
+
+#: teacherPanel.py:529
+msgid "Answers wrong:"
+msgstr "Foute antwurden:"
+
+#: teacherPanel.py:532
+msgid "OpenTeacher mark:"
+msgstr "OpenTeacher-sifer:"
+
+#: teacherPanel.py:534
+msgid "Final mark:"
+msgstr "Úteinlik sifer:"
+
+#: teacherPanel.py:536
+msgid "Question"
+msgstr "Fraach"
+
+#: teacherPanel.py:537
+msgid "Given answer"
+msgstr "Antwurd joen"
+
+#: teacherPanel.py:539
+msgid "Correct"
+msgstr "Korrizjearje"
+
+#: teacherPanel.py:685
+msgid "Teacher panel"
+msgstr "Learaarpaniel"
+
+#: teacherPanel.py:687
+msgid "Teacher Panel"
+msgstr "Leraarpaniel"

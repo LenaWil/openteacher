@@ -1,0 +1,46 @@
+# Frisian translation for openteacher
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-08-30 17:48+0200\n"
+"PO-Revision-Date: 2012-10-30 19:03+0000\n"
+"Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
+"Language-Team: Frisian <fy@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-10-31 05:14+0000\n"
+"X-Generator: Launchpad (build 16218)\n"
+
+#: connection.py:63
+msgid "Server IP or hostname:"
+msgstr "Tsjinner IP of hostnamme"
+
+#: connection.py:64
+msgid "Connect"
+msgstr "Ferbine"
+
+#: connection.py:95
+msgid "Username:"
+msgstr "Brûkersnamme:"
+
+#: connection.py:96
+msgid "Password:"
+msgstr "Wachtwurd:"
+
+#: connection.py:97 connection.py:142
+msgid "Login"
+msgstr "Oanmelde"
+
+#: connection.py:160
+msgid "Could not connect to the server. Possibly wrong hostname."
+msgstr "Koe gjin ferbining meitsje mei de tsjinner."
+
+#: connection.py:231
+msgid "Could not login. Wrong username or password."
+msgstr "Koe net oanmelde. Ferkearde brûkersnamme of wachtwurd."
