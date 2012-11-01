@@ -96,17 +96,30 @@ class SourceWithSetupSaverModule(object):
 			templ = pyratemp.Template(filename=self._mm.resourcePath("desktop.templ"))
 			f.write(templ(package=packageName, **self._metadata).encode("UTF-8"))
 
+		#linux/package.menu
+		with open(os.path.join(sourcePath, "linux", packageName), "w") as f:
+			templ = pyratemp.Template(filename=self._mm.resourcePath("menu.templ"))
+			f.write(templ(package=packageName, **self._metadata).encode("UTF-8"))
+
+		with open(os.path.join(sourcePath, "linux", packageName + ".1"), "w") as f:
+			templ = pyratemp.Template(filename=self._mm.resourcePath("manpage.templ"))
+			f.write(templ(package=packageName, **self._metadata).encode("UTF-8"))
+
 		#linux/package.xml
 		shutil.copy(
 			self._mm.resourcePath("mimetypes.xml"),
 			os.path.join(sourcePath, "linux", packageName + ".xml")
 		)
 
-		#generate icons
+		#generate png icons
 		image = QtGui.QImage(self._metadata["iconPath"])
-		image = image.scaled(128, 128, QtCore.Qt.KeepAspectRatio)
+		image128 = image.scaled(128, 128, QtCore.Qt.KeepAspectRatio)
 		for path in ["linux/openteacher.png"] + imagePaths:
-			image.save(os.path.join(sourcePath, path))
+			image128.save(os.path.join(sourcePath, path))
+
+		#generate openteacher.xpm
+		image32 = image.scaled(32, 32, QtCore.Qt.KeepAspectRatio)
+		image32.save(os.path.join(sourcePath, "linux/" + packageName + ".xpm"))
 
 		#setup.py
 		with open(os.path.join(sourcePath, "setup.py"), "w") as f:

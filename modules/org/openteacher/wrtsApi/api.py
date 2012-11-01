@@ -35,6 +35,9 @@ class ConnectionError(IOError):
 class NotEnoughMetadataError(ValueError):
 	pass
 
+class ShareNotFoundError(ValueError):
+	pass
+
 class RequestXml(xml.dom.minidom.Document):
 	"""The RequestXml class is used to create xml understood by the WRTS-api. The
 	   xml is used to send wordLists to WRTS."""
@@ -144,6 +147,18 @@ class WrtsConnection(object):
 		xml = self._openUrl("http://www.wrts.nl/api/lists")
 		return ListsParser(xml)
 
+	def shareListsParser(self, shareName):
+		"""Get all wrts-lists on the share specified by url. Returns a
+		   WrtsListParser instance.
+
+		"""
+		try:
+			xml = self._openUrl("http://www.wrts.nl/api/shared/" + shareName, show404=True)
+		except urllib2.HTTPError, e:
+			#this can only be a 404 due to the self._openUrl design
+			raise ShareNotFoundError(shareName)
+		return ListsParser(xml)
+
 	def exportWordList(self, wordList, compose):
 		"""Exports a wordList to WRTS, fully automatic after your login. Throws LoginError/ConnectionError"""
 		#Create the xml-document and set the wordlist
@@ -160,7 +175,7 @@ class WrtsConnection(object):
 		#return the wordList
 		return wordListParser.list
 
-	def _openUrl(self, url, method="GET", body=None, additionalHeaders=None):
+	def _openUrl(self, url, method="GET", body=None, additionalHeaders=None, show404=False):
 		"""Open an url, and return the response as a xml.dom.minidom.Document. Can raise a LoginError/ConnectionError"""
 		#If additionalHeaders not defined, they're set empty
 		if not additionalHeaders:
@@ -176,6 +191,9 @@ class WrtsConnection(object):
 		try:
 			response = self._opener.open(request)
 		except urllib2.HTTPError, e:
+			if show404 and e.code == 404:
+				#if the user asks to get 404's, pass the error.
+				raise
 			if e.code == 401:
 				#Not logged in
 				self.loggedIn = False

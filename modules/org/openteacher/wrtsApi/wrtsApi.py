@@ -260,7 +260,7 @@ class WrtsApiModule(object):
 		if not self._loginToWrts():
 			return
 
-		ldc = self._ui.ListChoiceDialog(
+		ldc = self._ui.UserListChoiceDialog(
 			self._wrtsConnection.listsParser.lists,
 			self._uiModule.qtParent
 		)
@@ -270,6 +270,9 @@ class WrtsApiModule(object):
 		tab.closeRequested.handle(tab.close)
 		ldc.rejected.connect(tab.close)
 		ldc.tab = tab
+		ldc.getFromShareClicked.connect(ldc.reject)
+		ldc.getFromShareClicked.connect(self._importFromWrtsShare)
+		#essentially rejected, because we're not importing a user list
 		ldc.accepted.connect(tab.close)
 
 		self._retranslate()
@@ -279,7 +282,49 @@ class WrtsApiModule(object):
 		if not ldc.result():
 			return
 
-		selectedRowIndices = ldc.selectedRowIndices
+		self._doActualImport(
+			self._wrtsConnection.listsParser,
+			ldc.selectedRowIndices
+		)
+
+	def _importFromWrtsShare(self, url):
+		#from QString
+		url = unicode(url)
+		if url.endswith(".wrts.nl"):
+			url = url[:-len(".wrts.nl")]
+		url.strip("/")
+		try:
+			parser = self._wrtsConnection.shareListsParser(url)
+		except self._api.ShareNotFoundError, e:
+			QtGui.QMessageBox.critical(
+				self._uiModule.qtParent,
+				_("Can't find the share"),
+				_("Can't find the share you requested. ('%s') Are you sure it exists?" % unicode(e))
+			)
+			return
+
+		lcd = self._ui.ListChoiceDialog(
+			parser.lists,
+			self._uiModule.qtParent
+		)
+		self._activeDialogs.add(lcd)
+
+		tab = self._uiModule.addCustomTab(lcd)
+		tab.closeRequested.handle(tab.close)
+		lcd.rejected.connect(tab.close)
+		lcd.accepted.connect(tab.close)
+		lcd.tab = tab
+
+		self._retranslate()
+
+		lcd.exec_()
+		self._activeDialogs.remove(lcd)
+		if not lcd.result():
+			return
+
+		self._doActualImport(parser, lcd.selectedRowIndices)
+
+	def _doActualImport(self, parser, selectedRowIndices):
 		if len(selectedRowIndices) == 0:
 			#No list selected, report.
 			QtGui.QMessageBox.warning(
@@ -289,7 +334,7 @@ class WrtsApiModule(object):
 			)
 			return
 		for index in selectedRowIndices:
-			listUrl = self._wrtsConnection.listsParser.getWordListUrl(index)
+			listUrl = parser.getWordListUrl(index)
 			try:
 				list = self._wrtsConnection.importWordList(listUrl)
 			except self._api.LoginError:

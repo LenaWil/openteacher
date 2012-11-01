@@ -24,9 +24,9 @@ from PyQt4 import QtCore, QtGui
 class LoginDialog(QtGui.QDialog):
 	def __init__(self, store, *args, **kwargs):
 		super(LoginDialog, self).__init__(*args, **kwargs)
-		
+
 		self.emailTextBox = QtGui.QLineEdit()
-		
+
 		self.passwordTextBox = QtGui.QLineEdit()
 		self.passwordTextBox.setEchoMode(QtGui.QLineEdit.Password)
 
@@ -114,3 +114,35 @@ class ListChoiceDialog(QtGui.QDialog):
 
 	def retranslate(self):
 		self.setWindowTitle(_("WRDS - Please choose a list:"))
+
+class UserListChoiceDialog(ListChoiceDialog):
+	getFromShareClicked = QtCore.pyqtSignal([object])
+
+	def __init__(self, *args, **kwargs):
+		super(UserListChoiceDialog, self).__init__(*args, **kwargs)
+
+		self._shareLabel = QtGui.QLabel()
+		self._shareBox = QtGui.QLineEdit()
+		self._getFromShareButton = QtGui.QPushButton()
+
+		fromShareLayout = QtGui.QHBoxLayout()
+		fromShareLayout.addWidget(self._shareLabel)
+		fromShareLayout.addWidget(self._shareBox)
+		fromShareLayout.addWidget(self._getFromShareButton)
+
+		self.layout().insertLayout(0, fromShareLayout)
+
+		self._getFromShareButton.clicked.connect(
+			#lambda so we can pass the argument.
+			lambda: self.getFromShareClicked.emit(self._shareBox.text())
+		)
+
+	def retranslate(self, *args, **kwargs):
+		super(UserListChoiceDialog, self).retranslate(*args, **kwargs)
+
+		self._shareLabel.setText(_("WRDS Share:"))
+		#TRANSLATORS: please only translate the 'share-name' part here,
+		#TRANSLATORS: unless you have a good reason to do something
+		#TRANSLATORS: else, of course ;).
+		self._shareBox.setText(_("share-name.wrts.nl"))
+		self._getFromShareButton.setText(_("Get from share"))

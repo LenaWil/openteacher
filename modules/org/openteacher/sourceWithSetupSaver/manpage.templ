@@ -1,0 +1,67 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH OPENTEACHER 1 "July 21, 2011"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+openteacher \- Learn words in a foreign language
+.SH SYNOPSIS
+.B openteacher
+.RI [filename] 
+.br
+.PP
+filename is name of file which contains list of words and was
+created by openteacher previously.
+.br
+.SH DESCRIPTION
+This manual page documents briefly
+.B OpenTeacher.
+.PP
+.\" TeX users may be more comfortable with the \fB<whatever>\fP and
+.\" \fI<whatever>\fP escape sequences to invode bold face and italics,
+.\" respectively.
+OpenTeacher helps you to learn a foreign language.  Just enter some words in
+your native or foreign language, and OpenTeacher tests you. 
+
+OpenTeacher has the following features:
+ 
+* Read and write T2K and wrts files
+  
+* Easy-to-use interface
+ 
+* Support for synonyms
+ 
+* Greek input
+ 
+* txt-output to print or send
+ 
+* Available in English and Dutch
+.br
+.SH OPERATION
+.PP
+When openteacher starts, the user can do any of the following
+
+Enter list: User enters a list of words in the format '<known word> = <foreign word>'
+and optionally save the list. Alternatively, the user can open an already
+existing word list created earlier using openteacher.
+ 
+Teach Me: Questions will be asked from current loaded list of words.
+.br
+.SH AUTHOR
+OpenTeacher was written by Milan Boers, Marten de Vries, Roel Huybrechts,
+Cas Widdershoven and David D Lowe.
+.PP
+This manual page was written by Arvind S Raj <sraj.arvind@gmail.com>,
+for the Debian project (and may be used by others).
