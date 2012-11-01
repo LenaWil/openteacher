@@ -19,10 +19,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt4 import QtScript
-try:
-	import json
-except ImportError:
-	import simplejson as json
+import json
 
 class Event(object):
 	"""Not cool: this wrapper class was harder to write than the native

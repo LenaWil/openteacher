@@ -27,10 +27,7 @@ import urllib2
 import cookielib
 import hashlib
 import socket
-try:
-	import json
-except:
-	import simplejson as json
+import json
 
 MAXVERSION = 1.0
 

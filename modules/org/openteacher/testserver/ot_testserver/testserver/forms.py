@@ -19,10 +19,7 @@ from django import forms
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from models import User, Group, Answers
 
-try:
-	import json
-except ImportError:
-	import simplejson as json
+import json
 
 def isValidRole(role):
 	if role not in ("admin", "teacher", "student"):

@@ -19,10 +19,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-try:
-	import json
-except ImportError:
-	import simplejson as json
+import json
 import zipfile
 
 class OtxxSaverModule(object):

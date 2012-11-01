@@ -19,10 +19,7 @@
 #    along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-try:
-	import json
-except:
-	import simplejson
+import json
 
 class MapModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

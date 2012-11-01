@@ -21,13 +21,7 @@
 import sys
 import os
 
-try:
-	from lxml import etree as ElementTree
-except ImportError:
-	try:
-		from xml.etree import ElementTree
-	except ImportError:
-		from elementTree import ElementTree
+from etree import ElementTree
 import Image
 
 class Lesson(object):

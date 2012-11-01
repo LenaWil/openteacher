@@ -26,11 +26,7 @@ import os
 import uuid
 import urllib2
 import copy
-
-try:
-	import json
-except:
-	import simplejson as json
+import json
 
 class PropertyLabel(QtGui.QLabel):
 	def __init__(self, *args, **kwargs):

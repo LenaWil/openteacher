@@ -19,10 +19,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import urllib2
-try:
-	from elementTree import ElementTree
-except ImportError:
-	from xml.etree import ElementTree
+from etree import ElementTree
 
 import xml.dom.minidom
 

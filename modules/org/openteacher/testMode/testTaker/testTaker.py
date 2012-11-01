@@ -23,11 +23,7 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 import uuid
 import urllib2
-
-try:
-	import json
-except:
-	import simplejson as json
+import json
 
 class TestChooser(QtGui.QWidget):
 	# Parameter: the chosen test (tests/<id>)

@@ -22,10 +22,7 @@
 import zipfile
 import datetime
 import uuid
-try:
-	import json
-except:
-	import simplejson as json
+import json
 
 class OpenTeachingWordsLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

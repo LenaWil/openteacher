@@ -27,10 +27,7 @@ import datetime
 import os
 import shutil
 import uuid
-try:
-	import json
-except:
-	import simplejson
+import json
 
 class OtxxLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

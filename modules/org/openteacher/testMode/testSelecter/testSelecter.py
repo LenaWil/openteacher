@@ -23,11 +23,7 @@ from PyQt4 import QtGui
 import uuid
 import os
 import weakref
-
-try:
-	import json
-except:
-	import simplejson as json
+import json
 
 class TestSelecter(QtGui.QListWidget):
 	# Parameter: The current test (tests/<id>)

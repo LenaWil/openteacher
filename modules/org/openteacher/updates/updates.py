@@ -21,10 +21,7 @@
 
 import urllib
 import urllib2
-try:
-	import json
-except ImportError:
-	import simplejson as json
+import json
 import datetime
 import zipfile
 import os

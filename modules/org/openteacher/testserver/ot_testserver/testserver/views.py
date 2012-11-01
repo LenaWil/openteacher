@@ -28,10 +28,7 @@ from guardian.shortcuts import assign, remove_perm, get_users_with_perms, get_gr
 from models import Test, Answers, CheckedAnswers, User, UserProfile, Group
 from forms import UsersForm, GroupsForm, GroupForm, TestsForm, TestGroupsForm, TestStudentsForm, TestAnswersForm, TestCheckedAnswersForm, TestCheckedAnswerForm
 
-try:
-	import json
-except ImportError:
-	import simplejson as json
+import json
 
 def role(request):
 	try:

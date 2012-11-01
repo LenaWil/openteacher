@@ -19,10 +19,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt4 import QtScript
-try:
-	import json
-except ImportError:
-	import simplejson as json
+import json
 
 class WordListStringParserModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

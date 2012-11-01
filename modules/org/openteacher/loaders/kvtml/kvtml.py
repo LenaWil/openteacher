@@ -18,13 +18,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-try:
-	from lxml import etree as ElementTree
-except ImportError:
-	try:
-		from xml.etree import ElementTree
-	except ImportError:
-		from elementTree import ElementTree
+from etree import ElementTree
 
 class KvtmlLoaderModule(object):
 	"""Loads .kvtml files (the format of various KDE programs)"""

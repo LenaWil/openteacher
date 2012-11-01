@@ -24,11 +24,7 @@ from PyQt4 import QtCore
 
 import os
 import uuid
-
-try:
-	import json
-except:
-	import simplejson as json
+import json
 
 class TestModeUploaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
