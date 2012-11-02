@@ -29,7 +29,7 @@ class WindowsPortablePackagerModule(object):
 
 		self.type = "windowsPortablePackager"
 		self.requires = (
-			self._mm.mods(type="pydistInterface"),
+			self._mm.mods(type="pyinstallerInterface"),
 			self._mm.mods(type="execute"),
 		)
 		self.priorities = {
@@ -39,13 +39,12 @@ class WindowsPortablePackagerModule(object):
 
 	def _run(self):
 		try:
-			dataZipLoc = sys.argv[1]
-			zipLoc = sys.argv[2]
+			zipLoc = sys.argv[1]
 		except IndexError:
-			sys.stderr.write("Please specify the data tar file and the resultive portable app zip file name as last command line parameters. (e.g. windowsdata.tar openteacher-portable.zip)\n")
+			sys.stderr.write("Please specify the resultive portable app zip file name as last command line parameter. (e.g. openteacher-portable.zip)\n")
 			return
 		#build to exe, dll etc.
-		resultDir = self._pydist.build(dataZipLoc, "windows")
+		resultDir = self._pyinstaller.build()
 
 		#create zip file
 		with zipfile.ZipFile(zipLoc, "w", zipfile.ZIP_DEFLATED) as f:
@@ -57,7 +56,7 @@ class WindowsPortablePackagerModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self._pydist = self._modules.default("active", type="pydistInterface")
+		self._pyinstaller = self._modules.default("active", type="pyinstallerInterface")
 
 		self._modules.default(type="execute").startRunning.handle(self._run)
 
@@ -67,7 +66,7 @@ class WindowsPortablePackagerModule(object):
 		self.active = False
 
 		del self._modules
-		del self._pydist
+		del self._pyinstaller
 
 def init(moduleManager):
 	return WindowsPortablePackagerModule(moduleManager)

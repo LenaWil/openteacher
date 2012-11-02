@@ -22,7 +22,6 @@ import sys
 import os
 
 from etree import ElementTree
-import Image
 
 class Lesson(object):
 	pass
@@ -112,6 +111,12 @@ class KgmConverterModule(object):
 		self._save("topo", lesson, outputPath)
 
 	def enable(self):
+                global Image
+                try:
+                        import Image
+                except ImportError:
+                        #remain inactive
+                        return
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._modules.default("active", type="execute").startRunning.handle(self._run)
 
@@ -120,6 +125,7 @@ class KgmConverterModule(object):
 	def disable(self):
 		self.active = False
 
+                del Image
 		del self._modules
 
 def init(moduleManager):

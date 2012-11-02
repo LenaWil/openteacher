@@ -30,71 +30,87 @@ import string
 wxs = """
 <?xml version="1.0" encoding="UTF-8" ?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Name="OpenTeacher" Id="*" UpgradeCode="6fbe08a3-4545-45b8-b6d1-4eaf00083835" Language="1033" Codepage="1252" Version="3.0.0.1" Manufacturer="OpenTeacher Maintainers">
-	<Package Id="*" Keywords="Installer" Manufacturer="OpenTeacher Maintainers" InstallerVersion="100" Languages="1033" Compressed="yes" />
-	
+	<Product Name="{name}" Id="*" UpgradeCode="6fbe08a3-4545-45b8-b6d1-4eaf00083835" Language="1033" Codepage="1252" Version="3.0.0.1" Manufacturer="{name} Maintainers">
+	<Package Id="*" Keywords="Installer" Manufacturer="{name} Maintainers" InstallerVersion="100" Languages="1033" Compressed="yes" />
+
 	<!-- files -->
-	<Media Id="1" Cabinet="OpenTeacher.cab" EmbedCab="yes" />
+	<Media Id="1" Cabinet="{name}.cab" EmbedCab="yes" />
 	<Directory Id="TARGETDIR" Name="SourceDir">
 		<Directory Id="ProgramFilesFolder" Name="PFiles">
-		<Directory Id="INSTALLDIR" Name="OpenTeacher">
+		<Directory Id="INSTALLDIR" Name="{name}">
 			<Component Id="MainFiles" Guid="{uuid1}">
-			<File Id="openteacher.exe" KeyPath="yes" Name="openteacher.exe" Source="openteacher.exe" DiskId="1">
-				<Shortcut Id="StartmenuShortcut" Directory="ProgramMenuDir" Name="OpenTeacher" WorkingDirectory="INSTALLDIR" Icon="openteacher.ico" Advertise="yes" />
-				<Shortcut Id="DesktopShortcut" Directory="DesktopFolder" Name="OpenTeacher" WorkingDirectory="INSTALLDIR" Icon="openteacher.ico" Advertise="yes" />
-			</File>
-			<File Id="openteacher.ico" Name="openteacher.ico" Source="openteacher.ico" DiskId="1" />
-			<File Id="start.py" Name="start.py" Source="start.py" DiskId="1" />
+                                <File Id="{lower_name}.exe" KeyPath="yes" Name="{lower_name}.exe" Source="{lower_name}.exe" DiskId="1">
+                                        <Shortcut Id="StartmenuShortcut" Directory="ProgramMenuDir" Name="{name}" WorkingDirectory="INSTALLDIR" Icon="{lower_name}.exe" Advertise="yes" />
+                                        <Shortcut Id="DesktopShortcut" Directory="DesktopFolder" Name="{name}" WorkingDirectory="INSTALLDIR" Icon="{lower_name}.exe" Advertise="yes" />
+                                </File>
 
-			<!-- File associations -->
-			<!-- otwd -->
-			<ProgId Id="OpenTeacher.otwd" Description="Open Teaching Words" Icon="openteacher.ico">
-				<Extension Id="otwd" ContentType="application/x-openteachingwords">
-				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%1&quot;" />
-				</Extension>
-			</ProgId>
-			<!-- ottp -->
-			<ProgId Id="OpenTeacher.ottp" Description="Open Teaching Topography" Icon="openteacher.ico">
-				<Extension Id="ottp" ContentType="application/x-openteachingtopography">
-				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%1&quot;" />
-				</Extension>
-			</ProgId>
-			<!-- otmd -->
-			<ProgId Id="OpenTeacher.otmd" Description="Open Teaching Media" Icon="openteacher.ico">
-				<Extension Id="otmd" ContentType="application/x-openteachingmedia">
-				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%1&quot;" />
-				</Extension>
-			</ProgId>
-			<!-- ot -->
-			<ProgId Id="OpenTeacher.ot" Description="Open Teacher 2.x" Icon="openteacher.ico">
-				<Extension Id="ot" ContentType="application/x-openteacher">
-				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%1&quot;" />
-				</Extension>
-			</ProgId>
-			<!-- t2k -->
-			<ProgId Id="OpenTeacher.t2k" Description="Teach 2000" Icon="openteacher.ico">
-				<Extension Id="t2k" ContentType="application/x-teach2000">
-				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%1&quot;" />
-				</Extension>
-			</ProgId>
-			<!-- wrts -->
-			<ProgId Id="OpenTeacher.wrts" Description="WRTS" Icon="openteacher.ico">
-				<Extension Id="wrts" ContentType="application/x-wrts">
-				<Verb Id="open" Command="open" TargetFile="openteacher.exe" Argument="&quot;%1&quot;" />
-				</Extension>
-			</ProgId>
-			<CreateFolder/>
+                                <!-- File associations -->
+                                <!-- otwd -->
+                                <ProgId Id="{name}.otwd" Description="Open Teaching Words" Icon="{lower_name}.exe">
+                                        <Extension Id="otwd" ContentType="application/x-openteachingwords">
+                                        <Verb Id="open" Command="open" TargetFile="{lower_name}.exe" Argument="&quot;%1&quot;" />
+                                        </Extension>
+                                </ProgId>
+                                <!-- ottp -->
+                                <ProgId Id="{name}.ottp" Description="Open Teaching Topography" Icon="{lower_name}.exe">
+                                        <Extension Id="ottp" ContentType="application/x-openteachingtopography">
+                                        <Verb Id="open" Command="open" TargetFile="{lower_name}.exe" Argument="&quot;%1&quot;" />
+                                        </Extension>
+                                </ProgId>
+                                <!-- otmd -->
+                                <ProgId Id="{name}.otmd" Description="Open Teaching Media" Icon="{lower_name}.exe">
+                                        <Extension Id="otmd" ContentType="application/x-openteachingmedia">
+                                        <Verb Id="open" Command="open" TargetFile="{lower_name}.exe" Argument="&quot;%1&quot;" />
+                                        </Extension>
+                                </ProgId>
+                                <!-- ot -->
+                                <ProgId Id="{name}.ot" Description="OpenTeacher 2.x" Icon="{lower_name}.exe">
+                                        <Extension Id="ot" ContentType="application/x-openteacher">
+                                        <Verb Id="open" Command="open" TargetFile="{lower_name}.exe" Argument="&quot;%1&quot;" />
+                                        </Extension>
+                                </ProgId>
+                                <!-- t2k -->
+                                <ProgId Id="{name}.t2k" Description="Teach 2000" Icon="{lower_name}.exe">
+                                        <Extension Id="t2k" ContentType="application/x-teach2000">
+                                        <Verb Id="open" Command="open" TargetFile="{lower_name}.exe" Argument="&quot;%1&quot;" />
+                                        </Extension>
+                                </ProgId>
+                                <!-- wrts -->
+                                <ProgId Id="{name}.wrts" Description="WRTS" Icon="{lower_name}.exe">
+                                        <Extension Id="wrts" ContentType="application/x-wrts">
+                                        <Verb Id="open" Command="open" TargetFile="{lower_name}.exe" Argument="&quot;%1&quot;" />
+                                        </Extension>
+                                </ProgId>
+                                <!-- kvtml -->
+                                <ProgId Id="{name}.kvtml" Description="KDE Vocabulary Document" Icon="{lower_name}.exe">
+                                        <Extension Id="kvtml" ContentType="application/x-kvtml">
+                                        <Verb Id="open" Command="open" TargetFile="{lower_name}.exe" Argument="&quot;%1&quot;" />
+                                        </Extension>
+                                </ProgId>
+                                <!-- anki -->
+                                <ProgId Id="{name}.anki" Description="Anki" Icon="{lower_name}.exe">
+                                        <Extension Id="anki" ContentType="application/x-anki">
+                                        <Verb Id="open" Command="open" TargetFile="{lower_name}.exe" Argument="&quot;%1&quot;" />
+                                        </Extension>
+                                </ProgId>
+                                <!-- pauker -->
+                                <ProgId Id="{name}.pau.gz" Description="Pauker" Icon="{lower_name}.exe">
+                                        <Extension Id="pau.gz" ContentType="application/x-pauker">
+                                        <Verb Id="open" Command="open" TargetFile="{lower_name}.exe" Argument="&quot;%1&quot;" />
+                                        </Extension>
+                                </ProgId>
+                                <CreateFolder/>
 			</Component>
 			{files}
 		</Directory>
 		</Directory>
 		<Directory Id="ProgramMenuFolder" Name="Programs">
-		<Directory Id="ProgramMenuDir" Name="OpenTeacher">
+		<Directory Id="ProgramMenuDir" Name="{name}">
 			<Component Id="ProgramMenuDir" Guid="{uuid2}">
 			<RemoveFolder Id="ProgramMenuDir" On="uninstall" />
 			<RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="" KeyPath="yes" /> 
 			<!-- Uninstall shortcut -->
-			<Shortcut Id="UninstallShortcut" Name="Uninstall OpenTeacher" Target="[SystemFolder]msiexec.exe" Arguments="/x [ProductCode]" Description="Uninstalls OpenTeacher" />
+			<Shortcut Id="UninstallShortcut" Name="Uninstall {name}" Target="[SystemFolder]msiexec.exe" Arguments="/x [ProductCode]" Description="Uninstalls {name}" />
 			<CreateFolder/>
 			</Component>
 		</Directory>
@@ -124,12 +140,12 @@ wxs = """
 	<WixVariable Id="WixUILicenseRtf" Value="COPYING.rtf" />
 
 	<!-- Launch after install -->
-	<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch OpenTeacher" />
-	<Property Id="WixShellExecTarget" Value="[#openteacher.exe]" />
+	<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch {name}" />
+	<Property Id="WixShellExecTarget" Value="[#{lower_name}.exe]" />
 	<CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
 
-	<Property Id="ARPPRODUCTICON" Value="openteacher.ico" />
-	<Icon Id="openteacher.ico" SourceFile="openteacher.ico" />
+	<Property Id="ARPPRODUCTICON" Value="openteacher.exe" />
+	<Icon Id="{lower_name}.exe" SourceFile="{lower_name}.exe" />
 	</Product>
 </Wix>
 """
@@ -141,8 +157,9 @@ class WindowsMsiPackagerModule(object):
 
 		self.type = "windowsMsiPackager"
 		self.requires = (
-			self._mm.mods(type="pydistInterface"),
+			self._mm.mods(type="pyinstallerInterface"),
 			self._mm.mods(type="execute"),
+                        self._mm.mods(type="metadata"),
 		)
 		self.priorities = {
 			"package-windows-msi": 0,
@@ -166,38 +183,36 @@ class WindowsMsiPackagerModule(object):
 			result += '<Component Id="{id}Component" Guid="{uuid}">'.format(id=self._toId(root), uuid=uuid.uuid4())
 
 			for file in os.listdir(root):
-					if not os.path.isfile(os.path.join(root, file)):
-						continue
-					result += '<File Id="{id}" Source="{source}" Name="{name}" DiskId="1" />'.format(
-						id=self._toId(os.path.join(root, file)),
-						source=os.path.join(root, file),
-						name=file,
-					)
+                                if root == "." and file in [self._metadata["name"].lower() + ".exe", "COPYING.rtf", "leftbanner.bmp", "topbanner.bmp"]:
+                                        #added manually or not needed at runtime.
+                                        continue
+                                if not os.path.isfile(os.path.join(root, file)):
+                                        continue
+                                result += '<File Id="{id}" Source="{source}" Name="{name}" DiskId="1" />'.format(
+                                        id=self._toId(os.path.join(root, file)),
+                                        source=os.path.join(root, file),
+                                        name=file,
+                                )
 			result += '<CreateFolder/></Component>'
 			for dir in os.listdir(root):
-					if not os.path.isdir(os.path.join(root, dir)):
-						continue
-					components2, result2 = self._gatherFiles(os.path.join(root, dir))
-					components += components2
-					result += result2
+                                if not os.path.isdir(os.path.join(root, dir)):
+                                        continue
+                                components2, result2 = self._gatherFiles(os.path.join(root, dir))
+                                components += components2
+                                result += result2
 			result += '</Directory>'
 			return components, result
 
 	def _run(self):
 		try:
-			dataZipLoc = sys.argv[1]
-			msiLoc = sys.argv[2]
+			msiLoc = sys.argv[1]
 		except IndexError:
-			sys.stderr.write("Please specify the data tar file and the resultive msi file name as last command line parameters. (e.g. windowsdata.tar AppName.msi)\n")
+			sys.stderr.write("Please specify the resultive msi file name as last command line parameter. (e.g. AppName.msi)\n")
 			return
 		#build to exe, dll etc.
-		resultDir = self._pydist.build(dataZipLoc, "windows")
+		resultDir = self._pyinstaller.build()
 
 		#copying in files needed to create the msi.
-		shutil.copy(
-			self._mm.resourcePath("openteacher.ico"),
-			os.path.join(resultDir, "openteacher.ico")
-		)
 		shutil.copy(
 			self._mm.resourcePath("leftbanner.bmp"),
 			os.path.join(resultDir, "leftbanner.bmp")
@@ -211,32 +226,32 @@ class WindowsMsiPackagerModule(object):
 			os.path.join(resultDir, "COPYING.rtf")
 		)
 
-		#Build msi
 		cwd = os.getcwd()
 		os.chdir(resultDir)
+
 		#complete the template and write it to the hard disk
-
-		components, files = self._gatherFiles("python")
-		components2, files2 = self._gatherFiles("src")
-
-		components += components2
-		files += files2
+		components, files = self._gatherFiles(".")
 
 		with open("OpenTeacher.wxs", "wb") as f:
 			f.write(wxs.strip().format(
 				files=files,
 				components=components,
 				uuid1=uuid.uuid4(),
-				uuid2=uuid.uuid4()
+				uuid2=uuid.uuid4(),
+                                name=self._metadata["name"],
+                                lower_name=self._metadata["name"].lower()
 			))
 
+                #build msi
 		wixPath = os.path.join(os.environ["ProgramFiles"], "Windows Installer XML v3.5/bin/")
 
 		subprocess.check_call(wixPath + "candle.exe OpenTeacher.wxs")
 		subprocess.check_call(wixPath + "light.exe -ext WixUtilExtension -ext WixUIExtension OpenTeacher.wixobj")
 
+                #switch back cwd
 		os.chdir(cwd)
 
+                #send back the result
 		shutil.copy(
 			os.path.join(resultDir, "OpenTeacher.msi"),
 			msiLoc
@@ -244,7 +259,8 @@ class WindowsMsiPackagerModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self._pydist = self._modules.default("active", type="pydistInterface")
+		self._metadata = self._modules.default("active", type="metadata").metadata
+		self._pyinstaller = self._modules.default("active", type="pyinstallerInterface")
 
 		self._modules.default(type="execute").startRunning.handle(self._run)
 
@@ -254,7 +270,8 @@ class WindowsMsiPackagerModule(object):
 		self.active = False
 
 		del self._modules
-		del self._pydist
+		del self._metadata
+		del self._pyinstaller
 
 def init(moduleManager):
 	return WindowsMsiPackagerModule(moduleManager)

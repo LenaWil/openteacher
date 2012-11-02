@@ -21,7 +21,6 @@
 from PyQt4 import QtCore, QtGui, QtWebKit, QtNetwork
 import weakref
 import os
-import BaseHTTPServer
 
 class OpenTeacherWebPage(QtWebKit.QWebPage):
 	def __init__(self, url, userAgent, fallbackPath, *args, **kwargs):
