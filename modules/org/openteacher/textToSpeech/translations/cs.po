@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-10-01 15:36+0200\n"
-"PO-Revision-Date: 2012-11-04 13:52+0000\n"
+"PO-Revision-Date: 2012-11-04 13:55+0000\n"
 "Last-Translator: Jan Žárský <jan.zarsky@gmail.com>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,28 +16,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-11-05 04:49+0000\n"
 "X-Generator: Launchpad (build 16232)\n"
-"Language: cs\n"
 
-#: repeatAnswer.py:70
-msgid "Click the button to start"
-msgstr "Klikněte pro spuštění"
+#: textToSpeech.py:187
+msgid "Voice name (language)"
+msgstr "Jméno hlasu"
 
-#: repeatAnswer.py:71
-msgid "Start!"
-msgstr "Spustit!"
+#: textToSpeech.py:188
+msgid "Speed"
+msgstr "Rychlost"
 
-#: repeatAnswer.py:186
-msgid "Repeat answer"
-msgstr "Zopakovat odpověď"
+#: textToSpeech.py:191
+msgid "Pronounciation"
+msgstr "Výslovnost"
 
-#: repeatAnswer.py:190
-msgid "Repeat mode fade duration (milliseconds)"
-msgstr "Délka zobrazení opakování (milisekundy)"
-
-#: repeatAnswer.py:191
-msgid "Lesson"
-msgstr "Lekce"
-
-#: repeatAnswer.py:192
-msgid "Words lesson"
-msgstr ""
+#: textToSpeech.py:192
+msgid "Voice"
+msgstr "Hlas"
