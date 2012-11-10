@@ -1,0 +1,59 @@
+# Galician translation for openteacher
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-10-01 15:36+0200\n"
+"PO-Revision-Date: 2012-11-09 23:20+0000\n"
+"Last-Translator: ghas <Unknown>\n"
+"Language-Team: Galician <gl@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-11-10 05:19+0000\n"
+"X-Generator: Launchpad (build 16251)\n"
+
+#: inputTyping.py:65
+msgid "Check!"
+msgstr "Comprobar!"
+
+#: inputTyping.py:66
+msgid "Correct anyway"
+msgstr "Corrixir de todos xeitos"
+
+#: inputTyping.py:67
+msgid "Skip"
+msgstr "Omitir"
+
+#: inputTyping.py:130
+#, python-format
+msgid "Corrected: %s"
+msgstr "Corrixido: %s"
+
+#: inputTyping.py:135
+msgid "Corrected"
+msgstr "Corrixido"
+
+#: inputTyping.py:183
+msgid "Correct answer: <b>{answers}</b> [{diff}]"
+msgstr "Corrixir resposta: <b>{answers}</b> [{diff}]"
+
+#: inputTyping.py:185
+msgid "Correct answer: <b>{answers}</b>"
+msgstr "Corrixir resposta: <b>{answers}</b>"
+
+#: inputTyping.py:282
+msgid "Fade duration when wrong (milliseconds)"
+msgstr ""
+
+#: inputTyping.py:283
+msgid "Lesson"
+msgstr "Lección"
+
+#: inputTyping.py:284
+msgid "Words lesson"
+msgstr ""
