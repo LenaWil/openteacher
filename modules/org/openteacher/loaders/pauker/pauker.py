@@ -65,6 +65,7 @@ class PaukerLoaderModule(object):
 			translator.languageChanged.handle(self._retranslate)
 		self._retranslate()
 
+		self.mimetype = "application/x-pauker"
 		self.loads = {
 			"pau": ["words"],
 			"pau.gz": ["words"],
@@ -78,6 +79,7 @@ class PaukerLoaderModule(object):
 
 		del self._modules
 		del self.name
+		del self.mimetype
 		del self.loads
 
 	def getFileTypeOf(self, path):

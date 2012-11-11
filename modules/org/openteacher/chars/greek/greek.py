@@ -58,7 +58,7 @@ class GreekModule(object):
 			(u"π", u"Π", u"ρ", u"Ρ", u"σ", u"Σ"),
 			(u"ς", u"τ", u"Τ", u"υ", u"Υ", u"φ"),
 			(u"Φ", u"χ", u"Χ", u"ψ", u"Ψ", u"ω"),
-			(u"Ω", u"", u"", u"", u"", u""),
+			(u"Ω", u"῾", u"᾿", u"", u"", u""),
 		)
 		self.active = True
 

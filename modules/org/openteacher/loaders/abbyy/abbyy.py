@@ -22,11 +22,11 @@ from etree import ElementTree
 import locale
 import datetime
 
-class AbbyLoaderModule(object):
-	"""Loads ABBY Lingvo Tutor files (.xml)"""
+class AbbyyLoaderModule(object):
+	"""Loads ABBYY Lingvo Tutor files (.xml)"""
 
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(AbbyLoaderModule, self).__init__(*args, **kwargs)
+		super(AbbyyLoaderModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "load"
@@ -47,7 +47,7 @@ class AbbyLoaderModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ("abby.py",)
+		self.filesWithTranslations = ("abbyy.py",)
 
 	def _retranslate(self):
 		try:
@@ -59,7 +59,7 @@ class AbbyLoaderModule(object):
 				self._mm.resourcePath("translations")
 			)
 		#TRANSLATORS: This is the name of a file format OT can read.
-		self.name = _("ABBY Lingvo Tutor")
+		self.name = _("ABBYY Lingvo Tutor")
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
@@ -71,6 +71,7 @@ class AbbyLoaderModule(object):
 			translator.languageChanged.handle(self._retranslate)
 		self._retranslate()
 
+		#No mimetype. Claiming .xml is too harsh.
 		self.loads = {"xml": ["words"]}
 
 		self.active = True
@@ -110,4 +111,4 @@ class AbbyLoaderModule(object):
 		}
 
 def init(moduleManager):
-	return AbbyLoaderModule(moduleManager)
+	return AbbyyLoaderModule(moduleManager)

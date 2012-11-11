@@ -78,6 +78,7 @@ class AnkiLoaderModule(object):
 
 	def enable(self):
 		self.loads = {"anki": ["words"]}
+		self.mimetype = "application/x-anki"
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		try:
@@ -95,6 +96,7 @@ class AnkiLoaderModule(object):
 
 		del self.name
 		del self.loads
+		del self.mimetype
 
 		del self._modules
 

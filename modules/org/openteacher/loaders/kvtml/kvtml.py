@@ -70,6 +70,7 @@ class KvtmlLoaderModule(object):
 		self._retranslate()
 
 		self.loads = {"kvtml": ["words"]}
+		self.mimetype = "application/x-kvtml"
 
 		self.active = True
 
@@ -79,6 +80,7 @@ class KvtmlLoaderModule(object):
 		del self._modules
 		del self.name
 		del self.loads
+		del self.mimetype
 
 	def getFileTypeOf(self, path):
 		if path.endswith(".kvtml"):

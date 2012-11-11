@@ -41,6 +41,7 @@ class SourceSaverModule(object):
 			shutil.rmtree(dir)
 
 	def saveSource(self):
+		print "Please keep in mind that the source export may contain text in the language that OpenTeacher currently uses. If you're building an official package, you should make sure OpenTeacher is running in English, first. (It might currently, this warning isn't a check but just shown always.)\n"
 		#e.g. /tmp/uuid-here
 		copyBase = tempfile.mkdtemp()
 		self._dirs.add(copyBase)

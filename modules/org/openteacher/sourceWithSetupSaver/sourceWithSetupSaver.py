@@ -34,6 +34,9 @@ class SourceWithSetupSaverModule(object):
 			self._mm.mods(type="metadata"),
 			self._mm.mods(type="sourceSaver"),
 		)
+		self.uses = (
+			self._mm.mods(type="load"),
+		)
 
 	def saveSource(self):
 		sourcePath = self._modules.default("active", type="sourceSaver").saveSource()
@@ -67,14 +70,14 @@ class SourceWithSetupSaverModule(object):
 			for file in files:
 				packageData.append(os.path.join(root, file))
 
-		imagePaths = [
-			"linux/application-x-%s.png" % packageName,
-			"linux/application-x-teach2000.png",
-			"linux/application-x-wrts.png",
-			"linux/application-x-openteachingwords.png",
-			"linux/application-x-openteachingtopography.png",
-			"linux/application-x-openteachingmedia.png",
-		]
+		mimetypes = []
+		imagePaths = []
+		for mod in self._modules.sort("active", type="load"):
+			if not hasattr(mod, "mimetype"):
+				continue
+			for ext in mod.loads.keys():
+				mimetypes.append((ext, mod.name, mod.mimetype))
+			imagePaths.append("linux/" + mod.mimetype.replace("/", "-") + ".png")
 
 		data = self._metadata.copy()
 		data.update({
@@ -94,7 +97,9 @@ class SourceWithSetupSaverModule(object):
 		os.mkdir(os.path.join(sourcePath, "linux"))
 		with open(os.path.join(sourcePath, "linux", packageName + ".desktop"), "w") as f:
 			templ = pyratemp.Template(filename=self._mm.resourcePath("desktop.templ"))
-			f.write(templ(package=packageName, **self._metadata).encode("UTF-8"))
+
+			mimetypeList = sorted({m[2] for m in mimetypes})
+			f.write(templ(package=packageName, mimetypes=";".join(mimetypeList), **self._metadata).encode("UTF-8"))
 
 		#linux/package.menu
 		with open(os.path.join(sourcePath, "linux", packageName), "w") as f:
@@ -106,10 +111,9 @@ class SourceWithSetupSaverModule(object):
 			f.write(templ(package=packageName, **self._metadata).encode("UTF-8"))
 
 		#linux/package.xml
-		shutil.copy(
-			self._mm.resourcePath("mimetypes.xml"),
-			os.path.join(sourcePath, "linux", packageName + ".xml")
-		)
+		with open(os.path.join(sourcePath, "linux", packageName + ".xml"), "w") as f:
+			templ = pyratemp.Template(filename=self._mm.resourcePath("mimetypes.xml"))
+			f.write(templ(data=mimetypes).encode("UTF-8"))
 
 		#generate png icons
 		image = QtGui.QImage(self._metadata["iconPath"])

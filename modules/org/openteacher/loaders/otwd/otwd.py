@@ -63,6 +63,7 @@ class OpenTeachingWordsLoaderModule(object):
 
 	def enable(self):
 		self.loads = {"otwd": ["words"]}
+		self.mimetype = "application/x-openteachingwords"
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._otxxLoader = self._modules.default("active", type="otxxLoader")
@@ -82,6 +83,7 @@ class OpenTeachingWordsLoaderModule(object):
 
 		del self.name
 		del self.loads
+		del self.mimetype
 
 		del self._modules
 		del self._otxxLoader

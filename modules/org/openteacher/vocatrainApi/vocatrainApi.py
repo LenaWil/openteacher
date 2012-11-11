@@ -224,32 +224,50 @@ class VocatrainApiModule(object):
 		self._import(api)
 
 	def _import(self, api):
-		d = self._showDialog(CategorySelectDialog(api.getCategories()))
-		if not d:
-			return
-		for categoryId in d.chosenItems:
-			d = self._showDialog(BookSelectDialog(api.getBook(categoryId)))
+		#[5:-1] to strip http:// and the final /
+		serviceName = api.service[6:-1]
+		try:
+			d = self._showDialog(CategorySelectDialog(api.getCategories()))
 			if not d:
-				continue
-			for bookId in d.chosenItems:
-				d = self._showDialog(ListSelectDialog(api.getLists(bookId)))
+				return
+			for categoryId in d.chosenItems:
+				d = self._showDialog(BookSelectDialog(api.getBook(categoryId)))
 				if not d:
 					continue
-				for listId in d.chosenItems:
-					list = api.getList(listId)
-					try:
-						self._modules.default(
-							"active",
-							type="loader"
-						).loadFromLesson("words", list)
-					except NotImplementedError:
-						#FIXME 3.1: make this into a separate module? It's shared
-						#with plainTextWordsEnterer.
-						QtGui.QMessageBox.critical(
-							self._uiModule.qtParent,
-							_("Can't show the result"),
-							_("Can't open the resultive word list, because it can't be shown.")
-						)
+				for bookId in d.chosenItems:
+					d = self._showDialog(ListSelectDialog(api.getLists(bookId)))
+					if not d:
+						continue
+					for listId in d.chosenItems:
+						list = api.getList(listId)
+						self._loadList(list)
+		except urllib2.URLError, e:
+			#for debugging purposes
+			print e
+			QtGui.QMessageBox.warning(
+				self._uiModule.qtParent,
+				_("No %s connection") % serviceName,
+				_("{serviceName} didn't accept the connection. Are you sure that your internet connection works and {serviceName} is online?").format(serviceName=serviceName)
+			)
+			return
+
+		#everything went well
+		self._uiModule.statusViewer.show(_("The word list was imported from %s successfully.") % serviceName)
+
+	def _loadList(self, list):
+		try:
+			self._modules.default(
+				"active",
+				type="loader"
+			).loadFromLesson("words", list)
+		except NotImplementedError:
+			#FIXME 3.1: make this into a separate module? It's shared
+			#with plainTextWordsEnterer.
+			QtGui.QMessageBox.critical(
+				self._uiModule.qtParent,
+				_("Can't show the result"),
+				_("Can't open the resultive word list, because it can't be shown.")
+			)
 
 	def disable(self):
 		self.active = False

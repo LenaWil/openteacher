@@ -71,6 +71,7 @@ class WrtsLoaderModule(object):
 			translator.languageChanged.handle(self._retranslate)
 		self._retranslate()
 
+		self.mimetype = "application/x-wrts"
 		self.loads = {"wrts": ["words"]}
 
 		self.active = True
@@ -81,6 +82,7 @@ class WrtsLoaderModule(object):
 		del self._modules
 		del self.name
 		del self.loads
+		del self.mimetype
 
 	def getFileTypeOf(self, path):
 		if path.endswith(".wrts"):

@@ -72,6 +72,7 @@ class Teach2000LoaderModule(object):
 			translator.languageChanged.handle(self._retranslate)
 		self._retranslate()
 
+		self.mimetype = "application/x-teach2000"
 		self.loads = {"t2k": ["words"]}
 
 		self.active = True

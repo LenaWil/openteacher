@@ -59,6 +59,7 @@ class OpenTeachingTopoLoaderModule(object):
 
 	def enable(self):
 		self.loads = {"ottp": ["topo"]}
+		self.mimetype = "application/x-openteachingtopography"
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._otxxLoader = self._modules.default("active", type="otxxLoader")
@@ -78,6 +79,7 @@ class OpenTeachingTopoLoaderModule(object):
 
 		del self.name
 		del self.loads
+		del self.mimetype
 
 		del self._modules
 		del self._otxxLoader

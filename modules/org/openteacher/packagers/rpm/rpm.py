@@ -77,6 +77,7 @@ class RpmPackagerModule(object):
 		with open(os.path.join(sourcePath, "setup.cfg"), "w") as f:
 			f.write(SETUP_CFG)
 
+		#make sure all caches etc. are updated.
 		with open(os.path.join(sourcePath, "post-changes.sh"), "w") as f:
 			f.write(POST_CHANGES)
 

@@ -72,6 +72,7 @@ class OpenTeachingMediaLoaderModule(object):
 		self._retranslate()
 
 		self.loads = {"otmd": ["media"]}
+		self.mimetype = "application/x-openteachingmedia"
 
 		self.active = True
 
@@ -80,6 +81,7 @@ class OpenTeachingMediaLoaderModule(object):
 
 		del self.name
 		del self.loads
+		del self.mimetype
 
 		del self._modules
 		del self._otxxLoader

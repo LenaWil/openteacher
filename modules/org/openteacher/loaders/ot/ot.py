@@ -48,6 +48,7 @@ class OpenTeacherLoaderModule(object):
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.loads = {"ot": ["words"]}
+		self.mimetype = "application/x-openteacher"
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -80,6 +81,7 @@ class OpenTeacherLoaderModule(object):
 		del self._modules
 		del self.name
 		del self.loads
+		del self.mimetype
 
 	def getFileTypeOf(self, path):
 		if path.endswith(".ot"):

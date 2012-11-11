@@ -372,9 +372,13 @@ class GuiModule(object):
 		self._app.closeAllWindows()
 
 	def setFullscreen(self, bool):
+		#native menubar enable/disable to keep it into view while
+		#fullscreen in at least unity.
 		if bool:
+			self._widget.menuBar().setNativeMenuBar(False)
 			self._widget.showFullScreen()
 		else:
+			self._widget.menuBar().setNativeMenuBar(True)
 			self._widget.showNormal()
 
 	def hide(self):

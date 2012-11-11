@@ -18,46 +18,12 @@
 	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <mime-info xmlns='http://www.freedesktop.org/standards/shared-mime-info'>
-	<!-- Open Teaching Words -->
-	<mime-type type="application/x-openteachingwords">
-		<comment>Open Teaching Words word list</comment>
-		<glob pattern="*.otwd"/>
-		<sub-class-of type="application/zip"/>
-		<icon>application/x-openteachingwords</icon>
+	<!--(for ext, name, mimetype in data)-->
+	<!-- @!name!@ -->
+	<mime-type type="@!mimetype!@">
+		<comment>@!name!@</comment>
+		<glob pattern="*.@!ext!@"/>
+		<icon>@!mimetype!@</icon>
 	</mime-type>
-	<!-- Open Teaching Topography -->
-	<mime-type type="application/x-openteachingtopography">
-		<comment>Open Teaching Topography map</comment>
-		<glob pattern="*.ottp"/>
-		<sub-class-of type="application/zip"/>
-		<icon>application/x-openteachingtopography</icon>
-	</mime-type>
-	<!-- Open Teaching Media -->
-	<mime-type type="application/x-openteachingmedia">
-		<comment>Open Teaching Media items</comment>
-		<glob pattern="*.otmd"/>
-		<sub-class-of type="application/zip"/>
-		<icon>application/x-openteachingmedia</icon>
-	</mime-type>
-	<!-- OpenTeacher -->
-	<mime-type type="application/x-openteacher">
-		<comment>OpenTeacher word list</comment>
-		<glob pattern="*.ot"/>
-		<sub-class-of type="application/xml"/>
-		<icon>application/x-openteacher</icon>
-	</mime-type>
-	<!-- WRTS -->
-	<mime-type type="application/x-wrts">
-		<comment>WRTS word list</comment>
-		<glob pattern="*.wrts"/>
-		<sub-class-of type="application/xml"/>
-		<icon>application/x-wrts</icon>
-	</mime-type>
-	<!-- Teach2000 -->
-	<mime-type type="application/x-teach2000">
-		<comment>Teach2000 word list</comment>
-		<glob pattern="*.t2k"/>
-		<sub-class-of type="application/xml"/>
-		<icon>application/x-teach2000</icon>
-	</mime-type>
+	<!--(end)-->
 </mime-info>
