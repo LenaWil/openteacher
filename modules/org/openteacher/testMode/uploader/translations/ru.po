@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-10-28 12:40+0100\n"
+"POT-Creation-Date: 2012-08-30 17:48+0200\n"
 "PO-Revision-Date: 2012-11-12 18:53+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -17,7 +17,6 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-11-13 05:46+0000\n"
 "X-Generator: Launchpad (build 16251)\n"
 
-#. TRANSLATORS: This is the name of a file format OT can read.
-#: abby.py:68
-msgid "ABBY Lingvo Tutor"
-msgstr "ABBYY Lingvo Tutor"
+#: uploader.py:95
+msgid "Upload lesson"
+msgstr "Передать урок"
