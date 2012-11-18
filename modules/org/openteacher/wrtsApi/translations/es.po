@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-18 14:53+0200\n"
+"POT-Creation-Date: 2012-11-18 21:45+0100\n"
 "PO-Revision-Date: 2012-09-06 15:57+0000\n"
 "Last-Translator: Miguel A. Alvarado V. <alvaradoma@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -82,25 +82,35 @@ msgstr ""
 msgid "Word list succesfully exported to WRDS."
 msgstr "Lista de palabras exportado a WRDS exitosamente."
 
-#: wrtsApi.py:288
+#: wrtsApi.py:301
+#, fuzzy
+msgid "Can't find the share"
+msgstr "No se pueden mostrar los resultados."
+
+#: wrtsApi.py:302
+#, python-format
+msgid "Can't find the share you requested. ('%s') Are you sure it exists?"
+msgstr ""
+
+#: wrtsApi.py:332
 msgid "No list selected"
 msgstr "Ninguna lista seleccionada."
 
-#: wrtsApi.py:289
+#: wrtsApi.py:333
 msgid "No list was selected. Please try again."
 msgstr "Ninguna lista fue seleccionada. Por favor intente de nuevo."
 
-#: wrtsApi.py:314
+#: wrtsApi.py:360
 msgid "Can't show the result"
 msgstr "No se pueden mostrar los resultados."
 
-#: wrtsApi.py:315
+#: wrtsApi.py:361
 msgid "Can't open the resultive word list, because it can't be shown."
 msgstr ""
 "No se pueden abrir la lista de palabras resultante, porque no pueden ser "
 "mostrados."
 
-#: wrtsApi.py:318
+#: wrtsApi.py:365
 msgid "The word list was imported from WRDS successfully."
 msgstr "La lista de palabras fue importando de WRDS exitosamente."
 
@@ -120,6 +130,21 @@ msgstr "Contraseña:"
 msgid "Remember email address and password"
 msgstr "Recordar dirección de correo electrónico y contraseña"
 
-#: ui.py:114
+#: ui.py:116
 msgid "WRDS - Please choose a list:"
 msgstr "WRDS - Por favor elija una lista:"
+
+#: ui.py:143
+msgid "WRDS Share:"
+msgstr ""
+
+#. TRANSLATORS: please only translate the 'share-name' part here,
+#. TRANSLATORS: unless you have a good reason to do something
+#. TRANSLATORS: else, of course ;).
+#: ui.py:147
+msgid "share-name.wrts.nl"
+msgstr ""
+
+#: ui.py:148
+msgid "Get from share"
+msgstr ""

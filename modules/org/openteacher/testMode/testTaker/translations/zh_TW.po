@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-28 12:38+0100\n"
+"POT-Creation-Date: 2012-11-18 21:45+0100\n"
 "PO-Revision-Date: 2012-08-24 16:57+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
@@ -18,28 +18,28 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-08-31 05:08+0000\n"
 "X-Generator: Launchpad (build 15887)\n"
 
-#: testTaker.py:54
+#: testTaker.py:50
 msgid "Select the test you want to take"
 msgstr "選擇你想做的測驗"
 
-#: testTaker.py:55 testTaker.py:118
+#: testTaker.py:51 testTaker.py:114
 msgid "Take test"
 msgstr ""
 
-#: testTaker.py:122
+#: testTaker.py:118
 msgid "Choose test"
 msgstr "選擇測驗"
 
-#: testTaker.py:124
+#: testTaker.py:120
 msgid "Taking test"
 msgstr ""
 
-#: testTaker.py:184
+#: testTaker.py:180
 msgid ""
 "An error occured. The server could not be reached. Check your network "
 "connection."
 msgstr "錯誤發生。無法連到伺服器。檢查你的網路連線。"
 
-#: testTaker.py:187
+#: testTaker.py:183
 msgid "Your answers have successfully been handed in!"
 msgstr "你的答案已成功交出！"

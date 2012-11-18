@@ -6,11 +6,12 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-10-01 15:36+0200\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-11-18 21:45+0100\n"
 "PO-Revision-Date: 2012-11-09 23:20+0000\n"
 "Last-Translator: ghas <Unknown>\n"
 "Language-Team: Galician <gl@li.org>\n"
+"Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -38,22 +39,22 @@ msgstr "Corrixido: %s"
 msgid "Corrected"
 msgstr "Corrixido"
 
-#: inputTyping.py:183
+#: inputTyping.py:190
 msgid "Correct answer: <b>{answers}</b> [{diff}]"
 msgstr "Corrixir resposta: <b>{answers}</b> [{diff}]"
 
-#: inputTyping.py:185
+#: inputTyping.py:192
 msgid "Correct answer: <b>{answers}</b>"
 msgstr "Corrixir resposta: <b>{answers}</b>"
 
-#: inputTyping.py:282
+#: inputTyping.py:290
 msgid "Fade duration when wrong (milliseconds)"
 msgstr ""
 
-#: inputTyping.py:283
+#: inputTyping.py:291
 msgid "Lesson"
 msgstr "Lección"
 
-#: inputTyping.py:284
+#: inputTyping.py:292
 msgid "Words lesson"
 msgstr ""

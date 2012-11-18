@@ -146,6 +146,7 @@ class VocatrainApiModule(object):
 			self._mm.mods(type="translator"),
 			self._mm.mods(type="loader"),
 		)
+		self.filesWithTranslations = ("vocatrainApi.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

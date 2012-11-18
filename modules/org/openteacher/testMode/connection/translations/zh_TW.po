@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-28 12:39+0100\n"
+"POT-Creation-Date: 2012-11-18 21:44+0100\n"
 "PO-Revision-Date: 2012-08-24 16:50+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
@@ -18,30 +18,30 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-08-31 05:08+0000\n"
 "X-Generator: Launchpad (build 15887)\n"
 
-#: connection.py:63
+#: connection.py:60
 msgid "Server IP or hostname:"
 msgstr "伺服器 IP 或主機名稱："
 
-#: connection.py:64
+#: connection.py:61
 msgid "Connect"
 msgstr "連接"
 
-#: connection.py:95
+#: connection.py:92
 msgid "Username:"
 msgstr "使用者名稱："
 
-#: connection.py:96
+#: connection.py:93
 msgid "Password:"
 msgstr "密碼："
 
-#: connection.py:97 connection.py:142
+#: connection.py:94 connection.py:139
 msgid "Login"
 msgstr "登入"
 
-#: connection.py:160
+#: connection.py:157
 msgid "Could not connect to the server. Possibly wrong hostname."
 msgstr "無法連線到伺服器。也許主機名稱錯誤"
 
-#: connection.py:231
+#: connection.py:228
 msgid "Could not login. Wrong username or password."
 msgstr "無法登入。錯誤使用者名稱或密碼"

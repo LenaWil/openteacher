@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-18 14:53+0200\n"
+"POT-Creation-Date: 2012-11-18 21:44+0100\n"
 "PO-Revision-Date: 2012-03-31 15:16+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -20,6 +20,6 @@ msgstr ""
 
 #. TRANSLATORS: This is one of the file formats OpenTeacher
 #. TRANSLATORS: can read.
-#: otwd.py:65
+#: otwd.py:62
 msgid "Open Teaching Words"
 msgstr "Vrij Leren Woordjes"

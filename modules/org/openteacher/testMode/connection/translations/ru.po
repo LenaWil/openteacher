@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-28 12:39+0100\n"
+"POT-Creation-Date: 2012-11-18 21:44+0100\n"
 "PO-Revision-Date: 2012-10-24 19:40+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -18,31 +18,31 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-10-25 05:55+0000\n"
 "X-Generator: Launchpad (build 16179)\n"
 
-#: connection.py:63
+#: connection.py:60
 msgid "Server IP or hostname:"
 msgstr "IP-адрес или имя сервера:"
 
-#: connection.py:64
+#: connection.py:61
 msgid "Connect"
 msgstr "Подключиться"
 
-#: connection.py:95
+#: connection.py:92
 msgid "Username:"
 msgstr "Имя пользователя:"
 
-#: connection.py:96
+#: connection.py:93
 msgid "Password:"
 msgstr "Пароль:"
 
-#: connection.py:97 connection.py:142
+#: connection.py:94 connection.py:139
 msgid "Login"
 msgstr "Войти"
 
-#: connection.py:160
+#: connection.py:157
 msgid "Could not connect to the server. Possibly wrong hostname."
 msgstr ""
 "Не удалось подключиться к серверу. Возможно указано неправильное имя сервера."
 
-#: connection.py:231
+#: connection.py:228
 msgid "Could not login. Wrong username or password."
 msgstr "Не удалось войти в систему. Неверное имя пользователя или пароль."

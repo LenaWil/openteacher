@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-28 12:38+0100\n"
+"POT-Creation-Date: 2012-11-18 21:45+0100\n"
 "PO-Revision-Date: 2012-08-15 14:46+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -18,23 +18,23 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-08-31 05:08+0000\n"
 "X-Generator: Launchpad (build 15887)\n"
 
-#: testTaker.py:54
+#: testTaker.py:50
 msgid "Select the test you want to take"
 msgstr "Selecteer de toets die je wilt maken"
 
-#: testTaker.py:55 testTaker.py:118
+#: testTaker.py:51 testTaker.py:114
 msgid "Take test"
 msgstr "Maak toets"
 
-#: testTaker.py:122
+#: testTaker.py:118
 msgid "Choose test"
 msgstr "Kies toets"
 
-#: testTaker.py:124
+#: testTaker.py:120
 msgid "Taking test"
 msgstr "Bezig met het maken van de toets"
 
-#: testTaker.py:184
+#: testTaker.py:180
 msgid ""
 "An error occured. The server could not be reached. Check your network "
 "connection."
@@ -42,6 +42,6 @@ msgstr ""
 "Er trad een fout op. De server kon niet worden bereikt. Kijk uw "
 "netwerkverbinding na."
 
-#: testTaker.py:187
+#: testTaker.py:183
 msgid "Your answers have successfully been handed in!"
 msgstr "Uw antwoorden zijn met succes ingeleverd!"

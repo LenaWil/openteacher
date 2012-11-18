@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-28 12:39+0100\n"
+"POT-Creation-Date: 2012-11-18 21:45+0100\n"
 "PO-Revision-Date: 2012-10-27 17:59+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -82,25 +82,35 @@ msgstr ""
 msgid "Word list succesfully exported to WRDS."
 msgstr "Список слов успешно экспортирован в WRDS."
 
-#: wrtsApi.py:288
+#: wrtsApi.py:301
+#, fuzzy
+msgid "Can't find the share"
+msgstr "Не удалось показать результат"
+
+#: wrtsApi.py:302
+#, python-format
+msgid "Can't find the share you requested. ('%s') Are you sure it exists?"
+msgstr ""
+
+#: wrtsApi.py:332
 msgid "No list selected"
 msgstr "Список не выбран"
 
-#: wrtsApi.py:289
+#: wrtsApi.py:333
 msgid "No list was selected. Please try again."
 msgstr "Список не выбран. Попробуйте ещё раз."
 
-#: wrtsApi.py:314
+#: wrtsApi.py:360
 msgid "Can't show the result"
 msgstr "Не удалось показать результат"
 
-#: wrtsApi.py:315
+#: wrtsApi.py:361
 msgid "Can't open the resultive word list, because it can't be shown."
 msgstr ""
 "Не удалось открыть результирующий список  слов, потому что он не может быть "
 "показан."
 
-#: wrtsApi.py:318
+#: wrtsApi.py:365
 msgid "The word list was imported from WRDS successfully."
 msgstr "Список слов успешно импортирован из WRDS."
 
@@ -120,6 +130,21 @@ msgstr "Пароль:"
 msgid "Remember email address and password"
 msgstr "Запомнить адрес электронной почты и пароль"
 
-#: ui.py:114
+#: ui.py:116
 msgid "WRDS - Please choose a list:"
 msgstr "WRDS - Пожалуйста, выберите список:"
+
+#: ui.py:143
+msgid "WRDS Share:"
+msgstr ""
+
+#. TRANSLATORS: please only translate the 'share-name' part here,
+#. TRANSLATORS: unless you have a good reason to do something
+#. TRANSLATORS: else, of course ;).
+#: ui.py:147
+msgid "share-name.wrts.nl"
+msgstr ""
+
+#: ui.py:148
+msgid "Get from share"
+msgstr ""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-28 12:38+0100\n"
+"POT-Creation-Date: 2012-11-18 21:44+0100\n"
 "PO-Revision-Date: 2012-08-15 14:45+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -18,71 +18,71 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-08-31 05:08+0000\n"
 "X-Generator: Launchpad (build 15887)\n"
 
-#: teacherPanel.py:70
+#: teacherPanel.py:66
 msgid "Tests"
 msgstr "Toetsen"
 
-#: teacherPanel.py:71
+#: teacherPanel.py:67
 msgid "Add lesson"
 msgstr "Les toevoegen"
 
-#: teacherPanel.py:114
+#: teacherPanel.py:110
 msgid "Select a student/group:"
 msgstr "Selecteer een leerling/groep:"
 
-#: teacherPanel.py:115
+#: teacherPanel.py:111
 msgid "Add person/group"
 msgstr "Persoon/groep toevoegen"
 
-#: teacherPanel.py:116
+#: teacherPanel.py:112
 msgid "Back"
 msgstr "Terug"
 
-#: teacherPanel.py:183
+#: teacherPanel.py:179
 msgid "(did not participate)"
 msgstr "(nam niet deel)"
 
-#: teacherPanel.py:189
+#: teacherPanel.py:185
 msgid "(Handed in)"
 msgstr "(Ingeleverd)"
 
-#: teacherPanel.py:229
+#: teacherPanel.py:225
 msgid "Questions:"
 msgstr "Vragen:"
 
-#: teacherPanel.py:230
+#: teacherPanel.py:226
 msgid "People in this test:"
 msgstr "Deelnemers van deze toets"
 
-#: teacherPanel.py:231
+#: teacherPanel.py:227
 msgid "Add person"
 msgstr "Persoon toevoegen"
 
-#: teacherPanel.py:313
+#: teacherPanel.py:309
 msgid "Test"
 msgstr "Toets"
 
-#: teacherPanel.py:314
+#: teacherPanel.py:310
 msgid "(Re)check answers"
 msgstr "Antwoorden (opnieuw) controleren"
 
-#: teacherPanel.py:315
+#: teacherPanel.py:311
 msgid "(Re)publish answers"
 msgstr "Antwoorden (opnieuw) publiceren"
 
-#: teacherPanel.py:327
+#: teacherPanel.py:323
 msgid "Student's answers have been checked!"
 msgstr "De antwoorden van de leerling zijn al nagekeken!"
 
-#: teacherPanel.py:333
+#: teacherPanel.py:329
 msgid "Student's results have been (re)published!"
 msgstr "De resultaten van de leerling zijn gepublicereerd!"
 
-#: teacherPanel.py:523
+#: teacherPanel.py:519
 msgid "Person"
 msgstr "Persoon"
 
-#: teacherPanel.py:525
+#: teacherPanel.py:521
 msgid ""
 "Answers of this student have not been checked yet. Click the 'Check answers' "
 "button in the second column."
@@ -90,39 +90,39 @@ msgstr ""
 "De antwoorden van deze leerling zijn nog niet nagekeken. Klik op de "
 "'Nakijken'-knop in de tweede kolom."
 
-#: teacherPanel.py:527
+#: teacherPanel.py:523
 msgid "Answers right:"
 msgstr "Goede antwoorden"
 
-#: teacherPanel.py:529
+#: teacherPanel.py:525
 msgid "Answers wrong:"
 msgstr "Foute antwoorden"
 
-#: teacherPanel.py:532
+#: teacherPanel.py:528
 msgid "OpenTeacher mark:"
 msgstr "OpenTeacher-cijfer:"
 
-#: teacherPanel.py:534
+#: teacherPanel.py:530
 msgid "Final mark:"
 msgstr "Uiteindelijke cijfer:"
 
-#: teacherPanel.py:536
+#: teacherPanel.py:532
 msgid "Question"
 msgstr "Vraag"
 
-#: teacherPanel.py:537
+#: teacherPanel.py:533
 msgid "Given answer"
 msgstr "Gegeven antwoord"
 
 #. TRANSLATORS: The name of a button clicked if an answer is correct.
-#: teacherPanel.py:540
+#: teacherPanel.py:536
 msgid "Correct"
 msgstr "Nakijken"
 
-#: teacherPanel.py:686
+#: teacherPanel.py:682
 msgid "Teacher panel"
 msgstr "Docentenpaneel"
 
-#: teacherPanel.py:688
+#: teacherPanel.py:684
 msgid "Teacher Panel"
 msgstr "Docentenpaneel"
