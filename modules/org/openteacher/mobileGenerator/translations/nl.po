@@ -1,24 +1,25 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Dutch translation for openteacher
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenTeacher 3.0\n"
-"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-22 20:58+0200\n"
-"PO-Revision-Date: 2012-10-16 20:18+0100\n"
-"Last-Translator: Marten de Vries <marten94@gmail.com>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-11-18 21:46+0100\n"
+"PO-Revision-Date: 2012-11-18 21:04+0000\n"
+"Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
+"Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-11-19 04:52+0000\n"
+"X-Generator: Launchpad (build 16278)\n"
 
 #: scr/gui.js:166 scr/gui.js:502
 msgid "Menu"
-msgstr ""
+msgstr "Menu"
 
 #: scr/gui.js:167
 msgid "New list"
@@ -30,7 +31,7 @@ msgstr "Laad lijst"
 
 #: scr/gui.js:169 scr/gui.js:174
 msgid "Save list"
-msgstr "Sla lijst op"
+msgstr "Lijst opslaan"
 
 #: scr/gui.js:170 scr/gui.js:191
 msgid "Remove list"
@@ -43,7 +44,7 @@ msgstr "Opties"
 #: scr/gui.js:175
 msgid "Please choose a name for the current list, so it can be saved."
 msgstr ""
-"Kies alstublieft een naam voor de huidige lijst, zodat die opgeslagen kan "
+"Kies alstublieft een naam voor de huidige lijst, zodat deze opgeslagen kan "
 "worden."
 
 #: scr/gui.js:176
@@ -100,7 +101,7 @@ msgstr "Lijst invoeren"
 
 #: scr/gui.js:270
 msgid "Word list:"
-msgstr "Woordjeslijst:"
+msgstr "Woordenlijst:"
 
 #: scr/gui.js:271
 msgid ""
@@ -114,7 +115,7 @@ msgstr ""
 
 #: scr/gui.js:273
 msgid "Error"
-msgstr "Probleem"
+msgstr "Fout"
 
 #: scr/gui.js:274
 msgid "Missing equals sign or tab"
@@ -125,8 +126,8 @@ msgid ""
 "Please make sure every line contains an '='-sign or tab between the "
 "questions and answers."
 msgstr ""
-"Zorg er alstublieft voor dat iedereen lijn een '='-teken of een tab bevat "
-"tussen de vragen en antwoorden."
+"Zorg er alstublieft voor dat iedere regel een '='-teken of een tab tussen de "
+"vragen en de antwoorden bevat."
 
 #: scr/gui.js:276 scr/gui.js:469
 msgid "Ok"
@@ -150,7 +151,7 @@ msgstr "Controleer!"
 
 #: scr/gui.js:463
 msgid "Skip"
-msgstr "Overslaan"
+msgstr "Sla over"
 
 #: scr/gui.js:464
 msgid "Correct anyway"
@@ -158,7 +159,7 @@ msgstr "Toch goed"
 
 #: scr/gui.js:467 scr/gui.js:468
 msgid "Test completed!"
-msgstr "Overhoring compleet!"
+msgstr "Toets afgerond!"
 
 #: scr/gui.js:470
 #, python-format
@@ -167,13 +168,4 @@ msgstr "Uw cijfer: %s"
 
 #: scr/gui.js:507
 msgid "List management"
-msgstr "Lijstbeheer"
-
-#~ msgid "Import from file"
-#~ msgstr "Importeren vanuit bestand"
-
-#~ msgid "Export to file"
-#~ msgstr "Exporteren naar bestand"
-
-#~ msgid "OpenTeacher"
-#~ msgstr "OpenTeacher"
+msgstr "Lijstmanagement"

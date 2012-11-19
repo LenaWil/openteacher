@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-11-18 21:45+0100\n"
+"POT-Creation-Date: 2012-11-18 21:46+0100\n"
 "PO-Revision-Date: 2012-10-27 17:59+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-28 04:55+0000\n"
-"X-Generator: Launchpad (build 16194)\n"
+"X-Launchpad-Export-Date: 2012-11-19 04:51+0000\n"
+"X-Generator: Launchpad (build 16278)\n"
+"Language: ru\n"
 
 #: wrtsApi.py:155
 msgid "Import from WRDS"
@@ -51,8 +51,8 @@ msgid ""
 "WRDS didn't accept the login credentials. Are you sure you entered your e-"
 "mail and password correctly?"
 msgstr ""
-"WRDS не принимает учетные данные для входа. Вы уверены, что вы ввели свой ​​"
-"адрес электронной почты и пароль правильно?"
+"WRDS не принимает учетные данные для входа. Вы уверены, что вы ввели свой "
+"​​адрес электронной почты и пароль правильно?"
 
 #: wrtsApi.py:183
 msgid "No WRDS connection"
@@ -83,9 +83,8 @@ msgid "Word list succesfully exported to WRDS."
 msgstr "Список слов успешно экспортирован в WRDS."
 
 #: wrtsApi.py:301
-#, fuzzy
 msgid "Can't find the share"
-msgstr "Не удалось показать результат"
+msgstr ""
 
 #: wrtsApi.py:302
 #, python-format
