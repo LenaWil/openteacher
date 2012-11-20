@@ -28,6 +28,7 @@
 		<link rel='icon' type='image/png' href='openteacher.png' />
 
 		<link type='text/css' rel='stylesheet' href='css/themes/default/jquery.mobile-1.2.0.css' />
+		<link type='text/css' rel='stylesheet' href='css/themes/android/android-theme.css' />
 		<style type='text/css'>
 			#missing-separator-popup, #overwrite-popup {
 				max-width: 400px;
@@ -62,6 +63,34 @@
 		<!--(for script in scripts)-->
 		<script type='text/javascript' src='scr/@!script!@'></script>
 		<!--(end)-->
+		<script type='text/javascript'>
+			/* iOS theme*/
+			(function () {
+				var ua, isIos;
+
+				ua = navigator.userAgent.toLowerCase();
+				isIos = ! (ua.indexOf("ipod") === -1 && ua.indexOf("iphone") === -1 && ua.indexOf("ipad") === -1);
+				if (isIos) {
+					//page transition
+					$(document).on("mobileinit", function(){
+					  $.mobile.defaultPageTransition = "slide";
+					});
+					//add css
+					$(function () {
+						$("head").append("<link type='text/css' rel='stylesheet' href='css/themes/ios/styles.css' />");
+					});
+				}
+			}());
+
+			/* android theme */
+//FIXME: debug some more.
+//			(function () {
+//				if (navigator.userAgent.toLowerCase().indexOf("android") !== -1) {
+//					//we want a dark theme.
+//					$.mobile.page.prototype.options.contentTheme = "d";
+//				}
+//			}());
+		</script>
 	</head>
 	<body>
 		<!-- enter page -->

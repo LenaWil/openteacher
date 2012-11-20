@@ -30,12 +30,24 @@ scr/jquery-1.8.2.js:
 
 	Date: Thu Sep 20 2012 21:13:05 GMT-0400 (Eastern Daylight Time)
 
-css/*, scr/jquery.mobile-1.2.0.js:
+css/themes/default/*, scr/jquery.mobile-1.2.0.js:
 	jQuery Mobile Framework Git Build: SHA1: b49cc06499abf8f987cf90f35349cfac0918c939 <> Date: Tue Oct 2 11:22:34 2012 -0700
 	http://jquerymobile.com
 
 	Copyright 2012 jQuery Foundation and other contributors
 	Released under the MIT license.
+	http://jquery.org/license
+
+css/themes/ios/*:
+	Distributed under the [MIT License](http://en.wikipedia.org/wiki/MIT_License).
+	Downloaded from: https://github.com/taitems/iOS-Inspired-jQuery-Mobile-Theme
+
+css/themes/android/*, scr/jquery.mobile.android-theme.js:
+	jQuery Mobile Framework 1.0.1
+	http://jquerymobile.com
+
+	Copyright 2011-2012 (c) jQuery Project
+	Dual licensed under the MIT or GPL Version 2 licenses.
 	http://jquery.org/license
 
 scr/taboverride.js, scr/jquery.taboverride.js:

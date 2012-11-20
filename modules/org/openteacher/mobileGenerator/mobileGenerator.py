@@ -24,6 +24,7 @@ import os
 import json
 import urllib2
 import urllib
+import re
 
 from PyQt4 import QtCore, QtGui
 
@@ -185,10 +186,11 @@ class MobileGeneratorModule(object):
 		scripts = [
 			"jquery-1.8.2.js",
 			"jquery.mobile-1.2.0.js",
+			"jquery.mobile.android-theme.js",
 			"taboverride.js",
 			"jquery.taboverride.js",
 			"jsdiff.js",
-			"gui.js"
+			"gui.js",
 		]
 
 		os.mkdir(os.path.join(path, "scr"))
