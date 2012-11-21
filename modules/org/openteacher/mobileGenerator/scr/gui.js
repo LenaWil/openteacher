@@ -18,7 +18,7 @@
 	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*global $: false, translationIndex: false, logic: false */
+/*global $: false, translationIndex: false, logic: false, JsDiff: false */
 /*jslint nomen: true, browser: true */
 
 (function () {
@@ -43,7 +43,7 @@
 			enterTab.newList();
 		};
 
-		removeList = function(name) {
+		removeList = function (name) {
 			var lessons;
 
 			lessons = getLessons();
@@ -342,17 +342,17 @@
 				}
 				answerBox.hide();
 				correctionLabel.show().fadeOut(4000, function () {
-					animationEnd(answerBox, correctionLabel, result);
+					animationEnd(answerBox, result);
 				});
 			}
 		};
 
-		animationEnd = function (answerBox, correctionLabel, result) {
+		animationEnd = function (answerBox, result) {
 			answerBox.show();
 			$("#correct-anyway-button").button("enable");
 
 			lessonType.setResult(result);
-		}
+		};
 
 		onSkip = function () {
 			lessonType.skip();
@@ -491,7 +491,7 @@
 
 	gui = (function () {
 		var setupDone, main, doRetranslate, retranslate, tabChange,
-			startLesson;
+			startLesson, onDeviceReady, onMenuKeyDown;
 
 		setupDone = false;
 
@@ -541,16 +541,16 @@
 				});
 			}
 		};
-		
-		function onDeviceReady() {
-			// Connect buttons to functions
-			document.addEventListener("menubutton", onMenuKeyDown, false);
-		}
-		
-		function onMenuKeyDown() {
-			// Make the menu button on Android work
-			$.mobile.changePage('#menu-dialog','pop',false,true);
-		}
+
+		onDeviceReady = function () {
+			//Connect buttons to functions
+			$(document).on("menubutton", onMenuKeyDown);
+		};
+
+		onMenuKeyDown = function () {
+			//Make the menu button on Android work
+			$.mobile.changePage("#menu-dialog", "pop", false, true);
+		};
 
 		main = function () {
 			//translate the GUI for the first time. Delay the other set
@@ -568,10 +568,7 @@
 
 					//make sure the options dialog is ready to be shown
 					optionsDialog.setupSettings();
-					
-					//do what needs to be done after the device is ready
-					document.addEventListener("deviceready", onDeviceReady, false);
-					
+
 					//this part of main() is supposed to only run once.
 					setupDone = true;
 				}
@@ -620,11 +617,47 @@
 			}
 		});
 
+		/* OS matching themes */
+		(function () {
+			var ua, isIos, isAndroid;
+
+			ua = navigator.userAgent.toLowerCase();
+			isIos = !(ua.indexOf("ipod") === -1 && ua.indexOf("iphone") === -1 && ua.indexOf("ipad") === -1);
+			isAndroid = ua.indexOf("android") !== -1;
+
+			if (isIos) {
+				//page transition
+				$(document).on("mobileinit", function () {
+					$.mobile.defaultPageTransition = "slide";
+				});
+				//add css
+				$(function () {
+					$("head").append("<link type='text/css' rel='stylesheet' href='css/themes/ios/styles.css' />");
+				});
+			}
+			if (isAndroid) {
+				//change default swatch to something looking good
+				//in android
+				$.mobile.page.prototype.options.contentTheme = "d";
+
+				$(function () {
+					//add css
+					$("head").append("<link type='text/css' rel='stylesheet' href='css/themes/android/android-theme.css' />");
+
+					//set theme class
+					$("body").addClass("android");
+				});
+			}
+		}());
+
 		//initialization of pages (retranslating etc.)
 		$(document).on("pageinit", main);
 
 		//handle page change, so a lesson can be started etc.
 		$(document).on("pagebeforechange", tabChange);
+
+		//do what needs to be done after the device is ready
+		$(document).on("deviceready", onDeviceReady);
 
 		return {
 			retranslate: retranslate

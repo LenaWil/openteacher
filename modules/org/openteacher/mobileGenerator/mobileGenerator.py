@@ -155,8 +155,8 @@ class MobileGeneratorModule(object):
 			for entry in po.translated_entries():
 				data[entry.msgid] = entry.msgstr
 
-			lang = poname[:len(".po") -1].replace("_", "-")
-			jsonname = lang + ".json"
+			lang = poname[:-len(".po")]
+			jsonname = lang.replace("_", "-") + ".json"
 			translationIndex[lang] = {
 				"url": os.path.join("translations", jsonname),
 				#the language code as fallback
@@ -186,7 +186,6 @@ class MobileGeneratorModule(object):
 		scripts = [
 			"jquery-1.8.2.js",
 			"jquery.mobile-1.2.0.js",
-			"jquery.mobile.android-theme.js",
 			"taboverride.js",
 			"jquery.taboverride.js",
 			"jsdiff.js",
