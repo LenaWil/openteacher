@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-11-18 21:46+0100\n"
 "PO-Revision-Date: 2012-11-20 13:55+0000\n"
 "Last-Translator: Adriano Steffler <Unknown>\n"
@@ -16,9 +16,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-11-21 04:58+0000\n"
 "X-Generator: Launchpad (build 16293)\n"
-"Language: pt_BR\n"
 
-#. TRANSLATORS: This is the name of a file format OT can read.
-#: abbyy.py:62
-msgid "ABBYY Lingvo Tutor"
-msgstr "ABBYY Lingvo Tutor"
+#. TRANSLATORS: This is one of the file formats OpenTeacher
+#. TRANSLATORS: can read. It's named after the program that uses
+#. TRANSLATORS: it. See http://ankisrs.net/ for more info on it.
+#: anki.py:77
+msgid "Anki"
+msgstr "Anki"

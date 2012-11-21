@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-11-18 21:46+0100\n"
-"PO-Revision-Date: 2012-11-20 13:55+0000\n"
+"PO-Revision-Date: 2012-11-20 13:58+0000\n"
 "Last-Translator: Adriano Steffler <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,9 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-11-21 04:58+0000\n"
 "X-Generator: Launchpad (build 16293)\n"
-"Language: pt_BR\n"
 
-#. TRANSLATORS: This is the name of a file format OT can read.
-#: abbyy.py:62
-msgid "ABBYY Lingvo Tutor"
-msgstr "ABBYY Lingvo Tutor"
+#: generateMobile.py:45
+msgid "Generates the html files of OpenTeacher mobile."
+msgstr "Gera os arquivos .html do OpenTeacher mobile"
