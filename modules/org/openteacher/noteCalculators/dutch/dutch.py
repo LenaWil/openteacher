@@ -29,14 +29,8 @@ class DutchNoteCalculatorModule(object):
 		)
 		self.filesWithTranslations = ("dutch.py",)
 
-		x = 935
 		self.priorities = {
-			"all": x,
-			"selfstudy": x,
-			"student@home": x,
-			"student@school": x,
-			"teacher": x,
-			"wordsonly": x,
+			"default": 935,
 		}
 
 	def _formatNote(self, note):

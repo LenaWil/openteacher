@@ -19,60 +19,54 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtCore, QtGui
-
 import threading
 
-class UpdatesDialog(QtGui.QDialog):
-	def __init__(self, updates, rememberChoice, *args, **kwargs):
-		super(UpdatesDialog, self).__init__(*args, **kwargs)
+def getUpdatesDialog():
+	class UpdatesDialog(QtGui.QDialog):
+		def __init__(self, updates, rememberChoice, *args, **kwargs):
+			super(UpdatesDialog, self).__init__(*args, **kwargs)
 
-		self._updatesLength = len(updates)
+			self._updatesLength = len(updates)
 
-		self.label = QtGui.QLabel()
-		self.checkBox = QtGui.QCheckBox()
-		self.checkBox.setChecked(rememberChoice)
-		buttonBox = QtGui.QDialogButtonBox(
-			QtGui.QDialogButtonBox.No |
-			QtGui.QDialogButtonBox.Yes
-		)
-		buttonBox.button(QtGui.QDialogButtonBox.Yes).setAutoDefault(True)
-		buttonBox.button(QtGui.QDialogButtonBox.No).setAutoDefault(False)
-		buttonBox.accepted.connect(self.accept)
-		buttonBox.rejected.connect(self.reject)
+			self.label = QtGui.QLabel()
+			self.checkBox = QtGui.QCheckBox()
+			self.checkBox.setChecked(rememberChoice)
+			buttonBox = QtGui.QDialogButtonBox(
+				QtGui.QDialogButtonBox.No |
+				QtGui.QDialogButtonBox.Yes
+			)
+			buttonBox.button(QtGui.QDialogButtonBox.Yes).setAutoDefault(True)
+			buttonBox.button(QtGui.QDialogButtonBox.No).setAutoDefault(False)
+			buttonBox.accepted.connect(self.accept)
+			buttonBox.rejected.connect(self.reject)
 
-		layout = QtGui.QVBoxLayout()
-		layout.addWidget(self.label)
-		layout.addStretch()
-		layout.addWidget(self.checkBox)
-		layout.addWidget(buttonBox)
-		
-		self.setLayout(layout)
+			layout = QtGui.QVBoxLayout()
+			layout.addWidget(self.label)
+			layout.addStretch()
+			layout.addWidget(self.checkBox)
+			layout.addWidget(buttonBox)
+			
+			self.setLayout(layout)
 
-	def retranslate(self):
-		self.setWindowTitle(ngettext(
-			"Update available",
-			"Updates available",
-			self._updatesLength
-		))
-		self.label.setText(ngettext(
-			"There is %s update available, do you want to update?",
-			"There are %s updates available, do you want to update?",
-			self._updatesLength
-		) % self._updatesLength)
-		self.checkBox.setText(_("Remember my choice"))
+		def retranslate(self):
+			self.setWindowTitle(ngettext(
+				"Update available",
+				"Updates available",
+				self._updatesLength
+			))
+			self.label.setText(ngettext(
+				"There is %s update available, do you want to update?",
+				"There are %s updates available, do you want to update?",
+				self._updatesLength
+			) % self._updatesLength)
+			self.checkBox.setText(_("Remember my choice"))
 
-	@property
-	def rememberChoice(self):
-		return self.checkBox.isChecked()
+		@property
+		def rememberChoice(self):
+			return self.checkBox.isChecked()
+	return UpdatesDialog
 
 class UpdatesDialogModule(object):
-	#Separate class, so the namespace isn't cluttered.
-	class _Signals(QtCore.QObject):
-		finishedFetching = QtCore.pyqtSignal()
-	#singleton, so overwrite the class
-	_Signals = _Signals()
-
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(UpdatesDialogModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
@@ -116,6 +110,18 @@ class UpdatesDialogModule(object):
 		})
 
 	def enable(self):
+		global QtCore, QtGui
+		try:
+			from PyQt4 import QtCore, QtGui
+		except ImportError:
+			return
+		global UpdatesDialog
+		UpdatesDialog = getUpdatesDialog()
+
+		class Signals(QtCore.QObject):
+			finishedFetching = QtCore.pyqtSignal()
+		self._Signals = Signals()
+
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._dataStore = self._modules.default(type="dataStore").store
 

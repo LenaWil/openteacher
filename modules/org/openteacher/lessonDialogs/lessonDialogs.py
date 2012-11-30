@@ -19,8 +19,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtCore, QtGui
-
 class LessonDialogsModule(object):
 	"""This module isn't retranslated, since it only has very short
 	   lasting dialogs. It's not worth the effort.
@@ -41,6 +39,11 @@ class LessonDialogsModule(object):
 		self.filesWithTranslations = ("lessonDialogs.py",)
 	
 	def enable(self):
+		global QtGui
+		try:
+			from PyQt4 import QtGui
+		except ImportError:
+			return
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		try:

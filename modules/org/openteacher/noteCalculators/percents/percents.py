@@ -33,27 +33,18 @@ class PercentsNoteCalculatorModule(object):
 		)
 		self.filesWithTranslations = ("percents.py",)
 
-		x = 735
 		self.priorities = {
-			"all": x,
-			"selfstudy": x,
-			"student@home": x,
-			"student@school": x,
-			"teacher": x,
-			"wordsonly": x,
+			"default": 735,
 		}
 
+	def _format(self, percents):
+		return "%s%%" % percents
+
 	def calculateNote(self, test):
-		return "%s%%" % self._calculatePercents(test)
+		return self._format(self._calculatePercents(test))
 
 	def calculateAverageNote(self, tests):
-		#FIXME 3.1: move this code into the calculatePercents module too.
-		#because shared with at least ects and american.
-		note = 0
-		for test in tests:
-			note += self._calculatePercents(test)
-		note /= float(len(tests))
-		return "%s%%" % int(round(note))
+		return self._format(self._calculateAveragePercents(tests))
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
@@ -67,10 +58,12 @@ class PercentsNoteCalculatorModule(object):
 			translator.languageChanged.handle(self._retranslate)
 		self._retranslate()
 
-		self._calculatePercents = self._modules.default(
+		percentsCalculator = self._modules.default(
 			"active",
 			type="percentsCalculator"
-		).calculatePercents
+		)
+		self._calculatePercents = percentsCalculator.calculatePercents
+		self._calculateAveragePercents = percentsCalculator.calculateAveragePercents
 
 		self.active = True
 
@@ -91,6 +84,7 @@ class PercentsNoteCalculatorModule(object):
 		del self.name
 		del self._modules
 		del self._calculatePercents
+		del self._calculateAveragePercents
 
 def init(moduleManager):
 	return PercentsNoteCalculatorModule(moduleManager)

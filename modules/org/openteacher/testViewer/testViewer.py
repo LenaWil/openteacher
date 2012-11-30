@@ -19,7 +19,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtCore, QtGui
 import datetime
 import weakref
 
@@ -30,148 +29,152 @@ def total_seconds(td):
 	"""
 	return int(round((td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / float(10**6)))
 
-class TestModel(QtCore.QAbstractTableModel):
-	def __init__(self, moduleManager, list, dataType, test, *args, **kwargs):
-		super(TestModel, self).__init__(*args, **kwargs)
+def getTestModel():
+	class TestModel(QtCore.QAbstractTableModel):
+		def __init__(self, moduleManager, list, dataType, test, *args, **kwargs):
+			super(TestModel, self).__init__(*args, **kwargs)
 
-		self._mm = moduleManager
+			self._mm = moduleManager
 
-		self._list = list
-		self._test = test
+			self._list = list
+			self._test = test
 
-		for module in self._mm.mods("active", type="testType"):
-			if dataType == module.dataType:
-				self.testTable = module
-				self.testTable.updateList(self._list, self._test)
-				break
+			for module in self._mm.mods("active", type="testType"):
+				if dataType == module.dataType:
+					self.testTable = module
+					self.testTable.updateList(self._list, self._test)
+					break
 
-	def headerData(self, section, orientation, role):
-		if role != QtCore.Qt.DisplayRole:
-			return
-		if orientation == QtCore.Qt.Horizontal:
-			return self.testTable.header[section]
-		else:
-			return section + 1
+		def headerData(self, section, orientation, role):
+			if role != QtCore.Qt.DisplayRole:
+				return
+			if orientation == QtCore.Qt.Horizontal:
+				return self.testTable.header[section]
+			else:
+				return section + 1
 
-	def data(self, index, role):
-		if not index.isValid():
-			return
-		
-		if type(self.testTable.data(index.row(), index.column())) == type(True):
-			# Boolean
-			if role == QtCore.Qt.CheckStateRole:
-				return self.testTable.data(index.row(), index.column())
-		else:
-			# Non-Boolean
-			if role == QtCore.Qt.DisplayRole:
-				return self.testTable.data(index.row(), index.column())
+		def data(self, index, role):
+			if not index.isValid():
+				return
+			
+			if type(self.testTable.data(index.row(), index.column())) == type(True):
+				# Boolean
+				if role == QtCore.Qt.CheckStateRole:
+					return self.testTable.data(index.row(), index.column())
+			else:
+				# Non-Boolean
+				if role == QtCore.Qt.DisplayRole:
+					return self.testTable.data(index.row(), index.column())
 
-	def rowCount(self, parent):
-		return len(self._test["results"])
+		def rowCount(self, parent):
+			return len(self._test["results"])
 
-	def columnCount(self, parent):
-		return len(self.testTable.header)
+		def columnCount(self, parent):
+			return len(self.testTable.header)
+	return TestModel
 
-class TestViewer(QtGui.QSplitter):
-	def __init__(self, moduleManager, list, dataType, test, *args, **kwargs):
-		super(TestViewer, self).__init__(QtCore.Qt.Vertical, *args, **kwargs)
-		
-		self.test = test
+def getTestViewer():
+	class TestViewer(QtGui.QSplitter):
+		def __init__(self, moduleManager, list, dataType, test, *args, **kwargs):
+			super(TestViewer, self).__init__(QtCore.Qt.Vertical, *args, **kwargs)
+			
+			self.test = test
 
-		self._mm = moduleManager
-		self._modules = set(self._mm.mods(type="modules")).pop()
+			self._mm = moduleManager
+			self._modules = set(self._mm.mods(type="modules")).pop()
 
-		#Vertical splitter
-		tableView = QtGui.QTableView()
-		testModel = TestModel(self._mm, list, dataType, self.test)
-		tableView.setModel(testModel)
+			#Vertical splitter
+			tableView = QtGui.QTableView()
+			testModel = TestModel(self._mm, list, dataType, self.test)
+			tableView.setModel(testModel)
 
-		self.totalThinkingTimeLabel = QtGui.QLabel()
-		vertSplitter = QtGui.QSplitter(QtCore.Qt.Vertical)
-		vertSplitter.addWidget(self.totalThinkingTimeLabel)
-		vertSplitter.addWidget(tableView)
+			self.totalThinkingTimeLabel = QtGui.QLabel()
+			vertSplitter = QtGui.QSplitter(QtCore.Qt.Vertical)
+			vertSplitter.addWidget(self.totalThinkingTimeLabel)
+			vertSplitter.addWidget(tableView)
 
-		#Horizontal splitter
-		factsLayout = QtGui.QVBoxLayout()
-		self.completedLabel = QtGui.QLabel()
-		self.noteLabel = QtGui.QLabel()
-		factsLayout.addWidget(self.noteLabel, 0, QtCore.Qt.AlignTop)
-		for module in self._mm.mods("active", type="testType"):
-			if module.dataType == dataType and hasattr(module, "funFacts"):
-				for fact in module.funFacts:
-					if fact[1] == None:
-						label = QtGui.QLabel("%s<br />-" % fact[0])
-					else:
-						label = QtGui.QLabel("%s<br /><span style=\"font-size: 14px\">%s</span>" % (fact[0], fact[1]))
-					factsLayout.addWidget(label, 0, QtCore.Qt.AlignTop)
-				break
-		factsLayout.addWidget(self.completedLabel)
-		factsLayout.addStretch()
-		
-		factsWidget = QtGui.QWidget()
-		factsWidget.setLayout(factsLayout)
-		
-		horSplitter = QtGui.QSplitter()
-		horSplitter.addWidget(vertSplitter)
-		horSplitter.addWidget(factsWidget)
+			#Horizontal splitter
+			factsLayout = QtGui.QVBoxLayout()
+			self.completedLabel = QtGui.QLabel()
+			self.noteLabel = QtGui.QLabel()
+			factsLayout.addWidget(self.noteLabel, 0, QtCore.Qt.AlignTop)
+			for module in self._mm.mods("active", type="testType"):
+				if module.dataType == dataType and hasattr(module, "funFacts"):
+					for fact in module.funFacts:
+						if fact[1] == None:
+							label = QtGui.QLabel("%s<br />-" % fact[0])
+						else:
+							label = QtGui.QLabel("%s<br /><span style=\"font-size: 14px\">%s</span>" % (fact[0], fact[1]))
+						factsLayout.addWidget(label, 0, QtCore.Qt.AlignTop)
+					break
+			factsLayout.addWidget(self.completedLabel)
+			factsLayout.addStretch()
+			
+			factsWidget = QtGui.QWidget()
+			factsWidget.setLayout(factsLayout)
+			
+			horSplitter = QtGui.QSplitter()
+			horSplitter.addWidget(vertSplitter)
+			horSplitter.addWidget(factsWidget)
 
-		#Main splitter
-		try:
-			progressWidget = self._modules.default(
-				"active",
-				type="progressViewer"
-			).createProgressViewer(self.test)
-		except IndexError:
-			pass
+			#Main splitter
+			try:
+				progressWidget = self._modules.default(
+					"active",
+					type="progressViewer"
+				).createProgressViewer(self.test)
+			except IndexError:
+				pass
 
-		self.addWidget(horSplitter)
-		try:
-			self.addWidget(progressWidget)
-		except NameError:
-			pass
+			self.addWidget(horSplitter)
+			try:
+				self.addWidget(progressWidget)
+			except NameError:
+				pass
 
-	def retranslate(self):
-		self.setWindowTitle(_("Results"))
+		def retranslate(self):
+			self.setWindowTitle(_("Results"))
 
-		try:
-			calculateNote = self._modules.default(
-				"active",
-				type="noteCalculatorChooser"
-			).noteCalculator.calculateNote
-		except IndexError:
-			self.noteLabel.setText("")
-		else:
-			html = "<br /><span style=\"font-size: 40px\">%s</span>"
-			self.noteLabel.setText(_("Note:") + html % calculateNote(self.test))
+			try:
+				calculateNote = self._modules.default(
+					"active",
+					type="noteCalculatorChooser"
+				).noteCalculator.calculateNote
+			except IndexError:
+				self.noteLabel.setText("")
+			else:
+				html = "<br /><span style=\"font-size: 40px\">%s</span>"
+				self.noteLabel.setText(_("Note:") + html % calculateNote(self.test))
 
-		try:
-			completedText = _("yes") if self.test["finished"] else _("no")
-		except KeyError:
-			completedText = _("no")
-		self.completedLabel.setText(_("Completed: %s") % completedText)
+			try:
+				completedText = _("yes") if self.test["finished"] else _("no")
+			except KeyError:
+				completedText = _("no")
+			self.completedLabel.setText(_("Completed: %s") % completedText)
 
-		seconds = int(round(self._totalThinkingTime))
-		if seconds < 180:
-			#< 3 minutes
-			self.totalThinkingTimeLabel.setText(ngettext(
-				"Total thinking time: %s second",
-				"Total thinking time: %s seconds",
-				seconds
-			) % seconds)
-		else:
-			#> 3 minutes
-			minutes = int(round(seconds / 60.0))
-			self.totalThinkingTimeLabel.setText(
-				_("Total thinking time: %s minutes") % minutes
-			)
+			seconds = int(round(self._totalThinkingTime))
+			if seconds < 180:
+				#< 3 minutes
+				self.totalThinkingTimeLabel.setText(ngettext(
+					"Total thinking time: %s second",
+					"Total thinking time: %s seconds",
+					seconds
+				) % seconds)
+			else:
+				#> 3 minutes
+				minutes = int(round(seconds / 60.0))
+				self.totalThinkingTimeLabel.setText(
+					_("Total thinking time: %s minutes") % minutes
+				)
 
-	@property
-	def _totalThinkingTime(self):
-		totalThinkingTime = datetime.timedelta()
-		for result in self.test["results"]:
-			if "active" in result:
-				totalThinkingTime += result["active"]["end"] - result["active"]["start"]
-		return total_seconds(totalThinkingTime)
+		@property
+		def _totalThinkingTime(self):
+			totalThinkingTime = datetime.timedelta()
+			for result in self.test["results"]:
+				if "active" in result:
+					totalThinkingTime += result["active"]["end"] - result["active"]["start"]
+			return total_seconds(totalThinkingTime)
+	return TestViewer
 
 class TestViewerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -198,6 +201,15 @@ class TestViewerModule(object):
 		return tv
 
 	def enable(self):
+		global QtCore, QtGui
+		try:
+			from PyQt4 import QtCore, QtGui
+		except ImportError:
+			return
+		global TestModel, TestViewer
+		TestModel = getTestModel()
+		TestViewer = getTestViewer()
+
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		self._testViewers = set()

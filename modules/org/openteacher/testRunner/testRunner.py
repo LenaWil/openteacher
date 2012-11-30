@@ -28,7 +28,7 @@ class TestRunnerModule(object):
 
 		self.type = "testRunner"
 		self.priorities = {
-			"testsuite": 0,
+			"test-suite": 0,
 			"default": -1,
 		}
 		self.requires = (
@@ -54,7 +54,7 @@ class TestRunnerModule(object):
 
 	def _run(self):
 		testSuite = unittest.TestSuite()
-		for module in self._mm.mods(type="test"):
+		for module in self._mm.mods("active", type="test"):
 			module.enable()
 			newTests = unittest.TestLoader().loadTestsFromTestCase(module.TestCase)
 			testSuite.addTests(newTests)

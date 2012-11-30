@@ -27,7 +27,7 @@ class ProfileDescriptionModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ("testserver.py",)
+		self.filesWithTranslations = ("testServer.py",)
 
 	def _retranslate(self):
 		try:
@@ -39,7 +39,7 @@ class ProfileDescriptionModule(object):
 				self._mm.resourcePath("translations")
 			)
 		self.desc = {
-			"name": "testserver",
+			"name": "test-server",
 			"niceName": _("Test server"),
 			"advanced": True,
 		}

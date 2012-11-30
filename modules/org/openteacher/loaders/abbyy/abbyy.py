@@ -31,14 +31,7 @@ class AbbyyLoaderModule(object):
 
 		self.type = "load"
 		self.priorities = {
-			"student@home": 756,
-			"student@school": 756,
-			"teacher": 756,
-			"wordsonly": 756,
-			"selfstudy": 756,
-			"testsuite": 756,
-			"codedocumentation": 756,
-			"all": 756,
+			"default": 756,
 		}
 		
 		self.requires = (

@@ -18,20 +18,20 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui
+def getSettingsWidget():
+	class SettingsWidget(QtGui.QLineEdit):
+		def __init__(self, setting, *args, **kwargs):
+			super(SettingsWidget, self).__init__(*args, **kwargs)
 
-class SettingsWidget(QtGui.QLineEdit):
-	def __init__(self, setting, *args, **kwargs):
-		super(SettingsWidget, self).__init__(*args, **kwargs)
+			self._setting = setting
 
-		self._setting = setting
+			self.setEchoMode(QtGui.QLineEdit.Password)
+			self.setText(setting["value"])
+			self.textChanged.connect(self._valueChanged)
 
-		self.setEchoMode(QtGui.QLineEdit.Password)
-		self.setText(setting["value"])
-		self.textChanged.connect(self._valueChanged)
-
-	def _valueChanged(self, text):
-		self._setting["value"] = unicode(text)
+		def _valueChanged(self, text):
+			self._setting["value"] = unicode(text)
+	return SettingsWidget
 
 class SettingsWidgetModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -48,8 +48,15 @@ class SettingsWidgetModule(object):
 		return SettingsWidget(*args, **kwargs)
 
 	def enable(self):
-		self.widgetType = "password"
+		global QtGui
+		try:
+			from PyQt4 import QtGui
+		except ImportError:
+			return
+		global SettingsWidget
+		SettingsWidget = getSettingsWidget()
 
+		self.widgetType = "password"
 		self.active = True
 
 	def disable(self):

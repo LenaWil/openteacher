@@ -18,7 +18,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-# cherrypy, pygments & pyratemp are imported in enable()
+# cherrypy, pygments, pyratemp & docutils.core are imported in enable()
 
 import webbrowser
 import inspect
@@ -26,9 +26,11 @@ import os
 import types
 import mimetypes
 import sys
+import re
+import tempfile
 
 class ModulesHandler(object):
-	def __init__(self, moduleManager, templates, *args, **kwargs):
+	def __init__(self, moduleManager, templates, buildModuleGraph, *args, **kwargs):
 		super(ModulesHandler, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
@@ -40,6 +42,7 @@ class ModulesHandler(object):
 			#make sure the path is relative to the modules root for easier recognition
 			self._mods[self._pathToUrl(path)] = mod
 		self._templates = templates
+		self._buildModuleGraph = buildModuleGraph
 
 	def _pathToUrl(self, path):
 		path = os.path.normpath(path)
@@ -55,11 +58,26 @@ class ModulesHandler(object):
 			return url
 		return path
 
-	def _newlineToBr(self, text):
+	def _format(self, text):
 		if text:
-			return text.replace("\n", "<br />\n")
+			return docutils.core.publish_parts(
+				text.replace("\t", "").replace("   ", ""),
+				writer_name="html",
+				settings_overrides={"report_level": 5}
+			)["html_body"]
 		else:
 			return text
+
+	def module_graph_svg(self):
+		cherrypy.response.headers["Content-Type"] = "image/svg+xml"
+		try:
+			path = tempfile.mkstemp(".svg")[1]
+			self._buildModuleGraph(path)
+			with open(path) as f:
+				return f.read()
+		finally:
+			os.remove(path)
+	module_graph_svg.exposed = True
 
 	def resources(self, *args):
 		path = "/".join(args)
@@ -93,8 +111,9 @@ class ModulesHandler(object):
 	index.exposed = True
 
 	def priorities_html(self):
-		profiles = self._mm.mods("active", type="profileDescription")
-		profiles = sorted(profiles, key=lambda p: p.desc["name"])
+		profileMods = self._mm.mods("active", type="profileDescription")
+		profiles = (profileMod.desc["name"] for profileMod in profileMods)
+		profiles = ["default"] + sorted(profiles)
 
 		mods = {}
 		for mod in self._mm.mods("priorities"):
@@ -107,6 +126,77 @@ class ModulesHandler(object):
 			"profiles": profiles,
 		})
 	priorities_html.exposed = True
+
+	def fixmes_html(self):
+		def upOne(p):
+			return os.path.normpath(os.path.join(p, ".."))
+
+		basePath = os.path.dirname(__file__)
+		while not basePath.endswith("modules"):
+			basePath = upOne(basePath)
+
+		rePattern = re.compile("fixme|todo", re.IGNORECASE)
+		fixmes = []
+		for root, dirs, files in sorted(os.walk(basePath)):
+			for file in sorted(files):
+				fpath = os.path.join(root, file)
+				if os.path.splitext(fpath)[1] in (".png", ".gif", ".bmp", ".ico", ".pyc", ".mo", ".psd", ".gpg", ".pem", ".sqlite3", ".rtf", ".po", ".pot"):
+					#no fixme's etc. in there...
+					continue
+				if fpath.endswith("~"):
+					#not in here too
+					continue
+				if "jquery" in fpath:
+					#actually a lot of TODO's in there, but we don't care :)
+					continue
+				if "admin_files" in fpath:
+					#some django files. Again, we don't care.
+					continue
+				if "codeDocs" in fpath:
+					#this module mentions the words fixme and todo
+					#while there aren't any. The rule is: no fixme's
+					#here! :P
+					continue
+				with open(fpath, "r") as f:
+					lines = f.readlines()
+
+				def toUnicode(data):
+					return unicode(data, encoding="UTF-8", errors="replace")
+				lines = map(toUnicode, lines)
+				for i, line in enumerate(lines):
+					match = rePattern.search(line)
+					if not match:
+						continue
+					try:
+						lines[i - 2]
+					except IndexError:
+						startNumber = 0
+					else:
+						startNumber = i - 2
+					try:
+						lines[i + 5]
+					except IndexError:
+						endNumber = len(lines) - 1
+					else:
+						endNumber = i + 5
+					relevantLines = lines[startNumber:endNumber]
+					relevantCode = u"".join(relevantLines)
+
+					lexer = pygments.lexers.get_lexer_for_filename(fpath)
+					formatter = pygments.formatters.HtmlFormatter()
+					fixmes.append({
+						"path": self._pathToUrl(unicode(fpath, sys.getfilesystemencoding())),
+						"line_number": i + 1,
+						"relevant_code": pygments.highlight(relevantCode, lexer, formatter),
+					})
+
+		t = pyratemp.Template(filename=self._templates["fixmes"])
+		return t(**{
+			"fixmes": fixmes,
+			#use last formatter if it's still there
+			"pygmentsStyle": formatter.get_style_defs('.source') if "formatter" in vars() else "",
+		})
+	fixmes_html.exposed = True
 
 	def _isFunction(self, mod, x):
 		try:
@@ -155,7 +245,7 @@ class ModulesHandler(object):
 				#no @property
 				continue
 			try:
-				propertyDocs[property] = self._newlineToBr(propertyObj.__doc__)
+				propertyDocs[property] = self._format(propertyObj.__doc__)
 			except AttributeError:
 				#also no @property
 				continue
@@ -176,7 +266,7 @@ class ModulesHandler(object):
 		methodArgs = {}
 		for method in methods:
 			methodObj = getattr(mod, method)
-			methodDocs[method] = self._newlineToBr(methodObj.__doc__)
+			methodDocs[method] = self._format(methodObj.__doc__)
 			methodArgs[method] = inspect.getargspec(methodObj)[0]
 
 		fileData = []
@@ -185,16 +275,18 @@ class ModulesHandler(object):
 				ext = os.path.splitext(f)[1]
 				if ext not in [".html", ".py", ".js", ".css", ".po", ".pot"]:
 					continue
-				path = os.path.join(root, f)
+				if "jquery" in f.lower():
+					continue
+				path = os.path.normpath(os.path.join(root, f))
 
 				code = open(path).read()
+
 				lexer = pygments.lexers.get_lexer_for_filename(path)
 				formatter = pygments.formatters.HtmlFormatter(**{
 					"linenos": "table",
 					"anchorlinenos": True,
 					"lineanchors": path,
 				})
-
 				source = pygments.highlight(code, lexer, formatter)
 				commonLength = len(os.path.commonprefix([
 					path,
@@ -205,7 +297,7 @@ class ModulesHandler(object):
 		t = pyratemp.Template(filename=self._templates["module"])
 		return t(**{
 			"name": mod.__class__.__name__,
-			"moddoc": self._newlineToBr(mod.__doc__),
+			"moddoc": self._format(mod.__doc__),
 			"type": getattr(mod, "type", None),
 			"uses": uses,
 			"requires": requires,
@@ -215,12 +307,27 @@ class ModulesHandler(object):
 			"properties": sorted(properties),
 			"propertyDocs": propertyDocs,
 			"files": fileData,
-			#last formatter is still there
-			"pygmentsStyle": formatter.get_style_defs('.source'),
+			#use last formatter if it exists
+			"pygmentsStyle": formatter.get_style_defs('.source') if "formatter" in vars() else "",
 		})
 	modules.exposed = True
 
 class CodeDocumentationModule(object):
+	"""This module generates code documentation for OpenTeacher
+	   automatically based on the actual code. When the server crashes,
+	   you can see the error message by adding the 'debug' parameter.
+	   (i.e. ``python openteacher.py -p code-documentation debug``).
+
+	   This module generates the following documentation:
+
+	   - Overview of all modules
+	   - Overview of the methods and properties of the module classes,
+	     including docstrings.
+	   - Source listing (including syntax highlighting)
+	   - The module map (showing all dependencies between modules)
+	   - FIXMEs/TODOs overview
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(CodeDocumentationModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
@@ -230,32 +337,33 @@ class CodeDocumentationModule(object):
 		self.requires = (
 			self._mm.mods(type="metadata"),
 			self._mm.mods(type="execute"),
+			self._mm.mods(type="moduleGraphBuilder"),
 		)
 		self.uses = (
 			self._mm.mods(type="profileDescription"),
 		)
 		self.priorities = {
-			"codedocumentation": 0,
+			"code-documentation": 0,
 			"default": -1,
 		}
 
 	def showDocumentation(self):
+		buildModuleGraph = self._modules.default("active", type="moduleGraphBuilder").buildModuleGraph
 		templates = {
 			"modules": self._mm.resourcePath("templ/modules.html"),
 			"priorities": self._mm.resourcePath("templ/priorities.html"),
+			"fixmes": self._mm.resourcePath("templ/fixmes.html"),
 			"module": self._mm.resourcePath("templ/module.html"),
 			"resources": self._mm.resourcePath("resources"),
 			"logo": self._modules.default("active", type="metadata").metadata["iconPath"],
 		}
-		root = ModulesHandler(self._mm, templates)
+		root = ModulesHandler(self._mm, templates, buildModuleGraph)
 
 		cherrypy.tree.mount(root)
-		cherrypy.config.update({
-			"server.socket_host": "0.0.0.0",
-			"environment": "production",
-		})
+		cherrypy.config.update({"server.socket_host": "0.0.0.0"})
+		if not (len(sys.argv) > 1 and sys.argv[1] == "debug"):
+			cherrypy.config.update({"environment": "production"})
 		cherrypy.engine.start()
-		webbrowser.open("http://localhost:8080/")
 		print "Serving at http://localhost:8080/"
 		print "Type 'quit' and press enter to stop the server"
 		while True:
@@ -267,7 +375,7 @@ class CodeDocumentationModule(object):
 		cherrypy.engine.exit()
 
 	def enable(self):
-		global cherrypy, pygments, pyratemp
+		global cherrypy, pygments, pyratemp, docutils
 		try:
 			import cherrypy
 			import pygments
@@ -275,6 +383,7 @@ class CodeDocumentationModule(object):
 			import pygments.formatters
 			import pygments.util
 			import pyratemp
+			import docutils.core
 		except ImportError:
 			return #leave disabled
 

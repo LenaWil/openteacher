@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,22 +18,22 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui
+def getSettingsWidget():
+	class SettingsWidget(QtGui.QComboBox):
+		def __init__(self, setting, *args, **kwargs):
+			super(SettingsWidget, self).__init__(*args, **kwargs)
 
-class SettingsWidget(QtGui.QComboBox):
-	def __init__(self, setting, *args, **kwargs):
-		super(SettingsWidget, self).__init__(*args, **kwargs)
+			self._setting = setting
 
-		self._setting = setting
+			# Add the options
+			for option in setting["options"]:
+				self.addItem(option[0], option[1])
+			self.currentIndexChanged.connect(self._valueChanged)
+			self.setCurrentIndex(self.findData(setting["value"]))
 
-		# Add the options
-		for option in setting["options"]:
-			self.addItem(option[0], option[1])
-		self.currentIndexChanged.connect(self._valueChanged)
-		self.setCurrentIndex(self.findData(setting["value"]))
-
-	def _valueChanged(self):
-		self._setting["value"] = unicode(self.itemData(self.currentIndex()).toString())
+		def _valueChanged(self):
+			self._setting["value"] = unicode(self.itemData(self.currentIndex()).toString())
+	return SettingsWidget
 
 class SettingsWidgetModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -50,8 +50,15 @@ class SettingsWidgetModule(object):
 		return SettingsWidget(*args, **kwargs)
 
 	def enable(self):
-		self.widgetType = "option"
+		global QtGui
+		try:
+			from PyQt4 import QtGui
+		except ImportError:
+			return
+		global SettingsWidget
+		SettingsWidget = getSettingsWidget()
 
+		self.widgetType = "option"
 		self.active = True
 
 	def disable(self):

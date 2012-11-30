@@ -19,7 +19,6 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-from PyQt4 import QtScript
 
 class TestCase(unittest.TestCase):
 	def testCodeValidity(self):
@@ -45,6 +44,11 @@ class TestModule(object):
 		)
 
 	def enable(self):
+		global QtScript
+		try:
+			from PyQt4 import QtScript
+		except ImportError:
+			return
 		self.TestCase = TestCase
 		self.TestCase._mm = self._mm
 		self.active = True

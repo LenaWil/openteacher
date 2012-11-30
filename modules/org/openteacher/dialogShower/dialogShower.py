@@ -18,65 +18,66 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui
-from PyQt4 import QtCore
+def getDialog():
+	class Dialog(QtGui.QWidget):
+		buttonClicked = QtCore.pyqtSignal()
+		def __init__(self, imagePath, text, redText=False, *args, **kwargs):
+			super(Dialog, self).__init__(*args, **kwargs)
 
-class Dialog(QtGui.QWidget):
-	buttonClicked = QtCore.pyqtSignal()
-	def __init__(self, imagePath, text, redText=False, *args, **kwargs):
-		super(Dialog, self).__init__(*args, **kwargs)
+			frame = QtGui.QFrame()
+			frame.setFrameStyle(QtGui.QFrame.Panel | QtGui.QFrame.Raised)
+			frame.setMidLineWidth(2)
+			frame.setLineWidth(3)
 
-		frame = QtGui.QFrame()
-		frame.setFrameStyle(QtGui.QFrame.Panel | QtGui.QFrame.Raised)
-		frame.setMidLineWidth(2)
-		frame.setLineWidth(3)
+			frameLayout = QtGui.QHBoxLayout()
+			frameLayout.setAlignment(QtCore.Qt.AlignHCenter)
 
-		frameLayout = QtGui.QHBoxLayout()
-		frameLayout.setAlignment(QtCore.Qt.AlignHCenter)
+			imageLabel = QtGui.QLabel("<img src=\"" + imagePath + "\" />")
+			imageLabel.setAlignment(QtCore.Qt.AlignHCenter)
+			frameLayout.addWidget(imageLabel)
 
-		imageLabel = QtGui.QLabel("<img src=\"" + imagePath + "\" />")
-		imageLabel.setAlignment(QtCore.Qt.AlignHCenter)
-		frameLayout.addWidget(imageLabel)
+			textLabel = QtGui.QLabel(text)
+			textLabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+			textLabel.setWordWrap(True)
+			textLabel.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Preferred)
+			if redText:
+				textLabel.setStyleSheet("color: #b60000; font-weight: bold;")
+			else:
+				textLabel.setStyleSheet("font-weight: bold;")
+			frameLayout.addWidget(textLabel)
 
-		textLabel = QtGui.QLabel(text)
-		textLabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
-		textLabel.setWordWrap(True)
-		textLabel.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Preferred)
-		if redText:
-			textLabel.setStyleSheet("color: #b60000; font-weight: bold;")
-		else:
-			textLabel.setStyleSheet("font-weight: bold;")
-		frameLayout.addWidget(textLabel)
+			backButton = QtGui.QPushButton("Close")
+			backButton.clicked.connect(lambda: self.buttonClicked.emit())
+			frameLayout.addWidget(backButton)
 
-		backButton = QtGui.QPushButton("Close")
-		backButton.clicked.connect(lambda: self.buttonClicked.emit())
-		frameLayout.addWidget(backButton)
+			frame.setLayout(frameLayout)
 
-		frame.setLayout(frameLayout)
+			layout = QtGui.QHBoxLayout()
+			layout.addWidget(frame)
+			self.setLayout(layout)
+	return Dialog
 
-		layout = QtGui.QHBoxLayout()
-		layout.addWidget(frame)
-		self.setLayout(layout)
-
-class BigDialog(QtGui.QWidget):
-	def __init__(self, imagePath, text, *args, **kwargs):
-		super(BigDialog, self).__init__(*args, **kwargs)
-		
-		layout = QtGui.QVBoxLayout()
-		
-		image = QtGui.QPixmap(imagePath)
-		imageLabel = QtGui.QLabel()
-		imageLabel.setPixmap(image)
-		imageLabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
-		layout.addWidget(imageLabel)
-		
-		textLabel = QtGui.QLabel(text)
-		textLabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
-		textLabel.setWordWrap(True)
-		textLabel.setStyleSheet("font-size: 18px; font-weight: bold;")
-		layout.addWidget(textLabel)
-		
-		self.setLayout(layout)
+def getBigDialog():
+	class BigDialog(QtGui.QWidget):
+		def __init__(self, imagePath, text, *args, **kwargs):
+			super(BigDialog, self).__init__(*args, **kwargs)
+			
+			layout = QtGui.QVBoxLayout()
+			
+			image = QtGui.QPixmap(imagePath)
+			imageLabel = QtGui.QLabel()
+			imageLabel.setPixmap(image)
+			imageLabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+			layout.addWidget(imageLabel)
+			
+			textLabel = QtGui.QLabel(text)
+			textLabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
+			textLabel.setWordWrap(True)
+			textLabel.setStyleSheet("font-size: 18px; font-weight: bold;")
+			layout.addWidget(textLabel)
+			
+			self.setLayout(layout)
+	return BigDialog
 
 class DialogShower(object):
 	def __init__(self, logoImagePath, brokenImagePath, bigLogoImagePath, bigBrokenImagePath, uiModule, *args, **kwargs):
@@ -143,6 +144,14 @@ class DialogShowerModule(object):
 		)
 
 	def enable(self):
+		global QtCore, QtGui
+		try:
+			from PyQt4 import QtCore, QtGui
+		except ImportError:
+			return
+		global Dialog, BigDialog
+		Dialog = getDialog()
+		BigDialog = getBigDialog()
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		
 		_event = self._modules.default(type="event")

@@ -135,14 +135,8 @@ class SmartModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.filesWithTranslations = ("smart.py",)
-		x = 130
 		self.priorities = {
-			"all": x,
-			"selfstudy": x,
-			"student@home": x,
-			"student@school": x,
-			"teacher": x,
-			"wordsonly": x,
+			"default": 130,
 		}
 
 	def enable(self):

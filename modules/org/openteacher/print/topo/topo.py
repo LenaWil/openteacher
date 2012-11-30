@@ -19,9 +19,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtWebKit
-from PyQt4 import QtGui
-
 class PrintModule(object):
 	def __init__(self, moduleManager):
 		self._mm = moduleManager
@@ -32,6 +29,11 @@ class PrintModule(object):
 		)
 
 	def enable(self):
+		global QtGui, QtWebKit
+		try:
+			from PyQt4 import QtGui, QtWebKit
+		except ImportError:
+			return
 		self.prints = ["topo"]
 
 		self.active = True

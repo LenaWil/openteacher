@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,21 +18,21 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui
+def getSettingsWidget():
+	class SettingsWidget(QtGui.QCheckBox):
+		def __init__(self, setting, *args, **kwargs):
+			super(SettingsWidget, self).__init__(*args, **kwargs)
 
-class SettingsWidget(QtGui.QCheckBox):
-	def __init__(self, setting, *args, **kwargs):
-		super(SettingsWidget, self).__init__(*args, **kwargs)
+			self._setting = setting
 
-		self._setting = setting
+			#*2 because 2 is checked and 0 is unchecked
+			self.setCheckState(setting["value"] * 2)
+			self.stateChanged.connect(self._valueChanged)
 
-		#*2 because 2 is checked and 0 is unchecked
-		self.setCheckState(setting["value"] * 2)
-		self.stateChanged.connect(self._valueChanged)
-
-	def _valueChanged(self, value):
-		#/2 because 2 is checked and 0 is unchecked
-		self._setting["value"] = bool(value /2)
+		def _valueChanged(self, value):
+			#/2 because 2 is checked and 0 is unchecked
+			self._setting["value"] = bool(value /2)
+	return SettingsWidget
 
 class SettingsWidgetModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -49,8 +49,15 @@ class SettingsWidgetModule(object):
 		return SettingsWidget(*args, **kwargs)
 
 	def enable(self):
-		self.widgetType = "boolean"
+		global QtGui
+		try:
+			from PyQt4 import QtGui
+		except ImportError:
+			return
+		global SettingsWidget
+		SettingsWidget = getSettingsWidget()
 
+		self.widgetType = "boolean"
 		self.active = True
 
 	def disable(self):

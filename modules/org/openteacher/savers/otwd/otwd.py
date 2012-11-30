@@ -26,14 +26,7 @@ class OpenTeachingWordsSaverModule(object):
 
 		self.type = "save"
 		self.priorities = {
-			"student@home": 280,
-			"student@school": 280,
-			"teacher": 280,
-			"wordsonly": 280,
-			"selfstudy": 280,
-			"testsuite": 280,
-			"codedocumentation": 280,
-			"all": 280,
+			"default": 280,
 		}
 		
 		self.requires = (

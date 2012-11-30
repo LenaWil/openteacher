@@ -184,14 +184,8 @@ class IntervalModule(object):
 			self._mm.mods(type="settings"),
 		)
 		self.filesWithTranslations = ("interval.py",)
-		x = 170
 		self.priorities = {
-			"all": x,
-			"selfstudy": x,
-			"student@home": x,
-			"student@school": x,
-			"teacher": x,
-			"wordsonly": x,
+			"default": 170,
 		}
 
 	def enable(self):

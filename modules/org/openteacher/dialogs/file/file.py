@@ -19,7 +19,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui
 import os
 
 class FileDialogsModule(object):
@@ -67,9 +66,9 @@ class FileDialogsModule(object):
 			return
 
 	def getLoadPath(self, startdir, exts):
-		stringExts = set()
+		stringExts = []
 		for ext, name in exts:
-			stringExts.add("*." + ext)
+			stringExts.append("*." + ext)
 		filter = u"Lessons (%s)" % u" ".join(stringExts)
 
 		fileDialog = QtGui.QFileDialog()
@@ -89,6 +88,12 @@ class FileDialogsModule(object):
 			return
 
 	def enable(self):
+		global QtGui
+		try:
+			from PyQt4 import QtGui
+		except ImportError:
+			#remain inactive
+			return
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._ui = self._modules.default("active", type="ui")
 

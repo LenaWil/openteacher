@@ -30,14 +30,8 @@ class RandomModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.filesWithTranslations = ("random_.py",)
-		x = 811
 		self.priorities = {
-			"all": x,
-			"selfstudy": x,
-			"student@home": x,
-			"student@school": x,
-			"teacher": x,
-			"wordsonly": x,
+			"default": 811,
 		}
 
 	def modifyList(self, indexes, list):

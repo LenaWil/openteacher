@@ -29,14 +29,7 @@ class WrtsSaverModule(object):
 		self._mm = moduleManager
 		self.type = "save"
 		self.priorities = {
-			"student@home": 532,
-			"student@school": 532,
-			"teacher": 532,
-			"wordsonly": 532,
-			"selfstudy": 532,
-			"testsuite": 532,
-			"codedocumentation": 532,
-			"all": 532,
+			"default": 532,
 		}
 		self.uses = (
 			self._mm.mods(type="translator"),

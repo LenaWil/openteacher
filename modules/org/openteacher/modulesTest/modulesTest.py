@@ -34,8 +34,9 @@ class TestCase(unittest.TestCase):
 	def testDefaultUnexisting(self):
 		for mod in self._mm.mods(type="modules"):
 			with self.assertRaises(IndexError):
-				#random, no chance this property really exists...
+				#random, no chance this properiesy really exist...
 				mod.default(uuid=uuid.uuid4())
+				mod.default(uuid.uuid4())
 
 	def testIfInSort(self):
 		for mod in self._mm.mods(type="modules"):

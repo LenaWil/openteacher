@@ -28,7 +28,7 @@ class TestServerModule(object):
 			self._mm.mods(type="execute"),
 		)
 		self.priorities = {
-			"testserver": 0,
+			"test-server": 0,
 			"default": -1,
 		}
 

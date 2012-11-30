@@ -19,138 +19,141 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtCore, QtGui
 import sys
 import weakref
 import copy
 
-class CategoryTab(QtGui.QWidget):
-	def __init__(self, byKey, widgets, name, inCategory, *args, **kwargs):
-		super(CategoryTab, self).__init__(*args, **kwargs)
+def getCategoryTab():
+	class CategoryTab(QtGui.QWidget):
+		def __init__(self, byKey, widgets, name, inCategory, *args, **kwargs):
+			super(CategoryTab, self).__init__(*args, **kwargs)
 
-		self.byKey = byKey
-		self._widgets = widgets
+			self.byKey = byKey
+			self._widgets = widgets
 
-		self.setWindowTitle(name)
-		vbox = QtGui.QVBoxLayout()
+			self.setWindowTitle(name)
+			vbox = QtGui.QVBoxLayout()
 
-		categories = self.byKey("subcategory", inCategory)
-		for name in sorted(categories.keys()):			
-			w = self.createSubcategoryGroupBox(name, categories[name])
-			vbox.addWidget(w)
+			categories = self.byKey("subcategory", inCategory)
+			for name in sorted(categories.keys()):			
+				w = self.createSubcategoryGroupBox(name, categories[name])
+				vbox.addWidget(w)
 
-		vbox.addStretch()
-		self.setLayout(vbox)
+			vbox.addStretch()
+			self.setLayout(vbox)
 
-	def createSubcategoryGroupBox(self, name, inSubcategory):
-		groupBox = QtGui.QGroupBox(name)
-		groupBoxLayout = QtGui.QFormLayout()
-		for setting in sorted(inSubcategory, key=lambda s: s["name"]):
-			try:
-				createWidget = self._widgets[setting["type"]]
-			except KeyError:
-				continue
-			try:
-				groupBoxLayout.addRow(
-					setting["name"],
-					createWidget(setting)
-				)
-			except KeyError:
-				continue
-		groupBox.setLayout(groupBoxLayout)
-		return groupBox
+		def createSubcategoryGroupBox(self, name, inSubcategory):
+			groupBox = QtGui.QGroupBox(name)
+			groupBoxLayout = QtGui.QFormLayout()
+			for setting in sorted(inSubcategory, key=lambda s: s["name"]):
+				try:
+					createWidget = self._widgets[setting["type"]]
+				except KeyError:
+					continue
+				try:
+					groupBoxLayout.addRow(
+						setting["name"],
+						createWidget(setting)
+					)
+				except KeyError:
+					continue
+			groupBox.setLayout(groupBoxLayout)
+			return groupBox
 
-	def retranslate(self):
-		pass
+		def retranslate(self):
+			pass
+	return CategoryTab
 
-class SettingsDialog(QtGui.QTabWidget):
-	def __init__(self, byKey, settings, widgets, *args, **kwargs):
-		super(SettingsDialog, self).__init__(*args, **kwargs)
+def getSettingsDialog():
+	class SettingsDialog(QtGui.QTabWidget):
+		def __init__(self, byKey, settings, widgets, *args, **kwargs):
+			super(SettingsDialog, self).__init__(*args, **kwargs)
 
-		self.settings = settings
-		self.byKey = byKey
-		self.widgets = widgets
+			self.settings = settings
+			self.byKey = byKey
+			self.widgets = widgets
 
-		#Setup widget
-		self.setTabPosition(QtGui.QTabWidget.South)
-		self.setDocumentMode(True)
+			#Setup widget
+			self.setTabPosition(QtGui.QTabWidget.South)
+			self.setDocumentMode(True)
 
-		self.advancedButton = QtGui.QPushButton()
-		self.advancedButton.clicked.connect(self.advanced)
+			self.advancedButton = QtGui.QPushButton()
+			self.advancedButton.clicked.connect(self.advanced)
 
-		self.simpleButton = QtGui.QPushButton()
-		self.simpleButton.clicked.connect(self.simple)
+			self.simpleButton = QtGui.QPushButton()
+			self.simpleButton.clicked.connect(self.simple)
 
-		# Go to simple mode
-		self.simple()
+			# Go to simple mode
+			self.simple()
 
-		#Used to track if the widget needs to be updated because of
-		#retranslation. We can't do that directly, because then the
-		#language box in which the language is selected is also updated
-		#immediately, rendering it unusable. Instead, we do it when the
-		#widget is hidden (see the eventFilter method.)
-		self._updateNeeded = False
-
-		#so the focus can be tracked
-		self.installEventFilter(self)
-
-	def retranslate(self):
-		self.setWindowTitle(_("Settings"))
-		self.simpleButton.setText(_("Simple mode"))
-		self.advancedButton.setText(_("Advanced mode"))
-		self._updateNeeded = True
-
-	def createCategoryTab(self, *args, **kwargs):
-		tab = CategoryTab(self.byKey, *args, **kwargs)
-		self.addTab(tab, tab.windowTitle())
-
-	def eventFilter(self, object, event, *args, **kwargs):
-		if event.type() == QtCore.QEvent.Hide and self._updateNeeded:
-			tabIndex = self.currentIndex()
-			self.update()
+			#Used to track if the widget needs to be updated because of
+			#retranslation. We can't do that directly, because then the
+			#language box in which the language is selected is also updated
+			#immediately, rendering it unusable. Instead, we do it when the
+			#widget is hidden (see the eventFilter method.)
 			self._updateNeeded = False
-			#Reset the index
-			self.setCurrentIndex(tabIndex)
-			return True
-		else:
-			return False
 
-	def update(self):
-		# Copy settings
-		settings = copy.copy(self.settings)
-		if self.simpleMode:
-			for setting in self.settings:
-				if "advanced" in setting and setting["advanced"]:
-					settings.remove(setting)
+			#so the focus can be tracked
+			self.installEventFilter(self)
 
-		self.clear()
-		categories = self.byKey("category", settings)
-		for name in sorted(categories.keys()):
-			self.createCategoryTab(self.widgets, name, categories[name])
+		def retranslate(self):
+			self.setWindowTitle(_("Settings"))
+			self.simpleButton.setText(_("Simple mode"))
+			self.advancedButton.setText(_("Advanced mode"))
+			self._updateNeeded = True
 
-	def advanced(self):
-		self.setCornerWidget(
-			self.simpleButton,
-			QtCore.Qt.BottomRightCorner
-		)
+		def createCategoryTab(self, *args, **kwargs):
+			tab = CategoryTab(self.byKey, *args, **kwargs)
+			self.addTab(tab, tab.windowTitle())
 
-		self.simpleMode = False
+		def eventFilter(self, object, event, *args, **kwargs):
+			if event.type() == QtCore.QEvent.Hide and self._updateNeeded:
+				tabIndex = self.currentIndex()
+				self.update()
+				self._updateNeeded = False
+				#Reset the index
+				self.setCurrentIndex(tabIndex)
+				return True
+			else:
+				return False
 
-		self.update()
+		def update(self):
+			# Copy settings
+			settings = copy.copy(self.settings)
+			if self.simpleMode:
+				for setting in self.settings:
+					if "advanced" in setting and setting["advanced"]:
+						settings.remove(setting)
 
-		self.simpleButton.show()
+			self.clear()
+			categories = self.byKey("category", settings)
+			for name in sorted(categories.keys()):
+				self.createCategoryTab(self.widgets, name, categories[name])
 
-	def simple(self):
-		self.setCornerWidget(
-			self.advancedButton,
-			QtCore.Qt.BottomRightCorner
-		)
+		def advanced(self):
+			self.setCornerWidget(
+				self.simpleButton,
+				QtCore.Qt.BottomRightCorner
+			)
 
-		self.simpleMode = True
+			self.simpleMode = False
 
-		self.update()
+			self.update()
 
-		self.advancedButton.show()
+			self.simpleButton.show()
+
+		def simple(self):
+			self.setCornerWidget(
+				self.advancedButton,
+				QtCore.Qt.BottomRightCorner
+			)
+
+			self.simpleMode = True
+
+			self.update()
+
+			self.advancedButton.show()
+	return SettingsDialog
 
 class SettingsDialogModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -170,6 +173,16 @@ class SettingsDialogModule(object):
 		self.filesWithTranslations = ("settings.py",)
 
 	def enable(self):
+		global QtCore, QtGui
+		try:
+			from PyQt4 import QtCore, QtGui
+		except ImportError:
+			#remain inactive
+			return
+		global CategoryTab, SettingsDialog
+		CategoryTab = getCategoryTab()
+		SettingsDialog = getSettingsDialog()
+
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._uiModule = self._modules.default("active", type="ui")
 		self._settings = self._modules.default(type="settings")

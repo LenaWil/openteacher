@@ -31,14 +31,7 @@ class MapModule(object):
 
 		self.type = "map"
 		self.priorities = {
-			"student@home": 204,
-			"student@school": 204,
-			"teacher": 204,
-			"wordsonly": -1,
-			"selfstudy": 204,
-			"testsuite": 204,
-			"codedocumentation": 204,
-			"all": 204,
+			"default": 204,
 		}
 
 	def enable(self):

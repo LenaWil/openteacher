@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #    Copyright 2008-2011, Milan Boers
+#    Copyright 2012, Marten de Vries
 #
 #    This file is part of OpenTeacher.
 #
@@ -21,7 +22,6 @@
 
 import fnmatch
 import mimetypes
-from PyQt4 import QtCore
 
 class MediaTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -33,17 +33,15 @@ class MediaTypeModule(object):
 		self.type = "mediaType"
 		self.extensions = [".txt"]
 		self.priorities = {
-			"student@home": 450,
-			"student@school": 450,
-			"teacher": 450,
-			"wordsonly": -1,
-			"selfstudy": 450,
-			"testsuite": 450,
-			"codedocumentation": 450,
-			"all": 450,
+			"default": 450,
 		}
 
 	def enable(self):
+		global QtCore
+		try:
+			from PyQt4 import QtCore
+		except ImportError:
+			return
 		self.active = True
 
 	def disable(self):

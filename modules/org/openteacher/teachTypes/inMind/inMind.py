@@ -20,125 +20,130 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui, QtCore
 import datetime
 import weakref
 
-class ThinkWidget(QtGui.QWidget):
-	def __init__(self, *args, **kwargs):
-		super(ThinkWidget, self).__init__(*args, **kwargs)
-		
-		self.label = QtGui.QLabel()
-		self.label.setWordWrap(True)
-		self.viewAnswerButton = QtGui.QPushButton()
-		self.skipButton = QtGui.QPushButton()
-		
-		mainLayout = QtGui.QVBoxLayout()
-		mainLayout.addWidget(self.label)
-		mainLayout.addWidget(self.skipButton)
-		mainLayout.addWidget(self.viewAnswerButton)
-		
-		self.setLayout(mainLayout)
+def getThinkWidget():
+	class ThinkWidget(QtGui.QWidget):
+		def __init__(self, *args, **kwargs):
+			super(ThinkWidget, self).__init__(*args, **kwargs)
+			
+			self.label = QtGui.QLabel()
+			self.label.setWordWrap(True)
+			self.viewAnswerButton = QtGui.QPushButton()
+			self.skipButton = QtGui.QPushButton()
+			
+			mainLayout = QtGui.QVBoxLayout()
+			mainLayout.addWidget(self.label)
+			mainLayout.addWidget(self.skipButton)
+			mainLayout.addWidget(self.viewAnswerButton)
+			
+			self.setLayout(mainLayout)
 
-	def retranslate(self):
-		self.label.setText(_("Think about the answer, and press the 'View answer' button when you're done."))
-		self.viewAnswerButton.setText(_("View answer"))
-		self.skipButton.setText(_("Skip"))
+		def retranslate(self):
+			self.label.setText(_("Think about the answer, and press the 'View answer' button when you're done."))
+			self.viewAnswerButton.setText(_("View answer"))
+			self.skipButton.setText(_("Skip"))
+	return ThinkWidget
 
-class AnswerWidget(QtGui.QWidget):
-	def __init__(self, *args, **kwargs):
-		super(AnswerWidget, self).__init__(*args, **kwargs)
+def getAnswerWidget():
+	class AnswerWidget(QtGui.QWidget):
+		def __init__(self, *args, **kwargs):
+			super(AnswerWidget, self).__init__(*args, **kwargs)
 
-		self.label = QtGui.QLabel()
-		self.rightButton = QtGui.QPushButton()
-		self.wrongButton = QtGui.QPushButton()
+			self.label = QtGui.QLabel()
+			self.rightButton = QtGui.QPushButton()
+			self.wrongButton = QtGui.QPushButton()
 
-		bottomLayout = QtGui.QHBoxLayout()
-		bottomLayout.addWidget(self.rightButton)
-		bottomLayout.addWidget(self.wrongButton)
+			bottomLayout = QtGui.QHBoxLayout()
+			bottomLayout.addWidget(self.rightButton)
+			bottomLayout.addWidget(self.wrongButton)
 
-		mainLayout = QtGui.QVBoxLayout()
-		mainLayout.addWidget(self.label)
-		mainLayout.addLayout(bottomLayout)
-		
-		self.setLayout(mainLayout)
+			mainLayout = QtGui.QVBoxLayout()
+			mainLayout.addWidget(self.label)
+			mainLayout.addLayout(bottomLayout)
+			
+			self.setLayout(mainLayout)
 
-	def retranslate(self):
-		self.rightButton.setText(_("I was right"))
-		self.wrongButton.setText(_("I was wrong"))
+		def retranslate(self):
+			self.rightButton.setText(_("I was right"))
+			self.wrongButton.setText(_("I was wrong"))
+	return AnswerWidget
 
-class InMindTeachWidget(QtGui.QStackedWidget):
-	def __init__(self, compose, *args, **kwargs):
-		super(InMindTeachWidget, self).__init__(*args, **kwargs)
+def getInMindTeachWidget():
+	class InMindTeachWidget(QtGui.QStackedWidget):
+		def __init__(self, compose, *args, **kwargs):
+			super(InMindTeachWidget, self).__init__(*args, **kwargs)
 
-		self._compose = compose
+			self._compose = compose
 
-		self.thinkWidget = ThinkWidget()
-		self.answerWidget = AnswerWidget()
+			self.thinkWidget = ThinkWidget()
+			self.answerWidget = AnswerWidget()
 
-		self.addWidget(self.thinkWidget)
-		self.addWidget(self.answerWidget)
+			self.addWidget(self.thinkWidget)
+			self.addWidget(self.answerWidget)
 
-		#connect some events
-		self.thinkWidget.viewAnswerButton.clicked.connect(self.startAnswering)
-		self.answerWidget.rightButton.clicked.connect(self.setRight)
-		self.answerWidget.wrongButton.clicked.connect(self.setWrong)
+			#connect some events
+			self.thinkWidget.viewAnswerButton.clicked.connect(self.startAnswering)
+			self.answerWidget.rightButton.clicked.connect(self.setRight)
+			self.answerWidget.wrongButton.clicked.connect(self.setWrong)
 
-	def retranslate(self):
-		self.thinkWidget.retranslate()
-		self.answerWidget.retranslate()
-		
-		curWid = self.currentWidget()
-		try:
-			self.newItem(self._currentWord)
-		except AttributeError:
-			pass
-		self.setCurrentWidget(curWid)
+		def retranslate(self):
+			self.thinkWidget.retranslate()
+			self.answerWidget.retranslate()
+			
+			curWid = self.currentWidget()
+			try:
+				self.newItem(self._currentWord)
+			except AttributeError:
+				pass
+			self.setCurrentWidget(curWid)
 
-	def updateLessonType(self, lessonType):
-		self.lessonType = lessonType
+		def updateLessonType(self, lessonType):
+			self.lessonType = lessonType
 
-		#connect lesson type specific events
-		self.lessonType.newItem.handle(self.newItem)
-		self.lessonType.lessonDone.handle(self.lessonDone)
-		self.thinkWidget.skipButton.clicked.connect(self.lessonType.skip)
+			#connect lesson type specific events
+			self.lessonType.newItem.handle(self.newItem)
+			self.lessonType.lessonDone.handle(self.lessonDone)
+			self.thinkWidget.skipButton.clicked.connect(self.lessonType.skip)
 
-	def lessonDone(self):
-		#forget the old lessonType to be fresh for a new lesson
-		self.lessonType.newItem.unhandle(self.newItem)
-		self.lessonType.lessonDone.unhandle(self.lessonDone)
-		self.thinkWidget.skipButton.clicked.disconnect(self.lessonType.skip)
+		def lessonDone(self):
+			#forget the old lessonType to be fresh for a new lesson
+			self.lessonType.newItem.unhandle(self.newItem)
+			self.lessonType.lessonDone.unhandle(self.lessonDone)
+			self.thinkWidget.skipButton.clicked.disconnect(self.lessonType.skip)
 
-	def _constructResult(self):
-		return {
-			"itemId": self._currentWord["id"],
-			"active": {
-				"start": self.start,
-				"end": self.end,
-			},
-		}
+		def _constructResult(self):
+			return {
+				"itemId": self._currentWord["id"],
+				"active": {
+					"start": self.start,
+					"end": self.end,
+				},
+			}
 
-	def setRight(self):
-		result = self._constructResult()
-		result["result"] = "right"
-		self.lessonType.setResult(result)
+		def setRight(self):
+			result = self._constructResult()
+			result["result"] = "right"
+			self.lessonType.setResult(result)
 
-	def setWrong(self):
-		result = self._constructResult()
-		result["result"] = "wrong"
-		self.lessonType.setResult(result)
+		def setWrong(self):
+			result = self._constructResult()
+			result["result"] = "wrong"
+			self.lessonType.setResult(result)
 
-	def newItem(self, word):
-		self._currentWord = word
-		self.answerWidget.label.setText(
-			_("Translation: ") + self._compose(word["answers"])
-		)
-		self.start = datetime.datetime.now()
-		self.setCurrentWidget(self.thinkWidget)
+		def newItem(self, word):
+			self._currentWord = word
+			self.answerWidget.label.setText(
+				_("Translation: ") + self._compose(word["answers"])
+			)
+			self.start = datetime.datetime.now()
+			self.setCurrentWidget(self.thinkWidget)
 
-	def startAnswering(self):
-		self.end = datetime.datetime.now()
-		self.setCurrentWidget(self.answerWidget)
+		def startAnswering(self):
+			self.end = datetime.datetime.now()
+			self.setCurrentWidget(self.answerWidget)
+	return InMindTeachWidget
 
 class InMindTeachTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -147,14 +152,8 @@ class InMindTeachTypeModule(object):
 
 		self.type = "teachType"
 
-		x = 514
 		self.priorities = {
-			"all": x,
-			"selfstudy": x,
-			"student@home": x,
-			"student@school": x,
-			"teacher": x,
-			"wordsonly": x,
+			"default": 514,
 		}
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -166,6 +165,16 @@ class InMindTeachTypeModule(object):
 		self.filesWithTranslations = ("inMind.py",)
 
 	def enable(self):
+		global QtGui
+		try:
+			from PyQt4 import QtGui
+		except ImportError:
+			return
+		global AnswerWidget, InMindTeachWidget, ThinkWidget
+		AnswerWidget = getAnswerWidget()
+		InMindTeachWidget = getInMindTeachWidget()
+		ThinkWidget = getThinkWidget()
+
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		self._activeWidgets = set()

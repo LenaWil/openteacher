@@ -19,85 +19,88 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtCore, QtGui
 import weakref
 
-class RecentlyOpenedModel(QtCore.QAbstractListModel):
-	def __init__(self, modules, *args, **kwargs):
-		super(RecentlyOpenedModel, self).__init__(*args, **kwargs)
-		
-		self._modules = modules
-		
-		self._items = []
+def getRecentlyOpenedModel():
+	class RecentlyOpenedModel(QtCore.QAbstractListModel):
+		def __init__(self, modules, *args, **kwargs):
+			super(RecentlyOpenedModel, self).__init__(*args, **kwargs)
+			
+			self._modules = modules
+			
+			self._items = []
 
-	def columnCount(self, parent=None):
-		return 1
+		def columnCount(self, parent=None):
+			return 1
 
-	def rowCount(self, parent=None):
-		return len(self._items)
+		def rowCount(self, parent=None):
+			return len(self._items)
 
-	def data(self, index, role):
-		if not index.isValid():
-			return
-		item = self._items[index.row()]
-		if role == QtCore.Qt.DisplayRole:
-			return item["label"]
-		elif role == QtCore.Qt.DecorationRole:
-			if item.has_key("item"):
-				return QtGui.QPixmap(item["icon"])
+		def data(self, index, role):
+			if not index.isValid():
+				return
+			item = self._items[index.row()]
+			if role == QtCore.Qt.DisplayRole:
+				return item["label"]
+			elif role == QtCore.Qt.DecorationRole:
+				if item.has_key("item"):
+					return QtGui.QPixmap(item["icon"])
 
-	def update(self, items):
-		self.beginResetModel()
-		self._items = items
-		self.endResetModel()
+		def update(self, items):
+			self.beginResetModel()
+			self._items = items
+			self.endResetModel()
 
-	def open(self, parent, row):
-		item = self._items[row]
+		def open(self, parent, row):
+			item = self._items[row]
 
-		showError = lambda: QtGui.QMessageBox.critical(
-			parent,
-			_("Can't open anymore"),
-			_("It's not possible anymore to open this kind of list.")
-		)
-
-		try:
-			module = self._modules.default(
-				*item["moduleArgsSelectors"],
-				**item["moduleKwargsSelectors"]
-			)
-		except IndexError:
-			showError()
-			return
-
-		try:
-			method = getattr(module, item["method"])
-		except AttributeError:
-			showError()
-			return
-
-		try:
-			method(
-				*item["args"],
-				**item["kwargs"]
-			)
-		except Exception, e:
-			#for debugging purposes
-			print e
-			QtGui.QMessageBox.critical(
+			showError = lambda: QtGui.QMessageBox.critical(
 				parent,
 				_("Can't open anymore"),
-				_("It's not possible anymore to open this list.")
+				_("It's not possible anymore to open this kind of list.")
 			)
 
-class RecentlyOpenedViewer(QtGui.QListView):
-	def __init__(self, modules, *args, **kwargs):
-		super(RecentlyOpenedViewer, self).__init__(*args, **kwargs)
+			try:
+				module = self._modules.default(
+					*item["moduleArgsSelectors"],
+					**item["moduleKwargsSelectors"]
+				)
+			except IndexError:
+				showError()
+				return
 
-		self.setModel(RecentlyOpenedModel(modules))
-		self.doubleClicked.connect(self._doubleClicked)
+			try:
+				method = getattr(module, item["method"])
+			except AttributeError:
+				showError()
+				return
 
-	def _doubleClicked(self, index):
-		self.model().open(self, index.row())
+			try:
+				method(
+					*item["args"],
+					**item["kwargs"]
+				)
+			except Exception, e:
+				#for debugging purposes
+				print e
+				QtGui.QMessageBox.critical(
+					parent,
+					_("Can't open anymore"),
+					_("It's not possible anymore to open this list.")
+				)
+	return RecentlyOpenedModel
+
+def getRecentlyOpenedViewer():
+	class RecentlyOpenedViewer(QtGui.QListView):
+		def __init__(self, modules, *args, **kwargs):
+			super(RecentlyOpenedViewer, self).__init__(*args, **kwargs)
+
+			self.setModel(RecentlyOpenedModel(modules))
+			self.doubleClicked.connect(self._doubleClicked)
+
+		def _doubleClicked(self, index):
+			self.model().open(self, index.row())
+	return RecentlyOpenedViewer
 
 class RecentlyOpenedViewerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -114,7 +117,14 @@ class RecentlyOpenedViewerModule(object):
 		self.type = "recentlyOpenedViewer"
 
 	def enable(self):
-		self.active = True
+		global QtCore, QtGui
+		try:
+			from PyQt4 import QtCore, QtGui
+		except ImportError:
+			return
+		global RecentlyOpenedModel, RecentlyOpenedViewer
+		RecentlyOpenedModel = getRecentlyOpenedModel()
+		RecentlyOpenedViewer = getRecentlyOpenedViewer()
 
 		self._viewers = set()
 
@@ -132,6 +142,7 @@ class RecentlyOpenedViewerModule(object):
 			type="recentlyOpened"
 		)
 		self._recentlyOpened.updated.handle(self._update)
+		self.active = True
 
 	def _retranslate(self):
 		#Translations

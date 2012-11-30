@@ -36,11 +36,19 @@
 	<body>
 		<div id='header'>
 			<img id='logo' src='resources/logo' />
-			<h1>Modules:</h1>
-			<a id='nav' href='priorities.html'>Module priorities by profile &gt;</a>
+			<div id='nav'>
+				<a href='priorities.html'>Module priorities by profile &gt;</a><br />
+				<a href='fixmes.html'>FIXMEs and TODOs &gt;</a><br />
+				<a href='module_graph.svg'>Module map (svg) &gt;</a>
+			</div>
+			<h1>Modules</h1>
 		</div>
 		<div id='page'>
-			Search: <input id='search' type='text' />
+			<p>
+			Total amount of modules: <strong>@!len(mods)!@</strong>.
+			</p>
+			<label for='search'>Search:</label>
+			<input id='search' type='text' />
 			<ul id='modules'>
 			<!--(for mod in mods)-->
 				<li><a href='@!mod!@.html'>@!mod[len("modules/"):]!@</a></li>

@@ -18,7 +18,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtScript
 import json
 
 class Event(object):
@@ -92,6 +91,11 @@ class JavascriptEventModule(object):
 		return Event(obj, self._checkForErrors)
 
 	def enable(self):
+		global QtScript
+		try:
+			from PyQt4 import QtScript
+		except ImportError:
+			return
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		self._engine = QtScript.QScriptEngine()

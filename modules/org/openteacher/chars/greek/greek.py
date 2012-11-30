@@ -29,14 +29,8 @@ class GreekModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.filesWithTranslations = ("greek.py",)
-		x = 160
 		self.priorities = {
-			"all": x,
-			"selfstudy": x,
-			"student@home": x,
-			"student@school": x,
-			"teacher": x,
-			"wordsonly": x,
+			"default": 160,
 		}
 
 	def enable(self):

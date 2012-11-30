@@ -26,14 +26,7 @@ class HtmlSaverModule(object):
 
 		self.type = "save"
 		self.priorities = {
-			"student@home": 616,
-			"student@school": 616,
-			"teacher": 616,
-			"wordsonly": 616,
-			"selfstudy": 616,
-			"testsuite": 616,
-			"codedocumentation": 616,
-			"all": 616,
+			"default": 616,
 		}
 
 		self.requires = (

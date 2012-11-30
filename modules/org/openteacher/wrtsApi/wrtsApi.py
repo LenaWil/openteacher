@@ -19,8 +19,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui
-
 class WrtsApiModule(object):
 	def __init__(self, moduleManager):
 		super(WrtsApiModule, self).__init__()
@@ -40,6 +38,17 @@ class WrtsApiModule(object):
 			self._mm.mods(type="wordsStringComposer"),
 			self._mm.mods(type="wordsStringParser"),
 		)
+		x = 508
+		self.priorities = {
+			"all": x,
+			"selfstudy": x,
+			"student@home": x,
+			"student@school": x,
+			"teacher": x,
+			"words-only": x,
+			"code-documentation": x,
+			"default": -1,
+		}
 		self.filesWithTranslations = ("wrtsApi.py", "ui.py")
 
 	def _updateMenuItemsWrapper(self, *args, **kwargs):
@@ -51,6 +60,11 @@ class WrtsApiModule(object):
 		self._action.enabled = canExport
 
 	def enable(self):
+		global QtGui
+		try:
+			from PyQt4 import QtGui
+		except ImportError:
+			return
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._uiModule = self._modules.default("active", type="ui")
 		self._lessonTracker = self._modules.default("active", type="lessonTracker")
@@ -61,11 +75,9 @@ class WrtsApiModule(object):
 
 		self._button = self._modules.default("active", type="buttonRegister").registerButton("load")
 		self._button.clicked.handle(self.importFromWrts)
-		#FIXME 3.1: get from self.prioritiies when they're set.
-		self._button.changePriority.send(100)
+		self._button.changePriority.send(self.priorities["all"])
 
-		#FIXME 3.1: get from module priority
-		self._action = self._uiModule.fileMenu.addAction(100)
+		self._action = self._uiModule.fileMenu.addAction(self.priorities["all"])
 		self._action.triggered.handle(self.exportToWrts)
 
 		self._uiModule.tabChanged.handle(self._updateMenuItems)
@@ -247,6 +259,7 @@ class WrtsApiModule(object):
 				_("No word list metadata given."),
 				_("Please fill in the wordlist title, question language and answer language first. Then try again.")
 			)
+			return
 		except self._api.LoginError:
 			self._invalidLogin()
 			return

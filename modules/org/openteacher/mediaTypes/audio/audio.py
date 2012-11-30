@@ -22,7 +22,6 @@
 
 import fnmatch
 import mimetypes
-from PyQt4.phonon import Phonon
 
 class MediaTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -38,17 +37,15 @@ class MediaTypeModule(object):
 		self.type = "mediaType"
 		self.extensions = [".mp3", ".wav", ".wma", ".aif", ".mid", ".midi", ".aac", ".flac"]
 		self.priorities = {
-			"student@home": 550,
-			"student@school": 550,
-			"teacher": 550,
-			"wordsonly": -1,
-			"selfstudy": 550,
-			"testsuite": 550,
-			"codedocumentation": 550,
-			"all": 550,
+			"default": 550,
 		}
 
 	def enable(self):
+		global Phonon
+		try:
+			from PyQt4.phonon import Phonon
+		except ImportError:
+			return
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		
 		try:

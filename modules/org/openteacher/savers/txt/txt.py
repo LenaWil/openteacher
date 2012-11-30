@@ -26,14 +26,7 @@ class TxtSaverModule(object):
 
 		self.type = "save"
 		self.priorities = {
-			"student@home": 924,
-			"student@school": 924,
-			"teacher": 924,
-			"wordsonly": 924,
-			"selfstudy": 924,
-			"testsuite": 924,
-			"codedocumentation": 924,
-			"all": 924,
+			"default": 924,
 		}
 		self.requires = (
 			self._mm.mods(type="wordsStringComposer"),

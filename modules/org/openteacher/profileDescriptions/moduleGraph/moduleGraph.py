@@ -27,7 +27,7 @@ class ProfileDescriptionModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ("module-graph.py",)
+		self.filesWithTranslations = ("moduleGraph.py",)
 
 	def _retranslate(self):
 		try:

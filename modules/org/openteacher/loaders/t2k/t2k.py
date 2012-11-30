@@ -34,12 +34,7 @@ class Teach2000LoaderModule(object):
 
 		self.type = "load"
 		self.priorities = {
-			"student@home": 648,
-			"student@school": 648,
-			"teacher": 648,
-			"wordsonly": 648,
-			"selfstudy": 648,
-			"all": 648,
+			"default": 648,
 		}
 		
 		self.uses = (

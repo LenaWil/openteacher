@@ -23,8 +23,6 @@
 import os
 import weakref
 
-from PyQt4 import QtGui
-
 #FIXME (>3.1): give media lessons a title
 
 class MediaLessonModule(object):
@@ -37,16 +35,17 @@ class MediaLessonModule(object):
 		self.counter = 1
 
 		self.type = "lesson"
+		x = 667
 		self.priorities = {
-			"student@home": 667,
-			"student@school": 667,
-			"teacher": 667,
-			"wordsonly": -1,
-			"selfstudy": 667,
-			"testsuite": 667,
-			"codedocumentation": 667,
-			"all": 667,
+			"all": x,
+			"selfstudy": x,
+			"student@home": x,
+			"student@school": x,
+			"teacher": x,
+			"code-documentation": x,
+			"default": -1,
 		}
+
 		self.dataType = "media"
 
 		self.uses = (
@@ -63,6 +62,11 @@ class MediaLessonModule(object):
 		self.filesWithTranslations = ("media.py",)
 
 	def enable(self):
+		global QtGui
+		try:
+			from PyQt4 import QtGui
+		except ImportError:
+			return
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		
 		self._lessons = set()

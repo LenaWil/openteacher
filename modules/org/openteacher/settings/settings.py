@@ -61,57 +61,62 @@ class SettingsModule(object):
 
 	def registerSetting(self, internal_name, **setting):
 		"""Adds a setting. internal_name should be unique and describe
-		what the setting contains, we *strongly recommmend* to use the
-		'reverse domain' naming	strategy because of the first property.
-		(E.g. com.example.moduleName.settingName).
+		   what the setting contains, we **strongly recommmend** to use the
+		   'reverse domain' naming	strategy because of the first property.
+		   (E.g. ``com.example.moduleName.settingName``).
 
-		The other arguments, describing the setting, should be:
-		 * name,
-		 * type="short_text",
-		  * boolean
-		  * short_text
-		  * long_text
-		  * number
-		  * password
-		  * option
-		  * multiOption
-		  * language
-		  * profile
-		  ... are available.
-		 * defaultValue
-		 * minValue=None
-		 * maxValue=None
-		 * category=None
-		 * subcategory=None
-		 * advanced=False
-		 * callback=None
-		  * should have this format:
+		   The other arguments, describing the setting, should be:
+
+		   * name,
+		   * type="short_text",
+		    * boolean
+		    * short_text
+		    * long_text
+		    * number
+		    * password
+		    * option
+		    * multiOption
+		    * language
+		    * profile
+		    ... are available.
+		   * defaultValue
+		   * minValue=None
+		   * maxValue=None
+		   * category=None
+		   * subcategory=None
+		   * advanced=False
+		   * callback=None
+
+		   The callback option should have this format::
+
 		    {
-				"args": ("active",),
-				"kwargs": {"type": "callback"},
-				"method": "callbackMethod",
-			}
-		    Where args and kwargs are the same as in the following:
-		    self._mm.mods(*args, **kwargs)
+		        "args": ("active",),
+		        "kwargs": {"type": "callback"},
+		        "method": "callbackMethod",
+		    }
 
-		The following argument should be included when type="option" or type="multiOption":
-		 * options=[]
-		  * options should have this format: ("label", data)
+		   Where args and kwargs are the same as in the following:
+		   ``self._mm.mods(*args, **kwargs)``
 
-		This method returns a setting dict with the same properties as
-		described above, with the difference that defaultValue is
-		missing and that the 'value' key is added containing the actual
-		current value of the setting. You're free to modify the object,
-		as long as its values are valid.
+		   The following argument should be included when type="option" or type="multiOption":
 
-		When a setting argument isn't given (e.g. category), then it
-		also isn't in the setting dict that is returned, so for the
-		non-obligatory ones (the one with default values above) check
-		for a KeyError and if there is one, threat it like the default
-		value is the current data.
+		   * options=[]
+		    * options should have this format: ``("label", data)``
 
-		If a callback is added, it's called when the value is changed
-		automatically by this module.
+		   This method returns a setting dict with the same properties as
+		   described above, with the difference that defaultValue is
+		   missing and that the 'value' key is added containing the actual
+		   current value of the setting. You're free to modify the object,
+		   as long as its values are valid.
+
+		   When a setting argument isn't given (e.g. category), then it
+		   also isn't in the setting dict that is returned, so for the
+		   non-obligatory ones (the one with default values above) check
+		   for a ``KeyError`` and if there is one, threat it like the default
+		   value is the current data.
+
+		   If a callback is added, it's called when the value is changed
+		   automatically by this module.
 
 		"""
 		if internal_name in self._settings:

@@ -28,6 +28,10 @@ class PercentsCalculatorModule(object):
 	def enable(self):
 		self.active = True
 
+	def calculateAveragePercents(self, tests):
+		percentSum = sum((self.calculatePercents(test) for test in tests))
+		return int(round(percentSum / float(len(tests))))
+
 	def calculatePercents(self, test):
 		results = map(lambda x: 1 if x["result"] == "right" else 0, test["results"])
 		total = len(results)

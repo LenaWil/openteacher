@@ -437,9 +437,21 @@ class TestCase(unittest.TestCase):
 			#see comment above test data
 			self.assertNotEquals(note1, note3)
 
+			#should be a non empty string
+			self.assertIsInstance(note1, basestring, msg=mod)
+			self.assertIsInstance(note2, basestring, msg=mod)
+			self.assertIsInstance(note3, basestring, msg=mod)
+			self.assertTrue(note1, msg=mod)
+			self.assertTrue(note2, msg=mod)
+			self.assertTrue(note3, msg=mod)
+
 	def testCalculateAverageNote(self):
 		for mod in self._mm.mods("active", type="noteCalculator"):
-			mod.calculateAverageNote(self.tests)
+			note = mod.calculateAverageNote(self.tests)
+
+			#should be a non-empty string.
+			self.assertIsInstance(note, basestring, msg=mod)
+			self.assertTrue(note, msg=mod)
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

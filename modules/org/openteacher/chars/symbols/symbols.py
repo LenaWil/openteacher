@@ -33,14 +33,8 @@ class SymbolsModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.filesWithTranslations = ("symbols.py",)
-		x = 155
 		self.priorities = {
-			"all": x,
-			"selfstudy": x,
-			"student@home": x,
-			"student@school": x,
-			"teacher": x,
-			"wordsonly": x,
+			"default": 155,
 		}
 
 	def sendUpdated(self):

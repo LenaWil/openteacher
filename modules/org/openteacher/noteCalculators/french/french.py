@@ -30,14 +30,8 @@ class FrenchNoteCalculatorModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		x = 935
 		self.priorities = {
-			"all": x,
-			"selfstudy": x,
-			"student@home": x,
-			"student@school": x,
-			"teacher": x,
-			"wordsonly": x,
+			"default": 935,
 		}
 
 	def _calculate(self, test):
@@ -48,7 +42,7 @@ class FrenchNoteCalculatorModule(object):
 		return int(round(float(amountRight) / float(total) * 20))
 
 	def calculateNote(self, test):
-		return self._calculate(test)
+		return str(self._calculate(test))
 
 	def calculateAverageNote(self, tests):
 		note = 0

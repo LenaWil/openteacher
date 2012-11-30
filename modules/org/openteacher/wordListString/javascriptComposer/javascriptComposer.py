@@ -18,7 +18,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtScript
 import json
 
 class WordListStringComposerModule(object):
@@ -44,6 +43,11 @@ class WordListStringComposerModule(object):
 		return unicode(v.toString())
 
 	def enable(self):
+		global QtScript
+		try:
+			from PyQt4 import QtScript
+		except ImportError:
+			return
 		modules = set(self._mm.mods(type="modules")).pop()
 
 		self._engine = QtScript.QScriptEngine()

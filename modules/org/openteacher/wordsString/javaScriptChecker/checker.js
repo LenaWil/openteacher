@@ -45,10 +45,8 @@ var check = (function () {
 		return a1.length === 0;
 	};
 
-	return function (givenAnswerString, word) {
-		var givenAnswer, result, compulsoryAnswerCount, difference, i, compulsoryAnswer, oldDifference, compulsoryGivenAnswer, j;
-
-		givenAnswer = parse(givenAnswerString);
+	return function (givenAnswer, word) {
+		var result, compulsoryAnswerCount, difference, i, compulsoryAnswer, oldDifference, compulsoryGivenAnswer, j;
 
 		result = {"result": "wrong"};
 		compulsoryAnswerCount = 0;

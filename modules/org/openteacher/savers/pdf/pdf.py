@@ -19,8 +19,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui, QtWebKit
-
 class PdfSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(PdfSaverModule, self).__init__(*args, **kwargs)
@@ -28,14 +26,7 @@ class PdfSaverModule(object):
 
 		self.type = "save"
 		self.priorities = {
-			"student@home": 784,
-			"student@school": 784,
-			"teacher": 784,
-			"wordsonly": 784,
-			"selfstudy": 784,
-			"testsuite": 784,
-			"codedocumentation": 784,
-			"all": 784,
+			"default": 784,
 		}
 
 		self.requires = (
@@ -64,6 +55,11 @@ class PdfSaverModule(object):
 		self.name = _("Portable Document Format")
 
 	def enable(self):
+		global QtGui, QtWebKit
+		try:
+			from PyQt4 import QtGui, QtWebKit
+		except ImportError:
+			return
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.saves = {"words": ["pdf"]}
 

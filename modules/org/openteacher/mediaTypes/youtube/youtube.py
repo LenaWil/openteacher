@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #    Copyright 2008-2011, Milan Boers
+#    Copyright 2012, Marten de Vries
 #
 #    This file is part of OpenTeacher.
 #
@@ -18,9 +19,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-
 import fnmatch
-from PyQt4 import QtCore
 
 class MediaTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -32,17 +31,15 @@ class MediaTypeModule(object):
 		self.type = "mediaType"
 		self.remoteNames = ["YouTube"]
 		self.priorities = {
-			"student@home": 100,
-			"student@school": 100,
-			"teacher": 100,
-			"wordsonly": -1,
-			"selfstudy": 100,
-			"testsuite": 100,
-			"codedocumentation": 100,
-			"all": 100,
+			"default": 100,
 		}
 
 	def enable(self):
+		global QtCore
+		try:
+			from PyQt4 import QtCore
+		except ImportError:
+			return
 		self.active = True
 
 	def disable(self):

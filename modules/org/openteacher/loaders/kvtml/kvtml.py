@@ -28,15 +28,8 @@ class KvtmlLoaderModule(object):
 		self._mm = moduleManager
 
 		self.type = "load"
-		x = 770
 		self.priorities = {
-			"student@home": x,
-			"student@school": x,
-			"teacher": x,
-			"wordsonly": x,
-			"selfstudy": x,
-			"all": x,
-			"default": x,
+			"default": 770,
 		}
 		
 		self.requires = (

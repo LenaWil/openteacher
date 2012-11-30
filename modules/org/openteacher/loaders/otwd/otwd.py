@@ -30,14 +30,7 @@ class OpenTeachingWordsLoaderModule(object):
 
 		self.type = "load"
 		self.priorities = {
-			"student@home": 432,
-			"student@school": 432,
-			"teacher": 432,
-			"wordsonly": 432,
-			"selfstudy": 432,
-			"testsuite": 432,
-			"codedocumentation": 432,
-			"all": 432,
+			"default": 432,
 		}
 		self._mm = moduleManager
 		self.uses = (

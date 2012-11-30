@@ -18,7 +18,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtScript
 import json
 
 class JavascriptCheckerModule(object):
@@ -30,7 +29,6 @@ class JavascriptCheckerModule(object):
 		self.javaScriptImplementation = True
 		self.requires = (
 			self._mm.mods(type="ui"),
-			self._mm.mods("javaScriptImplementation", type="wordsStringParser"),
 		)
 		self.priorities = {
 			"default": 20,
@@ -48,12 +46,16 @@ class JavascriptCheckerModule(object):
 		return json.loads(jsonResult)
 
 	def enable(self):
+		global QtScript
+		try:
+			from PyQt4 import QtScript
+		except ImportError:
+			return
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.code = self._modules.default("javaScriptImplementation", type="wordsStringParser").code
 
 		self._engine = QtScript.QScriptEngine()
 		with open(self._mm.resourcePath("checker.js")) as f:
-			self.code += "\n" + f.read()
+			self.code = f.read()
 		self._engine.evaluate(self.code, f.name)
 		self._checkForErrors()
 

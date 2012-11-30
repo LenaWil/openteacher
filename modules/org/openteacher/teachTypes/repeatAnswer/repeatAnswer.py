@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Cas Widdershoven
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -20,96 +20,101 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui, QtCore
 import weakref
 
-class RepeatScreenWidget(QtGui.QWidget):
-	def __init__(self, repeatAnswerTeachWidget, compose, getFadeDuration, *args, **kwargs):
-		super(RepeatScreenWidget, self).__init__(*args, **kwargs)
+def getRepeatScreenWidget():
+	class RepeatScreenWidget(QtGui.QWidget):
+		def __init__(self, repeatAnswerTeachWidget, compose, getFadeDuration, *args, **kwargs):
+			super(RepeatScreenWidget, self).__init__(*args, **kwargs)
 
-		self._repeatAnswerTeachWidget = repeatAnswerTeachWidget
-		self._compose = compose
-		self._getFadeDuration = getFadeDuration
+			self._repeatAnswerTeachWidget = repeatAnswerTeachWidget
+			self._compose = compose
+			self._getFadeDuration = getFadeDuration
 
-		self.showAnswerScreen = QtGui.QVBoxLayout()
-		self.answerLabel = QtGui.QLabel()
-		self.showAnswerScreen.addWidget(self.answerLabel)
-		self.setLayout(self.showAnswerScreen)
+			self.showAnswerScreen = QtGui.QVBoxLayout()
+			self.answerLabel = QtGui.QLabel()
+			self.showAnswerScreen.addWidget(self.answerLabel)
+			self.setLayout(self.showAnswerScreen)
 
-	def fade(self, callback):
-		self.answerLabel.setText(self._compose(self.word["answers"]))
-		timer = QtCore.QTimeLine(self._getFadeDuration(), self)
-		timer.setFrameRange(0, 255)
-		timer.frameChanged.connect(self.fadeAction)
-		timer.finished.connect(callback)
-		timer.start()
+		def fade(self, callback):
+			self.answerLabel.setText(self._compose(self.word["answers"]))
+			timer = QtCore.QTimeLine(self._getFadeDuration(), self)
+			timer.setFrameRange(0, 255)
+			timer.frameChanged.connect(self.fadeAction)
+			timer.finished.connect(callback)
+			timer.start()
 
-	def fadeAction(self, frame):
-		palette = QtGui.QPalette()
-		color = palette.windowText().color()
-		color.setAlpha(255 - frame)
-		palette.setColor(QtGui.QPalette.WindowText, color)
+		def fadeAction(self, frame):
+			palette = QtGui.QPalette()
+			color = palette.windowText().color()
+			color.setAlpha(255 - frame)
+			palette.setColor(QtGui.QPalette.WindowText, color)
 
-		self.answerLabel.setPalette(palette)
+			self.answerLabel.setPalette(palette)
+	return RepeatScreenWidget
 
-class StartScreenWidget(QtGui.QWidget):
-	def __init__(self, *args, **kwargs):
-		super(StartScreenWidget, self).__init__(*args, **kwargs)
+def getStartScreenWidget():
+	class StartScreenWidget(QtGui.QWidget):
+		def __init__(self, *args, **kwargs):
+			super(StartScreenWidget, self).__init__(*args, **kwargs)
 
-		self.label = QtGui.QLabel()
-		self.startButton = QtGui.QPushButton()
+			self.label = QtGui.QLabel()
+			self.startButton = QtGui.QPushButton()
 
-		self.startScreen = QtGui.QVBoxLayout()
-		self.startScreen.addWidget(self.label)
-		self.startScreen.addWidget(self.startButton)
-		self.setLayout(self.startScreen)
-		
-		self.retranslate()
+			self.startScreen = QtGui.QVBoxLayout()
+			self.startScreen.addWidget(self.label)
+			self.startScreen.addWidget(self.startButton)
+			self.setLayout(self.startScreen)
+			
+			self.retranslate()
 
-	def retranslate(self):
-		self.label.setText(_("Click the button to start"))
-		self.startButton.setText(_("Start!"))
+		def retranslate(self):
+			self.label.setText(_("Click the button to start"))
+			self.startButton.setText(_("Start!"))
+	return StartScreenWidget
 
-class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
-	def __init__(self, modules, compose, getFadeDuration, tabChanged, letterChosen, *args, **kwargs):
-		super(RepeatAnswerTeachWidget, self).__init__(*args, **kwargs)
+def getRepeatAnswerTeachWidget():
+	class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
+		def __init__(self, modules, compose, getFadeDuration, tabChanged, letterChosen, *args, **kwargs):
+			super(RepeatAnswerTeachWidget, self).__init__(*args, **kwargs)
 
-		self._modules = modules
+			self._modules = modules
 
-		#make start screen
-		self.startScreen = StartScreenWidget(self)
-		self.startScreen.startButton.clicked.connect(self.startRepeat)
-		self.addWidget(self.startScreen)
+			#make start screen
+			self.startScreen = StartScreenWidget(self)
+			self.startScreen.startButton.clicked.connect(self.startRepeat)
+			self.addWidget(self.startScreen)
 
-		#make "show answer" screen
-		self.repeatScreen = RepeatScreenWidget(self, compose, getFadeDuration)
-		self.addWidget(self.repeatScreen)
+			#make "show answer" screen
+			self.repeatScreen = RepeatScreenWidget(self, compose, getFadeDuration)
+			self.addWidget(self.repeatScreen)
 
-		#make input screen
-		typingInput = self._modules.default("active", type="typingInput")
-		self.inputWidget = typingInput.createWidget(letterChosen)
-		self.addWidget(self.inputWidget)
+			#make input screen
+			typingInput = self._modules.default("active", type="typingInput")
+			self.inputWidget = typingInput.createWidget(letterChosen)
+			self.addWidget(self.inputWidget)
 
-		tabChanged.connect(lambda: self.setCurrentWidget(self.startScreen))
+			tabChanged.connect(lambda: self.setCurrentWidget(self.startScreen))
 
-	def retranslate(self):
-		self.startScreen.retranslate()
+		def retranslate(self):
+			self.startScreen.retranslate()
 
-	def _onRepeatFinished(self):
-		self.setCurrentWidget(self.inputWidget)
+		def _onRepeatFinished(self):
+			self.setCurrentWidget(self.inputWidget)
 
-	def startRepeat(self):
-		self.setCurrentWidget(self.repeatScreen)
-		self.repeatScreen.fade(self._onRepeatFinished)
+		def startRepeat(self):
+			self.setCurrentWidget(self.repeatScreen)
+			self.repeatScreen.fade(self._onRepeatFinished)
 
-	def updateLessonType(self, lessonType, *args, **kwargs):
-		self.inputWidget.updateLessonType(lessonType, *args, **kwargs)
-		lessonType.newItem.handle(self.newWord)
+		def updateLessonType(self, lessonType, *args, **kwargs):
+			self.inputWidget.updateLessonType(lessonType, *args, **kwargs)
+			lessonType.newItem.handle(self.newWord)
 
-	def newWord(self, word):
-		self.repeatScreen.word = word
-		if self.isVisible():
-			self.startRepeat()
+		def newWord(self, word):
+			self.repeatScreen.word = word
+			if self.isVisible():
+				self.startRepeat()
+	return RepeatAnswerTeachWidget
 
 class RepeatAnswerTeachTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -118,14 +123,7 @@ class RepeatAnswerTeachTypeModule(object):
 
 		self.type = "teachType"
 		self.priorities = {
-			"student@home": 651,
-			"student@school": 651,
-			"teacher": 651,
-			"wordsonly": 651,
-			"selfstudy": 651,
-			"testsuite": 651,
-			"codedocumentation": 651,
-			"all": 651,
+			"default": 651,
 		}
 		self.requires = (
 			self._mm.mods(type="ui"),
@@ -139,6 +137,16 @@ class RepeatAnswerTeachTypeModule(object):
 		self.filesWithTranslations = ("repeatAnswer.py",)
 
 	def enable(self):
+		global QtCore, QtGui
+		try:
+			from PyQt4 import QtCore, QtGui
+		except ImportError:
+			return
+		global RepeatAnswerTeachWidget, RepeatScreenWidget, StartScreenWidget
+		RepeatAnswerTeachWidget = getRepeatAnswerTeachWidget()
+		RepeatScreenWidget = getRepeatScreenWidget()
+		StartScreenWidget = getStartScreenWidget()
+
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		self._activeWidgets = set()

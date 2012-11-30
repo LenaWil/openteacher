@@ -18,7 +18,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtScript
 import json
 
 class JavascriptParserModule(object):
@@ -52,6 +51,11 @@ class JavascriptParserModule(object):
 		return map(tuple, json.loads(jsonResult))
 
 	def enable(self):
+		global QtScript
+		try:
+			from PyQt4 import QtScript
+		except ImportError:
+			return
 		self._engine = QtScript.QScriptEngine()
 		with open(self._mm.resourcePath("parser.js")) as f:
 			self.code = f.read()

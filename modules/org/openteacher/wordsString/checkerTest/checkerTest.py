@@ -37,34 +37,34 @@ class WordsStringCheckerTestCase(unittest.TestCase):
 		}
 
 	def testSingleRightAnswer(self):
-		self._test(u"in", self.word1, "wrong")
+		self._test([(u"in",)], self.word1, "wrong")
 
 	def testMultipleRightAnswers(self):
-		self._test(u"in, tijdens, bij", self.word1, "right")
+		self._test([(u"in", u"tijdens", u"bij")], self.word1, "right")
 
 	def testWrongAnswersNextToRightOnes(self):
 		#opp != op
-		self._test(u"in, tijdens, opp", self.word1, "wrong")
+		self._test([(u"in", u"tijdens", u"opp")], self.word1, "wrong")
 
 	def testSingleWrongAnswer(self):
-		self._test(u"opp", self.word1, "wrong")
+		self._test([(u"opp",)], self.word1, "wrong")
 
 	def testEmptyAnswer(self):
-		self._test(u"", self.word1, "wrong")
+		self._test([], self.word1, "wrong")
 
 	def testFullAnswer(self):
-		self._test(u"1. in, op, bij 2. tijdens", self.word1, "right")
+		self._test([(u"in", u"op", u"bij"), (u"tijdens",)], self.word1, "right")
 
 	def testFullAnswerWithExtraWrongWords(self):
 		#gelijktijdig met isn't in the answers (however it's possibly
 		#right linguistically seen.)
-		self._test(u"1. in, op, bij 2. tijdens, gelijktijdig met", self.word1, "wrong")
+		self._test([(u"in", "op", "bij"), (u"tijdens", u"gelijktijdig met")], self.word1, "wrong")
 
 	def testWordsInWeirdOrder(self):
-		self._test(u"naar(binnen), jegens, tot", self.word2, "right")
+		self._test([(u"naar(binnen)", "jegens", "tot")], self.word2, "right")
 
 	def testFullNotationAndDontIncludeAnNonObligatoryWord(self):
-		self._test(u"1. in, naar(binnen) 2. jegens", self.word2, "right")
+		self._test([(u"in", u"naar(binnen)"), (u"jegens",)], self.word2, "right")
 
 	def _test(self, givenAnswer, word, output):
 		for mod in self._mm.mods("active", type="wordsStringChecker"):

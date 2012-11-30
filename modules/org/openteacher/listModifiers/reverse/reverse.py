@@ -30,14 +30,8 @@ class ReverseModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.filesWithTranslations = ("reverse.py",)
-		x = 848
 		self.priorities = {
-			"all": x,
-			"selfstudy": x,
-			"student@home": x,
-			"student@school": x,
-			"teacher": x,
-			"wordsonly": x,
+			"default": 848,
 		}
 
 	def modifyList(self, indexes, list):

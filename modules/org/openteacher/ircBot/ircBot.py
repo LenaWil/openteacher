@@ -28,7 +28,7 @@ class IrcBotModule(object):
 			self._mm.mods(type="execute"),
 		)
 		self.priorities = {
-			"ircbot": 0,
+			"irc-bot": 0,
 			"default": -1,
 		}
 

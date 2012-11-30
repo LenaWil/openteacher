@@ -20,73 +20,72 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtCore
-from PyQt4 import QtGui
-
 import copy
 import weakref
 
-class TeachWidget(QtGui.QWidget):
-	lessonDone = QtCore.pyqtSignal()
-	listChanged = QtCore.pyqtSignal([object])
-	def __init__(self, moduleManager, keyboardWidget, applicationActivityChanged, *args, **kwargs):
-		super(TeachWidget, self).__init__(*args, **kwargs)
-		
-		self._mm = moduleManager
-		self._modules = set(self._mm.mods(type="modules")).pop()
-		self._composer = self._modules.default("active", type="wordsStringComposer")
-		
-		layout = QtGui.QVBoxLayout()
-		
-		self.title = QtGui.QLabel()
-		self.title.setStyleSheet("font-size: 18px;")
-		layout.addWidget(self.title)
-		
-		scrollArea = QtGui.QScrollArea()
-		
-		self.questions = QtGui.QFormLayout()
-		
-		scrollArea.setLayout(self.questions)
-
-		layout.addWidget(scrollArea)
-
-		self.handInButton = QtGui.QPushButton()
-		self.handInButton.clicked.connect(self.lessonDone.emit)
-		layout.addWidget(self.handInButton)
-
-		self.setLayout(layout)
-
-		self.retranslate()
-
-	def retranslate(self):
-		self.handInButton.setText(_("Hand in answers"))
-
-	def updateList(self, list):
-		self.list = list
-	
-	def showEvent(self, event):
-		# Set title
-		self.title.setText(self.list["title"])
-		
-		self.answerWidgets = []
-		
-		for item in self.list["items"]:
-			answerWidget = QtGui.QLineEdit()
-			self.questions.addRow(self._composer.compose(item["questions"]), answerWidget)
-			self.answerWidgets.append(answerWidget)
-	
-	def getAnsweredList(self):
-		# Make copy of list
-		answeredList = copy.copy(self.list)
-		
-		# Iterate through the answer widgets
-		i = 0;
-		for answerWidget in self.answerWidgets:
-			self.list["items"][i]["answer"] = unicode(answerWidget.text())
+def getTeachWidget():
+	class TeachWidget(QtGui.QWidget):
+		lessonDone = QtCore.pyqtSignal()
+		listChanged = QtCore.pyqtSignal([object])
+		def __init__(self, moduleManager, *args, **kwargs):
+			super(TeachWidget, self).__init__(*args, **kwargs)
 			
-			i += 1
+			self._mm = moduleManager
+			self._modules = set(self._mm.mods(type="modules")).pop()
+			self._composer = self._modules.default("active", type="wordsStringComposer")
+			
+			layout = QtGui.QVBoxLayout()
+			
+			self.title = QtGui.QLabel()
+			self.title.setStyleSheet("font-size: 18px;")
+			layout.addWidget(self.title)
+			
+			scrollArea = QtGui.QScrollArea()
+			
+			self.questions = QtGui.QFormLayout()
+			
+			scrollArea.setLayout(self.questions)
+
+			layout.addWidget(scrollArea)
+
+			self.handInButton = QtGui.QPushButton()
+			self.handInButton.clicked.connect(self.lessonDone.emit)
+			layout.addWidget(self.handInButton)
+
+			self.setLayout(layout)
+
+			self.retranslate()
+
+		def retranslate(self):
+			self.handInButton.setText(_("Hand in answers"))
+
+		def updateList(self, list):
+			self.list = list
 		
-		return answeredList
+		def showEvent(self, event):
+			# Set title
+			self.title.setText(self.list["title"])
+			
+			self.answerWidgets = []
+			
+			for item in self.list["items"]:
+				answerWidget = QtGui.QLineEdit()
+				self.questions.addRow(self._composer.compose(item["questions"]), answerWidget)
+				self.answerWidgets.append(answerWidget)
+		
+		def getAnsweredList(self):
+			# Make copy of list
+			answeredList = copy.copy(self.list)
+			
+			# Iterate through the answer widgets
+			i = 0;
+			for answerWidget in self.answerWidgets:
+				self.list["items"][i]["answer"] = unicode(answerWidget.text())
+				
+				i += 1
+			
+			return answeredList
+	return TeachWidget
 
 class TestModeTeacherModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -95,14 +94,7 @@ class TestModeTeacherModule(object):
 
 		self.type = "wordsTestTeacher"
 		self.priorities = {
-			"student@home": -1,
-			"student@school": 520,
-			"teacher": 520,
-			"wordsonly": -1,
-			"selfstudy": -1,
-			"testsuite": 520,
-			"codedocumentation": 520,
-			"all": 520,
+			"default": 520,
 		}
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -114,28 +106,20 @@ class TestModeTeacherModule(object):
 		self.filesWithTranslations = ("teacher.py",)
 
 	def createWordsTeacher(self):		
-		tw = TeachWidget(self._mm, self._onscreenKeyboard, self._applicationActivityChanged)
+		tw = TeachWidget(self._mm)
 		self._activeWidgets.add(weakref.ref(tw))
 		self._retranslate()
 
 		return tw
 
-	@property
-	def _onscreenKeyboard(self):
-		try:
-			return self._modules.default(
-				"active",
-				type="onscreenKeyboard"
-			).createWidget()
-		except IndexError:
-			return
-
-	@property
-	def _applicationActivityChanged(self):
-		uiModule = set(self._mm.mods("active", type="ui")).pop()
-		return uiModule.applicationActivityChanged
-
 	def enable(self):
+		global QtCore, QtGui
+		try:
+			from PyQt4 import QtCore, QtGui
+		except ImportError:
+			return
+		global TeachWidget
+		TeachWidget = getTeachWidget()
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._activeWidgets = set()
 

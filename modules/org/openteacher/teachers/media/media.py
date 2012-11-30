@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Milan Boers
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -19,144 +19,145 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui
-from PyQt4 import QtCore
-
 import datetime
 import weakref
 
-class TeachLessonTypeChooser(QtGui.QComboBox):
-	"""The dropdown menu to choose lesson type"""
+def getTeachLessonTypeChooser():
+	class TeachLessonTypeChooser(QtGui.QComboBox):
+		"""The dropdown menu to choose lesson type"""
 
-	currentIndexChanged = QtCore.pyqtSignal([int])
+		currentIndexChanged = QtCore.pyqtSignal([int])
 
-	def __init__(self,*args,**kwargs):
-		super(TeachLessonTypeChooser, self).__init__(*args, **kwargs)
+		def __init__(self,*args,**kwargs):
+			super(TeachLessonTypeChooser, self).__init__(*args, **kwargs)
 
-		self.retranslate()
+			self.retranslate()
 
-	def retranslate(self):
-		#disconnect the signal, so we can change some stuff without
-		#other classes notice
-		try:
-			super(TeachLessonTypeChooser, self).currentIndexChanged.disconnect(self.currentIndexChanged.emit)
-		except TypeError:
-			#not yet connected (first pass)
-			pass
+		def retranslate(self):
+			#disconnect the signal, so we can change some stuff without
+			#other classes notice
+			try:
+				super(TeachLessonTypeChooser, self).currentIndexChanged.disconnect(self.currentIndexChanged.emit)
+			except TypeError:
+				#not yet connected (first pass)
+				pass
 
-		#save status
-		i = self.currentIndex()
+			#save status
+			i = self.currentIndex()
 
-		#update data
-		self.clear()
-		self._lessonTypeModules = base._modules.sort("active", type="lessonType")
-		for lessontype in self._lessonTypeModules:
-			self.addItem(lessontype.name, lessontype)
+			#update data
+			self.clear()
+			self._lessonTypeModules = base._modules.sort("active", type="lessonType")
+			for lessontype in self._lessonTypeModules:
+				self.addItem(lessontype.name, lessontype)
 
-		#restore status
-		if i != -1:
-			self.setCurrentIndex(i)
+			#restore status
+			if i != -1:
+				self.setCurrentIndex(i)
 
-		#re-connect signal
-		super(TeachLessonTypeChooser, self).currentIndexChanged.connect(self.currentIndexChanged.emit)
+			#re-connect signal
+			super(TeachLessonTypeChooser, self).currentIndexChanged.connect(self.currentIndexChanged.emit)
 
-	@property
-	def currentLessonType(self):
-		"""Get the current lesson type"""
+		@property
+		def currentLessonType(self):
+			"""Get the current lesson type"""
 
-		return self._lessonTypeModules[self.currentIndex()]
+			return self._lessonTypeModules[self.currentIndex()]
+	return TeachLessonTypeChooser
 
-class TeachWidget(QtGui.QWidget):
-	"""The teach tab"""
+def getTeachWidget():
+	class TeachWidget(QtGui.QWidget):
+		"""The teach tab"""
 
-	lessonDone = QtCore.pyqtSignal()
-	listChanged = QtCore.pyqtSignal([object])
-	def __init__(self,*args, **kwargs):
-		super(TeachWidget, self).__init__(*args, **kwargs)
+		lessonDone = QtCore.pyqtSignal()
+		listChanged = QtCore.pyqtSignal([object])
+		def __init__(self,*args, **kwargs):
+			super(TeachWidget, self).__init__(*args, **kwargs)
+			
+			self.inLesson = False
+			
+			#draw the GUI
+			
+			top = QtGui.QHBoxLayout()
+			
+			self.label = QtGui.QLabel()
+			self.lessonTypeChooser = TeachLessonTypeChooser()
+			self.lessonTypeChooser.currentIndexChanged.connect(self.changeLessonType)
+
+			top.addWidget(self.label)
+			top.addWidget(self.lessonTypeChooser)
+			
+			self.nameLabel = QtGui.QLabel()
+			font = QtGui.QFont()
+			font.setPointSize(14)
+			self.nameLabel.setFont(font)
+			
+			self.mediaDisplay = base._modules.default("active", type="mediaDisplay").createDisplay(True)
+			
+			self.questionLabel = QtGui.QLabel()
+			
+			self.answerField = QtGui.QLineEdit()
+			self.answerField.returnPressed.connect(self.checkAnswerButtonClick)
+
+			self.checkButton = QtGui.QPushButton()
+			self.checkButton.clicked.connect(self.checkAnswerButtonClick)
+			
+			self.progress = QtGui.QProgressBar()
+			
+			bottomL = QtGui.QHBoxLayout()
+			bottomL.addWidget(self.answerField)
+			bottomL.addWidget(self.checkButton)
+			bottomL.addWidget(self.progress)
+			
+			layout = QtGui.QVBoxLayout()
+			layout.addLayout(top)
+			layout.addWidget(self.mediaDisplay)
+			layout.addWidget(self.nameLabel)
+			layout.addWidget(self.questionLabel)
+			layout.addLayout(bottomL)
+			
+			self.setLayout(layout)
+			self.retranslate()
+
+		def retranslate(self):
+			#TRANSLATORS: lesson types are e.g. 'smart', 'all once' and 'interval'
+			self.label.setText(_("Lesson type:"))
+			#TRANSLATORS: a button which the user presses to tell the computer it should check his/her answer.
+			self.checkButton.setText(_("Check"))
+
+			self.lessonTypeChooser.retranslate()
+
+		def initiateLesson(self, items):
+			"""Starts the lesson"""
+
+			self.items = items
+			self.lesson = TeachMediaLesson(items, self)
+			self.answerField.setFocus()
 		
-		self.inLesson = False
-		
-		#draw the GUI
-		
-		top = QtGui.QHBoxLayout()
-		
-		self.label = QtGui.QLabel()
-		self.lessonTypeChooser = TeachLessonTypeChooser()
-		self.lessonTypeChooser.currentIndexChanged.connect(self.changeLessonType)
+		def restartLesson(self):
+			"""Restarts the lesson"""
 
-		top.addWidget(self.label)
-		top.addWidget(self.lessonTypeChooser)
+			self.initiateLesson(self.items)
 		
-		self.nameLabel = QtGui.QLabel()
-		font = QtGui.QFont()
-		font.setPointSize(14)
-		self.nameLabel.setFont(font)
+		def changeLessonType(self, index):
+			"""What happens when you change the lesson type"""
+
+			if self.inLesson:
+				self.restartLesson()
 		
-		self.mediaDisplay = base._modules.default("active", type="mediaDisplay").createDisplay(True)
+		def stopLesson(self, showResults=True):
+			"""Stops the lesson"""
+
+			self.lesson.endLesson(showResults)
+			del self.lesson
 		
-		self.questionLabel = QtGui.QLabel()
-		
-		self.answerField = QtGui.QLineEdit()
-		self.answerField.returnPressed.connect(self.checkAnswerButtonClick)
+		def checkAnswerButtonClick(self):
+			"""What happens when you click the check answer button"""
 
-		self.checkButton = QtGui.QPushButton()
-		self.checkButton.clicked.connect(self.checkAnswerButtonClick)
-		
-		self.progress = QtGui.QProgressBar()
-		
-		bottomL = QtGui.QHBoxLayout()
-		bottomL.addWidget(self.answerField)
-		bottomL.addWidget(self.checkButton)
-		bottomL.addWidget(self.progress)
-		
-		layout = QtGui.QVBoxLayout()
-		layout.addLayout(top)
-		layout.addWidget(self.mediaDisplay)
-		layout.addWidget(self.nameLabel)
-		layout.addWidget(self.questionLabel)
-		layout.addLayout(bottomL)
-		
-		self.setLayout(layout)
-		self.retranslate()
-
-	def retranslate(self):
-		#TRANSLATORS: lesson types are e.g. 'smart', 'all once' and 'interval'
-		self.label.setText(_("Lesson type:"))
-		#TRANSLATORS: a button which the user presses to tell the computer it should check his/her answer.
-		self.checkButton.setText(_("Check"))
-
-		self.lessonTypeChooser.retranslate()
-
-	def initiateLesson(self, items):
-		"""Starts the lesson"""
-
-		self.items = items
-		self.lesson = TeachMediaLesson(items, self)
-		self.answerField.setFocus()
-	
-	def restartLesson(self):
-		"""Restarts the lesson"""
-
-		self.initiateLesson(self.items)
-	
-	def changeLessonType(self, index):
-		"""What happens when you change the lesson type"""
-
-		if self.inLesson:
-			self.restartLesson()
-	
-	def stopLesson(self, showResults=True):
-		"""Stops the lesson"""
-
-		self.lesson.endLesson(showResults)
-		del self.lesson
-	
-	def checkAnswerButtonClick(self):
-		"""What happens when you click the check answer button"""
-
-		self.lesson.checkAnswer()
-		self.answerField.clear()
-		self.answerField.setFocus()
+			self.lesson.checkAnswer()
+			self.answerField.clear()
+			self.answerField.setFocus()
+	return TeachWidget
 
 class TeachMediaLesson(object):	
 	"""The lesson itself (being teached)"""
@@ -271,14 +272,7 @@ class MediaTeacherModule(object):
 		
 		self.type = "mediaTeacher"
 		self.priorities = {
-			"student@home": 520,
-			"student@school": 520,
-			"teacher": 520,
-			"wordsonly": -1,
-			"selfstudy": 520,
-			"testsuite": 520,
-			"codedocumentation": 520,
-			"all": 520,
+			"default": 520,
 		}
 		
 		self.uses = (
@@ -292,6 +286,15 @@ class MediaTeacherModule(object):
 		self.filesWithTranslations = ("media.py",)
 	
 	def enable(self):
+		global QtCore, QtGui
+		try:
+			from PyQt4 import QtCore, QtGui
+		except ImportError:
+			return
+		global TeachLessonTypeChooser, TeachWidget
+		TeachLessonTypeChooser = getTeachLessonTypeChooser()
+		TeachWidget = getTeachWidget()
+
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		self._widgets = set()

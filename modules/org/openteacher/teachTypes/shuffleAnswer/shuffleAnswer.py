@@ -20,79 +20,81 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui, QtCore
 import random
 import weakref
 
-class ShuffleAnswerTeachWidget(QtGui.QWidget):
-	def __init__(self, inputWidget, compose, *args, **kwargs):
-		super(ShuffleAnswerTeachWidget, self).__init__(*args, **kwargs)
-		
-		self.inputWidget = inputWidget
-		self.compose = compose
-		
-		vbox = QtGui.QVBoxLayout()
-		self.hintLabel = QtGui.QLabel()
-		vbox.addWidget(self.hintLabel)
-		vbox.addWidget(self.inputWidget)
-		self.setLayout(vbox)
+def getShuffleAnswerTeachWidget():
+	class ShuffleAnswerTeachWidget(QtGui.QWidget):
+		def __init__(self, inputWidget, compose, *args, **kwargs):
+			super(ShuffleAnswerTeachWidget, self).__init__(*args, **kwargs)
+			
+			self.inputWidget = inputWidget
+			self.compose = compose
+			
+			vbox = QtGui.QVBoxLayout()
+			self.hintLabel = QtGui.QLabel()
+			vbox.addWidget(self.hintLabel)
+			vbox.addWidget(self.inputWidget)
+			self.setLayout(vbox)
 
-	def retranslate(self):
-		try:
+		def retranslate(self):
+			try:
+				self.setHint()
+			except AttributeError:
+				pass
+
+		#	Two solutions for the OpenTeacher 2.2 bug at 24-10-11:
+		#	(the commented version isn't ported to 3.x)
+		#
+		#	def setHint(self, answer):
+		#		hint = QtCore.QCoreApplication.translate("OpenTeacher", "Hint:") + u" "
+		#		if len(answer) > 1 and not answer.strip(answer[0]): #If len(answer) == 1, it is always the same shuffled#			for i in range(255): #Avoid "while True"
+		#				hintList = list(answer) #Make random.shuffle() possible
+		#				random.shuffle(hintList) #The actual shuffling of the word
+		#				if hintList != list(answer): #Check if the hint isn't the same as the answer
+		#					hint += u"".join(hintList) #Put the shuffled word in a string
+		#					self.ui.hintLabelShuffle.setText(hint) #Set the hint
+		#				else:
+		#					continue #It's the same; try again
+		#		else:
+		#			hint += u"." * len(answer) #It's only one character (0 should already be caught), so the hint string is only a dot
+		#			self.ui.hintLabelShuffle.setText(hint) #Set the hint
+
+		def setHint(self):
+			hint = _("Hint:") + u" "
+
+			#Shuffle list making sure that no letter gets at the same
+			#position if possible.
+			if "answers" in self.word:
+				oldAnswer = list(self.compose(self.word["answers"]))
+			else:
+				oldAnswer = u""
+			answer = oldAnswer[:]
+			for i in range(len(answer) -1):
+				j = i + 1 + int(random.random() * (len(answer) -i -1))
+
+				answer[i], answer[j] = answer[j], answer[i]
+
+			#Check if the word has a minimum length and could be shuffled.
+			#If not, the hint is a few dots, as much as there are letters
+			#in the answer
+			if len(answer) <= 2 or oldAnswer == answer:
+				hint += u"." * len(answer)
+			else:
+				hint += u"".join(answer)
+
+			self.hintLabel.setText(hint)
+
+		def updateLessonType(self, lessonType, *args, **kwargs):
+			self.inputWidget.updateLessonType(lessonType, *args, **kwargs)
+
+			lessonType.newItem.handle(self.newWord)
+
+		def newWord(self, word):
+			self.word = word
 			self.setHint()
-		except AttributeError:
-			pass
 
-#	Two solutions for the OpenTeacher 2.2 bug at 24-10-11:
-#	(the commented version isn't ported to 3.x)
-#
-#	def setHint(self, answer):
-#		hint = QtCore.QCoreApplication.translate("OpenTeacher", "Hint:") + u" "
-#		if len(answer) > 1 and not answer.strip(answer[0]): #If len(answer) == 1, it is always the same shuffled#			for i in range(255): #Avoid "while True"
-#				hintList = list(answer) #Make random.shuffle() possible
-#				random.shuffle(hintList) #The actual shuffling of the word
-#				if hintList != list(answer): #Check if the hint isn't the same as the answer
-#					hint += u"".join(hintList) #Put the shuffled word in a string
-#					self.ui.hintLabelShuffle.setText(hint) #Set the hint
-#				else:
-#					continue #It's the same; try again
-#		else:
-#			hint += u"." * len(answer) #It's only one character (0 should already be caught), so the hint string is only a dot
-#			self.ui.hintLabelShuffle.setText(hint) #Set the hint
-
-	def setHint(self):
-		hint = _("Hint:") + u" "
-
-		#Shuffle list making sure that no letter gets at the same
-		#position if possible.
-		if "answers" in self.word:
-			oldAnswer = list(self.compose(self.word["answers"]))
-		else:
-			oldAnswer = u""
-		answer = oldAnswer[:]
-		for i in range(len(answer) -1):
-			j = i + 1 + int(random.random() * (len(answer) -i -1))
-
-			answer[i], answer[j] = answer[j], answer[i]
-
-		#Check if the word has a minimum length and could be shuffled.
-		#If not, the hint is a few dots, as much as there are letters
-		#in the answer
-		if len(answer) <= 2 or oldAnswer == answer:
-			hint += u"." * len(answer)
-		else:
-			hint += u"".join(answer)
-
-		self.hintLabel.setText(hint)
-
-	def updateLessonType(self, lessonType, *args, **kwargs):
-		self.inputWidget.updateLessonType(lessonType, *args, **kwargs)
-
-		lessonType.newItem.handle(self.newWord)
-
-	def newWord(self, word):
-		self.word = word
-		self.setHint()
+	return ShuffleAnswerTeachWidget
 
 class ShuffleAnswerTeachTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -101,14 +103,7 @@ class ShuffleAnswerTeachTypeModule(object):
 
 		self.type = "teachType"
 		self.priorities = {
-			"student@home": 558,
-			"student@school": 558,
-			"teacher": 558,
-			"wordsonly": 558,
-			"selfstudy": 558,
-			"testsuite": 558,
-			"codedocumentation": 558,
-			"all": 558,
+			"default": 558,
 		}
 		self.requires = (
 			self._mm.mods(type="ui"),
@@ -121,6 +116,14 @@ class ShuffleAnswerTeachTypeModule(object):
 		self.filesWithTranslations = ("shuffleAnswer.py",)
 
 	def enable(self):
+		global QtGui
+		try:
+			from PyQt4 import QtGui
+		except ImportError:
+			return
+		global ShuffleAnswerTeachWidget
+		ShuffleAnswerTeachWidget = getShuffleAnswerTeachWidget()
+
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._activeWidgets = set()
 

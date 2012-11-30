@@ -107,14 +107,8 @@ class AllOnceModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.filesWithTranslations = ("allOnce.py",)
-		x = 140
 		self.priorities = {
-			"all": x,
-			"selfstudy": x,
-			"student@home": x,
-			"student@school": x,
-			"teacher": x,
-			"wordsonly": x,
+			"default": 140,
 		}
 
 	def enable(self):

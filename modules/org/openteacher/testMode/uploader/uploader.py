@@ -19,9 +19,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui
-from PyQt4 import QtCore
-
 import os
 import uuid
 import json
@@ -32,17 +29,13 @@ class TestModeUploaderModule(object):
 		self._mm = moduleManager
 		
 		self.type = "testModeUploader"
+		x = 560
 		self.priorities = {
-			"student@home": -1,
-			"student@school": 560,
-			"teacher": -1,
-			"wordsonly": -1,
-			"selfstudy": -1,
-			"testsuite": 560,
-			"codedocumentation": 560,
-			"all": 560,
+			"all": x,
+			"teacher": x,
+			"code-documentation": x,
+			"default": -1,
 		}
-		
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
@@ -56,12 +49,17 @@ class TestModeUploaderModule(object):
 		self.filesWithTranslations = ("uploader.py",)
 
 	def enable(self):
+		global QtCore, QtGui
+		try:
+			from PyQt4 import QtCore, QtGui
+		except ImportError:
+			return
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._fileDialogs = self._modules.default("active", type="fileDialogs")
 
 		self._testMenu = self._modules.default("active", type="testMenu").menu
 
-		self._action = self._testMenu.addAction(self.priorities["all"])
+		self._action = self._testMenu.addAction(self.priorities["default"])
 		self._action.triggered.handle(self.upload)
 
 		#setup translation

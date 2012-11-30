@@ -34,14 +34,7 @@ class TypingTeachTypeModule(object):
 		)
 
 		self.priorities = {
-			"student@home": 465,
-			"student@school": 465,
-			"teacher": 465,
-			"wordsonly": 465,
-			"selfstudy": 465,
-			"testsuite": 465,
-			"codedocumentation": 465,
-			"all": 465,
+			"default": 465,
 		}
 		self.filesWithTranslations = ("typing.py",)
 

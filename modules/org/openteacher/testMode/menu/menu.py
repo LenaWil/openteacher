@@ -18,18 +18,19 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui
-
 class TestMenuModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestMenuModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "testMenu"
+		x = 728
 		self.priorities = {
-			"student@home": -1,
-			"wordsonly": -1,
-			"selfstudy": -1,
+			"all": x,
+			"student@school": x,
+			"teacher": x,
+			"code-documentation": x,
+			"default": -1,
 		}
 
 		self.uses = (
@@ -38,14 +39,18 @@ class TestMenuModule(object):
 		self.requires = (
 			self._mm.mods(type="ui"),
 		)
-		self.filesWithTranslations = ("testMenu.py",)
+		self.filesWithTranslations = ("menu.py",)
 
 	def enable(self):
+		global QtGui
+		try:
+			from PyQt4 import QtGui
+		except ImportError:
+			return
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		ui = self._modules.default("active", type="ui")
-		#FIXME 3.1: get from module priority
-		self.menu = ui.fileMenu.addMenu(200)
+		self.menu = ui.fileMenu.addMenu(self.priorities["all"])
 
 		try:
 			translator = self._modules.default("active", type="translator")

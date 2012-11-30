@@ -34,15 +34,15 @@ class TeachTopoLessonModule(object):
 		self.counter = 1
 		
 		self.type = "lesson"
+		x = 580
 		self.priorities = {
-			"student@home": 580,
-			"student@school": 580,
-			"teacher": 580,
-			"wordsonly": -1,
-			"selfstudy": 580,
-			"testsuite": 580,
-			"codedocumentation": 580,
-			"all": 580,
+			"all": x,
+			"selfstudy": x,
+			"student@home": x,
+			"student@school": x,
+			"teacher": x,
+			"code-documentation": x,
+			"default": -1,
 		}
 		
 		self.uses = (

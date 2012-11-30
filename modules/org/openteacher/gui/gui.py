@@ -19,7 +19,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtCore, QtGui
 import sys
 import platform
 
@@ -177,6 +176,11 @@ class GuiModule(object):
 		self.filesWithTranslations = ("gui.py", "ui.py")
 
 	def enable(self):
+		global QtCore, QtGui
+		try:
+			from PyQt4 import QtCore, QtGui
+		except ImportError:
+			return
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		createEvent = self._modules.default(type="event").createEvent
 

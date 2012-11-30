@@ -18,7 +18,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtCore, QtGui
 import urllib2
 import urllib
 from etree import ElementTree
@@ -64,72 +63,75 @@ class VocatrainApi(object):
 		list = root.findtext("list")
 		return self._parseList(list)
 
-class Model(QtCore.QAbstractListModel):
-	def __init__(self, choices, *args, **kwargs):
-		"""Choices should be an iterable object of tuples of size two,
-		   with in it first the text to display and second the value to
-		   return.
+def installQtClasses():
+	global AbstractSelectDialog, BookSelectDialog, CategorySelectDialog, ListSelectDialog, Model
 
-		"""
-		super(Model, self).__init__(*args, **kwargs)
+	class Model(QtCore.QAbstractListModel):
+		def __init__(self, choices, *args, **kwargs):
+			"""Choices should be an iterable object of tuples of size two,
+			   with in it first the text to display and second the value to
+			   return.
 
-		self._choices = list(choices)
+			"""
+			super(Model, self).__init__(*args, **kwargs)
 
-	def rowCount(self, parent):
-		return len(self._choices)
+			self._choices = list(choices)
 
-	def data(self, index, role):
-		if not (index.isValid() and role == QtCore.Qt.DisplayRole):
-			return
+		def rowCount(self, parent):
+			return len(self._choices)
 
-		return self._choices[index.row()][0]
+		def data(self, index, role):
+			if not (index.isValid() and role == QtCore.Qt.DisplayRole):
+				return
 
-	def getChoice(self, index):
-		return self._choices[index.row()][1]
+			return self._choices[index.row()][0]
 
-class AbstractSelectDialog(QtGui.QDialog):
-	def __init__(self, choices, *args, **kwargs):
-		super(AbstractSelectDialog, self).__init__(*args, **kwargs)
+		def getChoice(self, index):
+			return self._choices[index.row()][1]
 
-		self.label = QtGui.QLabel()
+	class AbstractSelectDialog(QtGui.QDialog):
+		def __init__(self, choices, *args, **kwargs):
+			super(AbstractSelectDialog, self).__init__(*args, **kwargs)
 
-		self._listView = QtGui.QListView()
-		self._model = Model(choices)
-		self._listView.setModel(self._model)
-		self._listView.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
-		self._listView.doubleClicked.connect(self.accept)
+			self.label = QtGui.QLabel()
 
-		buttonBox = QtGui.QDialogButtonBox(
-			QtGui.QDialogButtonBox.Cancel | QtGui.QDialogButtonBox.Ok,
-			parent=self
-		)
-		buttonBox.accepted.connect(self.accept)
-		buttonBox.rejected.connect(self.reject)
+			self._listView = QtGui.QListView()
+			self._model = Model(choices)
+			self._listView.setModel(self._model)
+			self._listView.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
+			self._listView.doubleClicked.connect(self.accept)
 
-		l = QtGui.QVBoxLayout()
-		l.addWidget(self.label)
-		l.addWidget(self._listView)
-		l.addWidget(buttonBox)
-		self.setLayout(l)
+			buttonBox = QtGui.QDialogButtonBox(
+				QtGui.QDialogButtonBox.Cancel | QtGui.QDialogButtonBox.Ok,
+				parent=self
+			)
+			buttonBox.accepted.connect(self.accept)
+			buttonBox.rejected.connect(self.reject)
 
-	@property
-	def chosenItems(self):
-		return [self._model.getChoice(i) for i in self._listView.selectedIndexes()]
+			l = QtGui.QVBoxLayout()
+			l.addWidget(self.label)
+			l.addWidget(self._listView)
+			l.addWidget(buttonBox)
+			self.setLayout(l)
 
-class CategorySelectDialog(AbstractSelectDialog):
-	def retranslate(self):
-		self.setWindowTitle(_("Select category"))
-		self.label.setText(_("Please select a category"))
+		@property
+		def chosenItems(self):
+			return [self._model.getChoice(i) for i in self._listView.selectedIndexes()]
 
-class BookSelectDialog(AbstractSelectDialog):
-	def retranslate(self):
-		self.setWindowTitle(_("Select book"))
-		self.label.setText(_("Please select a book"))
+	class CategorySelectDialog(AbstractSelectDialog):
+		def retranslate(self):
+			self.setWindowTitle(_("Select category"))
+			self.label.setText(_("Please select a category"))
 
-class ListSelectDialog(AbstractSelectDialog):
-	def retranslate(self):
-		self.setWindowTitle(_("Select list"))
-		self.label.setText(_("Please select a list"))
+	class BookSelectDialog(AbstractSelectDialog):
+		def retranslate(self):
+			self.setWindowTitle(_("Select book"))
+			self.label.setText(_("Please select a book"))
+
+	class ListSelectDialog(AbstractSelectDialog):
+		def retranslate(self):
+			self.setWindowTitle(_("Select list"))
+			self.label.setText(_("Please select a list"))
 
 class VocatrainApiModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -148,7 +150,26 @@ class VocatrainApiModule(object):
 		)
 		self.filesWithTranslations = ("vocatrainApi.py",)
 
+		x = 644
+		self.priorities = {
+			"all": x,
+			"selfstudy": x,
+			"student@home": x,
+			"student@school": x,
+			"teacher": x,
+			"words-only": x,
+			"code-documentation": x,
+			"default": -1,
+		}
+
 	def enable(self):
+		global QtCore, QtGui
+		try:
+			from PyQt4 import QtCore, QtGui
+		except ImportError:
+			return
+		installQtClasses()
+
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._uiModule = self._modules.default("active", type="ui")
 		self._buttonRegister = self._modules.default("active", type="buttonRegister")
@@ -157,13 +178,12 @@ class VocatrainApiModule(object):
 
 		self._enButton = self._buttonRegister.registerButton("load")
 		self._enButton.clicked.handle(self.importFromVocatrain)
-		#FIXME 3.1: get from self.prioritiies when they're set.
-		self._enButton.changePriority.send(210)
+		self._enButton.changePriority.send(self.priorities["all"])
 
 		self._nlButton = self._buttonRegister.registerButton("load")
 		self._nlButton.clicked.handle(self.importFromWoordjesleren)
-		#FIXME 3.1: get from self.prioritiies when they're set.
-		self._nlButton.changePriority.send(200)
+		#+1 so it gets less priority than the vocatrain button.
+		self._nlButton.changePriority.send(self.priorities["all"] + 1)
 
 		try:
 			translator = self._modules.default("active", type="translator")

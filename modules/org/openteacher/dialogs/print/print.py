@@ -19,8 +19,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui
-
 class PrintDialogModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(PrintDialogModule, self).__init__(*args, **kwargs)
@@ -46,6 +44,12 @@ class PrintDialogModule(object):
 		return printer
 
 	def enable(self):
+		global QtGui
+		try:
+			from PyQt4 import QtGui
+		except ImportError:
+			#remain inactive
+			return
 		self.active = True
 
 	def disable(self):

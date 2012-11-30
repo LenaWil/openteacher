@@ -19,11 +19,9 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import inspect
-import time
 
 class ModulesModule(object):
-	"""Lowest (positive) priority: 10 000"""
+	"""Lowest (positive) priority: 1000"""
 
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(ModulesModule, self).__init__(*args, **kwargs)

@@ -19,90 +19,83 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui
-
 import os
 
-class StudentsView(QtGui.QTreeWidget):
-	def __init__(self, connection, *args, **kwargs):
-		super(StudentsView, self).__init__(*args, **kwargs)
-		
-		self.connection = connection
-		self.header().hide();
-		
-		self._addStudents()
-	
-	def _addStudents(self):
-		# Keep a dictionary of name to url of student so we can call the url from the name later
-		self.nameToUrl = dict()
-		
-		# Get list of groups
-		groupList = self.connection.get("groups")
-		for group in groupList:
-			groupInfo = self.connection.get(group["url"])
+def getStudentsView():
+	class StudentsView(QtGui.QTreeWidget):
+		def __init__(self, connection, *args, **kwargs):
+			super(StudentsView, self).__init__(*args, **kwargs)
 			
-			# Get list of members
-			userIds = map(os.path.basename, groupInfo["members"])
+			self.connection = connection
+			self.header().hide();
 			
-			userWidgets = []
+			self._addStudents()
+		
+		def _addStudents(self):
+			# Keep a dictionary of name to url of student so we can call the url from the name later
+			self.nameToUrl = dict()
 			
-			for userId in userIds:
-				userInfo = self.connection.get("users/" + userId)
+			# Get list of groups
+			groupList = self.connection.get("groups")
+			for group in groupList:
+				groupInfo = self.connection.get(group["url"])
+				
+				# Get list of members
+				userIds = map(os.path.basename, groupInfo["members"])
+				
+				userWidgets = []
+				
+				for userId in userIds:
+					userInfo = self.connection.get("users/" + userId)
+					if "role" in userInfo and userInfo["role"] == "student":
+						# This is a student. Add the student to the list
+						item = QtGui.QTreeWidgetItem()
+						item.setText(0, userInfo["username"])
+						userWidgets.append(item)
+						
+						# Also add this name and the id to a list so we know which id belongs to this student
+						self.nameToUrl[userInfo["username"]] = userInfo["url"]
+				
+				item = QtGui.QTreeWidgetItem()
+				item.setText(0, groupInfo["name"])
+				item.addChildren(userWidgets)
+				self.addTopLevelItem(item)
+			
+			# Get list of individual users
+			userList = self.connection.get("users")
+			
+			for user in userList:
+				userInfo = self.connection.get(user["url"])
 				if "role" in userInfo and userInfo["role"] == "student":
 					# This is a student. Add the student to the list
 					item = QtGui.QTreeWidgetItem()
 					item.setText(0, userInfo["username"])
-					userWidgets.append(item)
+					self.addTopLevelItem(item)
 					
 					# Also add this name and the id to a list so we know which id belongs to this student
 					self.nameToUrl[userInfo["username"]] = userInfo["url"]
-			
-			item = QtGui.QTreeWidgetItem()
-			item.setText(0, groupInfo["name"])
-			item.addChildren(userWidgets)
-			self.addTopLevelItem(item)
 		
-		# Get list of individual users
-		userList = self.connection.get("users")
-		
-		for user in userList:
-			userInfo = self.connection.get(user["url"])
-			if "role" in userInfo and userInfo["role"] == "student":
-				# This is a student. Add the student to the list
-				item = QtGui.QTreeWidgetItem()
-				item.setText(0, userInfo["username"])
-				self.addTopLevelItem(item)
-				
-				# Also add this name and the id to a list so we know which id belongs to this student
-				self.nameToUrl[userInfo["username"]] = userInfo["url"]
-	
-	def getCurrentStudents(self):
-		# Check if selected item is a group
-		if self.currentItem().childCount() != 0:
-			# Return list of all items
-			feedback = []
-			for i in xrange(self.currentItem().childCount()):
-				text = self.connection.get(self.nameToUrl[unicode(self.currentItem().child(i).text(0))])
-				feedback.append(text)
-			return feedback
-		else:
-			return self.connection.get(self.nameToUrl[unicode(self.currentItem().text(0))])
+		def getCurrentStudents(self):
+			# Check if selected item is a group
+			if self.currentItem().childCount() != 0:
+				# Return list of all items
+				feedback = []
+				for i in xrange(self.currentItem().childCount()):
+					text = self.connection.get(self.nameToUrl[unicode(self.currentItem().child(i).text(0))])
+					feedback.append(text)
+				return feedback
+			else:
+				return self.connection.get(self.nameToUrl[unicode(self.currentItem().text(0))])
+	return StudentsView
 
-class TestModeStudentsView(object):
+class TestModeStudentsViewModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(TestModeStudentsView, self).__init__(*args, **kwargs)
+		super(TestModeStudentsViewModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "testModeStudentsView"
 		self.priorities = {
-			"student@home": -1,
-			"student@school": -1,
-			"teacher": 546,
-			"wordsonly": -1,
-			"selfstudy": -1,
-			"testsuite": 546,
-			"codedocumentation": 546,
-			"all": 546,
+			"default": 546,
 		}
 
 		self.requires = (
@@ -112,8 +105,15 @@ class TestModeStudentsView(object):
 		)
 
 	def enable(self):
-		self._modules = set(self._mm.mods(type="modules")).pop()
+		global QtGui
+		try:
+			from PyQt4 import QtGui
+		except ImportError:
+			return
+		global StudentsView
+		StudentsView = getStudentsView()
 
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.active = True
 
 	def disable(self):
@@ -126,4 +126,4 @@ class TestModeStudentsView(object):
 		return StudentsView(connection)
 
 def init(moduleManager):
-	return TestModeStudentsView(moduleManager)
+	return TestModeStudentsViewModule(moduleManager)

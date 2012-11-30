@@ -33,14 +33,8 @@ class ECTSNoteCalculatorModule(object):
 		)
 		self.filesWithTranslations = ("ects.py",)
 
-		x = 935
 		self.priorities = {
-			"all": x,
-			"selfstudy": x,
-			"student@home": x,
-			"student@school": x,
-			"teacher": x,
-			"wordsonly": x,
+			"default": 935,
 		}
 
 	def _convert(self, percents):
@@ -63,19 +57,17 @@ class ECTSNoteCalculatorModule(object):
 		return self._convert(self._percents(test))
 
 	def calculateAverageNote(self, tests):
-		percents = 0
-		for test in tests:
-			percents += self._percents(test)
-		percents /= float(len(tests))
-		return self._convert(percents)
+		return self._convert(self._averagePercents(tests))
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
-		self._percents = self._modules.default(
+		pc = self._modules.default(
 			"active",
 			type="percentsCalculator"
-		).calculatePercents
+		)
+		self._percents = pc.calculatePercents
+		self._averagePercents = pc.calculateAveragePercents
 
 		#Connect to the languageChanged event so retranslating is done.
 		try:
@@ -104,6 +96,8 @@ class ECTSNoteCalculatorModule(object):
 		self.active = False
 		del self.name
 		del self._modules
+		del self._percents
+		del self._calculateAveragePercents
 
 def init(moduleManager):
 	return ECTSNoteCalculatorModule(moduleManager)

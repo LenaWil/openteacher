@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2012, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -19,8 +19,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtWebKit
-
 class PrintModule(object):
 	def __init__(self, moduleManager):
 		self._mm = moduleManager
@@ -36,6 +34,11 @@ class PrintModule(object):
 		self.filesWithTranslations = ("words.py",)
 	
 	def enable(self):
+		global QtWebKit
+		try:
+			from PyQt4 import QtWebKit
+		except ImportError:
+			return
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		try:

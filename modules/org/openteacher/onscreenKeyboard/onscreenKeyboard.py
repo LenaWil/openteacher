@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2009-2011, Marten de Vries
+#	Copyright 2009-2012, Marten de Vries
 #	Copyright 2008-2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -19,84 +19,87 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtCore, QtGui
 import weakref
 
-class OnscreenKeyboardWidget(QtGui.QWidget):
-	letterChosen = QtCore.pyqtSignal([object])
+def getOnscreenKeyboardWidget():
+	class OnscreenKeyboardWidget(QtGui.QWidget):
+		letterChosen = QtCore.pyqtSignal([object])
 
-	def __init__(self, characters, *args,  **kwargs):
-		super(OnscreenKeyboardWidget, self).__init__(*args, **kwargs)
+		def __init__(self, characters, *args,  **kwargs):
+			super(OnscreenKeyboardWidget, self).__init__(*args, **kwargs)
 
-		topWidget = QtGui.QWidget()
+			topWidget = QtGui.QWidget()
 
-		layout = QtGui.QGridLayout()
-		layout.setSpacing(1)
-		layout.setContentsMargins(0, 0, 0, 0)
+			layout = QtGui.QGridLayout()
+			layout.setSpacing(1)
+			layout.setContentsMargins(0, 0, 0, 0)
 
-		i = 0
-		for line in characters:
-			j = 0
-			for item in line:
-				b = QtGui.QPushButton(item)
-				b.clicked.connect(self._letterChosen)
-				b.setMinimumSize(1, 1)
-				b.setFlat(True)
-				b.setAutoFillBackground(True)
-				palette = b.palette()
-				if i % 2 == 0:
-					brush = palette.brush(QtGui.QPalette.Base)
-				else:
-					brush = palette.brush(QtGui.QPalette.AlternateBase)
-				palette.setBrush(QtGui.QPalette.Button, brush)
-				b.setPalette(palette)
-				if not item:
-					b.setEnabled(False)
-				layout.addWidget(b, i, j)
-				j += 1
-			i+= 1
-		topWidget.setLayout(layout)
-		palette = topWidget.palette()
-		brush = palette.brush(QtGui.QPalette.WindowText)
-		palette.setBrush(QtGui.QPalette.Window, QtCore.Qt.darkGray)
-		topWidget.setPalette(palette)
-		topWidget.setAutoFillBackground(True)
+			i = 0
+			for line in characters:
+				j = 0
+				for item in line:
+					b = QtGui.QPushButton(item)
+					b.clicked.connect(self._letterChosen)
+					b.setMinimumSize(1, 1)
+					b.setFlat(True)
+					b.setAutoFillBackground(True)
+					palette = b.palette()
+					if i % 2 == 0:
+						brush = palette.brush(QtGui.QPalette.Base)
+					else:
+						brush = palette.brush(QtGui.QPalette.AlternateBase)
+					palette.setBrush(QtGui.QPalette.Button, brush)
+					b.setPalette(palette)
+					if not item:
+						b.setEnabled(False)
+					layout.addWidget(b, i, j)
+					j += 1
+				i+= 1
+			topWidget.setLayout(layout)
+			palette = topWidget.palette()
+			brush = palette.brush(QtGui.QPalette.WindowText)
+			palette.setBrush(QtGui.QPalette.Window, QtCore.Qt.darkGray)
+			topWidget.setPalette(palette)
+			topWidget.setAutoFillBackground(True)
 
-		mainLayout = QtGui.QVBoxLayout()
-		mainLayout.addWidget(topWidget)
-		mainLayout.addStretch()
-		mainLayout.setContentsMargins(0, 0, 0, 0)
-		self.setLayout(mainLayout)
+			mainLayout = QtGui.QVBoxLayout()
+			mainLayout.addWidget(topWidget)
+			mainLayout.addStretch()
+			mainLayout.setContentsMargins(0, 0, 0, 0)
+			self.setLayout(mainLayout)
 
-		topWidget.setSizePolicy(
-			QtGui.QSizePolicy.Expanding,
-			QtGui.QSizePolicy.Maximum
-		)
+			topWidget.setSizePolicy(
+				QtGui.QSizePolicy.Expanding,
+				QtGui.QSizePolicy.Maximum
+			)
 
-	def _letterChosen(self):
-		text = unicode(self.sender().text())
-		self.letterChosen.emit(text)
+		def _letterChosen(self):
+			text = unicode(self.sender().text())
+			self.letterChosen.emit(text)
+	return OnscreenKeyboardWidget
 
-class KeyboardsWidget(QtGui.QTabWidget):
-	def __init__(self, createEvent, data, *args, **kwargs):
-		super(KeyboardsWidget, self).__init__(*args, **kwargs)
+def getKeyboadsWidget():
+	class KeyboardsWidget(QtGui.QTabWidget):
+		def __init__(self, createEvent, data, *args, **kwargs):
+			super(KeyboardsWidget, self).__init__(*args, **kwargs)
 
-		self.letterChosen = createEvent()
-		self._data = data
-		self.update()
+			self.letterChosen = createEvent()
+			self._data = data
+			self.update()
 
-	def update(self):
-		#clean the widget, needed if this method has been called before.
-		self.clear()
-		for module in self._data:
-			#create tab and add it to the widget
-			tab = OnscreenKeyboardWidget(module.data)
-			self.addTab(tab, module.name)
-			#connect the event that handles letter selection
-			tab.letterChosen.connect(self.letterChosen.send)
-			#make sure the widget updates on character changes
-			if hasattr(module, "updated"):
-				module.updated.handle(self.update)
+		def update(self):
+			#clean the widget, needed if this method has been called before.
+			self.clear()
+			for module in self._data:
+				#create tab and add it to the widget
+				tab = OnscreenKeyboardWidget(module.data)
+				self.addTab(tab, module.name)
+				#connect the event that handles letter selection
+				tab.letterChosen.connect(self.letterChosen.send)
+				#make sure the widget updates on character changes
+				if hasattr(module, "updated"):
+					module.updated.handle(self.update)
+	return KeyboardsWidget
 
 class OnscreenKeyboardModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -112,6 +115,15 @@ class OnscreenKeyboardModule(object):
 		)
 
 	def enable(self):
+		global QtCore, QtGui
+		try:
+			from PyQt4 import QtCore, QtGui
+		except ImportError:
+			return
+		global KeyboardsWidget, OnscreenKeyboardWidget
+		KeyboardsWidget = getKeyboadsWidget()
+		OnscreenKeyboardWidget = getOnscreenKeyboardWidget()
+
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._widgets = set()
 

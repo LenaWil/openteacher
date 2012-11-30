@@ -18,7 +18,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtCore, QtGui
 import datetime
 import weakref
 
@@ -29,130 +28,134 @@ def total_seconds(td):
 	"""
 	return int(round((td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / float(10**6)))
 
-class Graph(QtGui.QFrame):
-	def __init__(self, test, *args, **kwargs):
-		super(Graph, self).__init__(*args, **kwargs)
-		
-		self._test = test
+def getGraph():
+	class Graph(QtGui.QFrame):
+		def __init__(self, test, *args, **kwargs):
+			super(Graph, self).__init__(*args, **kwargs)
+			
+			self._test = test
 
-		self.setSizePolicy(
-			QtGui.QSizePolicy.Expanding,
-			QtGui.QSizePolicy.MinimumExpanding
-		)
-		
-		self.setFrameStyle(QtGui.QFrame.StyledPanel)
-		self.setFrameShadow(QtGui.QFrame.Sunken)
-
-		self.start = self._test["results"][0]["active"]["start"]
-		self.end = self._test["results"][-1]["active"]["end"]
-		self._totalSeconds = total_seconds(self.end - self.start)
-
-	@property
-	def _amountOfUniqueItems(self):
-		ids = set()
-		for result in self._test["results"]:
-			ids.add(result["itemId"])
-		return len(ids)
-
-	def event(self, event, *args, **kwargs):
-		if event.type() == QtCore.QEvent.ToolTip:
-			second = event.x() / self._secondsPerPixel
-			moment = self.start + datetime.timedelta(seconds=second)
-			for pause in self._test["pauses"]:
-				if pause["start"] < moment and pause["end"] > moment:
-					text = _("Pause")
-					break
-			try:
-				text
-			except NameError:
-				for result in self._test["results"]:
-					if result["active"]["start"] < moment and result["active"]["end"] > moment:
-						text = _("Thinking")
-			try:
-				text
-			except NameError:
-				text = _("Answering")
-			QtGui.QToolTip.showText(
-				event.globalPos(),
-				text,
+			self.setSizePolicy(
+				QtGui.QSizePolicy.Expanding,
+				QtGui.QSizePolicy.MinimumExpanding
 			)
-			return True
-		return super(Graph, self).event(event, *args, **kwargs)
+			
+			self.setFrameStyle(QtGui.QFrame.StyledPanel)
+			self.setFrameShadow(QtGui.QFrame.Sunken)
 
-	def _paintItem(self, p, item):
-		x = total_seconds(item["start"] - self.start) * self._secondsPerPixel
-		width = total_seconds(item["end"] - item["start"]) * self._secondsPerPixel
+			self.start = self._test["results"][0]["active"]["start"]
+			self.end = self._test["results"][-1]["active"]["end"]
+			self._totalSeconds = total_seconds(self.end - self.start)
 
-		p.drawRect(x, 0, width, self._h)
+		@property
+		def _amountOfUniqueItems(self):
+			ids = set()
+			for result in self._test["results"]:
+				ids.add(result["itemId"])
+			return len(ids)
 
-	def paintEvent(self, event, *args, **kwargs):
-		p = QtGui.QPainter()
-		p.begin(self)
-		
-		p.setPen(QtCore.Qt.NoPen)
+		def event(self, event, *args, **kwargs):
+			if event.type() == QtCore.QEvent.ToolTip:
+				second = event.x() / self._secondsPerPixel
+				moment = self.start + datetime.timedelta(seconds=second)
+				for pause in self._test["pauses"]:
+					if pause["start"] < moment and pause["end"] > moment:
+						text = _("Pause")
+						break
+				try:
+					text
+				except NameError:
+					for result in self._test["results"]:
+						if result["active"]["start"] < moment and result["active"]["end"] > moment:
+							text = _("Thinking")
+				try:
+					text
+				except NameError:
+					text = _("Answering")
+				QtGui.QToolTip.showText(
+					event.globalPos(),
+					text,
+				)
+				return True
+			return super(Graph, self).event(event, *args, **kwargs)
 
-		w = self.width()
-		self._h = self.height()
+		def _paintItem(self, p, item):
+			x = total_seconds(item["start"] - self.start) * self._secondsPerPixel
+			width = total_seconds(item["end"] - item["start"]) * self._secondsPerPixel
 
-		try:
-			#float, because one pixel might be more than one second.
-			#When int was used, secondsPerPixel could become 0 showing
-			#nothing in that case.
-			self._secondsPerPixel = float(w) / self._totalSeconds
-		except ZeroDivisionError:
-			self._secondsPerPixel = 0
-		colors = {}
-		baseColor = self.palette().highlight().color()
-		steps = 0
-		colorDifference = (255 - baseColor.lightness()) / (self._amountOfUniqueItems +1)#+1 so it doesn't become 0
-		for result in self._test["results"]:
+			p.drawRect(x, 0, width, self._h)
+
+		def paintEvent(self, event, *args, **kwargs):
+			p = QtGui.QPainter()
+			p.begin(self)
+			
+			p.setPen(QtCore.Qt.NoPen)
+
+			w = self.width()
+			self._h = self.height()
+
 			try:
-				p.setBrush(QtGui.QBrush(colors[result["itemId"]]))
-			except KeyError:
-				color = QtGui.QColor(baseColor)
-				hsl = list(color.getHsl())
-				hsl[2] = hsl[2] + colorDifference * steps
-				color.setHsl(*hsl)
+				#float, because one pixel might be more than one second.
+				#When int was used, secondsPerPixel could become 0 showing
+				#nothing in that case.
+				self._secondsPerPixel = float(w) / self._totalSeconds
+			except ZeroDivisionError:
+				self._secondsPerPixel = 0
+			colors = {}
+			baseColor = self.palette().highlight().color()
+			steps = 0
+			colorDifference = (255 - baseColor.lightness()) / (self._amountOfUniqueItems +1)#+1 so it doesn't become 0
+			for result in self._test["results"]:
+				try:
+					p.setBrush(QtGui.QBrush(colors[result["itemId"]]))
+				except KeyError:
+					color = QtGui.QColor(baseColor)
+					hsl = list(color.getHsl())
+					hsl[2] = hsl[2] + colorDifference * steps
+					color.setHsl(*hsl)
 
-				steps += 1
+					steps += 1
 
-				colors[result["itemId"]] = QtGui.QBrush(color)
-				p.setBrush(colors[result["itemId"]])
+					colors[result["itemId"]] = QtGui.QBrush(color)
+					p.setBrush(colors[result["itemId"]])
 
-			if "active" in result:
-				self._paintItem(p, result["active"])
+				if "active" in result:
+					self._paintItem(p, result["active"])
 
-		p.setBrush(self.palette().dark())
-		for pause in self._test.get("pauses", []):
-			self._paintItem(p, pause)
+			p.setBrush(self.palette().dark())
+			for pause in self._test.get("pauses", []):
+				self._paintItem(p, pause)
 
-		p.setBrush(QtGui.QBrush())
+			p.setBrush(QtGui.QBrush())
 
-		p.end()
-		super(Graph, self).paintEvent(event, *args, **kwargs)
+			p.end()
+			super(Graph, self).paintEvent(event, *args, **kwargs)
 
-	def sizeHint(self):
-		return QtCore.QSize(200, 30)
+		def sizeHint(self):
+			return QtCore.QSize(200, 30)
+	return Graph
 
-class ProgressViewer(QtGui.QWidget):
-	def __init__(self, test, *args, **kwargs):
-		super(ProgressViewer, self).__init__(*args, **kwargs)
+def getProgressViewer():
+	class ProgressViewer(QtGui.QWidget):
+		def __init__(self, test, *args, **kwargs):
+			super(ProgressViewer, self).__init__(*args, **kwargs)
 
-		self.graph = Graph(test)
-		format = "%X"
-		firstTime = QtGui.QLabel(self.graph.start.strftime(format))
-		lastTime = QtGui.QLabel(self.graph.end.strftime(format))
-		
-		horLayout = QtGui.QHBoxLayout()
-		horLayout.addWidget(firstTime)
-		horLayout.addStretch()
-		horLayout.addWidget(lastTime)
-		
-		mainLayout = QtGui.QVBoxLayout()
-		mainLayout.addLayout(horLayout)
-		mainLayout.addWidget(self.graph)
-		
-		self.setLayout(mainLayout)
+			self.graph = Graph(test)
+			format = "%X"
+			firstTime = QtGui.QLabel(self.graph.start.strftime(format))
+			lastTime = QtGui.QLabel(self.graph.end.strftime(format))
+			
+			horLayout = QtGui.QHBoxLayout()
+			horLayout.addWidget(firstTime)
+			horLayout.addStretch()
+			horLayout.addWidget(lastTime)
+			
+			mainLayout = QtGui.QVBoxLayout()
+			mainLayout.addLayout(horLayout)
+			mainLayout.addWidget(self.graph)
+			
+			self.setLayout(mainLayout)
+	return ProgressViewer
 
 class ProgressViewerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -172,6 +175,15 @@ class ProgressViewerModule(object):
 		return pv
 
 	def enable(self):
+		global QtCore, QtGui
+		try:
+			from PyQt4 import QtCore, QtGui
+		except ImportError:
+			return
+		global Graph, ProgressViewer
+		Graph = getGraph()
+		ProgressViewer = getProgressViewer()
+
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._progressViewers = set()
 

@@ -306,12 +306,13 @@
 			noteMessage, backToEnterTab, animationEnd;
 
 		onCheck = function () {
-			var answerBox, text, result, correctionLabel, goodAnswer,
-				diff, diffText, i;
+			var answerBox, text, givenAnswer, result, correctionLabel,
+				goodAnswer, diff, diffText, i;
 
 			answerBox = $("#answer-box");
 			text = answerBox.val();
-			result = logic.check(text, currentItem);
+			givenAnswer = logic.parse(text);
+			result = logic.check(givenAnswer, currentItem);
 
 			//disable the button for now, it stays that way or it's
 			//re-enabled *after* the animation

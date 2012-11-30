@@ -28,14 +28,7 @@ class PngSaverModule(object):
 
 		self.type = "save"
 		self.priorities = {
-			"student@home": 868,
-			"student@school": 868,
-			"teacher": 868,
-			"wordsonly": 868,
-			"selfstudy": 868,
-			"testsuite": 868,
-			"codedocumentation": 868,
-			"all": 868,
+			"default": 868,
 		}
 		self.uses = (
 			self._mm.mods(type="translator"),

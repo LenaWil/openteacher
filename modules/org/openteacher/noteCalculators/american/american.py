@@ -34,14 +34,8 @@ class AmericanNoteCalculatorModule(object):
 		)
 		self.filesWithTranslations = ("american.py",)
 
-		x = 935
 		self.priorities = {
-			"all": x,
-			"selfstudy": x,
-			"student@home": x,
-			"student@school": x,
-			"teacher": x,
-			"wordsonly": x,
+			"default": 935,
 		}
 
 	def _convert(self, percents):
@@ -76,18 +70,16 @@ class AmericanNoteCalculatorModule(object):
 		return self._convert(self._calculatePercents(test))
 
 	def calculateAverageNote(self, tests):
-		percents = 0
-		for test in tests:
-			percents += self._calculatePercents(test)
-		percents /= float(len(tests))
-		return self._convert(percents)
+		return self._convert(self._calculateAveragePercents(tests))
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self._calculatePercents = self._modules.default(
+		pc = self._modules.default(
 			"active",
 			type="percentsCalculator"
-		).calculatePercents
+		)
+		self._calculatePercents = pc.calculatePercents
+		self._calculateAveragePercents = pc.calculateAveragePercents
 
 		#Connect to the languageChanged event so retranslating is done.
 		try:
@@ -117,6 +109,7 @@ class AmericanNoteCalculatorModule(object):
 		del self.name
 		del self._modules
 		del self._calculatePercents
+		del self._calculateAveragePercents
 
 def init(moduleManager):
 	return AmericanNoteCalculatorModule(moduleManager)

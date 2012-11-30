@@ -18,60 +18,62 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtCore, QtGui
+def getModel():
+	class Model(QtCore.QAbstractTableModel):
+		def __init__(self, data, *args, **kwargs):
+			super(Model, self).__init__(*args, **kwargs)
 
-class Model(QtCore.QAbstractTableModel):
-	def __init__(self, data, *args, **kwargs):
-		super(Model, self).__init__(*args, **kwargs)
+			self.data = data
 
-		self.data = data
+		def rowCount(self, parent):
+			return len(self.data)
 
-	def rowCount(self, parent):
-		return len(self.data)
+		def columnCount(self, parent):
+			return len(self.data[0])
 
-	def columnCount(self, parent):
-		return len(self.data[0])
+		def data(self, index, role):
+			if not index.isValid() or role not in (QtCore.Qt.DisplayRole, QtCore.Qt.EditRole):
+				return
+			return self.data[index.row()][index.column()]
 
-	def data(self, index, role):
-		if not index.isValid() or role not in (QtCore.Qt.DisplayRole, QtCore.Qt.EditRole):
-			return
-		return self.data[index.row()][index.column()]
+		def setData(self, index, value, role):
+			if not index.isValid() or role != QtCore.Qt.EditRole:
+				return False
+			value = unicode(value.toString())
+			if len(value) > 1 and not (len(value) == 2 and value[0] == "\\"):
+				return False
+			self.data[index.row()][index.column()] = value
+			self.dataChanged.emit(index, index)
+			return True
 
-	def setData(self, index, value, role):
-		if not index.isValid() or role != QtCore.Qt.EditRole:
-			return False
-		value = unicode(value.toString())
-		if len(value) > 1 and not (len(value) == 2 and value[0] == "\\"):
-			return False
-		self.data[index.row()][index.column()] = value
-		self.dataChanged.emit(index, index)
-		return True
+		def flags(self, index):
+			flags = super(Model, self).flags(index)
+			if index.isValid():
+				flags = flags | QtCore.Qt.EditRole
+			return flags
+	return Model
 
-	def flags(self, index):
-		flags = super(Model, self).flags(index)
-		if index.isValid():
-			flags = flags | QtCore.Qt.EditRole
-		return flags
+def getSettingsWidget():
+	class SettingsWidget(QtGui.QTableView):
+		def __init__(self, setting, *args, **kwargs):
+			super(SettingsWidget, self).__init__(*args, **kwargs)
 
-class SettingsWidget(QtGui.QTableView):
-	def __init__(self, setting, *args, **kwargs):
-		super(SettingsWidget, self).__init__(*args, **kwargs)
+			self._setting = setting
 
-		self._setting = setting
+			model = Model(setting["value"])
+			model.dataChanged.connect(self._resetValue)
+			self.setModel(model)
 
-		model = Model(setting["value"])
-		model.dataChanged.connect(self._resetValue)
-		self.setModel(model)
+			self.setAlternatingRowColors(True)
+			self.resizeColumnsToContents()
+			self.resizeRowsToContents()
+			self.horizontalHeader().hide()
+			self.verticalHeader().hide()
 
-		self.setAlternatingRowColors(True)
-		self.resizeColumnsToContents()
-		self.resizeRowsToContents()
-		self.horizontalHeader().hide()
-		self.verticalHeader().hide()
-
-	def _resetValue(self):
-		"""To make the settings callback get called"""
-		self._setting["value"] = self.model().data
+		def _resetValue(self):
+			"""To make the settings callback get called"""
+			self._setting["value"] = self.model().data
+	return SettingsWidget
 
 class SettingsWidgetModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -88,8 +90,16 @@ class SettingsWidgetModule(object):
 		return SettingsWidget(*args, **kwargs)
 
 	def enable(self):
-		self.widgetType = "character_table"
+		global QtCore, QtGui
+		try:
+			from PyQt4 import QtCore, QtGui
+		except ImportError:
+			return
+		global Model, SettingsWidget
+		Model = getModel()
+		SettingsWidget = getSettingsWidget()
 
+		self.widgetType = "character_table"
 		self.active = True
 
 	def disable(self):

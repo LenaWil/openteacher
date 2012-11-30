@@ -20,8 +20,6 @@
 
 import sys
 
-#pygraphviz is imported inside enable()
-
 class ModuleGraphModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(ModuleGraphModule, self).__init__(*args, **kwargs)
@@ -31,7 +29,7 @@ class ModuleGraphModule(object):
 
 		self.requires = (
 			self._mm.mods(type="execute"),
-			self._mm.mods(type="metadata"),
+			self._mm.mods(type="moduleGraphBuilder"),
 		)
 		self.priorities = {
 			"default": -1,
@@ -39,14 +37,7 @@ class ModuleGraphModule(object):
 		}
 
 	def enable(self):
-		global pygraphviz
-		try:
-			import pygraphviz
-		except ImportError:
-			return #remaining inactive
-		
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self._metadata = self._modules.default("active", type="metadata").metadata
 		self._modules.default(type="execute").startRunning.handle(self.run)
 
 		self.active = True
@@ -58,30 +49,8 @@ class ModuleGraphModule(object):
 			sys.stderr.write("Please specify an image path to output to as last command line argument.\n")
 			return
 
-		def addEdges(mod, graph, demands, color):
-			for demand in demands:
-				for demandedMod in demand:
-					graph.add_edge(mod.type, demandedMod.type, dir="forward", color=color)
-
-		graph = pygraphviz.AGraph(**{
-			"label": "%s module map" % self._metadata["name"],
-			"labelloc": "t", #top
-			"fontsize": len(set(self._mm.mods)) * 1.25,
-			"fontname": "Ubuntu",
-			"strict": False,
-		})
-		graph.node_attr["style"] = "filled"
-		graph.node_attr["fillcolor"] = "#D1E9FA"
-		for mod in self._mm.mods:
-			if not hasattr(mod, "type"):
-				continue
-			graph.add_node(mod.type)
-			if hasattr(mod, "requires"):
-				addEdges(mod, graph, mod.requires, "#555555")
-			if hasattr(mod, "uses"):
-				addEdges(mod, graph, mod.uses, "#dddddd")
-
-		graph.draw(outputPath, prog="dot")
+		mgb = self._modules.default("active", type="moduleGraphBuilder")
+		mgb.buildModuleGraph(outputPath)
 
 	def disable(self):
 		self.active = False

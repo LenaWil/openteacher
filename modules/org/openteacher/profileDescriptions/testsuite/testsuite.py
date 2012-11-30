@@ -27,7 +27,7 @@ class ProfileDescriptionModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ("testsuite.py",)
+		self.filesWithTranslations = ("testSuite.py",)
 
 	def _retranslate(self):
 		try:
@@ -39,7 +39,7 @@ class ProfileDescriptionModule(object):
 				self._mm.resourcePath("translations")
 			)
 		self.desc = {
-			"name": "testsuite",
+			"name": "test-suite",
 			"niceName": _("Run the test suite"),
 			"advanced": True,
 		}

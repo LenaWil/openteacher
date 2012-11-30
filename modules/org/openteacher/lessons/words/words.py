@@ -21,7 +21,6 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import weakref
-from PyQt4 import QtGui
 
 class Lesson(object):
 	def __init__(self, moduleManager, fileTab, module, lessonData, enterWidget, teachWidget, resultsWidget=None, *args, **kwargs):
@@ -138,15 +137,16 @@ class WordsLessonModule(object):
 
 		self._mm = moduleManager
 		self.type = "lesson"
+		x = 493
 		self.priorities = {
-			"student@home": 493,
-			"student@school": 493,
-			"teacher": 493,
-			"wordsonly": 493,
-			"selfstudy": 493,
-			"testsuite": 493,
-			"codedocumentation": 493,
-			"all": 493,
+			"all": x,
+			"selfstudy": x,
+			"student@home": x,
+			"student@school": x,
+			"teacher": x,
+			"words-only": x,
+			"code-documentation": x,
+			"default": -1,
 		}
 		self.requires = (
 			self._mm.mods(type="ui"),
@@ -163,6 +163,11 @@ class WordsLessonModule(object):
 		self.filesWithTranslations = ("words.py",)
 
 	def enable(self):
+		global QtGui
+		try:
+			from PyQt4 import QtGui
+		except ImportError:
+			return
 		self.dataType = "words"
 
 		self._modules = set(self._mm.mods(type="modules")).pop()

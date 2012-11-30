@@ -28,14 +28,8 @@ class SortModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.filesWithTranslations = ("sort.py",)
-		x = 911
 		self.priorities = {
-			"all": x,
-			"selfstudy": x,
-			"student@home": x,
-			"student@school": x,
-			"teacher": x,
-			"wordsonly": x,
+			"default": 911,
 		}
 
 	def modifyList(self, indexes, list):

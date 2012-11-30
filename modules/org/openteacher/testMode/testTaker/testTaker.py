@@ -19,36 +19,36 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui
-from PyQt4 import QtCore
 import uuid
 import urllib2
 import json
 
-class TestChooser(QtGui.QWidget):
-	# Parameter: the chosen test (tests/<id>)
-	testChosen = QtCore.pyqtSignal(dict)
-	def __init__(self, testSelecter, *args, **kwargs):
-		super(TestChooser, self).__init__(*args, **kwargs)
-		
-		self.testSelecter = testSelecter
-		
-		layout = QtGui.QVBoxLayout()
-		
-		self.comm = QtGui.QLabel()
-		layout.addWidget(self.comm)
+def getTestChooser():
+	class TestChooser(QtGui.QWidget):
+		# Parameter: the chosen test (tests/<id>)
+		testChosen = QtCore.pyqtSignal(dict)
+		def __init__(self, testSelecter, *args, **kwargs):
+			super(TestChooser, self).__init__(*args, **kwargs)
+			
+			self.testSelecter = testSelecter
+			
+			layout = QtGui.QVBoxLayout()
+			
+			self.comm = QtGui.QLabel()
+			layout.addWidget(self.comm)
 
-		layout.addWidget(testSelecter)
-		
-		self.button = QtGui.QPushButton()
-		self.button.clicked.connect(lambda: self.testChosen.emit(self.testSelecter.getCurrentTest()))
-		layout.addWidget(self.button)
-		
-		self.setLayout(layout)
+			layout.addWidget(testSelecter)
+			
+			self.button = QtGui.QPushButton()
+			self.button.clicked.connect(lambda: self.testChosen.emit(self.testSelecter.getCurrentTest()))
+			layout.addWidget(self.button)
+			
+			self.setLayout(layout)
 
-	def retranslate(self):
-		self.comm.setText(_("Select the test you want to take"))
-		self.button.setText(_("Take test"))
+		def retranslate(self):
+			self.comm.setText(_("Select the test you want to take"))
+			self.button.setText(_("Take test"))
+	return TestChooser
 
 class TestModeTestTakerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -56,15 +56,12 @@ class TestModeTestTakerModule(object):
 		self._mm = moduleManager
 		
 		self.type = "testModeTestTaker"
+		x = 504
 		self.priorities = {
-			"student@home": -1,
-			"student@school": 504,
-			"teacher": -1,
-			"wordsonly": -1,
-			"selfstudy": -1,
-			"testsuite": 504,
-			"codedocumentation": 504,
-			"all": 504,
+			"all": x,
+			"student@school": x,
+			"code-documentation": x,
+			"default": -1,
 		}
 		
 		self.uses = (
@@ -80,11 +77,19 @@ class TestModeTestTakerModule(object):
 		self.filesWithTranslations = ("testTaker.py",)
 
 	def enable(self):
+		global QtCore, QtGui
+		try:
+			from PyQt4 import QtCore, QtGui
+		except ImportError:
+			return
+		global TestChooser
+		TestChooser = getTestChooser()
+
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		self._testMenu = self._modules.default("active", type="testMenu").menu
 
-		self._action = self._testMenu.addAction(self.priorities["all"])
+		self._action = self._testMenu.addAction(self.priorities["default"])
 		self._action.triggered.handle(self.showTestTaker)
 
 		#setup translation

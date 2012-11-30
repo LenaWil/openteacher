@@ -18,67 +18,69 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtCore, QtGui
+def getGraph():
+	class Graph(QtGui.QWidget):
+		BAR_SIZE = 50
+		SPACING = 20
+		FONT_MARGIN = 5
 
-class Graph(QtGui.QWidget):
-	BAR_SIZE = 50
-	SPACING = 20
-	FONT_MARGIN = 5
+		def __init__(self, notes, *args, **kwargs):
+			super(Graph, self).__init__(*args, **kwargs)
 
-	def __init__(self, notes, *args, **kwargs):
-		super(Graph, self).__init__(*args, **kwargs)
+			self._notes = notes
 
-		self._notes = notes
+			self.setSizePolicy(
+				QtGui.QSizePolicy.MinimumExpanding,
+				QtGui.QSizePolicy.Minimum
+			)
 
-		self.setSizePolicy(
-			QtGui.QSizePolicy.MinimumExpanding,
-			QtGui.QSizePolicy.Minimum
-		)
+		def sizeHint(self):
+			w = len(self._notes) * self.BAR_SIZE + len(self._notes) * self.SPACING
+			h = self.fontMetrics().height() + 2 * self.FONT_MARGIN
+			return QtCore.QSize(w, h)
 
-	def sizeHint(self):
-		w = len(self._notes) * self.BAR_SIZE + len(self._notes) * self.SPACING
-		h = self.fontMetrics().height() + 2 * self.FONT_MARGIN
-		return QtCore.QSize(w, h)
+		def paintEvent(self, e):
+			h = self.height()
+			w = self.width()
 
-	def paintEvent(self, e):
-		h = self.height()
-		w = self.width()
+			p = QtGui.QPainter()
+			p.begin(self)
 
-		p = QtGui.QPainter()
-		p.begin(self)
+			#draw the bars
+			p.setBrush(self.palette().highlight())
 
-		#draw the bars
-		p.setBrush(self.palette().highlight())
+			horPos = int(round(self.SPACING / 2.0))
+			for note in self._notes:
+				barHeight = int(round(note / 100.0 * h))
+				p.setPen(QtCore.Qt.NoPen)
+				p.drawRect(horPos, h, self.BAR_SIZE, -barHeight)
+				p.setPen(QtGui.QPen(self.palette().highlightedText()))
+				text = "%s%%" % note
+				y = h - self.FONT_MARGIN
+				#center on the bar
+				x = horPos + self.BAR_SIZE / 2.0 - self.fontMetrics().width(text) / 2.0
+				p.drawText(x, y, text)
+				horPos += self.BAR_SIZE + self.SPACING
 
-		horPos = int(round(self.SPACING / 2.0))
-		for note in self._notes:
-			barHeight = int(round(note / 100.0 * h))
-			p.setPen(QtCore.Qt.NoPen)
-			p.drawRect(horPos, h, self.BAR_SIZE, -barHeight)
-			p.setPen(QtGui.QPen(self.palette().highlightedText()))
-			text = "%s%%" % note
-			y = h - self.FONT_MARGIN
-			#center on the bar
-			x = horPos + self.BAR_SIZE / 2.0 - self.fontMetrics().width(text) / 2.0
-			p.drawText(x, y, text)
-			horPos += self.BAR_SIZE + self.SPACING
+			p.end()
+	return Graph
 
-		p.end()
+def getPercentNotesViewer():
+	class PercentNotesViewer(QtGui.QScrollArea):
+		def __init__(self, notes, *args, **kwargs):
+			super(PercentNotesViewer, self).__init__(*args, **kwargs)
 
-class PercentNotesViewer(QtGui.QScrollArea):
-	def __init__(self, notes, *args, **kwargs):
-		super(PercentNotesViewer, self).__init__(*args, **kwargs)
+			self.setFrameStyle(QtGui.QFrame.NoFrame)
 
-		self.setFrameStyle(QtGui.QFrame.NoFrame)
+			graph = Graph(notes)
+			self.setWidget(graph)
 
-		graph = Graph(notes)
-		self.setWidget(graph)
+		def resizeEvent(self, *args, **kwargs):
+			graphHeight = self.viewport().height()
+			self.widget().resize(self.widget().width(), graphHeight)
 
-	def resizeEvent(self, *args, **kwargs):
-		graphHeight = self.viewport().height()
-		self.widget().resize(self.widget().width(), graphHeight)
-
-		super(PercentNotesViewer, self).resizeEvent(*args, **kwargs)
+			super(PercentNotesViewer, self).resizeEvent(*args, **kwargs)
+	return PercentNotesViewer
 
 class PercentNotesViewerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -92,6 +94,15 @@ class PercentNotesViewerModule(object):
 		)
 
 	def enable(self):
+		global QtCore, QtGui
+		try:
+			from PyQt4 import QtCore, QtGui
+		except ImportError:
+			return
+		global Graph, PercentNotesViewer
+		Graph = getGraph()
+		PercentNotesViewer = getPercentNotesViewer()
+
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		self.active = True

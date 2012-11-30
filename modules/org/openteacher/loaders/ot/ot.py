@@ -26,14 +26,7 @@ class OpenTeacherLoaderModule(object):
 
 		self.type = "load"
 		self.priorities = {
-			"student@home": 540,
-			"student@school": 540,
-			"teacher": 540,
-			"wordsonly": 540,
-			"selfstudy": 540,
-			"testsuite": 540,
-			"codedocumentation": 540,
-			"all": 540,
+			"default": 540,
 		}
 		
 		self._mm = moduleManager

@@ -22,8 +22,6 @@ import sys
 import os
 import shutil
 
-from PyQt4 import QtCore, QtGui
-
 class SourceWithSetupSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(SourceWithSetupSaverModule, self).__init__(*args, **kwargs)
@@ -134,8 +132,10 @@ class SourceWithSetupSaverModule(object):
 
 	def enable(self):
 		global pyratemp
+		global QtCore, QtGui
 		try:
 			import pyratemp
+			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return #fail silently: stay inactive
 		self._modules = set(self._mm.mods(type="modules")).pop()

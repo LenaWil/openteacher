@@ -27,7 +27,7 @@ class ProfileDescriptionModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ("ircbot.py",)
+		self.filesWithTranslations = ("ircBot.py",)
 
 	def _retranslate(self):
 		try:
@@ -39,7 +39,7 @@ class ProfileDescriptionModule(object):
 				self._mm.resourcePath("translations")
 			)
 		self.desc = {
-			"name": "ircbot",
+			"name": "irc-bot",
 			"niceName": _("Starts the IRC bot used in the #openteacher channel at irc.freenode.net."),
 			"advanced": True,
 		}

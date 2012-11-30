@@ -27,7 +27,7 @@ class ProfileDescriptionModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ("wordsonly.py",)
+		self.filesWithTranslations = ("wordsOnly.py",)
 
 	def _retranslate(self):
 		try:
@@ -39,7 +39,7 @@ class ProfileDescriptionModule(object):
 				self._mm.resourcePath("translations")
 			)
 		self.desc = {
-			"name": "wordsonly",
+			"name": "words-only",
 			"niceName": _("Just gimme my good old OpenTeacher 2.x!"),
 			"advanced": False,
 		}

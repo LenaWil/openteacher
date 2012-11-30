@@ -18,49 +18,52 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtCore, QtGui, QtWebKit, QtNetwork
 import weakref
 import os
 
-class OpenTeacherWebPage(QtWebKit.QWebPage):
-	def __init__(self, url, userAgent, fallbackPath, *args, **kwargs):
-		super(OpenTeacherWebPage, self).__init__(*args, **kwargs)
+def getOpenTeacherWebPage():
+	class OpenTeacherWebPage(QtWebKit.QWebPage):
+		def __init__(self, url, userAgent, fallbackPath, *args, **kwargs):
+			super(OpenTeacherWebPage, self).__init__(*args, **kwargs)
 
-		self.url = url
-		self.userAgent = userAgent
-		self.fallbackPath = fallbackPath
+			self.url = url
+			self.userAgent = userAgent
+			self.fallbackPath = fallbackPath
 
-	def userAgentForUrl(self, url):
-		return self.userAgent
+		def userAgentForUrl(self, url):
+			return self.userAgent
 
-	def updateStatus(self, ok):
-		if not ok:
-			html = open(self.fallbackPath).read()
-			self.mainFrame().setHtml(html, QtCore.QUrl.fromLocalFile(
-				os.path.abspath(self.fallbackPath)
-			))
+		def updateStatus(self, ok):
+			if not ok:
+				html = open(self.fallbackPath).read()
+				self.mainFrame().setHtml(html, QtCore.QUrl.fromLocalFile(
+					os.path.abspath(self.fallbackPath)
+				))
 
-	def updateLanguage(self, language):
-		request = QtNetwork.QNetworkRequest(QtCore.QUrl(self.url))
-		request.setRawHeader("Accept-Language", language)
-		self.mainFrame().load(request)
+		def updateLanguage(self, language):
+			request = QtNetwork.QNetworkRequest(QtCore.QUrl(self.url))
+			request.setRawHeader("Accept-Language", language)
+			self.mainFrame().load(request)
 
-		self.loadFinished.connect(self.updateStatus)
+			self.loadFinished.connect(self.updateStatus)
+	return OpenTeacherWebPage
 
-class DocumentationDialog(QtWebKit.QWebView):
-	def __init__(self, url, userAgent, fallbackPath, *args, **kwargs):
-		super(DocumentationDialog, self).__init__(*args, **kwargs)
+def getDocumentationDialog():
+	class DocumentationDialog(QtWebKit.QWebView):
+		def __init__(self, url, userAgent, fallbackPath, *args, **kwargs):
+			super(DocumentationDialog, self).__init__(*args, **kwargs)
 
-		self.page = OpenTeacherWebPage(url, userAgent, fallbackPath)
-		self.setPage(self.page)
+			self.page = OpenTeacherWebPage(url, userAgent, fallbackPath)
+			self.setPage(self.page)
 
-	def retranslate(self):
-		self.setWindowTitle(_("Documentation"))
-		#self.page is retranslated by the updateLanguage call done on a
-		#higher level
+		def retranslate(self):
+			self.setWindowTitle(_("Documentation"))
+			#self.page is retranslated by the updateLanguage call done on a
+			#higher level
 
-	def updateLanguage(self, language):
-		self.page.updateLanguage(language)
+		def updateLanguage(self, language):
+			self.page.updateLanguage(language)
+	return DocumentationDialog
 
 class DocumentationModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -94,6 +97,15 @@ class DocumentationModule(object):
 		self._retranslate()
 
 	def enable(self):
+		global QtCore, QtGui, QtWebKit, QtNetwork
+		try:
+			from PyQt4 import QtCore, QtGui, QtWebKit, QtNetwork
+		except ImportError:
+			return
+		global DocumentationDialog, OpenTeacherWebPage
+		DocumentationDialog = getDocumentationDialog()
+		OpenTeacherWebPage = getOpenTeacherWebPage()
+
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._activeDialogs = set()
 

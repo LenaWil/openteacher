@@ -63,44 +63,42 @@
 					$!moddoc!$
 				</p>
 			<!--(end)-->
-			<p>
-				<table>
-					<tbody>
-						<!--(if type)-->
-							<tr>
-								<td>Type:</td>
-								<td>@!type!@</td>
-							</tr>
-						<!--(end)-->
-						<!--(if uses)-->
-							<tr>
-								<td>Uses (at least one of):</td>
-								<td>
-									<!--(for selector in uses)-->
-										<!--(for url, name in selector)-->
-											<a href='/@!url!@.html'>@!name!@ &gt;</a>
-										<!--(end)-->
-										<br />
+			<table>
+				<tbody>
+					<!--(if type)-->
+						<tr>
+							<td>Type:</td>
+							<td>@!type!@</td>
+						</tr>
+					<!--(end)-->
+					<!--(if uses)-->
+						<tr>
+							<td>Uses (at least one of):</td>
+							<td>
+								<!--(for selector in uses)-->
+									<!--(for url, name in selector)-->
+										<a href='/@!url!@.html'>@!name!@ &gt;</a>
 									<!--(end)-->
-								</td>
-							</tr>
-						<!--(end)-->
-						<!--(if requires)-->
-							<tr>
-								<td>Requires (at least one of):</td>
-								<td>
-									<!--(for selector in requires)-->
-										<!--(for url, name in selector)-->
-											<a href='/@!url!@.html'>@!name!@ &gt;</a>
-										<!--(end)-->
-										<br />
+									<br />
+								<!--(end)-->
+							</td>
+						</tr>
+					<!--(end)-->
+					<!--(if requires)-->
+						<tr>
+							<td>Requires (at least one of):</td>
+							<td>
+								<!--(for selector in requires)-->
+									<!--(for url, name in selector)-->
+										<a href='/@!url!@.html'>@!name!@ &gt;</a>
 									<!--(end)-->
-								</td>
-							</tr>
-						<!--(end)-->
-					</tbody>
-				</table>
-			</p>
+									<br />
+								<!--(end)-->
+							</td>
+						</tr>
+					<!--(end)-->
+				</tbody>
+			</table>
 			<!--(if methods)-->
 				<h2>Methods:</h2>
 				<ul>
@@ -109,7 +107,7 @@
 							<strong>@!method!@(@!", ".join(methodArgs[method])!@)</strong>
 							<!--(if methodDocs[method])-->
 								<br />
-								<em>$!methodDocs[method]!$</em>
+								$!methodDocs[method]!$
 							<!--(end)-->
 						</li>
 					<!--(end)-->
@@ -123,7 +121,7 @@
 							<strong>@!property!@</strong>
 							<!--(if property in propertyDocs and propertyDocs[property])-->
 								<br />
-								<em>$!propertyDocs[property]!$</em>
+								$!propertyDocs[property]!$
 							<!--(end)-->
 						</li>
 					<!--(end)-->
@@ -140,7 +138,6 @@
 					<!--(end)-->
 				</ul>
 			<!--(end)-->
-			</div>
 		</div>
 		<div id='footer'>
 			<a href='/'>&lt; Back to index</a><br />

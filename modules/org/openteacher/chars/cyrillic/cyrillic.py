@@ -28,14 +28,8 @@ class CyrillicModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.filesWithTranslations = ("cyrillic.py",)
-		x = 165
 		self.priorities = {
-			"all": x,
-			"selfstudy": x,
-			"student@home": x,
-			"student@school": x,
-			"teacher": x,
-			"wordsonly": x,
+			"default": 165,
 		}
 
 	def enable(self):

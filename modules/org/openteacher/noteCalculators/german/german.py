@@ -33,22 +33,9 @@ class GermanNoteCalculatorModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.filesWithTranslations = ("german.py",)
-		x = 935
 		self.priorities = {
-			"all": x,
-			"selfstudy": x,
-			"student@home": x,
-			"student@school": x,
-			"teacher": x,
-			"wordsonly": x,
+			"default": 935,
 		}
-
-	def _percents(self, test):
-		results = map(lambda x: 1 if x["result"] == "right" else 0, test["results"])
-		total = len(results)
-		amountRight = sum(results)
-
-		return float(amountRight) / float(total) * 100
 		
 	def _convert(self, percents):
 		if percents >= 92:
@@ -68,11 +55,7 @@ class GermanNoteCalculatorModule(object):
 		return self._convert(self._percents(test))
 
 	def calculateAverageNote(self, tests):
-		percents = 0
-		for test in tests:
-			percents += self._percents(test)
-		percents /= len(tests)
-		return self._convert(percents)
+		return self._convert(self._averagePercents(tests))
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
@@ -85,6 +68,10 @@ class GermanNoteCalculatorModule(object):
 		else:
 			translator.languageChanged.handle(self._retranslate)
 		self._retranslate()
+
+		percentsCalculator = self._modules.default("active", type="percentsCalculator")
+		self._percents = percentsCalculator.calculatePercents
+		self._averagePercents = percentsCalculator.calculateAveragePercents
 
 		self.active = True
 
@@ -102,8 +89,11 @@ class GermanNoteCalculatorModule(object):
 
 	def disable(self):
 		self.active = False
+
 		del self.name
 		del self._modules
+		del self._percents
+		del self._averagePercents
 
 def init(moduleManager):
 	return GermanNoteCalculatorModule(moduleManager)

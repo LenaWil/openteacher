@@ -18,63 +18,64 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui
+def getEnterPlainTextDialog():
+	class EnterPlainTextDialog(QtGui.QDialog):
+		def __init__(self, parseList, onscreenKeyboard, *args, **kwargs):
+			super(EnterPlainTextDialog, self).__init__(*args, **kwargs)
 
-class EnterPlainTextDialog(QtGui.QDialog):
-	def __init__(self, parseList, onscreenKeyboard, *args, **kwargs):
-		super(EnterPlainTextDialog, self).__init__(*args, **kwargs)
+			self._parseList = parseList
 
-		self._parseList = parseList
-
-		buttonBox = QtGui.QDialogButtonBox(
-			QtGui.QDialogButtonBox.Cancel | QtGui.QDialogButtonBox.Ok,
-			parent=self
-		)
-		buttonBox.accepted.connect(self.accept)
-		buttonBox.rejected.connect(self.reject)
-
-		self._label = QtGui.QLabel()
-		self._label.setWordWrap(True)
-		self._textEdit = QtGui.QTextEdit()
-
-		splitter = QtGui.QSplitter()
-		splitter.addWidget(self._textEdit)
-		splitter.setStretchFactor(0, 3)
-		if onscreenKeyboard:
-			splitter.addWidget(onscreenKeyboard)
-			splitter.setStretchFactor(1, 1)
-			onscreenKeyboard.letterChosen.handle(self._addLetter)
-
-		layout = QtGui.QVBoxLayout()
-		layout.addWidget(self._label)
-		layout.addWidget(splitter)
-		layout.addWidget(buttonBox)
-		self.setLayout(layout)
-
-	def _addLetter(self, letter):
-		self._textEdit.insertPlainText(letter)
-		self._textEdit.setFocus(True)
-
-	def retranslate(self):
-		self._label.setText(_("Please enter the plain text in the text edit. Separate words with a new line and questions from answers with an equals sign ('=') or a tab."))
-		self.setWindowTitle(_("Plain text words enterer"))
-
-	def exec_(self, *args, **kwargs):
-		self._textEdit.setFocus()
-
-		super(EnterPlainTextDialog, self).exec_(*args, **kwargs)
-
-	@property
-	def lesson(self):
-		text = unicode(self._textEdit.toPlainText())
-		try:
-			return self._parseList(text)
-		except ValueError:
-			QtGui.QMessageBox.warning(
-				self,
-				_("Missing equals sign or tab"),
-				_("Please make sure every line contains an '='-sign or tab between the questions and answers.")
+			buttonBox = QtGui.QDialogButtonBox(
+				QtGui.QDialogButtonBox.Cancel | QtGui.QDialogButtonBox.Ok,
+				parent=self
 			)
+			buttonBox.accepted.connect(self.accept)
+			buttonBox.rejected.connect(self.reject)
+
+			self._label = QtGui.QLabel()
+			self._label.setWordWrap(True)
+			self._textEdit = QtGui.QTextEdit()
+
+			splitter = QtGui.QSplitter()
+			splitter.addWidget(self._textEdit)
+			splitter.setStretchFactor(0, 3)
+			if onscreenKeyboard:
+				splitter.addWidget(onscreenKeyboard)
+				splitter.setStretchFactor(1, 1)
+				onscreenKeyboard.letterChosen.handle(self._addLetter)
+
+			layout = QtGui.QVBoxLayout()
+			layout.addWidget(self._label)
+			layout.addWidget(splitter)
+			layout.addWidget(buttonBox)
+			self.setLayout(layout)
+
+		def _addLetter(self, letter):
+			self._textEdit.insertPlainText(letter)
+			self._textEdit.setFocus(True)
+
+		def retranslate(self):
+			self._label.setText(_("Please enter the plain text in the text edit. Separate words with a new line and questions from answers with an equals sign ('=') or a tab."))
+			self.setWindowTitle(_("Plain text words enterer"))
+
+		def exec_(self, *args, **kwargs):
+			self._textEdit.setFocus()
+
+			super(EnterPlainTextDialog, self).exec_(*args, **kwargs)
+
+		@property
+		def lesson(self):
+			text = unicode(self._textEdit.toPlainText())
+			try:
+				return self._parseList(text)
+			except ValueError:
+				QtGui.QMessageBox.warning(
+					self,
+					_("Missing equals sign or tab"),
+					_("Please make sure every line contains an '='-sign or tab between the questions and answers.")
+				)
+
+	return EnterPlainTextDialog
 
 class PlainTextWordsEntererModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -92,6 +93,17 @@ class PlainTextWordsEntererModule(object):
 			self._mm.mods(type="translator"),
 			self._mm.mods(type="onscreenKeyboard"),
 		)
+		x = 960
+		self.priorities = {
+			"all": x,
+			"selfstudy": x,
+			"student@home": x,
+			"student@school": x,
+			"teacher": x,
+			"words-only": x,
+			"code-documentation": x,
+			"default": -1,
+		}
 		self.filesWithTranslations = ("plainTextWords.py",)
 
 	@property
@@ -105,6 +117,14 @@ class PlainTextWordsEntererModule(object):
 			return
 
 	def enable(self):
+		global QtGui, EnterPlainTextDialog
+		try:
+			from PyQt4 import QtGui
+		except ImportError:
+			#stay disabled
+			return
+		EnterPlainTextDialog = getEnterPlainTextDialog()
+
 		self._references = set()
 		self._activeDialogs = set()
 
@@ -113,8 +133,7 @@ class PlainTextWordsEntererModule(object):
 
 		self._button = self._modules.default("active", type="buttonRegister").registerButton("create")
 		self._button.clicked.handle(self.createLesson)
-		#FIXME 3.1: get from self.priorities when they're defined.
-		self._button.changePriority.send(1000)
+		self._button.changePriority.send(self.priorities["all"])
 
 		try:
 			translator = self._modules.default("active", type="translator")

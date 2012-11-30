@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #    Copyright 2008-2011, Milan Boers
+#    Copyright 2012, Marten de Vries
 #
 #    This file is part of OpenTeacher.
 #
@@ -20,7 +21,6 @@
 
 
 import fnmatch
-from PyQt4 import QtCore
 
 class MediaTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -32,17 +32,15 @@ class MediaTypeModule(object):
 		self.type = "mediaType"
 		self.remoteNames = ["Dailymotion"]
 		self.priorities = {
-			"student@home": 300,
-			"student@school": 300,
-			"teacher": 300,
-			"wordsonly": -1,
-			"selfstudy": 300,
-			"testsuite": 300,
-			"codedocumentation": 300,
-			"all": 300,
+			"default": 300,
 		}
 
 	def enable(self):
+		global QtCore
+		try:
+			from PyQt4 import QtCore
+		except ImportError:
+			return
 		self.active = True
 
 	def disable(self):

@@ -26,8 +26,6 @@ import urllib2
 import urllib
 import re
 
-from PyQt4 import QtCore, QtGui
-
 class MobileGeneratorModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(MobileGeneratorModule, self).__init__(*args, **kwargs)
@@ -64,11 +62,13 @@ class MobileGeneratorModule(object):
 		self.filesWithTranslations = ("scr/gui.js",)
 
 	def enable(self):
+		global QtCore, QtGui
 		global pyratemp
 		global polib
 		try:
 			import pyratemp
 			import polib
+			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return #remain disabled
 		self._modules = set(self._mm.mods(type="modules")).pop()

@@ -19,8 +19,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtGui
-from PyQt4 import QtCore
 import os
 import urllib
 import urllib2
@@ -31,90 +29,96 @@ import json
 
 MAXVERSION = 1.0
 
-class ConnectWidget(QtGui.QWidget):
-	"""We use HTTP so there's not actually a continuous connection, but
-	   this class is basically here to check whether a server exists.
+def getConnectWidget():
+	class ConnectWidget(QtGui.QWidget):
+		"""We use HTTP so there's not actually a continuous connection, but
+		   this class is basically here to check whether a server exists.
 
-	"""
-	def __init__(self, connection, *args, **kwargs):
-		super(ConnectWidget, self).__init__(*args, **kwargs)
-		
-		self.connection = connection
-		
-		self.connectLayout = QtGui.QFormLayout()
-		self.setLayout(self.connectLayout)
-		
-		self.serverField = QtGui.QLineEdit()
-		self.serverLabel = QtGui.QLabel()
-		self.connectLayout.addRow(self.serverLabel, self.serverField)
-		
-		self.connectButton = QtGui.QPushButton()
-		self.connectButton.clicked.connect(lambda: self.connection.connect(str(self.serverField.text())))
-		self.connectLayout.addRow(self.connectButton)
-		
-		self.serverField.returnPressed.connect(self.connectButton.click)
+		"""
+		def __init__(self, connection, *args, **kwargs):
+			super(ConnectWidget, self).__init__(*args, **kwargs)
+			
+			self.connection = connection
+			
+			self.connectLayout = QtGui.QFormLayout()
+			self.setLayout(self.connectLayout)
+			
+			self.serverField = QtGui.QLineEdit()
+			self.serverLabel = QtGui.QLabel()
+			self.connectLayout.addRow(self.serverLabel, self.serverField)
+			
+			self.connectButton = QtGui.QPushButton()
+			self.connectButton.clicked.connect(lambda: self.connection.connect(str(self.serverField.text())))
+			self.connectLayout.addRow(self.connectButton)
+			
+			self.serverField.returnPressed.connect(self.connectButton.click)
 
-		self.retranslate()
+			self.retranslate()
 
-	def retranslate(self):
-		self.serverLabel.setText(_("Server IP or hostname:"))
-		self.connectButton.setText(_("Connect"))
+		def retranslate(self):
+			self.serverLabel.setText(_("Server IP or hostname:"))
+			self.connectButton.setText(_("Connect"))
+	return ConnectWidget
 
-class LoginWidget(QtGui.QWidget):
-	def __init__(self, connection, loginid, *args, **kwargs):
-		super(LoginWidget, self).__init__(*args, **kwargs)
-		
-		self.connection = connection
-		
-		self.loginLayout = QtGui.QFormLayout()
-		self.setLayout(self.loginLayout)
+def getLoginWidget():
+	class LoginWidget(QtGui.QWidget):
+		def __init__(self, connection, loginid, *args, **kwargs):
+			super(LoginWidget, self).__init__(*args, **kwargs)
+			
+			self.connection = connection
+			
+			self.loginLayout = QtGui.QFormLayout()
+			self.setLayout(self.loginLayout)
 
-		self.usernameLabel = QtGui.QLabel()
-		self.usernameField = QtGui.QLineEdit()
-		self.loginLayout.addRow(self.usernameLabel, self.usernameField)
+			self.usernameLabel = QtGui.QLabel()
+			self.usernameField = QtGui.QLineEdit()
+			self.loginLayout.addRow(self.usernameLabel, self.usernameField)
 
-		self.passwordLabel = QtGui.QLabel()
-		self.passwordField = QtGui.QLineEdit()
-		self.passwordField.setEchoMode(QtGui.QLineEdit.Password)
-		self.loginLayout.addRow(self.passwordLabel, self.passwordField)
+			self.passwordLabel = QtGui.QLabel()
+			self.passwordField = QtGui.QLineEdit()
+			self.passwordField.setEchoMode(QtGui.QLineEdit.Password)
+			self.loginLayout.addRow(self.passwordLabel, self.passwordField)
 
-		self.checkButton = QtGui.QPushButton()
-		self.checkButton.clicked.connect(lambda: connection.checkLogin(
-			str(self.usernameField.text()),
-			str(self.passwordField.text()),
-			loginid
-		))
-		self.loginLayout.addRow(self.checkButton)
+			self.checkButton = QtGui.QPushButton()
+			self.checkButton.clicked.connect(lambda: connection.checkLogin(
+				str(self.usernameField.text()),
+				str(self.passwordField.text()),
+				loginid
+			))
+			self.loginLayout.addRow(self.checkButton)
 
-		self.passwordField.returnPressed.connect(self.checkButton.click)
+			self.passwordField.returnPressed.connect(self.checkButton.click)
 
-	def retranslate(self):
-		self.usernameLabel.setText(_("Username:"))
-		self.passwordLabel.setText(_("Password:"))
-		self.checkButton.setText(_("Login"))
+		def retranslate(self):
+			self.usernameLabel.setText(_("Username:"))
+			self.passwordLabel.setText(_("Password:"))
+			self.checkButton.setText(_("Login"))
+	return LoginWidget
 
-class ConnectLoginWidget(QtGui.QWidget):
-	def __init__(self, connection, loginid, *args, **kwargs):
-		super(ConnectLoginWidget, self).__init__(*args, **kwargs)
-		
-		self.layout = QtGui.QStackedLayout()
-		self.setLayout(self.layout)
-		
-		self.connectWidget = ConnectWidget(connection)
-		connection.connected.handle(self.afterConnect)
-		self.layout.addWidget(self.connectWidget)
-		
-		self.loginWidget = LoginWidget(connection, loginid)
-		self.layout.addWidget(self.loginWidget)
+def getConnectLoginWidget():
+	class ConnectLoginWidget(QtGui.QWidget):
+		def __init__(self, connection, loginid, *args, **kwargs):
+			super(ConnectLoginWidget, self).__init__(*args, **kwargs)
+			
+			self.layout = QtGui.QStackedLayout()
+			self.setLayout(self.layout)
+			
+			self.connectWidget = ConnectWidget(connection)
+			connection.connected.handle(self.afterConnect)
+			self.layout.addWidget(self.connectWidget)
+			
+			self.loginWidget = LoginWidget(connection, loginid)
+			self.layout.addWidget(self.loginWidget)
 
-		self.retranslate()
+			self.retranslate()
 
-	def afterConnect(self):
-		self.layout.setCurrentWidget(self.loginWidget)
+		def afterConnect(self):
+			self.layout.setCurrentWidget(self.loginWidget)
 
-	def retranslate(self):
-		self.connectWidget.retranslate()
-		self.loginWidget.retranslate()
+		def retranslate(self):
+			self.connectWidget.retranslate()
+			self.loginWidget.retranslate()
+	return ConnectLoginWidget
 
 class Connection(object):
 	def __init__(self, modules, *args, **kwargs):
@@ -244,14 +248,7 @@ class TestModeConnectionModule(object):
 
 		self.type = "testModeConnection"
 		self.priorities = {
-			"student@home": -1,
-			"student@school": 444,
-			"teacher": 444,
-			"wordsonly": -1,
-			"selfstudy": -1,
-			"testsuite": 444,
-			"codedocumentation": 444,
-			"all": 444,
+			"default": 444,
 		}
 
 		self.uses = (
@@ -280,6 +277,16 @@ class TestModeConnectionModule(object):
 		self.connection.retranslate()
 
 	def enable(self):
+		global QtCore, QtGui
+		try:
+			from PyQt4 import QtCore, QtGui
+		except ImportError:
+			return
+		global ConnectLoginWidget, ConnectWidget, LoginWidget
+		ConnectLoginWidget = getConnectLoginWidget()
+		ConnectWidget = getConnectWidget()
+		LoginWidget = getLoginWidget()
+
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		
 		self.connection = Connection(self._modules)

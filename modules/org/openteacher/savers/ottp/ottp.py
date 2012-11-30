@@ -28,14 +28,7 @@ class OpenTeachingTopoSaverModule(object):
 
 		self.type = "save"
 		self.priorities = {
-			"student@home": 196,
-			"student@school": 196,
-			"teacher": 196,
-			"wordsonly": -1,
-			"selfstudy": 196,
-			"testsuite": 196,
-			"codedocumentation": 196,
-			"all": 196,
+			"default": 196,
 		}
 		self.requires = (
 			self._mm.mods(type="otxxSaver"),

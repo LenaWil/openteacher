@@ -18,75 +18,78 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import QtCore, QtGui
+def getMultiOptionListModel():
+	class MultiOptionListModel(QtCore.QAbstractListModel):
+		def __init__(self, options, active, *args, **kwargs):
+			super(MultiOptionListModel, self).__init__(*args, **kwargs)
 
-class MultiOptionListModel(QtCore.QAbstractListModel):
-	def __init__(self, options, active, *args, **kwargs):
-		super(MultiOptionListModel, self).__init__(*args, **kwargs)
+			self.options = options
+			self.active = set()
+			for data in active:
+				for label, secondData in options:
+					if data == secondData:
+						self.active.add((label, data))
 
-		self.options = options
-		self.active = set()
-		for data in active:
-			for label, secondData in options:
-				if data == secondData:
-					self.active.add((label, data))
+		def rowCount(self, parent=None):
+			return len(self.options)
 
-	def rowCount(self, parent=None):
-		return len(self.options)
+		def data(self, index, role):
+			if not index.isValid():
+				return
+			if role == QtCore.Qt.DisplayRole:
+				return self.options[index.row()][0]
+			elif role == QtCore.Qt.UserRole:
+				return self.options[index.row()][1]
+			elif role == QtCore.Qt.CheckStateRole:
+				if self.options[index.row()] in self.active:
+					return QtCore.Qt.Checked
+				else:
+					return QtCore.Qt.Unchecked
 
-	def data(self, index, role):
-		if not index.isValid():
-			return
-		if role == QtCore.Qt.DisplayRole:
-			return self.options[index.row()][0]
-		elif role == QtCore.Qt.UserRole:
-			return self.options[index.row()][1]
-		elif role == QtCore.Qt.CheckStateRole:
-			if self.options[index.row()] in self.active:
-				return QtCore.Qt.Checked
-			else:
-				return QtCore.Qt.Unchecked
-
-	def setData(self, index, value, role):
-		if not index.isValid():
+		def setData(self, index, value, role):
+			if not index.isValid():
+				return False
+			if role == QtCore.Qt.CheckStateRole:
+				option = self.options[index.row()]
+				if value == QtCore.Qt.Checked:
+					self.active.add(option)
+				else:
+					self.active.remove(option)
+				self.dataChanged.emit(index, index)
+				return True
 			return False
-		if role == QtCore.Qt.CheckStateRole:
-			option = self.options[index.row()]
-			if value == QtCore.Qt.Checked:
-				self.active.add(option)
-			else:
-				self.active.remove(option)
-			self.dataChanged.emit(index, index)
-			return True
-		return False
 
-	def flags(self, index):
-		return (
-			QtCore.Qt.ItemIsEnabled |
-			QtCore.Qt.ItemIsSelectable |
-			QtCore.Qt.ItemIsUserCheckable
-		)
+		def flags(self, index):
+			return (
+				QtCore.Qt.ItemIsEnabled |
+				QtCore.Qt.ItemIsSelectable |
+				QtCore.Qt.ItemIsUserCheckable
+			)
 
-	@property
-	def value(self):
-		list = []
-		for option in self.options:
-			if option in self.active:
-				list.append(option[1])
-		return list
+		@property
+		def value(self):
+			list = []
+			for option in self.options:
+				if option in self.active:
+					list.append(option[1])
+			return list
+	return MultiOptionListModel
 
-class SettingsWidget(QtGui.QListView):
-	def __init__(self, setting, *args, **kwargs):
-		super(SettingsWidget, self).__init__(*args, **kwargs)
+def getSettingsWidget():
+	class SettingsWidget(QtGui.QListView):
+		def __init__(self, setting, *args, **kwargs):
+			super(SettingsWidget, self).__init__(*args, **kwargs)
 
-		self._setting = setting
+			self._setting = setting
 
-		model = MultiOptionListModel(setting["options"], setting["value"])
-		model.dataChanged.connect(self._valueChanged)
-		self.setModel(model)
+			model = MultiOptionListModel(setting["options"], setting["value"])
+			model.dataChanged.connect(self._valueChanged)
+			self.setModel(model)
 
-	def _valueChanged(self, topLeft, bottomRight):
-		self._setting["value"] = self.model().value
+		def _valueChanged(self, topLeft, bottomRight):
+			self._setting["value"] = self.model().value
+
+	return SettingsWidget
 
 class SettingsWidgetModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -103,8 +106,16 @@ class SettingsWidgetModule(object):
 		return SettingsWidget(*args, **kwargs)
 
 	def enable(self):
-		self.widgetType = "multiOption"
+		global QtCore, QtGui
+		try:
+			from PyQt4 import QtCore, QtGui
+		except ImportError:
+			return
+		global MultiOptionListModel, SettingsWidget
+		MultiOptionListModel = getMultiOptionListModel()
+		SettingsWidget = getSettingsWidget()
 
+		self.widgetType = "multiOption"
 		self.active = True
 
 	def disable(self):

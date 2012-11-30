@@ -44,7 +44,6 @@ class PrinterModule(object):
 		)
 
 	def print_(self, printer):
-		#print
 		printers = []
 
 		dataType = self._lessonTracker.currentLesson.module.dataType
@@ -56,7 +55,7 @@ class PrinterModule(object):
 			raise NotImplementedError()
 
 		printerWrapper = printers[0]
-		#Save
+		#Print
 		printerWrapper.print_()
 
 	@property

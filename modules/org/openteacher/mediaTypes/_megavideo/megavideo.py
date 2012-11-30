@@ -32,14 +32,7 @@ class MediaTypeModule(object):
 		self.type = "mediaType"
 		self.remoteNames = ["MegaVideo"]
 		self.priorities = {
-			"student@home": 200,
-			"student@school": 200,
-			"teacher": 200,
-			"wordsonly": -1,
-			"selfstudy": 200,
-			"testsuite": 200,
-			"codedocumentation": 200,
-			"all": 200,
+			"default": 200,
 		}
 
 	def enable(self):

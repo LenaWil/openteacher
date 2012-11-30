@@ -36,15 +36,7 @@ class WordsStringCheckerModule(object):
 	def _parse(self):
 		return self._modules.default("active", type="wordsStringParser").parse
 
-	def check(self, givenAnswerString, word):
-		#FIXME > 3.0: givenAnswerString should be replaced with a parsed
-		#instance so this module doesn't depend on the parser being
-		#there anymore, making the whole thing more versatile. Not so
-		#important here, but for the JS implementation that's a large
-		#plus, because otherwise the parse() function gets in the JS
-		#source twice.
-		givenAnswer = self._parse(givenAnswerString)
-
+	def check(self, givenAnswer, word):
 		result = {"result": "wrong"}
 		compulsoryAnswerCount = 0
 
@@ -72,7 +64,6 @@ class WordsStringCheckerModule(object):
 
 		result.update({
 			"itemId": word["id"],
-			"givenAnswer": givenAnswerString,
 		})
 
 		return result
