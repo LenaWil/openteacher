@@ -7,54 +7,54 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-11-21 13:46+0100\n"
+"POT-Creation-Date: 2012-11-30 20:20+0100\n"
 "PO-Revision-Date: 2011-09-13 07:39+0000\n"
 "Last-Translator: Richard Somlói <ricsipontaz@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-11-22 05:18+0000\n"
 "X-Generator: Launchpad (build 16293)\n"
-"Language: hu\n"
 
-#: inputTyping.py:65
+#: inputTyping.py:66
 msgid "Check!"
 msgstr "Ellenőrzés!"
 
-#: inputTyping.py:66
+#: inputTyping.py:67
 msgid "Correct anyway"
 msgstr "Javítás mindenképp"
 
-#: inputTyping.py:67
+#: inputTyping.py:68
 msgid "Skip"
 msgstr ""
 
-#: inputTyping.py:130
+#: inputTyping.py:131
 #, python-format
 msgid "Corrected: %s"
 msgstr ""
 
-#: inputTyping.py:135
+#: inputTyping.py:136
 msgid "Corrected"
 msgstr ""
 
-#: inputTyping.py:190
+#: inputTyping.py:193
 msgid "Correct answer: <b>{answers}</b> [{diff}]"
 msgstr ""
 
-#: inputTyping.py:192
+#: inputTyping.py:195
 msgid "Correct answer: <b>{answers}</b>"
 msgstr ""
 
-#: inputTyping.py:290
+#: inputTyping.py:304
 msgid "Fade duration when wrong (milliseconds)"
 msgstr ""
 
-#: inputTyping.py:291
+#: inputTyping.py:305
 msgid "Lesson"
 msgstr ""
 
-#: inputTyping.py:292
+#: inputTyping.py:306
 msgid "Words lesson"
 msgstr ""

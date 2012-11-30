@@ -7,46 +7,46 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-11-21 13:46+0100\n"
+"POT-Creation-Date: 2012-11-30 20:19+0100\n"
 "PO-Revision-Date: 2012-09-06 15:57+0000\n"
 "Last-Translator: Miguel A. Alvarado V. <alvaradoma@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-11-22 05:19+0000\n"
 "X-Generator: Launchpad (build 16293)\n"
-"Language: es\n"
 
-#: wrtsApi.py:155
+#: wrtsApi.py:167
 msgid "Import from WRDS"
 msgstr "Importar desde WRDS"
 
-#: wrtsApi.py:156
+#: wrtsApi.py:168
 msgid "Export to WRDS"
 msgstr "Exportar a WRDS"
 
-#: wrtsApi.py:159
+#: wrtsApi.py:171
 msgid "Email"
 msgstr "Correo electrónico"
 
-#: wrtsApi.py:160
+#: wrtsApi.py:172
 msgid "Password"
 msgstr "Contraseña"
 
-#: wrtsApi.py:162
+#: wrtsApi.py:174
 msgid "Input and output"
 msgstr "Entrada y salida"
 
-#: wrtsApi.py:163
+#: wrtsApi.py:175
 msgid "WRDS Login credentials"
 msgstr "Credenciales WRDS de inicio"
 
-#: wrtsApi.py:176
+#: wrtsApi.py:188
 msgid "Invalid login credentials"
 msgstr "Credenciales de inicio inválidas"
 
-#: wrtsApi.py:177
+#: wrtsApi.py:189
 msgid ""
 "WRDS didn't accept the login credentials. Are you sure you entered your e-"
 "mail and password correctly?"
@@ -54,11 +54,11 @@ msgstr ""
 "WRDS no aceptó las credenciales de inicio. ¿Estás seguro que ha introducido "
 "su correo electrónico y contraseña correctamente?"
 
-#: wrtsApi.py:183
+#: wrtsApi.py:195
 msgid "No WRDS connection"
 msgstr "Sin conexión WRDS"
 
-#: wrtsApi.py:184
+#: wrtsApi.py:196
 msgid ""
 "WRDS didn't accept the connection. Are you sure that your internet "
 "connection works and WRDS is online?"
@@ -66,11 +66,11 @@ msgstr ""
 "WRDS no aceptó la conexión. ¿Está seguro que funciona su conexión a internet "
 "y que WRDS está en línea?"
 
-#: wrtsApi.py:247
+#: wrtsApi.py:259
 msgid "No word list metadata given."
 msgstr "Ninguna metadata de lista de palabras suministrada."
 
-#: wrtsApi.py:248
+#: wrtsApi.py:260
 msgid ""
 "Please fill in the wordlist title, question language and answer language "
 "first. Then try again."
@@ -78,38 +78,38 @@ msgstr ""
 "Por favor rellena el título de la lista de palabras, pregunta de idioma y "
 "respuesta de idioma primero. Luego intenta de nuevo."
 
-#: wrtsApi.py:257
+#: wrtsApi.py:270
 msgid "Word list succesfully exported to WRDS."
 msgstr "Lista de palabras exportado a WRDS exitosamente."
 
-#: wrtsApi.py:301
+#: wrtsApi.py:314
 msgid "Can't find the share"
 msgstr ""
 
-#: wrtsApi.py:302
+#: wrtsApi.py:315
 #, python-format
 msgid "Can't find the share you requested. ('%s') Are you sure it exists?"
 msgstr ""
 
-#: wrtsApi.py:332
+#: wrtsApi.py:345
 msgid "No list selected"
 msgstr "Ninguna lista seleccionada."
 
-#: wrtsApi.py:333
+#: wrtsApi.py:346
 msgid "No list was selected. Please try again."
 msgstr "Ninguna lista fue seleccionada. Por favor intente de nuevo."
 
-#: wrtsApi.py:360
+#: wrtsApi.py:373
 msgid "Can't show the result"
 msgstr "No se pueden mostrar los resultados."
 
-#: wrtsApi.py:361
+#: wrtsApi.py:374
 msgid "Can't open the resultive word list, because it can't be shown."
 msgstr ""
 "No se pueden abrir la lista de palabras resultante, porque no pueden ser "
 "mostrados."
 
-#: wrtsApi.py:365
+#: wrtsApi.py:378
 msgid "The word list was imported from WRDS successfully."
 msgstr "La lista de palabras fue importando de WRDS exitosamente."
 

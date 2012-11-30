@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-04 11:49+0200\n"
+"POT-Creation-Date: 2012-11-30 20:19+0100\n"
 "PO-Revision-Date: 2012-08-09 00:10+0000\n"
 "Last-Translator: Teemu Paavola <tteeemu@gmail.com>\n"
 "Language-Team: Finnish <fi@li.org>\n"
@@ -19,35 +19,35 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-10-02 05:36+0000\n"
 "X-Generator: Launchpad (build 16061)\n"
 
-#: updates.py:54
+#: updates.py:53
 msgid "Update available"
 msgid_plural "Updates available"
 msgstr[0] "Päivitys saatavilla"
 
-#: updates.py:59
+#: updates.py:58
 #, python-format
 msgid "There is %s update available, do you want to update?"
 msgid_plural "There are %s updates available, do you want to update?"
 msgstr[0] ""
 msgstr[1] "Saatavilla päivityksiä, haluatko päivittää?"
 
-#: updates.py:63
+#: updates.py:62
 msgid "Remember my choice"
 msgstr "Muista valintani"
 
-#: updates.py:111 updates.py:115
+#: updates.py:105 updates.py:109
 msgid "Updates"
 msgstr "Päivitykset"
 
-#: updates.py:114
+#: updates.py:108
 msgid "Remember if I want to install updates or not"
 msgstr "Muista, jos haluan asentaa päivityksiä tai en"
 
-#: updates.py:185
+#: updates.py:191
 msgid "Updating completed"
 msgstr "Päivitys valmis"
 
-#: updates.py:185
+#: updates.py:191
 msgid ""
 "All updates were succesfully installed. In order for the changes to take "
 "effect, please restart the application."

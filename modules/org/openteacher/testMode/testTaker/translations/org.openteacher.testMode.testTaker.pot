@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.1\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-11-21 13:47+0100\n"
+"POT-Creation-Date: 2012-11-30 20:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,28 +17,28 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: testTaker.py:50
+#: testTaker.py:49
 msgid "Select the test you want to take"
 msgstr ""
 
-#: testTaker.py:51 testTaker.py:114
+#: testTaker.py:50 testTaker.py:119
 msgid "Take test"
 msgstr ""
 
-#: testTaker.py:118
+#: testTaker.py:123
 msgid "Choose test"
 msgstr ""
 
-#: testTaker.py:120
+#: testTaker.py:125
 msgid "Taking test"
 msgstr ""
 
-#: testTaker.py:180
+#: testTaker.py:185
 msgid ""
 "An error occured. The server could not be reached. Check your network "
 "connection."
 msgstr ""
 
-#: testTaker.py:183
+#: testTaker.py:188
 msgid "Your answers have successfully been handed in!"
 msgstr ""

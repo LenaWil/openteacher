@@ -7,41 +7,41 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-11-21 13:46+0100\n"
+"POT-Creation-Date: 2012-11-30 20:19+0100\n"
 "PO-Revision-Date: 2012-10-24 19:51+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Launchpad-Export-Date: 2012-11-22 05:19+0000\n"
 "X-Generator: Launchpad (build 16293)\n"
-"Language: ru\n"
 
-#: testViewer.py:134
+#: testViewer.py:136
 msgid "Results"
 msgstr "Результаты"
 
-#: testViewer.py:145
+#: testViewer.py:147
 msgid "Note:"
 msgstr "Примечание:"
 
-#: testViewer.py:148
+#: testViewer.py:150
 msgid "yes"
 msgstr "да"
 
-#: testViewer.py:148 testViewer.py:150
+#: testViewer.py:150 testViewer.py:152
 msgid "no"
 msgstr "нет"
 
-#: testViewer.py:151
+#: testViewer.py:153
 #, python-format
 msgid "Completed: %s"
 msgstr "Выполнено: %s"
 
-#: testViewer.py:157
+#: testViewer.py:159
 #, python-format
 msgid "Total thinking time: %s second"
 msgid_plural "Total thinking time: %s seconds"
@@ -49,7 +49,7 @@ msgstr[0] "Общее время обдумывания: %s секунда"
 msgstr[1] "Общее время обдумывания: %s секунды"
 msgstr[2] "Общее время обдумывания: %s секунд"
 
-#: testViewer.py:165
+#: testViewer.py:167
 #, python-format
 msgid "Total thinking time: %s minutes"
 msgstr "Общее время обдумывания: %s минут"

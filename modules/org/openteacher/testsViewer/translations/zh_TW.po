@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-11-21 13:47+0100\n"
+"POT-Creation-Date: 2012-11-30 20:19+0100\n"
 "PO-Revision-Date: 2012-08-24 17:01+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-11-22 05:19+0000\n"
 "X-Generator: Launchpad (build 16293)\n"
-"Language: \n"
 
 #: testsViewer.py:48
 msgid "Date"
@@ -30,15 +30,15 @@ msgstr "評論"
 msgid "Completed"
 msgstr "已完成"
 
-#: testsViewer.py:111
+#: testsViewer.py:113
 msgid "Highest note:"
 msgstr "最高評論："
 
-#: testsViewer.py:114
+#: testsViewer.py:116
 msgid "Average note:"
 msgstr "平均評論："
 
-#: testsViewer.py:117
+#: testsViewer.py:119
 msgid "Lowest note:"
 msgstr "最低評論："
 
@@ -46,11 +46,11 @@ msgstr "最低評論："
 #. stand a note, but not today.' If '-' isn't
 #. appropriate in you language for that, please replace.
 #. Otherwise, just copy the original.
-#: testsViewer.py:133 testsViewer.py:138 testsViewer.py:142 testsViewer.py:166
-#: testsViewer.py:172
+#: testsViewer.py:135 testsViewer.py:140 testsViewer.py:144 testsViewer.py:170
+#: testsViewer.py:176
 msgid "-"
 msgstr "-"
 
-#: testsViewer.py:242
+#: testsViewer.py:250
 msgid "Back"
 msgstr "返回"

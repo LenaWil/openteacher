@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.1\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-11-21 13:47+0100\n"
+"POT-Creation-Date: 2012-11-30 20:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: scr/gui.js:166 scr/gui.js:502
+#: scr/gui.js:166 scr/gui.js:503
 msgid "Menu"
 msgstr ""
 
@@ -93,7 +93,7 @@ msgstr ""
 msgid "Copyright info"
 msgstr ""
 
-#: scr/gui.js:269 scr/gui.js:505
+#: scr/gui.js:269 scr/gui.js:506
 msgid "Enter list"
 msgstr ""
 
@@ -122,43 +122,43 @@ msgid ""
 "questions and answers."
 msgstr ""
 
-#: scr/gui.js:276 scr/gui.js:469
+#: scr/gui.js:276 scr/gui.js:470
 msgid "Ok"
 msgstr ""
 
-#: scr/gui.js:459 scr/gui.js:506
+#: scr/gui.js:460 scr/gui.js:507
 msgid "Teach me!"
 msgstr ""
 
-#: scr/gui.js:460
+#: scr/gui.js:461
 msgid "Question:"
 msgstr ""
 
-#: scr/gui.js:461
+#: scr/gui.js:462
 msgid "Answer:"
 msgstr ""
 
-#: scr/gui.js:462
+#: scr/gui.js:463
 msgid "Check!"
 msgstr ""
 
-#: scr/gui.js:463
+#: scr/gui.js:464
 msgid "Skip"
 msgstr ""
 
-#: scr/gui.js:464
+#: scr/gui.js:465
 msgid "Correct anyway"
 msgstr ""
 
-#: scr/gui.js:467 scr/gui.js:468
+#: scr/gui.js:468 scr/gui.js:469
 msgid "Test completed!"
 msgstr ""
 
-#: scr/gui.js:470
+#: scr/gui.js:471
 #, python-format
 msgid "Your note: %s"
 msgstr ""
 
-#: scr/gui.js:507
+#: scr/gui.js:508
 msgid "List management"
 msgstr ""

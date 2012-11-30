@@ -7,18 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-11-21 13:47+0100\n"
+"POT-Creation-Date: 2012-11-30 20:20+0100\n"
 "PO-Revision-Date: 2012-11-18 21:04+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-11-22 05:20+0000\n"
 "X-Generator: Launchpad (build 16293)\n"
-"Language: nl\n"
 
-#: scr/gui.js:166 scr/gui.js:502
+#: scr/gui.js:166 scr/gui.js:503
 msgid "Menu"
 msgstr "Menu"
 
@@ -96,7 +96,7 @@ msgstr "Taal:"
 msgid "Copyright info"
 msgstr "Copyrightinformatie"
 
-#: scr/gui.js:269 scr/gui.js:505
+#: scr/gui.js:269 scr/gui.js:506
 msgid "Enter list"
 msgstr "Lijst invoeren"
 
@@ -130,43 +130,43 @@ msgstr ""
 "Zorg er alstublieft voor dat iedere regel een '='-teken of een tab tussen de "
 "vragen en de antwoorden bevat."
 
-#: scr/gui.js:276 scr/gui.js:469
+#: scr/gui.js:276 scr/gui.js:470
 msgid "Ok"
 msgstr "Ok"
 
-#: scr/gui.js:459 scr/gui.js:506
+#: scr/gui.js:460 scr/gui.js:507
 msgid "Teach me!"
 msgstr "Overhoor me!"
 
-#: scr/gui.js:460
+#: scr/gui.js:461
 msgid "Question:"
 msgstr "Vraag:"
 
-#: scr/gui.js:461
+#: scr/gui.js:462
 msgid "Answer:"
 msgstr "Antwoord:"
 
-#: scr/gui.js:462
+#: scr/gui.js:463
 msgid "Check!"
 msgstr "Controleer!"
 
-#: scr/gui.js:463
+#: scr/gui.js:464
 msgid "Skip"
 msgstr "Sla over"
 
-#: scr/gui.js:464
+#: scr/gui.js:465
 msgid "Correct anyway"
 msgstr "Toch goed"
 
-#: scr/gui.js:467 scr/gui.js:468
+#: scr/gui.js:468 scr/gui.js:469
 msgid "Test completed!"
 msgstr "Toets afgerond!"
 
-#: scr/gui.js:470
+#: scr/gui.js:471
 #, python-format
 msgid "Your note: %s"
 msgstr "Uw cijfer: %s"
 
-#: scr/gui.js:507
+#: scr/gui.js:508
 msgid "List management"
 msgstr "Lijstmanagement"

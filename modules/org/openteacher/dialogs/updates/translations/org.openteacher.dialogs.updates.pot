@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.1\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-11-21 13:46+0100\n"
+"POT-Creation-Date: 2012-11-30 20:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,36 +18,36 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: updates.py:54
+#: updates.py:53
 msgid "Update available"
 msgid_plural "Updates available"
 msgstr[0] ""
 msgstr[1] ""
 
-#: updates.py:59
+#: updates.py:58
 #, python-format
 msgid "There is %s update available, do you want to update?"
 msgid_plural "There are %s updates available, do you want to update?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: updates.py:63
+#: updates.py:62
 msgid "Remember my choice"
 msgstr ""
 
-#: updates.py:111 updates.py:115
+#: updates.py:105 updates.py:109
 msgid "Updates"
 msgstr ""
 
-#: updates.py:114
+#: updates.py:108
 msgid "Remember if I want to install updates or not"
 msgstr ""
 
-#: updates.py:185
+#: updates.py:191
 msgid "Updating completed"
 msgstr ""
 
-#: updates.py:185
+#: updates.py:191
 msgid ""
 "All updates were succesfully installed. In order for the changes to take "
 "effect, please restart the application."

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.1\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-11-21 13:47+0100\n"
+"POT-Creation-Date: 2012-11-30 20:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,18 +30,18 @@ msgstr ""
 msgid "Skip"
 msgstr ""
 
-#: inMind.py:67
+#: inMind.py:69
 msgid "I was right"
 msgstr ""
 
-#: inMind.py:68
+#: inMind.py:70
 msgid "I was wrong"
 msgstr ""
 
-#: inMind.py:134
+#: inMind.py:138
 msgid "Translation: "
 msgstr ""
 
-#: inMind.py:197
+#: inMind.py:206
 msgid "Think answer"
 msgstr ""

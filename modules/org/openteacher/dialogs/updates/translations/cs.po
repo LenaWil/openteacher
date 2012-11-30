@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-10-04 11:49+0200\n"
+"POT-Creation-Date: 2012-11-30 20:19+0100\n"
 "PO-Revision-Date: 2012-05-11 22:07+0000\n"
 "Last-Translator: Jakub Šnapka <snapka@seznam.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -19,36 +19,36 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-10-02 05:36+0000\n"
 "X-Generator: Launchpad (build 16061)\n"
 
-#: updates.py:54
+#: updates.py:53
 msgid "Update available"
 msgid_plural "Updates available"
 msgstr[0] "Dostupné aktualizace"
 msgstr[1] "Dostupné aktualizace"
 msgstr[2] "Dostupné aktualizace"
 
-#: updates.py:59
+#: updates.py:58
 #, python-format
 msgid "There is %s update available, do you want to update?"
 msgid_plural "There are %s updates available, do you want to update?"
 msgstr[0] "%s dostupných aktualizací, chcete aktualizovat?"
 
-#: updates.py:63
+#: updates.py:62
 msgid "Remember my choice"
 msgstr "Zapamatovat výběr"
 
-#: updates.py:111 updates.py:115
+#: updates.py:105 updates.py:109
 msgid "Updates"
 msgstr "Aktualitzace"
 
-#: updates.py:114
+#: updates.py:108
 msgid "Remember if I want to install updates or not"
 msgstr "Zapamatovat zdali chci instalovat aktualizace"
 
-#: updates.py:185
+#: updates.py:191
 msgid "Updating completed"
 msgstr "Aktualizace dokončena"
 
-#: updates.py:185
+#: updates.py:191
 msgid ""
 "All updates were succesfully installed. In order for the changes to take "
 "effect, please restart the application."

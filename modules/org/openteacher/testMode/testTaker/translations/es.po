@@ -7,34 +7,34 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-11-21 13:47+0100\n"
+"POT-Creation-Date: 2012-11-30 20:19+0100\n"
 "PO-Revision-Date: 2012-09-03 17:27+0000\n"
 "Last-Translator: Rose <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-11-22 05:20+0000\n"
 "X-Generator: Launchpad (build 16293)\n"
-"Language: es\n"
 
-#: testTaker.py:50
+#: testTaker.py:49
 msgid "Select the test you want to take"
 msgstr "Seleccione la prueba que desea tomar"
 
-#: testTaker.py:51 testTaker.py:114
+#: testTaker.py:50 testTaker.py:119
 msgid "Take test"
 msgstr "Tomar una prueba"
 
-#: testTaker.py:118
+#: testTaker.py:123
 msgid "Choose test"
 msgstr "Elija una prueba"
 
-#: testTaker.py:120
+#: testTaker.py:125
 msgid "Taking test"
 msgstr "Tomando prueba"
 
-#: testTaker.py:180
+#: testTaker.py:185
 msgid ""
 "An error occured. The server could not be reached. Check your network "
 "connection."
@@ -42,6 +42,6 @@ msgstr ""
 "Ha ocurrido un error. El servidor no pudo ser localizado. Compruebe su "
 "conexión de red."
 
-#: testTaker.py:183
+#: testTaker.py:188
 msgid "Your answers have successfully been handed in!"
 msgstr "Sus respuestas han sido entregadas con éxito!"

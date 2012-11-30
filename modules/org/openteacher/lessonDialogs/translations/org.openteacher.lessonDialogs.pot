@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.1\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-11-21 13:47+0100\n"
+"POT-Creation-Date: 2012-11-30 20:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,27 +17,27 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: lessonDialogs.py:81
+#: lessonDialogs.py:84
 msgid "Unsaved data"
 msgstr ""
 
-#: lessonDialogs.py:82
+#: lessonDialogs.py:85
 msgid "There are unsaved items or results. Are you sure you want to close?"
 msgstr ""
 
-#: lessonDialogs.py:98
+#: lessonDialogs.py:101
 msgid "Warning"
 msgstr ""
 
-#: lessonDialogs.py:100
+#: lessonDialogs.py:103
 msgid ""
 "Are you sure you want to go back to the enter tab? This will end your lesson!"
 msgstr ""
 
-#: lessonDialogs.py:111
+#: lessonDialogs.py:114
 msgid "Not enough items"
 msgstr ""
 
-#: lessonDialogs.py:112
+#: lessonDialogs.py:115
 msgid "You need to add items to your test first"
 msgstr ""

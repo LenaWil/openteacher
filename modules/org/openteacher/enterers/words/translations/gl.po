@@ -7,41 +7,41 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-11-21 13:46+0100\n"
+"POT-Creation-Date: 2012-11-30 20:19+0100\n"
 "PO-Revision-Date: 2012-11-09 23:16+0000\n"
 "Last-Translator: ghas <Unknown>\n"
 "Language-Team: Galician <gl@li.org>\n"
+"Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-11-22 05:19+0000\n"
 "X-Generator: Launchpad (build 16293)\n"
-"Language: gl\n"
 
-#: words.py:130
+#: words.py:134
 msgid "Questions"
 msgstr "Preguntas"
 
-#: words.py:130
+#: words.py:134
 msgid "Answers"
 msgstr "Respostas"
 
-#: words.py:130
+#: words.py:134
 msgid "Comment"
 msgstr "Comentario"
 
-#: words.py:372
+#: words.py:378
 msgid "Title:"
 msgstr "Título:"
 
-#: words.py:373
+#: words.py:379
 msgid "Question language:"
 msgstr "Idioma da pregunta:"
 
-#: words.py:374
+#: words.py:380
 msgid "Answer language:"
 msgstr "Idioma da resposta:"
 
-#: words.py:375
+#: words.py:381
 msgid "Remove selected row(s)"
 msgstr "Eliminar fila(s) seleccionada(s)"
