@@ -96,7 +96,7 @@ class SourceWithSetupSaverModule(object):
 		with open(os.path.join(sourcePath, "linux", packageName + ".desktop"), "w") as f:
 			templ = pyratemp.Template(filename=self._mm.resourcePath("desktop.templ"))
 
-			mimetypeList = sorted({m[2] for m in mimetypes})
+			mimetypeList = sorted(set((m[2] for m in mimetypes)))
 			f.write(templ(package=packageName, mimetypes=";".join(mimetypeList), **self._metadata).encode("UTF-8"))
 
 		#linux/package.menu
