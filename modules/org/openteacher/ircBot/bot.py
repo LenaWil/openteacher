@@ -43,11 +43,12 @@ class OpenTeacherBot(irc.IRCClient):
 		".website": "http://openteacher.org/",
 		".about": "http://openteacher.org/about.html",
 		".documentation": "http://openteacher.org/documentation.html",
-		".codedocs": "http://people.ubuntu.com/~marten-de-vries/openteacher-code-documentation",
+		".codedocs": "http://vps.marten-de-vries.nl/openteacher-code-documentation/",
 		".contribute": "http://openteacher.org/contribute.html",
 		".forum": "http://forum.ubuntu-nl.org/etalage/openteacher-overhoorprogramma-voor-linux/new/#new",
 		".wiki": "http://sourceforge.net/apps/mediawiki/openteacher/index.php",
 		".ogd": "http://opengamedesigner.org/",
+		".ogd-lp": "https://launchpad.net/opengamedesigner",
 		".twitter": "http://twitter.com/#!/openteacher",
 		".facebook": "http://www.facebook.com/OpenTeacher",
 		".hyves": "http://openteacher.hyves.nl/",
@@ -55,13 +56,23 @@ class OpenTeacherBot(irc.IRCClient):
 		".mailarchive": "https://lists.launchpad.net/openteachermaintainers/",
 		".paste": "http://paste.ubuntu.com/",
 		".etherpad": "http://openetherpad.org/",
+		".testsuite": "http://vps.marten-de-vries.nl/openteacher-test-suite-log.txt",
+		".ogd-testsuite": "http://vps.marten-de-vries.nl/opengamedesigner-test-suite-log.txt",
+		".jfl": "https://launchpad.net/justforlearning/",
+		".jfl-demo": "http://vps.marten-de-vries.nl/justforlearning/",
 	}
+	factoids[".launchpad"] = factoids[".lp"]
 	factoids[".download"] = factoids[".downloads"]
 	factoids[".homepage"] = factoids[".website"]
 	factoids[".codedocumentation"] = factoids[".codedocs"]
+	factoids[".code-documentation"] = factoids[".codedocs"]
 	factoids[".forumtopic"] = factoids[".forum"]
 	factoids[".mailinglist"] = factoids[".mailarchive"]
 	factoids[".pastebin"] = factoids[".paste"]
+	factoids[".test-suite"] = factoids[".testsuite"]
+	factoids[".tests"] = factoids[".testsuite"]
+	factoids[".ogd-test-suite"] = factoids[".ogd-testsuite"]
+	factoids[".ogd-tests"] = factoids[".ogd-testsuite"]
 
 	@property
 	def nickname(self):
@@ -194,19 +205,19 @@ class OpenTeacherBot(irc.IRCClient):
 			self.factory.timeToQuit = True
 			self.quit()
 
-#		#blueprints
-#		match = re.search("(?:specs?[ /]+|blueprints? )([^ ,.?!/]+)", msg)
-#		if match:
-#			spec = self.factory.launchpad.projects["openteacher"].getSpecification(name=match.group(1))
-#			if spec:
-#				text = "blueprint %s: %s (definition status: %s, implementation status: %s, priority: %s) - %s" % (
-#					spec.name,
-#					spec.title,
-#					spec.definition_status,
-#					spec.implementation_status,
-#					spec.priority,
-#					spec.web_link,
-#				)
+		#blueprints
+		match = re.search("(?:specs?[ /]+|blueprints? )([^ ,.?!/]+)", msg)
+		if match:
+			spec = self.factory.launchpad.projects["openteacher"].getSpecification(name=match.group(1))
+			if spec:
+				text = "blueprint %s: %s (definition status: %s, implementation status: %s, priority: %s) - %s" % (
+					spec.name,
+					spec.title,
+					spec.definition_status,
+					spec.implementation_status,
+					spec.priority,
+					spec.web_link,
+				)
 
 class OpenTeacherBotFactory(protocol.ClientFactory):
 	protocol = OpenTeacherBot
@@ -244,7 +255,7 @@ on irc. Then press ctrl+c here.\n"""
 		"password": None,
 		"admins": [
 			"CasW!~cas@unaffiliated/casw",
-			"commandoline!~commandol@ubuntu/member/commandoline",
+			"commandoline!~Thunderbi@ubuntu/member/commandoline",
 			"lordnoid!~lordnoid@53537359.cm-6-4b.dynamic.ziggo.nl",
 		]
 	}
