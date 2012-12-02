@@ -214,7 +214,7 @@ class OpenTeacherBot(irc.IRCClient):
 		if match:
 			spec = self.factory.launchpad.projects["openteacher"].getSpecification(name=match.group(1))
 			if spec:
-				text = "blueprint %s: %s (def. status: %s, impl. status: %s, priority: %s) - %s" % (
+				text = u"blueprint %s: %s (def. status: %s, impl. status: %s, priority: %s) - %s" % (
 					spec.name,
 					spec.title,
 					spec.definition_status,
@@ -222,7 +222,7 @@ class OpenTeacherBot(irc.IRCClient):
 					spec.priority,
 					spec.web_link,
 				)
-				self.msg(target, text)
+				self.msg(target, text.encode("UTF-8"))
 
 class OpenTeacherBotFactory(protocol.ClientFactory):
 	protocol = OpenTeacherBot
