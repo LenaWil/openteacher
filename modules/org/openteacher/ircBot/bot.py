@@ -61,6 +61,8 @@ class OpenTeacherBot(irc.IRCClient):
 		".jfl": "https://launchpad.net/justforlearning/",
 		".jfl-demo": "http://vps.marten-de-vries.nl/justforlearning/",
 		".ot-mobile": "http://vps.marten-de-vries.nl/openteacher-mobile/",
+		".ot-test-coverage": "http://vps.marten-de-vries.nl/openteacher-test-coverage/",
+		".ogd-test-coverage": "http://vps.marten-de-vries.nl/opengamedesigner-test-coverage/",
 	}
 	factoids[".openteacher"] = factoids[".website"]
 	factoids[".launchpad"] = factoids[".lp"]
@@ -77,6 +79,9 @@ class OpenTeacherBot(irc.IRCClient):
 	factoids[".ogd-tests"] = factoids[".ogd-testsuite"]
 	factoids[".openteacher-mobile"] = factoids[".ot-mobile"]
 	factoids[".mobile"] = factoids[".ot-mobile"]
+	factoids[".ot-coverage"] = factoids[".ot-test-coverage"]
+	factoids[".ogd-coverage"] = factoids[".ogd-test-coverage"]
+	factoids[".coverage"] = factoids[".ot-test-coverage"]
 
 	@property
 	def nickname(self):
