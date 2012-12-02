@@ -60,7 +60,9 @@ class OpenTeacherBot(irc.IRCClient):
 		".ogd-testsuite": "http://vps.marten-de-vries.nl/opengamedesigner-test-suite-log.txt",
 		".jfl": "https://launchpad.net/justforlearning/",
 		".jfl-demo": "http://vps.marten-de-vries.nl/justforlearning/",
+		".ot-mobile": "http://vps.marten-de-vries.nl/openteacher-mobile/",
 	}
+	factoids[".openteacher"] = factoids[".website"]
 	factoids[".launchpad"] = factoids[".lp"]
 	factoids[".download"] = factoids[".downloads"]
 	factoids[".homepage"] = factoids[".website"]
@@ -73,6 +75,8 @@ class OpenTeacherBot(irc.IRCClient):
 	factoids[".tests"] = factoids[".testsuite"]
 	factoids[".ogd-test-suite"] = factoids[".ogd-testsuite"]
 	factoids[".ogd-tests"] = factoids[".ogd-testsuite"]
+	factoids[".openteacher-mobile"] = factoids[".ot-mobile"]
+	factoids[".mobile"] = factoids[".ot-mobile"]
 
 	@property
 	def nickname(self):
@@ -210,7 +214,7 @@ class OpenTeacherBot(irc.IRCClient):
 		if match:
 			spec = self.factory.launchpad.projects["openteacher"].getSpecification(name=match.group(1))
 			if spec:
-				text = "blueprint %s: %s (definition status: %s, implementation status: %s, priority: %s) - %s" % (
+				text = "blueprint %s: %s (def. status: %s, impl. status: %s, priority: %s) - %s" % (
 					spec.name,
 					spec.title,
 					spec.definition_status,
@@ -218,6 +222,7 @@ class OpenTeacherBot(irc.IRCClient):
 					spec.priority,
 					spec.web_link,
 				)
+				self.msg(target, text)
 
 class OpenTeacherBotFactory(protocol.ClientFactory):
 	protocol = OpenTeacherBot
