@@ -29,7 +29,7 @@ class WordListStringComposerModule(object):
 		self.javaScriptImplementation = True
 		self.requires = (
 			self._mm.mods("javaScriptImplementation", type="wordsStringComposer"),
-			self._mm.mods(type="ui"),
+			self._mm.mods(type="qtApp"),
 		)
 
 	def _checkForErrors(self):

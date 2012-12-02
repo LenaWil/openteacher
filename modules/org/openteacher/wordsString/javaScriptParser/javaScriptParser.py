@@ -28,7 +28,7 @@ class JavascriptParserModule(object):
 		self.type = "wordsStringParser"
 		self.javaScriptImplementation = True
 		self.requires = (
-			self._mm.mods(type="ui"),
+			self._mm.mods(type="qtApp"),
 		)
 		self.priorities = {
 			"default": 20,

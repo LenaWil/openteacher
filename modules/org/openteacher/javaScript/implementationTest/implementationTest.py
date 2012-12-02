@@ -37,7 +37,7 @@ class TestModule(object):
 
 		self.type = "test"
 		self.requires = (
-			self._mm.mods(type="ui"),
+			self._mm.mods(type="qtApp"),
 		)
 		self.uses = (
 			self._mm.mods("javaScriptImplementation"),

@@ -20,6 +20,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
+import os
 import platform
 
 class Action(object):
@@ -181,6 +182,18 @@ class GuiModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
+		if hasattr(QtGui.QApplication, "x11EventFilter") and os.getenv("DISPLAY") == None:
+			#if on a system that could potentially support X11, but
+			#doesn't have it installed/running, leave this mod disabled.
+			#Otherwise the whole application crashes on a 'Can't connect
+			#to display' error message.
+			#
+			#checking for x11EventFilter because that is only defined
+			#when Q_WS_X11 is set. No other way as far as I know to get
+			#the value of that property. :(
+			return
+		self._app = QtGui.QApplication(sys.argv)
+
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		createEvent = self._modules.default(type="event").createEvent
 
@@ -208,8 +221,6 @@ class GuiModule(object):
 				})
 			else:
 				self._aeroSetting = None
-		
-		self._app = QtGui.QApplication(sys.argv)
 
 		#try to load translations for Qt itself
 		qtTranslator = QtCore.QTranslator()

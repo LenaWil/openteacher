@@ -69,10 +69,12 @@ class TestModule(object):
 	def enable(self):
 		self.TestCase = WordsStringComposerTestCase
 		self.TestCase._mm = self._mm
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
 		del self.TestCase
 
 def init(moduleManager):

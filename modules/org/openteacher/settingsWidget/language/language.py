@@ -18,9 +18,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import locale
-
 def getSettingsWidget():
 	class SettingsWidget(QtGui.QComboBox):
 		def __init__(self, languages, setting, *args, **kwargs):
@@ -53,30 +50,22 @@ class SettingsWidgetModule(object):
 		self._mm = moduleManager
 
 		self.type = "settingsWidget"
-		self.subType = "languageChooser"
 
 		self.requires = (
 			self._mm.mods(type="ui"),
+			self._mm.mods(type="friendlyTranslationNames"),
+		)
+		self.uses = (
 			self._mm.mods(type="translator"),
 		)
 		self.filesWithTranslations = ("language.py",)
 
 	@property
 	def languages(self):
-		translator = self._modules.default("active", type="translator")
-		files = os.listdir(self._mm.resourcePath("translations"))
-		files = filter(lambda x: x.endswith(".po"), files)
-		codes = map(lambda x: x.split(".")[0], files)
-		codes += "C" #English
-		languages = {}
-		for code in codes:
-			_, ngettext = translator.gettextFunctions(
-				self._mm.resourcePath("translations"),
-				code
-			)
-			#TRANSLATORS: replace 'English' with the native name of the language you're translating to
-			languages[code] = _("I speak English")
-		return languages
+		return self._modules.default(
+			"active",
+			type="friendlyTranslationNames"
+		).friendlyNames
 
 	def createWidget(self, *args, **kwargs):
 		return SettingsWidget(self.languages, *args, **kwargs)

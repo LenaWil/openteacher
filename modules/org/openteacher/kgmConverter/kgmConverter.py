@@ -111,12 +111,13 @@ class KgmConverterModule(object):
 		self._save("topo", lesson, outputPath)
 
 	def enable(self):
-                global Image
-                try:
-                        import Image
-                except ImportError:
-                        #remain inactive
-                        return
+		global Image
+		try:
+			import Image
+		except ImportError:
+			sys.stderr.write("For this developer module to work, you need to have PIL (the Image module) installed.\n")
+			#remain inactive
+			return
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._modules.default("active", type="execute").startRunning.handle(self._run)
 

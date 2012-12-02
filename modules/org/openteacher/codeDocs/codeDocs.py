@@ -385,6 +385,7 @@ class CodeDocumentationModule(object):
 			import pyratemp
 			import docutils.core
 		except ImportError:
+			sys.stderr.write("For this developer module to work, you need to have cherrypy, pygments, pyratemp and docutils installed. And indirectly, pygraphviz.\n")
 			return #leave disabled
 
 		self._modules = set(self._mm.mods(type="modules")).pop()

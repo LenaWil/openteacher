@@ -78,7 +78,7 @@ class JavascriptEventModule(object):
 		self.javascriptImplementation = True
 
 		self.requires = (
-			self._mm.mods(type="ui"),
+			self._mm.mods(type="qtApp"),
 		)
 
 	def _checkForErrors(self):

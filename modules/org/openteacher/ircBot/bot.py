@@ -231,7 +231,7 @@ class OpenTeacherBotFactory(protocol.ClientFactory):
 
 		self.timeToQuit = False
 
-		self.launchpad = launchpad.Launchpad.login_anonymously("OpenTeacher bot", "production", "~/.config/launchpadlib")
+		self.launchpad = launchpad.Launchpad.login_anonymously("OpenTeacher bot", "production", "~/.config/launchpadlib", version="devel")
 
 	def clientConnectionLost(self, connector, reason):
 		if not self.timeToQuit:

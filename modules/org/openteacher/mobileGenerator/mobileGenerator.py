@@ -35,7 +35,7 @@ class MobileGeneratorModule(object):
 
 		self.requires = [
 			self._mm.mods(type="execute"),
-			self._mm.mods(subType="languageChooser"),
+			self._mm.mods(type="friendlyTranslationNames"),
 			self._mm.mods(type="metadata"),
 		]
 		self._logicModTypes = [
@@ -70,6 +70,7 @@ class MobileGeneratorModule(object):
 			import polib
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
+			sys.stderr.write("For this developer profile to work, you need pyratemp, polib and PyQt4 (QtCore & QtGui) to be installed.\n")
 			return #remain disabled
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._modules.default(type="execute").startRunning.handle(self._run)
@@ -79,7 +80,7 @@ class MobileGeneratorModule(object):
 	@property
 	def languages(self, cache={}):
 		if "languages" not in cache:
-			cache["languages"] = self._modules.default("active", subType="languageChooser").languages
+			cache["languages"] = self._modules.default("active", type="friendlyTranslationNames").friendlyNames
 		return cache["languages"]
 
 	def _buildSplash(self, width, height, iconPath):
