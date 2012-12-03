@@ -63,6 +63,7 @@ class OpenTeacherBot(irc.IRCClient):
 		".ot-mobile": "http://vps.marten-de-vries.nl/openteacher-mobile/",
 		".ot-test-coverage": "http://vps.marten-de-vries.nl/openteacher-test-coverage/",
 		".ogd-test-coverage": "http://vps.marten-de-vries.nl/opengamedesigner-test-coverage/",
+		".vps": "http://vps.marten-de-vries.nl/",
 	}
 	factoids[".openteacher"] = factoids[".website"]
 	factoids[".launchpad"] = factoids[".lp"]
@@ -123,8 +124,12 @@ class OpenTeacherBot(irc.IRCClient):
 		print "%s: %s: %s" % (user.split("!")[0], channel, msg)
 		target = channel if channel in self.factory.channels else user.split("!")[0]
 		#factoids
-		if msg in self.factoids:
-			self.msg(target, self.factoids[msg])
+		for key, factoid in self.factoids.iteritems():
+			if key in msg:
+				self.msg(target, factoid)
+				#stop the loop, otherwise OTbot might spam the channel
+				#on one command.
+				break
 		#bugs
 		match = re.search("(?:bugs? ?/?|#)([0-9]+)", msg)
 		if match:
