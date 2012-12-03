@@ -25,16 +25,9 @@ class WordsStringCheckerModule(object):
 		self._mm = moduleManager
 
 		self.type = "wordsStringChecker"
-		self.requires = (
-			self._mm.mods(type="wordsStringParser"),
-		)
 		self.priorities = {
 			"default": 10,
 		}
-
-	@property
-	def _parse(self):
-		return self._modules.default("active", type="wordsStringParser").parse
 
 	def check(self, givenAnswer, word):
 		result = {"result": "wrong"}

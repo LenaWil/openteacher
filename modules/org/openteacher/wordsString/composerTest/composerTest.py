@@ -26,6 +26,9 @@ class WordsStringComposerTestCase(unittest.TestCase):
 			string = mod.compose(input)
 			self.assertEqual(string, output)
 
+	def testEmpty(self):
+		self._test([], u"")
+
 	def testSingleWord(self):
 		self._test(
 			[(u"one",)],

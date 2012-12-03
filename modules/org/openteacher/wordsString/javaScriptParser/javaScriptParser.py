@@ -34,11 +34,6 @@ class JavascriptParserModule(object):
 			"default": 20,
 		}
 
-	def _jsArrayIter(self, v):
-		for i in range(int(v.property("length").toNumber())):
-			data = v.property(i)
-			yield data
-
 	def _checkForErrors(self):
 		if self._engine.hasUncaughtException():
 			raise Exception(self._engine.uncaughtException().toString())

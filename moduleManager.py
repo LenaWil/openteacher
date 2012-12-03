@@ -60,6 +60,10 @@ class ModuleFilterer(object):
 			if not append:
 				continue
 			for attribute in self._whereTrue:
+				#hasattr() and getattr() require strings, but we don't
+				#want to force the user into that, so we convert it
+				#ourselves
+				attribute = str(attribute)
 				if not hasattr(module, attribute):
 					append = False
 					break

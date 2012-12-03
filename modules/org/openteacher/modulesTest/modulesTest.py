@@ -34,14 +34,21 @@ class TestCase(unittest.TestCase):
 	def testDefaultUnexisting(self):
 		for mod in self._mm.mods(type="modules"):
 			with self.assertRaises(IndexError):
-				#random, no chance this properiesy really exist...
+				#random, no chance this property really exist...
 				mod.default(uuid=uuid.uuid4())
+			with self.assertRaises(IndexError):
+				#same here.
 				mod.default(uuid.uuid4())
 
 	def testIfInSort(self):
 		for mod in self._mm.mods(type="modules"):
 			a = mod.sort(type="test")
 			self.assertIn(self.thisMod, a)
+
+	def testModuleManagerImport(self):
+		"""Test for the module manager."""
+		pyMod = self._mm.import_("fileToImport")
+		self.assertEquals(pyMod.test, "sure")
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
