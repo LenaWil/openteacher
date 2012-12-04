@@ -49,7 +49,7 @@ class AllOnceLessonType(object):
 		self._sendNext()
 
 	def skip(self):
-		self._indexes.append(self._indexes.pop(askedItems))
+		self._indexes.append(self._indexes.pop(self.askedItems))
 		self._sendNext()
 
 	def setResult(self, result):

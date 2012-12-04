@@ -34,10 +34,18 @@ class LessonTrackerModule(object):
 
 	@property
 	def lessons(self):
+		"""Returns all lesson objects that are open (although they might
+		   be in a tab on the background.).
+
+		"""
 		return iter(self._lessons.values())
 
 	@property
 	def currentLesson(self):
+		"""Returns the lesson object the user is currently working with
+		   in the user interface.
+
+		"""
 		uiModule = self._modules.default("active", type="ui")
 		try:
 			return self._lessons[uiModule.currentFileTab]

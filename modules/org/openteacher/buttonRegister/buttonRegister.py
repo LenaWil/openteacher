@@ -81,7 +81,9 @@ class ButtonRegisterModule(object):
 	def registerButton(self, category):
 		"""Creates a new Button object, and tells the world (mostly the
 		   gui modules) it has been created. It returns the resulting
-		   object to the user.
+		   object to the user. `category` can be everything in theory,
+		   if you want your button to be shown using a string with value
+		   'load' or 'create' is a good idea.
 
 		"""
 		b = Button(category, self._createEvent)
@@ -89,7 +91,7 @@ class ButtonRegisterModule(object):
 		return b
 
 	def unregisterButton(self, b):
-		"""Tell 'the world' the button b isn't in use anymore. User
+		"""Tell 'the world' the button `b` isn't in use anymore. User
 		   responsibility to call this on disable.
 
 		"""

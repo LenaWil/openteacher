@@ -104,8 +104,9 @@ class AnkiLoaderModule(object):
 			#DB scheme (also generatable from a file I guess...):
 			#https://ankisrs.googlegroups.com/attach/244fa793e3ad8b52/anki.png?view=1&part=4
 			cursor.execute("SELECT question, answer FROM cards ORDER BY created")
-			for question, answer in cursor.fetchall():
+			for i, (question, answer) in enumerate(cursor.fetchall()):
 				items.append({
+					"id": i,
 					"questions": self._parse(self._stripTags(question)),
 					"answers": self._parse(self._stripTags(answer))
 				})
