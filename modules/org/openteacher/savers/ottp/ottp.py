@@ -70,6 +70,7 @@ class OpenTeachingTopoSaverModule(object):
 		self.active = False
 
 		del self._modules
+		del self._otxxSaver
 		del self.name
 
 	def save(self, type, lesson, path):

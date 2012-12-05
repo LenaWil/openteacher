@@ -61,7 +61,6 @@ class SourceWithSetupPackagerModule(object):
 		self.active = False
 
 		del self._modules
-		del self._metadata
 
 def init(moduleManager):
 	return SourceWithSetupPackagerModule(moduleManager)

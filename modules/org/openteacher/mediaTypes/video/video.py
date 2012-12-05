@@ -58,6 +58,10 @@ class MediaTypeModule(object):
 
 	def disable(self):
 		self.active = False
+		del self._modules
+		if hasattr(self, "_settings"):
+			del self._settings
+		del self._html5
 	
 	def supports(self, path):
 		try:

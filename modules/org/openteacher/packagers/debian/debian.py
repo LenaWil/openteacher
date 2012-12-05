@@ -45,7 +45,7 @@ class DebianPackagerModule(object):
 		if not platform.linux_distribution()[0] in ("Debian", "Ubuntu"):
 			return #debian-based only module, remain inactive
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self._metadata= self._modules.default("active", type="metadata").metadata
+		self._metadata = self._modules.default("active", type="metadata").metadata
 		self._modules.default(type="execute").startRunning.handle(self._run)
 
 		self.active = True
@@ -90,6 +90,7 @@ Depends: python-qt4, python-qt4-phonon, python-qt4-gl, espeak
 		self.active = False
 
 		del self._modules
+		del self._metadata
 
 def init(moduleManager):
 	return DebianPackagerModule(moduleManager)

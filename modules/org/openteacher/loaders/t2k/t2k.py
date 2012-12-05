@@ -79,8 +79,10 @@ class Teach2000LoaderModule(object):
 	def disable(self):
 		self.active = False
 
+		del self._modules
 		del self.name
 		del self.loads
+		del self.mimetype
 
 	def getFileTypeOf(self, path):
 		if path.endswith(".t2k"):

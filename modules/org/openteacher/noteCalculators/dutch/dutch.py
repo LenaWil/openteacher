@@ -85,6 +85,8 @@ class DutchNoteCalculatorModule(object):
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
 		del self.name
 
 def init(moduleManager):

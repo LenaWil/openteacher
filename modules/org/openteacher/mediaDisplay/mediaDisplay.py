@@ -241,6 +241,8 @@ class MediaDisplayModule(object):
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
 		del self._settings
 		del self._html5VideoSetting
 		del self._html5AudioSetting

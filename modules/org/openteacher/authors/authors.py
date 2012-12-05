@@ -40,7 +40,14 @@ class AuthorsModule(object):
 		   arguments should be convertible with `unicode()`.
 
 		"""
-		self._authors.add((unicode(category), unicode(name)))
+		data = (unicode(category), unicode(name))
+		self._authors.add(data)
+		#FIXME: add test cases that make sure that if one module calls
+		#this returned method, other modules that called this function
+		#with the same arguments won't be affected. Then make sure this
+		#mod passes that test. E.g. by using a dict with a counter as
+		#key internally.
+		return lambda: self._authors.remove(data)
 
 	@property
 	def registeredAuthors(self):

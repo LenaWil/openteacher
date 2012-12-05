@@ -147,6 +147,7 @@ class WrtsApiModule(object):
 		del self._passwordSetting
 		del self._wrtsConnection
 		del self._storeEnabled
+		del self._action
 
 	def _retranslate(self):
 		global _

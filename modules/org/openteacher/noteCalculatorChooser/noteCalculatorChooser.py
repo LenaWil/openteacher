@@ -98,6 +98,7 @@ class NoteCalculatorChooserModule(object):
 		self.active = False
 
 		del self._setting
+		del self._modules
 
 def init(moduleManager):
 	return NoteCalculatorChooserModule(moduleManager)

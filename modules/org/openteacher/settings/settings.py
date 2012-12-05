@@ -37,6 +37,9 @@ class SettingsModule(object):
 		self._mm = moduleManager
 
 		self.type = "settings"
+		self.requires = (
+			self._mm.mods(type="dataStore"),
+		)
 
 	def initialize(self):
 		"""Connects to data store, should be called before doing

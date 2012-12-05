@@ -108,6 +108,12 @@ class SymbolsModule(object):
 		del self._modules
 		del self.name
 		del self.data
+		if hasattr(self, "_settings"):
+			del self._settings
+		if hasattr(self, "_setting"):
+			del self._setting
+		del self.internalName
+		del self.updated
 
 def init(moduleManager):
 	return SymbolsModule(moduleManager)

@@ -445,6 +445,7 @@ class WordsTeacherModule(object):
 
 		del self._modules
 		del self._activeWidgets
+		del self._settings
 
 def init(moduleManager):
 	return WordsTeacherModule(moduleManager)

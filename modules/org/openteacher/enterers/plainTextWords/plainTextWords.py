@@ -206,6 +206,7 @@ class PlainTextWordsEntererModule(object):
 		self._modules.default("active", type="buttonRegister").unregisterButton(self._button)
 
 		del self._references
+		del self._activeDialogs
 		del self._modules
 		del self._uiModule
 		del self._button

@@ -90,6 +90,9 @@ class TxtSaverModule(object):
 		del self._modules
 		del self.name
 		del self.saves
+		if hasattr(self, "_settings"):
+			del self._settings
+		del self._maxLenSetting
 
 	@property
 	def _compose(self):

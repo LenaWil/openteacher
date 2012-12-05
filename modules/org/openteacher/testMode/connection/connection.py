@@ -304,6 +304,9 @@ class TestModeConnectionModule(object):
 
 	def disable(self):
 		self.active = False
+
+		del self.connection
+		del self._modules
 	
 	def getConnection(self):
 		return self.connection

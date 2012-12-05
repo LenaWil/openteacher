@@ -721,6 +721,7 @@ class TestModeTeacherPanelModule(object):
 
 		self._action.remove()
 
+		del self._modules
 		del self._testMenu
 		del self._action
 		del self.dialogShower

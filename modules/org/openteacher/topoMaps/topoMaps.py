@@ -343,7 +343,9 @@ class TopoMapsModule(object):
 	def disable(self):
 		self.active = False
 
-		del self._settings
+		del self._modules
+		if hasattr(self, "_settings"):
+			del self._settings
 		del self._openGlSetting
 
 	def getEnterMap(self, enterWidget):

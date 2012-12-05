@@ -214,6 +214,7 @@ class RepeatAnswerTeachTypeModule(object):
 		del self._activeWidgets
 		del self.dataType
 		del self.name
+		del self._fadeDurationSetting
 
 	def createWidget(self, tabChanged, letterChosen, addSideWidget, removeSideWidget):
 		ratw = RepeatAnswerTeachWidget(

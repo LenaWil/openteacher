@@ -111,20 +111,12 @@ class UiControllerModule(object):
 		self._execute.startRunning.unhandle(self.run)
 
 		del self._modules
-		if hasattr(self, "_fileDialogs"):
-			del self._fileDialogs
-		if hasattr(self, "_printDialog"):
-			del self._printDialog
-		if hasattr(self, "_lessonTracker"):
-			del self._lessonTracker
-		if hasattr(self, "_saver"):
-			del self._saver
-		if hasattr(self, "_loader"):
-			del self._loader
-		if hasattr(self, "_printer"):
-			del self._printer
-
+		del self._fileDialogs
+		del self._printDialog
+		del self._lessonTracker
+		del self._saver
 		del self._execute
+		del self._store
 
 	def run(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

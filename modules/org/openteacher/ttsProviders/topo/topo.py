@@ -85,6 +85,10 @@ class TextToSpeechProviderTopo(object):
 		for module in self._mm.mods("active", type="lessonType"):
 			module.newItem.unhandle(self.itemSent)
 
+		del self._pronounceSetting
+		if hasattr(self, "_settings"):
+			del self._settings
+
 		self.active = False
 	
 	def itemSent(self, item):

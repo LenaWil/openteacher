@@ -164,7 +164,7 @@ class DialogShowerModule(object):
 		uiModule = self._modules.default("active", type="ui")
 		
 		self.dialogShower = DialogShower(logoImagePath, brokenImagePath, bigLogoImagePath, bigBrokenImagePath, uiModule)
-		
+
 		self.showError = _event.createEvent()
 		self.showMessage = _event.createEvent()
 		self.showBigMessage = _event.createEvent()
@@ -183,6 +183,17 @@ class DialogShowerModule(object):
 
 	def disable(self):
 		self.active = False
+
+		del self.dialogShower
+
+		del self.showError
+		del self.showMessage
+		del self.showBigMessage
+		del self.showBigError
+		del self.showBigDialog
+		del self.showDialog
+
+		del self._modules
 
 def init(moduleManager):
 	return DialogShowerModule(moduleManager)

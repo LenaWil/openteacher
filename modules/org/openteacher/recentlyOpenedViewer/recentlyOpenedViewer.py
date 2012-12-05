@@ -162,6 +162,7 @@ class RecentlyOpenedViewerModule(object):
 		self.active = False
 
 		del self._modules
+		del self._recentlyOpened
 		del self._viewers
 
 	def createViewer(self):

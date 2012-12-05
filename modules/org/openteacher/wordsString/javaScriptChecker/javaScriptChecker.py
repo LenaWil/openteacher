@@ -64,6 +64,7 @@ class JavascriptCheckerModule(object):
 	def disable(self):
 		self.active = False
 
+		del self._modules
 		del self._engine
 		del self.code
 

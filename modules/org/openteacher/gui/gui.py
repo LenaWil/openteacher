@@ -205,12 +205,12 @@ class GuiModule(object):
 
 		# Add Aero glass option on Windows
 		try:
-			self._settings = self._modules.default(type="settings")
+			settings = self._modules.default(type="settings")
 		except IndexError, e:
 			self._aeroSetting = None
 		else:
 			if platform.system() == "Windows" and platform.version() >= 6.0:
-				self._aeroSetting = self._settings.registerSetting(**{
+				self._aeroSetting = settings.registerSetting(**{
 					"internal_name": "org.openteacher.gui.aero",
 					"name": "Use Aero glass (experimental)",
 					"type": "boolean",
@@ -320,9 +320,12 @@ class GuiModule(object):
 		del self._modules
 		del self._ui
 		del self._fileTabs
+		del self._widget
+		del self._aeroSetting
+		del self._app
+
 		del self.tabChanged
 		del self.applicationActivityChanged
-		del self._widget
 
 		del self.fileMenu
 		del self.newAction
@@ -334,6 +337,9 @@ class GuiModule(object):
 
 		del self.editMenu
 		del self.settingsAction
+
+		del self.viewMenu
+		del self.fullscreenAction
 
 		del self.helpMenu
 		del self.documentationAction

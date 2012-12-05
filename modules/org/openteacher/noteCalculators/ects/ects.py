@@ -94,10 +94,11 @@ class ECTSNoteCalculatorModule(object):
 
 	def disable(self):
 		self.active = False
+
 		del self.name
 		del self._modules
 		del self._percents
-		del self._calculateAveragePercents
+		del self._averagePercents
 
 def init(moduleManager):
 	return ECTSNoteCalculatorModule(moduleManager)

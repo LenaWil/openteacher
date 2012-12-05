@@ -156,6 +156,7 @@ class OpenTeacherAuthorsModule(object):
 	def disable(self):
 		self.active = False
 
+		del self._modules
 		del self._authors
 		del self._removers
 

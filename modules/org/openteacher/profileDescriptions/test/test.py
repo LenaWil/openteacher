@@ -18,44 +18,33 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
+import unittest
 
-class ModuleGraphModule(object):
+class TestCase(unittest.TestCase):
+	def test(self):
+		for mod in self._mm.mods("active", type="profileDescription"):
+			self.assertTrue(mod.desc["name"])
+			self.assertTrue(mod.desc["niceName"])
+			self.assertIsNotNone(mod.desc["advanced"])
+
+class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(ModuleGraphModule, self).__init__(*args, **kwargs)
+		super(TestModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "moduleGraph"
-
+		self.type = "test"
 		self.requires = (
-			self._mm.mods(type="execute"),
-			self._mm.mods(type="moduleGraphBuilder"),
+			self._mm.mods(type="profileDescription"),
 		)
-		self.priorities = {
-			"default": -1,
-			"module-graph": 0,
-		}
 
 	def enable(self):
-		self._modules = set(self._mm.mods(type="modules")).pop()
-		self._modules.default(type="execute").startRunning.handle(self.run)
-
+		self.TestCase = TestCase
+		self.TestCase._mm = self._mm
 		self.active = True
-
-	def run(self):
-		try:
-			outputPath = sys.argv[1]
-		except IndexError:
-			sys.stderr.write("Please specify an image path to output to as last command line argument.\n")
-			return
-
-		mgb = self._modules.default("active", type="moduleGraphBuilder")
-		mgb.buildModuleGraph(outputPath)
 
 	def disable(self):
 		self.active = False
-
-		del self._modules
+		del self.TestCase
 
 def init(moduleManager):
-	return ModuleGraphModule(moduleManager)
+	return TestModule(moduleManager)

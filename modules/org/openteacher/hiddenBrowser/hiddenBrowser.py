@@ -277,6 +277,9 @@ class HiddenBrowserModule(object):
 		self.active = False
 		
 		del self._modules
+		del self._enabled
+		del self._lessons
+		del self.browser
 
 def init(moduleManager):
 	return HiddenBrowserModule(moduleManager)

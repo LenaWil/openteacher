@@ -257,6 +257,8 @@ class TypingTeachTypeModule(object):
 		del self.dataType
 		del self.name
 		del self._modules
+		del self.word
+		del self.graphics
 
 	def _retranslate(self):
 		global _, ngettext

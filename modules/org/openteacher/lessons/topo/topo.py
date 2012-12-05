@@ -96,6 +96,7 @@ class TeachTopoLessonModule(object):
 	def disable(self):
 		self.active = False
 
+		del self._modules
 		del self._lessons
 		del self._button
 		del self.dataType

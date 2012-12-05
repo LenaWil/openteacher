@@ -113,6 +113,8 @@ class TranslatorModule(object):
 
 		del self._modules
 		del self.languageChanged
+		del self.languageChangeDone
+		del self._languageSetting
 
 def init(moduleManager):
 	return TranslatorModule(moduleManager)

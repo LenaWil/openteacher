@@ -224,6 +224,7 @@ class WordsLessonModule(object):
 		del self._lessons
 		del self.lessonCreated
 		del self._button
+		del self.lessonCreationFinished
 
 	def createLesson(self, lessonData=None):
 		if not lessonData:

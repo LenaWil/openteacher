@@ -66,6 +66,8 @@ class TopoTestTypeModule(object):
 	def disable(self):
 		self.active = False
 
+		del self._modules
+
 	def updateList(self, list, test):
 		self._list = list
 		self._test = test

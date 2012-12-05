@@ -98,13 +98,13 @@ class MediaLessonModule(object):
 	def disable(self):
 		self.active = False
 
+		del self._modules
 		del self._lessons
 		del self._button
-		del self.dataType
 		del self.lessonCreated
 		del self.lessonCreationFinished
-	
-	def createLesson(self):		
+
+	def createLesson(self):	
 		module = self._modules.default("active", type="ui")
 
 		self.enterWidget = self._modules.default("active", type="mediaEnterer").createMediaEnterer()

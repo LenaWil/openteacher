@@ -147,16 +147,16 @@ class TextToSpeechModule(object):
 			except IndexError:
 				pass
 		else:
-			self._settings = self._modules.default(type="settings")
+			settings = self._modules.default(type="settings")
 			
 			# Add settings
-			self._ttsVoice = self._settings.registerSetting(**{
+			self._ttsVoice = settings.registerSetting(**{
 				"internal_name": "org.openteacher.textToSpeech.voice",
 				"type": "option",
 				"defaultValue": self.tts.getVoices()[0][1],
 				"options": self.tts.getVoices(),
 			})
-			self._ttsSpeed = self._settings.registerSetting(**{
+			self._ttsSpeed = settings.registerSetting(**{
 				"internal_name": "org.openteacher.textToSpeech.speed",
 				"type": "number",
 				"defaultValue": 120,
@@ -196,18 +196,19 @@ class TextToSpeechModule(object):
 
 	def disable(self):
 		del self._modules
-		try:
+		if hasattr(self, "tts"):
 			del self.tts
-		except AttributeError:
-			pass
 		del self.say
+		del self._ttsVoice
+		del self._ttsSpeed
+
 		self.active = False
 	
 	def newWord(self, word, thread=True):
 		# First voice as default/if none is selected
 		voiceid = self.tts.getVoices()[0][1]
 		# Get the selected voice
-		if self._ttsVoice != None:
+		if self._ttsVoice is not None:
 			voiceid = self._ttsVoice["value"]
 		speed = 120
 		# Get the selected speed

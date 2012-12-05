@@ -73,5 +73,7 @@ class SettingsFiltererModule(object):
 	def disable(self):
 		self.active = False
 
+		del self._modules
+
 def init(moduleManager):
 	return SettingsFiltererModule(moduleManager)

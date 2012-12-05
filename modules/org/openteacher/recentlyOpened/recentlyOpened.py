@@ -70,11 +70,11 @@ class RecentlyOpenedModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.store = self._modules.default(type="dataStore").store
+		store = self._modules.default(type="dataStore").store
 		try:
-			self._recentlyOpened = self.store["org.openteacher.recentlyOpened"]
+			self._recentlyOpened = store["org.openteacher.recentlyOpened"]
 		except KeyError:
-			self._recentlyOpened = self.store["org.openteacher.recentlyOpened"] = []
+			self._recentlyOpened = store["org.openteacher.recentlyOpened"] = []
 
 		self.updated = self._modules.default(type="event").createEvent()
 
@@ -120,7 +120,10 @@ class RecentlyOpenedModule(object):
 	def disable(self):
 		self.active = False
 
+		del self.updated
+		del self._modules
 		del self._recentlyOpened
+		del self._sizeSetting
 
 def init(moduleManager):
 	return RecentlyOpenedModule(moduleManager)

@@ -240,5 +240,8 @@ class TestViewerModule(object):
 	def disable(self):
 		self.active = False
 
+		del self._testViewers
+		del self._modules
+
 def init(moduleManager):
 	return TestViewerModule(moduleManager)

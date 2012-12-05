@@ -126,7 +126,8 @@ class KgmConverterModule(object):
 	def disable(self):
 		self.active = False
 
-                del Image
+		global Image
+		del Image
 		del self._modules
 
 def init(moduleManager):
