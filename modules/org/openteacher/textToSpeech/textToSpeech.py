@@ -198,9 +198,12 @@ class TextToSpeechModule(object):
 		del self._modules
 		if hasattr(self, "tts"):
 			del self.tts
-		del self.say
-		del self._ttsVoice
-		del self._ttsSpeed
+		if hasattr(self, "say"):
+			del self.say
+		if hasattr(self, "_ttsVoice"):
+			del self._ttsVoice
+		if hasattr(self, "_ttsSpeed"):
+			del self._ttsSpeed
 
 		self.active = False
 	
