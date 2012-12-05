@@ -21,26 +21,44 @@
 import unittest
 
 class TestCase(unittest.TestCase):
-	def testAmountOfColumns(self):
-		for mod in self._mm.mods("active", type="chars"):
-			for row in mod.data:
-				self.assertEquals(len(row), 6)
+	def testAddButton(self):
+		"""Test if the addButton event works"""
 
-	def testRowLengthNotZero(self):
-		for mod in self._mm.mods("active", type="chars"):
-			self.assertFalse(len(mod.data) == 0)
+		def func(myB):
+			data["myB"] = myB
+		for mod in self._mm.mods("active", type="buttonRegister"):
+			data = {}
+			mod.addButton.handle(func)
+			b = mod.registerButton("category")
+			self.assertEqual(b, data["myB"])
 
-	def testUpdated(self):
-		def func():
-			data["called"] = True
+	def testRemoveButton(self):
+		"""Test if the removeButton event works"""
 
-		for mod in self._mm.mods("active", type="chars"):
-			data = {"called": False}
-			if not hasattr(mod, "updated"):
-				continue
-			mod.updated.connect(myFunc)
-			mod.sendUpdated()
-			self.assertTrue(data["called"])
+		def func(myB):
+			data["myB"] = myB
+		for mod in self._mm.mods("active", type="buttonRegister"):
+			data = {}
+			mod.removeButton.handle(func)
+			b = mod.registerButton("category")
+			mod.unregisterButton(b)
+			self.assertEqual(b, data["myB"])
+
+	def testRegisterButton(self):
+		"""Test if the button interface is correct"""
+
+		def checkEvent(item):
+			self.assertIsNotNone(item.handle)
+			self.assertIsNotNone(item.unhandle)
+			self.assertIsNotNone(item.send)
+
+		for mod in self._mm.mods("active", type="buttonRegister"):
+			b = mod.registerButton("myCategory")
+			self.assertEqual(b.category, "myCategory")
+			checkEvent(b.clicked)
+			checkEvent(b.changeText)
+			checkEvent(b.changePriority)
+			checkEvent(b.changeIcon)
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -48,8 +66,8 @@ class TestModule(object):
 		self._mm = moduleManager
 
 		self.type = "test"
-		self.uses = (
-			self._mm.mods(type="chars"),
+		self.requires = (
+			self._mm.mods(type="buttonRegister"),
 		)
 
 	def enable(self):

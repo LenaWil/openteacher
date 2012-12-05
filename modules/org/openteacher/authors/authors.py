@@ -18,6 +18,8 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+import collections
+
 class AuthorsModule(object):
 	"""This module keeps track of the authors of OpenTeacher. Every
 	   installed module can use it to add authors itself. This way, it's
@@ -39,15 +41,14 @@ class AuthorsModule(object):
 		"""Registers author `name` for his/her work in `category`. Both
 		   arguments should be convertible with `unicode()`.
 
+		   Returns a function which, when called, removes the author
+		   again from the list. Handy if you want to retranslate the
+		   category for example.
+
 		"""
 		data = (unicode(category), unicode(name))
-		self._authors.add(data)
-		#FIXME: add test cases that make sure that if one module calls
-		#this returned method, other modules that called this function
-		#with the same arguments won't be affected. Then make sure this
-		#mod passes that test. E.g. by using a dict with a counter as
-		#key internally.
-		return lambda: self._authors.remove(data)
+		self._authors.update((data,))
+		return lambda: self._authors.subtract((data,))
 
 	@property
 	def registeredAuthors(self):
@@ -64,14 +65,16 @@ class AuthorsModule(object):
 		   multiple times.
 
 		"""
-		return self._authors.copy()
+		return set((a for a in self._authors if self._authors[a] > 0))
 
 	def enable(self):
-		self._authors = set()
+		self._authors = collections.Counter()
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
 		del self._authors
 
 def init(moduleManager):

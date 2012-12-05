@@ -23,6 +23,12 @@ import math
 import uuid
 
 class TestCase(unittest.TestCase):
+	def setUp(self):
+		for mod in self._mm.mods("active", type="authors"):
+			#should clear state between runs
+			mod.disable()
+			mod.enable()
+
 	def testAdding(self):
 		for mod in self._mm.mods("active", type="authors"):
 			mod.registerAuthor("some work", "name")
@@ -36,6 +42,19 @@ class TestCase(unittest.TestCase):
 
 			item = (u"Being great with circles", str(math.pi))
 			self.assertEqual(list(mod.registeredAuthors).count(item), 1)
+
+	def testAddingMultipleTimesAndRemoving(self):
+		for mod in self._mm.mods("active", type="authors"):
+			remove1 = mod.registerAuthor("Being great with circles", math.pi)
+			remove2 = mod.registerAuthor("Being great with circles", math.pi)
+
+			item = (u"Being great with circles", str(math.pi))
+
+			remove1()
+			self.assertEqual(list(mod.registeredAuthors).count(item), 1)
+
+			remove2()
+ 			self.assertEqual(list(mod.registeredAuthors).count(item), 0)
 
 	def testModifyingMods(self):
 		for mod in self._mm.mods("active", type="authors"):

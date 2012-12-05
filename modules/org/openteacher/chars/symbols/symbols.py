@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2009-2011, Marten de Vries
+#	Copyright 2009-2012, Marten de Vries
 #	Copyright 2008-2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -61,7 +61,7 @@ class SymbolsModule(object):
 		
 		try:
 			self._settings = self._modules.default(type="settings")
-		except IndexError, e:
+		except IndexError:
 			self.data = defaultSetting
 		else:
 			self._setting = self._settings.registerSetting(**{

@@ -24,6 +24,9 @@ import glob
 
 class TestCase(unittest.TestCase):
 	def testFilesWithTranslations(self):
+		"""Test if all files specified in filesWithTranslations exist.
+
+		"""
 		for mod in self._mm.mods:
 			if not hasattr(mod, "filesWithTranslations"):
 				continue
@@ -34,6 +37,10 @@ class TestCase(unittest.TestCase):
 				self.assertTrue(os.path.exists(path))
 
 	def testPotFiles(self):
+		"""Test if every module with a translations dir has a .pot file
+		   in place, which is required.
+
+		"""
 		potFiles = set()
 		for mod in self._mm.mods:
 			base = os.path.dirname(mod.__class__.__file__)
@@ -46,12 +53,27 @@ class TestCase(unittest.TestCase):
 			self.assertNotIn(matches[0], potFiles)
 			potFiles.add(matches[0])
 
+	def testLanguageChanged(self):
+		"""Tests if:
+		   1. translator modss have a working sendLanguageChanged
+		      method.
+		   2. modules subscribing to events offered by the translator
+		      modules are doing that correctly (i.e. don't crash when
+		      the actual events are send.)
+
+		"""
+		for mod in self._mm.mods("active", type="translator"):
+			mod.sendLanguageChanged()
+
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "test"
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
 
 	def enable(self):
 		self.TestCase = TestCase
