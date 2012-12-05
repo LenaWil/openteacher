@@ -306,47 +306,46 @@ class GuiModule(object):
 	def disable(self):
 		self.active = False
 
-		if hasattr(self, "_app"):
-			try:
-				br = self._modules.default("active", type="buttonRegister")
-			except IndexError:
-				pass
-			else:
-				#we don't unhandle the event, since PyQt4 does some weird
-				#memory stuff making it impossible to find the right item,
-				#and it's unneeded anyway.
-				br.unregisterButton(self._loadButton)
-				del self._loadButton
+		try:
+			br = self._modules.default("active", type="buttonRegister")
+		except IndexError:
+			pass
+		else:
+			#we don't unhandle the event, since PyQt4 does some weird
+			#memory stuff making it impossible to find the right item,
+			#and it's unneeded anyway.
+			br.unregisterButton(self._loadButton)
+			del self._loadButton
 
-			del self._modules
-			del self._ui
-			del self._fileTabs
-			del self._widget
-			del self._aeroSetting
-			del self._app
+		del self._modules
+		del self._ui
+		del self._fileTabs
+		del self._widget
+		del self._aeroSetting
+		del self._app
 
-			del self.tabChanged
-			del self.applicationActivityChanged
+		del self.tabChanged
+		del self.applicationActivityChanged
 
-			del self.fileMenu
-			del self.newAction
-			del self.openAction
-			del self.saveAction
-			del self.saveAsAction
-			del self.printAction
-			del self.quitAction
+		del self.fileMenu
+		del self.newAction
+		del self.openAction
+		del self.saveAction
+		del self.saveAsAction
+		del self.printAction
+		del self.quitAction
 
-			del self.editMenu
-			del self.settingsAction
+		del self.editMenu
+		del self.settingsAction
 
-			del self.viewMenu
-			del self.fullscreenAction
+		del self.viewMenu
+		del self.fullscreenAction
 
-			del self.helpMenu
-			del self.documentationAction
-			del self.aboutAction
+		del self.helpMenu
+		del self.documentationAction
+		del self.aboutAction
 
-			del self.statusViewer
+		del self.statusViewer
 
 	def _retranslate(self):
 		global _

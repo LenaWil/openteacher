@@ -47,5 +47,8 @@ class QtAppModule(object):
 	def disable(self):
 		self.active = False
 
+		if hasattr(self, "_app"):
+			del self._app
+
 def init(moduleManager):
 	return QtAppModule(moduleManager)
