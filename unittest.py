@@ -18,8 +18,8 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-#abstracts the json importing process. Hackish so this file can be
-#named json.py, but it works! :D
+#abstracts the unittest importing process. Hackish so this file can be
+#named unittest.py, but it works! :D
 
 import sys as _sys
 
