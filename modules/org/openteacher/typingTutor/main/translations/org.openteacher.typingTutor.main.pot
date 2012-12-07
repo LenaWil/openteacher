@@ -1,0 +1,50 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenTeacher 3.1\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-12-07 21:42+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.py:139
+msgid "Welcome, please choose your account by clicking on it."
+msgstr ""
+
+#: main.py:140
+msgid "I am a new user"
+msgstr ""
+
+#: main.py:145
+msgid "Please choose a username."
+msgstr ""
+
+#: main.py:146
+msgid "What username would you like to have?"
+msgstr ""
+
+#: main.py:154
+msgid "Username taken"
+msgstr ""
+
+#: main.py:155
+msgid "That username is already taken. Please try again."
+msgstr ""
+
+#: main.py:187
+msgid "Start exercise"
+msgstr ""
+
+#: main.py:309 main.py:319
+msgid "Typing Tutor"
+msgstr ""

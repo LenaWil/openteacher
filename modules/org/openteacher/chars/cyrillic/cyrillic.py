@@ -23,7 +23,7 @@ class CyrillicModule(object):
 		super(CyrillicModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "onscreenKeyboardData"
+		self.type = "chars"
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)

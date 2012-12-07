@@ -21,12 +21,12 @@
 
 import weakref
 
-def getOnscreenKeyboardWidget():
-	class OnscreenKeyboardWidget(QtGui.QWidget):
+def getCharsKeyboardWidget():
+	class CharsKeyboardWidget(QtGui.QWidget):
 		letterChosen = QtCore.pyqtSignal([object])
 
 		def __init__(self, characters, *args,  **kwargs):
-			super(OnscreenKeyboardWidget, self).__init__(*args, **kwargs)
+			super(CharsKeyboardWidget, self).__init__(*args, **kwargs)
 
 			topWidget = QtGui.QWidget()
 
@@ -76,7 +76,7 @@ def getOnscreenKeyboardWidget():
 		def _letterChosen(self):
 			text = unicode(self.sender().text())
 			self.letterChosen.emit(text)
-	return OnscreenKeyboardWidget
+	return CharsKeyboardWidget
 
 def getKeyboadsWidget():
 	class KeyboardsWidget(QtGui.QTabWidget):
@@ -92,7 +92,7 @@ def getKeyboadsWidget():
 			self.clear()
 			for module in self._data:
 				#create tab and add it to the widget
-				tab = OnscreenKeyboardWidget(module.data)
+				tab = CharsKeyboardWidget(module.data)
 				self.addTab(tab, module.name)
 				#connect the event that handles letter selection
 				tab.letterChosen.connect(self.letterChosen.send)
@@ -101,16 +101,16 @@ def getKeyboadsWidget():
 					module.updated.handle(self.update)
 	return KeyboardsWidget
 
-class OnscreenKeyboardModule(object):
+class CharsKeyboardModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(OnscreenKeyboardModule, self).__init__(*args, **kwargs)
+		super(CharsKeyboardModule, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
-		self.type = "onscreenKeyboard"
+		self.type = "charsKeyboard"
 		self.requires = (
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="event"),
-			self._mm.mods(type="onscreenKeyboardData"),
+			self._mm.mods(type="chars"),
 			self._mm.mods(type="translator"),
 		)
 
@@ -120,9 +120,9 @@ class OnscreenKeyboardModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		global KeyboardsWidget, OnscreenKeyboardWidget
+		global KeyboardsWidget, CharsKeyboardWidget
 		KeyboardsWidget = getKeyboadsWidget()
-		OnscreenKeyboardWidget = getOnscreenKeyboardWidget()
+		CharsKeyboardWidget = getCharsKeyboardWidget()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._widgets = set()
@@ -145,7 +145,7 @@ class OnscreenKeyboardModule(object):
 	def createWidget(self):
 		kw = KeyboardsWidget(
 			self._modules.default(type="event").createEvent,
-			self._modules.sort("active", type="onscreenKeyboardData")
+			self._modules.sort("active", type="chars")
 		)
 		self._widgets.add(weakref.ref(kw))
 		return kw
@@ -157,4 +157,4 @@ class OnscreenKeyboardModule(object):
 				widget.update()
 
 def init(moduleManager):
-	return OnscreenKeyboardModule(moduleManager)
+	return CharsKeyboardModule(moduleManager)

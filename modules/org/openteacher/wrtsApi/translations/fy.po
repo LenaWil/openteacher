@@ -7,46 +7,46 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-12-02 13:07+0100\n"
+"POT-Creation-Date: 2012-12-07 21:40+0100\n"
 "PO-Revision-Date: 2012-11-23 14:59+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Frisian <fy@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-12-03 04:43+0000\n"
 "X-Generator: Launchpad (build 16319)\n"
-"Language: \n"
 
-#: wrtsApi.py:167
+#: wrtsApi.py:168
 msgid "Import from WRDS"
 msgstr "Ynfoegje fan WRTS"
 
-#: wrtsApi.py:168
+#: wrtsApi.py:169
 msgid "Export to WRDS"
 msgstr "Fuortskriuwe nei WRTS"
 
-#: wrtsApi.py:171
+#: wrtsApi.py:172
 msgid "Email"
 msgstr "E-mail"
 
-#: wrtsApi.py:172
+#: wrtsApi.py:173
 msgid "Password"
 msgstr "Wachtwurd"
 
-#: wrtsApi.py:174
+#: wrtsApi.py:175
 msgid "Input and output"
 msgstr "Ynfier en útfier"
 
-#: wrtsApi.py:175
+#: wrtsApi.py:176
 msgid "WRDS Login credentials"
 msgstr "WRTS oanmelddata"
 
-#: wrtsApi.py:188
+#: wrtsApi.py:189
 msgid "Invalid login credentials"
 msgstr "Ûnjildiche oanmelddata"
 
-#: wrtsApi.py:189
+#: wrtsApi.py:190
 msgid ""
 "WRDS didn't accept the login credentials. Are you sure you entered your e-"
 "mail and password correctly?"
@@ -54,11 +54,11 @@ msgstr ""
 "WRTS akseptearde jo oanmelddata net. Witte jo seker dat jo jo e-mail en "
 "wachtwuld korrekt ynfierd hawwe?"
 
-#: wrtsApi.py:195
+#: wrtsApi.py:196
 msgid "No WRDS connection"
 msgstr "Gjin WRTS-ferbining"
 
-#: wrtsApi.py:196
+#: wrtsApi.py:197
 msgid ""
 "WRDS didn't accept the connection. Are you sure that your internet "
 "connection works and WRDS is online?"
@@ -66,11 +66,11 @@ msgstr ""
 "WRTS akseptearde de ferbining net. Witte jo seker dat jo mei ynternet ferbûn "
 "binne en dat WRTS online is?"
 
-#: wrtsApi.py:259
+#: wrtsApi.py:260
 msgid "No word list metadata given."
 msgstr "Gjin wurdlist-details joen."
 
-#: wrtsApi.py:260
+#: wrtsApi.py:261
 msgid ""
 "Please fill in the wordlist title, question language and answer language "
 "first. Then try again."
@@ -78,39 +78,39 @@ msgstr ""
 "Folje alsjebleaft earst de titel, taal fan de fragen en taal fan de "
 "antwurden fan de wurdlist yn. Besykje it dernei nochris."
 
-#: wrtsApi.py:270
+#: wrtsApi.py:271
 msgid "Word list succesfully exported to WRDS."
 msgstr "Wurdlist mei sukses fuortskriuwn nei WRTS."
 
-#: wrtsApi.py:314
+#: wrtsApi.py:315
 msgid "Can't find the share"
 msgstr "Kin de share net fine"
 
-#: wrtsApi.py:315
+#: wrtsApi.py:316
 #, python-format
 msgid "Can't find the share you requested. ('%s') Are you sure it exists?"
 msgstr ""
 "Kin de share dy't jo oanfrege hawwe net fine. ('%s') Binne jo wis dat it "
 "bestiet?"
 
-#: wrtsApi.py:345
+#: wrtsApi.py:346
 msgid "No list selected"
 msgstr "Gjin list selektearre"
 
-#: wrtsApi.py:346
+#: wrtsApi.py:347
 msgid "No list was selected. Please try again."
 msgstr "Gjin list wie selektearre. Besykje it alsjebleaft nochris."
 
-#: wrtsApi.py:373
+#: wrtsApi.py:374
 msgid "Can't show the result"
 msgstr "Kin it resultaat net sjen litte."
 
-#: wrtsApi.py:374
+#: wrtsApi.py:375
 msgid "Can't open the resultive word list, because it can't be shown."
 msgstr ""
 "Kin de resultearende wurdlist net iepenje, want it kin net sjen litten wurre."
 
-#: wrtsApi.py:378
+#: wrtsApi.py:379
 msgid "The word list was imported from WRDS successfully."
 msgstr "De wurdlist is mei sukses ynfoegd fan WRTS."
 

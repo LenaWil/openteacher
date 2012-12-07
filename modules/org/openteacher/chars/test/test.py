@@ -38,7 +38,7 @@ class TestCase(unittest.TestCase):
 			data = {"called": False}
 			if not hasattr(mod, "updated"):
 				continue
-			mod.updated.connect(myFunc)
+			mod.updated.handle(func)
 			mod.sendUpdated()
 			self.assertTrue(data["called"])
 
@@ -48,7 +48,7 @@ class TestModule(object):
 		self._mm = moduleManager
 
 		self.type = "test"
-		self.uses = (
+		self.requires = (
 			self._mm.mods(type="chars"),
 		)
 

@@ -267,7 +267,7 @@ class ModulesHandler(object):
 		for method in methods:
 			methodObj = getattr(mod, method)
 			methodDocs[method] = self._format(methodObj.__doc__)
-			methodArgs[method] = inspect.getargspec(methodObj)[0]
+			methodArgs[method] = self._constructSignature(inspect.getargspec(methodObj))
 
 		fileData = []
 		for root, dirs, files in os.walk(os.path.dirname(mod.__class__.__file__)):
@@ -311,6 +311,28 @@ class ModulesHandler(object):
 			"pygmentsStyle": formatter.get_style_defs('.source') if "formatter" in vars() else "",
 		})
 	modules.exposed = True
+
+	def _constructSignature(self, data):
+		try:
+			args = reversed(data.args)
+		except TypeError:
+			args = []
+		try:
+			defaults = list(reversed(data.defaults))
+		except TypeError:
+			defaults = []
+
+		result = []
+		for i, arg in enumerate(args):
+			try:
+				result.insert(0, "%s=%s" % (arg, defaults[i]))
+			except IndexError:
+				result.insert(0, arg)
+		if data.varargs:
+			result.append("*" + data.varargs)
+		if data.keywords:
+			result.append("**" + data.keywords)
+		return result
 
 class CodeDocumentationModule(object):
 	"""This module generates code documentation for OpenTeacher

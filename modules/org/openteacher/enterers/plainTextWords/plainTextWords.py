@@ -20,7 +20,7 @@
 
 def getEnterPlainTextDialog():
 	class EnterPlainTextDialog(QtGui.QDialog):
-		def __init__(self, parseList, onscreenKeyboard, *args, **kwargs):
+		def __init__(self, parseList, charsKeyboard, *args, **kwargs):
 			super(EnterPlainTextDialog, self).__init__(*args, **kwargs)
 
 			self._parseList = parseList
@@ -39,10 +39,10 @@ def getEnterPlainTextDialog():
 			splitter = QtGui.QSplitter()
 			splitter.addWidget(self._textEdit)
 			splitter.setStretchFactor(0, 3)
-			if onscreenKeyboard:
-				splitter.addWidget(onscreenKeyboard)
+			if charsKeyboard:
+				splitter.addWidget(charsKeyboard)
 				splitter.setStretchFactor(1, 1)
-				onscreenKeyboard.letterChosen.handle(self._addLetter)
+				charsKeyboard.letterChosen.handle(self._addLetter)
 
 			layout = QtGui.QVBoxLayout()
 			layout.addWidget(self._label)
@@ -91,7 +91,7 @@ class PlainTextWordsEntererModule(object):
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
-			self._mm.mods(type="onscreenKeyboard"),
+			self._mm.mods(type="charsKeyboard"),
 		)
 		x = 960
 		self.priorities = {
@@ -107,11 +107,11 @@ class PlainTextWordsEntererModule(object):
 		self.filesWithTranslations = ("plainTextWords.py",)
 
 	@property
-	def _onscreenKeyboard(self):
+	def _charsKeyboard(self):
 		try:
 			return self._modules.default(
 				"active",
-				type="onscreenKeyboard"
+				type="charsKeyboard"
 			).createWidget()
 		except IndexError:
 			return
@@ -170,7 +170,7 @@ class PlainTextWordsEntererModule(object):
 			type="wordListStringParser"
 		).parseList
 
-		eptd = EnterPlainTextDialog(parseList, self._onscreenKeyboard)
+		eptd = EnterPlainTextDialog(parseList, self._charsKeyboard)
 		self._activeDialogs.add(eptd)
 
 		tab = self._uiModule.addCustomTab(eptd)

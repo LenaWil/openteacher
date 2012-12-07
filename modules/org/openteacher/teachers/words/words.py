@@ -155,6 +155,9 @@ def getTeachWidget():
 			self._teachTypeWidgets = []
 			for module in self._modules.sort("active", type="teachType"): 
 				if module.dataType in ("all", "words"):
+					#FIXME: charsKeyboard is in uses, not requires, but
+					#is passed here nonetheless... That makes it crash
+					#when the mod isn't there.
 					widget = module.createWidget(self.tabChanged, self._keyboardWidget.letterChosen, self._lessonWidget.addSideWidget, self._lessonWidget.removeSideWidget)
 					self._teachTypeWidgets.append(widget)
 					self._lessonWidget.teachTabWidget.addTab(widget, module.name)
@@ -323,7 +326,7 @@ class WordsTeacherModule(object):
 		self.filesWithTranslations = ("words.py",)
 
 	def createWordsTeacher(self):
-		tw = TeachWidget(self._mm, self._modules, self._settings, self._widgets, self._onscreenKeyboard, self._applicationActivityChanged)
+		tw = TeachWidget(self._mm, self._modules, self._settings, self._widgets, self._charsKeyboard, self._applicationActivityChanged)
 		self._activeWidgets.add(weakref.ref(tw))
 		self._retranslate()
 
@@ -334,11 +337,11 @@ class WordsTeacherModule(object):
 		return self._modules.default("active", type="settingsWidgets").widgets
 
 	@property
-	def _onscreenKeyboard(self):
+	def _charsKeyboard(self):
 		try:
 			return self._modules.default(
 				"active",
-				type="onscreenKeyboard"
+				type="charsKeyboard"
 			).createWidget()
 		except IndexError:
 			return

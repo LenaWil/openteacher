@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.1\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-12-02 13:07+0100\n"
+"POT-Creation-Date: 2012-12-07 21:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,32 +17,32 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: uiController.py:191
+#: uiController.py:183
 msgid ""
 "Couldn't open the file, because the file type is unknown or it can't be "
 "shown."
 msgstr ""
 
-#: uiController.py:194
+#: uiController.py:186
 msgid ""
 "Couldn't open the file, is it still there and do we have the right to open "
 "it?"
 msgstr ""
 
-#: uiController.py:197
+#: uiController.py:189
 msgid "Couldn't open the file, it seems to be corrupted."
 msgstr ""
 
-#: uiController.py:199
+#: uiController.py:191
 msgid "File opened succesfully."
 msgstr ""
 
-#: uiController.py:206
+#: uiController.py:198
 msgid ""
 "Couldn't save the file, is there enough free disk space and do we have the "
 "right to write to the specified location?"
 msgstr ""
 
-#: uiController.py:208
+#: uiController.py:200
 msgid "File saved succesfully."
 msgstr ""

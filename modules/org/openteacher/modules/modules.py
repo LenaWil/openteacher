@@ -56,7 +56,7 @@ class ModulesModule(object):
 		   the arguments
 
 		"""
-		mods = set(self._mm.mods(*args, **kwargs))
+		mods = self._mm.mods(*args, **kwargs)
 		try:
 			return min(mods, key=self._getPriority)
 		except ValueError:

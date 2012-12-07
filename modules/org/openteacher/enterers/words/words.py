@@ -413,7 +413,7 @@ class WordsEntererModule(object):
 		}
 		self.uses = (
 			self._mm.mods(type="translator"),
-			self._mm.mods(type="onscreenKeyboard"),
+			self._mm.mods(type="charsKeyboard"),
 		)
 		self.requires = (
 			self._mm.mods(type="ui"),
@@ -423,11 +423,11 @@ class WordsEntererModule(object):
 		self.filesWithTranslations = ("words.py",)
 
 	@property
-	def _onscreenKeyboard(self):
+	def _charsKeyboard(self):
 		try:
 			return self._modules.default(
 				"active",
-				type="onscreenKeyboard"
+				type="charsKeyboard"
 			).createWidget()
 		except IndexError:
 			return
@@ -448,7 +448,7 @@ class WordsEntererModule(object):
 
 	def createWordsEnterer(self):
 		ew = EnterWidget(
-			self._onscreenKeyboard,
+			self._charsKeyboard,
 			self._compose,
 			self._parse
 		)

@@ -24,7 +24,7 @@ class SymbolsModule(object):
 		super(SymbolsModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "onscreenKeyboardData"
+		self.type = "chars"
 		self.requires = (
 			self._mm.mods(type="event"),
 		)
