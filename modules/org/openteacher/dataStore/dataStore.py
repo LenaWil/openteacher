@@ -30,19 +30,22 @@ class JSONShelve(dict):
 		self.filepath = filepath
 
 		if os.path.exists(self.filepath):
-			fp = open(self.filepath, 'r')
-			d = json.load(fp)
+			with open(self.filepath, "r") as fp:
+				try:
+					d = json.load(fp)
+				except json.decoder.JSONDecodeError, e:
+					#file corrupted. Print for debugging purposes, but
+					#letting the whole program crash for a corrupt
+					#settings file isn't done.
+					print e
+					return
 			# Copy dict to self
 			for key, value in d.iteritems():
 				self[key] = value
-			fp.close()
-		else:
-			pass
 
 	def write(self):
-		fp = open(self.filepath, 'w+')
-		json.dump(self, fp)
-		fp.close()
+		with open(self.filepath, "w") as fp:
+			json.dump(self, fp)
 
 class DataStoreModule(object):
 	"""This module offers a data store, which allows data to be saved
