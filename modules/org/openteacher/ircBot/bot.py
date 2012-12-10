@@ -64,6 +64,7 @@ class OpenTeacherBot(irc.IRCClient):
 		".ot-test-coverage": "http://vps.marten-de-vries.nl/openteacher-test-coverage/",
 		".ogd-test-coverage": "http://vps.marten-de-vries.nl/opengamedesigner-test-coverage/",
 		".vps": "http://vps.marten-de-vries.nl/",
+		".peps": "http://www.python.org/dev/peps/",
 	}
 	factoids[".openteacher"] = factoids[".website"]
 	factoids[".launchpad"] = factoids[".lp"]
@@ -188,10 +189,24 @@ class OpenTeacherBot(irc.IRCClient):
 			else:
 				self.msg(target, url)
 
-		if msg.startswith(".answer ") or msg.startswith(".ask") or msg.startswith(".question"):
+		if msg.startswith(".answer ") or msg.startswith(".ask ") or msg.startswith(".question "):
 			q = msg.split(" ", 1)[1].replace(self.nickname, "")
 			q = urllib.quote_plus(q)
 			self.msg(target, "http://www.wolframalpha.com/input/?i=%s" % q)
+
+		if msg.startswith(".pep "):
+			try:
+				number = int(msg.split(" ", 1)[1].replace(self.nickname, ""))
+			except ValueError:
+				self.msg(target, "Couldn't parse pep number.")
+			else:
+				url = "http://www.python.org/dev/peps/pep-%04d/" % number
+				try:
+					urllib2.urlopen(url)
+				except urllib2.HTTPError:
+					self.msg(target, "No pep found for that number.")
+				else:
+					self.msg(target, url)
 
 		#python evaluation
 		if msg.startswith(".py "):
