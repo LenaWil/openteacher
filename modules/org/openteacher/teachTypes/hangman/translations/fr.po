@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-07 21:41+0100\n"
-"PO-Revision-Date: 2012-12-10 12:43+0000\n"
+"PO-Revision-Date: 2012-12-10 12:54+0000\n"
 "Last-Translator: EmmanuelLeNormand <manu@ubuntu-fr.org>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,12 +16,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-12-11 05:06+0000\n"
 "X-Generator: Launchpad (build 16356)\n"
-"Language: fr\n"
 
-#: recentlyOpened.py:116
-msgid "Amount of recently opened files to remember"
-msgstr "Montrer des fichiers récemment ouverts à mémoriser"
+#: hangman.py:103
+msgid "Check!"
+msgstr "Verifier!"
 
-#: recentlyOpened.py:117
-msgid "General"
-msgstr "Général"
+#: hangman.py:117
+msgid "You have already tried this character / word"
+msgstr "Vous avez déjà essayé ce caractère / mot"
+
+#: hangman.py:133
+msgid "Mistakes:  "
+msgstr "Erreurs:  "
+
+#: hangman.py:155
+msgid "hanged man"
+msgstr "pendu"
+
+#: hangman.py:177
+msgid "You lose, the answer was: "
+msgstr "Vous avez perdu, la réponse était: "
+
+#: hangman.py:275
+msgid "Play hangman"
+msgstr "Jouer au pendu"

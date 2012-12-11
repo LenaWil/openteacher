@@ -1,0 +1,51 @@
+# French translation for openteacher
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-07 21:41+0100\n"
+"PO-Revision-Date: 2012-12-10 12:52+0000\n"
+"Last-Translator: EmmanuelLeNormand <manu@ubuntu-fr.org>\n"
+"Language-Team: French <fr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-12-11 05:06+0000\n"
+"X-Generator: Launchpad (build 16356)\n"
+
+#: topo.py:95
+msgid "Place - Name"
+msgstr "Lieu - Nom"
+
+#: topo.py:96
+msgid "Name - Place"
+msgstr "Nom - Lieu"
+
+#: topo.py:198
+msgid "Please click this place: "
+msgstr "S'il vous plait cliquez sur ce lieu: "
+
+#: topo.py:303
+msgid "Lesson type:"
+msgstr "Type de leçon:"
+
+#: topo.py:304
+msgid "Lesson order:"
+msgstr "Ordre de leçon:"
+
+#: topo.py:305
+msgid "Which place is here?"
+msgstr "Quel lieu est ici?"
+
+#. TRANSLATORS: A button the user clicks to let the computer check the given answer.
+#: topo.py:307
+msgid "Check"
+msgstr "Vérifier"
+
+#: topo.py:308
+msgid "Please click this place:"
+msgstr "S'il vous plait cliquez sur ce lieu:"

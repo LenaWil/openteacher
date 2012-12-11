@@ -1,0 +1,46 @@
+# French translation for openteacher
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-07 21:42+0100\n"
+"PO-Revision-Date: 2012-12-10 15:48+0000\n"
+"Last-Translator: EmmanuelLeNormand <manu@ubuntu-fr.org>\n"
+"Language-Team: French <fr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-12-11 05:06+0000\n"
+"X-Generator: Launchpad (build 16356)\n"
+
+#: testTaker.py:49
+msgid "Select the test you want to take"
+msgstr "Sélectionner le test que vous voulez faire"
+
+#: testTaker.py:50 testTaker.py:119
+msgid "Take test"
+msgstr "Prendre le test"
+
+#: testTaker.py:123
+msgid "Choose test"
+msgstr "Choisir le test"
+
+#: testTaker.py:125
+msgid "Taking test"
+msgstr "Faire le test"
+
+#: testTaker.py:185
+msgid ""
+"An error occured. The server could not be reached. Check your network "
+"connection."
+msgstr ""
+"Une erreur s'est produite. Le serveur n'a pas pu être atteint. Vérifiez "
+"votre connexion réseau."
+
+#: testTaker.py:188
+msgid "Your answers have successfully been handed in!"
+msgstr "Vos réponses ont bien été transmises!"
