@@ -105,26 +105,37 @@ class TypeDataStore(object):
 			4: user["layout"][2][1:11],
 		}[user["level"]])
 
-		if user["level"] == 0 and not user["results"]:
-			instr = """Welcome, I'm your personal OpenTeacher typing tutor. We'll improve your typing skills by doing simple exercises. Between the exercises, I'll give instructions. Let's get started:
+		#sentences are added to the instruction depending on how the
+		#user did, what the current level is, how many results there are
+		#already, etc.
+		instr = ""
 
-First place your fingers on the so-called home row: your fingers, from left to right, should always be on the keys a, s, d, f, space, space, j, k, l and ; while not typing another character. When your fingers are in position, press
-space to start the first lesson. Work for accuracy at first, not speed.
+		if not user["results"]:
+			#FIXME: make sure this includes the home row of the current keyboard, which might not be qwerty.
+			instr += """Welcome, I'm your personal OpenTeacher typing tutor. We'll improve your typing skills by doing simple exercises. Between the exercises, I'll give instructions. Let's get started:
+
+First place your fingers on the so-called home row: your fingers, from left to right, should always be on the keys a, s, d, f, space, space, j, k, l and ; while not typing another character. When your fingers are in position, press space to start the first lesson. Work for accuracy at first, not speed.
+
 """
-		elif user["level"] == 0 and len(user["results"]) == 1:
-			instr = """Congratulations, you finished your first exercise! You made %s mistake(s) though, so try again until you can do it flawless!""" % user["results"][-1]["amountOfMistakes"]
-		elif user["level"] == 0:
-			instr = "Almost there. %s mistakes left. Please try again." %  user["results"][-1]["amountOfMistakes"]
-		elif user["level"] == 1 and len(user["results"]) == 1:
-			instr = "Congratulations, you finished your first exercise! And apart from that, you also made no mistakes! Let's try the next two letters: a and s"
-		elif user["level"] == 1:
-			instr = "You made it, keep up the good work while practising a and s."
-		else:
-			instr = "Naah"
-		user["currentInstruction"] = instr
+
+		if len(user["results"]) == 1:
+			instr += "Congratulations, you finished your first exercise!\n\n"
+
+		if user["level"] < 5 and user["results"] and user["results"][-1]["amountOfMistakes"] == 0:
+			instr += "You made zero mistakes, so you can continue practising some new letters. Keep up the good work!\n\n"
+		#FIXME: TODO. also check if it went wrong multiple times, and show a varying message then. So it stays a bit 'personal'.
+		if user["level"] < 5 and user["results"] and user["results"][-1]["amountOfMistakes"] != 0:
+			#TODO: ngettext required.
+			instr += "You made %s mistakes, please try again until you can do it flawless. If that seems hard, try slowing down a bit." % user["results"][-1]["amountOfMistakes"]
+		if user["level"] >= 5:
+			instr += "Ok, the app probably crashed by now... :P"
+
+		user["currentInstruction"] = instr.strip()
 
 	@staticmethod
 	def wordsPerMinute(cls, result):
+		#a word is fixed to five chars, as is normal when calculating
+		#words per minute.
 		amountOfWords = len(result["exercise"]) / 5.0
 		minutes = result["time"] / 60.0
 
