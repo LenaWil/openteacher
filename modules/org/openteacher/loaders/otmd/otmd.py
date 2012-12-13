@@ -20,6 +20,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import zipfile
+import contextlib
 
 class OpenTeachingMediaLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -85,7 +86,8 @@ class OpenTeachingMediaLoaderModule(object):
 
 	def load(self, path):
 		resourceFilenames = {}
-		with zipfile.ZipFile(path, "r") as zipFile:
+		#FIXME sometime: remove the contextlib wrapper when > Python 2.6
+		with contextlib.closing(zipfile.ZipFile(path, "r")) as zipFile:
 			names = zipFile.namelist()
 		names.remove("list.json")
 		for name in names:
