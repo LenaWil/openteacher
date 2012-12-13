@@ -21,6 +21,7 @@
 
 import json
 import zipfile
+import contextlib
 
 class OtxxSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -35,7 +36,9 @@ class OtxxSaverModule(object):
 	def save(self, lesson, path, resourceFilenames={}, zipCompression=zipfile.ZIP_DEFLATED):
 		list = {"file-format-version": self._version}
 		list.update(lesson.list)
-		with zipfile.ZipFile(path, 'w', zipCompression) as otxxzip:
+		#FIXME after 2.6 support dropped: zipfile is a context manager
+		#itself at Python > 3.2 and Python > 2.7.
+		with contextlib.closing(zipfile.ZipFile(path, "w", zipCompression)) as otxxzip:
 			otxxzip.writestr("list.json", json.dumps(
 				list, #the list to save
 				separators=(',',':'), #compact encoding

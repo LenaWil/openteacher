@@ -21,6 +21,7 @@
 from etree import ElementTree
 import locale
 import datetime
+import itertools
 
 class AbbyyLoaderModule(object):
 	"""Loads ABBYY Lingvo Tutor files (.xml)"""
@@ -90,9 +91,14 @@ class AbbyyLoaderModule(object):
 			"title": root.get("title", u""),
 		}
 
+		#a counter is used to suppply the ids. That's because ABBYY
+		#Lingvo Tutor decided to not include ids anymore from version X5
+		#on.
+		counter = itertools.count()
+
 		for wordTree in root.findall("card"):
 			word = {
-				"id": int(wordTree.find("./word").get("wordId")),
+				"id": next(counter),
 				"questions": wsp.parse(wordTree.findtext("word") or u""),
 				"answers": [[a.text or u"" for a in wordTree.findall("meanings/meaning/translations/word")]],
 			}

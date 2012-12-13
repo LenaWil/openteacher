@@ -107,7 +107,7 @@ class PaukerLoaderModule(object):
 		}
 		cards = root.findall("Batch//Card")
 		if cards is not None:
-			for card in cards:
+			for id, card in enumerate(cards):
 				questions = self._parse(
 					(card.findtext("FrontSide") or u"").strip() or
 					(card.findtext("FrontSide/Text") or u"").strip() or
@@ -122,6 +122,7 @@ class PaukerLoaderModule(object):
 				)
 
 				wordList["items"].append({
+					"id": id,
 					"questions": questions,
 					"answers": answers
 				})

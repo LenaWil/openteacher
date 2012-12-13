@@ -235,7 +235,7 @@ class ModulesHandler(object):
 		properties = filter(checkPublic, properties)
 
 		#remove special properties
-		properties = set(properties) - set(["type", "uses", "requires"])
+		properties = set(properties) - set(["type", "uses", "requires", "priorities", "filesWithTranslations"])
 
 		propertyDocs = {}
 		for property in properties:

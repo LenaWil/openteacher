@@ -28,6 +28,7 @@ import os
 import shutil
 import uuid
 import json
+import contextlib
 
 class OtxxLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -55,7 +56,9 @@ class OtxxLoaderModule(object):
 		)
 
 	def load(self, path, resourceFilenames={}):
-		with zipfile.ZipFile(path, "r") as zipFile:
+		#FIXME after 2.6 support dropped: zipfile is a context manager
+		#itself at Python > 3.2 and Python > 2.7.
+		with contextlib.closing(zipfile.ZipFile(path, "r")) as zipFile:
 			listFile = zipFile.open("list.json")
 			list = json.load(listFile)
 			list = self._stringsToDatetimes(list)

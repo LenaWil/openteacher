@@ -104,7 +104,7 @@ class WrtsLoaderModule(object):
 				listTree.findtext("created").rsplit(" ", 1)[0], #strip tz info
 				"%a, %d %b %Y %H:%M:%S" #since our datetime objects are naive
 			)
-		except ValueError:
+		except (ValueError, AttributeError):
 			pass
 		#set locale back to make sure conflicts don't arise with other
 		#modules depending on the locale.

@@ -24,22 +24,46 @@ import os
 
 class TestCase(unittest.TestCase):
 	def setUp(self):
-		self._results = []
+		self._files = glob.glob(self._mm.resourcePath("testFiles") + "/*")
 
-		files = glob.glob(self._mm.resourcePath("testFiles") + "/*")
-		for file in files:
-			mimetype = os.path.basename(file).split(".")[0].replace("_", "/")
-			loadMods = set(self._mm.mods("active", type="load", mimetype=mimetype))
-			self.assertTrue(loadMods, msg="No loader fount for mimetype: %s" % mimetype)
+	def _loadFiles(self):
+		results = []
+
+		for file in self._files:
+			if file.endswith(".xml"):
+				#Special case for abbyy since it doesn't have a mimetype
+				loadMods = set(self._mm.mods("active", type="load", loads={"xml": ["words"]}))
+			else:
+				mimetype = os.path.basename(file).split(".")[0].replace("_", "/")
+				loadMods = set(self._mm.mods("active", type="load", mimetype=mimetype))
+				self.assertTrue(loadMods, msg="No loader fount for mimetype: %s" % mimetype)
 			for mod in loadMods:
-				self._results.append(mod.load(file))
+				results.append(mod.load(file))
+
+		return results
+
+	def testGetFileTypeOf(self):
+		for file in self._files:
+			if file.endswith(".xml"):
+				#ABBYY Lingvo Tutor
+				loadMods = self._mm.mods("active", type="load", loads={"xml": ["words"]})
+			else:
+				mimetype = os.path.basename(file).split(".")[0].replace("_", "/")
+				loadMods = set(self._mm.mods("active", type="load", mimetype=mimetype))
+
+			for mod in loadMods:
+				self.assertIn(mod.getFileTypeOf(file), ["words", "topo", "media"])
 
 	def testHasItems(self):
-		for data in self._results:
+		results = self._loadFiles()
+
+		for data in results:
 			self.assertIsNotNone(data["list"]["items"])
 
 	def testItemHasUniqueId(self):
-		for data in self._results:
+		results = self._loadFiles()
+
+		for data in results:
 			ids = set()
 			for item in data["list"]["items"]:
 				self.assertNotIn(item["id"], ids)
