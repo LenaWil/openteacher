@@ -20,6 +20,7 @@
 
 from etree import ElementTree
 import gzip
+import contextlib
 
 class PaukerLoaderModule(object):
 	"""Loads .pau.gz and .xml.gz files (the format of Pauker)"""
@@ -96,7 +97,9 @@ class PaukerLoaderModule(object):
 			with open(path) as f:
 				root = ElementTree.parse(f).getroot()
 		else:
-			with gzip.open(path) as f:
+			#FIXME sometime: the contextlib isn't necessary anymore in
+			#Python > 2.6 and > 3.1.
+			with contextlib.closing(gzip.open(path)) as f:
 				root = ElementTree.parse(f).getroot()
 
 		wordList = {

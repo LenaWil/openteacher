@@ -31,6 +31,7 @@ class PdfSaverModule(object):
 
 		self.requires = (
 			self._mm.mods(type="wordsHtmlGenerator"),
+			self._mm.mods(type="ui"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
