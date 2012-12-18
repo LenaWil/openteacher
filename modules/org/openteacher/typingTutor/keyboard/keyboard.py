@@ -34,6 +34,7 @@ def initializeWidgets():
 			[(0, 2.5, 1), (2.5, 1, 1), (3.5, 1, 2), (4.5, 1, 3), (5.5, 1, 4), (6.5, 1, 4), (7.5, 1, 7), (8.5, 1, 7), (9.5, 1, 8), (10.5, 1, 9), (11.5, 1, 10), (12.5, 2.5, 10)],
 			[(1.5, 12, (5, 6))],
 		]
+		ALTERNATIVE_FOURTH_ROW = [(0, 1.5, 1), (1.5, 1, 1), (2.5, 1, 1), (3.5, 1, 2), (4.5, 1, 3), (5.5, 1, 4), (6.5, 1, 4), (7.5, 1, 7), (8.5, 1, 7), (9.5, 1, 8), (10.5, 1, 9), (11.5, 1, 10), (12.5, 2.5, 10)]
 
 		def __init__(self, *args, **kwargs):
 			super(KeyboardWidget, self).__init__(*args, **kwargs)
@@ -69,6 +70,9 @@ def initializeWidgets():
 			p.begin(self)
 
 			for rowNumber, row in enumerate(self.SIZE_MAP):
+				if (rowNumber + 1) == 4 and len(self.layout[rowNumber]) == len(self.ALTERNATIVE_FOURTH_ROW):
+					#alternative size map
+					row = self.ALTERNATIVE_FOURTH_ROW
 				y = rowNumber * cellSize
 				height = cellSize
 				for columnNumber, column in enumerate(row):

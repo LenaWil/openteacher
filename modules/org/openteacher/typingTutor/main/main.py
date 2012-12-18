@@ -148,13 +148,20 @@ def initializeWidgets():
 			if ok:
 				try:
 					self._model.registerUser(unicode(username))
-				except ValueError:
+				except self._model.UsernameEmptyError:
+					QtGui.QMessageBox.critical(
+						self,
+						_("Username empty"),
+						_("The username should not be empty. Please try again.")
+					)
+				except self._model.UsernameTakenError:
 					QtGui.QMessageBox.critical(
 						self,
 						_("Username taken"),
 						_("That username is already taken. Please try again."),
 					)
-				self.userChosen.emit(unicode(username))
+				else:
+					self.userChosen.emit(unicode(username))
 
 		def _userClicked(self, index):
 			username = index.data(QtCore.Qt.DisplayRole).toString()
@@ -167,13 +174,23 @@ def initializeWidgets():
 
 			self._model = model
 
-			self._label = QtGui.QLabel()
-			self._label.setWordWrap(True)
+			self._speedLabel = QtGui.QLabel()
+			self._speedLabelLabel = QtGui.QLabel()
+			self._mistakesLabel = QtGui.QLabel()
+			self._mistakesLabelLabel = QtGui.QLabel()
+
+			layout = QtGui.QFormLayout()
+			layout.addRow(self._speedLabelLabel, self._speedLabel)
+			layout.addRow(self._mistakesLabelLabel, self._mistakesLabel)
+
+			self._instructionLabel = QtGui.QLabel()
+			self._instructionLabel.setWordWrap(True)
 			self._button = QtGui.QPushButton()
 			self._button.clicked.connect(self.exerciseStartRequested.emit)
 
 			vbox = QtGui.QVBoxLayout()
-			vbox.addWidget(self._label)
+			vbox.addWidget(self._instructionLabel)
+			vbox.addLayout(layout)
 			vbox.addWidget(self._button)
 			self.setLayout(vbox)
 
@@ -181,9 +198,23 @@ def initializeWidgets():
 
 		def updateInstruction(self):
 			instr = self._model.currentInstruction(self.username)
-			self._label.setText(instr)
+			try:
+				self._speedLabel.setText(unicode(self._model.speed(self.username)))
+			except IndexError:
+				self._speedLabelLabel.hide()
+			else:
+				self._speedLabelLabel.show()
+			try:
+				self._mistakesLabel.setText(unicode(self._model.amountOfMistakes(self.username)))
+			except IndexError:
+				self._mistakesLabelLabel.hide()
+			else:
+				self._mistakesLabelLabel.show()
+			self._instructionLabel.setText(instr)
 
 		def retranslate(self):
+			self._speedLabelLabel.setText(_("Speed (words per minute)"))
+			self._mistakesLabelLabel.setText(_("Amount of mistakes"))
 			self._button.setText(_("Start exercise"))
 			try:
 				#requires self.username, which might not be set yet.

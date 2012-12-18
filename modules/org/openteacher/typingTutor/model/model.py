@@ -32,6 +32,22 @@ class TypeDataStore(object):
 		["Space"],
 	]
 
+	BELGIAN_AZERTY_LAYOUT = [
+		[u"²", "&", u"é", '"', "'", "(", u"§", u"è", "!", u"ç", u"à", ")", "-", "Back-\nspace"],
+		["Tab", "a", "z", "e", "r", "t", "y", "u", "i", "o", "p", "^", "$", "Enter"],
+		["Caps\nLock", "q", "s", "d", "f", "g", "h", "j", "k", "l", "m", u"ù", u"µ"],
+		["Shift", "<", "x", "x", "c", "v", "b", "n", ",", ";", ":", "=", "Shift"],
+		["Space"],
+	]
+
+	FRENCH_AZERTY_LAYOUT = [
+		[u"²", "&", u"é", '"', "'", "(", "-", u"è", "_", u"ç", u"à", ")", "=", "Back-\nspace"],
+		["Tab", "a", "z", "e", "r", "t", "y", "u", "i", "o", "p", "^", "$", "Enter"],
+		["Caps\nLock", "q", "s", "d", "f", "g", "h", "j", "k", "l", "m", u"ù", u"µ"],
+		["Shift", "<", "x", "x", "c", "v", "b", "n", ",", ";", ":", "!", "Shift"],
+		["Space"],
+	]
+
 	COLEMAK_LAYOUT = [
 		["`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "Back-\nspace"],
 		["Tab", "q", "w", "f", "p", "g", "j", "l", "u", "y", ";", "[", "]", "\\"],
@@ -48,22 +64,38 @@ class TypeDataStore(object):
 		["Space"],
 	]
 
-	def __init__(self, *args, **kwargs):
-		#FIXME: load from sqlite database/dataStore OT module/whatever instead of dummy data.
-		self._users = {}
-		self.registerUser("commandoline")
+	QWERTZ_LAYOUT = [
+		["^", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", u"ß", u"´", "Back-\nspace"],
+		["Tab", "q", "w", "e", "r", "t", "z", "u", "i", "o", "p", u"ü", "+", "Enter"],
+		["Caps\nLock", "a", "s", "d", "f", "g", "h", "j", "k", "l", u"ö", u"ä", "#"],
+		["Shift", "<", "y", "x", "c", "v", "b", "n", "m", ",", ".", "-", "Shift"],
+		["Space"],
+	]
+
+	class UsernameEmptyError(ValueError):
+		pass
+
+	class UsernameTakenError(ValueError):
+		pass
+
+	def __init__(self, words, data, *args, **kwargs):
+		super(TypeDataStore, self).__init__(*args, **kwargs)
+		self._words = words
+		self._users = data
 
 	def registerUser(self, name, keyboardLayout=None):
 		if not keyboardLayout:
 			keyboardLayout = self.QWERTY_LAYOUT
+		name = name.strip()
+		if not name:
+			raise self.UsernameEmptyError()
 		if name in self._users:
-			raise ValueError("Username already in use.")
+			raise self.UsernameTakenError()
 		self._users[name] = {
-			"level": 0,
+			"level": 100,
 			"results": [],
 			"layout": keyboardLayout,
 		}
-		self._setNewExerciseFor(self._users[name])
 
 	@staticmethod
 	def _createRow(letters):
@@ -74,10 +106,80 @@ class TypeDataStore(object):
 		return u"".join(row[:59])
 
 	def currentExercise(self, username):
-		return self._users[username]["currentExercise"]
+		user = self._users[username]
+
+		exercises = []
+
+		#generate exercises to learn the most commonly used keys
+		#automatically. This first learns letters in pairs, then in
+		#larger groups.
+		rows = [2, 1, 3, 0]
+		for row in rows:
+			exercises.extend([
+				user["layout"][row][4] + user["layout"][row][7],
+				user["layout"][row][3] + user["layout"][row][8],
+				user["layout"][row][2] + user["layout"][row][9],
+				user["layout"][row][1] + user["layout"][row][10],
+				user["layout"][row][1:5],
+				user["layout"][row][7:11],
+				#<- FIXME: extra instruction required here (finger position)
+				user["layout"][row][5:7],
+				user["layout"][row][4:8],
+				user["layout"][row][1:11],
+			])
+		#add an exercise which just uses all letters
+		everything = "".join(["".join(user["layout"][row][1:11]) for row in rows])
+		exercises.append(everything)
+
+		if user["level"] < len(exercises):
+			#first practise the keys needed
+			letters = exercises[user["level"]]
+			user["currentExercise"] = self._createRow(letters)
+		else:
+			#then practise typing words to improve speed.
+			user["currentExercise"] = u" ".join([random.choice(self._words) for i in range(8)])
+
+		return user["currentExercise"]
 
 	def currentInstruction(self, username):
-		return self._users[username]["currentInstruction"]
+		user = self._users[username]
+
+		#sentences are added to the instruction depending on how the
+		#user did, what the current level is, how many results there are
+		#already, etc.
+		instr = ""
+
+		if not user["results"]:
+			instr += u"""Welcome, I'm your personal OpenTeacher typing tutor. We'll improve your typing skills by doing simple exercises. Between the exercises, I'll give instructions. Let's get started:
+
+First place your fingers on the so-called home row: your fingers, from left to right, should always be on the keys '{a}', '{s}', '{d}', '{f}', '{space}', '{space}', '{j}', '{k}', '{l}' and '{;}' while not typing another character. When your fingers are in position, press {space} to start the first lesson. Work for accuracy at first, not speed.
+
+""".format(**{
+	"a": user["layout"][2][1],
+	"s": user["layout"][2][2],
+	"d": user["layout"][2][3],
+	"f": user["layout"][2][4],
+	"space": user["layout"][4][0].lower(),
+	"j": user["layout"][2][7],
+	"k": user["layout"][2][8],
+	"l": user["layout"][2][9],
+	";": user["layout"][2][10],
+})
+
+		if len(user["results"]) == 1:
+			instr += "Congratulations, you finished your first exercise!\n\n"
+
+		if user["results"] and user["results"][-1]["amountOfMistakes"] == 0:
+			instr += "You made zero mistakes, so you can continue practising some new letters. Keep up the good work!\n\n"
+		#FIXME: TODO. also check if it went wrong multiple times, and show a varying message then. So it stays a bit 'personal'.
+		#Also for success.
+		if user["results"] and user["results"][-1]["amountOfMistakes"] != 0:
+			#TODO: ngettext required.
+			instr += "You made %s mistakes, please try again until you can do it flawless. If that seems hard, try slowing down a bit." % user["results"][-1]["amountOfMistakes"]
+
+		#check for last exercise
+
+		return instr.strip()
 
 	def layout(self, username):
 		return self._users[username]["layout"]
@@ -88,58 +190,30 @@ class TypeDataStore(object):
 			"time": time,
 			"amountOfMistakes": amountOfMistakes,
 			"exercise": user["currentExercise"],
+			"level": user["level"],
 		})
 		#calculate new level
 		if amountOfMistakes == 0:
 			user["level"] += 1
 
-		#get new exercise
-		self._setNewExerciseFor(user)
-
-	def _setNewExerciseFor(self, user):
-		user["currentExercise"] = self._createRow({
-			0: user["layout"][2][4] + user["layout"][2][7],
-			1: user["layout"][2][1:5],
-			2: user["layout"][2][7:11],
-			3: user["layout"][2][4:8],
-			4: user["layout"][2][1:11],
-		}[user["level"]])
-
-		#sentences are added to the instruction depending on how the
-		#user did, what the current level is, how many results there are
-		#already, etc.
-		instr = ""
-
-		if not user["results"]:
-			#FIXME: make sure this includes the home row of the current keyboard, which might not be qwerty.
-			instr += """Welcome, I'm your personal OpenTeacher typing tutor. We'll improve your typing skills by doing simple exercises. Between the exercises, I'll give instructions. Let's get started:
-
-First place your fingers on the so-called home row: your fingers, from left to right, should always be on the keys a, s, d, f, space, space, j, k, l and ; while not typing another character. When your fingers are in position, press space to start the first lesson. Work for accuracy at first, not speed.
-
-"""
-
-		if len(user["results"]) == 1:
-			instr += "Congratulations, you finished your first exercise!\n\n"
-
-		if user["level"] < 5 and user["results"] and user["results"][-1]["amountOfMistakes"] == 0:
-			instr += "You made zero mistakes, so you can continue practising some new letters. Keep up the good work!\n\n"
-		#FIXME: TODO. also check if it went wrong multiple times, and show a varying message then. So it stays a bit 'personal'.
-		if user["level"] < 5 and user["results"] and user["results"][-1]["amountOfMistakes"] != 0:
-			#TODO: ngettext required.
-			instr += "You made %s mistakes, please try again until you can do it flawless. If that seems hard, try slowing down a bit." % user["results"][-1]["amountOfMistakes"]
-		if user["level"] >= 5:
-			instr += "Ok, the app probably crashed by now... :P"
-
-		user["currentInstruction"] = instr.strip()
-
 	@staticmethod
-	def wordsPerMinute(cls, result):
+	def _wordsPerMinute(result):
 		#a word is fixed to five chars, as is normal when calculating
 		#words per minute.
 		amountOfWords = len(result["exercise"]) / 5.0
 		minutes = result["time"] / 60.0
 
 		return int(round(amountOfWords / minutes))
+
+	def amountOfMistakes(self, username):
+		user = self._users[username]
+
+		return user["results"][-1]["amountOfMistakes"]
+
+	def speed(self, username):
+		user = self._users[username]
+
+		return self._wordsPerMinute(user["results"][-1])
 
 	@property
 	def usernames(self):
@@ -153,14 +227,32 @@ class TypingTutorModelModule(object):
 		self.type = "typingTutorModel"
 		self.filesWithTranslations = ("model.py",)
 
+		self.requires = (
+			self._mm.mods(type="dataStore"),
+		)
+
+	@property
+	def _words(self):
+		with open(self._mm.resourcePath("words.txt"), "r") as f:
+			return [word.strip() for word in f]
+
 	def enable(self):
-		self.model = TypeDataStore()
+		self._modules = next(iter(self._mm.mods(type="modules")))
+
+		store = self._modules.default("active", type="dataStore").store
+		try:
+			data = store["org.openteacher.typingTutor.model.data"]
+		except KeyError:
+			data = store["org.openteacher.typingTutor.model.data"] = {}
+
+		self.model = TypeDataStore(self._words, data)
 
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
+		del self._modules
 		del self.model
 
 def init(moduleManager):
