@@ -35,8 +35,8 @@ def getThinkWidget():
 			
 			mainLayout = QtGui.QVBoxLayout()
 			mainLayout.addWidget(self.label)
-			mainLayout.addWidget(self.skipButton)
 			mainLayout.addWidget(self.viewAnswerButton)
+			mainLayout.addWidget(self.skipButton)
 			
 			self.setLayout(mainLayout)
 
