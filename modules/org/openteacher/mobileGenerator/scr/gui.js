@@ -19,11 +19,12 @@
 */
 
 /*global $: false, translationIndex: false, logic: false, JsDiff: false */
-/*jslint nomen: true, browser: true */
+/*jshint browser: true */
 
 (function () {
 	"use strict";
-	var gui, menuDialog, optionsDialog, enterTab, teachTab;
+	var gui, menuDialog, optionsDialog, enterTab, teachTab,
+		copyrightInfoDialog, practisingModeChoiceDialog;
 
 	menuDialog = (function () {
 		var newList, askWhichListToLoad, loadList, askSaveName,
@@ -195,11 +196,23 @@
 		};
 	}());
 
+	copyrightInfoDialog = {
+		retranslate: function (_) {
+			$("#copyright-info-header").text(_("Copyright info"));
+		},
+		setupUi: function () {
+			$("#copyright-info-text")
+				.load("COPYING.txt")
+				.css("overflow", "auto");
+		}
+	};
+
 	optionsDialog = (function () {
-		var getLanguage, languageChanged;
+		var getLanguage, languageChanged, practisingModeChanged,
+			updatePractisingMode;
 
 		getLanguage = function () {
-			if (localStorage.language === undefined) {
+			if (typeof localStorage.language === "undefined") {
 				//first time running
 				if (translationIndex.hasOwnProperty(navigator.language)) {
 					//first try the exact browser locale
@@ -216,9 +229,19 @@
 		};
 
 		languageChanged = function () {
-			localStorage.language = $("option:selected", this).attr("name");
+			localStorage.language = $("option:selected", this).val();
 			gui.retranslate();
 		};
+
+		practisingModeChanged = function () {
+			localStorage.practisingMode = $("option:selected", this).val();
+		};
+
+		updatePractisingMode = function () {
+			if (typeof localStorage.practisingMode !== "undefined") {
+				$("#practising-mode-select").val(localStorage.practisingMode);
+			}
+		}
 
 		return {
 			setupSettings: function () {
@@ -230,19 +253,34 @@
 				//fill combobox
 				for (langCode in translationIndex) {
 					if (translationIndex.hasOwnProperty(langCode)) {
-						select.append("<option name='" + langCode + "'>" + translationIndex[langCode].name + "</option>");
+						select.append("<option value='" + langCode + "'>" + translationIndex[langCode].name + "</option>");
 					}
 				}
 
 				//set current value
-				select.val(getLanguage().name);
+				//this makes sure localStorage.language is set
+				getLanguage();
+				//this sets the value.
+				select.val(localStorage.language);
 
 				//register handler
 				select.change(languageChanged);
+
+				//practising mode
+				//set current value
+				updatePractisingMode();
+				//register handler
+				$("#practising-mode-select").change(practisingModeChanged);
 			},
+			updatePractisingMode: updatePractisingMode,
 			retranslate: function (_) {
 				$("#options-header").text(_("Options"));
 				$("#language-select-label").text(_("Language:"));
+
+				$("#practising-mode-select-label").text(_("Practising mode:"));
+				$("#think-answer-option").text(_("Think answer"));
+				$("#type-answer-option").text(_("Type answer"));
+
 				$("#copyright-info-link").text(_("Copyright info"));
 			},
 			getLanguage: getLanguage
@@ -303,7 +341,8 @@
 	teachTab = (function () {
 		var onCheck, onSkip, onCorrectAnyway, lessonDone, newItem,
 			sliderToProgressBar, lessonType, currentItem, calculateNote,
-			noteMessage, backToEnterTab, animationEnd;
+			noteMessage, backToEnterTab, animationEnd, onViewAnswer,
+			onRight, onWrong;
 
 		onCheck = function () {
 			var answerBox, text, givenAnswer, result, correctionLabel,
@@ -404,6 +443,10 @@
 			//empty answer box
 			$("#answer-box").val("");
 
+			//show/hide the right 'think answer'-controls
+			$("#thinking-controls").show();
+			$("#answering-controls").hide();
+
 			//update progress bar
 			slider = $("#progress-bar");
 			slider.attr("max", lessonType.totalItems);
@@ -412,14 +455,18 @@
 				slider.slider("refresh");
 			} catch (e) {}
 
-			//focus to input box when jqm is fully set up.
+			//focus to input box/the button when jqm is fully set up.
 			setTimeout(function () {
-				$("#answer-box").focus();
+				if (localStorage.practisingMode === "type-answer") {
+					$("#answer-box").focus();
+				} else {
+					$("#view-answer-button").focus();
+				}
 			}, 0);
 		};
 
 		sliderToProgressBar = function () {
-			//It's a hack. But it works.
+			//It's a hack. But it works. Brilliantly.
 			$("#progress-bar")
 				.hide()
 
@@ -440,17 +487,42 @@
 		};
 		$(document).on("pageinit", sliderToProgressBar);
 
+		onViewAnswer = function () {
+			var answers;
+
+			answers = logic.compose(currentItem.answers)
+			$("#translation-label").text(answers);
+
+			$("#thinking-controls").hide();
+			$("#answering-controls").show();
+		};
+
+		onRight = function () {
+			lessonType.setResult({"result": "right"});
+		};
+
+		onWrong = function () {
+			lessonType.setResult({"result": "wrong"});
+		};
+
 		return {
 			setupUi: function () {
 				$("#check-button").click(onCheck);
-				$("#skip-button").click(onSkip);
+				$("#view-answer-button").click(onViewAnswer);
+				$("#i-was-right-button").click(onRight);
+				$("#i-was-wrong-button").click(onWrong);
+				$(".skip-button").click(onSkip);
 				$("#correct-anyway-button").click(onCorrectAnyway);
 
 				$("#result-ok-button").click(backToEnterTab);
 				$("#teach-page").keydown(function (event) {
 					if (event.which === 13) {
 						//enter key
-						$("#check-button").click();
+						if (localStorage.practisingMode === "type-answer") {
+							$("#check-button").click();
+						} else {
+							$("#view-answer-button").click();
+						}
 					}
 				});
 			},
@@ -461,8 +533,13 @@
 				$("#question-label-label").text(_("Question:"));
 				$("#answer-box-label").text(_("Answer:"));
 				$("#check-button").text(_("Check!"));
-				$("#skip-button").text(_("Skip"));
+				$(".skip-button").text(_("Skip"));
 				$("#correct-anyway-button").text(_("Correct anyway"));
+				$("#think-answer-explanation").text(_("Think about the answer, and press the 'View answer' button when you're done."));
+				$("#view-answer-button").text(_("View answer"));
+				$("#translation-label-label").text(_("Translation:"));
+				$("#i-was-right-button").text(_("I was right"));
+				$("#i-was-wrong-button").text(_("I was wrong"));
 
 				//result popup
 				$("#result-header").text(_("Test completed!"));
@@ -473,6 +550,11 @@
 
 			doLesson: function (lesson) {
 				var i, indexes;
+
+				if (typeof localStorage.practisingMode === "undefined") {
+					$.mobile.changePage("#practising-mode-choice-dialog");
+					return;
+				}
 
 				indexes = [];
 				for (i = 0; i < lesson.list.items.length; i += 1) {
@@ -486,13 +568,52 @@
 				try {
 					$("#correct-anyway-button").button("disable");
 				} catch (e) {}
+
+				if (localStorage.practisingMode === "type-answer") {
+					$("#think-answer-practising-mode").hide();
+					$("#type-answer-practising-mode").show();
+				} else {
+					$("#think-answer-practising-mode").show();
+					$("#type-answer-practising-mode").hide();
+				}
+			}
+		};
+	}());
+
+	practisingModeChoiceDialog = (function () {
+		var onTypeAnswer, onThinkAnswer, setSetting;
+
+		setSetting = function (mode) {
+			localStorage.practisingMode = mode;
+			optionsDialog.updatePractisingMode();
+			gui.startLesson();
+		}
+
+		onThinkAnswer = function () {
+			setSetting("think-answer");
+		}
+
+		onTypeAnswer = function () {
+			setSetting("type-answer");
+		};
+
+		return {
+			retranslate: function (_) {
+				$("#practising-mode-choice-header").text(_("Practising mode choice"));
+				$("#practising-mode-choice-label").text(_("Please choose the practising mode you want to use:"));
+				$("#think-answer-button").text(_("Think answer"));
+				$("#type-answer-button").text(_("Type answer"));
+			},
+			setupUi: function () {
+				$("#think-answer-button").click(onThinkAnswer);
+				$("#type-answer-button").click(onTypeAnswer);
 			}
 		};
 	}());
 
 	gui = (function () {
-		var setupDone, main, doRetranslate, retranslate, tabChange,
-			startLesson, onDeviceReady, onMenuKeyDown;
+		var setupDone, main, doRetranslate, retranslate, startLesson,
+			onDeviceReady, onMenuKeyDown;
 
 		setupDone = false;
 
@@ -505,13 +626,14 @@
 			//tabs
 			$(".enter-page-link .ui-btn-text").text(_("Enter list"));
 			$(".teach-page-link .ui-btn-text").text(_("Teach me!"));
-			//$("#list-management-dialog-link .ui-btn-text").text(_("List management"));
 
 			//retranslate all tabs & dialogs
 			enterTab.retranslate(_);
 			teachTab.retranslate(_);
 			menuDialog.retranslate(_);
 			optionsDialog.retranslate(_);
+			copyrightInfoDialog.retranslate(_);
+			practisingModeChoiceDialog.retranslate(_);
 
 			try {
 				$("button").button("refresh");
@@ -521,7 +643,7 @@
 		};
 
 		retranslate = function (callback) {
-			if (optionsDialog.getLanguage().url === undefined) {
+			if (typeof optionsDialog.getLanguage().url === "undefined") {
 				//english, use a simple pass through function.
 				doRetranslate(function (str) {
 					return str;
@@ -563,12 +685,17 @@
 					enterTab.setupUi();
 					teachTab.setupUi();
 					menuDialog.setupUi();
+					copyrightInfoDialog.setupUi();
+					practisingModeChoiceDialog.setupUi();
 
 					//start with a new word list
 					enterTab.newList();
 
 					//make sure the options dialog is ready to be shown
 					optionsDialog.setupSettings();
+
+					//handle tab switching.
+					$(".teach-page-link").click(startLesson);
 
 					//this part of main() is supposed to only run once.
 					setupDone = true;
@@ -583,30 +710,17 @@
 			if (!lesson) {
 				return false;
 			}
-			teachTab.doLesson(lesson);
-			return true;
-		};
 
-		tabChange = function (event, info) {
-			var hash, success;
-
-			if (typeof info.toPage !== "string") {
-				return;
+			if (typeof localStorage.practisingMode === "undefined") {
+				$.mobile.changePage("#practising-mode-choice-dialog");
+			} else {
+				$.mobile.changePage("#teach-page", {"transition": "none"});
+				teachTab.doLesson(lesson);
 			}
 
-			hash = $.mobile.path.parseUrl(info.toPage).hash;
-			if (hash === "#teach-page") {
-				success = startLesson();
-				if (!success) {
-					//set the enter tab as active again on the navbar
-					//(jqm doesn't seem to do that on preventDefault())
-					$(".teach-page-link").removeClass("ui-btn-active ui-state-persist");
-					$(".enter-page-link").addClass("ui-btn-active ui-state-persist");
-
-					//not going to that page
-					event.preventDefault();
-				}
-			}
+			//don't allow to follow the link the normal way, which
+			//reloads the page.
+			return false;
 		};
 
 		//setup for a local environment
@@ -654,14 +768,12 @@
 		//initialization of pages (retranslating etc.)
 		$(document).on("pageinit", main);
 
-		//handle page change, so a lesson can be started etc.
-		$(document).on("pagebeforechange", tabChange);
-
 		//do what needs to be done after the device is ready
 		$(document).on("deviceready", onDeviceReady);
 
 		return {
-			retranslate: retranslate
+			retranslate: retranslate,
+			startLesson: startLesson
 		};
 	}());
 }());

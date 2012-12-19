@@ -44,7 +44,7 @@
 				<textarea id='list-textarea' spellcheck='false'></textarea>
 			</div>
 			<div id='missing-separator-popup' data-role='popup'>
-				<div data-role='header' data-theme='b'>
+				<div data-role='header'>
 					<h1 id='missing-separator-header'></h1>
 				</div>
 				<div data-role='content'>
@@ -61,6 +61,18 @@
 			</div>
 		</div>
 
+		<!-- practising mode choice dialog -->
+		<div data-role='dialog' id='practising-mode-choice-dialog'>
+			<div data-role='header'>
+				<h1 id='practising-mode-choice-header'></h1>
+			</div>
+			<div data-role='content'>
+				<label id='practising-mode-choice-label'></label>
+				<button id='think-answer-button'></button>
+				<button id='type-answer-button'></button>
+			</div>
+		</div>
+
 		<!-- teach page -->
 		<div data-role='page' id='teach-page'>
 			$!teachTabHeader!$
@@ -68,17 +80,38 @@
 				<label id='question-label-label'></label><br />
 				<label id='question-label'></label><br />
 
-				<label id='answer-box-label' for='answer-box'></label>
-				<label id='correction-label'></label>
-				<input id='answer-box' type='text' />
-
-				<button id='check-button'></button>
-				<div class='ui-grid-a'>
-					<div class='ui-block-a'>
-						<button id='skip-button' data-mini='true'></button>
+				<div id='think-answer-practising-mode'>
+					<div id='thinking-controls'>
+						<label id='think-answer-explanation'></label>
+						<button id='view-answer-button'></button>
+						<button class='skip-button' data-mini='true'></button>
 					</div>
-					<div class='ui-block-b'>
-						<button id='correct-anyway-button' data-mini='true'></button>
+					<div id='answering-controls'>
+						<label id='translation-label-label'></label><br />
+						<label id='translation-label'></label>
+						<div class='ui-grid-a'>
+							<div class='ui-block-a'>
+								<button id='i-was-right-button'></button>
+							</div>
+							<div class='ui-block-b'>
+								<button id='i-was-wrong-button'></button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id='type-answer-practising-mode'>
+					<label id='answer-box-label' for='answer-box'></label>
+					<label id='correction-label'></label>
+					<input id='answer-box' type='text' />
+					<button id='check-button'></button>
+
+					<div class='ui-grid-a'>
+						<div class='ui-block-a'>
+							<button class='skip-button' data-mini='true'></button>
+						</div>
+						<div class='ui-block-b'>
+							<button id='correct-anyway-button' data-mini='true'></button>
+						</div>
 					</div>
 				</div>
 				<!-- hackish progress bar -->
@@ -88,7 +121,7 @@
 		
 		<!-- result dialog -->
 		<div data-role='dialog' id='result-dialog'>
-			<div data-role='header' data-theme='b'>
+			<div data-role='header'>
 				<h1 id='result-header'></h1>
 			</div>
 			<div data-role='content'>
@@ -100,7 +133,7 @@
 
 		<!-- save dialog -->
 		<div data-role='dialog' id='save-dialog'>
-			<div data-role='header' data-theme='b'>
+			<div data-role='header'>
 				<h1 id='save-header'></h1>
 			</div>
 			<div data-role='content'>
@@ -128,7 +161,7 @@
 
 		<!-- load dialog -->
 		<div data-role='dialog' id='load-dialog'>
-			<div data-role='header' data-theme='b'>
+			<div data-role='header'>
 				<h1 id='load-header'></h1>
 			</div>
 			<div data-role='content'>
@@ -140,7 +173,7 @@
 
 		<!-- remove dialog -->
 		<div data-role='dialog' id='remove-dialog'>
-			<div data-role='header' data-theme='b'>
+			<div data-role='header'>
 				<h1 id='remove-header'></h1>
 			</div>
 			<div data-role='content'>
@@ -152,20 +185,35 @@
 
 		<!-- options dialog -->
 		<div data-role='dialog' id='options-dialog'>
-			<div data-role='header' data-theme='b'>
+			<div data-role='header'>
 				<h1 id='options-header'></h1>
 			</div>
 			<div data-role='content'>
 				<label id='language-select-label' for='language-select'></label>
 				<select id='language-select'>
 				</select>
-				<a href='COPYING.txt' rel='external' id='copyright-info-link'></a>
+				<label id='practising-mode-select-label' for='practising-mode-select'></label>
+				<select id='practising-mode-select'>
+					<option id='think-answer-option' value='think-answer'></option>
+					<option id='type-answer-option' value='type-answer'></option>
+				</select>
+				<a href='#copyright-info-dialog' id='copyright-info-link'></a>
 			</div>
 		</div>
-		
+
+		<!-- copyright info dialog -->
+		<div data-role='dialog' id='copyright-info-dialog'>
+				<div data-role='header'>
+					<h1 id='copyright-info-header'></h1>
+				</div>
+				<div data-role='content'>
+					<pre id='copyright-info-text'></pre>
+				</div>
+		</div>
+
 		<!-- menu dialog -->
 		<div data-role='dialog' id='menu-dialog'>
-			<div data-role='header' data-theme='b'>
+			<div data-role='header'>
 				<h1 id='menu-header'></h1>
 			</div>
 			<div data-role='content'>
