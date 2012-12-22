@@ -83,16 +83,29 @@ class TypeDataStore(object):
 		self._words = words
 		self._users = data
 
+		self._retranslate()
+
+	def _retranslate(self):
+		#FIXME
+		_ = unicode
+		self.layouts = sorted([
+			("BELGIAN_AZERTY_LAYOUT", _("Belgian AZERTY")),
+			("COLEMAK_LAYOUT", _("Colemak")),
+			("DVORAK_LAYOUT", _("Dvorak Simplified Keyboard")),
+			("FRENCH_AZERTY_LAYOUT", _("French AZERTY")),
+			("QWERTY_LAYOUT", _("QWERTY")),
+			("QWERTZ_LAYOUT", _("QWERTZ")),
+		], key=lambda t: t[1])
+
 	def registerUser(self, name, keyboardLayout=None):
-		if not keyboardLayout:
-			keyboardLayout = self.QWERTY_LAYOUT
+		keyboardLayout = getattr(self, keyboardLayout, self.QWERTY_LAYOUT)
 		name = name.strip()
 		if not name:
 			raise self.UsernameEmptyError()
 		if name in self._users:
 			raise self.UsernameTakenError()
 		self._users[name] = {
-			"level": 100,
+			"level": 0,
 			"results": [],
 			"layout": keyboardLayout,
 		}
@@ -137,7 +150,7 @@ class TypeDataStore(object):
 			user["currentExercise"] = self._createRow(letters)
 		else:
 			#then practise typing words to improve speed.
-			user["currentExercise"] = u" ".join([random.choice(self._words) for i in range(8)])
+			user["currentExercise"] = " ".join(random.sample(self._words, 8))
 
 		return user["currentExercise"]
 

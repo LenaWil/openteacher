@@ -25,6 +25,11 @@ def initializeWidgets():
 	global KeyboardWidget
 
 	class KeyboardWidget(QtGui.QWidget):
+		"""An onscreen keyboard view. Make sure you call
+		   setKeyboardLayout() before showing the widget (otherwise
+		   drawing will fail.)
+
+		"""
 		#15 per row
 		SIZE_MAP = [
 			#tuples: (start_position, relative_size, finger_number)
@@ -35,6 +40,8 @@ def initializeWidgets():
 			[(1.5, 12, (5, 6))],
 		]
 		ALTERNATIVE_FOURTH_ROW = [(0, 1.5, 1), (1.5, 1, 1), (2.5, 1, 1), (3.5, 1, 2), (4.5, 1, 3), (5.5, 1, 4), (6.5, 1, 4), (7.5, 1, 7), (8.5, 1, 7), (9.5, 1, 8), (10.5, 1, 9), (11.5, 1, 10), (12.5, 2.5, 10)]
+
+		_golden_ratio_conjugate = 1.6180339887498948482
 
 		def __init__(self, *args, **kwargs):
 			super(KeyboardWidget, self).__init__(*args, **kwargs)
@@ -47,7 +54,6 @@ def initializeWidgets():
 			)
 			self._h = random.random()
 			self._cache = {}
-			self._golden_ratio_conjugate = 1.6180339887498948482
 
 		def _colorForFinger(self, finger):
 			if finger == (5, 6):
@@ -70,7 +76,7 @@ def initializeWidgets():
 			p.begin(self)
 
 			for rowNumber, row in enumerate(self.SIZE_MAP):
-				if (rowNumber + 1) == 4 and len(self.layout[rowNumber]) == len(self.ALTERNATIVE_FOURTH_ROW):
+				if (rowNumber + 1) == 4 and len(self._layout[rowNumber]) == len(self.ALTERNATIVE_FOURTH_ROW):
 					#alternative size map
 					row = self.ALTERNATIVE_FOURTH_ROW
 				y = rowNumber * cellSize
@@ -82,7 +88,7 @@ def initializeWidgets():
 						finger = column[2]
 					except IndexError:
 						print column
-					text = self.layout[rowNumber][columnNumber]
+					text = self._layout[rowNumber][columnNumber]
 
 					p.setBrush(self._colorForFinger(finger))
 					if text == self._currentKey:
@@ -109,6 +115,10 @@ def initializeWidgets():
 
 		def sizeHint(self):
 			return QtCore.QSize(500, 210)
+
+		def setKeyboardLayout(self, layout):
+			self._layout = layout
+			self.update()
 
 class TypingTutorKeyboardModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

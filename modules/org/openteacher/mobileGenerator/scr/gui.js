@@ -603,6 +603,7 @@
 				$("#practising-mode-choice-label").text(_("Please choose the practising mode you want to use:"));
 				$("#think-answer-button").text(_("Think answer"));
 				$("#type-answer-button").text(_("Type answer"));
+				$("#practising-mode-choice-explanation").text(_("If you ever want to change your choice, you can do so in the options dialog, which is accessable by clicking 'Menu' and then 'Options'."));
 			},
 			setupUi: function () {
 				$("#think-answer-button").click(onThinkAnswer);

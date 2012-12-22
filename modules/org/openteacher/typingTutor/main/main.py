@@ -54,7 +54,7 @@ def initializeWidgets():
 			self._active = False
 
 		def start(self, keyboardLayout, text):
-			self._keyboardWidget.layout = keyboardLayout
+			self._keyboardWidget.setKeyboardLayout(keyboardLayout)
 			self._text = text
 
 			#startTime is set after the first keyboard strike
@@ -100,27 +100,96 @@ def initializeWidgets():
 				self._keyboardWidget.setWrongKey(self._charToKeyName(keyInput[-1]))
 				self._statusLabel.setText("That's a mistake :(.")
 
+	class NewUserDialog(QtGui.QDialog):
+		def __init__(self, model, KeyboardWidget, *args, **kwargs):
+			super(NewUserDialog, self).__init__(*args, **kwargs)
+
+			self._model = model
+
+			self._explanationLabel = QtGui.QLabel()
+			self._userNameLabel = QtGui.QLabel()
+			self._userNameTextBox = QtGui.QLineEdit()
+			self._layoutLabel = QtGui.QLabel()
+			self._layoutComboBox = QtGui.QComboBox()
+			self._previewLabel = QtGui.QLabel()
+			self._keyboardWidget = KeyboardWidget()
+
+			buttons = QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel
+			buttonBox = QtGui.QDialogButtonBox(buttons)
+
+			layout = QtGui.QFormLayout()
+			layout.addRow(self._explanationLabel)
+			layout.addRow(self._userNameLabel, self._userNameTextBox)
+			layout.addRow(self._previewLabel, self._keyboardWidget)
+			layout.addRow(self._layoutLabel, self._layoutComboBox)
+			layout.addRow(buttonBox)
+
+			self.setLayout(layout)
+
+			self._layoutComboBox.highlighted.connect(self._updatePreview)
+			buttonBox.accepted.connect(self.accepted.emit)
+			buttonBox.rejected.connect(self.rejected.emit)
+
+			self.retranslate()
+
+		def clear(self):
+			self._userNameTextBox.clear()
+			if self._layoutComboBox.count():
+				self._layoutComboBox.setCurrentIndex(0)
+				self._updatePreview(0)
+
+		def retranslate(self):
+			self._explanationLabel.setText(_("Please choose a user name and the keyboard layout you want to learn."))
+			self._userNameLabel.setText(_("Username:"))
+			self._layoutLabel.setText(_("Keyboard layout:"))
+			#TRANSLATORS: Split the line as closest to the middle as
+			#TRANSLATORS: possible, not necessarily between 'Keyboard
+			#TRANSLATORS: layout' and 'preview'. Thanks :)
+			self._previewLabel.setText(_("Keyboard layout\npreview:"))
+
+			#update on next event loop iteration, when the retranslate
+			#of the model is handled.
+			QtCore.QTimer.singleShot(0, self._updateComboBox)
+
+		def _updatePreview(self, index):
+			layoutName = unicode(self._layoutComboBox.itemData(index).toString())
+			layout = getattr(self._model, layoutName)
+			self._keyboardWidget.setKeyboardLayout(layout)
+
+		def _updateComboBox(self):
+			self._layoutComboBox.clear()
+			for internalName, name in self._model.layouts:
+				self._layoutComboBox.addItem(name, internalName)
+			self._updatePreview(0)
+
+		@property
+		def username(self):
+			return unicode(self._userNameTextBox.text())
+
+		@property
+		def layout(self):
+			i = self._layoutComboBox.currentIndex()
+			return unicode(self._layoutComboBox.itemData(i).toString())
+
 	class ReadOnlyStringModel(QtGui.QStringListModel):
 		def flags(self, *args, **kwargs):
 			return QtCore.QAbstractItemModel.flags(self, *args, **kwargs)
 
 	class LoginWidget(QtGui.QWidget):
 		userChosen = QtCore.pyqtSignal([object])
+		newUserRequested = QtCore.pyqtSignal()
 
 		def __init__(self, model, *args, **kwargs):
 			super(LoginWidget, self).__init__(*args, **kwargs)
 
-			self._model = model
-			users = self._model.usernames
-
 			self._label = QtGui.QLabel()
 
-			qtModel = ReadOnlyStringModel(users)
+			qtModel = ReadOnlyStringModel(model.usernames)
 			listView = QtGui.QListView()
 			listView.setModel(qtModel)
 			listView.clicked.connect(self._userClicked)
 			self._newUserButton = QtGui.QPushButton()
-			self._newUserButton.clicked.connect(self._newUser)
+			self._newUserButton.clicked.connect(self.newUserRequested.emit)
 
 			vbox = QtGui.QVBoxLayout()
 			vbox.addWidget(self._label)
@@ -130,38 +199,9 @@ def initializeWidgets():
 
 			self.retranslate()
 
-			if not users:
-				#next time in the event loop, so there is a widget shown
-				#behind the new user box.
-				QtCore.QTimer.singleShot(0, self._newUser)
-
 		def retranslate(self):
 			self._label.setText(_("Welcome, please choose your account by clicking on it."))
 			self._newUserButton.setText(_("I am a new user"))
-
-		def _newUser(self):
-			username, ok = QtGui.QInputDialog.getText(
-				self,
-				_("Please choose a username."),
-				_("What username would you like to have?"),			
-			)
-			if ok:
-				try:
-					self._model.registerUser(unicode(username))
-				except self._model.UsernameEmptyError:
-					QtGui.QMessageBox.critical(
-						self,
-						_("Username empty"),
-						_("The username should not be empty. Please try again.")
-					)
-				except self._model.UsernameTakenError:
-					QtGui.QMessageBox.critical(
-						self,
-						_("Username taken"),
-						_("That username is already taken. Please try again."),
-					)
-				else:
-					self.userChosen.emit(unicode(username))
 
 		def _userClicked(self, index):
 			username = index.data(QtCore.Qt.DisplayRole).toString()
@@ -230,19 +270,56 @@ def initializeWidgets():
 
 			#setup other widgets, connect signals
 			self._loginWidget = LoginWidget(self._model)
+			self._newUserDialog = NewUserDialog(self._model, createKeyboardWidget)
 			self._instructionsWidget = InstructionsWidget(self._model)
 			self._exerciseWidget = ExerciseWidget(createKeyboardWidget)
 
 			self._loginWidget.userChosen.connect(self._userKnown)
+			self._loginWidget.newUserRequested.connect(self._showNewUser)
+			self._newUserDialog.accepted.connect(self._newUser)
+			self._newUserDialog.rejected.connect(self._showLoginWidget)
 			self._instructionsWidget.exerciseStartRequested.connect(self._startExercise)
 			self._exerciseWidget.finished.connect(self._exerciseDone)
 
 			#add widgets and set current widget
 			self.addWidget(self._loginWidget)
+			self.addWidget(self._newUserDialog)
 			self.addWidget(self._instructionsWidget)
 			self.addWidget(self._exerciseWidget)
 
+			if self._model.usernames:
+				self._showLoginWidget()
+			else:
+				self._showNewUser()
+
+		def _showLoginWidget(self):
 			self.setCurrentWidget(self._loginWidget)
+
+		def _showNewUser(self):
+			self._newUserDialog.clear()
+			self.setCurrentWidget(self._newUserDialog)
+
+		def _newUser(self):
+			username = self._newUserDialog.username
+			layout = self._newUserDialog.layout
+			try:
+				self._model.registerUser(username, layout)
+			except self._model.UsernameEmptyError:
+				QtGui.QMessageBox.critical(
+					self,
+					_("Username empty"),
+					_("The username should not be empty. Please try again.")
+				)
+				self._showNewUser()
+			except self._model.UsernameTakenError:
+				QtGui.QMessageBox.critical(
+					self,
+					_("Username taken"),
+					_("That username is already taken. Please try again."),
+				)
+				self._showNewUser()
+			else:
+				self._userKnown(username)
 
 		def _userKnown(self, username):
 			self._username = username
