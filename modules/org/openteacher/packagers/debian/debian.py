@@ -58,6 +58,7 @@ class DebianPackagerModule(object):
 			sys.stderr.write("Please specify a debian build number and after that a path for the deb file (ending in .deb) as the last command line arguments.\n")
 			return
 		sourcePath = self._modules.default("active", type="sourceWithSetupSaver").saveSource()
+		packageName = self._metadata["name"].lower()
 
 		oldCwd = os.getcwd()
 		os.chdir(sourcePath)
@@ -69,7 +70,7 @@ Section: misc
 XS-Python-Version: >= 2.6
 Depends: python-qt4, python-qt4-phonon, python-qt4-gl, espeak
 			""".strip().format(
-				package=self._metadata["name"].lower()
+				package=packageName
 			))
 		subprocess.check_call([
 			sys.executable or "python",
@@ -78,8 +79,16 @@ Depends: python-qt4, python-qt4-phonon, python-qt4-gl, espeak
 			"--force-buildsystem", "False",
 			#e.g. 0openteachermaintainers1
 			"--debian-version", "0" + self._metadata["email"].split("@")[0] + buildNumber,
-			"bdist_deb",
 		])
+		os.chdir("deb_dist/%s-%s" % (
+			packageName,
+			self._metadata["version"],
+		))
+		with open("debian/%s.manpages" % packageName, "w") as f:
+			#this asserts there are only manpages of category 1. Which
+			#is currently just fine.
+			f.write("\n".join(glob.glob("linux/*.1")))
+		subprocess.check_call(["dpkg-buildpackage", "-rfakeroot", "-uc", "-us",])
 		os.chdir(oldCwd)
 		shutil.copy(
 			glob.glob(os.path.join(sourcePath, "deb_dist/*.deb"))[0],

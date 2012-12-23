@@ -12,7 +12,11 @@ build() {
   cd "$startdir"
 
   #fix the shebang
-  sed -i 's,^#<!--(raw)-->!<!--(end)-->/usr/bin/env python,#<!--(raw)-->!<!--(end)-->/usr/bin/env python2,' bin/openteacher
+  sed -i 's,^#<!--(raw)-->!<!--(end)-->/usr/bin/env python,#<!--(raw)-->!<!--(end)-->/usr/bin/env python2,' bin/$pkgname!@
+
+  #copy the man page
+  mkdir -p $pkgdir/usr/share/man/man1
+  cp linux/$pkgname.1 $pkgdir/usr/share/man/man1
 
   #install into pkgdir
   python2 setup.py install --root=$pkgdir/ || return 1

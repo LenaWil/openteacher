@@ -21,6 +21,13 @@
 import sys
 import os
 import shutil
+import datetime
+import subprocess
+
+def check_output(command):
+	#FIXME sometime: replace with subprocess.check_output
+	process = subprocess.Popen(command, stdout=subprocess.PIPE)
+	return process.communicate()[0]
 
 class SourceWithSetupSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -33,6 +40,8 @@ class SourceWithSetupSaverModule(object):
 			self._mm.mods(type="sourceSaver"),
 		)
 		self.uses = (
+			self._mm.mods(type="profileDescription"),
+			self._mm.mods(type="authors"),
 			self._mm.mods(type="load"),
 		)
 
@@ -104,9 +113,24 @@ class SourceWithSetupSaverModule(object):
 			templ = pyratemp.Template(filename=self._mm.resourcePath("menu.templ"))
 			f.write(templ(package=packageName, **self._metadata).encode("UTF-8"))
 
-		with open(os.path.join(sourcePath, "linux", packageName + ".1"), "w") as f:
+		#man page
+		rstPath = os.path.join(sourcePath, "linux", "manpage.rst")
+		with open(rstPath, "w") as f:
 			templ = pyratemp.Template(filename=self._mm.resourcePath("manpage.templ"))
-			f.write(templ(package=packageName, **self._metadata).encode("UTF-8"))
+			authors = self._modules.default("active", type="authors").registeredAuthors
+			profileMods = self._modules.sort("active", type="profileDescription")
+			args = {
+				"package": packageName,
+				"now": datetime.datetime.now(),
+				#someone may appear in multiple categories, so set.
+				"otAuthors": set([a[1] for a in authors]),
+				"profiles": [m.desc for m in profileMods]
+			}
+			args.update(self._metadata)
+			f.write(templ(**args).encode("UTF-8"))
+
+		subprocess.check_call(["rst2man", rstPath, os.path.join(sourcePath, "linux", packageName + ".1")])
+		os.remove(rstPath)
 
 		#linux/package.xml
 		with open(os.path.join(sourcePath, "linux", packageName + ".xml"), "w") as f:
