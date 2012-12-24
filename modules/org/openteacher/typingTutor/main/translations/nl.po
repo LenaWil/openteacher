@@ -6,45 +6,84 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-07 21:42+0100\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2012-12-24 11:55+0100\n"
 "PO-Revision-Date: 2012-12-10 16:26+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-12-11 05:06+0000\n"
 "X-Generator: Launchpad (build 16356)\n"
 
-#: main.py:139
+#: main.py:142
+msgid "Please choose a user name and the keyboard layout you want to learn."
+msgstr ""
+
+#: main.py:143
+#, fuzzy
+msgid "Username:"
+msgstr "Gebruikersnaam bezet"
+
+#: main.py:144
+msgid "Keyboard layout:"
+msgstr ""
+
+#. TRANSLATORS: Split the line as closest to the middle as
+#. TRANSLATORS: possible, not necessarily between 'Keyboard
+#. TRANSLATORS: layout' and 'preview'. Thanks :)
+#: main.py:148
+msgid ""
+"Keyboard layout\n"
+"preview:"
+msgstr ""
+
+#: main.py:203
 msgid "Welcome, please choose your account by clicking on it."
 msgstr "Welkom, kies alstublieft uw account door erop te klikken."
 
-#: main.py:140
+#: main.py:204
 msgid "I am a new user"
 msgstr "Ik ben een nieuwe gebruiker"
 
-#: main.py:145
-msgid "Please choose a username."
-msgstr "Kies alstublieft een gebruikersnaam"
+#: main.py:256
+msgid "Speed (words per minute)"
+msgstr ""
 
-#: main.py:146
-msgid "What username would you like to have?"
-msgstr "Welke gebruikersnaam wilt u hebben?"
+#: main.py:257
+msgid "Amount of mistakes"
+msgstr ""
 
-#: main.py:154
-msgid "Username taken"
-msgstr "Gebruikersnaam bezet"
-
-#: main.py:155
-msgid "That username is already taken. Please try again."
-msgstr "Die gebruikersnaam is al bezet. Probeer het alstublieft opnieuw."
-
-#: main.py:187
+#: main.py:258
 msgid "Start exercise"
 msgstr "Begin oefening"
 
-#: main.py:309 main.py:319
+#: main.py:310
+#, fuzzy
+msgid "Username empty"
+msgstr "Gebruikersnaam bezet"
+
+#: main.py:311
+#, fuzzy
+msgid "The username should not be empty. Please try again."
+msgstr "Die gebruikersnaam is al bezet. Probeer het alstublieft opnieuw."
+
+#: main.py:317
+msgid "Username taken"
+msgstr "Gebruikersnaam bezet"
+
+#: main.py:318
+msgid "That username is already taken. Please try again."
+msgstr "Die gebruikersnaam is al bezet. Probeer het alstublieft opnieuw."
+
+#: main.py:417 main.py:427
 msgid "Typing Tutor"
 msgstr "Typeleraar"
+
+#~ msgid "Please choose a username."
+#~ msgstr "Kies alstublieft een gebruikersnaam"
+
+#~ msgid "What username would you like to have?"
+#~ msgstr "Welke gebruikersnaam wilt u hebben?"

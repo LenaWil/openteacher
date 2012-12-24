@@ -23,6 +23,7 @@ import os
 import shutil
 import datetime
 import subprocess
+import glob
 
 def check_output(command):
 	#FIXME sometime: replace with subprocess.check_output
@@ -38,12 +39,14 @@ class SourceWithSetupSaverModule(object):
 		self.requires = (
 			self._mm.mods(type="metadata"),
 			self._mm.mods(type="sourceSaver"),
+			self._mm.mods(type="translator"),
 		)
 		self.uses = (
 			self._mm.mods(type="profileDescription"),
 			self._mm.mods(type="authors"),
 			self._mm.mods(type="load"),
 		)
+		self.filesWithTranslations = ("manpage.templ",)
 
 	def saveSource(self):
 		sourcePath = self._modules.default("active", type="sourceSaver").saveSource()
@@ -113,24 +116,13 @@ class SourceWithSetupSaverModule(object):
 			templ = pyratemp.Template(filename=self._mm.resourcePath("menu.templ"))
 			f.write(templ(package=packageName, **self._metadata).encode("UTF-8"))
 
-		#man page
-		rstPath = os.path.join(sourcePath, "linux", "manpage.rst")
-		with open(rstPath, "w") as f:
-			templ = pyratemp.Template(filename=self._mm.resourcePath("manpage.templ"))
-			authors = self._modules.default("active", type="authors").registeredAuthors
-			profileMods = self._modules.sort("active", type="profileDescription")
-			args = {
-				"package": packageName,
-				"now": datetime.datetime.now(),
-				#someone may appear in multiple categories, so set.
-				"otAuthors": set([a[1] for a in authors]),
-				"profiles": [m.desc for m in profileMods]
-			}
-			args.update(self._metadata)
-			f.write(templ(**args).encode("UTF-8"))
-
-		subprocess.check_call(["rst2man", rstPath, os.path.join(sourcePath, "linux", packageName + ".1")])
-		os.remove(rstPath)
+		#english man page
+		self._buildManPage(sourcePath, packageName, "C")
+		#other languages
+		translator = self._modules.default("active", type="translator")
+		for file in glob.glob(self._mm.resourcePath("translations/*.po")):
+			lang = os.path.splitext(os.path.basename(file))[0]
+			self._buildManPage(sourcePath, packageName, lang)
 
 		#linux/package.xml
 		with open(os.path.join(sourcePath, "linux", packageName + ".xml"), "w") as f:
@@ -153,6 +145,42 @@ class SourceWithSetupSaverModule(object):
 			f.write(templ(**data).encode("UTF-8"))
 
 		return sourcePath
+
+	def _buildManPage(self, sourcePath, packageName, lang):
+		translator = self._modules.default("active", type="translator")
+		#temporarily switch the application language
+		oldLanguage = translator.language
+		translator.language = lang
+
+		rstPath = os.path.join(sourcePath, "linux", "manpage.rst")
+		with open(rstPath, "w") as f:
+			_, ngettext = translator.gettextFunctions(self._mm.resourcePath("translations"))
+
+			templ = pyratemp.Template(filename=self._mm.resourcePath("manpage.templ"))
+			authors = self._modules.default("active", type="authors").registeredAuthors
+			profileMods = self._modules.sort("active", type="profileDescription")
+			args = {
+				"package": packageName,
+				"now": datetime.datetime.now(),
+				#someone may appear in multiple categories, so set.
+				"otAuthors": set([a[1] for a in authors]),
+				"profiles": [m.desc for m in profileMods],
+				"tr": _,
+				#constructs a valid restructured text title.
+				"titleify": lambda title: title + "\n" + (len(title) + 1) * "="
+			}
+			args.update(self._metadata)
+			f.write(templ(**args).encode("UTF-8"))
+
+		if lang == "C":
+			manName = packageName + ".1"
+		else:
+			manName = packageName + "." + lang + ".1"
+		subprocess.check_call(["rst2man", rstPath, os.path.join(sourcePath, "linux", manName)])
+		os.remove(rstPath)
+
+		#restore the default application language again.
+		translator.language = oldLanguage
 
 	def enable(self):
 		global pyratemp

@@ -7,104 +7,116 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-12-07 21:41+0100\n"
+"POT-Creation-Date: 2012-12-24 11:55+0100\n"
 "PO-Revision-Date: 2012-11-18 21:04+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-12-08 05:25+0000\n"
 "X-Generator: Launchpad (build 16341)\n"
-"Language: nl\n"
 
-#: scr/gui.js:166 scr/gui.js:503
+#: scr/gui.js:167 scr/gui.js:625
 msgid "Menu"
 msgstr "Menu"
 
-#: scr/gui.js:167
+#: scr/gui.js:168
 msgid "New list"
 msgstr "Nieuwe lijst"
 
-#: scr/gui.js:168 scr/gui.js:186
+#: scr/gui.js:169 scr/gui.js:187
 msgid "Load list"
 msgstr "Laad lijst"
 
-#: scr/gui.js:169 scr/gui.js:174
+#: scr/gui.js:170 scr/gui.js:175
 msgid "Save list"
 msgstr "Lijst opslaan"
 
-#: scr/gui.js:170 scr/gui.js:191
+#: scr/gui.js:171 scr/gui.js:192
 msgid "Remove list"
 msgstr "Verwijder lijst"
 
-#: scr/gui.js:171 scr/gui.js:244
+#: scr/gui.js:172 scr/gui.js:277
 msgid "Options"
 msgstr "Opties"
 
-#: scr/gui.js:175
+#: scr/gui.js:176
 msgid "Please choose a name for the current list, so it can be saved."
 msgstr ""
 "Kies alstublieft een naam voor de huidige lijst, zodat deze opgeslagen kan "
 "worden."
 
-#: scr/gui.js:176
+#: scr/gui.js:177
 msgid "Name:"
 msgstr "Naam:"
 
-#: scr/gui.js:177
+#: scr/gui.js:178
 msgid "Done"
 msgstr "Klaar"
 
-#: scr/gui.js:179
+#: scr/gui.js:180
 msgid "Warning"
 msgstr "Waarschuwing"
 
-#: scr/gui.js:180
+#: scr/gui.js:181
 msgid "There is already a list named like that."
 msgstr "Er is al een lijst die zo heet."
 
-#: scr/gui.js:181
+#: scr/gui.js:182
 msgid "If you continue, it will be overwritten. Continue?"
 msgstr "Als u doorgaat, zal deze overschreven worden. Doorgaan?"
 
-#: scr/gui.js:182
+#: scr/gui.js:183
 msgid "Yes"
 msgstr "Ja"
 
-#: scr/gui.js:183
+#: scr/gui.js:184
 msgid "No"
 msgstr "Nee"
 
-#: scr/gui.js:187
+#: scr/gui.js:188
 msgid "Please choose the list you want to load."
 msgstr "Kies alstublieft de lijst die u wilt laden."
 
-#: scr/gui.js:188 scr/gui.js:193
+#: scr/gui.js:189 scr/gui.js:194
 msgid "Filter lists..."
 msgstr "Filter lijsten..."
 
-#: scr/gui.js:192
+#: scr/gui.js:193
 msgid "Please choose the list you want to remove."
 msgstr "Kies alstublieft de lijst die u wilt verwijderen."
 
-#: scr/gui.js:245
-msgid "Language:"
-msgstr "Taal:"
-
-#: scr/gui.js:246
+#: scr/gui.js:201 scr/gui.js:284
 msgid "Copyright info"
 msgstr "Copyrightinformatie"
 
-#: scr/gui.js:269 scr/gui.js:506
+#: scr/gui.js:278
+msgid "Language:"
+msgstr "Taal:"
+
+#: scr/gui.js:280
+msgid "Practising mode:"
+msgstr ""
+
+#: scr/gui.js:281 scr/gui.js:604
+msgid "Think answer"
+msgstr ""
+
+#: scr/gui.js:282 scr/gui.js:605
+msgid "Type answer"
+msgstr ""
+
+#: scr/gui.js:307 scr/gui.js:628
 msgid "Enter list"
 msgstr "Lijst invoeren"
 
-#: scr/gui.js:270
+#: scr/gui.js:308
 msgid "Word list:"
 msgstr "Woordenlijst:"
 
-#: scr/gui.js:271
+#: scr/gui.js:309
 msgid ""
 "Welcome = Welkom\n"
 "to = bij\n"
@@ -114,15 +126,15 @@ msgstr ""
 "to = bij\n"
 "OpenTeacher mobile = OpenTeacher mobile\n"
 
-#: scr/gui.js:273
+#: scr/gui.js:311
 msgid "Error"
 msgstr "Fout"
 
-#: scr/gui.js:274
+#: scr/gui.js:312
 msgid "Missing equals sign or tab"
 msgstr "Missend gelijkheidsteken of tab"
 
-#: scr/gui.js:275
+#: scr/gui.js:313
 msgid ""
 "Please make sure every line contains an '='-sign or tab between the "
 "questions and answers."
@@ -130,43 +142,78 @@ msgstr ""
 "Zorg er alstublieft voor dat iedere regel een '='-teken of een tab tussen de "
 "vragen en de antwoorden bevat."
 
-#: scr/gui.js:276 scr/gui.js:470
+#: scr/gui.js:314 scr/gui.js:547
 msgid "Ok"
 msgstr "Ok"
 
-#: scr/gui.js:460 scr/gui.js:507
+#: scr/gui.js:532 scr/gui.js:629
 msgid "Teach me!"
 msgstr "Overhoor me!"
 
-#: scr/gui.js:461
+#: scr/gui.js:533
 msgid "Question:"
 msgstr "Vraag:"
 
-#: scr/gui.js:462
+#: scr/gui.js:534
 msgid "Answer:"
 msgstr "Antwoord:"
 
-#: scr/gui.js:463
+#: scr/gui.js:535
 msgid "Check!"
 msgstr "Controleer!"
 
-#: scr/gui.js:464
+#: scr/gui.js:536
 msgid "Skip"
 msgstr "Sla over"
 
-#: scr/gui.js:465
+#: scr/gui.js:537
 msgid "Correct anyway"
 msgstr "Toch goed"
 
-#: scr/gui.js:468 scr/gui.js:469
+#: scr/gui.js:538
+msgid ""
+"Think about the answer, and press the 'View answer' button when you're done."
+msgstr ""
+
+#: scr/gui.js:539
+msgid "View answer"
+msgstr ""
+
+#: scr/gui.js:540
+msgid "Translation:"
+msgstr ""
+
+#: scr/gui.js:541
+msgid "I was right"
+msgstr ""
+
+#: scr/gui.js:542
+msgid "I was wrong"
+msgstr ""
+
+#: scr/gui.js:545 scr/gui.js:546
 msgid "Test completed!"
 msgstr "Toets afgerond!"
 
-#: scr/gui.js:471
+#: scr/gui.js:548
 #, python-format
 msgid "Your note: %s"
 msgstr "Uw cijfer: %s"
 
-#: scr/gui.js:508
-msgid "List management"
-msgstr "Lijstmanagement"
+#: scr/gui.js:602
+msgid "Practising mode choice"
+msgstr ""
+
+#: scr/gui.js:603
+#, fuzzy
+msgid "Please choose the practising mode you want to use:"
+msgstr "Kies alstublieft de lijst die u wilt verwijderen."
+
+#: scr/gui.js:606
+msgid ""
+"If you ever want to change your choice, you can do so in the options dialog, "
+"which is accessable by clicking 'Menu' and then 'Options'."
+msgstr ""
+
+#~ msgid "List management"
+#~ msgstr "Lijstmanagement"

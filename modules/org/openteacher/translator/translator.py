@@ -80,7 +80,7 @@ class TranslatorModule(object):
 
 	def sendLanguageChanged(self):
 		"""A wrapper method called by the setting callback, which can't
-		   call the send() method directly
+		   call the send() methods directly
 
 		"""
 		self.languageChanged.send()
@@ -92,6 +92,11 @@ class TranslatorModule(object):
 		if not lang:
 			return locale.getdefaultlocale()[0]
 		return lang
+
+	@language.setter
+	def language(self, lang):
+		self._languageSetting["value"] = lang
+		self.sendLanguageChanged()
 
 	def gettextFunctions(self, localeDir, language=None):
 		if not language:

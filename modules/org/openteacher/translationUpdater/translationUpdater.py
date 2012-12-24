@@ -68,7 +68,7 @@ class TranslationUpdaterModule(object):
 			os.chdir(path)
 			#generate the xgettext comment, that extracts strings from
 			#source code.
-			cmd = "xgettext --force-po --add-comments=TRANSLATORS --from-code=UTF-8 --language=Python --package-name=%s --package-version=%s --msgid-bugs-address=%s --output=%s %s" % (
+			cmd = "xgettext --keyword=tr --force-po --add-comments=TRANSLATORS --from-code=UTF-8 --language=Python --package-name=%s --package-version=%s --msgid-bugs-address=%s --output=%s %s" % (
 				self._metadata["name"],
 				self._metadata["version"],
 				self._metadata["email"],

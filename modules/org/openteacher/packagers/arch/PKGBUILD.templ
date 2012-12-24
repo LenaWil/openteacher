@@ -16,6 +16,7 @@ build() {
 
   #copy the man page
   mkdir -p $pkgdir/usr/share/man/man1
+  #TODO: also install localized man pages. Needs some globbing I guess...
   cp linux/$pkgname.1 $pkgdir/usr/share/man/man1
 
   #install into pkgdir
