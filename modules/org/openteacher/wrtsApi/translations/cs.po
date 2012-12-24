@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2012-12-07 21:41+0100\n"
-"PO-Revision-Date: 2012-07-16 07:39+0000\n"
+"PO-Revision-Date: 2012-12-23 21:31+0000\n"
 "Last-Translator: Jakub Šnapka <snapka@seznam.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-08 05:24+0000\n"
-"X-Generator: Launchpad (build 16341)\n"
+"X-Launchpad-Export-Date: 2012-12-24 04:53+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 "Language: cs\n"
 
 #: wrtsApi.py:168
@@ -36,7 +36,7 @@ msgstr "Heslo"
 
 #: wrtsApi.py:175
 msgid "Input and output"
-msgstr ""
+msgstr "Vstup a výstup"
 
 #: wrtsApi.py:176
 msgid "WRDS Login credentials"
@@ -116,15 +116,15 @@ msgstr "WRDS - přihlaste se prosím:"
 
 #: ui.py:75
 msgid "Email:"
-msgstr ""
+msgstr "Email:"
 
 #: ui.py:78
 msgid "Password:"
-msgstr ""
+msgstr "Heslo:"
 
 #: ui.py:81
 msgid "Remember email address and password"
-msgstr ""
+msgstr "Zapamatovat email a heslo"
 
 #: ui.py:116
 msgid "WRDS - Please choose a list:"
