@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-12-24 11:55+0100\n"
+"POT-Creation-Date: 2012-12-24 14:22+0100\n"
 "PO-Revision-Date: 2012-12-09 09:46+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-10 04:47+0000\n"
-"X-Generator: Launchpad (build 16341)\n"
+"X-Launchpad-Export-Date: 2012-12-25 05:00+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
+"Language: ru\n"
 
 #: scr/gui.js:167 scr/gui.js:625
 msgid "Menu"
@@ -205,15 +205,11 @@ msgid "Practising mode choice"
 msgstr ""
 
 #: scr/gui.js:603
-#, fuzzy
 msgid "Please choose the practising mode you want to use:"
-msgstr "Выберите список который вы хотите удалить."
+msgstr ""
 
 #: scr/gui.js:606
 msgid ""
 "If you ever want to change your choice, you can do so in the options dialog, "
 "which is accessable by clicking 'Menu' and then 'Options'."
 msgstr ""
-
-#~ msgid "List management"
-#~ msgstr "Управление списком"
