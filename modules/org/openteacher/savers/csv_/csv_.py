@@ -85,9 +85,12 @@ class CsvSaverModule(object):
 	def save(self, type, lesson, path):
 		with open(path, "w") as f:
 			writer = csv.writer(f)
+
+			ql = lesson.list.get("questionLanguage", u"").encode("UTF-8")
+			al = lesson.list.get("answerLanguage", u"").encode("UTF-8")
 			#write header
-			questionsHeader = _("Questions").encode("UTF-8")
-			answersHeader = _("Answers").encode("UTF-8")
+			questionsHeader = ql or _("Questions").encode("UTF-8")
+			answersHeader = al or _("Answers").encode("UTF-8")
 			writer.writerow([questionsHeader, answersHeader])
 			#write items
 			for item in lesson.list.get("items", []):

@@ -36,8 +36,8 @@ class WordListStringComposerModule(object):
 		if self._engine.hasUncaughtException():
 			raise Exception(self._engine.uncaughtException().toString())
 
-	def composeList(self, list):
-		v = self._engine.evaluate("composeList(%s)" % json.dumps(list))
+	def composeList(self, lesson):
+		v = self._engine.evaluate("composeList(%s)" % json.dumps(lesson))
 		self._checkForErrors()
 
 		return unicode(v.toString())

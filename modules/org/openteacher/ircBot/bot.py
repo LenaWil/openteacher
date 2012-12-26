@@ -124,8 +124,12 @@ class OpenTeacherBot(irc.IRCClient):
 	def privmsg(self, user, channel, msg):
 		print "%s: %s: %s" % (user.split("!")[0], channel, msg)
 		target = channel if channel in self.factory.channels else user.split("!")[0]
+
 		#factoids
-		for key, factoid in self.factoids.iteritems():
+		#sorted on key so the longest factoid keys are tried first.
+		#Needed in this situation: .codedocumentation while there's a
+		#factoid .code.
+		for key, factoid in reversed(sorted(self.factoids.iteritems(), key=lambda t: len(t[0]))):
 			if key in msg:
 				self.msg(target, factoid)
 				#stop the loop, otherwise OTbot might spam the channel
