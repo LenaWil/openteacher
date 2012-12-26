@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2012-12-24 14:22+0100\n"
-"PO-Revision-Date: 2012-11-18 21:04+0000\n"
+"PO-Revision-Date: 2012-12-25 10:59+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-25 05:00+0000\n"
+"X-Launchpad-Export-Date: 2012-12-26 04:50+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 "Language: nl\n"
 
@@ -98,15 +98,15 @@ msgstr "Taal:"
 
 #: scr/gui.js:280
 msgid "Practising mode:"
-msgstr ""
+msgstr "Oefenmodus:"
 
 #: scr/gui.js:281 scr/gui.js:604
 msgid "Think answer"
-msgstr ""
+msgstr "Denk antwoord"
 
 #: scr/gui.js:282 scr/gui.js:605
 msgid "Type answer"
-msgstr ""
+msgstr "Typ antwoord"
 
 #: scr/gui.js:307 scr/gui.js:628
 msgid "Enter list"
@@ -174,22 +174,24 @@ msgstr "Toch goed"
 msgid ""
 "Think about the answer, and press the 'View answer' button when you're done."
 msgstr ""
+"Denk na over het antwoord en druk op de 'Toon antwoord'-knop wanneer je "
+"klaar bent."
 
 #: scr/gui.js:539
 msgid "View answer"
-msgstr ""
+msgstr "Toon antwoord"
 
 #: scr/gui.js:540
 msgid "Translation:"
-msgstr ""
+msgstr "Vertaling:"
 
 #: scr/gui.js:541
 msgid "I was right"
-msgstr ""
+msgstr "Ik had het goed"
 
 #: scr/gui.js:542
 msgid "I was wrong"
-msgstr ""
+msgstr "Ik had het fout"
 
 #: scr/gui.js:545 scr/gui.js:546
 msgid "Test completed!"
@@ -202,14 +204,16 @@ msgstr "Uw cijfer: %s"
 
 #: scr/gui.js:602
 msgid "Practising mode choice"
-msgstr ""
+msgstr "Oefenmoduskeuze"
 
 #: scr/gui.js:603
 msgid "Please choose the practising mode you want to use:"
-msgstr ""
+msgstr "Kies alstublieft de oefenmodus die u wilt gebruiken:"
 
 #: scr/gui.js:606
 msgid ""
 "If you ever want to change your choice, you can do so in the options dialog, "
 "which is accessable by clicking 'Menu' and then 'Options'."
 msgstr ""
+"Als u ooit uw keuze wilt veranderen, kunt u dat doen in het optiesvenster, "
+"dat bereikbaar is door te klikken op 'Menu' en 'Opties'."
