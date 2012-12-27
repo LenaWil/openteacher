@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-24 14:23+0100\n"
-"PO-Revision-Date: 2012-12-26 20:57+0000\n"
+"PO-Revision-Date: 2012-12-26 20:59+0000\n"
 "Last-Translator: Adriano Steffler <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-12-27 05:29+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
-"Language: pt_BR\n"
 
-#: typing.py:72
-msgid "Type answer"
-msgstr "Digitar a resposta"
+#: model.py:92
+msgid "Belgian AZERTY"
+msgstr "AZERTY belga"
+
+#: model.py:93
+msgid "Colemak"
+msgstr "Colemak"
+
+#: model.py:94
+msgid "Dvorak Simplified Keyboard"
+msgstr "Teclado simplificado Dvorak"
+
+#: model.py:95
+msgid "French AZERTY"
+msgstr "AZERTY francês"
+
+#: model.py:96
+msgid "QWERTY"
+msgstr "QWERTY"
+
+#: model.py:97
+msgid "QWERTZ"
+msgstr "QWERTZ"

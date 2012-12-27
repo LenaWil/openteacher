@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2012-12-24 14:22+0100\n"
-"PO-Revision-Date: 2012-11-20 14:15+0000\n"
+"PO-Revision-Date: 2012-12-26 21:21+0000\n"
 "Last-Translator: Adriano Steffler <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-25 05:00+0000\n"
+"X-Launchpad-Export-Date: 2012-12-27 05:29+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 "Language: pt_BR\n"
 
@@ -97,15 +97,15 @@ msgstr "Idioma:"
 
 #: scr/gui.js:280
 msgid "Practising mode:"
-msgstr ""
+msgstr "Modo de prática:"
 
 #: scr/gui.js:281 scr/gui.js:604
 msgid "Think answer"
-msgstr ""
+msgstr "Pensar na resposta"
 
 #: scr/gui.js:282 scr/gui.js:605
 msgid "Type answer"
-msgstr ""
+msgstr "Digitar a resposta"
 
 #: scr/gui.js:307 scr/gui.js:628
 msgid "Enter list"
@@ -173,22 +173,24 @@ msgstr "Corrigir de qualquer maneira"
 msgid ""
 "Think about the answer, and press the 'View answer' button when you're done."
 msgstr ""
+"Pense na resposta e aperte o botão de \"Ver resposta\" quando você tiver "
+"terminado."
 
 #: scr/gui.js:539
 msgid "View answer"
-msgstr ""
+msgstr "Ver a resposta"
 
 #: scr/gui.js:540
 msgid "Translation:"
-msgstr ""
+msgstr "Tradução:"
 
 #: scr/gui.js:541
 msgid "I was right"
-msgstr ""
+msgstr "Eu estava certo"
 
 #: scr/gui.js:542
 msgid "I was wrong"
-msgstr ""
+msgstr "Eu estava errado"
 
 #: scr/gui.js:545 scr/gui.js:546
 msgid "Test completed!"
@@ -201,14 +203,16 @@ msgstr "A sua nota: %s"
 
 #: scr/gui.js:602
 msgid "Practising mode choice"
-msgstr ""
+msgstr "Escolha do modo de prática"
 
 #: scr/gui.js:603
 msgid "Please choose the practising mode you want to use:"
-msgstr ""
+msgstr "Por favor, escolha o modo de prática que você deseja utilizar:"
 
 #: scr/gui.js:606
 msgid ""
 "If you ever want to change your choice, you can do so in the options dialog, "
 "which is accessable by clicking 'Menu' and then 'Options'."
 msgstr ""
+"Se você quiser alterar a sua escolha, você pode fazê-lo na janela de opções, "
+"que pode ser acessada clicando em “Menu” e depois em “Opções”."
