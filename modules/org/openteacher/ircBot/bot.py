@@ -125,16 +125,6 @@ class OpenTeacherBot(irc.IRCClient):
 		print "%s: %s: %s" % (user.split("!")[0], channel, msg)
 		target = channel if channel in self.factory.channels else user.split("!")[0]
 
-		#factoids
-		#sorted on key so the longest factoid keys are tried first.
-		#Needed in this situation: .codedocumentation while there's a
-		#factoid .code.
-		for key, factoid in reversed(sorted(self.factoids.iteritems(), key=lambda t: len(t[0]))):
-			if key in msg:
-				self.msg(target, factoid)
-				#stop the loop, otherwise OTbot might spam the channel
-				#on one command.
-				break
 		#bugs
 		match = re.search("(?:bugs? ?/?|#)([0-9]+)", msg)
 		if match:
@@ -154,6 +144,7 @@ class OpenTeacherBot(irc.IRCClient):
 						bug.web_link
 					)
 					self.msg(target, text.encode("UTF-8"))
+					return
 
 		#branches
 		match = re.search("lp:[^ ]*(?=[^,.?!])[^ ]", msg)
@@ -167,6 +158,7 @@ class OpenTeacherBot(irc.IRCClient):
 					branch.web_link,
 				)
 				self.msg(target, text.encode("UTF-8"))
+				return
 
 		if msg.startswith(".pymod "):
 			mod = msg.split(" ")[1]
@@ -177,11 +169,13 @@ class OpenTeacherBot(irc.IRCClient):
 				self.msg(target, "Can't find documentation for that module.")
 			else:
 				self.msg(target, url)
+			return
 
 		if msg.startswith(".google "):
 			q = msg.split(" ", 1)[1]
 			q = urllib.quote_plus(q)
 			self.msg(target, "http://google.com/search?q=%s" % q)
+			return
 
 		if msg.startswith(".qt "):
 			cls = msg.split(" ")[1]
@@ -192,11 +186,13 @@ class OpenTeacherBot(irc.IRCClient):
 				self.msg(target, "Can't find documentation for that class.")
 			else:
 				self.msg(target, url)
+			return
 
 		if msg.startswith(".answer ") or msg.startswith(".ask ") or msg.startswith(".question "):
 			q = msg.split(" ", 1)[1].replace(self.nickname, "")
 			q = urllib.quote_plus(q)
 			self.msg(target, "http://www.wolframalpha.com/input/?i=%s" % q)
+			return
 
 		if msg.startswith(".pep "):
 			try:
@@ -211,6 +207,7 @@ class OpenTeacherBot(irc.IRCClient):
 					self.msg(target, "No pep found for that number.")
 				else:
 					self.msg(target, url)
+			return
 
 		#python evaluation
 		if msg.startswith(".py "):
@@ -225,6 +222,7 @@ class OpenTeacherBot(irc.IRCClient):
 			if len(result) > 350:
 				result = result[len(result) - 350:]
 			self.msg(target, result)
+			return
 
 		#reset python shell
 		if msg == ".reset" and user in self.factory.admins:
@@ -232,6 +230,7 @@ class OpenTeacherBot(irc.IRCClient):
 				self.msg(target, "I've been reset.")
 			else:
 				self.msg(target, "Could not reset. Is appspot down?")
+			return
 
 		#quit client
 		if msg == ".quit" and user in self.factory.admins:
@@ -252,6 +251,18 @@ class OpenTeacherBot(irc.IRCClient):
 					spec.web_link,
 				)
 				self.msg(target, text.encode("UTF-8"))
+				return
+
+		#factoids
+		#sorted on key so the longest factoid keys are tried first.
+		#Needed in this situation: .codedocumentation while there's a
+		#factoid .code.
+		for key, factoid in reversed(sorted(self.factoids.iteritems(), key=lambda t: len(t[0]))):
+			if key in msg:
+				self.msg(target, factoid)
+				#stop the loop, otherwise OTbot might spam the channel
+				#on one command.
+				return
 
 class OpenTeacherBotFactory(protocol.ClientFactory):
 	protocol = OpenTeacherBot

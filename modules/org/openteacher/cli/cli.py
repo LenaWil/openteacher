@@ -273,32 +273,41 @@ class CommandLineInterfaceModule(object):
 
 		subparsers = parser.add_subparsers()
 
-		#convert
-		convert = subparsers.add_parser("convert", help="convert word, topo and media files", prefix_chars="+")
-		convert.add_argument("+f", "++output-format", help="output format", default="otwd", choices=list(self._saveExts()))
-		convert.add_argument("input-files", nargs="+", help="input files")
-		convert.set_defaults(func=self._convert)
+		#if at least one saver and loader available:
+		if set(self._mm.mods("active", type="load")) and set(self._mm.mods("active", type="save")):
+			#convert
+			convert = subparsers.add_parser("convert", help="convert word, topo and media files", prefix_chars="+")
+			convert.add_argument("+f", "++output-format", help="output format", default="otwd", choices=list(self._saveExts()))
+			convert.add_argument("input-files", nargs="+", help="input files")
+			convert.set_defaults(func=self._convert)
 
-		#view-word-list
-		viewWordList = subparsers.add_parser("view-word-list", help="show a word list", prefix_chars="+")
-		viewWordList.add_argument("input-files", nargs="+", help="input files")
-		viewWordList.add_argument("+p", "++part", choices=["list", "title", "question-lang", "answer-lang"], default="list")
-		viewWordList.set_defaults(func=self._viewWordList)
+		#if at least a loader is available.
+		if set(self._mm.mods("active", type="load")):
+			#view-word-list
+			viewWordList = subparsers.add_parser("view-word-list", help="show a word list", prefix_chars="+")
+			viewWordList.add_argument("input-files", nargs="+", help="input files")
+			viewWordList.add_argument("+p", "++part", choices=["list", "title", "question-lang", "answer-lang"], default="list")
+			viewWordList.set_defaults(func=self._viewWordList)
 
-		#new-word-list
-		newWordList = subparsers.add_parser("new-word-list", help="make a new word list", prefix_chars="+")
-		newWordList.add_argument("output-file", help="output file")
-		newWordList.add_argument("input-file", help="input file (default: stdin)", nargs="?", default="-")
-		newWordList.add_argument("+t", "++title")
-		newWordList.add_argument("+q", "++question-lang")
-		newWordList.add_argument("+a", "++answer-lang")
-		newWordList.set_defaults(func=self._newWordList)
+		#if at least a saver is available
+		if set(self._mm.mods("active", type="save")):
+			#new-word-list
+			newWordList = subparsers.add_parser("new-word-list", help="make a new word list", prefix_chars="+")
+			newWordList.add_argument("output-file", help="output file")
+			newWordList.add_argument("input-file", help="input file (default: stdin)", nargs="?", default="-")
+			newWordList.add_argument("+t", "++title")
+			newWordList.add_argument("+q", "++question-lang")
+			newWordList.add_argument("+a", "++answer-lang")
+			newWordList.set_defaults(func=self._newWordList)
 
-		#practise-word-list
-		practiseWordList = subparsers.add_parser("practise-word-list", help="practise a word list", prefix_chars="+")
-		practiseWordList.add_argument("file", help="the file to practise")
-		practiseWordList.add_argument("+l", "++lesson-type", choices=self._lessonTypes, default=self._lessonTypes[0])
-		practiseWordList.set_defaults(func=self._practiseWordList)
+		#if curses framework used for practising and at least one loader
+		#is available.
+		if urwid and set(self._mm.mods("active", type="load")):
+			#practise-word-list
+			practiseWordList = subparsers.add_parser("practise-word-list", help="practise a word list", prefix_chars="+")
+			practiseWordList.add_argument("file", help="the file to practise")
+			practiseWordList.add_argument("+l", "++lesson-type", choices=self._lessonTypes, default=self._lessonTypes[0])
+			practiseWordList.set_defaults(func=self._practiseWordList)
 
 		args = parser.parse_args()
 		if not len(set(vars(args)) - set(["func"])):
@@ -312,7 +321,7 @@ class CommandLineInterfaceModule(object):
 			import urwid
 		except ImportError:
 			#remain inactive
-			return
+			urwid = None
 		self._modules = next(iter(self._mm.mods(type="modules")))
 		self._modules.default("active", type="execute").startRunning.handle(self._run)
 
