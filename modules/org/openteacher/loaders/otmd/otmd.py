@@ -92,7 +92,18 @@ class OpenTeachingMediaLoaderModule(object):
 		names.remove("list.json")
 		for name in names:
 			resourceFilenames[name] = name
-		return self._otxxLoader.load(path, resourceFilenames)
+
+		lesson = self._otxxLoader.load(path, resourceFilenames)
+
+		# Replace filenames with their real (temporary) files
+		for item in lesson["list"]["items"]:
+			try:
+				item["filename"] = lesson["resources"][item["filename"]]
+			except KeyError:
+				#Remote-data items
+				pass
+
+		return lesson
 
 def init(moduleManager):
 	return OpenTeachingMediaLoaderModule(moduleManager)

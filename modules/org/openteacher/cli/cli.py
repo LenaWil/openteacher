@@ -104,6 +104,7 @@ class CommandLineInterfaceModule(object):
 		self.uses = (
 			self._mm.mods(type="load"),
 			self._mm.mods(type="save"),
+			self._mm.mods(type="reverser"),
 		)
 		self.priorities = {
 			"cli": 0,
@@ -134,6 +135,20 @@ class CommandLineInterfaceModule(object):
 		for selector in paths:
 			newPaths.extend(glob.iglob(selector))
 		return newPaths
+
+	def _reverseList(self, args):
+		type, lesson = self._load(args["input-file"])
+		if not lesson:
+			print >> sys.stderr, "Couldn't load file '%s', not reversing." % args["input-file"]
+			return
+
+		try:
+			self._modules.default("active", type="reverser", dataType=type).reverse(lesson["list"])
+		except IndexError:
+			print >> sys.stderr, "Couldn't reverse the file '%s'." % args["input-file"]
+			return
+
+		self._save(type, lesson, args["output-file"])
 
 	def _convert(self, args):
 		inputPaths = self._expandPaths(args["input-files"])
@@ -205,21 +220,24 @@ class CommandLineInterfaceModule(object):
 		if args["answer_lang"]:
 			lesson["list"]["answerLanguage"] = unicode(args["answer_lang"], encoding=sys.stdin.encoding or "UTF-8")
 
-		if os.path.isfile(args["output-file"]):
+		self._save(type, lesson, args["output-file"])
+
+	def _save(self, type, lesson, path):
+		#also strip the dot.
+		ext = os.path.splitext(path)[1][1:]
+
+		if os.path.isfile(path):
 			print >> sys.stderr, "Output file already exists. Not saving."
 			return
 
-		#also strip the dot.
-		ext = os.path.splitext(args["output-file"])[1][1:]
-
 		for mod in self._modules.sort("active", type="save"):
-			if not ext in mod.saves.get("words", []):
+			if not ext in mod.saves.get(type, []):
 				continue
-			mod.save("words", DummyLesson(lesson), args["output-file"])
+			mod.save("words", DummyLesson(lesson), path)
 			print "Done."
 			break
 		else:
-			print >> sys.stderr, "Couldn't save your input to '%s'." % args["output-file"]
+			print >> sys.stderr, "Couldn't save your input to '%s'." % path
 
 	@property
 	def _lessonTypes(self):
@@ -280,6 +298,14 @@ class CommandLineInterfaceModule(object):
 			convert.add_argument("+f", "++output-format", help="output format", default="otwd", choices=list(self._saveExts()))
 			convert.add_argument("input-files", nargs="+", help="input files")
 			convert.set_defaults(func=self._convert)
+
+		#loader & saver required
+		if set(self._mm.mods("active", type="load")) and set(self._mm.mods("active", type="save")):
+			#reverse list
+			reverseList = subparsers.add_parser("reverse-list", help="reverse list", prefix_chars="+")
+			reverseList.add_argument("input-file", help="input files")
+			reverseList.add_argument("output-file", help="output file")
+			reverseList.set_defaults(func=self._reverseList)
 
 		#if at least a loader is available.
 		if set(self._mm.mods("active", type="load")):

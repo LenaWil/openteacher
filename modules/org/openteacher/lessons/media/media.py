@@ -129,14 +129,6 @@ class MediaLessonModule(object):
 		return lesson
 
 	def loadFromLesson(self, lessonl):
-		# Replace filenames with their real (temporary) files
-		for item in lessonl["list"]["items"]:
-			try:
-				item["filename"] = lessonl["resources"][item["filename"]]
-			except KeyError:
-				#Remote-data items
-				pass
-
 		lesson = self.createLesson()
 		# Load the list
 		self.enterWidget.list = lessonl["list"]

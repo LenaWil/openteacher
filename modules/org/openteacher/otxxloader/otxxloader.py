@@ -44,6 +44,8 @@ class OtxxLoaderModule(object):
 			return list
 		for test in list["tests"]:
 			for result in test["results"]:
+				if "active" not in result:
+					continue
 				result["active"]["start"] = self.stringToDatetime(result["active"]["start"])
 				result["active"]["end"] = self.stringToDatetime(result["active"]["end"])
 
