@@ -182,7 +182,10 @@ class ModulesHandler(object):
 					relevantLines = lines[startNumber:endNumber]
 					relevantCode = u"".join(relevantLines)
 
-					lexer = pygments.lexers.get_lexer_for_filename(fpath)
+					try:
+						lexer = pygments.lexers.get_lexer_for_filename(fpath)
+					except pygments.util.ClassNotFound:
+						lexer = pygments.lexers.TextLexer()
 					formatter = pygments.formatters.HtmlFormatter()
 					fixmes.append({
 						"path": self._pathToUrl(unicode(fpath, sys.getfilesystemencoding())),
