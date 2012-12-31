@@ -105,7 +105,7 @@ class TypeDataStore(object):
 		if name in self._users:
 			raise self.UsernameTakenError()
 		self._users[name] = {
-			"level": 0,
+			"level": 55,
 			"results": [],
 			"layout": keyboardLayout,
 		}
@@ -118,9 +118,7 @@ class TypeDataStore(object):
 			row.insert(i, " ")
 		return u"".join(row[:59])
 
-	def currentExercise(self, username):
-		user = self._users[username]
-
+	def _letterExercises(self, user):
 		exercises = []
 
 		#generate exercises to learn the most commonly used keys
@@ -128,6 +126,7 @@ class TypeDataStore(object):
 		#larger groups.
 		rows = [2, 1, 3, 0]
 		for row in rows:
+			#FIXME: using indexes doesn't always work (different keyboard layouts)
 			exercises.extend([
 				user["layout"][row][4] + user["layout"][row][7],
 				user["layout"][row][3] + user["layout"][row][8],
@@ -140,13 +139,18 @@ class TypeDataStore(object):
 				user["layout"][row][4:8],
 				user["layout"][row][1:11],
 			])
-		#add an exercise which just uses all letters
+		#add an exercise which just uses all letters.
 		everything = "".join(["".join(user["layout"][row][1:11]) for row in rows])
 		exercises.append(everything)
 
-		if user["level"] < len(exercises):
+		return exercises
+
+	def currentExercise(self, username):
+		user = self._users[username]
+
+		if user["level"] < len(self._letterExercises(user)):
 			#first practise the keys needed
-			letters = exercises[user["level"]]
+			letters = self._letterExercises(user)[user["level"]]
 			user["currentExercise"] = self._createRow(letters)
 		else:
 			#then practise typing words to improve speed.
@@ -182,15 +186,22 @@ First place your fingers on the so-called home row: your fingers, from left to r
 		if len(user["results"]) == 1:
 			instr += "Congratulations, you finished your first exercise!\n\n"
 
+		#twenty word exercises need to be completed succesfully
+		if user["level"] > len(self._letterExercises(user)) + 20:
+			instr += "Congratulations, you finished this typing course! If you do want to continue, you can, but this is the end of the instructions not generated automatically. You did a great job!"
+
+		#FIXME: check if speed ok.
 		if user["results"] and user["results"][-1]["amountOfMistakes"] == 0:
 			instr += "You made zero mistakes, so you can continue practising some new letters. Keep up the good work!\n\n"
+
 		#FIXME: TODO. also check if it went wrong multiple times, and show a varying message then. So it stays a bit 'personal'.
 		#Also for success.
 		if user["results"] and user["results"][-1]["amountOfMistakes"] != 0:
 			#TODO: ngettext required.
-			instr += "You made %s mistakes, please try again until you can do it flawless. If that seems hard, try slowing down a bit." % user["results"][-1]["amountOfMistakes"]
-
-		#check for last exercise
+			instr += "You made %s mistakes, please keep trying until you can do it flawless.\n\n" % user["results"][-1]["amountOfMistakes"]
+			if self._wordsPerMinute(user["results"][-1]) >= 50:
+				#user is going a bit fast, which might be the cause for the mistakes.
+				instr = instr.rstrip() + " To archieve that, you might try slowing down a bit.\n\n"
 
 		return instr.strip()
 
@@ -205,9 +216,26 @@ First place your fingers on the so-called home row: your fingers, from left to r
 			"exercise": user["currentExercise"],
 			"level": user["level"],
 		})
+
+		speed = self._wordsPerMinute(user["results"][-1])
+
 		#calculate new level
-		if amountOfMistakes == 0:
-			user["level"] += 1
+		if user["level"] < len(self._letterExercises(user)):
+			#user is practising letters
+			if amountOfMistakes == 0 and speed >= 20:
+				user["level"] += 1
+		elif user["level"] < len(self._letterExercises(user)) + 20:
+			#user is practising words
+
+			maxLevel = len(self._letterExercises(user)) + 20
+
+			#at the end the user needs to type at 80 words per minute.
+			#work towards that.
+			if amountOfMistakes == 0 and speed >= (float(user["level"]) / maxLevel * 60) + 20:
+				user["level"] += 1
+		else:
+			#user is done. Don't increase the level anymore.
+			pass
 
 	@staticmethod
 	def _wordsPerMinute(result):
@@ -227,6 +255,11 @@ First place your fingers on the so-called home row: your fingers, from left to r
 		user = self._users[username]
 
 		return self._wordsPerMinute(user["results"][-1])
+
+	def level(self, username):
+		user = self._users[username]
+
+		return user["level"]
 
 	@property
 	def usernames(self):

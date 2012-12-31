@@ -214,12 +214,15 @@ def initializeWidgets():
 
 			self._model = model
 
+			self._levelLabel = QtGui.QLabel()
+			self._levelLabelLabel = QtGui.QLabel()
 			self._speedLabel = QtGui.QLabel()
 			self._speedLabelLabel = QtGui.QLabel()
 			self._mistakesLabel = QtGui.QLabel()
 			self._mistakesLabelLabel = QtGui.QLabel()
 
 			layout = QtGui.QFormLayout()
+			layout.addRow(self._levelLabelLabel, self._levelLabel)
 			layout.addRow(self._speedLabelLabel, self._speedLabel)
 			layout.addRow(self._mistakesLabelLabel, self._mistakesLabel)
 
@@ -239,11 +242,19 @@ def initializeWidgets():
 		def updateInstruction(self):
 			instr = self._model.currentInstruction(self.username)
 			try:
+				self._levelLabel.setText(unicode(self._model.level(self.username)))
+			except IndexError:
+				self._levelLabel.hide()
+			else:
+				self._levelLabel.show()
+
+			try:
 				self._speedLabel.setText(unicode(self._model.speed(self.username)))
 			except IndexError:
 				self._speedLabelLabel.hide()
 			else:
 				self._speedLabelLabel.show()
+
 			try:
 				self._mistakesLabel.setText(unicode(self._model.amountOfMistakes(self.username)))
 			except IndexError:
@@ -253,6 +264,7 @@ def initializeWidgets():
 			self._instructionLabel.setText(instr)
 
 		def retranslate(self):
+			self._levelLabelLabel.setText(_("Level"))
 			self._speedLabelLabel.setText(_("Speed (words per minute)"))
 			self._mistakesLabelLabel.setText(_("Amount of mistakes"))
 			self._button.setText(_("Start exercise"))

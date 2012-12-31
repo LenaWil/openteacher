@@ -123,7 +123,7 @@ def getTestViewer():
 					"active",
 					type="progressViewer"
 				).createProgressViewer(self.test)
-			except IndexError:
+			except (IndexError, KeyError):
 				pass
 
 			self.addWidget(horSplitter)
@@ -149,8 +149,9 @@ def getTestViewer():
 			try:
 				completedText = _("yes") if self.test["finished"] else _("no")
 			except KeyError:
-				completedText = _("no")
-			self.completedLabel.setText(_("Completed: %s") % completedText)
+				self.completedLabel.setText("")
+			else:
+				self.completedLabel.setText(_("Completed: %s") % completedText)
 
 			seconds = int(round(self._totalThinkingTime))
 			if seconds < 180:

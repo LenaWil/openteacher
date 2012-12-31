@@ -31,6 +31,8 @@ def total_seconds(td):
 def getGraph():
 	class Graph(QtGui.QFrame):
 		def __init__(self, test, *args, **kwargs):
+			"""Raises KeyError if 'test' doesn't contain time info."""
+
 			super(Graph, self).__init__(*args, **kwargs)
 			
 			self._test = test

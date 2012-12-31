@@ -63,7 +63,11 @@ def getTestsModel():
 				elif index.column() == self.NOTE:
 					return self._calculateNote(test)
 			elif role == QtCore.Qt.CheckStateRole and index.column() == self.COMPLETED:
-				return test["finished"]
+				#guess it's there.
+				try:
+					return test["finished"]
+				except KeyError:
+					return
 
 		def testFor(self, index):
 			if index.isValid():
