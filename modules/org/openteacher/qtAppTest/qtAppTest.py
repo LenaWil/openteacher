@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,31 +18,40 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class WordsReverserModule(object):
-	def __init__(self, moduleManager, *args, **kwargs):
-		super(WordsReverserModule, self).__init__(*args, **kwargs)
-		self._mm = moduleManager
+import unittest
 
-		self.type = "reverser"
-		self.dataType = "words"
-
-	def reverse(self, list):
-		"""Reverses the list word list. Crashes if the dataType isn't
-		   words. Modifies the list in place (returns nothing).
+class TestCase(unittest.TestCase):
+	def testForQApplication(self):
+		"""Test if the qtApp mod did what it promised to do: making sure
+		   there's a QApplication active.
 
 		"""
-		#reverse question & answers
-		for word in list["items"]:
-			word["questions"], word["answers"] = word.get("answers", []), word.get("questions", [])
+		self.assertIsInstance(QtGui.QApplication.instance(), QtCore.QCoreApplication)
 
-		#reverse questionLanguage & answerLanguage
-		list["questionLanguage"], list["answerLanguage"] = list.get("answerLanguage", u""), list.get("questionLanguage", u"")
+class TestModule(object):
+	def __init__(self, moduleManager, *args, **kwargs):
+		super(TestModule, self).__init__(*args, **kwargs)
+		self._mm = moduleManager
+
+		self.type = "test"
+		self.requires = (
+			self._mm.mods(type="qtApp"),
+		)
 
 	def enable(self):
+		global QtCore, QtGui
+		try:
+			from PyQt4 import QtCore, QtGui
+		except ImportError:
+			#remain inactive
+			return
+		self.TestCase = TestCase
+		self.TestCase._mm = self._mm
 		self.active = True
 
 	def disable(self):
 		self.active = False
+		del self.TestCase
 
 def init(moduleManager):
-	return WordsReverserModule(moduleManager)
+	return TestModule(moduleManager)

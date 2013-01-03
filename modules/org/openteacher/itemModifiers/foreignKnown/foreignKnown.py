@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -30,9 +30,9 @@ class ForeignKnownModule(object):
 		self.filesWithTranslations = ("foreignKnown.py",)
 
 	def modifyItem(self, item):
-		#modify in place, because the caller is responsable for passing
+		#modify in place, because the caller is responsible for passing
 		#a copy of item.
-		item["questions"], item["answers"] = item["answers"], item["questions"]
+		item["questions"], item["answers"] = item.get("answers", []), item.get("questions", [])
 		return item
 
 	def enable(self):
@@ -56,7 +56,6 @@ class ForeignKnownModule(object):
 
 	def disable(self):
 		self.active = False
-
 
 		del self.dataType
 		del self._modules

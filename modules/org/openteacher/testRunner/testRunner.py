@@ -55,10 +55,8 @@ class TestRunnerModule(object):
 	def _run(self):
 		testSuite = unittest.TestSuite()
 		for module in self._mm.mods("active", type="test"):
-			module.enable()
 			newTests = unittest.TestLoader().loadTestsFromTestCase(module.TestCase)
 			testSuite.addTests(newTests)
-			module.disable()
 		result = unittest.TextTestRunner().run(testSuite)
 
 		#exit self so the exit code is passed. Not really nice in the

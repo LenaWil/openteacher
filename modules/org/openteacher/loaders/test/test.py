@@ -30,6 +30,9 @@ class TestCase(unittest.TestCase):
 		results = []
 
 		for file in self._files:
+			if os.path.basename(file) in ("netherlands.png", "COPYING",):
+				#files that aren't loadable
+				continue
 			if file.endswith(".xml"):
 				#Special case for abbyy since it doesn't have a mimetype
 				loadMods = set(self._mm.mods("active", type="load", loads={"xml": ["words"]}))
@@ -52,7 +55,22 @@ class TestCase(unittest.TestCase):
 				loadMods = set(self._mm.mods("active", type="load", mimetype=mimetype))
 
 			for mod in loadMods:
+				#feel free to extend
 				self.assertIn(mod.getFileTypeOf(file), ["words", "topo", "media"])
+
+	def testHasAttrs(self):
+		for mod in self._mm.mods("active", type="load"):
+			self.assertTrue(mod.getFileTypeOf)
+			self.assertTrue(mod.load)
+			self.assertTrue(mod.name)
+			for type, ext in mod.loads.iteritems():
+				self.assertTrue(type)
+				self.assertTrue(ext)
+			try:
+				self.assertTrue(mod.mimetype)
+			except AttributeError:
+				#optional. But not empty
+				pass
 
 	def testHasItems(self):
 		results = self._loadFiles()

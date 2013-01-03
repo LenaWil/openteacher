@@ -24,6 +24,7 @@ class MediaReverserModule(object):
 		self._mm = moduleManager
 
 		self.type = "reverser"
+		self.dataType = "media"
 
 	def reverse(self, list):
 		"""Reverses the list word list. Crashes if the dataType isn't
@@ -35,14 +36,10 @@ class MediaReverserModule(object):
 			item["question"], item["answer"] = item.get("answer", u""), item.get("question", u"")
 
 	def enable(self):
-		self.dataType = "media"
-
 		self.active = True
 
 	def disable(self):
 		self.active = False
-
-		del self.dataType
 
 def init(moduleManager):
 	return MediaReverserModule(moduleManager)
