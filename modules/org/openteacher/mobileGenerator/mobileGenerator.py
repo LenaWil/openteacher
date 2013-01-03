@@ -160,8 +160,7 @@ class MobileGeneratorModule(object):
 			jsonname = lang.replace("_", "-") + ".json"
 			translationIndex[lang] = {
 				"url": os.path.join("translations", jsonname),
-				#the language code as fallback
-				"name": self.languages.get(lang, lang),
+				"name": self.languages[lang],
 			}
 
 			with open(os.path.join(path, "translations", jsonname), "w") as f:

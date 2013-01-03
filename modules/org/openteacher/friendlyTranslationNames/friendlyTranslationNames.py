@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -20,6 +20,11 @@
 
 import os
 import locale
+import collections
+
+class KeyAsDefaultDict(dict):
+	def __missing__(self, key):
+		return key
 
 class FriendlyTranslationNamesModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -44,7 +49,8 @@ class FriendlyTranslationNamesModule(object):
 		files = filter(lambda x: x.endswith(".po"), files)
 		codes = map(lambda x: x.split(".")[0], files)
 		codes += "C" #English
-		languages = {}
+		#if no nice name is known, just return the language code.
+		languages = KeyAsDefaultDict()
 		for code in codes:
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations"),
