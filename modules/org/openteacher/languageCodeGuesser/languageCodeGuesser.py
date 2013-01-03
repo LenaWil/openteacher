@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -38,14 +38,14 @@ class LanguageCodeGuesserModule(object):
 			return
 
 	def enable(self):
-		self._modules = set(self._mm.mods(type="modules")).pop()
-
 		global pycountry
 		try:
 			import pycountry
 		except ImportError:
 			#remain inactive
 			return
+
+		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._re = re.compile("[,;]")
 
 		try:
