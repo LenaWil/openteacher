@@ -280,12 +280,12 @@ class OpenTeacherBotFactory(protocol.ClientFactory):
 
 	def clientConnectionLost(self, connector, reason):
 		if not self.timeToQuit:
-			print "Lost connection: %s. Trying to reconnect" % (reason,)
+			print "Lost connection: %s. Trying to reconnect." % (reason,)
 			connector.connect()
 
 	def clientConnectionFailed(self, connector, reason):
-		print "Connection impossible: %s" % (reason,)
-
+		print "Connection failed: %s, Trying to reconnect." % (reason,)
+		connector.connect()
 
 def run():
 	print """For a nice quit, first tell the bot to .quit

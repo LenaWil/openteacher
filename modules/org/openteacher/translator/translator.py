@@ -90,7 +90,7 @@ class TranslatorModule(object):
 	def language(self):
 		lang = self._languageSetting["value"]
 		if not lang:
-			return locale.getdefaultlocale()[0]
+			return locale.getdefaultlocale()[0] or "C"
 		return lang
 
 	@language.setter
@@ -100,17 +100,15 @@ class TranslatorModule(object):
 
 	def gettextFunctions(self, localeDir, language=None):
 		if not language:
-			# Try to fill it
+			#Try to fill it
 			language = self.language
-		# If it is filled...
-		if language:
-			path = os.path.join(localeDir, language + ".mo")
-			if not os.path.isfile(path):
-				path = os.path.join(localeDir, language.split("_")[0] + ".mo")
-			if os.path.isfile(path):
-				t = gettext.GNUTranslations(open(path, "rb"))
-				return t.ugettext, t.ungettext
-		# Otherwise, default
+		path = os.path.join(localeDir, language + ".mo")
+		if not os.path.isfile(path):
+			path = os.path.join(localeDir, language.split("_")[0] + ".mo")
+		if os.path.isfile(path):
+			t = gettext.GNUTranslations(open(path, "rb"))
+			return t.ugettext, t.ungettext
+		#Couldn't find a mo file. Return the default translator
 		return unicode, lambda x, y, n: x if n == 1 else y
 
 	def disable(self):
