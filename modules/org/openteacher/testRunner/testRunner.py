@@ -53,17 +53,22 @@ class TestRunnerModule(object):
 		del self._modules
 
 	def _run(self):
+		try:
+			advanced = {
+				"extensive": True,
+				"fast": False
+			}[sys.argv[1]]
+		except (IndexError, KeyError):
+			print >> sys.stderr, "This command needs one command line argument: 'extensive' or 'fast'. When passing the second, only a subset of tests is run (the ones taking relatively long are left out). Otherwise, all tests are run."
+			return
+
 		testSuite = unittest.TestSuite()
 		for module in self._mm.mods("active", type="test"):
+			#set the advanced flag
+			module.TestCase.advanced = advanced
 			newTests = unittest.TestLoader().loadTestsFromTestCase(module.TestCase)
 			testSuite.addTests(newTests)
 		result = unittest.TextTestRunner().run(testSuite)
-
-		#exit self so the exit code is passed. Not really nice in the
-		#module structure idea, but worth it because an exit code is
-		#nice for a bzr hook that doesn't let you commit unless the test
-		#suite passes.
-		sys.exit(0 if result.wasSuccessful() else 1)
 
 def init(moduleManager):
 	return TestRunnerModule(moduleManager)

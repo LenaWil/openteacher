@@ -27,6 +27,9 @@ class TestCase(unittest.TestCase):
 		self._files = glob.glob(self._mm.resourcePath("testFiles") + "/*")
 
 	def _loadFiles(self):
+		if not self.advanced:
+			#don't run the tests.
+			return []
 		results = []
 
 		for file in self._files:
