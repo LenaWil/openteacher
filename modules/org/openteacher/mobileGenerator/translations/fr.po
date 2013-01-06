@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2012-12-30 12:48+0100\n"
-"PO-Revision-Date: 2012-12-10 09:37+0000\n"
-"Last-Translator: EmmanuelLeNormand <manu@ubuntu-fr.org>\n"
+"PO-Revision-Date: 2013-01-05 16:09+0000\n"
+"Last-Translator: SOMDA Sâaviel Constant <saaviel@gmail.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-31 04:51+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-06 05:03+0000\n"
+"X-Generator: Launchpad (build 16393)\n"
 "Language: fr\n"
 
 #: scr/gui.js:167 scr/gui.js:625
@@ -90,7 +90,7 @@ msgstr "S'il vous plait, choisissez la liste que vous voulez supprimer"
 
 #: scr/gui.js:201 scr/gui.js:284
 msgid "Copyright info"
-msgstr "Information sur le Copyright"
+msgstr "Information sur les droits d'auteur"
 
 #: scr/gui.js:278
 msgid "Language:"
@@ -98,15 +98,15 @@ msgstr "Langue"
 
 #: scr/gui.js:280
 msgid "Practising mode:"
-msgstr ""
+msgstr "mode pratiquant"
 
 #: scr/gui.js:281 scr/gui.js:604
 msgid "Think answer"
-msgstr ""
+msgstr "Pensez à la réponse"
 
 #: scr/gui.js:282 scr/gui.js:605
 msgid "Type answer"
-msgstr ""
+msgstr "Tapez la réponse"
 
 #: scr/gui.js:307 scr/gui.js:628
 msgid "Enter list"
@@ -122,6 +122,9 @@ msgid ""
 "to = bij\n"
 "OpenTeacher mobile = OpenTeacher mobile\n"
 msgstr ""
+"Welcome = Bienvenue\n"
+"to = à\n"
+"Openteacher mobile = OpenTeacher mobile\n"
 
 #: scr/gui.js:311
 msgid "Error"
@@ -161,7 +164,7 @@ msgstr "Verifier!"
 
 #: scr/gui.js:536
 msgid "Skip"
-msgstr "Ignorer"
+msgstr "Changer"
 
 #: scr/gui.js:537
 msgid "Correct anyway"
@@ -171,22 +174,24 @@ msgstr "Correct de toute façon"
 msgid ""
 "Think about the answer, and press the 'View answer' button when you're done."
 msgstr ""
+"Pensez à la réponse et appuyez sur le bouton 'Voir la réponse' quand vous "
+"avez fini"
 
 #: scr/gui.js:539
 msgid "View answer"
-msgstr ""
+msgstr "Voir la réponse"
 
 #: scr/gui.js:540
 msgid "Translation:"
-msgstr ""
+msgstr "Traduction"
 
 #: scr/gui.js:541
 msgid "I was right"
-msgstr ""
+msgstr "J'ai eu raison"
 
 #: scr/gui.js:542
 msgid "I was wrong"
-msgstr ""
+msgstr "Je suis dans l'erreur"
 
 #: scr/gui.js:545 scr/gui.js:546
 msgid "Test completed!"
@@ -199,14 +204,17 @@ msgstr "Votre note:%s"
 
 #: scr/gui.js:602
 msgid "Practising mode choice"
-msgstr ""
+msgstr "Choix du mode pratiquant"
 
 #: scr/gui.js:603
 msgid "Please choose the practising mode you want to use:"
 msgstr ""
+"S'il vous plait choisissez le mode pratiquant que vous voulez utiliser"
 
 #: scr/gui.js:606
 msgid ""
 "If you ever want to change your choice, you can do so in the options dialog, "
 "which is accessable by clicking 'Menu' and then 'Options'."
 msgstr ""
+"Si vous voulez changer votre choix, vous pouvez le faire dans les options de "
+"dialogue accessible en cliquant sur 'Menu' puis 'Options'"
