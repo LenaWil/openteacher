@@ -64,6 +64,9 @@ class OpenTeacherBot(irc.IRCClient):
 		".ot-test-coverage": "http://vps.marten-de-vries.nl/openteacher-test-coverage/",
 		".ogd-test-coverage": "http://vps.marten-de-vries.nl/opengamedesigner-test-coverage/",
 		".vps": "http://vps.marten-de-vries.nl/",
+		".priorities": "http://vps.marten-de-vries.nl/openteacher-code-documentation/priorities.html",
+		".fixmes": "http://vps.marten-de-vries.nl/openteacher-code-documentation/fixmes.html",
+		".modulemap": "http://vps.marten-de-vries.nl/openteacher-code-documentation/module_graph.svg",
 		".peps": "http://www.python.org/dev/peps/",
 	}
 	factoids[".openteacher"] = factoids[".website"]
@@ -84,6 +87,13 @@ class OpenTeacherBot(irc.IRCClient):
 	factoids[".ot-coverage"] = factoids[".ot-test-coverage"]
 	factoids[".ogd-coverage"] = factoids[".ogd-test-coverage"]
 	factoids[".coverage"] = factoids[".ot-test-coverage"]
+	factoids[".fixme"] = factoids[".fixmes"]
+	factoids[".todos"] = factoids[".fixmes"]
+	factoids[".todo"] = factoids[".fixmes"]
+	factoids[".priority"] = factoids[".priorities"]
+	factoids[".module-map"] = factoids[".modulemap"]
+	factoids[".modulegraph"] = factoids[".modulemap"]
+	factoids[".module-graph"] = factoids[".modulemap"]
 
 	@property
 	def nickname(self):

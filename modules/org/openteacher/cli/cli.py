@@ -108,7 +108,7 @@ class CommandLineInterfaceModule(object):
 		)
 		self.priorities = {
 			"cli": 0,
-			"default": -1,
+			"default": 960,
 		}
 
 	def _saveExts(self):
@@ -220,7 +220,7 @@ class CommandLineInterfaceModule(object):
 		if args["answer_lang"]:
 			lesson["list"]["answerLanguage"] = unicode(args["answer_lang"], encoding=sys.stdin.encoding or "UTF-8")
 
-		self._save(type, lesson, args["output-file"])
+		self._save("words", lesson, args["output-file"])
 
 	def _save(self, type, lesson, path):
 		#also strip the dot.
@@ -241,10 +241,12 @@ class CommandLineInterfaceModule(object):
 
 	@property
 	def _lessonTypes(self):
-		return [mod.name for mod in self._modules.sort("active", type="lessonType")]
+		lts = []
+		for mod in self._modules.sort("active", type="lessonType"):
+			lts.append(mod.name.encode(sys.stdin.encoding or "UTF-8"))
+		return lts
 
 	def _practiseWordList(self, args):
-		#FIXME: make this method work.
 		inputFile = args["file"]
 
 		type, lesson = self._load(inputFile)
@@ -277,11 +279,13 @@ class CommandLineInterfaceModule(object):
 		if result["result"] == "wrong":
 			self._ui.setCorrection(self._compose(currentItem["answers"]))
 
-	def _run(self):
+	def run(self, argList=None):
+		if argList is None:
+			argList = sys.argv
 		#setup parser: using + instead of - to distinguish from the
 		#execute module's argparse. (the one providing the -p arg).
 		parser = argparse.ArgumentParser(**{
-			"prog": sys.argv[0] + " -p cli",
+			"prog": argList[0] + " -p cli",
 			"prefix_chars": "+",
 		})
 
@@ -335,7 +339,7 @@ class CommandLineInterfaceModule(object):
 			practiseWordList.add_argument("+l", "++lesson-type", choices=self._lessonTypes, default=self._lessonTypes[0])
 			practiseWordList.set_defaults(func=self._practiseWordList)
 
-		args = parser.parse_args()
+		args = parser.parse_args(argList[1:])
 		if not len(set(vars(args)) - set(["func"])):
 			parser.print_usage()
 			return
@@ -349,7 +353,8 @@ class CommandLineInterfaceModule(object):
 			#remain inactive
 			urwid = None
 		self._modules = next(iter(self._mm.mods(type="modules")))
-		self._modules.default("active", type="execute").startRunning.handle(self._run)
+		if self._modules.profile == "cli":
+			self._modules.default("active", type="execute").startRunning.handle(self.run)
 
 		self._metadata = self._modules.default("active", type="metadata").metadata
 		self._composeWordList = self._modules.default("active", type="wordListStringComposer").composeList

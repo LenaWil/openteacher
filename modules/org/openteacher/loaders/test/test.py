@@ -39,6 +39,9 @@ class TestCase(unittest.TestCase):
 			if file.endswith(".xml"):
 				#Special case for abbyy since it doesn't have a mimetype
 				loadMods = set(self._mm.mods("active", type="load", loads={"xml": ["words"]}))
+			elif file.endswith(".csv"):
+				#same for csv
+				loadMods = set(self._mm.mods("active", type="load", loads={"csv": ["words"]}))
 			else:
 				mimetype = os.path.basename(file).split(".")[0].replace("_", "/")
 				loadMods = set(self._mm.mods("active", type="load", mimetype=mimetype))
@@ -53,6 +56,9 @@ class TestCase(unittest.TestCase):
 			if file.endswith(".xml"):
 				#ABBYY Lingvo Tutor
 				loadMods = self._mm.mods("active", type="load", loads={"xml": ["words"]})
+			elif file.endswith(".csv"):
+				#CSV
+				loadMods = self._mm.mods("active", type="load", loads={"csv": ["words"]})
 			else:
 				mimetype = os.path.basename(file).split(".")[0].replace("_", "/")
 				loadMods = set(self._mm.mods("active", type="load", mimetype=mimetype))

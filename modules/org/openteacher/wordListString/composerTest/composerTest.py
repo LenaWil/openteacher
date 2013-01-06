@@ -19,6 +19,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
+import datetime
 
 class TestCase(unittest.TestCase):
 	def _test(self, input, expectedOutput):
@@ -42,6 +43,21 @@ class TestCase(unittest.TestCase):
 				"id": 0,
 				"questions": [(u"a",)],
 				"answers": [(u"b",)],
+			}],
+			u"a = b\n"
+		)
+
+	def testExtraAttributes(self):
+		"""And of course, that type is non-JSON serializable to
+		   reproduce a bug that once happened. ;)
+
+		"""
+		self._test(
+			[{
+				"id": 0,
+				"questions": [(u"a",)],
+				"answers": [(u"b",)],
+				"created": datetime.datetime.now(),
 			}],
 			u"a = b\n"
 		)
