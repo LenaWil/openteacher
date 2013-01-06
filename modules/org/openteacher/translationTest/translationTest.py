@@ -55,13 +55,16 @@ class TestCase(unittest.TestCase):
 
 	def testLanguageChanged(self):
 		"""Tests if:
-		   1. translator modss have a working sendLanguageChanged
+		   1. translator mods have a working sendLanguageChanged
 		      method.
 		   2. modules subscribing to events offered by the translator
 		      modules are doing that correctly (i.e. don't crash when
 		      the actual events are send.)
 
 		"""
+		if not self.advanced:
+			#this takes a long time, only when not in 'fast' mode.
+			return
 		for mod in self._mm.mods("active", type="translator"):
 			mod.sendLanguageChanged()
 

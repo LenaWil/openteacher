@@ -21,7 +21,14 @@
 import os
 
 class ModulesModule(object):
-	"""Lowest (positive) priority: 1000"""
+	"""This module has two purposes:
+	   1) selecting modules via its default() and sort() methods.
+	   2) updating OT to self.profile (which should be set by a module
+	      other than this one, normally the execute module, before this
+	      module should be used by any module.)
+
+	   Lowest (positive) priority: 1000
+	"""
 
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(ModulesModule, self).__init__(*args, **kwargs)
@@ -46,14 +53,22 @@ class ModulesModule(object):
 				#uses seconds since installation.
 				path = mod.__class__.__file__
 				return - int(os.path.getmtime(path))
-	
+
 	def sort(self, *args, **kwargs):
+		"""Sorts the modules returned by self._mm.mods(*args, **kwargs)
+		   based on their priority in the current profile.
+
+		"""
 		mods = set(self._mm.mods(*args, **kwargs))
 		return sorted(mods, key=self._getPriority)
 
 	def default(self, *args, **kwargs):
-		"""Raises IndexError if no modules remain after filtering with
-		   the arguments
+		"""Selects one of the modules returned by
+		   self._mm.mods(*args, **kwargs) based on their priority and
+		   the current profile OT's running in.
+
+		   Raises IndexError if no modules remain after filtering with
+		   the arguments.
 
 		"""
 		mods = self._mm.mods(*args, **kwargs)
@@ -73,6 +88,13 @@ class ModulesModule(object):
 				return True #If no priorities-stuff, just enable
 
 	def updateToProfile(self):
+		"""Enable()s and disable()s modules until only modules that have
+		   a positive priority in the current profile remain. This takes
+		   into account dependencies: if a module depends on one that
+		   can't be enabled due to its priority in the current profile,
+		   that module isn't enabled either.
+
+		"""
 		#build dependency tree by topological sorting
 		#http://en.wikipedia.org/wiki/Topological_sort ; second algorithm
 

@@ -38,6 +38,7 @@ class ModulesTest(unittest.TestCase):
 			__file__ = "modules/org/openteacher/execute/execute.py"
 		self._mm._modules.remove(next(iter(self._mm.mods(type="execute"))))
 		self._mm._modules.add(ExecuteMod())
+		next(iter(self._mm.mods(type="modules"))).profile = "default"
 
 		#FIXME: shared with modules.py. By refactoring that module a
 		#little bit it should be possible to call the needed code there.
