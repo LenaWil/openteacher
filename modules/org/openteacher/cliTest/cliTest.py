@@ -116,7 +116,7 @@ class TestCase(unittest.TestCase):
 			os.remove(outputFile)
 
 	def testConvertList(self):
-		"""convert +f pdf testfile.otwd"""
+		"""convert +f html testfile.otwd"""
 
 		#not literally because we may not assume the module's dir is
 		#writable.
@@ -128,8 +128,8 @@ class TestCase(unittest.TestCase):
 		shutil.copy(self._mm.resourcePath("testfile.otwd"), inFile)
 
 		try:
-			outFile = os.path.splitext(inFile)[0] + ".pdf"
-			for result in self._test("convert +f pdf " + inFile):
+			outFile = os.path.splitext(inFile)[0] + ".html"
+			for result in self._test("convert +f html " + inFile):
 				os.remove(outFile)
 		finally:
 			os.remove(inFile)
