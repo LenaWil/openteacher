@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -40,6 +40,7 @@ class OpenTeachingWordsLoaderModule(object):
 			self._mm.mods(type="otxxLoader"),
 		)
 		self.filesWithTranslations = ("otwd.py",)
+		self.loads = {"otwd": ["words"]}
 
 	def _retranslate(self):
 		try:
@@ -55,7 +56,6 @@ class OpenTeachingWordsLoaderModule(object):
 		self.name = _("Open Teaching Words")
 
 	def enable(self):
-		self.loads = {"otwd": ["words"]}
 		self.mimetype = "application/x-openteachingwords"
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
@@ -75,7 +75,6 @@ class OpenTeachingWordsLoaderModule(object):
 		self.active = False
 
 		del self.name
-		del self.loads
 		del self.mimetype
 
 		del self._modules

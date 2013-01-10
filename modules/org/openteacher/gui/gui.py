@@ -182,7 +182,7 @@ class GuiModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		if hasattr(QtGui.QApplication, "x11EventFilter") and os.getenv("DISPLAY") == None:
+		if hasattr(QtGui.QApplication, "x11EventFilter") and os.getenv("DISPLAY") is None:
 			#if on a system that could potentially support X11, but
 			#doesn't have it installed/running, leave this mod disabled.
 			#Otherwise the whole application crashes on a 'Can't connect
@@ -192,7 +192,12 @@ class GuiModule(object):
 			#when Q_WS_X11 is set. No other way as far as I know to get
 			#the value of that property. :(
 			return
-		self._app = QtGui.QApplication(sys.argv)
+
+		#prevents that calling enable() and disable() multiple times
+		#segfaults.
+		self._app = QtGui.QApplication.instance()
+		if not self._app:
+			self._app = QtGui.QApplication(sys.argv)
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		createEvent = self._modules.default(type="event").createEvent

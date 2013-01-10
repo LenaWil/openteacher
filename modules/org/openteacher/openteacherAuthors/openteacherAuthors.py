@@ -33,7 +33,10 @@ class OpenTeacherAuthorsModule(object):
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
-		self._authors = self._modules.default("active", type="authors")
+		try:
+			self._authors = self._modules.default("active", type="authors")
+		except IndexError:
+			self._authors = {}
 		self._removers = set()
 
 		try:

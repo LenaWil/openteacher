@@ -41,6 +41,12 @@ class ModuleFilterer(object):
 		self._where = {}
 		self._whereTrue = set()
 
+	def __copy__(self):
+		copy = ModuleFilterer(self._modules)
+		copy._where = self._where.copy()
+		copy._whereTrue = self._whereTrue.copy()
+		return copy
+
 	def __call__(self, *args, **kwargs):
 		self._whereTrue = self._whereTrue.union(args)
 		self._where.update(kwargs)

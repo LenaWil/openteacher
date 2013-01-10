@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #	Copyright 2011-2012, Cas Widdershoven
 #	Copyright 2012, Milan Boers
 #
@@ -381,19 +381,19 @@ class WordsTeacherModule(object):
 				"internal_name": "org.openteacher.teachers.words.lessonType",
 				"type": "option",
 				"options": lessonTypeOptions,
-				"defaultValue": lessonTypeOptions[0][1],
+				"defaultValue": lessonTypeOptions[0][1] if len(lessonTypeOptions) > 0 else None,
 			}),
 			"listModifiers": registerSetting(**{
 				"internal_name": "org.openteacher.teachers.words.listModifiers",
 				"type": "multiOption",
 				"options": listModifierOptions,
-				"defaultValue": listModifierOptions[0][1],
+				"defaultValue": listModifierOptions[0][1] if len(listModifierOptions) > 0 else None,
 			}),
 			"itemModifiers": registerSetting(**{
 				"internal_name": "org.openteacher.teachers.words.itemModifiers",
 				"type": "multiOption",
 				"options": itemModifierOptions,
-				"defaultValue": itemModifierOptions[0][1],
+				"defaultValue": itemModifierOptions[0][1] if len(itemModifierOptions) > 0 else None,
 			}),
 #FIXME: make this actually work... :S
 #			"dontShowAgain": registerSetting(**{

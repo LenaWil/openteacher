@@ -35,6 +35,7 @@ class TranslationUpdaterModule(object):
 		}
 		self.requires = (
 			self._mm.mods(type="metadata"),
+			self._mm.mods(type="execute"),
 		)
 
 	def _run(self):

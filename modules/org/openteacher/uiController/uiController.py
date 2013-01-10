@@ -77,7 +77,10 @@ class UiControllerModule(object):
 			self._lessonTracker = self._modules.default("active", type="lessonTracker")
 		except IndexError:
 			self._lessonTracker = None
-		self._saver = self._modules.default("active", type="saver")
+		try:
+			self._saver = self._modules.default("active", type="saver")
+		except IndexError:
+			self._saver = None
 		self._execute = self._modules.default(type="execute")
 
 		try:
@@ -235,7 +238,7 @@ class UiControllerModule(object):
 	def _connectEvents(self):
 		for module in self._mm.mods("active", type="lesson"):
 			module.lessonCreationFinished.handle(self._updateMenuItemsWrapper)
-
+ 
 		#file
 		self._uiModule.newAction.triggered.handle(self.new)
 		self._uiModule.openAction.triggered.handle(self.open_)
@@ -294,12 +297,10 @@ class UiControllerModule(object):
 		self._uiModule.openAction.enabled = openSupport
 
 		#save
-		try:
-			saver = self._modules.default("active", type="saver")
-		except IndexError:
-			saveSupport = False
+		if self._saver:
+			saveSupport = self._saver.saveSupport
 		else:
-			saveSupport = saver.saveSupport
+			saveSupport = False
 		saveSupport = saveSupport and self._fileDialogs is not None
 		self._uiModule.saveAsAction.enabled = saveSupport
 

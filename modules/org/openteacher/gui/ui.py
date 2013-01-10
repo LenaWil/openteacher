@@ -165,7 +165,7 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 
 		#File menu
 		self.fileMenu = self.menuBar().addMenu("")
-		
+
 		self.newAction = self.fileMenu.addAction(
 			QtGui.QIcon.fromTheme("filenew",
 				QtGui.QIcon(ICON_PATH + "new.png"),
@@ -219,7 +219,7 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 			""
 		)
 		self.quitAction.setShortcut(QtGui.QKeySequence.Quit)
-		
+
 		#Edit
 		self.editMenu = self.menuBar().addMenu("")
 		self.settingsAction = self.editMenu.addAction(
