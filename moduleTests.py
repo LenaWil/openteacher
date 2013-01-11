@@ -55,7 +55,7 @@ class ModulesTest(unittest.TestCase):
 
 		#enable
 		try:
-			print "enabling ", mod.__class__.__file__
+#			print "enabling ", mod.__class__.__file__
 			mod.enable()
 		except AttributeError:
 			pass
@@ -65,7 +65,7 @@ class ModulesTest(unittest.TestCase):
 	def _disableDependencyTree(self, mods):
 		for mod in reversed(mods):
 			try:
-				print "disabling", mod.__class__.__file__
+#				print "disabling", mod.__class__.__file__
 				mod.disable()
 			except AttributeError:
 				pass
@@ -94,7 +94,7 @@ class ModulesTest(unittest.TestCase):
 		for mod in self._mm.mods:
 			success, enabledMods = self._enableIncludingDependencies(mod, True)
 			self._disableDependencyTree(enabledMods)
-			print ""
+#			print ""
 
 	def testWithFullDependencies(self):
 		self._fakeExecuteModule()
@@ -102,7 +102,7 @@ class ModulesTest(unittest.TestCase):
 		for mod in self._mm.mods:
 			success, enabledMods = self._enableIncludingDependencies(mod, False)
 			self._disableDependencyTree(enabledMods)
-			print ""
+#			print ""
 
 if __name__ == "__main__":
 	#since this mod doesn't respect the 'uses' behaviour completely,
