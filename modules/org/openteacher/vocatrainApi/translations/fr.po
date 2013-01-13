@@ -1,0 +1,78 @@
+# French translation for openteacher
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-30 12:47+0100\n"
+"PO-Revision-Date: 2013-01-12 11:22+0000\n"
+"Last-Translator: Hélion du Mas des Bourboux <helion331990@gmail.com>\n"
+"Language-Team: French <fr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-01-13 04:46+0000\n"
+"X-Generator: Launchpad (build 16420)\n"
+
+#: vocatrainApi.py:123
+msgid "Select category"
+msgstr "Sélectionnez une catégorie"
+
+#: vocatrainApi.py:124
+msgid "Please select a category"
+msgstr "Veuillez sélectionner une catégorie"
+
+#: vocatrainApi.py:128
+msgid "Select book"
+msgstr "Choisissez un livre"
+
+#: vocatrainApi.py:129
+msgid "Please select a book"
+msgstr "Veuillez choisir un livre"
+
+#: vocatrainApi.py:133
+msgid "Select list"
+msgstr "Choisissez une liste"
+
+#: vocatrainApi.py:134
+msgid "Please select a list"
+msgstr "Veuillez choisir une liste"
+
+#: vocatrainApi.py:212
+msgid "Import from vocatrain.com"
+msgstr "Importer depuis vocatrain.com"
+
+#: vocatrainApi.py:213
+msgid "Import from woordjesleren.nl"
+msgstr "Importer depuis woordjesleren.nl"
+
+#: vocatrainApi.py:270
+#, python-format
+msgid "No %s connection"
+msgstr "Pas de %s connection"
+
+#: vocatrainApi.py:271
+msgid ""
+"{serviceName} didn't accept the connection. Are you sure that your internet "
+"connection works and {serviceName} is online?"
+msgstr ""
+"{serviceName} n'a pas accepté la connexion. Êtes-vous sûr que votre "
+"connexion internet fonctionne et que {serviceName} est en ligne ?"
+
+#: vocatrainApi.py:276
+#, python-format
+msgid "The word list was imported from %s successfully."
+msgstr "La liste de mots a été importée depuis %s avec succès."
+
+#: vocatrainApi.py:289
+msgid "Can't show the result"
+msgstr "Impossible de montrer le résultat"
+
+#: vocatrainApi.py:290
+msgid "Can't open the resultive word list, because it can't be shown."
+msgstr ""
+"Impossible d'ouvrir la liste de mots résultante, car elle ne peut être "
+"affichée."
