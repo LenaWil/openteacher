@@ -249,8 +249,9 @@ class GuiModule(object):
 			#add the open action as a load button too.
 			self._loadButton = br.registerButton("load")
 			self._loadButton.clicked.handle(lambda: self._widget.openAction.triggered.emit(False))
-			#always the first load button.
+			#always the load button first.
 			self._loadButton.changePriority.send(0)
+			self._loadButton.changeSize.send("small")
 
 		metadata = self._modules.default("active", type="metadata").metadata
 		self._widget.setWindowTitle(metadata["name"])

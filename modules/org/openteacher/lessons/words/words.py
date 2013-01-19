@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #	Copyright 2011-2012, Cas Widdershoven
 #	Copyright 2011-2012, Milan Boers
 #
@@ -177,6 +177,7 @@ class WordsLessonModule(object):
 
 		self._button = self._modules.default("active", type="buttonRegister").registerButton("create")
 		self._button.clicked.handle(self.createLesson)
+		self._button.changeIcon.send(self._mm.resourcePath("words.png"))
 		#reasonable priority
 		self._button.changePriority.send(self.priorities["all"])
 

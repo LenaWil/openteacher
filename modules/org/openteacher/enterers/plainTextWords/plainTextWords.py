@@ -134,6 +134,7 @@ class PlainTextWordsEntererModule(object):
 		self._button = self._modules.default("active", type="buttonRegister").registerButton("create")
 		self._button.clicked.handle(self.createLesson)
 		self._button.changePriority.send(self.priorities["all"])
+		self._button.changeSize.send("small")
 
 		try:
 			translator = self._modules.default("active", type="translator")

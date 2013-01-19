@@ -18,6 +18,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+#ATTENTION: fixmes/todos in this module won't be shown in the overview,
+#since the word 'fixme' is used multiple times for other reasons.
+
 import sys
 
 class IrcBotModule(object):

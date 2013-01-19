@@ -76,6 +76,7 @@ class WrtsApiModule(object):
 		self._button = self._modules.default("active", type="buttonRegister").registerButton("load")
 		self._button.clicked.handle(self.importFromWrts)
 		self._button.changePriority.send(self.priorities["all"])
+		self._button.changeSize.send("small")
 
 		self._action = self._uiModule.fileMenu.addAction(self.priorities["all"])
 		self._action.triggered.handle(self.exportToWrts)

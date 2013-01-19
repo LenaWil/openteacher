@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -26,16 +26,16 @@ class TypeDataStore(object):
 	#>>> print str([x for x in "zxcvbnm,./"]).replace("'", '"')
 	QWERTY_LAYOUT = [
 		["`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "Back-\nspace"],
-		["Tab", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "\\"],
-		["Caps\nLock", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "Enter"],
-		["Shift", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "Shift"],
+		["Tab", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "Enter"],
+		["Caps\nLock", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "\\", ""],
+		["Shift", "\\", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "Shift"],
 		["Space"],
 	]
 
 	BELGIAN_AZERTY_LAYOUT = [
 		[u"²", "&", u"é", '"', "'", "(", u"§", u"è", "!", u"ç", u"à", ")", "-", "Back-\nspace"],
 		["Tab", "a", "z", "e", "r", "t", "y", "u", "i", "o", "p", "^", "$", "Enter"],
-		["Caps\nLock", "q", "s", "d", "f", "g", "h", "j", "k", "l", "m", u"ù", u"µ"],
+		["Caps\nLock", "q", "s", "d", "f", "g", "h", "j", "k", "l", "m", u"ù", u"µ", ""],
 		["Shift", "<", "x", "x", "c", "v", "b", "n", ",", ";", ":", "=", "Shift"],
 		["Space"],
 	]
@@ -43,31 +43,31 @@ class TypeDataStore(object):
 	FRENCH_AZERTY_LAYOUT = [
 		[u"²", "&", u"é", '"', "'", "(", "-", u"è", "_", u"ç", u"à", ")", "=", "Back-\nspace"],
 		["Tab", "a", "z", "e", "r", "t", "y", "u", "i", "o", "p", "^", "$", "Enter"],
-		["Caps\nLock", "q", "s", "d", "f", "g", "h", "j", "k", "l", "m", u"ù", u"µ"],
+		["Caps\nLock", "q", "s", "d", "f", "g", "h", "j", "k", "l", "m", u"ù", u"µ", ""],
 		["Shift", "<", "x", "x", "c", "v", "b", "n", ",", ";", ":", "!", "Shift"],
 		["Space"],
 	]
 
 	COLEMAK_LAYOUT = [
 		["`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "Back-\nspace"],
-		["Tab", "q", "w", "f", "p", "g", "j", "l", "u", "y", ";", "[", "]", "\\"],
-		["Back-\nspace", "a", "r", "s", "t", "d", "h", "n", "e", "i", "o", "'", "Enter"],
-		["Shift", "z", "x", "c", "v", "b", "k", "m", ",", ".", "/", "Shift"],
+		["Tab", "q", "w", "f", "p", "g", "j", "l", "u", "y", ";", "[", "]", "Enter"],
+		["Back-\nspace", "a", "r", "s", "t", "d", "h", "n", "e", "i", "o", "'", "\\", ""],
+		["Shift", "\\", "z", "x", "c", "v", "b", "k", "m", ",", ".", "/", "Shift"],
 		["Space"],
 	]
 
 	DVORAK_LAYOUT = [
 		["`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "[", "]", "Back-\nspace"],
-		["Tab", "'", ",", ".", "p", "y", "f", "g", "c", "r", "l", "/", "=", "\\"],
-		["Caps\nLock", "a", "o", "e", "u", "i", "d", "h", "t", "n", "s", "-", "Enter"],
-		["Shift", ";", "q", "j", "k", "x", "b", "m", "w", "v", "z", "Shift"],
+		["Tab", "'", ",", ".", "p", "y", "f", "g", "c", "r", "l", "/", "=", "Enter"],
+		["Caps\nLock", "a", "o", "e", "u", "i", "d", "h", "t", "n", "s", "-", "\\", ""],
+		["Shift", "\\", ";", "q", "j", "k", "x", "b", "m", "w", "v", "z", "Shift"],
 		["Space"],
 	]
 
 	QWERTZ_LAYOUT = [
 		["^", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", u"ß", u"´", "Back-\nspace"],
 		["Tab", "q", "w", "e", "r", "t", "z", "u", "i", "o", "p", u"ü", "+", "Enter"],
-		["Caps\nLock", "a", "s", "d", "f", "g", "h", "j", "k", "l", u"ö", u"ä", "#"],
+		["Caps\nLock", "a", "s", "d", "f", "g", "h", "j", "k", "l", u"ö", u"ä", "#", ""],
 		["Shift", "<", "y", "x", "c", "v", "b", "n", "m", ",", ".", "-", "Shift"],
 		["Space"],
 	]
@@ -83,11 +83,14 @@ class TypeDataStore(object):
 		self._words = words
 		self._users = data
 
-		self._retranslate()
+	def retranslate(self):
+		"""You never have to call this manually. It's handled by the
+		   module in which this class is defined. That module *does*
+		   have to call this before it lets 'the world' interact with
+		   its instances, though. Without it some other methods will
+		   crash.
 
-	def _retranslate(self):
-		#FIXME
-		_ = unicode
+		"""
 		self.layouts = sorted([
 			("BELGIAN_AZERTY_LAYOUT", _("Belgian AZERTY")),
 			("COLEMAK_LAYOUT", _("Colemak")),
@@ -105,9 +108,10 @@ class TypeDataStore(object):
 		if name in self._users:
 			raise self.UsernameTakenError()
 		self._users[name] = {
-			"level": 55,
+			"level": 0,
 			"results": [],
 			"layout": keyboardLayout,
+			"status": "start",
 		}
 
 	@staticmethod
@@ -126,19 +130,23 @@ class TypeDataStore(object):
 		#larger groups.
 		rows = [2, 1, 3, 0]
 		for row in rows:
-			#FIXME: using indexes doesn't always work (different keyboard layouts)
+			if row == 3:
+				spacing = 1
+			else:
+				spacing = 0
 			exercises.extend([
-				user["layout"][row][4] + user["layout"][row][7],
-				user["layout"][row][3] + user["layout"][row][8],
-				user["layout"][row][2] + user["layout"][row][9],
-				user["layout"][row][1] + user["layout"][row][10],
-				user["layout"][row][1:5],
-				user["layout"][row][7:11],
+				user["layout"][row][spacing + 4] + user["layout"][row][spacing + 7],
+				user["layout"][row][spacing + 3] + user["layout"][row][spacing + 8],
+				user["layout"][row][spacing + 2] + user["layout"][row][spacing + 9],
+				user["layout"][row][spacing + 1] + user["layout"][row][spacing + 10],
+				user["layout"][row][spacing + 1:spacing + 5],
+				user["layout"][row][spacing + 7:spacing + 11],
 				#<- FIXME: extra instruction required here (finger position)
-				user["layout"][row][5:7],
-				user["layout"][row][4:8],
-				user["layout"][row][1:11],
+				user["layout"][row][spacing + 5:spacing + 7],
+				user["layout"][row][spacing + 4:spacing + 8],
+				user["layout"][row][spacing + 1:spacing + 11]
 			])
+
 		#add an exercise which just uses all letters.
 		everything = "".join(["".join(user["layout"][row][1:11]) for row in rows])
 		exercises.append(everything)
@@ -161,47 +169,50 @@ class TypeDataStore(object):
 	def currentInstruction(self, username):
 		user = self._users[username]
 
+		if user["status"] == "start":
+			return _("""Welcome, I'm your personal OpenTeacher typing tutor. We'll improve your typing skills by doing simple exercises. Between the exercises, I'll give instructions. Let's get started:
+
+First place your fingers on the so-called home row: your fingers, from left to right, should always be on the keys '{a}', '{s}', '{d}', '{f}', '{space}', '{space}', '{j}', '{k}', '{l}' and '{;}' while not typing another character. When your fingers are in position, press {space} to start the first lesson. Work for accuracy at first, not speed.""").format(**{
+			"a": user["layout"][2][1],
+			"s": user["layout"][2][2],
+			"d": user["layout"][2][3],
+			"f": user["layout"][2][4],
+			"space": user["layout"][4][0].lower(),
+			"j": user["layout"][2][7],
+			"k": user["layout"][2][8],
+			"l": user["layout"][2][9],
+			";": user["layout"][2][10],
+		}).strip()
+
+		if user["status"] == "done":
+			return _("Congratulations, you finished this typing course! If you want to continue, you can, but this is the end of the instructions. You did a great job!")
+
 		#sentences are added to the instruction depending on how the
-		#user did, what the current level is, how many results there are
-		#already, etc.
-		instr = ""
-
-		if not user["results"]:
-			instr += u"""Welcome, I'm your personal OpenTeacher typing tutor. We'll improve your typing skills by doing simple exercises. Between the exercises, I'll give instructions. Let's get started:
-
-First place your fingers on the so-called home row: your fingers, from left to right, should always be on the keys '{a}', '{s}', '{d}', '{f}', '{space}', '{space}', '{j}', '{k}', '{l}' and '{;}' while not typing another character. When your fingers are in position, press {space} to start the first lesson. Work for accuracy at first, not speed.
-
-""".format(**{
-	"a": user["layout"][2][1],
-	"s": user["layout"][2][2],
-	"d": user["layout"][2][3],
-	"f": user["layout"][2][4],
-	"space": user["layout"][4][0].lower(),
-	"j": user["layout"][2][7],
-	"k": user["layout"][2][8],
-	"l": user["layout"][2][9],
-	";": user["layout"][2][10],
-})
+		#user did.
+		instr = u""
 
 		if len(user["results"]) == 1:
-			instr += "Congratulations, you finished your first exercise!\n\n"
+			instr += _("Congratulations, you finished your first exercise!") + "\n\n"
 
-		#twenty word exercises need to be completed succesfully
-		if user["level"] > len(self._letterExercises(user)) + 20:
-			instr += "Congratulations, you finished this typing course! If you do want to continue, you can, but this is the end of the instructions not generated automatically. You did a great job!"
+		if user["status"] == "next":
+			#FIXME: make it know about letters/words
+			instr += _("You made zero mistakes and are typing fast enough, so you can continue practising some new letters/words. Keep up the good work!") + "\n\n"
 
-		#FIXME: check if speed ok.
-		if user["results"] and user["results"][-1]["amountOfMistakes"] == 0:
-			instr += "You made zero mistakes, so you can continue practising some new letters. Keep up the good work!\n\n"
-
-		#FIXME: TODO. also check if it went wrong multiple times, and show a varying message then. So it stays a bit 'personal'.
-		#Also for success.
-		if user["results"] and user["results"][-1]["amountOfMistakes"] != 0:
-			#TODO: ngettext required.
-			instr += "You made %s mistakes, please keep trying until you can do it flawless.\n\n" % user["results"][-1]["amountOfMistakes"]
+		if user["status"] == "mistakes":
+			amountOfMistakes = user["results"][-1]["amountOfMistakes"]
+			instr += ngettext(
+				"You made %s mistake, please keep trying until you can do it flawless.",
+				"You made %s mistakes, please keep trying until you can do it flawless.",
+				amountOfMistakes
+			) % amountOfMistakes + "\n\n"
 			if self._wordsPerMinute(user["results"][-1]) >= 50:
+				#FIXME: only true while practising letters. For words, the speed to aim for might be above 50.
+				#
 				#user is going a bit fast, which might be the cause for the mistakes.
-				instr = instr.rstrip() + " To archieve that, you might try slowing down a bit.\n\n"
+				instr = instr.rstrip() + " " + _("To archieve that, you might try slowing down a bit.") + "\n\n"
+
+		if user["status"] == "slow":
+			instr += _("You made zero mistakes. Now try to improve your typing speed a bit.") + "\n\n"
 
 		return instr.strip()
 
@@ -218,24 +229,35 @@ First place your fingers on the so-called home row: your fingers, from left to r
 		})
 
 		speed = self._wordsPerMinute(user["results"][-1])
+		maxLevel = len(self._letterExercises(user)) + 20
 
 		#calculate new level
 		if user["level"] < len(self._letterExercises(user)):
 			#user is practising letters
-			if amountOfMistakes == 0 and speed >= 20:
-				user["level"] += 1
-		elif user["level"] < len(self._letterExercises(user)) + 20:
+			if amountOfMistakes > 0:
+				user["status"] = "mistakes"
+				return
+			if speed < 20:
+				user["status"] = "slow"
+				return
+
+		elif user["level"] < maxLevel:
 			#user is practising words
 
-			maxLevel = len(self._letterExercises(user)) + 20
-
+			if amountOfMistakes > 0:
+				user["status"] = "mistakes"
+				return
 			#at the end the user needs to type at 80 words per minute.
 			#work towards that.
-			if amountOfMistakes == 0 and speed >= (float(user["level"]) / maxLevel * 60) + 20:
-				user["level"] += 1
+			if speed < (float(user["level"]) / maxLevel * 60) + 20:
+				user["status"] = "slow"
+				return
 		else:
-			#user is done. Don't increase the level anymore.
-			pass
+			#user is done.
+			user["status"] = "done"
+			return
+		user["status"] = "next"
+		user["level"] += 1
 
 	@staticmethod
 	def _wordsPerMinute(result):
@@ -276,11 +298,29 @@ class TypingTutorModelModule(object):
 		self.requires = (
 			self._mm.mods(type="dataStore"),
 		)
+		self.uses = (
+			self._mm.mods(type="translator"),
+		)
+		self.filesWithTranslations = ("model.py",)
 
 	@property
 	def _words(self):
 		with open(self._mm.resourcePath("words.txt"), "r") as f:
 			return [word.strip() for word in f]
+
+	def _retranslate(self):
+		global _
+		global ngettext
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
+		self.model.retranslate()
 
 	def enable(self):
 		self._modules = next(iter(self._mm.mods(type="modules")))
@@ -292,6 +332,15 @@ class TypingTutorModelModule(object):
 			data = store["org.openteacher.typingTutor.model.data"] = {}
 
 		self.model = TypeDataStore(self._words, data)
+
+		#translations
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 
 		self.active = True
 

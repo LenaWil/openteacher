@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -20,10 +20,10 @@
 
 import weakref
 
-def getStartWidgetButton():
-	class StartWidgetButton(QtGui.QPushButton):
+def getLargeStartWidgetButton():
+	class LargeStartWidgetButton(QtGui.QPushButton):
 		def __init__(self, *args, **kwargs):
-			super(StartWidgetButton, self).__init__(*args, **kwargs)
+			super(LargeStartWidgetButton, self).__init__(*args, **kwargs)
 			#our setText is reimplemented, the QPushButton constructor
 			#doesn't call setText by default.
 			self.setText(self.text())
@@ -32,6 +32,7 @@ def getStartWidgetButton():
 				QtGui.QSizePolicy.MinimumExpanding,
 				QtGui.QSizePolicy.MinimumExpanding
 			)
+			self.setIconSize(QtCore.QSize(32, 32))
 
 		def setText(self, text):
 			self._text = text
@@ -42,6 +43,10 @@ def getStartWidgetButton():
 			width = max(map(fm.width, self._text.split(" "))) + 20 #+20 to keep margin
 			height = fm.height() * len(self._splitLines().split("\n")) +10 #+10 to keep margin
 
+			if self.icon():
+				width += 32
+				height += 32
+
 			return QtCore.QSize(width, height)
 
 		def _splitLines(self):
@@ -50,6 +55,8 @@ def getStartWidgetButton():
 			curLine = u""
 			words = unicode(self._text).split(u" ")
 			w = self.width()
+			if self.icon():
+				w -= 32
 			try:
 				return self._cache[w]
 			except KeyError:
@@ -76,9 +83,9 @@ def getStartWidgetButton():
 
 		def resizeEvent(self, *args, **kwargs):
 			result = self._splitLines()
-			super(StartWidgetButton, self).setText(result)
-			super(StartWidgetButton, self).resizeEvent(*args, **kwargs)
-	return StartWidgetButton
+			super(LargeStartWidgetButton, self).setText(result)
+			super(LargeStartWidgetButton, self).resizeEvent(*args, **kwargs)
+	return LargeStartWidgetButton
 
 def getButtonsGroupBox():
 	class ButtonsGroupBox(QtGui.QGroupBox):
@@ -86,41 +93,63 @@ def getButtonsGroupBox():
 			super(ButtonsGroupBox, self).__init__(*args, **kwargs)
 
 			self._buttons = {}
-			self._layout = QtGui.QGridLayout()
-			self.setLayout(self._layout)
+
+			self._smallLayout = QtGui.QVBoxLayout()
+			self._largeLayout = QtGui.QGridLayout()
+
+			layout = QtGui.QVBoxLayout()
+			layout.addLayout(self._largeLayout)
+			layout.addLayout(self._smallLayout)
+			self.setLayout(layout)
 
 		def _updateLayout(self):
-			#empty layout
-			while True:
-				item = self._layout.takeAt(0)
-				if not item:
-					break
-				item.widget().setParent(None)
+			def emptyLayout(layout):
+				while True:
+					item = layout.takeAt(0)
+					if not item:
+						break
+					item.widget().setParent(None)
+			emptyLayout(self._largeLayout)
+			emptyLayout(self._smallLayout)
+
 			i = 0
 			j = 0
 			for button, desc in sorted(self._buttons.iteritems(), key=lambda data: data[1]["priority"]):
-				qtButton = StartWidgetButton(desc["text"])
-				qtButton.setIcon(QtGui.QIcon(desc["icon"]))
+				if desc["size"] == "large":
+					#make button
+					qtButton = LargeStartWidgetButton()
+					qtButton.setIcon(QtGui.QIcon(desc["icon"]))
+					#insert into layout
+					self._largeLayout.addWidget(qtButton, i, j)
+					j += 1
+					if j > 1:
+						j = 0
+						i += 1
+				else:
+					#make button
+					qtButton = QtGui.QCommandLinkButton()
+					#insert into layout
+					self._smallLayout.addWidget(qtButton)
+
+				#do stuff common to buttons of both sizes
+				qtButton.setText(desc["text"])
 				#lambda to remove some qt argument. The second lambda so it
 				#works as expected in a for-loop.
 				qtButton.clicked.connect(
 					(lambda button: lambda: button.clicked.send())(button)
 				)
-				self._layout.addWidget(qtButton, i, j)
-				j += 1
-				if j > 1:
-					j = 0
-					i += 1
 
 		def addButton(self, button):
 			self._buttons[button] = {
 				"text": "",
 				"icon": "",
 				"priority": 0,
+				"size": "large",
 			}
 			button.changeText.handle(lambda t: self._updateText(button, t))
 			button.changeIcon.handle(lambda i: self._updateIcon(button, i))
 			button.changePriority.handle(lambda p: self._updatePriority(button, p))
+			button.changeSize.handle(lambda s: self._updateSize(button, s))
 			self._updateLayout()
 
 		def removeButton(self, button):
@@ -137,6 +166,10 @@ def getButtonsGroupBox():
 
 		def _updatePriority(self, button, priority):
 			self._buttons[button]["priority"] = priority
+			self._updateLayout()
+
+		def _updateSize(self, button, size):
+			self._buttons[button]["size"] = size
 			self._updateLayout()
 
 	return ButtonsGroupBox
@@ -259,10 +292,10 @@ class StartWidgetModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		global ButtonsGroupBox, StartWidget, StartWidgetButton
+		global ButtonsGroupBox, StartWidget, LargeStartWidgetButton
 		ButtonsGroupBox = getButtonsGroupBox()
 		StartWidget = getStartWidget()
-		StartWidgetButton = getStartWidgetButton()
+		LargeStartWidgetButton = getLargeStartWidgetButton()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._register = self._modules.default("active", type="buttonRegister")

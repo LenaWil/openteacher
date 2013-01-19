@@ -157,6 +157,12 @@ class ModulesHandler(object):
 					#while there aren't any. The rule is: no fixme's
 					#here! :P
 					continue
+				if "ircBot" in fpath:
+					#same as codeDocs
+					continue
+				if "words.txt" in fpath:
+					#we don't care
+					continue
 				with open(fpath, "r") as f:
 					lines = f.readlines()
 

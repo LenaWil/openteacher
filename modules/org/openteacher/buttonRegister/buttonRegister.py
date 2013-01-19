@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -31,13 +31,16 @@ class Button(object):
 	   - clicked() -> gui to user
 	   - changeText(text) -> user to gui
 	   - changeIcon(icon_path) -> user to gui
-	   #piority is a number; 0 is high, inifinity low.
+	   - changeSize(size) -> user to gui
+	     size is a string: either 'small' or 'large'
 	   - changePriority(priority) -> user to gui
+	     piority is a number; 0 is high, inifinity low.
 
 	"""
 	def __init__(self, category, createEvent, *args, **kwargs):
-		"""category must be either 'create' or 'load'"""
+		"""category must be either 'create' or 'load'.
 
+		"""
 		super(Button, self).__init__(*args, **kwargs)
 
 		self.category = category
@@ -46,6 +49,7 @@ class Button(object):
 		self.changeText = createEvent()
 		self.changeIcon = createEvent()
 		self.changePriority = createEvent()
+		self.changeSize = createEvent()
 
 class ButtonRegisterModule(object):
 	"""Module that provides a register of all 'buttons', a way for

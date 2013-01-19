@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -127,6 +127,7 @@ def initializeWidgets():
 			self.setLayout(layout)
 
 			self._layoutComboBox.highlighted.connect(self._updatePreview)
+			self._layoutComboBox.currentIndexChanged.connect(self._updatePreview)
 			buttonBox.accepted.connect(self.accepted.emit)
 			buttonBox.rejected.connect(self.rejected.emit)
 
@@ -397,6 +398,7 @@ class TypingTutorModule(object):
 		#FIXME: create doesn't make any sense.
 		self._button = self._buttonRegister.registerButton("create")
 		self._button.clicked.handle(self._show)
+		self._button.changeIcon.send(self._mm.resourcePath("typingTutor.png"))
 		self._button.changePriority.send(self.priorities["all"])
 
 		self._widgetRefs = set()

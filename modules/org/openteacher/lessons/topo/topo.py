@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Milan Boers
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -67,6 +67,7 @@ class TeachTopoLessonModule(object):
 		# Add the button to start
 		module = self._modules.default("active", type="buttonRegister")
 		self._button = module.registerButton("create")
+		self._button.changeIcon.send(self._mm.resourcePath("topo.png"))
 		self._button.clicked.handle(self.createLesson)
 		#reasonable priority
 		self._button.changePriority.send(self.priorities["all"])

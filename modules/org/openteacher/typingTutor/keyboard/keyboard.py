@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -35,11 +35,10 @@ def initializeWidgets():
 			#tuples: (start_position, relative_size, finger_number)
 			[(0, 1, 1), (1, 1, 1), (2, 1, 2), (3, 1, 3), (4, 1, 4), (5, 1, 4), (6, 1, 7), (7, 1, 7), (8, 1, 8), (9, 1, 9), (10, 1, 10), (11, 1, 10), (12, 1, 10), (13, 2, 10)],
 			[(0, 1.5, 1), (1.5, 1, 1), (2.5, 1, 2), (3.5, 1, 3), (4.5, 1, 4), (5.5, 1, 4), (6.5, 1, 7), (7.5, 1, 7), (8.5, 1, 8), (9.5, 1, 9), (10.5, 1, 10), (11.5, 1, 10), (12.5, 1, 10), (13.5, 1.5, 10)],
-			[(0, 2, 1), (2, 1, 1), (3, 1, 2), (4, 1, 3), (5, 1, 4), (6, 1, 4), (7, 1, 7), (8, 1, 7), (9, 1, 8), (10, 1, 9), (11, 1, 10), (12, 1, 10), (13, 2, 10)],
-			[(0, 2.5, 1), (2.5, 1, 1), (3.5, 1, 2), (4.5, 1, 3), (5.5, 1, 4), (6.5, 1, 4), (7.5, 1, 7), (8.5, 1, 7), (9.5, 1, 8), (10.5, 1, 9), (11.5, 1, 10), (12.5, 2.5, 10)],
+			[(0, 2, 1), (2, 1, 1), (3, 1, 2), (4, 1, 3), (5, 1, 4), (6, 1, 4), (7, 1, 7), (8, 1, 7), (9, 1, 8), (10, 1, 9), (11, 1, 10), (12, 1, 10), (13, 1, 10), (14, 1, 10)],
+			[(0, 1.5, 1), (1.5, 1, 1), (2.5, 1, 1), (3.5, 1, 2), (4.5, 1, 3), (5.5, 1, 4), (6.5, 1, 4), (7.5, 1, 7), (8.5, 1, 7), (9.5, 1, 8), (10.5, 1, 9), (11.5, 1, 10), (12.5, 2.5, 10)],
 			[(1.5, 12, (5, 6))],
 		]
-		ALTERNATIVE_FOURTH_ROW = [(0, 1.5, 1), (1.5, 1, 1), (2.5, 1, 1), (3.5, 1, 2), (4.5, 1, 3), (5.5, 1, 4), (6.5, 1, 4), (7.5, 1, 7), (8.5, 1, 7), (9.5, 1, 8), (10.5, 1, 9), (11.5, 1, 10), (12.5, 2.5, 10)]
 
 		_golden_ratio_conjugate = 1.6180339887498948482
 
@@ -76,31 +75,41 @@ def initializeWidgets():
 			p.begin(self)
 
 			for rowNumber, row in enumerate(self.SIZE_MAP):
-				if (rowNumber + 1) == 4 and len(self._layout[rowNumber]) == len(self.ALTERNATIVE_FOURTH_ROW):
-					#alternative size map
-					row = self.ALTERNATIVE_FOURTH_ROW
 				y = rowNumber * cellSize
 				height = cellSize
 				for columnNumber, column in enumerate(row):
 					x = cellSize * column[0]
 					width = cellSize * column[1]
-					try:
-						finger = column[2]
-					except IndexError:
-						print column
+					finger = column[2]
 					text = self._layout[rowNumber][columnNumber]
 
+					#set key background color
 					p.setBrush(self._colorForFinger(finger))
 					if text == self._currentKey:
 						p.setBrush(QtCore.Qt.black)
 					elif text == self._wrongKey:
 						p.setBrush(QtCore.Qt.red)
 
+					#draw the key background
 					p.drawRect(x, y, width, height)
+
+					#if this is the enter key we're drawing, remove the
+					#line which separates the two parts of it now the
+					#last part of it is drawn.
+					if rowNumber +1 == 3 and columnNumber == len(row) -1:
+						p.setPen(self._colorForFinger(finger))
+						#x + 1 because it looks better
+						p.drawLine(x + 1, y, x + width, y)
+						p.setPen(QtGui.QPen())
+
+					#reset the background color
 					p.setBrush(QtGui.QBrush())
 					if text in (self._currentKey, self._wrongKey):
+						#set the text color
 						p.setPen(QtCore.Qt.white)
+					#draw the text onto the key
 					p.drawText(QtCore.QRect(x, y, width, height), QtCore.Qt.AlignCenter, text)
+					#reset the text color to the default
 					p.setPen(QtGui.QPen())
 
 			p.end()

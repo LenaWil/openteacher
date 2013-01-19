@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Milan Boers
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #	Copyright 2011-2012, Cas Widdershoven
 #
 #	This file is part of OpenTeacher.
@@ -74,6 +74,7 @@ class MediaLessonModule(object):
 		module = self._modules.default("active", type="buttonRegister")
 		self._button = module.registerButton("create")
 		self._button.clicked.handle(self.createLesson)
+		self._button.changeIcon.send(self._mm.resourcePath("media.png"))
 		#reasonable priority
 		self._button.changePriority.send(self.priorities["all"])
 

@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -59,6 +59,7 @@ class TestCase(unittest.TestCase):
 			checkEvent(b.changeText)
 			checkEvent(b.changePriority)
 			checkEvent(b.changeIcon)
+			checkEvent(b.changeSize)
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
