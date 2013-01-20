@@ -157,6 +157,7 @@ class WordsLessonModule(object):
 			self._mm.mods(type="buttonRegister"),
 		)
 		self.uses = (
+			self._mm.mods(type="dataTypeIcons"),
 			self._mm.mods(type="translator"),
 			self._mm.mods(type="testsViewer"),
 		)
@@ -177,7 +178,12 @@ class WordsLessonModule(object):
 
 		self._button = self._modules.default("active", type="buttonRegister").registerButton("create")
 		self._button.clicked.handle(self.createLesson)
-		self._button.changeIcon.send(self._mm.resourcePath("words.png"))
+		try:
+			iconPath = self._modules.default("active", type="dataTypeIcons").findIcon(self.dataType)
+		except (IndexError, KeyError):
+			pass
+		else:
+			self._button.changeIcon.send(iconPath)
 		#reasonable priority
 		self._button.changePriority.send(self.priorities["all"])
 

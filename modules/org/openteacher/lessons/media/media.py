@@ -50,6 +50,7 @@ class MediaLessonModule(object):
 
 		self.uses = (
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="dataTypeIcons"),
 		)
 		self.requires = (
 			self._mm.mods(type="event"),
@@ -74,7 +75,12 @@ class MediaLessonModule(object):
 		module = self._modules.default("active", type="buttonRegister")
 		self._button = module.registerButton("create")
 		self._button.clicked.handle(self.createLesson)
-		self._button.changeIcon.send(self._mm.resourcePath("media.png"))
+		try:
+			iconPath = self._modules.default("active", type="dataTypeIcons").findIcon(self.dataType)
+		except (IndexError, KeyError):
+			pass
+		else:
+			self._button.changeIcon.send(iconPath)
 		#reasonable priority
 		self._button.changePriority.send(self.priorities["all"])
 

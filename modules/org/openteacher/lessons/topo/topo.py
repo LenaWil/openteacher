@@ -47,6 +47,7 @@ class TeachTopoLessonModule(object):
 		
 		self.uses = (
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="dataTypeIcons"),
 		)
 		self.requires = (
 			self._mm.mods(type="event"),
@@ -64,17 +65,22 @@ class TeachTopoLessonModule(object):
 		
 		self._lessons = set()
 
+		# Data type & icon
+		self.dataType = "topo"
+
 		# Add the button to start
 		module = self._modules.default("active", type="buttonRegister")
 		self._button = module.registerButton("create")
-		self._button.changeIcon.send(self._mm.resourcePath("topo.png"))
+		try:
+			iconPath = self._modules.default("active", type="dataTypeIcons").findIcon(self.dataType)
+		except (IndexError, KeyError):
+			pass
+		else:
+			self._button.changeIcon.send(iconPath)
 		self._button.clicked.handle(self.createLesson)
 		#reasonable priority
 		self._button.changePriority.send(self.priorities["all"])
 
-		# Data type
-		self.dataType = "topo"
-		
 		# Signals
 		self.lessonCreated = self._modules.default(type="event").createEvent()
 		self.lessonCreationFinished = self._modules.default(type="event").createEvent()

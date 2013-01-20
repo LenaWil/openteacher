@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -45,6 +45,7 @@ class SourceWithSetupSaverModule(object):
 			self._mm.mods(type="profileDescription"),
 			self._mm.mods(type="authors"),
 			self._mm.mods(type="load"),
+			self._mm.mods(type="dataTypeIcons"),
 		)
 		self.filesWithTranslations = ("manpage.templ",)
 
@@ -87,7 +88,7 @@ class SourceWithSetupSaverModule(object):
 				continue
 			for ext in mod.loads.keys():
 				mimetypes.append((ext, mod.name, mod.mimetype))
-			imagePaths.append("linux/" + mod.mimetype.replace("/", "-") + ".png")
+			imagePaths.append((mod.mimetype, "linux/" + mod.mimetype.replace("/", "-") + ".png"))
 
 		data = self._metadata.copy()
 		data.update({
@@ -129,15 +130,45 @@ class SourceWithSetupSaverModule(object):
 			templ = pyratemp.Template(filename=self._mm.resourcePath("mimetypes.xml"))
 			f.write(templ(data=mimetypes).encode("UTF-8"))
 
-		#generate png icons
+		#generate png icon
 		image = QtGui.QImage(self._metadata["iconPath"])
 		image128 = image.scaled(128, 128, QtCore.Qt.KeepAspectRatio)
-		for path in ["linux/openteacher.png"] + imagePaths:
-			image128.save(os.path.join(sourcePath, path))
+		image128.save(os.path.join(sourcePath, "linux/openteacher.png"))
 
 		#generate openteacher.xpm
 		image32 = image.scaled(32, 32, QtCore.Qt.KeepAspectRatio)
 		image32.save(os.path.join(sourcePath, "linux/" + packageName + ".xpm"))
+
+		#generate file icons
+		def findSubIcon(type):
+			try:
+				return QtGui.QImage(self._modules.default("active", type="dataTypeIcons").findIcon(type))
+			except (KeyError, IndexError):
+				return QtGui.QImage()
+
+		for mimeType, imagePath in imagePaths:
+			copy = image128.copy()
+			if mimeType == "application/x-openteachingwords":
+				otherImage = findSubIcon("words")
+			elif mimeType == "application/x-openteachingtopography":
+				otherImage = findSubIcon("topo")
+			elif mimeType == "application/x-openteachingmedia":
+				otherImage = findSubIcon("media")
+			else:
+				#nothing to project over the base icon
+				otherImage = QtGui.QImage()
+			if not otherImage.isNull():
+				otherImage = otherImage.scaled(64, 64, QtCore.Qt.KeepAspectRatio)
+
+			p = QtGui.QPainter(copy)
+			p.drawImage(64, 64, otherImage)
+			p.end()
+
+			copy.save(os.path.join(sourcePath, imagePath))
+
+		#make a COPYING file in place for the generated files
+		with open(os.path.join(sourcePath, "linux/COPYING"), "w") as f:
+			f.write("application-x-openteachingwords.png, application-x-openteachingtopo.png and application-x-openteachingmedia.png are based on the files words.png, topo.png and media.png of which the licenses are described elsewhere in this package.\n")
 
 		#setup.py
 		with open(os.path.join(sourcePath, "setup.py"), "w") as f:
