@@ -82,20 +82,13 @@ class SourceWithSetupSaverModule(object):
 				packageData.append(os.path.join(root, file))
 
 		mimetypes = []
-		imagePaths = []
+		imagePaths = {}
 		for mod in self._modules.sort("active", type="load"):
 			if not hasattr(mod, "mimetype"):
 				continue
 			for ext in mod.loads.keys():
 				mimetypes.append((ext, mod.name, mod.mimetype))
-			imagePaths.append((mod.mimetype, "linux/" + mod.mimetype.replace("/", "-") + ".png"))
-
-		data = self._metadata.copy()
-		data.update({
-			"package": packageName,
-			"package_data": packageData,
-			"image_paths": repr(imagePaths)
-		})
+			imagePaths[mod.mimetype] = "linux/" + mod.mimetype.replace("/", "-") + ".png"
 
 		#bin/package
 		os.mkdir(os.path.join(sourcePath, "bin"))
@@ -146,7 +139,7 @@ class SourceWithSetupSaverModule(object):
 			except (KeyError, IndexError):
 				return QtGui.QImage()
 
-		for mimeType, imagePath in imagePaths:
+		for mimeType, imagePath in imagePaths.iteritems():
 			copy = image128.copy()
 			if mimeType == "application/x-openteachingwords":
 				otherImage = findSubIcon("words")
@@ -169,6 +162,13 @@ class SourceWithSetupSaverModule(object):
 		#make a COPYING file in place for the generated files
 		with open(os.path.join(sourcePath, "linux/COPYING"), "w") as f:
 			f.write("application-x-openteachingwords.png, application-x-openteachingtopo.png and application-x-openteachingmedia.png are based on the files words.png, topo.png and media.png of which the licenses are described elsewhere in this package.\n")
+
+		data = self._metadata.copy()
+		data.update({
+			"package": packageName,
+			"package_data": packageData,
+			"image_paths": repr(imagePaths.values())
+		})
 
 		#setup.py
 		with open(os.path.join(sourcePath, "setup.py"), "w") as f:
