@@ -100,8 +100,14 @@ class TypeDataStore(object):
 			("QWERTZ_LAYOUT", _("QWERTZ")),
 		], key=lambda t: t[1])
 
+	def deregisterUser(self, name):
+		"""Raises KeyError if name couldn't be found."""
+
+		del self._users[name]
+
 	def registerUser(self, name, keyboardLayout=None):
-		keyboardLayout = getattr(self, keyboardLayout, self.QWERTY_LAYOUT)
+		if not keyboardLayout:
+			keyboardLayout = "QWERTY_LAYOUT"
 		name = name.strip()
 		if not name:
 			raise self.UsernameEmptyError()
@@ -112,7 +118,10 @@ class TypeDataStore(object):
 			"results": [],
 			"layout": keyboardLayout,
 			"status": "start",
+			"exerciseType": "letters",
+			"targetSpeed": 20,
 		}
+		self._newExercise(self._users[name])
 
 	@staticmethod
 	def _createRow(letters):
@@ -125,6 +134,8 @@ class TypeDataStore(object):
 	def _letterExercises(self, user):
 		exercises = []
 
+		layout = getattr(self, user["layout"])
+
 		#generate exercises to learn the most commonly used keys
 		#automatically. This first learns letters in pairs, then in
 		#larger groups.
@@ -135,20 +146,19 @@ class TypeDataStore(object):
 			else:
 				spacing = 0
 			exercises.extend([
-				user["layout"][row][spacing + 4] + user["layout"][row][spacing + 7],
-				user["layout"][row][spacing + 3] + user["layout"][row][spacing + 8],
-				user["layout"][row][spacing + 2] + user["layout"][row][spacing + 9],
-				user["layout"][row][spacing + 1] + user["layout"][row][spacing + 10],
-				user["layout"][row][spacing + 1:spacing + 5],
-				user["layout"][row][spacing + 7:spacing + 11],
-				#<- FIXME: extra instruction required here (finger position)
-				user["layout"][row][spacing + 5:spacing + 7],
-				user["layout"][row][spacing + 4:spacing + 8],
-				user["layout"][row][spacing + 1:spacing + 11]
+				layout[row][spacing + 4] + layout[row][spacing + 7],
+				layout[row][spacing + 3] + layout[row][spacing + 8],
+				layout[row][spacing + 2] + layout[row][spacing + 9],
+				layout[row][spacing + 1] + layout[row][spacing + 10],
+				layout[row][spacing + 1:spacing + 5],
+				layout[row][spacing + 7:spacing + 11],
+				layout[row][spacing + 5:spacing + 7],
+				layout[row][spacing + 4:spacing + 8],
+				layout[row][spacing + 1:spacing + 11]
 			])
 
 		#add an exercise which just uses all letters.
-		everything = "".join(["".join(user["layout"][row][1:11]) for row in rows])
+		everything = "".join(["".join(layout[row][1:11]) for row in rows])
 		exercises.append(everything)
 
 		return exercises
@@ -156,32 +166,28 @@ class TypeDataStore(object):
 	def currentExercise(self, username):
 		user = self._users[username]
 
-		if user["level"] < len(self._letterExercises(user)):
-			#first practise the keys needed
-			letters = self._letterExercises(user)[user["level"]]
-			user["currentExercise"] = self._createRow(letters)
-		else:
-			#then practise typing words to improve speed.
-			user["currentExercise"] = " ".join(random.sample(self._words, 8))
-
 		return user["currentExercise"]
 
 	def currentInstruction(self, username):
+		#TODO: enter multiple formulations of the most often shown
+		#sentences and use random.choice() to pick one. That way, the
+		#instructions are a bit more personal/nicer.
 		user = self._users[username]
+		layout = self.layout(username)
 
 		if user["status"] == "start":
 			return _("""Welcome, I'm your personal OpenTeacher typing tutor. We'll improve your typing skills by doing simple exercises. Between the exercises, I'll give instructions. Let's get started:
 
 First place your fingers on the so-called home row: your fingers, from left to right, should always be on the keys '{a}', '{s}', '{d}', '{f}', '{space}', '{space}', '{j}', '{k}', '{l}' and '{;}' while not typing another character. When your fingers are in position, press {space} to start the first lesson. Work for accuracy at first, not speed.""").format(**{
-			"a": user["layout"][2][1],
-			"s": user["layout"][2][2],
-			"d": user["layout"][2][3],
-			"f": user["layout"][2][4],
-			"space": user["layout"][4][0].lower(),
-			"j": user["layout"][2][7],
-			"k": user["layout"][2][8],
-			"l": user["layout"][2][9],
-			";": user["layout"][2][10],
+			"a": layout[2][1],
+			"s": layout[2][2],
+			"d": layout[2][3],
+			"f": layout[2][4],
+			"space": layout[4][0].lower(),
+			"j": layout[2][7],
+			"k": layout[2][8],
+			"l": layout[2][9],
+			";": layout[2][10],
 		}).strip()
 
 		if user["status"] == "done":
@@ -194,10 +200,6 @@ First place your fingers on the so-called home row: your fingers, from left to r
 		if len(user["results"]) == 1:
 			instr += _("Congratulations, you finished your first exercise!") + "\n\n"
 
-		if user["status"] == "next":
-			#FIXME: make it know about letters/words
-			instr += _("You made zero mistakes and are typing fast enough, so you can continue practising some new letters/words. Keep up the good work!") + "\n\n"
-
 		if user["status"] == "mistakes":
 			amountOfMistakes = user["results"][-1]["amountOfMistakes"]
 			instr += ngettext(
@@ -205,19 +207,37 @@ First place your fingers on the so-called home row: your fingers, from left to r
 				"You made %s mistakes, please keep trying until you can do it flawless.",
 				amountOfMistakes
 			) % amountOfMistakes + "\n\n"
-			if self._wordsPerMinute(user["results"][-1]) >= 50:
-				#FIXME: only true while practising letters. For words, the speed to aim for might be above 50.
-				#
-				#user is going a bit fast, which might be the cause for the mistakes.
-				instr = instr.rstrip() + " " + _("To archieve that, you might try slowing down a bit.") + "\n\n"
 
 		if user["status"] == "slow":
 			instr += _("You made zero mistakes. Now try to improve your typing speed a bit.") + "\n\n"
 
+		if user["exerciseType"] == "letters":
+			if user["status"] == "mistakes" and self._wordsPerMinute(user["results"][-1]) >= 40:
+				instr = instr.rstrip() + " " + _("To archieve that, you might try slowing down a bit.") + "\n\n"
+
+			if user["status"] == "next":
+				instr += _("You made zero mistakes and are typing fast enough, so you can continue practising some new letter combinations. Keep up the good work!") + "\n\n"
+			#the first time the fingers go from the home row
+			if user["level"] == 9:
+				instr += _("You're now going to learn letters that aren't on the home row. To see which fingers you need to use, see the keyboard image on your screen. When you're not using a finger to type a letter, put it back on the home row directly.") + "\n\n"
+			#extra letters for left & right index fingers
+			if user["level"] % 9 == 6:
+				instr += _("The keys you're going to practise now are typed by the left and right index finger and further away from those fingers than the other keys we practised on the current row. Make sure you return your finger to its position on the home row when you're typing another letter.") + "\n\n"
+
+		if user["exerciseType"] == "words" and user["status"] == "next":
+			instr += _("You made zero mistakes and are typing fast enough, so you can continue practising with some new words. Keep up the good work!") + "\n\n"
+
 		return instr.strip()
 
 	def layout(self, username):
-		return self._users[username]["layout"]
+		return getattr(self, self._users[username]["layout"])
+
+	def targetSpeed(self, username):
+		return self._users[username]["targetSpeed"]
+
+	def maxLevel(self, user):
+		#20 word exercises
+		return len(self._letterExercises(self._users[user])) + 20
 
 	def setResult(self, username, time, amountOfMistakes):
 		user = self._users[username]
@@ -227,37 +247,48 @@ First place your fingers on the so-called home row: your fingers, from left to r
 			"exercise": user["currentExercise"],
 			"level": user["level"],
 		})
+		self._newExercise(user)
 
 		speed = self._wordsPerMinute(user["results"][-1])
-		maxLevel = len(self._letterExercises(user)) + 20
+		amountOfLetterExercises = len(self._letterExercises(user))
 
 		#calculate new level
-		if user["level"] < len(self._letterExercises(user)):
+		if user["level"] < amountOfLetterExercises:
 			#user is practising letters
-			if amountOfMistakes > 0:
-				user["status"] = "mistakes"
-				return
-			if speed < 20:
-				user["status"] = "slow"
-				return
+			user["exerciseType"] = "letters"
+			user["targetSpeed"] = 20
 
-		elif user["level"] < maxLevel:
+		elif user["level"] < self.maxLevel(username):
 			#user is practising words
+			user["exerciseType"] = "words"
 
-			if amountOfMistakes > 0:
-				user["status"] = "mistakes"
-				return
-			#at the end the user needs to type at 80 words per minute.
-			#work towards that.
-			if speed < (float(user["level"]) / maxLevel * 60) + 20:
-				user["status"] = "slow"
-				return
+			done = (user["level"] - amountOfLetterExercises)
+			total = self.maxLevel(username) - amountOfLetterExercises
+			#gradually increase speed until 80 wpm
+			user["targetSpeed"] = int(round(20 + float(done) / total * 60))
 		else:
 			#user is done.
 			user["status"] = "done"
 			return
+
+		if amountOfMistakes > 0:
+			user["status"] = "mistakes"
+			return
+		if speed < user["targetSpeed"]:
+			user["status"] = "slow"
+			return
+
 		user["status"] = "next"
 		user["level"] += 1
+
+	def _newExercise(self, user):
+		if user["level"] < len(self._letterExercises(user)):
+			#first practise the keys needed
+			letters = self._letterExercises(user)[user["level"]]
+			user["currentExercise"] = self._createRow(letters)
+		else:
+			#then practise typing words to improve speed.
+			user["currentExercise"] = " ".join(random.sample(self._words, 8))
 
 	@staticmethod
 	def _wordsPerMinute(result):

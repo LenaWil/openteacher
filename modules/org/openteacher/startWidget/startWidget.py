@@ -33,6 +33,8 @@ def getLargeStartWidgetButton():
 				QtGui.QSizePolicy.MinimumExpanding
 			)
 			self.setIconSize(QtCore.QSize(32, 32))
+			#width: unlimited (Qt default). Height: fixed
+			self.setMaximumSize(16777215, 100)
 
 		def setText(self, text):
 			self._text = text
@@ -108,7 +110,8 @@ def getButtonsGroupBox():
 					item = layout.takeAt(0)
 					if not item:
 						break
-					item.widget().setParent(None)
+					if item.widget():
+						item.widget().setParent(None)
 			emptyLayout(self._largeLayout)
 			emptyLayout(self._smallLayout)
 
@@ -185,6 +188,7 @@ def getStartWidget():
 			openLayout = QtGui.QVBoxLayout()
 			openLayout.addWidget(self.createLessonGroupBox)
 			openLayout.addWidget(self.loadLessonGroupBox)
+			openLayout.addStretch()
 
 			left = self.style().pixelMetric(QtGui.QStyle.PM_LayoutLeftMargin)
 			openLayout.setContentsMargins(left, 0, 0, 0)

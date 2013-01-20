@@ -243,14 +243,20 @@ def initializeWidgets():
 		def updateInstruction(self):
 			instr = self._model.currentInstruction(self.username)
 			try:
-				self._levelLabel.setText(unicode(self._model.level(self.username)))
+				self._levelLabel.setText(u"%s/%s" % (
+					self._model.level(self.username),
+					self._model.maxLevel(self.username),
+				))
 			except IndexError:
 				self._levelLabel.hide()
 			else:
 				self._levelLabel.show()
 
 			try:
-				self._speedLabel.setText(unicode(self._model.speed(self.username)))
+				self._speedLabel.setText(u"%s/%s" % (
+					self._model.speed(self.username),
+					self._model.targetSpeed(self.username),
+				))
 			except IndexError:
 				self._speedLabelLabel.hide()
 			else:
@@ -395,7 +401,7 @@ class TypingTutorModule(object):
 		self._uiModule = self._modules.default("active", type="ui")
 
 		self._buttonRegister = self._modules.default("active", type="buttonRegister")
-		#FIXME: create doesn't make any sense.
+		#FIXME? create doesn't really make sense.
 		self._button = self._buttonRegister.registerButton("create")
 		self._button.clicked.handle(self._show)
 		self._button.changeIcon.send(self._mm.resourcePath("typingTutor.png"))

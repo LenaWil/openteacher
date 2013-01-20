@@ -34,6 +34,9 @@ def getEnterPlainTextDialog():
 
 			self._label = QtGui.QLabel()
 			self._label.setWordWrap(True)
+			#make sure the label doesn't claim too much space when e.g.
+			#being full screen.
+			self._label.setSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
 			self._textEdit = QtGui.QTextEdit()
 
 			splitter = QtGui.QSplitter()
