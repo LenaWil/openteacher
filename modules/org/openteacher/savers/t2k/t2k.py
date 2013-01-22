@@ -144,8 +144,8 @@ class Teach2000SaverModule(object):
 		#Teach2000 is written in Pascal... Blegh :P.
 		#use its epoch. (So not the unix one)
 		#strftime doesn't allow dates < 1900, so that's why the weird
-		#string formatting
-		return "1899-12-30T%s" % t.strftime("%H:%M:%S.%f")
+		#string formatting. See _composeDateTime for info on the [:-3].
+		return "1899-12-30T%s" % t.strftime("%H:%M:%S.%f")[:-3]
 
 	def _answersCorrect(self, test):
 		correct = 0

@@ -48,7 +48,7 @@ composeList = (function () {
 	return function (container) {
 		var items, result, i, questions, answers;
 
-		items = container.list.items;
+		items = container.list.items || [];
 		result = "";
 		for (i = 0; i < items.length; i += 1) {
 			questions = compose(items[i].questions);

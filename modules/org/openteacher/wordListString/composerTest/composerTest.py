@@ -33,6 +33,14 @@ class TestCase(unittest.TestCase):
 			})
 			self.assertEqual(output, expectedOutput)
 
+	def testNoItems(self):
+		for mod in self._mm.mods("active", type="wordListStringComposer"):
+			output = mod.composeList({
+				"resources": {},
+				"list": {},
+			})
+			self.assertEqual(output, "\n")
+
 	def testEmpty(self):
 		#one blank line
 		self._test([], "\n")

@@ -249,7 +249,7 @@ class VocatrainApiModule(object):
 
 	def _import(self, api):
 		#[5:-1] to strip http:// and the final /
-		serviceName = api.service[6:-1]
+		serviceName = api.service[7:-1]
 		try:
 			d = self._showDialog(CategorySelectDialog(api.getCategories()))
 			if not d:

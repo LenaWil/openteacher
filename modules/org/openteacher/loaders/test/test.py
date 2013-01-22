@@ -26,28 +26,31 @@ class TestCase(unittest.TestCase):
 	def setUp(self):
 		self._files = glob.glob(self._mm.resourcePath("testFiles") + "/*")
 
-	def _loadFiles(self):
+	def _loadFiles(self, results=[]):
 		if not self.advanced:
 			#don't run the tests.
 			return []
-		results = []
-
-		for file in self._files:
-			if os.path.basename(file) in ("netherlands.png", "COPYING",):
-				#files that aren't loadable
-				continue
-			if file.endswith(".xml"):
-				#Special case for abbyy since it doesn't have a mimetype
-				loadMods = set(self._mm.mods("active", type="load", loads={"xml": ["words"]}))
-			elif file.endswith(".csv"):
-				#same for csv
-				loadMods = set(self._mm.mods("active", type="load", loads={"csv": ["words"]}))
-			else:
-				mimetype = os.path.basename(file).split(".")[0].replace("_", "/")
-				loadMods = set(self._mm.mods("active", type="load", mimetype=mimetype))
-				self.assertTrue(loadMods, msg="No loader fount for mimetype: %s" % mimetype)
-			for mod in loadMods:
-				results.append(mod.load(file))
+		if not results:
+			#only load when not yet in cache.
+			for file in self._files:
+				if os.path.basename(file) in ("netherlands.png", "COPYING",):
+					#files that aren't loadable
+					continue
+				if file.endswith(".xml"):
+					#Special case for abbyy since it doesn't have a mimetype
+					loadMods = set(self._mm.mods("active", type="load", loads={"xml": ["words"]}))
+				elif file.endswith(".csv"):
+					#same for csv
+					loadMods = set(self._mm.mods("active", type="load", loads={"csv": ["words"]}))
+				else:
+					mimetype = os.path.basename(file).split(".")[0].replace("_", "/")
+					loadMods = set(self._mm.mods("active", type="load", mimetype=mimetype))
+					self.assertTrue(loadMods, msg="No loader fount for mimetype: %s" % mimetype)
+				for mod in loadMods:
+					result = mod.load(file)
+					result["file"] = file
+					result["mod"] = mod
+					results.append(result)
 
 		return results
 
@@ -85,7 +88,11 @@ class TestCase(unittest.TestCase):
 		results = self._loadFiles()
 
 		for data in results:
-			self.assertIsNotNone(data["list"]["items"])
+			try:
+				self.assertTrue(data["list"]["items"])
+			except AssertionError:
+				print data["mod"], data["file"]
+				raise
 
 	def testItemHasUniqueId(self):
 		results = self._loadFiles()
