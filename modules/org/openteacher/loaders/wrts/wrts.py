@@ -82,7 +82,8 @@ class WrtsLoaderModule(object):
 			return "words"
 
 	def load(self, path):
-		root = ElementTree.parse(open(path)).getroot()
+		with open(path) as f:
+			root = ElementTree.parse(f).getroot()
 		#dutch: lijst = list
 		listTree = root.find("lijst")
 

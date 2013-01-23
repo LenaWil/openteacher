@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -26,6 +26,28 @@ class TestCase(unittest.TestCase):
 	def setUp(self):
 		self._files = glob.glob(self._mm.resourcePath("testFiles") + "/*")
 
+	def _modsForFile(self, file):
+		if os.path.basename(file) in ("netherlands.png", "COPYING",):
+			#files that aren't loadable
+			return set()
+		if file.endswith(".xml"):
+			#Special case for abbyy since it doesn't have a mimetype
+			loadMods = set(self._mm.mods("active", type="load", loads={"xml": ["words"]}))
+		elif file.endswith(".csv"):
+			#same for csv
+			loadMods = set(self._mm.mods("active", type="load", loads={"csv": ["words"]}))
+		elif file.endswith(".txt"):
+			#same for txt
+			loadMods = set(self._mm.mods("active", type="load", loads={"txt": ["words"]}))
+		elif file.endswith(".db"):
+			#same for sqlite .db
+			loadMods = set(self._mm.mods("active", type="load", loads={"db": ["words"]}))
+		else:
+			mimetype = os.path.basename(file).split(".")[0].replace("_", "/")
+			loadMods = set(self._mm.mods("active", type="load", mimetype=mimetype))
+			self.assertTrue(loadMods, msg="No loader fount for mimetype: %s" % mimetype)
+		return loadMods
+
 	def _loadFiles(self, results=[]):
 		if not self.advanced:
 			#don't run the tests.
@@ -33,19 +55,7 @@ class TestCase(unittest.TestCase):
 		if not results:
 			#only load when not yet in cache.
 			for file in self._files:
-				if os.path.basename(file) in ("netherlands.png", "COPYING",):
-					#files that aren't loadable
-					continue
-				if file.endswith(".xml"):
-					#Special case for abbyy since it doesn't have a mimetype
-					loadMods = set(self._mm.mods("active", type="load", loads={"xml": ["words"]}))
-				elif file.endswith(".csv"):
-					#same for csv
-					loadMods = set(self._mm.mods("active", type="load", loads={"csv": ["words"]}))
-				else:
-					mimetype = os.path.basename(file).split(".")[0].replace("_", "/")
-					loadMods = set(self._mm.mods("active", type="load", mimetype=mimetype))
-					self.assertTrue(loadMods, msg="No loader fount for mimetype: %s" % mimetype)
+				loadMods = self._modsForFile(file)
 				for mod in loadMods:
 					result = mod.load(file)
 					result["file"] = file
@@ -56,19 +66,14 @@ class TestCase(unittest.TestCase):
 
 	def testGetFileTypeOf(self):
 		for file in self._files:
-			if file.endswith(".xml"):
-				#ABBYY Lingvo Tutor
-				loadMods = self._mm.mods("active", type="load", loads={"xml": ["words"]})
-			elif file.endswith(".csv"):
-				#CSV
-				loadMods = self._mm.mods("active", type="load", loads={"csv": ["words"]})
-			else:
-				mimetype = os.path.basename(file).split(".")[0].replace("_", "/")
-				loadMods = set(self._mm.mods("active", type="load", mimetype=mimetype))
-
+			loadMods = self._modsForFile(file)
 			for mod in loadMods:
 				#feel free to extend
-				self.assertIn(mod.getFileTypeOf(file), ["words", "topo", "media"])
+				try:
+					self.assertIn(mod.getFileTypeOf(file), ["words", "topo", "media"])
+				except AssertionError:
+					print file, mod
+					raise
 
 	def testHasAttrs(self):
 		for mod in self._mm.mods("active", type="load"):

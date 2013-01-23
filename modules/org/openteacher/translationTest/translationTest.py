@@ -34,7 +34,8 @@ class TestCase(unittest.TestCase):
 			files = mod.filesWithTranslations
 			for file in files:
 				path = os.path.join(directory, file)
-				self.assertTrue(os.path.exists(path))
+				self.assertTrue(os.path.exists(path), msg="Mod %s's filesWithTranslations contains %s, but that doesn't exist." % (mod, file))
+
 
 	def testPotFiles(self):
 		"""Test if every module with a translations dir has a .pot file

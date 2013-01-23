@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -19,12 +19,10 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 from etree import ElementTree
-import locale
-import datetime
 
-class VokabelTrainerLoaderModule(object):
+class TeachmasterLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(VokabelTrainerLoaderModule, self).__init__(*args, **kwargs)
+		super(TeachmasterLoaderModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "load"
@@ -38,7 +36,11 @@ class VokabelTrainerLoaderModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ("vokabelTrainer.py",)
+		self.filesWithTranslations = ("teachmaster.py",)
+
+	@property
+	def _parse(self):
+		return self._modules.default("active", type="wordsStringParser").parse
 
 	def _retranslate(self):
 		try:
@@ -52,8 +54,8 @@ class VokabelTrainerLoaderModule(object):
 		#TRANSLATORS: This is the name of a file type OpenTeacher can
 		#TRANSLATORS: read. It's named after the program with the same
 		#TRANSLATORS: name. For more info on the program, see:
-		#TRANSLATORS: http://www.vt-online.net/ueberblick/ (german)
-		self.name = _("Vokabel Trainer")
+		#TRANSLATORS: http://www.teachmaster.de/cms/1-1-Home.html
+		self.name = _("Teachmaster")
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
@@ -65,8 +67,8 @@ class VokabelTrainerLoaderModule(object):
 			translator.languageChanged.handle(self._retranslate)
 		self._retranslate()
 
-		self.mimetype = "application/x-vokabeltrainer"
-		self.loads = {"vtl3": ["words"]}
+		self.mimetype = "application/x-teachmaster"
+		self.loads = {"vok2": ["words"]}
 
 		self.active = True
 
@@ -79,32 +81,43 @@ class VokabelTrainerLoaderModule(object):
 		del self.mimetype
 
 	def getFileTypeOf(self, path):
-		if path.endswith(".vtl3"):
+		if path.endswith(".vok2"):
 			return "words"
 
 	def load(self, path):
+		"""Loads Teachmaster's .vok2 files. Lesson info is stored in
+		   additional files, but that's not loaded. It might not map to
+		   the OT result system either (not sure). For documentation on
+		   the file format in German (translations are available, but
+		   those aren't all complete/up-to-date):
+
+		   http://www.teachmaster.de/wikka/DocumentationDEDateiformate
+
+		"""
 		with open(path, "r") as f:
 			root = ElementTree.parse(f).getroot()
 
 		list = {
 			"items": [],
+			"title": root.findtext("header/titel") or u"",
+			"questionLanguage": root.findtext("header/spreins") or u"",
+			"answerLanguage": root.findtext("header/sprzwei"),
 		}
 
-		for i, itemTree in enumerate(root.findall("Vokabeldatensatz/Datensatz")):
+		for i, itemTree in enumerate(root.findall("vokabelsatz")):
 			word = {
 				"id": i,
-				"questions": [],
+				"questions": self._parse(itemTree.findtext("spreins") or u""),
 				"answers": [],
+				"comment": itemTree.findtext("bemerkung") or u"",
 			}
-			comments = []
-			for question in itemTree.findall("Vokabeln/string"):
-				word["questions"].append((question.text,))
-			for answer in itemTree.findall("Vokabeln/string"):
-				word["answers"].append((answer.text,))
-			for comment in itemTree.findall("Kommentare/string"):
-				comments.append((comment.text))
-			if comments:
-				word["comment"] = u"; ".join(comments)
+
+			answer = itemTree.findtext("sprzwei")
+			synonym = itemTree.findtext("synonym")
+			if answer:
+				word["answers"].append((answer,))
+			if synonym:
+				word["answers"].append((synonym,))
 
 			list["items"].append(word)
 
@@ -114,4 +127,4 @@ class VokabelTrainerLoaderModule(object):
 		}
 
 def init(moduleManager):
-	return VokabelTrainerLoaderModule(moduleManager)
+	return TeachmasterLoaderModule(moduleManager)

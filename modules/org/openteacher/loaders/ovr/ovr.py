@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,13 +18,11 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-from etree import ElementTree
-import locale
-import datetime
+import itertools
 
-class VokabelTrainerLoaderModule(object):
+class TeachmasterLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(VokabelTrainerLoaderModule, self).__init__(*args, **kwargs)
+		super(TeachmasterLoaderModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "load"
@@ -38,7 +36,11 @@ class VokabelTrainerLoaderModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ("vokabelTrainer.py",)
+		self.filesWithTranslations = ("ovr.py",)
+
+	@property
+	def _parse(self):
+		return self._modules.default("active", type="wordsStringParser").parse
 
 	def _retranslate(self):
 		try:
@@ -52,8 +54,8 @@ class VokabelTrainerLoaderModule(object):
 		#TRANSLATORS: This is the name of a file type OpenTeacher can
 		#TRANSLATORS: read. It's named after the program with the same
 		#TRANSLATORS: name. For more info on the program, see:
-		#TRANSLATORS: http://www.vt-online.net/ueberblick/ (german)
-		self.name = _("Vokabel Trainer")
+		#TRANSLATORS: http://aaronweb.net/projects/overhoor/ (Dutch)
+		self.name = _("Overhoringsprogramma Talen")
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
@@ -65,8 +67,8 @@ class VokabelTrainerLoaderModule(object):
 			translator.languageChanged.handle(self._retranslate)
 		self._retranslate()
 
-		self.mimetype = "application/x-vokabeltrainer"
-		self.loads = {"vtl3": ["words"]}
+		self.mimetype = "application/x-overhoringsprogrammatalen"
+		self.loads = {"ovr": ["words"]}
 
 		self.active = True
 
@@ -79,34 +81,54 @@ class VokabelTrainerLoaderModule(object):
 		del self.mimetype
 
 	def getFileTypeOf(self, path):
-		if path.endswith(".vtl3"):
+		if path.endswith(".ovr"):
 			return "words"
 
 	def load(self, path):
+		"""Loads 'Overhoringsprogramma Talen' (*.ovr) lists. This parser
+		   is based on inspection of files, not on official
+		   documentation.
+
+		"""
+		def readLine(f):
+			data = next(f)
+			return unicode(data, encoding="iso-8859-1").strip()
+
+		def skipLine(f):
+			next(f)
+
 		with open(path, "r") as f:
-			root = ElementTree.parse(f).getroot()
+			#do something with f
 
-		list = {
-			"items": [],
-		}
-
-		for i, itemTree in enumerate(root.findall("Vokabeldatensatz/Datensatz")):
-			word = {
-				"id": i,
-				"questions": [],
-				"answers": [],
+			list = {
+				"items": [],
+				"questionLanguage": readLine(f),
+				"answerLanguage": readLine(f),
 			}
-			comments = []
-			for question in itemTree.findall("Vokabeln/string"):
-				word["questions"].append((question.text,))
-			for answer in itemTree.findall("Vokabeln/string"):
-				word["answers"].append((answer.text,))
-			for comment in itemTree.findall("Kommentare/string"):
-				comments.append((comment.text))
-			if comments:
-				word["comment"] = u"; ".join(comments)
+			for i in range(4):
+				#no idea what these lines represent
+				skipLine(f)
 
-			list["items"].append(word)
+			counter = itertools.count()
+			while True:
+				try:
+					questions = readLine(f)
+					answers = []
+					#load answers untill the stop sequence is loaded
+					while answers[-2:] != [u"-", u"0"]:
+						answers.append(readLine(f))
+					#cut off the stop sequence
+					answers = answers[:-2]
+
+					answers = [tuple(answers)]
+				except StopIteration:
+					break
+
+				list["items"].append({
+					"id": next(counter),
+					"questions": self._parse(questions),
+					"answers": answers,
+				})
 
 		return {
 			"resources": {},
@@ -114,4 +136,4 @@ class VokabelTrainerLoaderModule(object):
 		}
 
 def init(moduleManager):
-	return VokabelTrainerLoaderModule(moduleManager)
+	return TeachmasterLoaderModule(moduleManager)
