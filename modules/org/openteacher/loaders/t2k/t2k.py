@@ -40,9 +40,16 @@ class Teach2000LoaderModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
+		self.requires = (
+			self._mm.mods(type="mimicryTypefaceConverter"),
+		)
 		self.filesWithTranslations = ("t2k.py",)
 		self._tempPaths = set()
 		atexit.register(self._cleanUp)
+
+	@property
+	def _convertMimicryTypeface(self):
+		return self._modules.default("active", type="mimicryTypefaceConverter").convert
 
 	def _retranslate(self):
 		try:
@@ -196,6 +203,9 @@ class Teach2000LoaderModule(object):
 			"tests": [],
 		}
 
+		questionFont = root.findtext("message_data/font_question") or u""
+		answerFont = root.findtext("message_data/answer_question") or u""
+
 		for item in root.findall("message_data/items/item"):
 			word = {
 				"id": int(),
@@ -210,17 +220,17 @@ class Teach2000LoaderModule(object):
 			word["questions"].append([])
 			for question in item.findall(".//question"):
 				#strip BBCode for now
-				word["questions"][0].append(
-					self._stripBBCode(question.text)
-				)
+				text = self._stripBBCode(question.text)
+				convertedText = self._convertMimicryTypeface(questionFont, text)
+				word["questions"][0].append(convertedText)
 
 			#answers
 			word["answers"].append([])
 			for answer in item.findall(".//answer"):
 				#strip BBCode for now
-				word["answers"][0].append(
-					self._stripBBCode(answer.text)
-				)
+				text = self._stripBBCode(answer.text)
+				convertedText = self._convertMimicryTypeface(questionFont, text)
+				word["answers"][0].append(convertedText)
 
 			#remarks (comment in OT)
 			comment = item.findtext("remarks")

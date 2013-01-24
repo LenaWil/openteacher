@@ -32,13 +32,14 @@ class CsvLoaderModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
+		self.filesWithTranslations = ("csv_.py",)
 
 	@property
 	def _parse(self):
 		return self._modules.default("active", type="wordsStringParser").parse
 
 	def getFileTypeOf(self, path):
-		if path.endswith(".csv"):
+		if path.endswith(".csv") or path.endswith(".tsv"):
 			return "words"
 
 	def load(self, path):
@@ -98,7 +99,10 @@ class CsvLoaderModule(object):
 					return {"encoding": "UTF-8"}
 			chardet = MyChardet()
 
-		self.loads = {"csv": ["words"]}
+		self.loads = {
+			"csv": ["words"],
+			"tsv": ["words"],
+		}
 		#no mimetype. Registering text/csv is too harsh.
 
 		self._modules = set(self._mm.mods(type="modules")).pop()

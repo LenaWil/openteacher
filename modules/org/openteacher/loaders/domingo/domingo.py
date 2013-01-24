@@ -27,6 +27,8 @@ class DomingoLoaderModule(object):
 
 		self.type = "load"
 		self.priorities = {
+			#less impotant than vocabularium, which shares the same
+			#extension!
 			"default": 432,
 		}
 		self._mm = moduleManager
@@ -85,6 +87,8 @@ class DomingoLoaderModule(object):
 
 	def getFileTypeOf(self, path):
 		if path.endswith(".voc"):
+			#probably. Not the only one using this extension. Fixed by
+			#the priorities in OT...
 			return "words"
 
 	def load(self, path):

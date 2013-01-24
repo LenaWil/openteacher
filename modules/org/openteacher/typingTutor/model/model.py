@@ -202,11 +202,18 @@ First place your fingers on the so-called home row: your fingers, from left to r
 
 		if user["status"] == "mistakes":
 			amountOfMistakes = user["results"][-1]["amountOfMistakes"]
-			instr += ngettext(
-				"You made %s mistake, please keep trying until you can do it flawless.",
-				"You made %s mistakes, please keep trying until you can do it flawless.",
-				amountOfMistakes
-			) % amountOfMistakes + "\n\n"
+			instr += random.choice([
+				ngettext(
+					"You made %s mistake, please keep trying until you can do it flawless.",
+					"You made %s mistakes, please keep trying until you can do it flawless.",
+					amountOfMistakes
+				),
+				ngettext(
+					"Too bad, you made %s mistake. Keep practising to get better!",
+					"Too bad, you made %s mistakes. Keep practising to get better!",
+					amountOfMistakes
+				)
+			]) % amountOfMistakes + "\n\n"
 
 		if user["status"] == "slow":
 			instr += _("You made zero mistakes. Now try to improve your typing speed a bit.") + "\n\n"
@@ -216,7 +223,10 @@ First place your fingers on the so-called home row: your fingers, from left to r
 				instr = instr.rstrip() + " " + _("To archieve that, you might try slowing down a bit.") + "\n\n"
 
 			if user["status"] == "next":
-				instr += _("You made zero mistakes and are typing fast enough, so you can continue practising some new letter combinations. Keep up the good work!") + "\n\n"
+				instr += random.choice([
+					_("You made zero mistakes and are typing fast enough, so you can continue practising some new letter combinations. Keep up the good work!"),
+					_("You did it flawlessly and fast! Continue practising some new letters combinations to get even better!"),
+				]) + "\n\n"
 			#the first time the fingers go from the home row
 			if user["level"] == 9:
 				instr += _("You're now going to learn letters that aren't on the home row. To see which fingers you need to use, see the keyboard image on your screen. When you're not using a finger to type a letter, put it back on the home row directly.") + "\n\n"
@@ -225,7 +235,10 @@ First place your fingers on the so-called home row: your fingers, from left to r
 				instr += _("The keys you're going to practise now are typed by the left and right index finger and further away from those fingers than the other keys we practised on the current row. Make sure you return your finger to its position on the home row when you're typing another letter.") + "\n\n"
 
 		if user["exerciseType"] == "words" and user["status"] == "next":
-			instr += _("You made zero mistakes and are typing fast enough, so you can continue practising with some new words. Keep up the good work!") + "\n\n"
+			instr += random.choice([
+				_("You made zero mistakes and are typing fast enough, so you can continue practising with some new words. Keep up the good work!"),
+				_("You did it flawlessly and fast! Continue practising with new words to get even better!")
+			]) + "\n\n"
 
 		return instr.strip()
 

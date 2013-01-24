@@ -19,11 +19,11 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import re
+from etree import ElementTree
 
-class OverhoorLoaderModule(object):
+class CueCardLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(OverhoorLoaderModule, self).__init__(*args, **kwargs)
+		super(CueCardLoaderModule, self).__init__(*args, **kwargs)
 
 		self.type = "load"
 		self.priorities = {
@@ -34,18 +34,13 @@ class OverhoorLoaderModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.requires = (
-			self._mm.mods(type="wordListStringParser"),
-			self._mm.mods(type="mimicryTypefaceConverter"),
+			self._mm.mods(type="wordsStringParser"),
 		)
-		self.filesWithTranslations = ("overhoor.py",)
+		self.filesWithTranslations = ("cuecard.py",)
 
 	@property
-	def _parseList(self):
-		return self._modules.default("active", type="wordListStringParser").parseList
-
-	@property
-	def _convertMimicryTypeface(self):
-		return self._modules.default("active", type="mimicryTypefaceConverter").convert
+	def _parse(self):
+		return self._modules.default("active", type="wordsStringParser").parse
 
 	def _retranslate(self):
 		try:
@@ -57,19 +52,16 @@ class OverhoorLoaderModule(object):
 				self._mm.resourcePath("translations")
 			)
 		#TRANSLATORS: This is one of the file formats OpenTeacher
-		#TRANSLATORS: can read. It's named after the programs that uses
-		#TRANSLATORS: it. See http://www.efkasoft.com/drillassistant-general-information
-		#TRANSLATORS: and http://www.efkasoft.com/overhoor-algemene-informatie (dutch)
-		#TRANSLATORS: for more info on these programs.
-		self.name = _("Overhoor/Drill Assistant")
+		#TRANSLATORS: can read. It's named after the program that uses
+		#TRANSLATORS: it. See http://www.wadeb.com/cuecard/
+		#TRANSLATORS: for more info on the program.
+		self.name = _("CueCard")
 
 	def enable(self):
 		self.loads = {
-			"oh": ["words"],
-			"ohw": ["words"],
-			"oh4": ["words"],
+			"wcu": ["words"],
 		}
-		self.mimetype = "application/x-overhoor"
+		self.mimetype = "application/x-cuecard"
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		try:
@@ -92,42 +84,32 @@ class OverhoorLoaderModule(object):
 		del self._modules
 
 	def getFileTypeOf(self, path):
-		if path.endswith(".oh") or path.endswith(".ohw") or path.endswith(".oh4"):
+		if path.endswith(".wcu"):
 			return "words"
 
 	def load(self, path):
-		#encoding
-		if path.endswith(".oh4"):
-			encoding = "iso-8859-1"
-		else:
-			encoding= "cp850"
-		#read file
+		"""Tries to load .wcu CueCard files. Based on observation of the
+		   file format, not on documentation. Seems like there is source
+		   code available though.
+
+		"""
 		with open(path, "r") as f:
-			data = unicode(f.read(), encoding=encoding)
-		if data.startswith(u"[FONT"):
-			fonts, data = data.split("\n", 1)
-			questionFont, answerFont = re.findall("\[FONT:([^,]*),", fonts)
+			root = ElementTree.parse(f).getroot()
 
-			newData = []
-			for line in data.split("\n"):
-				try:
-					questions, answers = line.split("=", 1)
-				except ValueError:
-					#be lenient.
-					continue
-				#convert letters to unicode if mimicry type faces are
-				#used (e.g. Symbol, Greek).
-				newData.append("".join([
-					self._convertMimicryTypeface(questionFont, questions),
-					"=",
-					self._convertMimicryTypeface(answerFont, answers),
-				]))
-			#replace the original data
-			data = "\n".join(newData)
+		items = []
+		for id, card in enumerate(root.findall("Card")):
+			items.append({
+				"id": id,
+				"questions": self._parse(card.get("Question")),
+				"answers": self._parse(card.get("Answer")),
+			})
 
-		#delegate real parsing
-		list = self._parseList(data)
-		return list
+		return {
+			"list": {
+				"items": items,
+			},
+			"resources": {},
+		}
 
 def init(moduleManager):
-	return OverhoorLoaderModule(moduleManager)
+	return CueCardLoaderModule(moduleManager)

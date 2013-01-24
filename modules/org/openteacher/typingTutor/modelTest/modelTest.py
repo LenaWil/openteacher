@@ -82,12 +82,14 @@ class TestCase(unittest.TestCase):
 					self.assertIsInstance(m.amountOfMistakes("_modeltest"), int)
 
 				exercise = m.currentExercise("_modeltest")
-#				print exercise
+				if self._showInfo:
+					print "EXERCISE:", exercise
 				self.assertIsInstance(exercise, basestring)
 				self.assertTrue(exercise)
 
 				instruction = m.currentInstruction("_modeltest")
-#				print instruction
+				if self._showInfo:
+					print "INSTRUCTION:", instruction
 				self.assertIsInstance(instruction, basestring)
 				self.assertTrue(instruction)
 
@@ -106,7 +108,8 @@ class TestCase(unittest.TestCase):
 						m.speed("_modeltest")
 				else:
 					speed = m.speed("_modeltest")
-#					print "%s wpm" % speed
+					if self._showInfo:
+						print "SPEED: %s wpm" % speed
 					self.assertIsInstance(speed, int)
 					self.assertTrue(speed >= 0)
 
@@ -114,7 +117,8 @@ class TestCase(unittest.TestCase):
 				self.assertIsInstance(targetSpeed, int)
 				self.assertTrue(targetSpeed >= 0)
 
-#				print ""
+				if self._showInfo:
+					print ""
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -128,6 +132,8 @@ class TestModule(object):
 
 	def enable(self):
 		self.TestCase = TestCase
+		#temporarily active to show test info
+		self.TestCase._showInfo = True
 		self.TestCase._mm = self._mm
 		self.active = True
 

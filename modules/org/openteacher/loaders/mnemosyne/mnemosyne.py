@@ -49,11 +49,6 @@ class MnemosyneLoaderModule(object):
 	def _parse(self):
 		return self._modules.default("active", type="wordsStringParser").parse
 
-	def _stripTags(self, html):
-		"""Thanks mmmdreg! See: http://stackoverflow.com/questions/753052/strip-html-from-strings-in-python"""
-
-		return re.sub("<[^<]+?>", "", html)
-
 	def _retranslate(self):
 		try:
 			translator = self._modules.default("active", type="translator")

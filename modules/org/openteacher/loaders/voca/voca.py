@@ -86,8 +86,13 @@ class VocaLoaderModule(object):
 		)
 		self.requires = (
 			self._mm.mods(type="wordsStringParser"),
+			self._mm.mods(type="mimicryTypefaceConverter"),
 		)
 		self.filesWithTranslations = ("voca.py",)
+
+	@property
+	def _convertMimicryTypeface(self):
+		return self._modules.default("active", type="mimicryTypefaceConverter").convert
 
 	@property
 	def _parse(self):
@@ -164,10 +169,10 @@ class VocaLoaderModule(object):
 		# 4 reference font size
 
 		lang = self._readUtf8String()
-		self._skipUtf8String()
+		font = self._readUtf8String()
 		self._reader.skipInt()
 
-		return lang
+		return (lang, font)
 
 	def _skipGrammar(self):
 		# 4 grammar item count (int)
@@ -199,8 +204,13 @@ class VocaLoaderModule(object):
 			self._reader.skipBytes(fileSize)
 
 	def _readLangs(self, list):
-		list["answerLanguage"] = self._readLang()
-		list["questionLanguage"] = self._readLang()
+		answerLanguage, answerFont = self._readLang()
+		questionLanguage, questionFont = self._readLang()
+
+		list["questionLanguage"] = questionLanguage
+		list["answerLanguage"] = answerLanguage
+
+		return (questionFont, answerFont)
 
 	def _skipHeader(self):
 		#0xA is the header length
@@ -355,7 +365,7 @@ class VocaLoaderModule(object):
 			# )*
 		# )*
 
-	def _readItems(self, list, loadImages):
+	def _readItems(self, list, questionFont, answerFont, loadImages):
 		#Finally. Some interesting stuff again.
 		# 4 item count (int)
 		# (
@@ -407,6 +417,10 @@ class VocaLoaderModule(object):
 			for i in xrange(2):
 				self._skipUtf8String()
 
+			#convert mimicry font symbols
+			question = self._convertMimicryTypeface(questionFont, question)
+			answer = self._convertMimicryTypeface(answerFont, answer)
+
 			list["items"].append({
 				"id": wordId,
 				"questions": self._parse(question),
@@ -421,13 +435,13 @@ class VocaLoaderModule(object):
 		}
 
 		self._skipHeader()
-		self._readLangs(list)
+		questionFont, answerFont = self._readLangs(list)
 		self._skipPhoneticAndForeignChars()
 		self._skipPartOfSpeech()
 		self._skipUploaded()
 		self._skip40OnlyExerciseInfo()
 		self._skipCommonExerciseInfo()
-		self._readItems(list, loadImages=True)
+		self._readItems(list, questionFont, answerFont, loadImages=True)
 
 		#We've got all the interesting stuff by now. Just in case I
 		#missed something, the remaining part of the file format
@@ -524,12 +538,12 @@ class VocaLoaderModule(object):
 		}
 
 		self._skipHeader()
-		self._readLangs(list)
+		questionFont, answerFont = self._readLangs(list)
 		self._skipPhoneticAndForeignChars()
 		self._skipPartOfSpeech()
 		self._skipUploaded()
 		self._skipCommonExerciseInfo()
-		self._readItems(list, loadImages=False)
+		self._readItems(list, questionFont, answerFont, loadImages=False)
 
 		return list
 
@@ -570,13 +584,13 @@ class VocaLoaderModule(object):
 		answerLang = self._readNullTerminatedString()
 		answerEncoding = self._readCharset()
 		list["answerLanguage"] = unicode(answerLang, encoding=answerEncoding)
-		self._skipNullTerminatedString()
+		answerFont = self._readNullTerminatedString()
 		self._reader.skipChar()
 
 		questionLang = self._readNullTerminatedString()
 		questionEncoding = self._readCharset()
 		list["questionLanguage"] = unicode(questionLang, encoding=questionEncoding)
-		self._skipNullTerminatedString()
+		questionFont = self._readNullTerminatedString()
 		self._reader.skipChar()
 
 		# * foreign characters (null-terminated string)
@@ -619,6 +633,10 @@ class VocaLoaderModule(object):
 
 			bytes = self._reader.readBytes(2)
 			assert(bytes.encode("hex") == "0d00")
+
+			#convert mimicry typeface chars into unicode
+			question = self._convertMimicryTypeface(questionFont, question)
+			answer = self._convertMimicryTypeface(answerFont, answer)
 
 			list["items"].append({
 				"id": next(counter),
