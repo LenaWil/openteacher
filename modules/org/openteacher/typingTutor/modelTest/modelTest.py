@@ -133,7 +133,7 @@ class TestModule(object):
 	def enable(self):
 		self.TestCase = TestCase
 		#temporarily active to show test info
-		self.TestCase._showInfo = True
+		self.TestCase._showInfo = False
 		self.TestCase._mm = self._mm
 		self.active = True
 
