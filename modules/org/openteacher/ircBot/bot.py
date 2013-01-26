@@ -72,7 +72,6 @@ class OpenTeacherBot(irc.IRCClient):
 		".modulemap": "http://vps.marten-de-vries.nl/openteacher-code-documentation/module_graph.svg",
 		".peps": "http://www.python.org/dev/peps/",
 	}
-	factoids[".openteacher"] = factoids[".website"]
 	factoids[".launchpad"] = factoids[".lp"]
 	factoids[".download"] = factoids[".downloads"]
 	factoids[".homepage"] = factoids[".website"]
