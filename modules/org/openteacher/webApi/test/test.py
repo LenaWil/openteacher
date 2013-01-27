@@ -37,12 +37,12 @@ class TestCase(unittest.TestCase):
 			os.remove(mod.app.config["DATABASE"])
 
 			client = mod.app.test_client()
-			client.post("/users/", data={
+			client.post("/api/users/", data={
 				"apiKey": "whatever",
 				"username": "test",
 				"password": "test",
 			})
-			client.post("/users/", data={
+			client.post("/api/users/", data={
 				"apiKey": "whatever",
 				"username": "secondtest",
 				"password": "test",
@@ -60,7 +60,7 @@ class TestCase(unittest.TestCase):
 		if not self.advanced:
 			return
 		for client in self.clients:
-			data = client.get("/").data
+			data = client.get("/api/").data
 			self.assertIn("welcome", data)
 			self.assertIn("version", data)
 			self.assertIn("resources", data)
@@ -73,19 +73,19 @@ class TestCase(unittest.TestCase):
 			return
 		k = {"headers": self._auth("test", "test")}
 		for client in self.clients:
-			r = client.post("/lists/", data={
+			r = client.post("/api/lists/", data={
 				"title": "1234",
 				"items": "{}",
 			}, **k)
 			self.assertEqual(r.status_code, 200)
 
-			r = client.post("/shares/", data={
+			r = client.post("/api/shares/", data={
 				"name": "test share",
 				"description": "description",
 			}, **k)
 			self.assertEqual(r.status_code, 200)
 
-			url = json.loads(client.get("/shares/", **k).data)["result"][0]["url"]
+			url = json.loads(client.get("/api/shares/", **k).data)["result"][0]["url"]
 
 			r = client.get(url)
 			self.assertEqual(r.status_code, 200)
@@ -98,8 +98,8 @@ class TestCase(unittest.TestCase):
 			self.assertEqual(r.status_code, 200)
 
 			#url changed
-			url = json.loads(client.get("/shares/", **k).data)["result"][0]["url"]
-			listId = json.loads(client.get("/lists/", **k).data)["result"][0]["id"]
+			url = json.loads(client.get("/api/shares/", **k).data)["result"][0]["url"]
+			listId = json.loads(client.get("/api/lists/", **k).data)["result"][0]["id"]
 
 			r = client.post(url, data={
 				"listId": listId,
@@ -126,20 +126,20 @@ class TestCase(unittest.TestCase):
 		k = {"headers": self._auth("test", "test")}
 		k2 = {"headers": self._auth("secondtest", "test")}
 		for client in self.clients:
-			resp = client.get("/lists/", **k)
+			resp = client.get("/api/lists/", **k)
 			self.assertEquals(resp.status_code, 200)
 			self.assertEquals(json.loads(resp.data), {"result": []})
 
-			resp2 = client.get("/lists/")
+			resp2 = client.get("/api/lists/")
 			self.assertEquals(resp2.status_code, 401)
 
-			resp3 = client.post("/lists/", data={
+			resp3 = client.post("/api/lists/", data={
 				"title": "1234",
 				"items": "{ }",
 			}, **k)
 			self.assertEquals(resp3.status_code, 200)
 
-			resp4 = client.get("/lists/", **k)
+			resp4 = client.get("/api/lists/", **k)
 			url = json.loads(resp4.data)["result"][0]["url"]
 
 			resp5 = client.get(url, **k)
@@ -174,49 +174,49 @@ class TestCase(unittest.TestCase):
 		if not self.advanced:
 			return
 		for client in self.clients:
-			resp = client.post("/users/", data={
+			resp = client.post("/api/users/", data={
 				#not actually tested, but we need to include one.
 				"apiKey": "abcd",
 				"username": "test1",
 				"password": "test"
 			})
 			self.assertEquals(resp.status_code, 200)
-			resp2 = client.post("/users/", data={
+			resp2 = client.post("/api/users/", data={
 				"apiKey": "abcd",
 				"username": "test1",
 				"password": "test"
 			})
 			self.assertEquals(resp2.status_code, 403)
 
-			resp3 = client.put("/users/test1", data={
+			resp3 = client.put("/api/users/test1", data={
 				"username": "test2",
 				"password": "testtest"
 			}, headers=self._auth("test1", "test"))
 			self.assertEquals(resp3.status_code, 200)
 
-			resp4 = client.delete("/users/test2", headers=self._auth("test2", "testtest"))
+			resp4 = client.delete("/api/users/test2", headers=self._auth("test2", "testtest"))
 			self.assertEquals(resp4.status_code, 200)
 
-			resp5 = client.put("/users/test", data={
+			resp5 = client.put("/api/users/test", data={
 				"username": "a",
 				"password": "b"
 			})
 			self.assertEquals(resp5.status_code, 401)
 
-			resp55 = client.post("/users/", data={
+			resp55 = client.post("/api/users/", data={
 				"apiKey": "whatever",
 				"username": "other",
 				"password": "test",
 			})
 			self.assertEquals(resp55.status_code, 200)
 
-			resp6 = client.delete("/users/test", headers=self._auth("other", "test"))
+			resp6 = client.delete("/api/users/test", headers=self._auth("other", "test"))
 			self.assertEquals(resp6.status_code, 404)
 
-			resp7 = client.delete("/users/nonexisting", headers=self._auth("other", "test"))
+			resp7 = client.delete("/api/users/nonexisting", headers=self._auth("other", "test"))
 			self.assertEquals(resp7.status_code, 404)
 
-			resp8 = client.put("/users/nonexisting", headers=self._auth("other", "test"))
+			resp8 = client.put("/api/users/nonexisting", headers=self._auth("other", "test"))
 			self.assertEquals(resp8.status_code, 404)
 
 class TestModule(object):
