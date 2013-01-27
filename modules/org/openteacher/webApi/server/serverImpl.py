@@ -149,7 +149,7 @@ do404 = lambda: doResponse(404, "not_found")
 
 #actually routed methods
 #index
-@app.route("/api/", methods=["GET"])
+@app.route("/", methods=["GET"])
 def api_get_index():
 	return flask.jsonify({
 		"welcome": "OpenTeacher Web API",
@@ -162,7 +162,7 @@ def api_get_index():
 	})
 
 #users
-@app.route("/api/users/", methods=["POST"])
+@app.route("/users/", methods=["POST"])
 def api_post_users():
 	#check key
 	apiKey = flask.request.form["apiKey"]
@@ -180,7 +180,7 @@ def api_post_users():
 		return do403()
 	return doSuccess()
 
-@app.route("/api/users/<username>", methods=["PUT"])
+@app.route("/users/<username>", methods=["PUT"])
 @requires_auth
 def api_put_user(username):
 	if flask.request.authorization.username == username:
@@ -196,7 +196,7 @@ def api_put_user(username):
 	else:
 		return do404()
 
-@app.route("/api/users/<username>", methods=["DELETE"])
+@app.route("/users/<username>", methods=["DELETE"])
 @requires_auth
 def api_delete_user(username):
 	if flask.request.authorization.username == username:
@@ -207,7 +207,7 @@ def api_delete_user(username):
 	return do404()
 
 #lists
-@app.route("/api/lists/", methods=["GET"])
+@app.route("/lists/", methods=["GET"])
 @requires_auth
 def api_get_lists():
 	lists = query_db("SELECT id, title, questionLanguage, answerLanguage FROM lists WHERE owner=? ORDER BY title", (flask.g.user_id,))
@@ -215,7 +215,7 @@ def api_get_lists():
 		list["url"] = flask.url_for("api_get_list", id=list["id"])
 	return flask.jsonify({"result": lists})
 
-@app.route("/api/lists/", methods=["POST"])
+@app.route("/lists/", methods=["POST"])
 @requires_auth
 def api_post_lists():
 	query_db("INSERT INTO lists(title, items, questionLanguage, answerLanguage, tests, owner) VALUES (?, ?, ?, ?, ?, ?)", (
@@ -228,7 +228,7 @@ def api_post_lists():
 	))
 	return doSuccess()
 
-@app.route("/api/lists/<id>", methods=["GET"])
+@app.route("/lists/<id>", methods=["GET"])
 @requires_auth
 def api_get_list(id):
 	list = query_db("SELECT id, title, questionLanguage, answerLanguage, items, tests FROM lists WHERE id=? AND owner=?", (id, flask.g.user_id), one=True)
@@ -238,7 +238,7 @@ def api_get_list(id):
 		#or 403
 		return do404()
 
-@app.route("/api/lists/<id>", methods=["PUT"])
+@app.route("/lists/<id>", methods=["PUT"])
 @requires_auth
 def api_put_list(id):
 	query_db("UPDATE lists SET title=?, items=?, questionlanguage=?, answerLanguage=?, tests=? WHERE id=? AND owner=?", (
@@ -256,7 +256,7 @@ def api_put_list(id):
 		#or 403
 		return do404()
 
-@app.route("/api/lists/<id>", methods=["DELETE"])
+@app.route("/lists/<id>", methods=["DELETE"])
 @requires_auth
 def api_delete_list(id):
 	query_db("DELETE FROM lists WHERE id=? AND owner=?", (id, flask.g.user_id))
@@ -267,7 +267,7 @@ def api_delete_list(id):
 		return do404()
 
 #shares
-@app.route("/api/shares/", methods=["GET"])
+@app.route("/shares/", methods=["GET"])
 @requires_auth
 def api_get_shares():
 	shares = query_db("SELECT name, description FROM shares WHERE owner=?", (flask.g.user_id,))
@@ -275,7 +275,7 @@ def api_get_shares():
 		share["url"] = flask.url_for("api_get_share", name=share["name"])
 	return flask.jsonify({"result": shares})
 
-@app.route("/api/shares/", methods=["POST"])
+@app.route("/shares/", methods=["POST"])
 @requires_auth
 def api_post_shares():
 	name = flask.request.form["name"]
@@ -286,7 +286,7 @@ def api_post_shares():
 		return do403()
 	return doSuccess()
 
-@app.route("/api/shares/<name>/", methods=["PUT"])
+@app.route("/shares/<name>/", methods=["PUT"])
 @requires_auth
 def api_put_share(name):
 	newName = flask.request.form["name"]
@@ -298,7 +298,7 @@ def api_put_share(name):
 		#or 403
 		return do404()
 
-@app.route("/api/shares/<name>/", methods=["GET"])
+@app.route("/shares/<name>/", methods=["GET"])
 def api_get_share(name):
 	share = query_db("SELECT id, name, description FROM shares WHERE name=?", (name,), one=True)
 	if share is None:
@@ -314,7 +314,7 @@ def api_get_share(name):
 		],
 	}})
 
-@app.route("/api/shares/<name>/", methods=["DELETE"])
+@app.route("/shares/<name>/", methods=["DELETE"])
 @requires_auth
 def api_delete_share(name):
 	query_db("DELETE FROM shares WHERE name=? AND owner=?", (name, flask.g.user_id))
@@ -324,7 +324,7 @@ def api_delete_share(name):
 		#or 403. Who cares.
 		return do404()
 
-@app.route("/api/shares/<share_name>/", methods=["POST"])
+@app.route("/shares/<share_name>/", methods=["POST"])
 @requires_auth
 def api_post_share_list(share_name):
 	unsafe_list_id = flask.request.form["listId"]
@@ -340,14 +340,14 @@ def api_post_share_list(share_name):
 		return do403()
 	return doSuccess()
 
-@app.route("/api/shares/<share_name>/<list_id>", methods=["GET"])
+@app.route("/shares/<share_name>/<list_id>", methods=["GET"])
 def api_get_share_list(share_name, list_id):
 	list = query_db("SELECT l.title, l.questionLanguage, l.answerLanguage, l.items FROM lists l, lists_shares ls, shares s WHERE s.name = ? AND ls.share_id = s.id AND ls.list_id=l.id AND l.id=?", (share_name, list_id), one=True)
 	if list is None:
 		return do404()
 	return flask.jsonify({"result": list})
 
-@app.route("/api/shares/<share_name>/<list_id>", methods=["DELETE"])
+@app.route("/shares/<share_name>/<list_id>", methods=["DELETE"])
 @requires_auth
 def api_delete_share_list(share_name, list_id):
 	share_id = query_db("SELECT id FROM shares WHERE name=? AND owner=?", (share_name, flask.g.user_id), one=True)
