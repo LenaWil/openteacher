@@ -63,7 +63,7 @@ class OpenTeacherBot(irc.IRCClient):
 		".ogd-testsuite": "http://vps.marten-de-vries.nl/opengamedesigner-test-suite-log.txt",
 		".jfl": "https://launchpad.net/justforlearning/",
 		".jfl-demo": "http://vps.marten-de-vries.nl/justforlearning/",
-		".ot-mobile": "http://vps.marten-de-vries.nl/openteacher-mobile/",
+		".ot-mobile": "http://web.openteacher.org/mobile/",
 		".ot-test-coverage": "http://vps.marten-de-vries.nl/openteacher-test-coverage/",
 		".ogd-test-coverage": "http://vps.marten-de-vries.nl/opengamedesigner-test-coverage/",
 		".vps": "http://vps.marten-de-vries.nl/",
@@ -71,6 +71,7 @@ class OpenTeacherBot(irc.IRCClient):
 		".fixmes": "http://vps.marten-de-vries.nl/openteacher-code-documentation/fixmes.html",
 		".modulemap": "http://vps.marten-de-vries.nl/openteacher-code-documentation/module_graph.svg",
 		".peps": "http://www.python.org/dev/peps/",
+		".api": "http://web.openteacher.org/api/",
 	}
 	factoids[".launchpad"] = factoids[".lp"]
 	factoids[".download"] = factoids[".downloads"]
