@@ -21,6 +21,7 @@
 import os
 import sqlite3
 import functools
+import datetime
 
 import flask
 import werkzeug.exceptions
@@ -32,7 +33,7 @@ app = flask.Flask("__main__")
 def getConnection():
 	dbPath = app.config["DATABASE"]
 	dbExists = os.path.exists(dbPath)
-	connection = sqlite3.connect(dbPath)
+	connection = sqlite3.connect(dbPath, detect_types=sqlite3.PARSE_DECLTYPES)
 
 	if not dbExists:
 		cursor = connection.cursor()
@@ -40,43 +41,45 @@ def getConnection():
 			PRAGMA foreign_keys = ON;
 
 			CREATE TABLE users (
-				id INTEGER PRIMARY KEY,
-				username TEXT,
-				hash TEXT,
+				id INTEGER PRIMARY KEY NOT NULL,
+				username TEXT NOT NULL,
+				hash TEXT NOT NULL,
 				UNIQUE (username)
 			);
 
 			CREATE TABLE apikeys (
-				key TEXT,
-				PRIMARY KEY(key)
+				key TEXT PRIMARY KEY NOT NULL
 			);
 
 			CREATE TABLE lists (
-				id INTEGER PRIMARY KEY,
-				owner NUMERIC,
+				id INTEGER PRIMARY KEY NOT NULL,
+				owner NUMERIC NOT NULL,
+				type TEXT NOT NULL,
 				questionLanguage TEXT,
 				answerLanguage TEXT,
-				title TEXT,
-				items TEXT,
-				tests TEXT,
+				created timestamp,
+				modified timestamp NOT NULL,
+				title TEXT NOT NULL,
+				items TEXT NOT NULL,
+				tests TEXT NOT NULL,
 				FOREIGN KEY (owner) references users (id) ON DELETE CASCADE
 			);
 
 			CREATE TABLE shares (
-				id INTEGER PRIMARY KEY,
-				owner NUMERIC,
-				name TEXT,
+				id INTEGER PRIMARY KEY NOT NULL,
+				owner NUMERIC NOT NULL,
+				name TEXT NOT NULL,
 				description TEXT,
 				UNIQUE (name),
 				FOREIGN KEY (owner) references users (id) ON DELETE CASCADE
 			);
 
 			CREATE TABLE lists_shares (
-				list_id NUMERIC,
-				share_id NUMERIC,
+				list_id NUMERIC NOT NULL,
+				share_id NUMERIC NOT NULL,
 				PRIMARY KEY (list_id, share_id),
 				FOREIGN KEY (list_id) references lists (id) ON DELETE CASCADE,
-				FOREIGN KEY (share_id) references shares(id) ON DELETE CASCADE
+				FOREIGN KEY (share_id) references shares (id) ON DELETE CASCADE
 			);
 		""")
 		connection.commit()
@@ -210,19 +213,27 @@ def api_delete_user(username):
 @app.route("/lists/", methods=["GET"])
 @requires_auth
 def api_get_lists():
-	lists = query_db("SELECT id, title, questionLanguage, answerLanguage FROM lists WHERE owner=? ORDER BY title", (flask.g.user_id,))
+	lists = query_db("SELECT id, type, title, questionLanguage, answerLanguage, created, modified FROM lists WHERE owner=? ORDER BY type, title", (flask.g.user_id,))
 	for list in lists:
 		list["url"] = flask.url_for("api_get_list", id=list["id"])
+		list["created"] = list["created"].isoformat()
+		list["modified"] = list["modified"].isoformat()
 	return flask.jsonify({"result": lists})
 
 @app.route("/lists/", methods=["POST"])
 @requires_auth
 def api_post_lists():
-	query_db("INSERT INTO lists(title, items, questionLanguage, answerLanguage, tests, owner) VALUES (?, ?, ?, ?, ?, ?)", (
+	query_db("INSERT INTO lists(type, title, items, questionLanguage, answerLanguage, created, modified, tests, owner) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (
+		flask.request.form["type"],
 		flask.request.form["title"],
 		flask.request.form["items"],
 		flask.request.form.get("questionLanguage", u""),
 		flask.request.form.get("answerLanguage", u""),
+		datetime.datetime.strptime(
+			flask.request.form.get("created", datetime.datetime.now().isoformat()),
+			"%Y-%m-%dT%H:%M:%S.%f",
+		),
+		flask.request.form.get("modified", datetime.datetime.now()),
 		flask.request.form.get("tests", "[]"),
 		flask.g.user_id,
 	))
@@ -231,8 +242,11 @@ def api_post_lists():
 @app.route("/lists/<id>", methods=["GET"])
 @requires_auth
 def api_get_list(id):
-	list = query_db("SELECT id, title, questionLanguage, answerLanguage, items, tests FROM lists WHERE id=? AND owner=?", (id, flask.g.user_id), one=True)
+	list = query_db("SELECT id, type, title, questionLanguage, answerLanguage, created, modified, items, tests FROM lists WHERE id=? AND owner=?", (id, flask.g.user_id), one=True)
 	if list is not None:
+		list["created"] = list["created"].isoformat()
+		list["modified"] = list["modified"].isoformat()
+
 		return flask.jsonify({"result": list})
 	else:
 		#or 403
@@ -241,11 +255,17 @@ def api_get_list(id):
 @app.route("/lists/<id>", methods=["PUT"])
 @requires_auth
 def api_put_list(id):
-	query_db("UPDATE lists SET title=?, items=?, questionlanguage=?, answerLanguage=?, tests=? WHERE id=? AND owner=?", (
+	query_db("UPDATE lists SET type=?, title=?, items=?, questionlanguage=?, answerLanguage=?, created=?, modified=?, tests=? WHERE id=? AND owner=?", (
+		flask.request.form["type"],
 		flask.request.form["title"],
 		flask.request.form["items"],
 		flask.request.form.get("questionLanguage", u""),
 		flask.request.form.get("answerLanguage", u""),
+		datetime.datetime.strptime(
+			flask.request.form.get("created", datetime.datetime.now().isoformat()),
+			"%Y-%m-%dT%H:%M:%S.%f",
+		),
+		datetime.datetime.now(),
 		flask.request.form.get("tests", "[]"),
 		id,
 		flask.g.user_id,
@@ -303,15 +323,18 @@ def api_get_share(name):
 	share = query_db("SELECT id, name, description FROM shares WHERE name=?", (name,), one=True)
 	if share is None:
 		return do404()
-	lists = query_db("SELECT list_id FROM lists_shares WHERE share_id=?", (share["id"],))
+	lists = query_db("SELECT l.id, l.type, l.title, l.questionLanguage, l.answerLanguage, l.created, l.modified FROM lists l, lists_shares ls WHERE ls.list_id = l.id AND ls.share_id=?", (share["id"],))
 	#no need to expose to the users
 	del share["id"]
 
+	for list in lists:
+		list["created"] = list["created"].isoformat()
+		list["modified"] = list["modified"].isoformat()
+		list["url"] = flask.url_for("api_get_share_list", share_name=name, list_id=list["id"])
+
 	return flask.jsonify({"result": {
 		"share": share,
-		"lists": [
-			flask.url_for("api_get_share_list", share_name=name, list_id=list["list_id"]) for list in lists
-		],
+		"lists": lists,
 	}})
 
 @app.route("/shares/<name>/", methods=["DELETE"])
@@ -342,9 +365,12 @@ def api_post_share_list(share_name):
 
 @app.route("/shares/<share_name>/<list_id>", methods=["GET"])
 def api_get_share_list(share_name, list_id):
-	list = query_db("SELECT l.title, l.questionLanguage, l.answerLanguage, l.items FROM lists l, lists_shares ls, shares s WHERE s.name = ? AND ls.share_id = s.id AND ls.list_id=l.id AND l.id=?", (share_name, list_id), one=True)
+	list = query_db("SELECT l.type, l.title, l.questionLanguage, l.answerLanguage, l.created, l.modified, l.items FROM lists l, lists_shares ls, shares s WHERE s.name = ? AND ls.share_id = s.id AND ls.list_id=l.id AND l.id=?", (share_name, list_id), one=True)
 	if list is None:
 		return do404()
+
+	list["created"] = list["created"].isoformat()
+	list["modified"] = list["modified"].isoformat()
 	return flask.jsonify({"result": list})
 
 @app.route("/shares/<share_name>/<list_id>", methods=["DELETE"])

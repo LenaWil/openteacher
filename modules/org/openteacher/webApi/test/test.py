@@ -74,6 +74,7 @@ class TestCase(unittest.TestCase):
 		k = {"headers": self._auth("test", "test")}
 		for client in self.clients:
 			r = client.post("/lists/", data={
+				"type": "words",
 				"title": "1234",
 				"items": "{}",
 			}, **k)
@@ -108,7 +109,7 @@ class TestCase(unittest.TestCase):
 
 			r = client.get(url)
 			self.assertEqual(r.status_code, 200)
-			sharedListUrl = json.loads(r.data)["result"]["lists"][0]
+			sharedListUrl = json.loads(r.data)["result"]["lists"][0]["url"]
 
 			r = client.get(sharedListUrl)
 			self.assertEqual(r.status_code, 200)
@@ -134,6 +135,7 @@ class TestCase(unittest.TestCase):
 			self.assertEquals(resp2.status_code, 401)
 
 			resp3 = client.post("/lists/", data={
+				"type": "words",
 				"title": "1234",
 				"items": "{ }",
 			}, **k)
@@ -156,12 +158,14 @@ class TestCase(unittest.TestCase):
 			self.assertEquals(resp8.status_code, 401)
 
 			resp9 = client.put(url, data={
+				"type": "words",
 				"title": "12345",
 				"items": "{}",
 			}, **k2)
 			self.assertEquals(resp9.status_code, 404)
 
 			resp10 = client.put(url, data={
+				"type": "words",
 				"title": "12345",
 				"items": "{}",
 			}, **k)
