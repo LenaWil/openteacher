@@ -19,9 +19,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class GnuVocabTrainLoaderModule(object):
+class VTrainTxtLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(GnuVocabTrainLoaderModule, self).__init__(*args, **kwargs)
+		super(VTrainTxtLoaderModule, self).__init__(*args, **kwargs)
 
 		self.type = "load"
 		self.priorities = {
@@ -34,9 +34,9 @@ class GnuVocabTrainLoaderModule(object):
 		self.requires = (
 			self._mm.mods(type="wordsStringParser"),
 		)
-		self.filesWithTranslations = ("gnuVocabTrain.py",)
+		self.filesWithTranslations = ("vtrainTxt.py",)
 		#for test suite purposes
-		self.format = "gnuVocabTrain"
+		self.format = "vtrain"
 
 	@property
 	def _parse(self):
@@ -53,9 +53,9 @@ class GnuVocabTrainLoaderModule(object):
 			)
 		#TRANSLATORS: This is one of the file formats OpenTeacher
 		#TRANSLATORS: can read. It's named after the program that uses
-		#TRANSLATORS: it. See http://www.gnuyork.org/en/gvt-about.html
-		#TRANSLATORS: for more info on the program.
-		self.name = _("gnuVocabTrain")
+		#TRANSLATORS: it. See http://www.vtrain.net/ for more info on
+		#TRANSLATORS: the program.
+		self.name = _("VTrain")
 
 	def enable(self):
 		self.loads = {
@@ -87,24 +87,34 @@ class GnuVocabTrainLoaderModule(object):
 			with open(path, "r") as f:
 				data = f.read()
 				#A heuristic. Adapt as necessary.
-				amountOfNewLines = data.count("\n")
-				amountOfSeparators = data.count(" : ")
-				if amountOfSeparators and amountOfSeparators > amountOfNewLines -2:
+				amountOfLineEnds = data.count("|")
+				amountOfSeparators = data.count("=")
+				if amountOfLineEnds and amountOfLineEnds == amountOfSeparators:
 					return "words"
 
 	def load(self, path):
-		"""Tries to load .txt gnuVocabTrain files. Based on observation
-		   of the file format, not on documentation.
+		"""Tries to load .txt VTrain files. Based on observation of the
+		    file format, and the following description send by mail by
+		    the author of VTrain:
+
+			'VTrain uses customizable separators after the front and
+			after the back of each flashcard. By default, the
+			separators are "=" and "|". You can use these separators to
+			import and export flashcards (File menu).
+
+			the horse=el caballo|
+			the house=la casa|
+			...'
 
 		"""
 		items = []
 
 		#read file
 		with open(path, "r") as f:
-			for i, line in enumerate(f):
-				line = unicode(line, encoding="UTF-8")
+			data = unicode(f.read(), encoding="ISO-8859-1")
+			for i, line in enumerate(data.split(u"|")):
 				try:
-					questions, answers = line.split(" : ")
+					questions, answers = line.split(u"=")
 				except ValueError:
 					#shouldn't happen, but just in case someone e.g.
 					#accidentally adds a newline at the end of the file.
@@ -124,4 +134,4 @@ class GnuVocabTrainLoaderModule(object):
 		}
 
 def init(moduleManager):
-	return GnuVocabTrainLoaderModule(moduleManager)
+	return VTrainTxtLoaderModule(moduleManager)

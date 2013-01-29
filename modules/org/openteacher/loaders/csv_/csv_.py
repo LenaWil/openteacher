@@ -56,9 +56,11 @@ class CsvLoaderModule(object):
 		for i, line in enumerate(reader):
 			if not line:
 				continue
-			#may raise IndexError. Valid again.
-			questions = self._parse(unicode(line[0], encoding="UTF-8"))
-			answers = self._parse(unicode(line[1], encoding="UTF-8"))
+			try:
+				questions = self._parse(unicode(line[0], encoding="UTF-8"))
+				answers = self._parse(unicode(line[1], encoding="UTF-8"))
+			except IndexError:
+				continue
 
 			items.append({
 				"id": i,

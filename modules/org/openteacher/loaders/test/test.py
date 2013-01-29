@@ -36,12 +36,15 @@ class TestCase(unittest.TestCase):
 		elif file.endswith(".csv"):
 			#same for csv
 			loadMods = set(self._mm.mods("active", type="load", loads={"csv": ["words"]}))
-		elif file.endswith(".txt"):
-			#same for txt
-			loadMods = set(self._mm.mods("active", type="load", loads={"txt": ["words"]}))
 		elif file.endswith(".db"):
 			#same for sqlite .db
 			loadMods = set(self._mm.mods("active", type="load", loads={"db": ["words"]}))
+		elif file.endswith("gnuVocabTrain.txt"):
+			#gnuVocabTrain .txt
+			loadMods = set(self._mm.mods("active", type="load", format="gnuVocabTrain"))
+		elif file.endswith("vtrain.txt"):
+			#vTrain .txt
+			loadMods = set(self._mm.mods("active", type="load", format="vtrain"))
 		else:
 			mimetype = os.path.basename(file).split(".")[0].replace("_", "/")
 			loadMods = set(self._mm.mods("active", type="load", mimetype=mimetype))
