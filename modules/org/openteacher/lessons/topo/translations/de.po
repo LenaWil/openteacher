@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2012-12-30 12:47+0100\n"
-"PO-Revision-Date: 2012-07-13 12:52+0000\n"
+"PO-Revision-Date: 2013-01-28 11:26+0000\n"
 "Last-Translator: dagmalina <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-31 04:49+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-29 05:36+0000\n"
+"X-Generator: Launchpad (build 16451)\n"
 "Language: de\n"
 
 #: topo.py:120
@@ -32,7 +32,7 @@ msgstr "Bezugsquelle"
 #: topo.py:176 topo.py:277 topo.py:279
 #, python-format
 msgid "Topo lesson: %s"
-msgstr ""
+msgstr "Topo Übungseinheit: %s"
 
 #~ msgid "Map:"
 #~ msgstr "Karte:"

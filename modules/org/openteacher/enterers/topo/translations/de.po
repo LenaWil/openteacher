@@ -1,0 +1,65 @@
+# German translation for openteacher
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-30 12:48+0100\n"
+"PO-Revision-Date: 2013-01-28 11:33+0000\n"
+"Last-Translator: Phillip Sz <Unknown>\n"
+"Language-Team: German <de@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-01-29 05:36+0000\n"
+"X-Generator: Launchpad (build 16451)\n"
+
+#: topo.py:67
+msgid "From hard disk..."
+msgstr ""
+
+#: topo.py:81
+msgid "Warning"
+msgstr "Achtung"
+
+#: topo.py:83
+msgid ""
+"Are you sure you want to use another map? This will remove all your places!"
+msgstr ""
+
+#: topo.py:238
+msgid "Map:"
+msgstr ""
+
+#: topo.py:239
+msgid "Add a place by doubleclicking it on the map"
+msgstr ""
+
+#: topo.py:240
+msgid "Places in your test"
+msgstr ""
+
+#: topo.py:241
+msgid "Remove selected place"
+msgstr ""
+
+#: topo.py:242
+msgid "Add a place by name:"
+msgstr ""
+
+#: topo.py:243
+msgid "Add"
+msgstr "Hinzufügen"
+
+#: topo.py:282
+msgid "Place not found"
+msgstr ""
+
+#: topo.py:283
+msgid ""
+"Sorry, this place is not in the list of known places. Please add it manually "
+"by doubleclicking on the right location in the map."
+msgstr ""
