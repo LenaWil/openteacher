@@ -154,7 +154,7 @@ def installQtClasses():
 			return unicode(self._searchBox.text())
 
 		def retranslate(self):
-			self._label.setText(_("Enter a search term and press the search button to search flashcardexchange.com for sets. Then select the set or sets you want to import and click Ok."))
+			self._label.setText(_("Enter a search term and press the search button to search flashcardexchange.com for sets. Then select the set or sets you want to import and click OK."))
 			self._searchBox.setPlaceholderText(_("E.g.: spanish travel vocabulary"))
 			self._searchButton.setText(_("Search"))
 			self.setWindowTitle(_("Search flashcardexchange.com"))
@@ -181,7 +181,7 @@ class FlashcardexchangeApiModule(object):
 			self._mm.mods(type="translator"),
 			self._mm.mods(type="loader"),
 		)
-		self.filesWithTranslations = ("vocatrainApi.py",)
+		self.filesWithTranslations = ("flashcardexchangeApi.py",)
 
 		self.priorities = {
 			"default": 525,
