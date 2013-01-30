@@ -61,14 +61,19 @@ class TestCase(unittest.TestCase):
 		def newItem(item):
 			lessonType.setResult({"result": "right", "itemId": item["id"]})
 		def lessonDone():
+			self.assertTrue(self._list["tests"][-1]["finished"])
 			data["called"] = True
 		for mod in self._mm.mods("active", type="lessonType"):
-			data = {"called": False}
-			lessonType = mod.createLessonType(self._list, range(len(self._list)))
-			lessonType.newItem.handle(newItem)
-			lessonType.lessonDone.handle(lessonDone)
-			lessonType.start()
-			self.assertTrue(data["called"], msg="Lesson should call lessonDone() before stopping sending next items.")
+			try:
+				data = {"called": False}
+				lessonType = mod.createLessonType(self._list, range(len(self._list)))
+				lessonType.newItem.handle(newItem)
+				lessonType.lessonDone.handle(lessonDone)
+				lessonType.start()
+				self.assertTrue(data["called"], msg="Lesson should call lessonDone() before stopping sending next items.")
+			except AssertionError:
+				print mod
+				raise
 
 	def testGlobalNewItem(self):
 		def func(item):

@@ -88,21 +88,26 @@ class ModulesTest(unittest.TestCase):
 		#Set a profile. The execute module does that normally.
 		next(iter(self._mm.mods(type="modules"))).profile = "default"
 
-	def testMinimalDependencies(self):
+	def _doTest(self, minimalDependencies):
 		self._fakeExecuteModule()
 
 		for mod in self._mm.mods:
-			success, enabledMods = self._enableIncludingDependencies(mod, True)
+			startVars = set(vars(mod).keys()) - set(["active"])
+			success, enabledMods = self._enableIncludingDependencies(mod, minimalDependencies)
 			self._disableDependencyTree(enabledMods)
+			endVars = set(vars(mod).keys()) - set(["active"])
+			try:
+				self.assertEqual(startVars, endVars)
+			except AssertionError:
+				print mod
+				raise
 #			print ""
+
+	def testMinimalDependencies(self):
+		self._doTest(True)
 
 	def testWithFullDependencies(self):
-		self._fakeExecuteModule()
-
-		for mod in self._mm.mods:
-			success, enabledMods = self._enableIncludingDependencies(mod, False)
-			self._disableDependencyTree(enabledMods)
-#			print ""
+		self._doTest(False)
 
 if __name__ == "__main__":
 	#since this mod doesn't respect the 'uses' behaviour completely,

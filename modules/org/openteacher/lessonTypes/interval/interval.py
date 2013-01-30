@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #	Copyright 2011, Cas Widdershoven
 #	Copyright 2011, Milan Boers
 #
@@ -42,50 +42,77 @@ class IntervalLessonType(object):
 			"pauses": [],
 		}
 
-		self.totalItems = len(self._indexes)
-
-		# Ids of items in the group
-		self._group = []
+	@property
+	def totalItems(self):
+		#the indexes still to do in the very best case + the amount of
+		#items already asked.
+		return len(self._indexes) + self.askedItems
 
 	@property
 	def askedItems(self):
-		ids = []
-		for item in self._test["results"]:
-			if ids.count(item["itemId"]) == 0:
-				ids.append(item["itemId"])
-
+		#the length of all the unique itemId's in the results of the
+		#current tests gives the amount of asked items
+		ids = set([result["itemId"] for result in self._test["results"]])
 		return len(ids)
 
-	def start(self):
-		size = self._groupSizeSetting["value"]
-		if size < 2:
-			size = 2
-
-		# Add items to the group
-		for i in xrange(size):
-			try:
-				self.list["items"][i]
-			except IndexError:
-				pass
-			else:
-				self._group.append(i)
-		self._sendNext()
-	
-	# result is a Result-type object saying whether the question was answered right or wrong
 	def setResult(self, result):
-		# Add the test to the list (if it's not already there)
+		"""result is a Result-type object saying whether the question
+		   was answered right or wrong
+
+		"""
+		#Add the test to the list (if it's not already there)
 		self._appendTest()
-		
+		#and add this result, so it's weighed in the calculations below
 		self._test["results"].append(result)
 
+		#get the values of some settings
+		size = max(self._groupSizeSetting["value"], 2)
+
+		minQuestions = self._minQuestionsSetting["value"]
+		if minQuestions < 1:
+			minQuestions = 2
+
+		whenKnown = self._whenKnownSetting["value"]
+		if whenKnown < 0 or whenKnown > 99:
+			whenKnown = 80
+
+		#get the amount of right and wrong answers for the current item
+		#in this test.
+		right = 0
+		wrong = 0
+		for loopResult in self._test["results"]:
+			if loopResult["itemId"] == self._currentIndex:
+				if loopResult["result"] == "right":
+					right += 1
+				elif loopResult["result"] == "wrong":
+					wrong += 1
+
+		#if the item is not known well enough, add it to the list again
+		#so it's asked later.
+		total = right + wrong
+		percentageRight = right / float(total) * 100.0
+		if total < minQuestions or percentageRight < whenKnown:
+			#pos may not be 0, because the current item shouldn't be
+			#asked again directly. Size is -1 because indexes start at
+			#0, and counting at 1.
+			try:
+				pos = random.randint(1, min(len(self._indexes), size -1))
+			except ValueError:
+				#len(self._indexes) is 0, but the item needs to be asked
+				#again. No option other than doing it immediately.
+				pos = 0
+			self._indexes.insert(pos, self._currentIndex)
+
+		#keep the user busy.
 		self._sendNext()
-	
+
 	def addPause(self, pause):
 		self._test["pauses"].append(pause)
 
 	def correctLastAnswer(self, result):
+		#it's questioned again anyway. Who cares...
 		self._test["results"][-1] = result
-	
+
 	def _appendTest(self):
 		try:
 			self.list["tests"][-1]
@@ -98,77 +125,22 @@ class IntervalLessonType(object):
 				self.list["tests"].append(self._test)
 
 	def _sendNext(self):
-		minQuestions = self._minQuestionsSetting["value"]
-		if minQuestions < 1:
-			minQuestions = 2
-
-		whenKnown = self._whenKnownSetting["value"]
-		if whenKnown < 0 or whenKnown > 99:
-			whenKnown = 80
-
-		# Go through all the items in the group to see which can be removed
-		for i in self._group:
-			right = 0
-			wrong = 0
-			# Fill in right and wrong variables
-			for item in self._test["results"]:
-				if item["itemId"] == i:
-					if item["result"] == "right":
-						right += 1
-					elif item["result"] == "wrong":
-						wrong += 1
-
-			if right + wrong > minQuestions and \
-			   right / float(right + wrong) > whenKnown / 100.0:
-				# Add new one
-				try:
-					# Try if it exists
-					self.list["items"][self._group[-1] + 1]
-				except IndexError:
-					pass
-				else:
-					# Add it
-					self._group.append(self._group[-1] + 1)
-				# Remove this item from the group
-				self._group.remove(i)
-		
-		if len(self._group) == 0:
-			# index not in list, so end of lesson
-			if len(self._test["results"]) != 0:
-				try:
-					self.list["tests"]
-				except KeyError:
-					self.list["tests"] = []
+		try:
+			self._currentIndex = self._indexes.pop(0)
+		except IndexError:
 			self._test["finished"] = True
 			self.lessonDone.send()
 		else:
-			# Copy group, because we are going to modify it
-			randomGroup = self._group[:]
-			# We will take out the last id, so a question isn't asked twice
-			if len(self._test["results"]) > 0:
-				try:
-					randomGroup.remove(self._test["results"][-1]["itemId"])
-				except ValueError:
-					# Not in list anymore
-					pass
-			
-			if len(randomGroup) > 1:
-				# Get random number
-				r = random.randrange(0, len(randomGroup) - 1)
-			else:
-				r = 0
-			
-			if len(randomGroup) > 0:
-				# There is more than one left, so ask another one than the last one
-				item = self.list["items"][randomGroup[r]]
-				self.newItem.send(self._modifyItem(item))
-			else:
-				# There is only one left, so ask that one
-				item = self.list["items"][self._group[0]]
-				self.newItem.send(self._modifyItem(item))
+			item = self.list["items"][self._currentIndex]
+			self.newItem.send(self._modifyItem(item))
 
 	#Just send the next question and everything will be fine :)
-	skip = _sendNext
+	start = _sendNext
+
+	def skip(self):
+		#just ask again at the end.
+		self._indexes.append(self._currentIndex)
+		self._sendNext()
 
 class IntervalModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
