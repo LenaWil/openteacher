@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.1\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-12-30 12:47+0100\n"
+"POT-Creation-Date: 2013-01-31 17:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,14 +17,14 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: startWidget.py:181
+#: startWidget.py:218
 msgid "Create lesson:"
 msgstr ""
 
-#: startWidget.py:182
+#: startWidget.py:219
 msgid "Load lesson:"
 msgstr ""
 
-#: startWidget.py:184
+#: startWidget.py:221
 msgid "Recently opened:"
 msgstr ""

@@ -1,0 +1,47 @@
+# Frisian translation for openteacher
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2013-01-31 17:16+0100\n"
+"PO-Revision-Date: 2012-10-30 19:19+0000\n"
+"Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
+"Language-Team: Frisian <fy@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-12-31 04:50+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
+
+#: testTaker.py:49
+msgid "Select the test you want to take"
+msgstr "Selektear de toets dy't jo meitsje wolle"
+
+#: testTaker.py:50 testTaker.py:119
+msgid "Take test"
+msgstr "Toets meitsje"
+
+#: testTaker.py:123
+msgid "Choose test"
+msgstr "Toets kieze"
+
+#: testTaker.py:125
+msgid "Taking test"
+msgstr "Toets oan it meitsje"
+
+#: testTaker.py:185
+msgid ""
+"An error occured. The server could not be reached. Check your network "
+"connection."
+msgstr ""
+"Der wie in flater. De tsjinner koe net berikke wurre. Kontrolearje jo "
+"netwurkferbining."
+
+#: testTaker.py:188
+msgid "Your answers have successfully been handed in!"
+msgstr "Jo antwurden binne mei sukses ynleverd."

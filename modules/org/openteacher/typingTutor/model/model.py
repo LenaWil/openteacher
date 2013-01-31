@@ -260,39 +260,38 @@ First place your fingers on the so-called home row: your fingers, from left to r
 			"exercise": user["currentExercise"],
 			"level": user["level"],
 		})
-		self._newExercise(user)
 
 		speed = self._wordsPerMinute(user["results"][-1])
 		amountOfLetterExercises = len(self._letterExercises(user))
 
-		#calculate new level
-		if user["level"] < amountOfLetterExercises:
-			#user is practising letters
-			user["exerciseType"] = "letters"
-			user["targetSpeed"] = 20
-
-		elif user["level"] < self.maxLevel(username):
-			#user is practising words
-			user["exerciseType"] = "words"
-
-			done = (user["level"] - amountOfLetterExercises)
-			total = self.maxLevel(username) - amountOfLetterExercises
-			#gradually increase speed until 80 wpm
-			user["targetSpeed"] = int(round(20 + float(done) / total * 60))
-		else:
-			#user is done.
-			user["status"] = "done"
-			return
-
 		if amountOfMistakes > 0:
 			user["status"] = "mistakes"
-			return
-		if speed < user["targetSpeed"]:
+		elif speed < user["targetSpeed"]:
 			user["status"] = "slow"
-			return
+		else:
+			user["level"] += 1
+			user["status"] = "next"
 
-		user["status"] = "next"
-		user["level"] += 1
+			#calculate new level exercise info
+			if user["level"] < amountOfLetterExercises:
+				#user is practising letters
+				user["exerciseType"] = "letters"
+				user["targetSpeed"] = 20
+			elif user["level"] < self.maxLevel(username):
+				#user is practising words
+				user["exerciseType"] = "words"
+
+				done = (user["level"] - amountOfLetterExercises)
+				total = self.maxLevel(username) - amountOfLetterExercises
+				#gradually increase speed until 80 wpm
+				user["targetSpeed"] = int(round(20 + float(done) / total * 60))
+			else:
+				#user is done. That means the level shouldn't increase
+				#anymore
+				user["level"] -= 1
+				user["status"] = "done"
+
+		self._newExercise(user)
 
 	def _newExercise(self, user):
 		if user["level"] < len(self._letterExercises(user)):

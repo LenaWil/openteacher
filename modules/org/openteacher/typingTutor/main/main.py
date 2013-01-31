@@ -98,7 +98,7 @@ def initializeWidgets():
 			else:
 				self._amountOfMistakes += 1
 				self._keyboardWidget.setWrongKey(self._charToKeyName(keyInput[-1]))
-				self._statusLabel.setText("That's a mistake :(.")
+				self._statusLabel.setText(_("That's a mistake :(."))
 
 	class NewUserDialog(QtGui.QDialog):
 		def __init__(self, model, KeyboardWidget, *args, **kwargs):

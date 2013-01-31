@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-12-30 12:47+0100\n"
+"POT-Creation-Date: 2013-01-31 17:16+0100\n"
 "PO-Revision-Date: 2012-12-23 21:34+0000\n"
 "Last-Translator: Jakub Šnapka <snapka@seznam.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-12-31 04:51+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
-"Language: cs\n"
 
 #: vocatrainApi.py:123
 msgid "Select category"
@@ -42,20 +42,20 @@ msgstr "Vyberte seznam"
 msgid "Please select a list"
 msgstr "Vyberte prosím seznam"
 
-#: vocatrainApi.py:212
+#: vocatrainApi.py:215
 msgid "Import from vocatrain.com"
 msgstr "Importovat z vocatrain.com"
 
-#: vocatrainApi.py:213
+#: vocatrainApi.py:216
 msgid "Import from woordjesleren.nl"
 msgstr "Importovat z woordjesleren.nl"
 
-#: vocatrainApi.py:270
+#: vocatrainApi.py:273
 #, python-format
 msgid "No %s connection"
 msgstr "Žádné spojení s %s"
 
-#: vocatrainApi.py:271
+#: vocatrainApi.py:274
 msgid ""
 "{serviceName} didn't accept the connection. Are you sure that your internet "
 "connection works and {serviceName} is online?"
@@ -63,15 +63,15 @@ msgstr ""
 "{serviceName} nepřijal spojení. Jste si jisti, že vaše internetové připojení "
 "funguje a {serviceName} je online?"
 
-#: vocatrainApi.py:276
+#: vocatrainApi.py:279
 #, python-format
 msgid "The word list was imported from %s successfully."
 msgstr "Seznam slov z %s byl úspěšně importován."
 
-#: vocatrainApi.py:289
+#: vocatrainApi.py:292
 msgid "Can't show the result"
 msgstr "Nelze zobrazit výsledek"
 
-#: vocatrainApi.py:290
+#: vocatrainApi.py:293
 msgid "Can't open the resultive word list, because it can't be shown."
 msgstr ""

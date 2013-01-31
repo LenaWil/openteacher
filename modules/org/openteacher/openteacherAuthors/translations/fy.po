@@ -7,71 +7,72 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-12-30 12:47+0100\n"
+"POT-Creation-Date: 2013-01-31 17:16+0100\n"
 "PO-Revision-Date: 2012-10-03 16:05+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Frisian <fy@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-12-31 04:50+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
-"Language: \n"
 
-#: openteacherAuthors.py:69 openteacherAuthors.py:70 openteacherAuthors.py:71
+#: openteacherAuthors.py:71 openteacherAuthors.py:72 openteacherAuthors.py:73
 msgid "Core developer"
 msgstr "Kern-ûntwikkelder"
 
-#: openteacherAuthors.py:74 openteacherAuthors.py:75
+#: openteacherAuthors.py:76 openteacherAuthors.py:77
 msgid "Patches contributor"
 msgstr "Oandrager fan ferbetteringen"
 
-#: openteacherAuthors.py:78
+#: openteacherAuthors.py:80
 msgid "Debian/Ubuntu packager"
 msgstr "Debian/Ubuntu pakketmakker"
 
-#: openteacherAuthors.py:81 openteacherAuthors.py:82
+#: openteacherAuthors.py:83 openteacherAuthors.py:84
 msgid "Artwork"
 msgstr "Ôfbyldingsmakker"
 
-#: openteacherAuthors.py:83
+#: openteacherAuthors.py:85
 msgid "Topography maps"
 msgstr "Topografykaarten"
 
-#: openteacherAuthors.py:86
+#: openteacherAuthors.py:88
 msgid "Chat channel spammer"
 msgstr "Petearkanaal unfeilichmakker"
 
-#: openteacherAuthors.py:89 openteacherAuthors.py:90 openteacherAuthors.py:91
-#: openteacherAuthors.py:92 openteacherAuthors.py:93 openteacherAuthors.py:94
-#: openteacherAuthors.py:95 openteacherAuthors.py:96 openteacherAuthors.py:97
-#: openteacherAuthors.py:98 openteacherAuthors.py:99 openteacherAuthors.py:100
-#: openteacherAuthors.py:101 openteacherAuthors.py:102
-#: openteacherAuthors.py:103 openteacherAuthors.py:104
-#: openteacherAuthors.py:105 openteacherAuthors.py:106
-#: openteacherAuthors.py:107 openteacherAuthors.py:108
-#: openteacherAuthors.py:109 openteacherAuthors.py:110
-#: openteacherAuthors.py:111 openteacherAuthors.py:112
-#: openteacherAuthors.py:113 openteacherAuthors.py:114
-#: openteacherAuthors.py:115 openteacherAuthors.py:116
-#: openteacherAuthors.py:117 openteacherAuthors.py:118
-#: openteacherAuthors.py:119 openteacherAuthors.py:120
-#: openteacherAuthors.py:121 openteacherAuthors.py:122
-#: openteacherAuthors.py:123 openteacherAuthors.py:124
-#: openteacherAuthors.py:125 openteacherAuthors.py:126
-#: openteacherAuthors.py:127 openteacherAuthors.py:128
-#: openteacherAuthors.py:129 openteacherAuthors.py:130
-#: openteacherAuthors.py:131 openteacherAuthors.py:132
-#: openteacherAuthors.py:133 openteacherAuthors.py:134
-#: openteacherAuthors.py:135 openteacherAuthors.py:136
-#: openteacherAuthors.py:137 openteacherAuthors.py:138
-#: openteacherAuthors.py:139 openteacherAuthors.py:140
-#: openteacherAuthors.py:141 openteacherAuthors.py:142
-#: openteacherAuthors.py:143 openteacherAuthors.py:144
-#: openteacherAuthors.py:145 openteacherAuthors.py:146
-#: openteacherAuthors.py:147 openteacherAuthors.py:148
-#: openteacherAuthors.py:149 openteacherAuthors.py:150
-#: openteacherAuthors.py:151 openteacherAuthors.py:152
+#: openteacherAuthors.py:91 openteacherAuthors.py:92 openteacherAuthors.py:93
+#: openteacherAuthors.py:94 openteacherAuthors.py:95 openteacherAuthors.py:96
+#: openteacherAuthors.py:97 openteacherAuthors.py:98 openteacherAuthors.py:99
+#: openteacherAuthors.py:100 openteacherAuthors.py:101
+#: openteacherAuthors.py:102 openteacherAuthors.py:103
+#: openteacherAuthors.py:104 openteacherAuthors.py:105
+#: openteacherAuthors.py:106 openteacherAuthors.py:107
+#: openteacherAuthors.py:108 openteacherAuthors.py:109
+#: openteacherAuthors.py:110 openteacherAuthors.py:111
+#: openteacherAuthors.py:112 openteacherAuthors.py:113
+#: openteacherAuthors.py:114 openteacherAuthors.py:115
+#: openteacherAuthors.py:116 openteacherAuthors.py:117
+#: openteacherAuthors.py:118 openteacherAuthors.py:119
+#: openteacherAuthors.py:120 openteacherAuthors.py:121
+#: openteacherAuthors.py:122 openteacherAuthors.py:123
+#: openteacherAuthors.py:124 openteacherAuthors.py:125
+#: openteacherAuthors.py:126 openteacherAuthors.py:127
+#: openteacherAuthors.py:128 openteacherAuthors.py:129
+#: openteacherAuthors.py:130 openteacherAuthors.py:131
+#: openteacherAuthors.py:132 openteacherAuthors.py:133
+#: openteacherAuthors.py:134 openteacherAuthors.py:135
+#: openteacherAuthors.py:136 openteacherAuthors.py:137
+#: openteacherAuthors.py:138 openteacherAuthors.py:139
+#: openteacherAuthors.py:140 openteacherAuthors.py:141
+#: openteacherAuthors.py:142 openteacherAuthors.py:143
+#: openteacherAuthors.py:144 openteacherAuthors.py:145
+#: openteacherAuthors.py:146 openteacherAuthors.py:147
+#: openteacherAuthors.py:148 openteacherAuthors.py:149
+#: openteacherAuthors.py:150 openteacherAuthors.py:151
+#: openteacherAuthors.py:152 openteacherAuthors.py:153
+#: openteacherAuthors.py:154
 #, python-format
 msgid "Translator (%s)"
 msgstr "Oersetter (%s)"

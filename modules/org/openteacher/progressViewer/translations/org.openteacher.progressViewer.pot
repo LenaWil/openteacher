@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.1\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-12-30 12:47+0100\n"
+"POT-Creation-Date: 2013-01-31 17:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,14 +17,14 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: progressViewer.py:63
+#: progressViewer.py:65
 msgid "Pause"
 msgstr ""
 
-#: progressViewer.py:70
+#: progressViewer.py:72
 msgid "Thinking"
 msgstr ""
 
-#: progressViewer.py:74
+#: progressViewer.py:76
 msgid "Answering"
 msgstr ""

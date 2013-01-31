@@ -18,7 +18,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-APP_ID = "5f1133e092b4eb1d610aecdb3a95e840"
+CLIENT_ID = "5f1133e092b4eb1d610aecdb3a95e840"
 
 import urllib2
 import urllib
@@ -220,8 +220,17 @@ class FlashcardexchangeApiModule(object):
 		self._button.changePriority.send(self.priorities["default"])
 		self._button.changeSize.send("small")
 
-		#TODO: make APP_ID into a setting, just in case.
-		self._api = FlashcardexchangeApi(APP_ID, self._parse)
+		try:
+			self._appIdSetting = self._modules.default(type="settings").registerSetting(**{
+				"internal_name": "org.openteacher.flashcardexchangeApi.clientId",
+				"type": "short_text",
+				"defaultValue": CLIENT_ID,
+				"advanced": True,
+			})
+		except IndexError:
+			self._appIdSetting = {
+				"value": CLIENT_ID,
+			}
 
 		try:
 			translator = self._modules.default("active", type="translator")
@@ -232,6 +241,10 @@ class FlashcardexchangeApiModule(object):
 		self._retranslate()
 
 		self.active = True
+
+	@property
+	def _api(self):
+		return FlashcardexchangeApi(self._appIdSetting["value"], self._parse)
 
 	def _retranslate(self):
 		global _
@@ -248,6 +261,10 @@ class FlashcardexchangeApiModule(object):
 			)
 
 		self._button.changeText.send(_("Import from flashcardexchange.com"))
+
+		self._appIdSetting.update({
+			"name": _("flashcardexchange.com API client id"),
+		})
 
 		#Translate all active dialogs
 		if hasattr(self, "_dialog"):

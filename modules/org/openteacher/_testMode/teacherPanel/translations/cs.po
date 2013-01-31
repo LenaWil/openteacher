@@ -1,0 +1,128 @@
+# Czech translation for openteacher
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2013-01-31 17:16+0100\n"
+"PO-Revision-Date: 2012-12-23 21:49+0000\n"
+"Last-Translator: Jakub Šnapka <snapka@seznam.cz>\n"
+"Language-Team: Czech <cs@li.org>\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-12-31 04:50+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
+
+#: teacherPanel.py:66
+msgid "Tests"
+msgstr "Testy"
+
+#: teacherPanel.py:67
+msgid "Add lesson"
+msgstr "Vložit lekci"
+
+#: teacherPanel.py:112
+msgid "Select a student/group:"
+msgstr "Vybrat studenta/skupinu:"
+
+#: teacherPanel.py:113
+msgid "Add person/group"
+msgstr "Přidat osobu/skupinu"
+
+#: teacherPanel.py:114
+msgid "Back"
+msgstr "Zpět"
+
+#: teacherPanel.py:183
+msgid "(did not participate)"
+msgstr "(nezúčastnil se)"
+
+#: teacherPanel.py:189
+msgid "(Handed in)"
+msgstr "(Odevzdáno)"
+
+#: teacherPanel.py:231
+msgid "Questions:"
+msgstr "Otázky:"
+
+#: teacherPanel.py:232
+msgid "People in this test:"
+msgstr "Lidé v tomto testu:"
+
+#: teacherPanel.py:233
+msgid "Add person"
+msgstr "Přidat osobu"
+
+#: teacherPanel.py:319
+msgid "Test"
+msgstr "Test"
+
+#: teacherPanel.py:320
+msgid "(Re)check answers"
+msgstr "Zkontrolovat odpovědi"
+
+#: teacherPanel.py:321
+msgid "(Re)publish answers"
+msgstr "Zveřejnit odpovědi"
+
+#: teacherPanel.py:333
+msgid "Student's answers have been checked!"
+msgstr "Studentovy odpovědi byly zkontrolovány!"
+
+#: teacherPanel.py:339
+msgid "Student's results have been (re)published!"
+msgstr "Studentovy odpovědi byly zveřejněny!"
+
+#: teacherPanel.py:533
+msgid "Person"
+msgstr "Osoba"
+
+#: teacherPanel.py:535
+msgid ""
+"Answers of this student have not been checked yet. Click the 'Check answers' "
+"button in the second column."
+msgstr ""
+"Odpovědi tohoto studenta nebyly dosud zkontrolovány. Klikněte na tlačítko "
+"\"Zkontrolovat odpovědi\" v druhém sloupci."
+
+#: teacherPanel.py:537
+msgid "Answers right:"
+msgstr "Správné odpovědi:"
+
+#: teacherPanel.py:539
+msgid "Answers wrong:"
+msgstr "Špatné odpovědi:"
+
+#: teacherPanel.py:542
+msgid "OpenTeacher mark:"
+msgstr "Známka OpenTeacher:"
+
+#: teacherPanel.py:544
+msgid "Final mark:"
+msgstr "Konečná známka:"
+
+#: teacherPanel.py:546
+msgid "Question"
+msgstr "Otázka"
+
+#: teacherPanel.py:547
+msgid "Given answer"
+msgstr "Vložená odpověď"
+
+#. TRANSLATORS: The name of a button clicked if an answer is correct.
+#: teacherPanel.py:550
+msgid "Correct"
+msgstr "Správná odpověď"
+
+#: teacherPanel.py:713
+msgid "Teacher panel"
+msgstr "Panel učitele"
+
+#: teacherPanel.py:715
+msgid "Teacher Panel"
+msgstr "Panel učitele"

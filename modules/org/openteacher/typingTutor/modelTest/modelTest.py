@@ -81,21 +81,23 @@ class TestCase(unittest.TestCase):
 				else:
 					self.assertIsInstance(m.amountOfMistakes("_modeltest"), int)
 
-				exercise = m.currentExercise("_modeltest")
-				if self._showInfo:
-					print "EXERCISE:", exercise
-				self.assertIsInstance(exercise, basestring)
-				self.assertTrue(exercise)
-
 				instruction = m.currentInstruction("_modeltest")
 				if self._showInfo:
 					print "INSTRUCTION:", instruction
 				self.assertIsInstance(instruction, basestring)
 				self.assertTrue(instruction)
 
+				exercise = m.currentExercise("_modeltest")
+				if self._showInfo:
+					print "NEW EXERCISE:", exercise
+				self.assertIsInstance(exercise, basestring)
+				self.assertTrue(exercise)
+
 				self.assertEqual(m.layout("_modeltest"), m.QWERTY_LAYOUT)
 
 				level = m.level("_modeltest")
+				if self._showInfo:
+					print "LEVEL:", level
 				self.assertIsInstance(level, int)
 				self.assertTrue(level >= 0)
 
@@ -109,7 +111,7 @@ class TestCase(unittest.TestCase):
 				else:
 					speed = m.speed("_modeltest")
 					if self._showInfo:
-						print "SPEED: %s wpm" % speed
+						print "SPEED PREVIOUS EXERCISE: %s wpm" % speed
 					self.assertIsInstance(speed, int)
 					self.assertTrue(speed >= 0)
 

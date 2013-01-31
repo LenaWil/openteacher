@@ -6,35 +6,40 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-30 12:48+0100\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2013-01-31 17:50+0100\n"
 "PO-Revision-Date: 2013-01-12 11:04+0000\n"
 "Last-Translator: Hélion du Mas des Bourboux <helion331990@gmail.com>\n"
 "Language-Team: French <fr@li.org>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-01-13 04:46+0000\n"
 "X-Generator: Launchpad (build 16420)\n"
 
-#: main.py:142
+#: main.py:101
+msgid "That's a mistake :(."
+msgstr ""
+
+#: main.py:143
 msgid "Please choose a user name and the keyboard layout you want to learn."
 msgstr ""
 "Veuillez choisir un nom d'utilisateur ainsi qu'un agencement de clavier que "
 "vous voulez apprendre."
 
-#: main.py:143
+#: main.py:144
 msgid "Username:"
 msgstr "Nom d'utilisateur :"
 
-#: main.py:144
+#: main.py:145
 msgid "Keyboard layout:"
 msgstr "Agencement du clavier :"
 
 #. TRANSLATORS: Split the line as closest to the middle as
 #. TRANSLATORS: possible, not necessarily between 'Keyboard
 #. TRANSLATORS: layout' and 'preview'. Thanks :)
-#: main.py:148
+#: main.py:149
 msgid ""
 "Keyboard layout\n"
 "preview:"
@@ -42,43 +47,47 @@ msgstr ""
 "Visualisation de\n"
 "l'agencement du clavier :"
 
-#: main.py:203
+#: main.py:204
 msgid "Welcome, please choose your account by clicking on it."
 msgstr "Bienvenue, veuillez choisir votre compte en cliquant dessus."
 
-#: main.py:204
+#: main.py:205
 msgid "I am a new user"
 msgstr "Je suis un nouvel utilisateur"
 
-#: main.py:256
+#: main.py:274
+msgid "Level"
+msgstr ""
+
+#: main.py:275
 msgid "Speed (words per minute)"
 msgstr "Vitesse (mots par minutes)"
 
-#: main.py:257
+#: main.py:276
 msgid "Amount of mistakes"
 msgstr "Nombre d’erreurs"
 
-#: main.py:258
+#: main.py:277
 msgid "Start exercise"
 msgstr "Commencer l'exercice"
 
-#: main.py:310
+#: main.py:329
 msgid "Username empty"
 msgstr "Nom d'utilisateur vide"
 
-#: main.py:311
+#: main.py:330
 msgid "The username should not be empty. Please try again."
 msgstr ""
 "Le nom d'utilisateur ne devrait pas être vide. Veuillez essayer de nouveau."
 
-#: main.py:317
+#: main.py:336
 msgid "Username taken"
 msgstr "Nom d'utilisateur utilisé"
 
-#: main.py:318
+#: main.py:337
 msgid "That username is already taken. Please try again."
 msgstr "Ce nom d'utilisateur est déjà pris. Veuillez essayer de nouveau."
 
-#: main.py:417 main.py:427
+#: main.py:437 main.py:447
 msgid "Typing Tutor"
 msgstr "Tuteur de frappe"

@@ -7,17 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-12-30 12:47+0100\n"
+"POT-Creation-Date: 2013-01-31 17:16+0100\n"
 "PO-Revision-Date: 2011-10-21 08:57+0000\n"
 "Last-Translator: Richard Somlói <ricsipontaz@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Launchpad-Export-Date: 2012-12-31 04:49+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
-"Language: hu\n"
 
 #: testViewer.py:136
 msgid "Results"
@@ -31,23 +31,23 @@ msgstr "Eredmény:"
 msgid "yes"
 msgstr "igen"
 
-#: testViewer.py:150 testViewer.py:152
+#: testViewer.py:150
 msgid "no"
 msgstr "nem"
 
-#: testViewer.py:153
+#: testViewer.py:154
 #, python-format
 msgid "Completed: %s"
 msgstr "Teljesítve: %s"
 
-#: testViewer.py:159
+#: testViewer.py:160
 #, python-format
 msgid "Total thinking time: %s second"
 msgid_plural "Total thinking time: %s seconds"
 msgstr[0] "Összes gondolkodási idő: %s másodperc"
 msgstr[1] "Összes gondolkodási idő: %s másodperc"
 
-#: testViewer.py:167
+#: testViewer.py:168
 #, python-format
 msgid "Total thinking time: %s minutes"
 msgstr ""

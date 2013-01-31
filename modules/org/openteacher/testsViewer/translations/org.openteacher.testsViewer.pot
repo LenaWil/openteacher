@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.1\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-12-30 12:48+0100\n"
+"POT-Creation-Date: 2013-01-31 17:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,15 +29,15 @@ msgstr ""
 msgid "Completed"
 msgstr ""
 
-#: testsViewer.py:113
+#: testsViewer.py:117
 msgid "Highest note:"
 msgstr ""
 
-#: testsViewer.py:116
+#: testsViewer.py:120
 msgid "Average note:"
 msgstr ""
 
-#: testsViewer.py:119
+#: testsViewer.py:123
 msgid "Lowest note:"
 msgstr ""
 
@@ -45,11 +45,11 @@ msgstr ""
 #. stand a note, but not today.' If '-' isn't
 #. appropriate in you language for that, please replace.
 #. Otherwise, just copy the original.
-#: testsViewer.py:135 testsViewer.py:140 testsViewer.py:144 testsViewer.py:170
-#: testsViewer.py:176
+#: testsViewer.py:139 testsViewer.py:144 testsViewer.py:148 testsViewer.py:174
+#: testsViewer.py:180
 msgid "-"
 msgstr ""
 
-#: testsViewer.py:250
+#: testsViewer.py:254
 msgid "Back"
 msgstr ""

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.1\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-12-30 12:47+0100\n"
+"POT-Creation-Date: 2013-01-31 17:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,22 +17,22 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: interval.py:246 interval.py:251
+#: interval.py:218 interval.py:223
 msgid "Interval"
 msgstr ""
 
-#: interval.py:250
+#: interval.py:222
 msgid "Lesson type"
 msgstr ""
 
-#: interval.py:253
+#: interval.py:225
 msgid "Maximum size of group"
 msgstr ""
 
-#: interval.py:255
+#: interval.py:227
 msgid "Minimum amount of questions asked"
 msgstr ""
 
-#: interval.py:257
+#: interval.py:229
 msgid "Percent right before known"
 msgstr ""

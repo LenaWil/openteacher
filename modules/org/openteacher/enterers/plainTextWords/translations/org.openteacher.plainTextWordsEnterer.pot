@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.1\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-12-30 12:47+0100\n"
+"POT-Creation-Date: 2013-01-31 17:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,34 +17,34 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: plainTextWords.py:58
+#: plainTextWords.py:61
 msgid ""
 "Please enter the plain text in the text edit. Separate words with a new line "
 "and questions from answers with an equals sign ('=') or a tab."
 msgstr ""
 
-#: plainTextWords.py:59
+#: plainTextWords.py:62
 msgid "Plain text words enterer"
 msgstr ""
 
-#: plainTextWords.py:74
+#: plainTextWords.py:77
 msgid "Missing equals sign or tab"
 msgstr ""
 
-#: plainTextWords.py:75
+#: plainTextWords.py:78
 msgid ""
 "Please make sure every line contains an '='-sign or tab between the "
 "questions and answers."
 msgstr ""
 
-#: plainTextWords.py:162
+#: plainTextWords.py:166
 msgid "Create words lesson by entering plain text"
 msgstr ""
 
-#: plainTextWords.py:196
+#: plainTextWords.py:200
 msgid "Can't show the result"
 msgstr ""
 
-#: plainTextWords.py:197
+#: plainTextWords.py:201
 msgid "Can't open the resultive word list, because it can't be shown."
 msgstr ""

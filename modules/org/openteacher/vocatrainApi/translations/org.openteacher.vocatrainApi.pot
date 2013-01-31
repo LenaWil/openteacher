@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.1\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-12-30 12:47+0100\n"
+"POT-Creation-Date: 2013-01-31 17:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,34 +41,34 @@ msgstr ""
 msgid "Please select a list"
 msgstr ""
 
-#: vocatrainApi.py:212
+#: vocatrainApi.py:215
 msgid "Import from vocatrain.com"
 msgstr ""
 
-#: vocatrainApi.py:213
+#: vocatrainApi.py:216
 msgid "Import from woordjesleren.nl"
 msgstr ""
 
-#: vocatrainApi.py:270
+#: vocatrainApi.py:273
 #, python-format
 msgid "No %s connection"
 msgstr ""
 
-#: vocatrainApi.py:271
+#: vocatrainApi.py:274
 msgid ""
 "{serviceName} didn't accept the connection. Are you sure that your internet "
 "connection works and {serviceName} is online?"
 msgstr ""
 
-#: vocatrainApi.py:276
+#: vocatrainApi.py:279
 #, python-format
 msgid "The word list was imported from %s successfully."
 msgstr ""
 
-#: vocatrainApi.py:289
+#: vocatrainApi.py:292
 msgid "Can't show the result"
 msgstr ""
 
-#: vocatrainApi.py:290
+#: vocatrainApi.py:293
 msgid "Can't open the resultive word list, because it can't be shown."
 msgstr ""

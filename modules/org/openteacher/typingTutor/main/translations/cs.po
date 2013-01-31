@@ -7,74 +7,82 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-12-30 12:48+0100\n"
+"POT-Creation-Date: 2013-01-31 17:50+0100\n"
 "PO-Revision-Date: 2012-12-23 21:40+0000\n"
 "Last-Translator: Jakub Šnapka <snapka@seznam.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-12-31 04:51+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
-"Language: cs\n"
 
-#: main.py:142
-msgid "Please choose a user name and the keyboard layout you want to learn."
+#: main.py:101
+msgid "That's a mistake :(."
 msgstr ""
 
 #: main.py:143
-msgid "Username:"
+msgid "Please choose a user name and the keyboard layout you want to learn."
 msgstr ""
 
 #: main.py:144
+msgid "Username:"
+msgstr ""
+
+#: main.py:145
 msgid "Keyboard layout:"
 msgstr ""
 
 #. TRANSLATORS: Split the line as closest to the middle as
 #. TRANSLATORS: possible, not necessarily between 'Keyboard
 #. TRANSLATORS: layout' and 'preview'. Thanks :)
-#: main.py:148
+#: main.py:149
 msgid ""
 "Keyboard layout\n"
 "preview:"
 msgstr ""
 
-#: main.py:203
+#: main.py:204
 msgid "Welcome, please choose your account by clicking on it."
 msgstr "Vítejte, vyberte si prosím poklikáním účet."
 
-#: main.py:204
+#: main.py:205
 msgid "I am a new user"
 msgstr "Jsem nový uživatel"
 
-#: main.py:256
+#: main.py:274
+msgid "Level"
+msgstr ""
+
+#: main.py:275
 msgid "Speed (words per minute)"
 msgstr ""
 
-#: main.py:257
+#: main.py:276
 msgid "Amount of mistakes"
 msgstr ""
 
-#: main.py:258
+#: main.py:277
 msgid "Start exercise"
 msgstr "Začít cvičení"
 
-#: main.py:310
+#: main.py:329
 msgid "Username empty"
 msgstr ""
 
-#: main.py:311
+#: main.py:330
 msgid "The username should not be empty. Please try again."
 msgstr ""
 
-#: main.py:317
+#: main.py:336
 msgid "Username taken"
 msgstr "Uživatelské jméno vybráno"
 
-#: main.py:318
+#: main.py:337
 msgid "That username is already taken. Please try again."
 msgstr "Tohle uživatelské jméno je už obsazeno. Zkuste to prosím znovu."
 
-#: main.py:417 main.py:427
+#: main.py:437 main.py:447
 msgid "Typing Tutor"
 msgstr ""
