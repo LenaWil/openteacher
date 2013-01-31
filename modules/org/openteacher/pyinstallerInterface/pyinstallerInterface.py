@@ -74,6 +74,9 @@ if not sys.frozen:
         import csv
         import code
         import xml.dom.minidom
+        import pycountry
+        import docutils
+        import chardet
         #windows only, so wrapped.
         try:
                 import win32com

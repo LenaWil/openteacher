@@ -87,9 +87,9 @@ class RpmPackagerModule(object):
 
 		#determine requirements based on distribution
 		if self._platform == "Fedora":
-			requirements = "PyQt4, espeak, rpm-build, python-cherrypy, gettext"
+			requirements = "PyQt4, espeak, rpm-build, python-cherrypy, gettext, python-chardet, python-docutils"
 		elif self._platform == "openSUSE":
-			requirements = "python-qt4, espeak, python-cherrypy, gettext"
+			requirements = "python-qt4, espeak, python-cherrypy, gettext, python-chardet, python-docutils"
 
 		oldCwd = os.getcwd()
 		os.chdir(sourcePath)
