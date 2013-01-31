@@ -22,7 +22,6 @@ import moduleManager
 import unittest
 import openteacher
 import json
-import copy
 
 class ModulesTest(unittest.TestCase):
 	def setUp(self):
@@ -54,21 +53,19 @@ class ModulesTest(unittest.TestCase):
 					enabledMods.extend(otherMods)
 
 		#enable
-		try:
+		if hasattr(mod, "enable"):
 #			print "enabling ", mod.__class__.__file__
 			mod.enable()
-		except AttributeError:
-			pass
-		enabledMods.append(mod)
-		return getattr(mod, "active", False), enabledMods
+		enabled = getattr(mod, "active", False)
+		if enabled:
+			enabledMods.append(mod)
+		return enabled, enabledMods
 
 	def _disableDependencyTree(self, mods):
 		for mod in reversed(mods):
-			try:
+			if hasattr(mod, "disable"):
 #				print "disabling", mod.__class__.__file__
 				mod.disable()
-			except AttributeError:
-				pass
 
 	def _fakeExecuteModule(self):
 		#initialize settings (normally they're used by the execute
@@ -89,19 +86,24 @@ class ModulesTest(unittest.TestCase):
 		next(iter(self._mm.mods(type="modules"))).profile = "default"
 
 	def _doTest(self, minimalDependencies):
-		self._fakeExecuteModule()
+		try:
+			self._fakeExecuteModule()
 
-		for mod in self._mm.mods:
-			startVars = set(vars(mod).keys()) - set(["active"])
-			success, enabledMods = self._enableIncludingDependencies(mod, minimalDependencies)
-			self._disableDependencyTree(enabledMods)
-			endVars = set(vars(mod).keys()) - set(["active"])
-			try:
-				self.assertEqual(startVars, endVars)
-			except AssertionError:
-				print mod
-				raise
-#			print ""
+			for mod in self._mm.mods:
+				startVars = set(vars(mod).keys()) - set(["active"])
+				success, enabledMods = self._enableIncludingDependencies(mod, minimalDependencies)
+				self._disableDependencyTree(enabledMods)
+				endVars = set(vars(mod).keys()) - set(["active"])
+				try:
+					self.assertEqual(startVars, endVars)
+				except AssertionError:
+					print mod
+					raise
+#				print ""
+		except Exception, e:
+#			import traceback
+#			traceback.print_exc()
+			raise
 
 	def testMinimalDependencies(self):
 		self._doTest(True)

@@ -38,8 +38,6 @@ class TranslatorModule(object):
 		self.filesWithTranslations = ("translator.py",)
 
 	def enable(self):
-		self.active = True
-
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		createEvent = self._modules.default(type="event").createEvent
 		self.languageChanged = createEvent()
@@ -67,6 +65,8 @@ class TranslatorModule(object):
 		
 		#subscribe this module's _retranslate to itself
 		self.languageChanged.handle(self._retranslate)
+
+		self.active = True
 
 	def _retranslate(self):
 		_, ngettext = self.gettextFunctions(

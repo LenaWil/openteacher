@@ -66,10 +66,13 @@ class JMemorizeLessonLoaderModule(object):
 			with contextlib.closing(zipfile.ZipFile(path, "r")) as f:
 				xmlFile = f.open("lesson.xml", "r")
 		except (zipfile.BadZipfile, KeyError):
-			xmlFile = f.open(path, "r")
+			xmlFile = open(path, "r")
 
 		#crashes when the file structure is invalid.
-		root = ElementTree.parse(xmlFile).getroot()
+		try:
+			root = ElementTree.parse(xmlFile).getroot()
+		finally:
+			xmlFile.close()
 		items = []
 		for i, card in enumerate(root.findall(".//Card")):
 			item = {

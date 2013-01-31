@@ -25,18 +25,17 @@ class OpenTeacherAuthorsModule(object):
 
 		self.type = "openteacherAuthors"
 		self.uses = (
-			self._mm.mods(type="authors"),
 			self._mm.mods(type="translator"),
+		)
+		self.requires = (
+			self._mm.mods(type="authors"),
 		)
 		self.filesWithTranslations = ("openteacherAuthors.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
-		try:
-			self._authors = self._modules.default("active", type="authors")
-		except IndexError:
-			self._authors = {}
+		self._authors = self._modules.default("active", type="authors")
 		self._removers = set()
 
 		try:

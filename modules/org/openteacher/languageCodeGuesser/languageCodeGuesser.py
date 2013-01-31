@@ -91,7 +91,8 @@ class LanguageCodeGuesserModule(object):
 
 		del self._modules
 		del self._re
-		del self._translator
+		if hasattr(self, "_translator"):
+			del self._translator
 		del self._index
 
 def init(moduleManager):

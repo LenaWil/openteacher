@@ -28,7 +28,7 @@ class TestCase(unittest.TestCase):
 	def testNativeLanguage(self):
 		self._test("Deutsch", "de")
 
-	def weirdCasing(self):
+	def testWeirdCasing(self):
 		self._test("nEdErLaNdS", "nl")
 
 	def testUnicode(self):

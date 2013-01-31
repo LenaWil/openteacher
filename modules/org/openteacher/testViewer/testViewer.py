@@ -215,7 +215,7 @@ class TestViewerModule(object):
 
 		self._testViewers = set()
 		try:
-			translator = self._modules.default(type="translator")
+			translator = self._modules.default("active", type="translator")
 		except IndexError:
 			pass
 		else:
@@ -226,7 +226,7 @@ class TestViewerModule(object):
 	def _retranslate(self):
 		global _, ngettext
 		try:
-			translator = self._modules.default(type="translator")
+			translator = self._modules.default("active", type="translator")
 		except IndexError:
 			_, ngettext = unicode, lambda x, y, n: x if n == 1 else y
 		else:

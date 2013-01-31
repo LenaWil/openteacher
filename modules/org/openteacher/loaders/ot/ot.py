@@ -116,7 +116,7 @@ class OpenTeacherLoaderModule(object):
 			).parse(known)
 
 			#Parses the answers
-			second = treeWord.findtext("second") or u""
+			second = treeWord.findtext("second")
 			if second is not None:
 				foreign = (treeWord.findtext("foreign") or u"") + ", " + second
 			else:
