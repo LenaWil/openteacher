@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-01-31 17:49+0100\n"
-"PO-Revision-Date: 2012-12-26 19:44+0000\n"
+"PO-Revision-Date: 2013-02-02 21:57+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2013-02-01 05:20+0000\n"
-"X-Generator: Launchpad (build 16455)\n"
+"X-Launchpad-Export-Date: 2013-02-03 05:00+0000\n"
+"X-Generator: Launchpad (build 16462)\n"
 "Language: ru\n"
 
 #: model.py:95
@@ -62,10 +62,12 @@ msgid ""
 "Congratulations, you finished this typing course! If you want to continue, "
 "you can, but this is the end of the instructions. You did a great job!"
 msgstr ""
+"Поздравляем, вы закончили этот курс машинописи! Если вы хотите продолжить, "
+"вы можете это сделать, но это конец инструкции. Вы проделали огромную работу!"
 
 #: model.py:201
 msgid "Congratulations, you finished your first exercise!"
-msgstr ""
+msgstr "Поздравляем, вы закончили первое упражнение!"
 
 #: model.py:207
 #, python-format
@@ -73,18 +75,34 @@ msgid "You made %s mistake, please keep trying until you can do it flawless."
 msgid_plural ""
 "You made %s mistakes, please keep trying until you can do it flawless."
 msgstr[0] ""
+"Вы совершили ошибку, пожалуйста, продолжайте тренироваться, пока вы не "
+"можете сделать это безупречно."
 msgstr[1] ""
+"Вы совершили %s ошибки, пожалуйста, продолжайте тренироваться, пока вы не "
+"можете сделать это безупречно."
+msgstr[2] ""
+"Вы совершили %s ошибок, пожалуйста, продолжайте тренироваться, пока вы не "
+"можете сделать это безупречно."
 
 #: model.py:212
 #, python-format
 msgid "Too bad, you made %s mistake. Keep practising to get better!"
 msgid_plural "Too bad, you made %s mistakes. Keep practising to get better!"
 msgstr[0] ""
+"Жаль, что вы совершили ошибку. Продолжайте практиковаться, чтобы улучшить "
+"результаты!"
 msgstr[1] ""
+"Жаль, что вы совершили %s ошибки. Продолжайте практиковаться, чтобы улучшить "
+"результаты!"
+msgstr[2] ""
+"Жаль, что вы совершили %s ошибок. Продолжайте практиковаться, чтобы улучшить "
+"результаты!"
 
 #: model.py:219
 msgid "You made zero mistakes. Now try to improve your typing speed a bit."
 msgstr ""
+"Вы не допустили ошибок. Теперь попробуйте немного улучшить скорость набора "
+"текста."
 
 #: model.py:223
 msgid "To archieve that, you might try slowing down a bit."
@@ -95,12 +113,17 @@ msgid ""
 "You made zero mistakes and are typing fast enough, so you can continue "
 "practising some new letter combinations. Keep up the good work!"
 msgstr ""
+"Вы не допустили ошибок и печатаете достаточно быстро, так что вы можете "
+"продолжать заниматься некоторыми новыми комбинациями букв. Продолжайте в том "
+"же духе!"
 
 #: model.py:228
 msgid ""
 "You did it flawlessly and fast! Continue practising some new letters "
 "combinations to get even better!"
 msgstr ""
+"Вы сделали это безупречно и быстро! Продолжайте практиковаться на некоторых "
+"новых комбинациях букв, чтобы улучшить результаты!"
 
 #: model.py:232
 msgid ""
@@ -122,9 +145,13 @@ msgid ""
 "You made zero mistakes and are typing fast enough, so you can continue "
 "practising with some new words. Keep up the good work!"
 msgstr ""
+"Вы не допустили ошибок и печатаете достаточно быстро, теперь вы можете "
+"заниматься с некоторыми новыми словами. Продолжайте в том же духе!"
 
 #: model.py:240
 msgid ""
 "You did it flawlessly and fast! Continue practising with new words to get "
 "even better!"
 msgstr ""
+"Вы сделали это безупречно и быстро! Продолжайте тренироваться с новыми "
+"словами, чтобы улучшить результат!"
