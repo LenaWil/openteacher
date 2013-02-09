@@ -337,7 +337,7 @@ class FlashcardexchangeApiModule(object):
 		del self._buttonRegister
 
 		del self._button
-		del self._api
+		del self._appIdSetting
 
 def init(moduleManager):
 	return FlashcardexchangeApiModule(moduleManager)
