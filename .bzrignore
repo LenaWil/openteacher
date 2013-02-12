@@ -6,3 +6,4 @@ modules/org/openteacher/dataStore/store.shelve
 
 mobile-test
 database.sqlite3
+pyinstaller-2.0

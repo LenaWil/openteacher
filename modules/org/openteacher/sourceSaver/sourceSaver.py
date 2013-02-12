@@ -47,7 +47,7 @@ class SourceSaverModule(object):
 		self._dirs.add(copyBase)
 
 		#e.g. /programming_dir/openteacher
-		moduleBase = os.path.dirname(__file__)
+		moduleBase = os.path.abspath(os.path.dirname(__file__))
 		while not moduleBase.endswith("modules"):
 			moduleBase = os.path.normpath(os.path.join(moduleBase, ".."))
 		originalBase = os.path.normpath(os.path.join(moduleBase, ".."))

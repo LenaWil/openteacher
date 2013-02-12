@@ -25,7 +25,6 @@ import shutil
 import uuid
 import subprocess
 import itertools
-import string
 
 wxs = """
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -183,10 +182,14 @@ class WindowsMsiPackagerModule(object):
 		components, files = self._gatherFiles(".")
 
 		fileAssociations = ""
+		alreadyDone = set()
 		for mod in self._modules.sort("active", type="load"):
 			if not hasattr(mod, "mimetype"):
 				continue
 			for ext in mod.loads.keys():
+                                if ext in alreadyDone:
+                                        continue
+                                alreadyDone.add(ext)
 				fileAssociations += """\n
 				<!-- .{ext}-->
  				<ProgId Id="{name}.{ext}" Description="{desc}" Icon="{lower_name}.exe">

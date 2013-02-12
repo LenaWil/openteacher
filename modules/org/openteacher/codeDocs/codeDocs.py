@@ -45,9 +45,9 @@ class ModulesHandler(object):
 		self._buildModuleGraph = buildModuleGraph
 
 	def _pathToUrl(self, path):
-		path = os.path.normpath(path)
+		path = os.path.abspath(path)
 
-		sourceBase = os.path.dirname(__file__)
+		sourceBase = os.path.abspath(os.path.dirname(__file__))
 		while not sourceBase.endswith("modules"):
 			sourceBase = os.path.normpath(os.path.join(sourceBase, ".."))
 		sourceBase = os.path.normpath(os.path.join(sourceBase, ".."))		
@@ -131,7 +131,7 @@ class ModulesHandler(object):
 		def upOne(p):
 			return os.path.normpath(os.path.join(p, ".."))
 
-		basePath = os.path.dirname(__file__)
+		basePath = os.path.abspath(os.path.dirname(__file__))
 		while not basePath.endswith("modules"):
 			basePath = upOne(basePath)
 
@@ -286,7 +286,7 @@ class ModulesHandler(object):
 					continue
 				if "jquery" in f.lower():
 					continue
-				path = os.path.normpath(os.path.join(root, f))
+				path = os.path.join(root, f)
 
 				code = open(path).read()
 
@@ -294,7 +294,7 @@ class ModulesHandler(object):
 				formatter = pygments.formatters.HtmlFormatter(**{
 					"linenos": "table",
 					"anchorlinenos": True,
-					"lineanchors": path,
+					"lineanchors": self._pathToUrl(path),
 				})
 				source = pygments.highlight(code, lexer, formatter)
 				commonLength = len(os.path.commonprefix([

@@ -137,5 +137,6 @@ class ModuleManager(object):
 				module = container.init(self)
 				#To compensate for the missing __module__ attribute of
 				#the class Python has when importing normally.
-				module.__class__.__file__ = os.path.join(root, name + ".py")
+				path = os.path.join(root, name + ".py")
+				module.__class__.__file__ = os.path.abspath(path)
 				self._modules.add(module)

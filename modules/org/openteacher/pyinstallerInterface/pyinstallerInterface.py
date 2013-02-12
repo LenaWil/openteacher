@@ -1,22 +1,22 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012-2013, Marten de Vries
+#       Copyright 2012-2013, Marten de Vries
 #
-#	This file is part of OpenTeacher.
+#       This file is part of OpenTeacher.
 #
-#	OpenTeacher is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+#       OpenTeacher is free software: you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation, either version 3 of the License, or
+#       (at your option) any later version.
 #
-#	OpenTeacher is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+#       OpenTeacher is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#       GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
+#       You should have received a copy of the GNU General Public License
+#       along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import subprocess
 import platform
@@ -26,17 +26,17 @@ import os
 import shutil
 
 class PyinstallerInterfaceModule(object):
-	def __init__(self, moduleManager, *args, **kwargs):
-		super(PyinstallerInterfaceModule, self).__init__(*args, **kwargs)
-		self._mm = moduleManager
+        def __init__(self, moduleManager, *args, **kwargs):
+                super(PyinstallerInterfaceModule, self).__init__(*args, **kwargs)
+                self._mm = moduleManager
 
-		self.type = "pyinstallerInterface"
-		self.requires = (
+                self.type = "pyinstallerInterface"
+                self.requires = (
                         self._mm.mods(type="sourceSaver"),
                         self._mm.mods(type="metadata")
                 )
-		self._tempPaths = set()
-		atexit.register(self._cleanup)
+                self._tempPaths = set()
+                atexit.register(self._cleanup)
 
         @property
         def _saveSource(self):
@@ -70,19 +70,22 @@ if not sys.frozen:
         import weakref
         import argparse
         import sqlite3
+        import itertools
+        import subprocess
+        import zipfile
         import uuid
         import csv
         import code
         import xml.dom.minidom
-        import pycountry
         import docutils
         import chardet
+        import contextlib
         #windows only, so wrapped.
         try:
                 import win32com
         except ImportError:
                 pass
-from xml.etree import ElementTree
+        from xml.etree import ElementTree
 
 sys.path.insert(0, os.path.join(os.path.dirname(sys.executable), 'source'))
 sys.exit(__import__('openteacher').ModuleApplication().run())
@@ -110,15 +113,15 @@ sys.exit(__import__('openteacher').ModuleApplication().run())
                 for path in self._tempPaths:
                         shutil.rmtree(path)
 
-	def enable(self):
+        def enable(self):
                 self._modules = set(self._mm.mods(type="modules")).pop()
                 self._metadata = self._modules.default("active", type="metadata").metadata
-		self.active = True
+                self.active = True
 
-	def disable(self):
-		self.active = False
+        def disable(self):
+                self.active = False
                 del self._modules
                 del self._metadata
 
 def init(moduleManager):
-	return PyinstallerInterfaceModule(moduleManager)
+        return PyinstallerInterfaceModule(moduleManager)
