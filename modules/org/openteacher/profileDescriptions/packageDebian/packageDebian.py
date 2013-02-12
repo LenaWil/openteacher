@@ -47,9 +47,9 @@ class ProfileDescriptionModule(object):
 		}
 
 	def enable(self):
-		if len(set(self._mm.mods(type="debianPackager"))) == 0:
+		if len(set(self._mm.mods(type="debianPackager"))) == 0: # pragma: no cover
 			return #remain inactive
-		if not platform.linux_distribution()[0] in ("Debian", "Ubuntu"):
+		if not platform.linux_distribution()[0] in ("Debian", "Ubuntu"): # pragma: no cover
 			return #debian-based only module, remain inactive
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		try:

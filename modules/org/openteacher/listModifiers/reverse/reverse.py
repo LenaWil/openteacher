@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -26,6 +26,7 @@ class ReverseModule(object):
 		self._mm = moduleManager
 
 		self.type = "listModifier"
+		self.testType = "reverse"
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)

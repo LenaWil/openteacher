@@ -47,9 +47,9 @@ class ProfileDescriptionModule(object):
 		}
 
 	def enable(self):
-		if len(set(self._mm.mods(type="windowsMsiPackager"))) == 0:
+		if len(set(self._mm.mods(type="windowsMsiPackager"))) == 0: # pragma: no cover
 			return #remain inactive
-		if platform.system() != "Windows":
+		if platform.system() != "Windows": # pragma: no cover
 			return #remain inactive, this is a windows-only mod.
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		try:

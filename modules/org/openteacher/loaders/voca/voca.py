@@ -136,7 +136,7 @@ class VocaLoaderModule(object):
 		del self.mimetype
 
 		del self._modules
-		if hasattr(self, "_reader"):
+		if hasattr(self, "_reader"): # pragma: no cover
 			del self._reader
 
 	def getFileTypeOf(self, path):
@@ -737,7 +737,7 @@ class VocaLoaderModule(object):
 				list = self._parse40()
 			elif start.majorVersion == 3 and start.minorVersion == 0:
 				list = self._parse30()
-			else:
+			else: # pragma: no cover
 				raise ValueError("Unknown file format version")
 		else:
 			#give vocatude a chance on reading the file

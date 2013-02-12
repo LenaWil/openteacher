@@ -19,25 +19,28 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-import tempfile
-import shutil
-import os
 
 class TestCase(unittest.TestCase):
-	def testModuleGraphBuilder(self):
-		if not self.advanced: # pragma: no cover
-			return
-		for mod in self._mm.mods("active", type="moduleGraphBuilder"):
-			path = tempfile.mkstemp(".svg")[1]
-			mod.buildModuleGraph(path)
-			#the file must be created, and not empty. Should be enough
-			#for now.
-			self.assertTrue(os.path.isfile(path))
-			try:
-				self.assertTrue(os.path.getsize(path) > 0)
-			finally:
-				#remove the file again
-				os.remove(path)
+	def testRandom(self):
+		for mod in self._mm.mods("active", type="listModifier", testType="random"):
+			newIndices = mod.modifyList([0, 2], {
+				"items": [
+					{
+						"id": 1,
+						"questions": [("b",)],
+					},
+					{
+						"id": 2,
+						"questions": [("c",)],
+					},
+					{
+						"id": 2,
+						"questions": [("a",)],
+					},
+				],
+			})
+			self.assertIn(0, newIndices)
+			self.assertIn(2, newIndices)
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -46,7 +49,7 @@ class TestModule(object):
 
 		self.type = "test"
 		self.requires = (
-			self._mm.mods(type="moduleGraphBuilder"),
+			self._mm.mods(type="listModifier", testType="random"),
 		)
 
 	def enable(self):

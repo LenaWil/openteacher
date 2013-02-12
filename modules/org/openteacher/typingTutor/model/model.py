@@ -371,7 +371,7 @@ class TypingTutorModelModule(object):
 		store = self._modules.default("active", type="dataStore").store
 		try:
 			data = store["org.openteacher.typingTutor.model.data"]
-		except KeyError:
+		except KeyError: # pragma: no cover
 			data = store["org.openteacher.typingTutor.model.data"] = {}
 
 		self.model = TypeDataStore(self._words, data)

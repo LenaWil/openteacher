@@ -58,7 +58,7 @@ class WrtsSaverModule(object):
 		global pyratemp
 		try:
 			import pyratemp
-		except ImportError:
+		except ImportError: # pragma: no cover
 			return #remain inactive
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._metadata = self._modules.default("active", type="metadata").metadata

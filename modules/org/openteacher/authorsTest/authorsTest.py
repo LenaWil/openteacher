@@ -60,11 +60,11 @@ class TestCase(unittest.TestCase):
 		for mod in self._mm.mods("active", type="authors"):
 			#pretty sure it's unique
 			value = uuid.uuid4()
-			try:
-				mod.registeredAuthors.add(value)
-			except AttributeError:
-				#hey, it's not specified to be a set ;). Just a guess...
-				pass
+			#ATTENTION: if you don't use a set as return value, feel
+			#free to change this to something more generic. As long as
+			#the principe (returning copies, not the actual storage
+			#object) is adheared to.
+			mod.registeredAuthors.add(value)
 			self.assertNotIn(value, mod.registeredAuthors)
 
 	def testNotEasyUnicodifyable(self):

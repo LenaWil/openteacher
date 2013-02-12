@@ -105,7 +105,7 @@ class GnuVocabTrainLoaderModule(object):
 				line = unicode(line, encoding="UTF-8")
 				try:
 					questions, answers = line.split(" : ")
-				except ValueError:
+				except ValueError: # pragma: no cover
 					#shouldn't happen, but just in case someone e.g.
 					#accidentally adds a newline at the end of the file.
 					continue

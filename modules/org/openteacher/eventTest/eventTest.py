@@ -97,7 +97,7 @@ class TestCase(unittest.TestCase):
 			a.handle(callback2)
 
 		def callback2():
-			self.assertTrue(False, "Shouldn't get here...")
+			self.assertTrue(False, "Shouldn't get here...") # pragma: no cover
 
 		for e in self._mods:
 			a = e.createEvent()

@@ -47,7 +47,7 @@ class ProfileDescriptionModule(object):
 		}
 
 	def enable(self):
-		if len(set(self._mm.mods(type="mobileGenerator"))) == 0:
+		if len(set(self._mm.mods(type="mobileGenerator"))) == 0: # pragma: no cover
 			return #remain inactive
 		try:
 			import polib

@@ -47,9 +47,9 @@ class ProfileDescriptionModule(object):
 		}
 
 	def enable(self):
-		if len(set(self._mm.mods(type="rpmPackager"))) == 0:
+		if len(set(self._mm.mods(type="rpmPackager"))) == 0: # pragma: no cover
 			return #remain inactive
-		if not platform.linux_distribution()[0].strip() in ("Fedora", "openSUSE"):
+		if not platform.linux_distribution()[0].strip() in ("Fedora", "openSUSE"): # pragma: no cover
 			return #rpm based distro only module, remain inactive
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		try:

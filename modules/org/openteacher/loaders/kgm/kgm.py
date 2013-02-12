@@ -97,7 +97,7 @@ class KGeographyMapLoaderModule(object):
 		global Image
 		try:
 			import Image
-		except ImportError:
+		except ImportError: # pragma: no cover
 			#remain inactive. If someone doesn't have PIL installed,
 			#the program can just function but just not import .kgm.
 			return

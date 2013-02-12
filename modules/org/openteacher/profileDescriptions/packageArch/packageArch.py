@@ -47,9 +47,9 @@ class ProfileDescriptionModule(object):
 		}
 
 	def enable(self):
-		if len(set(self._mm.mods(type="archPackager"))) == 0:
+		if len(set(self._mm.mods(type="archPackager"))) == 0: # pragma: no cover
 			return #remain inactive
-		if not os.path.isfile("/usr/bin/pacman"):
+		if not os.path.isfile("/usr/bin/pacman"): # pragma: no cover
 			return #arch only module, remain inactive
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		try:

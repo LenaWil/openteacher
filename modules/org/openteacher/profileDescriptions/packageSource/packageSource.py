@@ -45,7 +45,7 @@ class ProfileDescriptionModule(object):
 		}
 
 	def enable(self):
-		if len(set(self._mm.mods(type="sourcePackager"))) == 0:
+		if len(set(self._mm.mods(type="sourcePackager"))) == 0: # pragma: no cover
 			return #remain inactive
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		try:

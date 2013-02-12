@@ -82,7 +82,7 @@ class JavascriptEventModule(object):
 		)
 
 	def _checkForErrors(self):
-		if self._engine.hasUncaughtException():
+		if self._engine.hasUncaughtException(): # pragma: no cover
 			raise Exception(self._engine.uncaughtException().toString())
 
 	def createEvent(self):
@@ -94,7 +94,7 @@ class JavascriptEventModule(object):
 		global QtScript
 		try:
 			from PyQt4 import QtScript
-		except ImportError:
+		except ImportError: # pragma: no cover
 			return
 		self._modules = set(self._mm.mods(type="modules")).pop()
 

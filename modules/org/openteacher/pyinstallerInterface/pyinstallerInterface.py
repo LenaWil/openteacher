@@ -80,6 +80,7 @@ if not sys.frozen:
         import docutils
         import chardet
         import contextlib
+        import bisect
         #windows only, so wrapped.
         try:
                 import win32com

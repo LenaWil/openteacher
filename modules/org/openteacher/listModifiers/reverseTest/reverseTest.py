@@ -19,25 +19,18 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-import tempfile
-import shutil
-import os
 
 class TestCase(unittest.TestCase):
-	def testModuleGraphBuilder(self):
-		if not self.advanced: # pragma: no cover
-			return
-		for mod in self._mm.mods("active", type="moduleGraphBuilder"):
-			path = tempfile.mkstemp(".svg")[1]
-			mod.buildModuleGraph(path)
-			#the file must be created, and not empty. Should be enough
-			#for now.
-			self.assertTrue(os.path.isfile(path))
-			try:
-				self.assertTrue(os.path.getsize(path) > 0)
-			finally:
-				#remove the file again
-				os.remove(path)
+	def testReverse(self):
+		for mod in self._mm.mods("active", type="listModifier", testType="reverse"):
+			newList = mod.modifyList([0, 2], {
+				"items": [
+					{"id": 1},
+					{"id": 2},
+					{"id": 3},
+				],
+			})
+			self.assertEqual(newList, [2, 0])
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -46,7 +39,7 @@ class TestModule(object):
 
 		self.type = "test"
 		self.requires = (
-			self._mm.mods(type="moduleGraphBuilder"),
+			self._mm.mods(type="listModifier", testType="reverse"),
 		)
 
 	def enable(self):

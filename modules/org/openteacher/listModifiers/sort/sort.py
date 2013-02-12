@@ -24,6 +24,7 @@ class SortModule(object):
 		self._mm = moduleManager
 
 		self.type = "listModifier"
+		self.testType = "sort"
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
