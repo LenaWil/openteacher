@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.1\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-01-31 17:50+0100\n"
+"POT-Creation-Date: 2013-02-13 21:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,50 +17,50 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: flashcardexchangeApi.py:157
+#: flashcardexchangeApi.py:159
 msgid ""
 "Enter a search term and press the search button to search flashcardexchange."
 "com for sets. Then select the set or sets you want to import and click OK."
 msgstr ""
 
-#: flashcardexchangeApi.py:158
+#: flashcardexchangeApi.py:160
 msgid "E.g.: spanish travel vocabulary"
 msgstr ""
 
-#: flashcardexchangeApi.py:159
+#: flashcardexchangeApi.py:161
 msgid "Search"
 msgstr ""
 
-#: flashcardexchangeApi.py:160
+#: flashcardexchangeApi.py:162
 msgid "Search flashcardexchange.com"
 msgstr ""
 
-#: flashcardexchangeApi.py:263
+#: flashcardexchangeApi.py:265
 msgid "Import from flashcardexchange.com"
 msgstr ""
 
-#: flashcardexchangeApi.py:266
+#: flashcardexchangeApi.py:268
 msgid "flashcardexchange.com API client id"
 msgstr ""
 
-#: flashcardexchangeApi.py:307
+#: flashcardexchangeApi.py:309
 msgid "No flashcardexchange.com connection"
 msgstr ""
 
-#: flashcardexchangeApi.py:308
+#: flashcardexchangeApi.py:310
 msgid ""
 "flashcardexchange.com didn't accept the connection. Are you sure that your "
 "internet connection works and flashcardexchange.com is online?"
 msgstr ""
 
-#: flashcardexchangeApi.py:313
+#: flashcardexchangeApi.py:315
 msgid "The word list was imported from flashcardexchange.com successfully."
 msgstr ""
 
-#: flashcardexchangeApi.py:326
+#: flashcardexchangeApi.py:328
 msgid "Can't show the result"
 msgstr ""
 
-#: flashcardexchangeApi.py:327
+#: flashcardexchangeApi.py:329
 msgid "Can't open the resultive word list, because it can't be shown."
 msgstr ""

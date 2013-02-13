@@ -46,7 +46,9 @@ class FlashcardexchangeApi(object):
 	def searchSets(self, searchTerm, page=1):
 		try:
 			fd = self._open("/search/sets", qstr=searchTerm, page=page)
-		except urllib2.HTTPError:
+		except urllib2.HTTPError, e:
+			print e
+			print e.read()
 			return {"results": []}
 		return json.load(fd)
 
