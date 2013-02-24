@@ -55,8 +55,9 @@ class QuizletApi(object):
 		fd = self._open("/sets/%s" % id)
 		data = json.load(fd)
 
+		created = datetime.datetime.fromtimestamp(data["created_date"])
+
 		list = {}
-		list["created"] = datetime.datetime.fromtimestamp(data["created_date"])
 		list["title"] = data["title"]
 		list["questionLanguage"] = pycountry.languages.get(alpha2=data["lang_terms"]).name
 		list["answerLanguage"] = pycountry.languages.get(alpha2=data["lang_definitions"]).name
@@ -65,6 +66,7 @@ class QuizletApi(object):
 		for card in data["terms"]:
 			list["items"].append({
 				"id": card["id"],
+				"created": created,
 				"questions": self._parse(card["term"]),
 				"answers": self._parse(card["definition"]),
 			})
@@ -263,11 +265,23 @@ class QuizletApiModule(object):
 		return self._modules.default("active", type="wordsStringParser").parse
 
 	def _handleSearch(self):
-		data = self._api.searchSets(self._dialog.searchTerm)
+		try:
+			data = self._api.searchSets(self._dialog.searchTerm)
+		except urllib2.URLError, e:
+			print e
+			self._noConnection()
+			return
 		results = []
 		for result in data["sets"]:
 			results.append((result["title"], result["id"]))
 		self._dialog.setResults(results)
+
+	def _noConnection(self):
+		QtGui.QMessageBox.warning(
+			self._uiModule.qtParent,
+			_("No Quizlet connection"),
+			_("Quizlet didn't accept the connection. Are you sure that your internet connection works and quizlet.com is online?")
+		)
 
 	def doImport(self):
 		try:
@@ -285,34 +299,21 @@ class QuizletApiModule(object):
 
 			for setId in self._dialog.chosenResults:
 				list = self._api.downloadSet(setId)
-				self._loadList(list)
+				try:
+					self._loadList(list)
+				except NotImplementedError:
+					return
 		except urllib2.URLError, e:
 			#for debugging purposes
 			print e
-			QtGui.QMessageBox.warning(
-				self._uiModule.qtParent,
-				_("No Quizlet connection"),
-				_("Quizlet didn't accept the connection. Are you sure that your internet connection works and quizlet.com is online?")
-			)
+			self._noConnection()
 			return
 
 		#everything went well
 		self._uiModule.statusViewer.show(_("The word list was imported from Quizlet successfully."))
 
 	def _loadList(self, list):
-		try:
-			self._modules.default(
-				"active",
-				type="loader"
-			).loadFromLesson("words", list)
-		except NotImplementedError:
-			#FIXME 3.1: make this into a separate module? It's shared
-			#with plainTextWordsEnterer.
-			QtGui.QMessageBox.critical(
-				self._uiModule.qtParent,
-				_("Can't show the result"),
-				_("Can't open the resultive word list, because it can't be shown.")
-			)
+		self._modules.default("active", type="loaderGui").loadFromLesson("words", list)
 
 	def disable(self):
 		self.active = False

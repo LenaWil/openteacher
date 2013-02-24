@@ -30,58 +30,82 @@ class DummyLesson(object):
 		self.list = lessonDict["list"]
 		self.resources = lessonDict["resources"]
 
+def getEnterEdit(Event):
+	class EnterEdit(urwid.Edit):
+		def __init__(self, *args, **kwargs):
+			super(EnterEdit, self).__init__(*args, **kwargs)
+
+			self.enterPressed = Event()
+
+		def keypress(self, size, key):
+			if key == "enter":
+				self.enterPressed.send()
+			else:
+				return super(EnterEdit, self).keypress(size, key)
+
+	return EnterEdit
+
 class PractisingInterface(object):
-	def __init__(self, Event, *args, **kwargs):
+	def __init__(self, createController, lessonType, *args, **kwargs):
 		super(PractisingInterface, self).__init__(*args, **kwargs)
 
-		self.checkRequested = Event()
-		self.skipRequested = Event()
+		self._controller = createController()
+		self._controller.lessonType = lessonType
+		self._connectToEvents()
+		self._setupUi()
 
-		class EnterEdit(urwid.Edit):
-			def __init__(self, *args, **kwargs):
-				super(EnterEdit, self).__init__(*args, **kwargs)
+	def _connectToEvents(self):
+		self._controller.clearInput.handle(self._clearInput)
+		self._controller.showCorrection.handle(self._showCorrection)
+		#FIXME: Respond to the enable/disable events.
+		self._controller.hideCorrection.handle(self._hideCorrection)
 
-				self.enterPressed = Event()
-
-			def keypress(self, size, key):
-				if key == "enter":
-					self.enterPressed.send()
-				else:
-					return super(EnterEdit, self).keypress(size, key)
-
+	def _setupUi(self):
+		#setup main UI
 		self._txt = urwid.Text(u"")
 		self._edit = EnterEdit("ANSWER: ")
-		self._edit.enterPressed.handle(self._sendCheckRequested)
-		self._correctionTxt  = urwid.Text(u"")
+		self._edit.enterPressed.handle(self._onCheck)
+		urwid.connect_signal(self._edit, "change", lambda x, y: self._controller.userIsTyping)
 
-		checkButton = urwid.Button("Check", lambda button: self._sendCheckRequested())
-		skipButton = urwid.Button("Skip", lambda button: self.skipRequested.send())
+		checkButton = urwid.Button("Check", lambda button: self._onCheck())
+		skipButton = urwid.Button("Skip", lambda button: self._controller.skipTriggered())
 
 		divider = urwid.Divider()
 		quitButton = urwid.Button("Quit", lambda button: self.quit())
 
-		widgets = [self._txt, self._edit, self._correctionTxt, checkButton, skipButton, divider, quitButton]
+		widgets = [self._txt, self._edit, divider, checkButton, skipButton, divider, quitButton]
 		listBox = urwid.ListBox(widgets)
 		adapter = urwid.BoxAdapter(listBox, len(widgets))
-		filler = urwid.Filler(adapter, "middle")
+		self._mainFiller = urwid.Filler(adapter, "middle")
 
-		self._loop = urwid.MainLoop(filler)
+		#setup correction dialog
+		self._correctionTxt = urwid.Text(u"")
+		self._correctionFiller = urwid.Filler(self._correctionTxt, "middle")
 
-	def _sendCheckRequested(self):
-		self.checkRequested.send(self._edit.edit_text)
+		self._loop = urwid.MainLoop(self._mainFiller)
+
+	def _clearInput(self):
+		self._edit.edit_text = ""
+
+	def _showCorrection(self, correctAnswer):
+		self._loop.widget = self._correctionFiller
+		self._correctionTxt.set_text(u"WRONG ANSWER. IT SHOULD HAVE BEEN: %s" % correctAnswer)
+		self._loop.set_alarm_in(3, lambda x, y:self._controller.correctionShowingDone())
+
+	def _hideCorrection(self):
+		self._loop.widget = self._mainFiller
 
 	def run(self):
+		self._controller.lessonType.start()
 		self._loop.run()
+
+	def _onCheck(self):
+		self._controller.checkTriggered(self._edit.edit_text)
 
 	def quit(self):
 		raise urwid.ExitMainLoop()
 
-	def setCorrection(self, text):
-		self._correctionTxt.set_text(u"WRONG ANSWER. IT SHOULD HAVE BEEN: %s" % text)
-
 	def setNextItem(self, question):
-		self._edit.edit_text = ""
-		self._correctionTxt.set_text("")
 		self._txt.set_text("QUESTION: %s" % question)
 
 class CommandLineInterfaceModule(object):
@@ -97,9 +121,8 @@ class CommandLineInterfaceModule(object):
 			self._mm.mods(type="wordListStringParser"),
 			self._mm.mods(type="lessonType"),
 			self._mm.mods(type="event"),
+			self._mm.mods(type="inputTypingLogic"),
 			self._mm.mods(type="wordsStringComposer"),
-			self._mm.mods(type="wordsStringParser"),
-			self._mm.mods(type="wordsStringChecker"),
 		)
 		self.uses = (
 			self._mm.mods(type="load"),
@@ -194,7 +217,7 @@ class CommandLineInterfaceModule(object):
 			if not lesson:
 				print >> sys.stderr, "Couldn't load file %s, not showing." % inputPath
 				continue
-			#lambda's for lazy loading. Handy of the compose case which
+			#lambda's for lazy loading. Handy for the compose case which
 			#is a lot more likely to crash than the others + is
 			#relatively slow. JS implementation only currently...
 			print {
@@ -256,28 +279,18 @@ class CommandLineInterfaceModule(object):
 			print >> sys.stderr, "The '%s' file can't be loaded." % inputFile
 
 		lessonTypeMod = self._modules.default("active", type="lessonType", name=args["lesson_type"])
-		self._lessonType = lessonTypeMod.createLessonType(lesson["list"], range(len(lesson["list"]["items"])))
+		lessonType = lessonTypeMod.createLessonType(lesson["list"], range(len(lesson["list"]["items"])))
 
-		self._ui = PractisingInterface(self._createEvent)
-		self._ui.checkRequested.handle(self._checkAnswer)
-		self._ui.skipRequested.handle(self._lessonType.skip)
-		self._lessonType.newItem.handle(self._setNextItem)
-		self._lessonType.lessonDone.handle(self._ui.quit)
+		typingInputLogicMod = self._modules.default("active", type="inputTypingLogic")
+		self._ui = PractisingInterface(typingInputLogicMod.createController, lessonType)
 
-		self._lessonType.start()
+		lessonType.newItem.handle(self._setNextItem)
+		lessonType.lessonDone.handle(self._ui.quit)
 		self._ui.run()
 
-	def _setNextItem(self, item):
-		self._item = item
-		self._ui.setNextItem(self._compose(item["questions"]))
-
-	def _checkAnswer(self, answer):
-		currentItem = self._item
-		result = self._check(self._parse(answer), currentItem)
-
-		self._lessonType.setResult(result)
-		if result["result"] == "wrong":
-			self._ui.setCorrection(self._compose(currentItem["answers"]))
+	def _setNextItem(self, word):
+		question = self._compose(word["questions"])
+		self._ui.setNextItem(question)
 
 	def run(self, argList=None):
 		if argList is None:
@@ -347,6 +360,7 @@ class CommandLineInterfaceModule(object):
 
 	def enable(self):
 		global urwid
+		global EnterEdit
 		try:
 			import urwid
 		except ImportError:
@@ -359,11 +373,11 @@ class CommandLineInterfaceModule(object):
 		self._metadata = self._modules.default("active", type="metadata").metadata
 		self._composeWordList = self._modules.default("active", type="wordListStringComposer").composeList
 		self._parseWordList = self._modules.default("active", type="wordListStringParser").parseList
-		self._createEvent = self._modules.default("active", type="event").createEvent
-
 		self._compose = self._modules.default("active", type="wordsStringComposer").compose
-		self._parse = self._modules.default("active", type="wordsStringParser").parse
-		self._check = self._modules.default("active", type="wordsStringChecker").check
+
+		if urwid:
+			Event = self._modules.default("active", type="event").createEvent
+			EnterEdit = getEnterEdit(Event)
 
 		self.active = True
 
@@ -374,10 +388,7 @@ class CommandLineInterfaceModule(object):
 		del self._metadata
 		del self._composeWordList
 		del self._parseWordList
-		del self._createEvent
 		del self._compose
-		del self._parse
-		del self._check
 
 def init(moduleManager):
 	return CommandLineInterfaceModule(moduleManager)

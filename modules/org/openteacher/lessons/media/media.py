@@ -25,6 +25,16 @@ import weakref
 
 #FIXME (>3.1): give media lessons a title
 
+#FIXME? Make the whole module make use of a .resources attribute like
+#topo. It would make media savers and loaders a lot easier to write (see
+#mediaHtml.py and the loader and saver otmd.py). Downside: breaks
+#compatibility. :(
+#
+#Maybe a solution: deprecate the filename key and replace it by
+#a 'resource' key. (and 'link' in the case of 'remote'), but give it a
+#content for backward compatibility. Doesn't fix the clutter in the otmd
+#savers, but the general problem would be solved by that I guess...
+
 class MediaLessonModule(object):
 	"""The module"""
 

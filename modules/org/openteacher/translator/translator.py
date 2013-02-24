@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011, 2013, Marten de Vries
 #	Copyright 2012, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -108,8 +108,15 @@ class TranslatorModule(object):
 		if os.path.isfile(path):
 			t = gettext.GNUTranslations(open(path, "rb"))
 			return t.ugettext, t.ungettext
+
 		#Couldn't find a mo file. Return the default translator
-		return unicode, lambda x, y, n: x if n == 1 else y
+		gettextFallback = unicode
+		def ngettextFallback(x, y, n):
+			if n == 1:
+				return unicode(x)
+			else:
+				return unicode(y)
+		return gettextFallback, ngettextFallback
 
 	def disable(self):
 		self.active = False

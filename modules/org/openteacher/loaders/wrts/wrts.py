@@ -101,12 +101,12 @@ class WrtsLoaderModule(object):
 		#it should.
 		locale.setlocale(locale.LC_ALL, "C")
 		try:
-			wordList["created"] = datetime.datetime.strptime(
+			created = datetime.datetime.strptime(
 				listTree.findtext("created").rsplit(" ", 1)[0], #strip tz info
 				"%a, %d %b %Y %H:%M:%S" #since our datetime objects are naive
 			)
 		except (ValueError, AttributeError):
-			pass
+			created = None
 		#set locale back to make sure conflicts don't arise with other
 		#modules depending on the locale.
 		locale.resetlocale()
@@ -123,6 +123,8 @@ class WrtsLoaderModule(object):
 				"comment": unicode()
 			}
 			word["id"] = counter
+			if created:
+				word["created"] = created
 
 			wsp = self._modules.default("active", type="wordsStringParser")
 			word["questions"] = wsp.parse(wordTree.findtext("a") or u"")

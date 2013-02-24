@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -32,8 +32,9 @@ class ModuleFilterer(object):
 	   
 	   You can run through the results by a for loop, or get them in
 	   a python set/list/tuple/whatever by calling the appropriate
-	   conversion function (e.g. set(ModuleFilterer(modules)) )"""
+	   conversion function (e.g. set(ModuleFilterer(modules)) )
 
+	"""
 	def __init__(self, modules, *args, **kwargs):
 		super(ModuleFilterer, self).__init__(*args, **kwargs)
 		self._modules = modules
@@ -78,13 +79,13 @@ class ModuleManager(object):
 	"""This class manages modules. It loads them from a directory when
 	   they meet the requirements for being a module, and it offers a
 	   few functions to the initialized modules, like getting resource
-	   paths and handling imports in the module directory."""
+	   paths and handling imports in the module directory.
 
+	"""
 	def __init__(self, modulesPath, *args, **kwargs):
 		super(ModuleManager, self).__init__(*args, **kwargs)
 
 		self.modulesPath = modulesPath
-		self._events = {}
 		self._references = set()
 
 		self._loadModules()

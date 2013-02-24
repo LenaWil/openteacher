@@ -106,8 +106,8 @@ class WrtsSaverModule(object):
 		#set to C so strftime is English
 		locale.setlocale(locale.LC_ALL, "C")
 		try:
-			dt = lesson.list["created"]
-		except KeyError:
+			dt = lesson.list["items"][0]["created"]
+		except (IndexError, KeyError):
 			dt = datetime.datetime.now()
 		data = {
 			"list": lesson.list,

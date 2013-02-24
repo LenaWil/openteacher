@@ -34,6 +34,12 @@ class TextToSpeechProviderWords(object):
 			self._mm.mods(type="translator"),
 			self._mm.mods(type="settings"),
 		)
+		self.profiles = {
+			#I don't like it if my test suite talks to me (the stuff
+			#where textToSpeech responds to is tested in the test suite.
+			#)
+			"test-suite": -1,
+		}
 		self.filesWithTranslations = ("words.py",)
 
 	def _retranslate(self):

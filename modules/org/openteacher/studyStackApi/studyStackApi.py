@@ -150,10 +150,10 @@ class StudyStackApiModule(object):
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="buttonRegister"),
 			self._mm.mods(type="wordsStringParser"),
+			self._mm.mods(type="loaderGui"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
-			self._mm.mods(type="loader"),
 		)
 		self.filesWithTranslations = ("studyStackApi.py",)
 
@@ -250,7 +250,10 @@ class StudyStackApiModule(object):
 					continue
 				for listId in d.chosenItems:
 					list = self._api.getList(listId)
-					self._loadList(list)
+					try:
+						self._loadList(list)
+					except NotImplementedError:
+						return
 		except urllib2.URLError, e:
 			#for debugging purposes
 			print e
@@ -265,19 +268,7 @@ class StudyStackApiModule(object):
 		self._uiModule.statusViewer.show(_("The word list was imported from Study Stack successfully."))
 
 	def _loadList(self, list):
-		try:
-			self._modules.default(
-				"active",
-				type="loader"
-			).loadFromLesson("words", list)
-		except NotImplementedError:
-			#FIXME 3.1: make this into a separate module? It's shared
-			#with plainTextWordsEnterer.
-			QtGui.QMessageBox.critical(
-				self._uiModule.qtParent,
-				_("Can't show the result"),
-				_("Can't open the resultive word list, because it can't be shown.")
-			)
+		self._modules.default("active", type="loaderGui").loadFromLesson("words", list)
 
 	def disable(self):
 		self.active = False

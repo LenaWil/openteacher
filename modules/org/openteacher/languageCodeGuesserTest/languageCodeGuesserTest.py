@@ -22,8 +22,9 @@ import unittest
 
 class TestCase(unittest.TestCase):
 	def _test(self, langName, code):
-		for mod in self._mm.mods("active", type="languageCodeGuesser"):
-			self.assertEqual(mod.guessLanguageCode(langName), code)
+		if self.advanced:
+			for mod in self._mm.mods("active", type="languageCodeGuesser"):
+				self.assertEqual(mod.guessLanguageCode(langName), code)
 
 	def testNativeLanguage(self):
 		self._test("Deutsch", "de")

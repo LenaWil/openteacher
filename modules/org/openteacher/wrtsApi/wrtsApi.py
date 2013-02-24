@@ -33,7 +33,7 @@ class WrtsApiModule(object):
 		self.requires = (
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="buttonRegister"),
-			self._mm.mods(type="loader"),
+			self._mm.mods(type="loaderGui"),
 			self._mm.mods(type="lessonTracker"),
 			self._mm.mods(type="wordsStringComposer"),
 			self._mm.mods(type="wordsStringParser"),
@@ -359,22 +359,13 @@ class WrtsApiModule(object):
 				self._noConnection()
 				return
 
+			loaderGui = self._modules.default("active", type="loaderGui")
 			try:
-				self._modules.default(
-					"active",
-					type="loader"
-				).loadFromLesson("words", {
+				loaderGui.loadFromLesson("words", {
 					"list": list,
 					"resources": {},
 				})
 			except NotImplementedError:
-				#FIXME 3.1: make this into a separate module? It's shared
-				#with plainTextWordsEnterer.
-				QtGui.QMessageBox.critical(
-					self._uiModule.qtParent,
-					_("Can't show the result"),
-					_("Can't open the resultive word list, because it can't be shown.")
-				)
 				return
 		#if everything went well
 		self._uiModule.statusViewer.show(_("The word list was imported from WRDS successfully."))

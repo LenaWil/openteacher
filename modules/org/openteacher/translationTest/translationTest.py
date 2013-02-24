@@ -34,7 +34,7 @@ class TestCase(unittest.TestCase):
 			files = mod.filesWithTranslations
 			for file in files:
 				path = os.path.join(directory, file)
-				self.assertTrue(os.path.exists(path), msg="Mod %s's filesWithTranslations contains %s, but that doesn't exist." % (mod, file))
+				self.assertTrue(os.path.exists(path), msg="Mod %s's filesWithTranslations contains %s, but that doesn't exist." % (mod.__class__.__file__, file))
 
 
 	def testPotFiles(self):

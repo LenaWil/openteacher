@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011, 2013 Marten de Vries
 #	Copyright 2012, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -25,6 +25,8 @@ import json
 import datetime
 import zipfile
 import os
+
+DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
 
 class UpdatesModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -57,7 +59,7 @@ class UpdatesModule(object):
 		try:
 			lastUpdate = datetime.datetime.strptime(
 				self._dataStore["org.openteacher.updates.lastUpdate"],
-				"%Y-%m-%dT%H:%M:%S.%f"
+				DATETIME_FORMAT
 			)
 		except KeyError:
 			lastUpdate = datetime.datetime.min
@@ -66,7 +68,7 @@ class UpdatesModule(object):
 		for i in xrange(len(updates)):
 			updates[i]["timestamp"] = datetime.datetime.strptime(
 				updates[i]["timestamp"],
-				"%Y-%m-%dT%H:%M:%S.%f"
+				DATETIME_FORMAT
 			)
 		result = filter(lambda x: x["timestamp"] > lastUpdate, updates)
 		self._updatesCache = result
@@ -98,7 +100,7 @@ class UpdatesModule(object):
 			self._installUpdate(update["link"], update["signature"])
 			self._dataStore["org.openteacher.updates.lastUpdate"] = datetime.datetime.strftime(
 				update["timestamp"],
-				"%Y-%m-%dT%H:%M:%S.%f"
+				DATETIME_FORMAT
 			)
 		#Done installing updates, inform caller to restart in order for the changes to take effect.
 		raise SystemExit("Updates installed, please restart.")

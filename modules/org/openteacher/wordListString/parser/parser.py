@@ -19,6 +19,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import re
+import datetime
 
 class WordListStringParserModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -34,7 +35,12 @@ class WordListStringParserModule(object):
 		}
 
 	def parseList(self, text):
-		list = {"items": [], "tests": []}
+		list = {
+			"items": [],
+			"tests": [],
+		}
+		now = datetime.datetime.now()
+
 		counter = 0
 		for line in text.split("\n"):
 			if line.strip() == u"":
@@ -48,6 +54,7 @@ class WordListStringParserModule(object):
 				"id": counter,
 				"questions": self._parse(questionText),
 				"answers": self._parse(answerText),
+				"created": now,
 			}
 			list["items"].append(word)
 

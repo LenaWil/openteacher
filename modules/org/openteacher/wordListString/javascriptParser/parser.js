@@ -1,5 +1,5 @@
 /*
-	Copyright 2012, Marten de Vries
+	Copyright 2012-2013, Marten de Vries
 
 	This file is part of OpenTeacher.
 
@@ -19,11 +19,10 @@
 
 /*global parse: false */
 
-var parseList = function (string) {
+var parseList = (function() {
 	"use strict";
 
-	//assumed global: parse(wordsString);
-	var SeparatorError, re, parseLine, counter, list, lines, i, word;
+	var SeparatorError, re, parseLine;
 
 	SeparatorError = function (message) {
 		this.name = "SeparatorError";
@@ -36,49 +35,69 @@ var parseList = function (string) {
 	//escaping...
 	re = new RegExp("[^\\\\][=\t]");
 
-	parseLine = function (line, id) {
-		var questionText, answerText, firstOccurenceIndex;
-
-		if (line.trim() === "") {
-			return;
-		}
+	splitLine = function (line) {
+		var firstOccurenceIndex;
 
 		if (["\t", "="].indexOf(line[0]) !== -1) {
 			//if first character is \t or =, run special logic because
 			//the regex handler down here can't cope with that.
-			questionText = "";
-			answerText = line.slice(1);
+			return {
+				questionText: "",
+				answerText: line.slice(1)
+			};
 		} else {
 			firstOccurenceIndex = line.search(re);
 			if (firstOccurenceIndex === -1) {
 				throw new SeparatorError("Missing equals sign or tab");
 			}
-			questionText = line.slice(0, firstOccurenceIndex + 1);
-			answerText = line.slice(firstOccurenceIndex + 2);
+			return {
+				questionText: line.slice(0, firstOccurenceIndex + 1),
+				answerText: line.slice(firstOccurenceIndex + 2)
+			};
 		}
+	}
+
+	parseLine = function (line, id, createdDate) {
+		var splittedLine;
+
+		if (line.trim() === "") {
+			return;
+		}
+
+		splittedLine = splitLine(line);
 
 		return {
 			id: id,
-			questions: parse(questionText),
-			answers: parse(answerText)
+			created: createdDate,
+			questions: parse(splittedLine.questionText),
+			answers: parse(splittedLine.answerText)
 		};
 	};
 
-	list = {
-		items: [],
-		tests: []
-	};
-	counter = 0;
-	lines = string.split("\n");
-	for (i = 0; i < lines.length; i += 1) {
-		word = parseLine(lines[i], counter);
-		if (word) {
-			counter += 1;
-			list.items.push(word);
+	var parseList = function (string) {
+		var list, now, counter, lines, i, word;
+
+		list = {
+			items: [],
+			tests: []
+		};
+		now = new Date();
+		counter = 0;
+
+		lines = string.split("\n");
+		for (i = 0; i < lines.length; i += 1) {
+			word = parseLine(lines[i], counter, now);
+			if (word) {
+				list.items.push(word);
+				counter += 1
+			}
 		}
-	}
-	return {
-		"resources": {},
-		"list": list
+		return {
+			"resources": {},
+			"list": list
+		};
 	};
-};
+
+
+	return parseList;
+}());

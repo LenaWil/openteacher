@@ -1,0 +1,57 @@
+# French translation for openteacher
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2013-02-24 21:35+0100\n"
+"PO-Revision-Date: 2012-10-01 13:36+0000\n"
+"Last-Translator: Pierre Slamich <pierre.slamich@gmail.com>\n"
+"Language-Team: French <fr@li.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-02-14 05:02+0000\n"
+"X-Generator: Launchpad (build 16491)\n"
+
+#: gui.py:109
+msgid "Correct answer: <b>{answers}</b> [{diff}]"
+msgstr "Réponse correcte : <b>{answers}</b> [{diff}]"
+
+#: gui.py:111
+msgid "Correct answer: <b>{answers}</b>"
+msgstr "Réponse correcte : <b>{answers}</b>"
+
+#: gui.py:124
+msgid "Check!"
+msgstr "Verifier!"
+
+#: gui.py:125
+msgid "Correct anyway"
+msgstr "Correct de toute façon"
+
+#: gui.py:126
+msgid "Skip"
+msgstr "Ignorer"
+
+#: gui.py:249
+msgid "Fade duration when wrong (milliseconds)"
+msgstr "Durée d'atténuation quand c'est faux (milliseconds)"
+
+#: gui.py:250
+msgid "Lesson"
+msgstr "Leçon"
+
+#: gui.py:251
+msgid "Words lesson"
+msgstr "Leçon de mots"
+
+#~ msgid "Corrected: %s"
+#~ msgstr "Corrigé : %s"
+
+#~ msgid "Corrected"
+#~ msgstr "Corrigé"

@@ -6,11 +6,12 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-02-13 21:32+0100\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2013-02-24 21:35+0100\n"
 "PO-Revision-Date: 2013-02-16 17:58+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -37,11 +38,11 @@ msgstr "Пожалуйста, выберите список"
 msgid "Import from studystack.com"
 msgstr "Импорт с studystack.com"
 
-#: studyStackApi.py:259
+#: studyStackApi.py:262
 msgid "No Study Stack connection"
 msgstr "Отсутствует подключение к Study Stack"
 
-#: studyStackApi.py:260
+#: studyStackApi.py:263
 msgid ""
 "Study Stack didn't accept the connection. Are you sure that your internet "
 "connection works and http://www.studystack.com/ is online?"
@@ -49,16 +50,14 @@ msgstr ""
 "Сайт Study Stack не отвечает. Вы уверены, что ваше интернет-соединение "
 "работает и studystack.com доступен?"
 
-#: studyStackApi.py:265
+#: studyStackApi.py:268
 msgid "The word list was imported from Study Stack successfully."
 msgstr "Список слов успешно импортирован с Study Stack."
 
-#: studyStackApi.py:278
-msgid "Can't show the result"
-msgstr "Не удалось показать результат"
+#~ msgid "Can't show the result"
+#~ msgstr "Не удалось показать результат"
 
-#: studyStackApi.py:279
-msgid "Can't open the resultive word list, because it can't be shown."
-msgstr ""
-"Не удалось открыть результирующий список  слов, потому что он не может быть "
-"показан."
+#~ msgid "Can't open the resultive word list, because it can't be shown."
+#~ msgstr ""
+#~ "Не удалось открыть результирующий список  слов, потому что он не может "
+#~ "быть показан."

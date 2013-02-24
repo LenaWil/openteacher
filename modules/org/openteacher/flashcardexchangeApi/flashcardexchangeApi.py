@@ -56,8 +56,9 @@ class FlashcardexchangeApi(object):
 		fd = self._open("/sets/%s" % id)
 		data = json.load(fd)[0]
 
+		created = datetime.datetime.strptime(data["created"], "%Y-%m-%d %H:%M:%S")
+
 		list = {}
-		list["created"] = datetime.datetime.strptime(data["created"], "%Y-%m-%d %H:%M:%S")
 		list["title"] = data["title"]
 		#maybe we need some fields for description & subject in our
 		#file format...
@@ -68,6 +69,7 @@ class FlashcardexchangeApi(object):
 		for card in data["cards"]:
 			list["items"].append({
 				"id": card["card_id"],
+				"created": created,
 				"questions": self._parse(card["front"]),
 				"answers": self._parse(card["back"]),
 			})
@@ -178,10 +180,10 @@ class FlashcardexchangeApiModule(object):
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="buttonRegister"),
 			self._mm.mods(type="wordsStringParser"),
+			self._mm.mods(type="loaderGui"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
-			self._mm.mods(type="loader"),
 		)
 		self.filesWithTranslations = ("flashcardexchangeApi.py",)
 
@@ -278,11 +280,23 @@ class FlashcardexchangeApiModule(object):
 		return self._modules.default("active", type="wordsStringParser").parse
 
 	def _handleSearch(self):
-		data = self._api.searchSets(self._dialog.searchTerm)
+		try:
+			data = self._api.searchSets(self._dialog.searchTerm)
+		except urllib2.URLError, e:
+			print e
+			self._noConnection()
+			return
 		results = []
 		for result in data["results"]:
 			results.append((result["title"], result["set_id"]))
 		self._dialog.setResults(results)
+
+	def _noConnection(self):
+		QtGui.QMessageBox.warning(
+			self._uiModule.qtParent,
+			_("No flashcardexchange.com connection"),
+			_("flashcardexchange.com didn't accept the connection. Are you sure that your internet connection works and flashcardexchange.com is online?")
+		)
 
 	def doImport(self):
 		try:
@@ -300,34 +314,21 @@ class FlashcardexchangeApiModule(object):
 
 			for setId in self._dialog.chosenResults:
 				list = self._api.downloadSet(setId)
-				self._loadList(list)
+				try:
+					self._loadList(list)
+				except NotImplementedError:
+					return
 		except urllib2.URLError, e:
 			#for debugging purposes
 			print e
-			QtGui.QMessageBox.warning(
-				self._uiModule.qtParent,
-				_("No flashcardexchange.com connection"),
-				_("flashcardexchange.com didn't accept the connection. Are you sure that your internet connection works and flashcardexchange.com is online?")
-			)
+			self._noConnection()
 			return
 
 		#everything went well
 		self._uiModule.statusViewer.show(_("The word list was imported from flashcardexchange.com successfully."))
 
 	def _loadList(self, list):
-		try:
-			self._modules.default(
-				"active",
-				type="loader"
-			).loadFromLesson("words", list)
-		except NotImplementedError:
-			#FIXME 3.1: make this into a separate module? It's shared
-			#with plainTextWordsEnterer.
-			QtGui.QMessageBox.critical(
-				self._uiModule.qtParent,
-				_("Can't show the result"),
-				_("Can't open the resultive word list, because it can't be shown.")
-			)
+		self._modules.default("active", type="loaderGui").loadFromLesson("words", list)
 
 	def disable(self):
 		self.active = False

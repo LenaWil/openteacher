@@ -59,7 +59,30 @@ class TestCase(unittest.TestCase):
 				print "%s modified the lesson object passed to save(), which isn't allowed. More info:" % saver
 				raise
 
-	#TODO: add media.
+	def testSavingMedia(self):
+		metadata = next(iter(self._mm.mods("active", type="metadata"))).metadata
+		self._testSavingType("media", Lesson({
+			"items": [
+				{
+					"remote": True, 
+					"name": "http://openteacher.org/", 
+					"question": "a", 
+					"filename": "http://openteacher.org/", 
+					"answer": "b", 
+					"id": 0
+				}, 
+				{
+					"remote": False, 
+					"name": "openteacher-icon.png", 
+					"question": "", 
+					"filename": metadata["iconPath"], 
+					"answer": "", 
+					"id": 1
+				}
+			],
+			"tests": []
+		}, {}))
+		#FIXME: see comment on resources in the .otmd saver file.
 
 	def testSavingTopo(self):
 		metadata = next(iter(self._mm.mods("active", type="metadata"))).metadata

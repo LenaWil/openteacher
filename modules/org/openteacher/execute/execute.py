@@ -46,12 +46,12 @@ class ExecuteModule(object):
 	def execute(self):
 		#load the settings module's dependencies (currently one)
 		try:
-			self._getMod(type="dataStore")
+			dataStore = self._getMod(type="dataStore")
 			settings = self._getMod(type="settings")
-			settings.initialize()
 		except ValueError:
 			self._profileSetting = {"value": "all"}
 		else:
+			settings.initialize()
 			self._profileSetting = settings.registerSetting(**{
 				"internal_name": "org.openteacher.execute.startup_profile",
 				"type": "profile",

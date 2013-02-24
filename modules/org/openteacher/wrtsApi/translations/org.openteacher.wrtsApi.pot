@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.1\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-02-13 21:32+0100\n"
+"POT-Creation-Date: 2013-02-24 21:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -92,15 +92,7 @@ msgstr ""
 msgid "No list was selected. Please try again."
 msgstr ""
 
-#: wrtsApi.py:375
-msgid "Can't show the result"
-msgstr ""
-
-#: wrtsApi.py:376
-msgid "Can't open the resultive word list, because it can't be shown."
-msgstr ""
-
-#: wrtsApi.py:380
+#: wrtsApi.py:371
 msgid "The word list was imported from WRDS successfully."
 msgstr ""
 

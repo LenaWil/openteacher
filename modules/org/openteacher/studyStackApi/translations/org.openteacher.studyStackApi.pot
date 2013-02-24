@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.1\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-02-13 21:32+0100\n"
+"POT-Creation-Date: 2013-02-24 21:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,24 +37,16 @@ msgstr ""
 msgid "Import from studystack.com"
 msgstr ""
 
-#: studyStackApi.py:259
+#: studyStackApi.py:262
 msgid "No Study Stack connection"
 msgstr ""
 
-#: studyStackApi.py:260
+#: studyStackApi.py:263
 msgid ""
 "Study Stack didn't accept the connection. Are you sure that your internet "
 "connection works and http://www.studystack.com/ is online?"
 msgstr ""
 
-#: studyStackApi.py:265
+#: studyStackApi.py:268
 msgid "The word list was imported from Study Stack successfully."
-msgstr ""
-
-#: studyStackApi.py:278
-msgid "Can't show the result"
-msgstr ""
-
-#: studyStackApi.py:279
-msgid "Can't open the resultive word list, because it can't be shown."
 msgstr ""

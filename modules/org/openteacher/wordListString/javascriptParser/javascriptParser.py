@@ -19,6 +19,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import json
+import datetime
 
 class WordListStringParserModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -50,6 +51,7 @@ class WordListStringParserModule(object):
 		for item in result["list"]["items"]:
 			item["questions"] = map(tuple, item["questions"])
 			item["answers"] = map(tuple, item["answers"])
+			item["created"] = datetime.datetime.strptime(item["created"], "%Y-%m-%dT%H:%M:%S.%fZ")
 		return result
 
 	def enable(self):

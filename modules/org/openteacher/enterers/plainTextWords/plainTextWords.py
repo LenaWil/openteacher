@@ -90,7 +90,7 @@ class PlainTextWordsEntererModule(object):
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="buttonRegister"),
 			self._mm.mods(type="wordListStringParser"),
-			self._mm.mods(type="loader"),
+			self._mm.mods(type="loaderGui"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -183,24 +183,15 @@ class PlainTextWordsEntererModule(object):
 
 		self._retranslate()
 
-		while True:
-			eptd.exec_()
-			if not eptd.result():
-				break
+		eptd.exec_()
+		if eptd.result():
 			lesson = eptd.lesson
 			if lesson:
 				try:
-					self._modules.default(
-						"active",
-						type="loader"
-					).loadFromLesson("words", lesson)
+					self._modules.default("active", type="loaderGui").loadFromLesson("words", lesson)
 				except NotImplementedError:
-					QtGui.QMessageBox.critical(
-						self._uiModule.qtParent,
-						_("Can't show the result"),
-						_("Can't open the resultive word list, because it can't be shown.")
-					)
-				break
+					pass
+
 		self._activeDialogs.remove(eptd)
 		tab.close()
 

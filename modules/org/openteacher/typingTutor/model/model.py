@@ -169,9 +169,6 @@ class TypeDataStore(object):
 		return user["currentExercise"]
 
 	def currentInstruction(self, username):
-		#TODO: enter multiple formulations of the most often shown
-		#sentences and use random.choice() to pick one. That way, the
-		#instructions are a bit more personal/nicer.
 		user = self._users[username]
 		layout = self.layout(username)
 

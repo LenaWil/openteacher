@@ -100,6 +100,7 @@ class AllOnceModule(object):
 		self._mm = moduleManager
 
 		self.type = "lessonType"
+		self.testName = "allOnce"
 		self.requires = (
 			self._mm.mods(type="event"),
 		)

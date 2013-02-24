@@ -71,8 +71,8 @@ class TestCase(unittest.TestCase):
 		for file in self._files:
 			loadMods = self._modsForFile(file)
 			for mod in loadMods:
-				#feel free to extend
 				try:
+					#feel free to extend with new lsson types
 					self.assertIn(mod.getFileTypeOf(file), ["words", "topo", "media"])
 				except AssertionError:
 					print file, mod

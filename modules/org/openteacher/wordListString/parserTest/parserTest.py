@@ -19,12 +19,20 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
+import datetime
 
 class TestCase(unittest.TestCase):
+	def _checkCreatedAndRemoveFromLessonData(self, lessonData):
+		for item in lessonData["list"]["items"]:
+			self.assertIsInstance(item["created"], datetime.datetime)
+			del item["created"]
+		return lessonData
+
 	def _test(self, input, expectedOutput):
 		for mod in self._mm.mods("active", type="wordListStringParser"):
-			output = mod.parseList(input)
-			self.assertEqual(output["list"]["items"], expectedOutput)
+			lessonData = mod.parseList(input)
+			lessonData = self._checkCreatedAndRemoveFromLessonData(lessonData)
+			self.assertEqual(lessonData["list"]["items"], expectedOutput)
 
 	def testBasicStructure(self):
 		expectedOutput = {

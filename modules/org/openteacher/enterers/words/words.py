@@ -230,6 +230,7 @@ def getWordsTableModel():
 					#insert row
 					if not unicode(value.toString()):
 						return False
+
 					word = {"created": datetime.datetime.now()}
 					try:
 						word["id"] = self.lesson.list["items"][-1]["id"] +1

@@ -151,14 +151,17 @@ def getTeachWidget():
 			self._buildUi(keyboardWidget, widgets)
 			self._connectSignals()
 
+			try:
+				letterChosen = self._keyboardWidget.letterChosen
+			except AttributeError:
+				#replacement that does nothing
+				letterChosen = self._modules.default(type="event").createEvent()
+
 			#setup teachTypes
 			self._teachTypeWidgets = []
 			for module in self._modules.sort("active", type="teachType"): 
 				if module.dataType in ("all", "words"):
-					#FIXME: charsKeyboard is in uses, not requires, but
-					#is passed here nonetheless... That makes it crash
-					#when the mod isn't there.
-					widget = module.createWidget(self.tabChanged, self._keyboardWidget.letterChosen, self._lessonWidget.addSideWidget, self._lessonWidget.removeSideWidget)
+					widget = module.createWidget(self.tabChanged, letterChosen, self._lessonWidget.addSideWidget, self._lessonWidget.removeSideWidget)
 					self._teachTypeWidgets.append(widget)
 					self._lessonWidget.teachTabWidget.addTab(widget, module.name)
 			

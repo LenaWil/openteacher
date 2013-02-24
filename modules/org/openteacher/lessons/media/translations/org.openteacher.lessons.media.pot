@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.1\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-02-13 21:32+0100\n"
+"POT-Creation-Date: 2013-02-24 21:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,19 +17,19 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: media.py:153 media.py:209 media.py:211
+#: media.py:163 media.py:219 media.py:221
 #, python-format
 msgid "Media lesson: %s"
 msgstr ""
 
-#: media.py:169
+#: media.py:179
 msgid "Create media lesson"
 msgstr ""
 
-#: media.py:273
+#: media.py:283
 msgid "Empty question or answer"
 msgstr ""
 
-#: media.py:274
+#: media.py:284
 msgid "Please enter at least one question and one answer for every item."
 msgstr ""

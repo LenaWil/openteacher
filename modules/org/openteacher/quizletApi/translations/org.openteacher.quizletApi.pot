@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.1\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-02-13 21:32+0100\n"
+"POT-Creation-Date: 2013-02-24 21:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,46 +17,38 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: quizletApi.py:156
+#: quizletApi.py:158
 msgid ""
 "Enter a search term and press the search button to search quizlet.com for "
 "sets. Then select the set or sets you want to import and click OK."
 msgstr ""
 
-#: quizletApi.py:157
+#: quizletApi.py:159
 msgid "E.g.: german food vocabulary"
 msgstr ""
 
-#: quizletApi.py:158
+#: quizletApi.py:160
 msgid "Search"
 msgstr ""
 
-#: quizletApi.py:159
+#: quizletApi.py:161
 msgid "Search quizlet.com"
 msgstr ""
 
-#: quizletApi.py:254
+#: quizletApi.py:256
 msgid "Import from quizlet.com"
 msgstr ""
 
-#: quizletApi.py:294
+#: quizletApi.py:282
 msgid "No Quizlet connection"
 msgstr ""
 
-#: quizletApi.py:295
+#: quizletApi.py:283
 msgid ""
 "Quizlet didn't accept the connection. Are you sure that your internet "
 "connection works and quizlet.com is online?"
 msgstr ""
 
-#: quizletApi.py:300
-msgid "The word list was imported from Quizlet successfully."
-msgstr ""
-
 #: quizletApi.py:313
-msgid "Can't show the result"
-msgstr ""
-
-#: quizletApi.py:314
-msgid "Can't open the resultive word list, because it can't be shown."
+msgid "The word list was imported from Quizlet successfully."
 msgstr ""
