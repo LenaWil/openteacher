@@ -100,7 +100,8 @@ class LanguageCodeGuesserModule(object):
 		del self._re
 		if hasattr(self, "_translator"):
 			del self._translator
-		del self._index
+		if hasattr(self, "_index"):
+			del self._index
 
 def init(moduleManager):
 	return LanguageCodeGuesserModule(moduleManager)

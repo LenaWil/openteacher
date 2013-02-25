@@ -44,6 +44,14 @@ class ExecuteModule(object):
 		return mods.pop()
 
 	def execute(self):
+		#enable printing a stacktrace in the case of a segfault if
+		#supported.
+		try:
+			import faulthandler
+		except ImportError:
+			pass
+		else:
+			faulthandler.enable()
 		#load the settings module's dependencies (currently one)
 		try:
 			dataStore = self._getMod(type="dataStore")
