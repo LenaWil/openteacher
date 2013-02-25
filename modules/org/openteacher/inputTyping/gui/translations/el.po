@@ -11,12 +11,12 @@ msgstr ""
 "PO-Revision-Date: 2012-06-15 12:42+0000\n"
 "Last-Translator: Yannis Kaskamanidis <ttnfy17@yahoo.gr>\n"
 "Language-Team: Greek <el@li.org>\n"
-"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-14 05:02+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-02-25 05:15+0000\n"
+"X-Generator: Launchpad (build 16506)\n"
+"Language: el\n"
 
 #: gui.py:109
 msgid "Correct answer: <b>{answers}</b> [{diff}]"
@@ -49,9 +49,3 @@ msgstr ""
 #: gui.py:251
 msgid "Words lesson"
 msgstr ""
-
-#~ msgid "Corrected: %s"
-#~ msgstr "Διορθώθηκαν: %s"
-
-#~ msgid "Corrected"
-#~ msgstr "Διορθώθηκαν"

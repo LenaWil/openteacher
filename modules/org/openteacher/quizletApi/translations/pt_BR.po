@@ -6,17 +6,16 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-02-24 21:35+0100\n"
 "PO-Revision-Date: 2013-02-16 17:42+0000\n"
 "Last-Translator: Adriano Steffler <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
-"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-17 04:54+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-02-25 05:17+0000\n"
+"X-Generator: Launchpad (build 16506)\n"
 
 #: quizletApi.py:158
 msgid ""
@@ -59,11 +58,3 @@ msgstr ""
 #: quizletApi.py:313
 msgid "The word list was imported from Quizlet successfully."
 msgstr "A lista de palavras foi importada do sítio do Quizlet com sucesso."
-
-#~ msgid "Can't show the result"
-#~ msgstr "Não é possível mostrar o resultado"
-
-#~ msgid "Can't open the resultive word list, because it can't be shown."
-#~ msgstr ""
-#~ "Não é possível abrir a lista de palavras resultante, porque ela não pode "
-#~ "ser mostrada."
