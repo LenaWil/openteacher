@@ -98,7 +98,7 @@ class ModulesTest(unittest.TestCase):
 				endVars = set(vars(mod).keys()) - set(["active"])
 				try:
 					self.assertEqual(startVars, endVars)
-				except AssertionError:
+				except AssertionError: # pragma: no cover
 					print mod
 					raise
 #				print ""

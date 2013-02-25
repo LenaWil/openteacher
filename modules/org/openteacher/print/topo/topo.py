@@ -29,9 +29,9 @@ class PrintModule(object):
 		)
 
 	def enable(self):
-		global QtGui, QtWebKit
+		global QtGui
 		try:
-			from PyQt4 import QtGui, QtWebKit
+			from PyQt4 import QtGui
 		except ImportError:
 			return
 		self.prints = ["topo"]

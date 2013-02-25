@@ -22,8 +22,6 @@ class MimicryTypefaceConverterModule(object):
 	"""Supported mimicry fonts:
 	   - Greek
 	   - TekniaGreek
-	   - arabic
-	   - cyrillic?
 
 	"""
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -107,8 +105,6 @@ class MimicryTypefaceConverterModule(object):
 		#TekniaGreek. This might not be accurate, but better than
 		#nothing...
 		fontTable["tekniagreek"] = fontTable["greek"]
-
-		#TODO: add more fonts...
 
 		font = font.lower()
 		letterTable = fontTable.get(font, {})

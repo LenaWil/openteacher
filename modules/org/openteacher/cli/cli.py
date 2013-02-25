@@ -57,7 +57,6 @@ class PractisingInterface(object):
 	def _connectToEvents(self):
 		self._controller.clearInput.handle(self._clearInput)
 		self._controller.showCorrection.handle(self._showCorrection)
-		#FIXME: Respond to the enable/disable events.
 		self._controller.hideCorrection.handle(self._hideCorrection)
 
 	def _setupUi(self):

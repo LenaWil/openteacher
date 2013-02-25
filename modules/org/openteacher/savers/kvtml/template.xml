@@ -30,9 +30,11 @@
   <identifiers>
     <identifier id="0">
       <name>@!list.get("questionLanguage", u"")!@</name>
+      <locale>@!questionLocale or "C"!@</locale>
     </identifier>
     <identifier id="1">
       <name>@!list.get("answerLanguage", u"")!@</name>
+      <locale>@!answerLocale or "C"!@</locale>
     </identifier>
   </identifiers>
   <entries>
@@ -53,7 +55,6 @@
     </entry>
   </entries>
   <lessons>
-#!FIXME: check if I interpreted this section right
     <!--(for i, test in enumerate(list.get("tests", [])))-->
     <container>
       <name>Lesson @!i + 1!@</name>

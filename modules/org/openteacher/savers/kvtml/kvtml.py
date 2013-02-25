@@ -36,6 +36,7 @@ class KvtmlSaverModule(object):
 		self.requires = (
 			self._mm.mods(type="wordsStringComposer"),
 			self._mm.mods(type="metadata"),
+			self._mm.mods(type="languageCodeGuesser"),
 		)
 		self.filesWithTranslations = ("kvtml.py",)
 
@@ -87,6 +88,10 @@ class KvtmlSaverModule(object):
 			type="wordsStringComposer"
 		).compose
 
+	@property
+	def _guessLanguageCode(self):
+		return self._modules.default("active", type="languageCodeGuesser").guessLanguageCode
+
 	def save(self, type, lesson, path):
 		class EvalPseudoSandbox(pyratemp.EvalPseudoSandbox):
 			def __init__(self2, *args, **kwargs):
@@ -100,10 +105,14 @@ class KvtmlSaverModule(object):
 			eval_class=EvalPseudoSandbox
 		)
 
+		questionLang = lesson.list.get("questionLanguage", u"")
+		answerLang = lesson.list.get("answerLanguage", u"")
 		data = {
 			"list": lesson.list,
 			"appname": self._metadata["name"],
 			"appversion": self._metadata["version"],
+			"questionLocale": self._guessLanguageCode(questionLang),
+			"answerLocale": self._guessLanguageCode(answerLang),
 		}
 		content = t(**data)
 		with open(path, "w") as f:
