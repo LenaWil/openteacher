@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -19,6 +19,8 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 class JavascriptLessonTypeModule(object):
+	"""Smart lesson type (JS implementation)"""
+
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(JavascriptLessonTypeModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
@@ -28,21 +30,28 @@ class JavascriptLessonTypeModule(object):
 
 		self.requires = (
 			self._mm.mods(type="javaScriptEvent"),
+			self._mm.mods(type="javaScriptEvaluator"),
 		)
 
+	def createLessonType(self, *args, **kwargs):
+		return self._js["LessonType"].new(*args, **kwargs)
+
 	def enable(self):
-		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.code = self._modules.default("active", type="javaScriptEvent").code
+		modules = set(self._mm.mods(type="modules")).pop()
+		self.code = modules.default("active", type="javaScriptEvent").code
 		with open(self._mm.resourcePath("lessonType.js")) as f:
 			self.code += f.read()
+
+		self._js = modules.default("active", type="javaScriptEvaluator").createEvaluator()
+		self._js.eval(self.code)
 
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
-		del self._modules
 		del self.code
+		del self._js
 
 def init(moduleManager):
 	return JavascriptLessonTypeModule(moduleManager)

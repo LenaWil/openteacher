@@ -28,10 +28,21 @@ class TestCase(unittest.TestCase):
 			del item["created"]
 		return lessonData
 
+	def _normalizeLessonData(self, lessonData):
+		"""Normalize items so functions like assertEqual can do their
+		   job without worrying about list/tuple difference.
+
+		"""
+		for item in lessonData["list"]["items"]:
+			item["questions"] = map(tuple, item["questions"])
+			item["answers"] = map(tuple, item["answers"])
+		return lessonData
+
 	def _test(self, input, expectedOutput):
 		for mod in self._mm.mods("active", type="wordListStringParser"):
 			lessonData = mod.parseList(input)
 			lessonData = self._checkCreatedAndRemoveFromLessonData(lessonData)
+			lessonData = self._normalizeLessonData(lessonData)
 			self.assertEqual(lessonData["list"]["items"], expectedOutput)
 
 	def testBasicStructure(self):

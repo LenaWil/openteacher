@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -24,6 +24,8 @@ class WordsStringParserTestCase(unittest.TestCase):
 	def _test(self, input, output):
 		for mod in self._mm.mods("active", type="wordsStringParser"):
 			data = mod.parse(input)
+			#normalize
+			data = map(tuple, data)
 			self.assertEqual(data, output)
 
 	def testSingleWord(self):

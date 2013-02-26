@@ -23,11 +23,10 @@ import unittest
 class TestCase(unittest.TestCase):
 	@property
 	def _mods(self):
-		a = (
+		return (
 			set(self._mm.mods(type="event")) |
 			set(self._mm.mods("active", type="javaScriptEvent"))
 		)
-		return a
 
 	def testSendEmptyEvent(self):
 		for e in self._mods:
@@ -83,9 +82,7 @@ class TestCase(unittest.TestCase):
 		def callback(**kwargs):
 			self.assertEquals(kwargs, testKwargs)
 
-		#ATTENTION: native event only, since it requires keyword args
-		#which aren't supported in JS...
-		for e in self._mm.mods("active", type="event"):
+		for e in self._mods:
 			a = e.createEvent()
 			a.handle(callback)
 			a.send(**testKwargs)

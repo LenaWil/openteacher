@@ -23,7 +23,7 @@ var LessonType;
 
 LessonType = function (list, indexes) {
 	"use strict";
-	var test, sendNext, appendTest;
+	var modifyItem, test, sendNext, appendTest;
 
 	//give this object its events
 	this.newItem = new Event();
@@ -37,8 +37,15 @@ LessonType = function (list, indexes) {
 	//and object-unique private data
 	test = {
 		results: [],
-		finished: false
+		finished: false,
+		pauses: []
 	};
+
+	if (arguments.length === 3) {
+		modifyItem = arguments[2];
+	} else {
+		modifyItem = function (item) {return item;};
+	}
 
 	appendTest = function () {
 		if (list.tests[list.tests - 1] === undefined) {
@@ -66,7 +73,7 @@ LessonType = function (list, indexes) {
 		} else {
 			//normally in lesson
 			item = list.items[i];
-			this.newItem.send(item);
+			this.newItem.send(modifyItem(item));
 		}
 	};
 
@@ -101,4 +108,8 @@ LessonType = function (list, indexes) {
 	this.start = function () {
 		sendNext.call(this);
 	};
+
+	this.addPause = function (pause) {
+		test.pauses.push(pause)
+	}
 };

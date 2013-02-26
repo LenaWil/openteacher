@@ -98,6 +98,5 @@ var parseList = (function() {
 		};
 	};
 
-
 	return parseList;
 }());

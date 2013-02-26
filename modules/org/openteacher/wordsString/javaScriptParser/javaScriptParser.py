@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,8 +18,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import json
-
 class JavascriptParserModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(JavascriptParserModule, self).__init__(*args, **kwargs)
@@ -28,42 +26,30 @@ class JavascriptParserModule(object):
 		self.type = "wordsStringParser"
 		self.javaScriptImplementation = True
 		self.requires = (
-			self._mm.mods(type="qtApp"),
+			self._mm.mods(type="javaScriptEvaluator"),
 		)
 		self.priorities = {
 			"default": 20,
 		}
 
-	def _checkForErrors(self):
-		if self._engine.hasUncaughtException():
-			raise Exception(self._engine.uncaughtException().toString())
-
-	def parse(self, text):
-		statement = "JSON.stringify(parse(%s))" % json.dumps(text)
-		jsonResult = unicode(self._engine.evaluate(statement).toString())
-		self._checkForErrors()
-
-		return map(tuple, json.loads(jsonResult))
+	def parse(self, *args, **kwargs):
+		return self._js["parse"](*args, **kwargs)
 
 	def enable(self):
-		global QtScript
-		try:
-			from PyQt4 import QtScript
-		except ImportError:
-			return
-		self._engine = QtScript.QScriptEngine()
 		with open(self._mm.resourcePath("parser.js")) as f:
 			self.code = f.read()
-		self._engine.evaluate(self.code, f.name)
-		self._checkForErrors()
+
+		modules = next(iter(self._mm.mods(type="modules")))
+		self._js = modules.default("active", type="javaScriptEvaluator").createEvaluator()
+		self._js.eval(self.code)
 
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
-		del self._engine
 		del self.code
+		del self._js
 
 def init(moduleManager):
 	return JavascriptParserModule(moduleManager)

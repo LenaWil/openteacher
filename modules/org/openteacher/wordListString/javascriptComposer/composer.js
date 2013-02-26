@@ -51,8 +51,8 @@ composeList = (function () {
 		items = container.list.items || [];
 		result = "";
 		for (i = 0; i < items.length; i += 1) {
-			questions = compose(items[i].questions);
-			answers = compose(items[i].answers);
+			questions = compose(items[i].questions || []);
+			answers = compose(items[i].answers || []);
 			result += escape(questions) + " = " + escape(answers) + "\n";
 		}
 		if (!result) {

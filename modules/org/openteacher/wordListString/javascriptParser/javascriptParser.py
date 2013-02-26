@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,9 +18,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import json
-import datetime
-
 class WordListStringParserModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(WordListStringParserModule, self).__init__(*args, **kwargs)
@@ -30,51 +27,35 @@ class WordListStringParserModule(object):
 		self.javaScriptImplementation = True
 		self.requires = (
 			self._mm.mods("javaScriptImplementation", type="wordsStringParser"),
-			self._mm.mods(type="qtApp"),
+			self._mm.mods(type="javaScriptEvaluator"),
 		)
 		self.priorities = {
 			"default": 20,
 		}
 
-	def _checkForErrors(self):
-		if self._engine.hasUncaughtException():
-			exception = self._engine.uncaughtException()
-			if unicode(exception.property("name").toString()) == "SeparatorError":
-				raise ValueError(unicode(exception.property("message").toString()))
-			raise Exception(exception.toString())
-
-	def parseList(self, string):
-		jsonResult = self._engine.evaluate("JSON.stringify(parseList(%s))" % json.dumps(string))
-		self._checkForErrors()
-
-		result = json.loads(unicode(jsonResult.toString()))
-		for item in result["list"]["items"]:
-			item["questions"] = map(tuple, item["questions"])
-			item["answers"] = map(tuple, item["answers"])
-			item["created"] = datetime.datetime.strptime(item["created"], "%Y-%m-%dT%H:%M:%S.%fZ")
-		return result
+	def parseList(self, *args, **kwargs):
+		try:
+			return self._js["parseList"](*args, **kwargs)
+		except self._js.JSError, e:
+			if e.name == "SeparatorError":
+				raise ValueError(e.message)
+			raise
 
 	def enable(self):
-		global QtScript
-		try:
-			from PyQt4 import QtScript
-		except ImportError:
-			return
 		modules = set(self._mm.mods(type="modules")).pop()
 
-		self._engine = QtScript.QScriptEngine()
+		self._js = modules.default("active", type="javaScriptEvaluator").createEvaluator()
 		self.code = modules.default("active", "javaScriptImplementation", type="wordsStringParser").code
 		with open(self._mm.resourcePath("parser.js")) as f:
 			self.code += "\n\n" + f.read()
-		self._engine.evaluate(self.code, f.name)
-		self._checkForErrors()
+		self._js.eval(self.code)
 
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
-		del self._engine
+		del self._js
 		del self.code
 
 def init(moduleManager):

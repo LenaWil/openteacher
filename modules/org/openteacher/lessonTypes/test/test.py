@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -20,6 +20,7 @@
 
 import unittest
 import datetime
+import copy
 
 class TestCase(unittest.TestCase):
 	def setUp(self):
@@ -39,56 +40,74 @@ class TestCase(unittest.TestCase):
 			],
 		}
 
+	@property
+	def _mods(self):
+		return (
+			set(self._mm.mods("active", type="lessonType")) |
+			set(self._mm.mods("active", type="javaScriptLessonType"))
+		)
+
 	def testEmptyIndexes(self):
 		def newItem(item):
 			self.assertTrue(False, msg="newItem should not be called when an empty indexes list is passed.")
-		for mod in self._mm.mods("active", type="lessonType"):
+		for mod in self._mods:
 			lessonType = mod.createLessonType(self._list, [])
 			lessonType.newItem.handle(newItem)
 			lessonType.start()
 
 	def testItemsInList(self):
 		def newItem(item):
+			#normalize so assertIn can do it's work
+			item["questions"] = map(tuple, item["questions"])
+			item["answers"] = map(tuple, item["answers"])
+
 			self.assertIn(item, self._list["items"])
 			lessonType.setResult({"result": "right", "itemId": item["id"]})
 
-		for mod in self._mm.mods("active", type="lessonType"):
+		for mod in self._mods:
 			lessonType = mod.createLessonType(self._list, range(len(self._list)))
 			lessonType.newItem.handle(newItem)
 			lessonType.start()
 
 	def testLessonDoneCalled(self):
-		def newItem(item):
-			lessonType.setResult({"result": "right", "itemId": item["id"]})
-		def lessonDone():
-			self.assertTrue(self._list["tests"][-1]["finished"])
-			data["called"] = True
-		for mod in self._mm.mods("active", type="lessonType"):
-			try:
-				data = {"called": False}
-				lessonType = mod.createLessonType(self._list, range(len(self._list)))
-				lessonType.newItem.handle(newItem)
-				lessonType.lessonDone.handle(lessonDone)
-				lessonType.start()
-				self.assertTrue(data["called"], msg="Lesson should call lessonDone() before stopping sending next items.")
-			except AssertionError:
-				print mod
-				raise
+		for mod in self._mods:
+			def newItem(item):
+				lessonType.setResult({"result": "right", "itemId": item["id"]})
+
+			def lessonDone():
+				if not mod in self._mm.mods("active", type="javaScriptLessonType"):
+					#The JS evaluator doesn't support pass-by-reference,
+					#so we can't see the list being updated. This is
+					#what makes the javaScript mod not suited for
+					#desktop use. Because of this, the following
+					#assertion is skipped for JS
+					self.assertTrue(usedList["tests"][-1]["finished"])
+				data["called"] = True
+
+			data = {"called": False}
+			usedList = copy.deepcopy(self._list)
+			lessonType = mod.createLessonType(usedList, range(len(usedList)))
+			lessonType.newItem.handle(newItem)
+			lessonType.lessonDone.handle(lessonDone)
+			lessonType.start()
+			self.assertTrue(data["called"], msg="Lesson should call lessonDone() before stopping sending next items.")
 
 	def testGlobalNewItem(self):
 		def func(item):
 			pass
 		for mod in self._mm.mods("active", type="lessonType"):
+			#the JS mod isn't meant to be used on the desktop, so it
+			#doesn't need to have this event.
 			mod.newItem.handle(func)
 
 	def testSkip(self):
-		for mod in self._mm.mods("active", type="lessonType"):
+		for mod in self._mods:
 			lessonType = mod.createLessonType(self._list, range(len(self._list)))
 			lessonType.start()
 			lessonType.skip()
 
 	def testAddPause(self):
-		for mod in self._mm.mods("active", type="lessonType"):
+		for mod in self._mods:
 			lessonType = mod.createLessonType(self._list, range(len(self._list)))
 			lessonType.start()
 			lessonType.addPause({
@@ -97,7 +116,7 @@ class TestCase(unittest.TestCase):
 			})
 
 	def testProperties(self):
-		for mod in self._mm.mods("active", type="lessonType"):
+		for mod in self._mods:
 			lessonType = mod.createLessonType(self._list, range(len(self._list)))
 			lessonType.start()
 			self.assertIsInstance(lessonType.totalItems, int)
@@ -109,8 +128,9 @@ class TestModule(object):
 		self._mm = moduleManager
 
 		self.type = "test"
-		self.requires = (
+		self.uses = (
 			self._mm.mods(type="lessonType"),
+			self._mm.mods(type="javaScriptLessonType"),
 		)
 
 	def enable(self):

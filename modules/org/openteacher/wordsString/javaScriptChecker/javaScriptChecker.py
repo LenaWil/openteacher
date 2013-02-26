@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,8 +18,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import json
-
 class JavascriptCheckerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(JavascriptCheckerModule, self).__init__(*args, **kwargs)
@@ -28,44 +26,29 @@ class JavascriptCheckerModule(object):
 		self.type = "wordsStringChecker"
 		self.javaScriptImplementation = True
 		self.requires = (
-			self._mm.mods(type="qtApp"),
+			self._mm.mods(type="javaScriptEvaluator"),
 		)
 		self.priorities = {
 			"default": 20,
 		}
 
-	def _checkForErrors(self):
-		if self._engine.hasUncaughtException():
-			raise Exception(self._engine.uncaughtException().toString())
-
-	def check(self, givenAnswer, word):
-		statement = "JSON.stringify(check(%s, %s))" % (json.dumps(givenAnswer), json.dumps(word))
-		jsonResult = unicode(self._engine.evaluate(statement).toString())
-		self._checkForErrors()
-
-		return json.loads(jsonResult)
+	def check(self, *args, **kwargs):
+		return self._js["check"](*args, **kwargs)
 
 	def enable(self):
-		global QtScript
-		try:
-			from PyQt4 import QtScript
-		except ImportError:
-			return
-		self._modules = set(self._mm.mods(type="modules")).pop()
+		modules = set(self._mm.mods(type="modules")).pop()
 
-		self._engine = QtScript.QScriptEngine()
 		with open(self._mm.resourcePath("checker.js")) as f:
 			self.code = f.read()
-		self._engine.evaluate(self.code, f.name)
-		self._checkForErrors()
+		self._js = modules.default("active", type="javaScriptEvaluator").createEvaluator()
+		self._js.eval(self.code)
 
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
-		del self._modules
-		del self._engine
+		del self._js
 		del self.code
 
 def init(moduleManager):
