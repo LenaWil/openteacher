@@ -79,8 +79,15 @@ class TestCase(unittest.TestCase):
 
 	def testError(self):
 		for js in self._getEvaluators():
-			with self.assertRaises(Exception):
+			try:
 				js.eval("This should raise some kind of error, right?")
+			except js.JSError, e:
+				self.assertTrue(e)
+				self.assertTrue(e.name)
+				self.assertTrue(e.message)
+				self.assertTrue(e.lineNumber)
+			else:
+				self.assertTrue(False, msg="It didn't raise an error!")
 
 	def testScope(self):
 		for js in self._getEvaluators():

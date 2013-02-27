@@ -20,60 +20,14 @@
 
 import sys
 import os
-import inspect
 import imp
-
-class ModuleFilterer(object):
-	"""This class is used to filter a list of objects ('modules'). By
-	   calling an instance you can add filter requirements. There are
-	   two types of filter requirements:
-	   - an attribute equals a value
-	   - an attribute evaluates to true
-	   
-	   You can run through the results by a for loop, or get them in
-	   a python set/list/tuple/whatever by calling the appropriate
-	   conversion function (e.g. set(ModuleFilterer(modules)) )
-
-	"""
-	def __init__(self, modules, *args, **kwargs):
-		super(ModuleFilterer, self).__init__(*args, **kwargs)
-		self._modules = modules
-
-		self._where = {}
-		self._whereTrue = set()
-
-	def __call__(self, *args, **kwargs):
-		self._whereTrue = self._whereTrue.union(args)
-		self._where.update(kwargs)
-		return self
-
-	def __iter__(self):
-		result = set()
-		for module in self._modules:
-			append = True
-			for attribute, value in self._where.iteritems():
-				if not hasattr(module, attribute):
-					append = False
-					break
-				if getattr(module, attribute) != value:
-					append = False
-					break
-			if not append:
-				continue
-			for attribute in self._whereTrue:
-				#hasattr() and getattr() require strings, but we don't
-				#want to force the user into that, so we convert it
-				#ourselves
-				attribute = str(attribute)
-				if not hasattr(module, attribute):
-					append = False
-					break
-				if not bool(getattr(module, attribute)):
-					append = False
-					break
-			if append:
-				result.add(module)
-		return iter(result)
+try:
+	import pyximport; pyximport.install()
+	import moduleFilterer
+except ImportError:# pragma: no cover
+	import shutil
+	shutil.copy("moduleFilterer.pyx", "moduleFiltererDoNotEdit.py")
+	import moduleFiltererDoNotEdit as moduleFilterer
 
 class ModuleManager(object):
 	"""This class manages modules. It loads them from a directory when
@@ -92,7 +46,7 @@ class ModuleManager(object):
 
 	@staticmethod
 	def _callerOfCallerPath():
-		callerFile = inspect.getouterframes(inspect.currentframe())[2][1]
+		callerFile = sys._getframe(2).f_code.co_filename
 		return os.path.dirname(callerFile)
 
 	@classmethod
@@ -101,7 +55,7 @@ class ModuleManager(object):
 
 	@property
 	def mods(self):
-		return ModuleFilterer(self._modules)
+		return moduleFilterer.ModuleFilterer(self._modules)
 
 	def importFrom(self, path, moduleName):
 		fp, pathname, description = imp.find_module(moduleName, [path])

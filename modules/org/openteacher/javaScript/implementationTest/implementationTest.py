@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -21,14 +21,13 @@
 import unittest
 
 class TestCase(unittest.TestCase):
+	def setUp(self):
+		modules = next(iter(self._mm.mods(type="modules")))
+		self._js = modules.default("active", type="javaScriptEvaluator").createEvaluator()
+
 	def testCodeValidity(self):
 		for mod in self._mm.mods("active", "javaScriptImplementation"):
-			engine = QtScript.QScriptEngine()
-			engine.evaluate(mod.code)
-			self.assertFalse(
-				engine.hasUncaughtException(),
-				"Error in JS mod '%s': %s" % (mod.__class__.__file__, engine.uncaughtException().toString())
-			)
+			self._js.eval(mod.code)
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -37,7 +36,7 @@ class TestModule(object):
 
 		self.type = "test"
 		self.requires = (
-			self._mm.mods(type="qtApp"),
+			self._mm.mods(type="javaScriptEvaluator"),
 		)
 		self.uses = (
 			self._mm.mods("javaScriptImplementation"),

@@ -22,10 +22,7 @@ import datetime
 
 class JSObject(dict):
 	def __getattr__(self, attr):
-		try:
-			return self[attr]
-		except KeyError:
-			return getattr(dict, attr)
+		return self[attr]
 
 	def __setattr__(self, attr, value):
 		self[attr] = value

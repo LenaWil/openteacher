@@ -49,7 +49,7 @@ class TestCase(unittest.TestCase):
 
 	def testEmptyIndexes(self):
 		def newItem(item):
-			self.assertTrue(False, msg="newItem should not be called when an empty indexes list is passed.")
+			self.assertTrue(False, msg="newItem should not be called when an empty indexes list is passed.")# pragma: no cover
 		for mod in self._mods:
 			lessonType = mod.createLessonType(self._list, [])
 			lessonType.newItem.handle(newItem)

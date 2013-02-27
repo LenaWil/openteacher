@@ -102,7 +102,7 @@ class ModulesTest(unittest.TestCase):
 					print mod
 					raise
 #				print ""
-		except Exception, e:
+		except Exception, e:# pragma: no cover
 #			import traceback
 #			traceback.print_exc()
 			raise
