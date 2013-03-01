@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2010, David D Lowe
-#	Copyright 2010-2012, Marten de Vries
+#	Copyright 2010-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -20,6 +20,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 from distutils.core import setup
+from distutils.extension import Extension
 
 setup(
 	name = "@!name!@",
@@ -52,6 +53,11 @@ setup(
 		("share/mime/packages", [
 			"linux/@!package!@.xml"
 		])
+	],
+	ext_modules=[
+		<!--(for name, file in extensions)-->
+		Extension("openteacher.@!name!@", ["openteacher/@!file!@"]),
+		<!--(end)-->
 	],
 	scripts = ["bin/@!package!@"],
 	#a list of classifiers can be found at http://pypi.python.org/pypi?:action=list_classifiers

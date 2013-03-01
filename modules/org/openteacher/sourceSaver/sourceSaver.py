@@ -22,6 +22,7 @@ import tempfile
 import os
 import atexit
 import shutil
+import subprocess
 
 class SourceSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -54,14 +55,27 @@ class SourceSaverModule(object):
 
 		#make /tmp/uuid-here/modules
 		os.mkdir(os.path.join(copyBase, "modules"))
-		#copy python files from the original base dir to /tmp/uuid-here
+		#copy python/cython files from the original base dir to
+		#/tmp/uuid-here
 		for f in os.listdir(originalBase):
-			if not os.path.isfile(os.path.join(originalBase, f)) or not f.endswith(".py"):
+			valid = (
+				os.path.isfile(os.path.join(originalBase, f)) and
+				(
+					f.endswith(".py") or
+					f.endswith(".pyx")
+				)
+			)
+			if not valid:
 				continue
 			shutil.copy(
 				os.path.join(originalBase, f),
 				os.path.join(copyBase, f)
 			)
+		#compile cython (.pyx) files into c extension code
+		for f in os.listdir(copyBase):
+			path = os.path.join(copyBase, f)
+			if path.endswith(".pyx"):
+				subprocess.check_call(["cython", path])
 		#copy all modules available in self._mm.mods
 		for mod in self._mm.mods:
 			dir = os.path.dirname(mod.__class__.__file__)

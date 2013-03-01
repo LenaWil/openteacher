@@ -163,11 +163,18 @@ class SourceWithSetupSaverModule(object):
 		with open(os.path.join(sourcePath, "linux/COPYING"), "w") as f:
 			f.write("application-x-openteachingwords.png, application-x-openteachingtopo.png and application-x-openteachingmedia.png are based on the files words.png, topo.png and media.png of which the licenses are described elsewhere in this package.\n")
 
+		#gather extensions to compile
+		exts = []
+		for f in os.listdir(packagePath):
+			if f.endswith(".c"):
+				exts.append((os.path.splitext(f)[0], f))
+
 		data = self._metadata.copy()
 		data.update({
 			"package": packageName,
 			"package_data": packageData,
-			"image_paths": repr(imagePaths.values())
+			"image_paths": repr(imagePaths.values()),
+			"extensions": exts
 		})
 
 		#setup.py

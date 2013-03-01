@@ -82,12 +82,12 @@ class TestCase(unittest.TestCase):
 			try:
 				js.eval("This should raise some kind of error, right?")
 			except js.JSError, e:
-				self.assertTrue(e)
+				self.assertTrue(str(e))
 				self.assertTrue(e.name)
 				self.assertTrue(e.message)
 				self.assertTrue(e.lineNumber)
 			else:
-				self.assertTrue(False, msg="It didn't raise an error!")
+				self.assertTrue(False, msg="It didn't raise an error!")# pragma: no cover
 
 	def testScope(self):
 		for js in self._getEvaluators():

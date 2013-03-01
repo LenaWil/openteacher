@@ -21,13 +21,7 @@
 import sys
 import os
 import imp
-try:
-	import pyximport; pyximport.install()
-	import moduleFilterer
-except ImportError:# pragma: no cover
-	import shutil
-	shutil.copy("moduleFilterer.pyx", "moduleFiltererDoNotEdit.py")
-	import moduleFiltererDoNotEdit as moduleFilterer
+import moduleFilterer
 
 class ModuleManager(object):
 	"""This class manages modules. It loads them from a directory when

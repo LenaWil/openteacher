@@ -18,14 +18,14 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import moduleManager
-import sys
 import os
 
 MODULES_PATH = os.path.join(os.path.dirname(__file__), "modules")
 
 class ModuleApplication(object):
 	def run(self):
+		import moduleManager
+
 		mm = moduleManager.ModuleManager(MODULES_PATH)
 
 		#check if there's only one execute module
@@ -38,5 +38,11 @@ class ModuleApplication(object):
 		return 0
 
 if __name__ == "__main__":
+	#Used for development only. All packaged versions should call the
+	#ModuleApplication class directly, to circumvent pyximport.
+	import sys
+	import pyximport
+	pyximport.install()
+
 	app = ModuleApplication()
 	sys.exit(app.run())
