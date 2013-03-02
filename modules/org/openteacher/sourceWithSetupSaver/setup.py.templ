@@ -54,11 +54,13 @@ setup(
 			"linux/@!package!@.xml"
 		])
 	],
+	<!--(if extensions)-->
 	ext_modules=[
 		<!--(for name, file in extensions)-->
 		Extension("openteacher.@!name!@", ["openteacher/@!file!@"]),
 		<!--(end)-->
 	],
+	<!--(end)-->
 	scripts = ["bin/@!package!@"],
 	#a list of classifiers can be found at http://pypi.python.org/pypi?:action=list_classifiers
 	classifiers = [

@@ -23,6 +23,7 @@ import os
 import atexit
 import shutil
 import subprocess
+import glob
 
 class SourceSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -41,7 +42,7 @@ class SourceSaverModule(object):
 		for dir in self._dirs:
 			shutil.rmtree(dir)
 
-	def saveSource(self):
+	def _gatherSource(self):
 		print "Please keep in mind that the source export may contain text in the language that OpenTeacher currently uses. If you're building an official package, you should make sure OpenTeacher is running in English, first. (It might currently, this warning isn't a check but just shown always.)\n"
 		#e.g. /tmp/uuid-here
 		copyBase = tempfile.mkdtemp()
@@ -71,11 +72,7 @@ class SourceSaverModule(object):
 				os.path.join(originalBase, f),
 				os.path.join(copyBase, f)
 			)
-		#compile cython (.pyx) files into c extension code
-		for f in os.listdir(copyBase):
-			path = os.path.join(copyBase, f)
-			if path.endswith(".pyx"):
-				subprocess.check_call(["cython", path])
+
 		#copy all modules available in self._mm.mods
 		for mod in self._mm.mods:
 			dir = os.path.dirname(mod.__class__.__file__)
@@ -86,6 +83,21 @@ class SourceSaverModule(object):
 				dir[commonLen:].strip(os.sep)
 			)
 			shutil.copytree(dir, dest, ignore=shutil.ignore_patterns("*.pyc", "*~"))
+		return copyBase
+
+	def saveSourceWithCExtensions(self):
+		copyBase = self._gatherSource()
+
+		#compile cython (.pyx) files into c extension code
+		for path in glob.iglob(os.path.join(copyBase, "*.pyx")):
+			subprocess.check_call(["cython", path])
+		return copyBase
+
+	def saveSource(self):
+		copyBase = self._gatherSource()
+		for path in glob.iglob(os.path.join(copyBase, "*.pyx")):
+			os.rename(path, os.path.splitext(path)[0] + ".py")
+
 		return copyBase
 
 	def disable(self):

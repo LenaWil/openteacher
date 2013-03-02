@@ -54,10 +54,16 @@ class DebianPackagerModule(object):
 		try:
 			buildNumber = sys.argv[1]
 			path = sys.argv[2]
+			cExtensions = sys.argv[3] == "true"
 		except IndexError:
-			sys.stderr.write("Please specify a debian build number and after that a path for the deb file (ending in .deb) as the last command line arguments.\n")
+			sys.stderr.write("Please specify 1) a debian build number, 2) a path for the deb file (ending in .deb) and 3) 'true' to enable c extensions and 'false' to disable c extensions as the last command line arguments.\n")
 			return
-		sourcePath = self._modules.default("active", type="sourceWithSetupSaver").saveSource()
+
+		sourceWithSetupSaver = self._modules.default("active", type="sourceWithSetupSaver")
+		if cExtensions:
+			sourcePath = sourceWithSetupSaver.saveSourceWithCExtensions()
+		else:
+			sourcePath = sourceWithSetupSaver.saveSource()
 		packageName = self._metadata["name"].lower()
 
 		oldCwd = os.getcwd()

@@ -14,8 +14,7 @@
 #!
 #!	You should have received a copy of the GNU General Public License
 #!	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
-#!FIXME: check if this thing comforms to the DTD + check if apps accept
-#!it.
+#!
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE kvtml PUBLIC "kvtml2.dtd" "http://edu.kde.org/kvtml/kvtml2.dtd">
 <kvtml version="2.0">

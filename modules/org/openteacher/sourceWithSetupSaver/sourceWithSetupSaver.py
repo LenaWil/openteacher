@@ -49,9 +49,7 @@ class SourceWithSetupSaverModule(object):
 		)
 		self.filesWithTranslations = ("manpage.templ",)
 
-	def saveSource(self):
-		sourcePath = self._modules.default("active", type="sourceSaver").saveSource()
-
+	def _addSetupAndOtherFiles(self, sourcePath):
 		#move into python package
 		packageName = os.path.basename(sys.argv[0])
 		if packageName.endswith(".py"):
@@ -183,6 +181,16 @@ class SourceWithSetupSaverModule(object):
 			f.write(templ(**data).encode("UTF-8"))
 
 		return sourcePath
+
+	def saveSourceWithCExtensions(self):
+		sourcePath = self._sourceSaver.saveSourceWithCExtensions()
+		return self._addSetupAndOtherFiles(sourcePath)
+
+	def saveSource(self):
+		sourcePath = self._sourceSaver.saveSource()
+		return self._addSetupAndOtherFiles(sourcePath)
+
+	_sourceSaver = property(lambda self: self._modules.default("active", type="sourceSaver"))
 
 	def _buildManPage(self, sourcePath, packageName, lang):
 		translator = self._modules.default("active", type="translator")

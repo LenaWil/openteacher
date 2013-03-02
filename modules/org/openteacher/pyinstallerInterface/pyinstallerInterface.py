@@ -49,10 +49,6 @@ class PyinstallerInterfaceModule(object):
 			self._mm.resourcePath("icon.ico"),
 			os.path.join(path, "icon.ico")
 		)
-		for f in os.listdir(path):
-			path = os.path.join(path, f)
-			if path.endswith(".pyx"):
-				os.rename(path, os.path.splitext(path)[0] + ".py")
 		with open(os.path.join(path, "starter.py"), "w") as f:
 			f.write("""
 import sys

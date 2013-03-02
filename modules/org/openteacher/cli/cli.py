@@ -363,7 +363,6 @@ class CommandLineInterfaceModule(object):
 		try:
 			import urwid
 		except ImportError:
-			#remain inactive
 			urwid = None
 		self._modules = next(iter(self._mm.mods(type="modules")))
 		if self._modules.profile == "cli":

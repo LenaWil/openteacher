@@ -51,7 +51,7 @@ class SourceWithSetupPackagerModule(object):
 			sys.stderr.write("Please specify a path for the source tarball (ending in .tar.gz) as the last command line argument.\n")
 			return
 
-		sourcePath = self._modules.default("active", type="sourceWithSetupSaver").saveSource()
+		sourcePath = self._modules.default("active", type="sourceWithSetupSaver").saveSourceWithCExtensions()
 
 		with tarfile.open(path, "w:gz") as f:
 			for item in os.listdir(sourcePath):
