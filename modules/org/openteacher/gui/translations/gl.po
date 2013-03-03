@@ -8,23 +8,23 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-02-24 21:35+0100\n"
-"PO-Revision-Date: 2012-11-09 23:11+0000\n"
-"Last-Translator: ghas <Unknown>\n"
+"PO-Revision-Date: 2013-03-02 10:29+0000\n"
+"Last-Translator: Miguel Anxo Bouzada <mbouzada@gmail.com>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-25 05:15+0000\n"
-"X-Generator: Launchpad (build 16506)\n"
+"X-Launchpad-Export-Date: 2013-03-03 05:08+0000\n"
+"X-Generator: Launchpad (build 16514)\n"
 "Language: gl\n"
 
 #: gui.py:376
 msgid "Open from file"
-msgstr "Abrir desde arquivo"
+msgstr "Abrir desde ficheiro"
 
 #: ui.py:34
 msgid "Close Tab"
-msgstr "Pechar pestana"
+msgstr "Pechar a lapela"
 
 #: ui.py:97
 msgid "Enter list"
@@ -36,11 +36,11 @@ msgstr "Apréndeme!"
 
 #: ui.py:99
 msgid "Show results"
-msgstr "Mostrar resultados"
+msgstr "Amosar resultados"
 
 #: ui.py:296
 msgid "&File"
-msgstr "&Arquivo"
+msgstr "&Ficheiro"
 
 #: ui.py:297
 msgid "&New"
@@ -76,11 +76,11 @@ msgstr "&Configuración"
 
 #: ui.py:307
 msgid "&View"
-msgstr ""
+msgstr "&Ver"
 
 #: ui.py:308
 msgid "Fullscreen"
-msgstr ""
+msgstr "Pantalla completa"
 
 #: ui.py:310
 msgid "&Help"
@@ -92,7 +92,7 @@ msgstr "&Documentación"
 
 #: ui.py:312
 msgid "&About"
-msgstr "&Acerca de"
+msgstr "&Sobre"
 
 #: ui.py:314
 msgid "Toolbar"
