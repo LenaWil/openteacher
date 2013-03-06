@@ -18,21 +18,16 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class JavascriptListsSynchroniserModule(object):
+class JavascriptApiModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(JavascriptListsSynchroniserModule, self).__init__(*args, **kwargs)
+		super(JavascriptApiModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "javaScriptListsSynchroniser"
-		self.javaScriptImplementation = True
-
-		self.requires = (
-			self._mm.mods(type="javaScriptEvent"),
-		)
+		self.type = "javaScriptApi"
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		with open(self._mm.resourcePath("listsSynchroniser.js")) as f:
+		with open(self._mm.resourcePath("api.js")) as f:
 			self.code = f.read()
 
 		self.active = True
@@ -44,4 +39,4 @@ class JavascriptListsSynchroniserModule(object):
 		del self.code
 
 def init(moduleManager):
-	return JavascriptListsSynchroniserModule(moduleManager)
+	return JavascriptApiModule(moduleManager)

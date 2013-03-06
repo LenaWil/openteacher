@@ -36,7 +36,9 @@ class WebApiServerRunnerModule(object):
 	def _run(self):
 		app = self._modules.default("active", type="webApiServer").app
 		app.config["DATABASE"] = "database.sqlite3"
-		app.run(host="0.0.0.0")
+		app.config["RECAPTCHA_PUBLIC_KEY"] = "put a key here"
+		app.config["RECAPTCHA_PRIVATE_KEY"] = "put a key here"
+		app.run()
 
 	def enable(self):
 		self._modules = next(iter(self._mm.mods(type="modules")))

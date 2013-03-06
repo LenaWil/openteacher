@@ -26,6 +26,7 @@ import datetime
 import flask
 import werkzeug.exceptions
 import bcrypt
+import recaptcha.client.captcha
 
 app = flask.Flask("__main__")
 
@@ -58,7 +59,6 @@ def getConnection():
 				questionLanguage TEXT,
 				answerLanguage TEXT,
 				created timestamp,
-				modified timestamp NOT NULL,
 				title TEXT NOT NULL,
 				items TEXT NOT NULL,
 				tests TEXT NOT NULL,
@@ -162,7 +162,16 @@ def api_get_index():
 			flask.url_for("api_get_lists"),
 			flask.url_for("api_get_shares"),
 		],
+		"services": [
+			flask.url_for("api_get_register"),
+		],
 	})
+
+def register_user():
+	username = flask.request.form["username"]
+	hash = newHash(flask.request.form["password"])
+
+	query_db("INSERT INTO users(username, hash) VALUES (?, ?)", (username, hash))
 
 #users
 @app.route("/users/", methods=["POST"])
@@ -173,14 +182,11 @@ def api_post_users():
 	if app.config.get("KEYCHECK", True) and key is None:
 		return do403()
 
-	#create user
-	username = flask.request.form["username"]
-	hash = newHash(flask.request.form["password"])
-
 	try:
-		query_db("INSERT INTO users(username, hash) VALUES (?, ?)", (username, hash))
+		register_user()
 	except sqlite3.IntegrityError:
 		return do403()
+
 	return doSuccess()
 
 @app.route("/users/<username>", methods=["PUT"])
@@ -213,17 +219,16 @@ def api_delete_user(username):
 @app.route("/lists/", methods=["GET"])
 @requires_auth
 def api_get_lists():
-	lists = query_db("SELECT id, type, title, questionLanguage, answerLanguage, created, modified FROM lists WHERE owner=? ORDER BY type, title", (flask.g.user_id,))
+	lists = query_db("SELECT id, type, title, questionLanguage, answerLanguage, created FROM lists WHERE owner=? ORDER BY type, title", (flask.g.user_id,))
 	for list in lists:
 		list["url"] = flask.url_for("api_get_list", id=list["id"])
 		list["created"] = list["created"].isoformat()
-		list["modified"] = list["modified"].isoformat()
 	return flask.jsonify({"result": lists})
 
 @app.route("/lists/", methods=["POST"])
 @requires_auth
 def api_post_lists():
-	query_db("INSERT INTO lists(type, title, items, questionLanguage, answerLanguage, created, modified, tests, owner) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (
+	query_db("INSERT INTO lists(type, title, items, questionLanguage, answerLanguage, created, tests, owner) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (
 		flask.request.form["type"],
 		flask.request.form["title"],
 		flask.request.form["items"],
@@ -233,7 +238,6 @@ def api_post_lists():
 			flask.request.form.get("created", datetime.datetime.now().isoformat()),
 			"%Y-%m-%dT%H:%M:%S.%f",
 		),
-		flask.request.form.get("modified", datetime.datetime.now()),
 		flask.request.form.get("tests", "[]"),
 		flask.g.user_id,
 	))
@@ -242,10 +246,9 @@ def api_post_lists():
 @app.route("/lists/<id>", methods=["GET"])
 @requires_auth
 def api_get_list(id):
-	list = query_db("SELECT id, type, title, questionLanguage, answerLanguage, created, modified, items, tests FROM lists WHERE id=? AND owner=?", (id, flask.g.user_id), one=True)
+	list = query_db("SELECT id, type, title, questionLanguage, answerLanguage, created, items, tests FROM lists WHERE id=? AND owner=?", (id, flask.g.user_id), one=True)
 	if list is not None:
 		list["created"] = list["created"].isoformat()
-		list["modified"] = list["modified"].isoformat()
 
 		return flask.jsonify({"result": list})
 	else:
@@ -255,7 +258,7 @@ def api_get_list(id):
 @app.route("/lists/<id>", methods=["PUT"])
 @requires_auth
 def api_put_list(id):
-	query_db("UPDATE lists SET type=?, title=?, items=?, questionlanguage=?, answerLanguage=?, created=?, modified=?, tests=? WHERE id=? AND owner=?", (
+	query_db("UPDATE lists SET type=?, title=?, items=?, questionlanguage=?, answerLanguage=?, created=?, tests=? WHERE id=? AND owner=?", (
 		flask.request.form["type"],
 		flask.request.form["title"],
 		flask.request.form["items"],
@@ -265,7 +268,6 @@ def api_put_list(id):
 			flask.request.form.get("created", datetime.datetime.now().isoformat()),
 			"%Y-%m-%dT%H:%M:%S.%f",
 		),
-		datetime.datetime.now(),
 		flask.request.form.get("tests", "[]"),
 		id,
 		flask.g.user_id,
@@ -323,13 +325,12 @@ def api_get_share(name):
 	share = query_db("SELECT id, name, description FROM shares WHERE name=?", (name,), one=True)
 	if share is None:
 		return do404()
-	lists = query_db("SELECT l.id, l.type, l.title, l.questionLanguage, l.answerLanguage, l.created, l.modified FROM lists l, lists_shares ls WHERE ls.list_id = l.id AND ls.share_id=?", (share["id"],))
+	lists = query_db("SELECT l.id, l.type, l.title, l.questionLanguage, l.answerLanguage, l.created FROM lists l, lists_shares ls WHERE ls.list_id = l.id AND ls.share_id=?", (share["id"],))
 	#no need to expose to the users
 	del share["id"]
 
 	for list in lists:
 		list["created"] = list["created"].isoformat()
-		list["modified"] = list["modified"].isoformat()
 		list["url"] = flask.url_for("api_get_share_list", share_name=name, list_id=list["id"])
 
 	return flask.jsonify({"result": {
@@ -365,12 +366,11 @@ def api_post_share_list(share_name):
 
 @app.route("/shares/<share_name>/<list_id>", methods=["GET"])
 def api_get_share_list(share_name, list_id):
-	list = query_db("SELECT l.type, l.title, l.questionLanguage, l.answerLanguage, l.created, l.modified, l.items FROM lists l, lists_shares ls, shares s WHERE s.name = ? AND ls.share_id = s.id AND ls.list_id=l.id AND l.id=?", (share_name, list_id), one=True)
+	list = query_db("SELECT l.type, l.title, l.questionLanguage, l.answerLanguage, l.created, l.items FROM lists l, lists_shares ls, shares s WHERE s.name = ? AND ls.share_id = s.id AND ls.list_id=l.id AND l.id=?", (share_name, list_id), one=True)
 	if list is None:
 		return do404()
 
 	list["created"] = list["created"].isoformat()
-	list["modified"] = list["modified"].isoformat()
 	return flask.jsonify({"result": list})
 
 @app.route("/shares/<share_name>/<list_id>", methods=["DELETE"])
@@ -386,5 +386,38 @@ def api_delete_share_list(share_name, list_id):
 	else:
 		return do404()
 
+@app.route("/register/", methods=["GET"])
+def api_get_register():
+	redirect = flask.request.args["redirect"]
+	publicKey = app.config["RECAPTCHA_PUBLIC_KEY"]
+	captcha = recaptcha.client.captcha.displayhtml(publicKey)
+	with open(app.config["TEMPLATE_PATH"]) as f:
+		return flask.render_template_string(f.read(), captcha=captcha, redirect=redirect)
+
+@app.route("/register/send", methods=["POST"])
+def api_post_register_send():
+	challenge = flask.request.form["recaptcha_challenge_field"]
+	response = flask.request.form["recaptcha_response_field"]
+	private_key = app.config["RECAPTCHA_PRIVATE_KEY"]
+	ip = flask.request.remote_addr
+	valid = recaptcha.client.captcha.submit(challenge, response, private_key, ip).is_valid
+
+	success = False
+	if valid:
+		try:
+			register_user()
+		except sqlite3.IntegrityError:
+			pass
+		else:
+			success = True
+	redirect_url = flask.request.form["redirect"]
+	return flask.redirect(redirect_url + "?success=" + "true" if success else "false")
+
 if __name__ == "__main__":
+	#some placeholder values useful for debugging.
+	app.config["RECAPTCHA_PUBLIC_KEY"] = "put a key here"
+	app.config["RECAPTCHA_PRIVATE_KEY"] = "put a key here"
+	import os
+	app.config["TEMPLATE_PATH"] = os.path.join(os.path.dirname(__file__), "template.html")
+	app.config["DATABASE"] = "database.sqlite3"
 	app.run(debug=True)

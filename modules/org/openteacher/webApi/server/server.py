@@ -32,6 +32,7 @@ class WebApiServerModule(object):
 			return
 		else:
 			self.app = self._server.app
+			self.app.config["TEMPLATE_PATH"] = self._mm.resourcePath("template.html")
 
 		self.active = True
 
