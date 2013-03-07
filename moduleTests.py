@@ -18,12 +18,12 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+import pyximport; pyximport.install()
 import moduleManager
 import unittest
 import openteacher
 import json
-import faulthandler
-faulthandler.enable()
+import faulthandler; faulthandler.enable()
 
 class ModulesTest(unittest.TestCase):
 	def setUp(self):
