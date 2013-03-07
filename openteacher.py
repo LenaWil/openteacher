@@ -38,11 +38,13 @@ class ModuleApplication(object):
 		return 0
 
 if __name__ == "__main__":
-	#Used for development only. All packaged versions should call the
-	#ModuleApplication class directly, to circumvent pyximport.
 	import sys
-	import pyximport
-	pyximport.install()
+	try:
+		import pyximport
+	except ImportError:
+		pass
+	else:
+		pyximport.install()
 
 	app = ModuleApplication()
 	sys.exit(app.run())
