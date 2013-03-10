@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-03-07 14:15+0100\n"
+"POT-Creation-Date: 2013-03-10 16:41+0100\n"
 "PO-Revision-Date: 2012-05-23 14:57+0000\n"
 "Last-Translator: Wang Dianjin <Unknown>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-03-08 05:01+0000\n"
 "X-Generator: Launchpad (build 16523)\n"
-"Language: \n"
 
 #: openteacherAuthors.py:71 openteacherAuthors.py:72 openteacherAuthors.py:73
 msgid "Core developer"
@@ -72,7 +72,17 @@ msgstr ""
 #: openteacherAuthors.py:148 openteacherAuthors.py:149
 #: openteacherAuthors.py:150 openteacherAuthors.py:151
 #: openteacherAuthors.py:152 openteacherAuthors.py:153
-#: openteacherAuthors.py:154
+#: openteacherAuthors.py:154 openteacherAuthors.py:155
+#: openteacherAuthors.py:156 openteacherAuthors.py:157
+#: openteacherAuthors.py:158 openteacherAuthors.py:159
+#: openteacherAuthors.py:160 openteacherAuthors.py:161
+#: openteacherAuthors.py:162 openteacherAuthors.py:163
+#: openteacherAuthors.py:164 openteacherAuthors.py:165
+#: openteacherAuthors.py:166 openteacherAuthors.py:167
+#: openteacherAuthors.py:168 openteacherAuthors.py:169
+#: openteacherAuthors.py:170 openteacherAuthors.py:171
+#: openteacherAuthors.py:172 openteacherAuthors.py:173
+#: openteacherAuthors.py:174
 #, python-format
 msgid "Translator (%s)"
 msgstr "翻译者(%s)"

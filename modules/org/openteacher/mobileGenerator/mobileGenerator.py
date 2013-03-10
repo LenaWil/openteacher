@@ -117,7 +117,7 @@ class MobileGeneratorModule(object):
 			path = sys.argv[1]
 			minify = True if sys.argv[2] == "true" else False
 		except IndexError:
-			print >> sys.stderr, "Please specify a path to safe the mobile site to and 'true' if you want to minify as last command line arguments. (e.g. -p generate-mobile mobile-debug false)"
+			print >> sys.stderr, "Please specify a path to save the mobile site to and 'true' if you want to minify as last command line arguments. (e.g. -p generate-mobile mobile-debug false)"
 			return
 		#ask if overwrite
 		if os.path.isdir(path):
