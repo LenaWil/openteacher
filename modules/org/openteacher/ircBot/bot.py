@@ -72,7 +72,8 @@ class OpenTeacherBot(irc.IRCClient):
 		".modulemap": "http://vps.marten-de-vries.nl/openteacher-code-documentation/module_graph.svg",
 		".peps": "http://www.python.org/dev/peps/",
 		".api": "http://web.openteacher.org/api/",
-		".profiling-results": "http://vps.marten-de-vries.nl/openteacher-profiling-results/"
+		".profiling-results": "http://vps.marten-de-vries.nl/openteacher-profiling-results/",
+		".website-preview": "http://vps.marten-de-vries.nl/openteacher-website-preview/",
 	}
 	factoids[".launchpad"] = factoids[".lp"]
 	factoids[".download"] = factoids[".downloads"]
@@ -102,6 +103,7 @@ class OpenTeacherBot(irc.IRCClient):
 	factoids[".profiling"] = factoids[".profiling-results"]
 	factoids[".cProfile"] = factoids[".profiling-results"]
 	factoids[".performance"] = factoids[".profiling-results"]
+	factoids[".website-dev"] = factoids[".website-preview"]
 
 	@property
 	def nickname(self):
