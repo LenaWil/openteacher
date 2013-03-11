@@ -152,5 +152,10 @@ class WebsiteGeneratorModule(object):
 
 		self.active = True
 
+	def disable(self):
+		self.active = False
+
+		del self._modules
+
 def init(moduleManager):
 	return WebsiteGeneratorModule(moduleManager)

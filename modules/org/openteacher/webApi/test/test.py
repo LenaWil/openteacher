@@ -22,12 +22,17 @@ import unittest
 import tempfile
 import os
 import json
+import sys
 
 class TestCase(unittest.TestCase):
 	@classmethod
 	def setUpClass(cls):
 		if not cls.advanced:
 			return
+		#monkey patch the bcrypt module, gave the test suite a 9 second
+		#speedup when this comment was written. Worth it.
+		sys.modules["bcrypt"].hashpw = lambda password, salt_or_hash: password
+
 		cls.clients = []
 		for mod in cls._mm.mods("active", type="webApiServer"):
 			mod.app.config["TESTING"] = True
