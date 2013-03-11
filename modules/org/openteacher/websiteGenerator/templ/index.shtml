@@ -1,5 +1,5 @@
 <!--(set_escape)-->
-	html
+None
 <!--(end)-->
 
 <!--#if expr="$QUERY_STRING = /p=([a-zA-Z0-9]+)/" -->
