@@ -27,13 +27,13 @@ class WebsiteGeneratorModule(object):
 		super(WebsiteGeneratorModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 		
-		self.type = "website"
+		self.type = "websiteGenerator"
 		
 		self.requires = (
 			self._mm.mods(type="execute"),
 		)
 		self.uses = (
-			self._mm.mods(type="profileDescription"),
+			self._mm.mods(type="translator"),
 		)
 		
 		self.priorities = {
@@ -52,18 +52,19 @@ class WebsiteGeneratorModule(object):
 			print >> sys.stderr, "Please specify a path to save the website to. (e.g. -p generate-website website-debug)"
 			return
 		#ask if overwrite
-		if os.path.isdir(path):
+		if os.path.exists(path):
 			confirm = raw_input("There is already a directory at '%s'. Do you want to remove it and continue (y/n). " % path)
 			if confirm != "y":
 				return
 			shutil.rmtree(path)
-		else:
-			os.mkdir(path)
+
+		os.mkdir(path)
 		
 		# Copy images, scripts etc.
 		shutil.copytree(self._mm.resourcePath("images"), os.path.join(path, "images"))
 		shutil.copytree(self._mm.resourcePath("scripts"), os.path.join(path, "scripts"))
 		shutil.copy(self._mm.resourcePath("style.css"), os.path.join(path, "style.css"))
+		shutil.copy(self._mm.resourcePath("index.php"), os.path.join(path, "index.php"))
 		
 		templates = ["index.shtml", "download.html", "contribute.html", "home.html", "about.html", "documentation.html"]
 		docs = ["faq.html", "install-arch.html", "install-ubuntu.html", "the-openteacher-format.html", "translator-notes.html", "using-openteacher.html"]

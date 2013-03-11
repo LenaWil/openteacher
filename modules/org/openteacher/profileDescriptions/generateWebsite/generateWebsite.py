@@ -29,7 +29,7 @@ class ProfileDescriptionModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ("website.py",)
+		self.filesWithTranslations = ("generateWebsite.py",)
 
 	def _retranslate(self):
 		try:
@@ -50,7 +50,6 @@ class ProfileDescriptionModule(object):
 		if len(set(self._mm.mods(type="websiteGenerator"))) == 0: # pragma: no cover
 			return #remain inactive
 		try:
-			import polib
 			import pyratemp
 		except ImportError:
 			return #remain inactive
