@@ -2,16 +2,6 @@
 None
 <!--(end)-->
 
-<!--#if expr="$QUERY_STRING = /p=([a-zA-Z0-9]+)/" -->
-<!--#set var="p" value="$1" -->
-<!--#else -->
-<!--#set var="p" value="home" -->
-<!--#endif -->
-
-<!--#if expr="$QUERY_STRING = /s=([a-zA-Z0-9-]+)/" -->
-<!--#set var="s" value="$1" -->
-<!--#endif -->
-
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -20,20 +10,20 @@ None
 <meta name="google-site-verification" content="aqMocrCswPAdT7vDJmu6PzP0smkUD1VotXA5533zh4A" />
 <meta name="description" content="@!tr('Free and open source language tutor. Helps you learn for your tests and check your knowledge. Improves your school grades.')!@" />
 <meta name="keywords" content="openteacher, open teacher, language tutor, learn language, language teacher, learn foreign language, foreign language, teacher program, language lessons" />
-<link href="../style.css" rel="stylesheet" type="text/css" />
+<link href="@!url('../style.css')!@" rel="stylesheet" type="text/css" />
 <link rel="shortcut icon" href="openteacher-icon.ico" />
 <link href="https://plus.google.com/110111932125055034719/" rel="publisher" />
 <title>OpenTeacher - @!tr('Free exam training software')!@</title>
-<script src="../scripts/jquery-1.9.1.min.js" type="text/javascript"></script>
-<script src="../scripts/os.js" type="text/javascript"></script>
-<script src="../scripts/menuLight.js" type="text/javascript"></script>
-<script src="../scripts/menuPag.js" type="text/javascript"></script>
-<script src="../scripts/thumbnails.js" type="text/javascript"></script>
-<script src="../scripts/downloadButton.js" type="text/javascript"></script>
-<script src="../scripts/linkToHere.js" type="text/javascript"></script>
+<script src="@!url('../scripts/jquery-1.9.1.min.js')!@" type="text/javascript"></script>
+<script src="@!url('../scripts/os.js')!@" type="text/javascript"></script>
+<script src="@!url('../scripts/menuLight.js')!@" type="text/javascript"></script>
+<script src="@!url('../scripts/menuPag.js')!@" type="text/javascript"></script>
+<script src="@!url('../scripts/thumbnails.js')!@" type="text/javascript"></script>
+<script src="@!url('../scripts/downloadButton.js')!@" type="text/javascript"></script>
+<script src="@!url('../scripts/linkToHere.js')!@" type="text/javascript"></script>
 <script type="text/javascript">
 // Set current menu item
-selectedMenuItem = '#<!--#echo var="p" -->Link';
+selectedMenuItem = '@!pageName!@Link';
 </script>
 <script type="text/javascript">
 var _gaq = _gaq || [];
@@ -57,21 +47,17 @@ _gaq.push(['_trackPageview']);
 			<a href="../nl"><img src="../images/flags/nl.gif" alt="Nederlands" /></a>
 		</div>
 		<ul id="menu">
-			<li><a class="aLink menuLink" id="homeLink" href="@!siteroot!@home.html" rel="home">@!tr('Home')!@</a></li>
-			<li><a class="aLink menuLink" id="aboutLink" href="@!siteroot!@about.html" rel="about">@!tr('About')!@</a></li>
-			<li><a class="aLink menuLink" id="downloadLink" href="@!siteroot!@download.html" rel="download">@!tr('Download')!@</a></li>
-			<li><a class="aLink menuLink" id="documentationLink" href="@!siteroot!@documentation.html" rel="documentation">@!tr('Documentation')!@</a></li>
-			<li><a class="aLink menuLink" id="contributeLink" href="@!siteroot!@contribute.html" rel="contribute">@!tr('Contribute')!@</a></li>
+			<li><a class="aLink menuLink" id="indexLink" href="@!url('index.html')!@" rel="index">@!tr('Home')!@</a></li>
+			<li><a class="aLink menuLink" id="aboutLink" href="@!url('about.html')!@" rel="about">@!tr('About')!@</a></li>
+			<li><a class="aLink menuLink" id="downloadLink" href="@!url('download.html')!@" rel="download">@!tr('Download')!@</a></li>
+			<li><a class="aLink menuLink" id="documentationLink" href="@!url('documentation.html')!@" rel="documentation">@!tr('Documentation')!@</a></li>
+			<li><a class="aLink menuLink" id="contributeLink" href="@!url('contribute.html')!@" rel="contribute">@!tr('Contribute')!@</a></li>
 		</ul>
 
 		<div id="menuLight"></div>
 	</div>
 	<div id="content">
-	<!--#if expr="$p = documentation && $s" -->
-	<!--#include file="${p}/${s}.html" -->
-	<!--#else -->
-	<!--#include file="${p}.html" -->
-	<!--#endif -->
+		@!content!@
 	</div>
 </div>
 

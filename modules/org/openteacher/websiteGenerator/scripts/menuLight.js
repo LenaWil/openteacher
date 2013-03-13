@@ -11,7 +11,7 @@ function lightMove(selector) {
 $(document).ready(function() {
 	// Make light visible and on right place
 	$('#menuLight').show();
-	$('#menuLight').css('left', lightPos('#homeLink') + 'px');
+	$('#menuLight').css('left', lightPos('#indexLink') + 'px');
 	
 	// Hovering over menu items makes light move
 	$('.menuLink').hover(function() {

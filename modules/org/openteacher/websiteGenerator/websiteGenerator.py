@@ -21,30 +21,56 @@
 import sys
 import os
 import shutil
+import glob
+
+DOWNLOAD_LINK = "http://sourceforge.net/projects/openteacher/files/openteacher/3.1/openteacher-3.1-windows-setup.msi/download"
 
 class WebsiteGeneratorModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(WebsiteGeneratorModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
-		
+
 		self.type = "websiteGenerator"
-		
+
 		self.requires = (
 			self._mm.mods(type="execute"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		
+
 		self.priorities = {
 			"generate-website": 0,
 			"default": -1,
 		}
-		
-		self.filesWithTranslations = [('templ/' + name) for name in os.listdir(self._mm.resourcePath('templ'))] + \
-		                             [('docs/' + name) for name in os.listdir(self._mm.resourcePath('docs'))]
-	
+
+		self._templatesDir = self._mm.resourcePath("templates")
+		self._docsTemplatesDir = self._mm.resourcePath("docsTemplates")
+
+		templatesFiles = glob.glob(os.path.join(self._templatesDir, "/*"))
+		docTemplatesFiles = glob.glob(os.path.join(self._docsTemplatesDir, "/*"))
+		self.filesWithTranslations = templatesFiles + docTemplatesFiles
+
 	def generateWebsite(self):
+		"""Generates the complete OT website into a directory specified
+		   as the first command line argument.
+
+		"""
+		self._path = self._makeOutputDir()
+		if not self._path:
+			return
+
+		self._copyResources()
+		self._generateHtml()
+
+		print "Writing OpenTeacher website to '%s' is now done." % self._path
+
+	def _makeOutputDir(self):
+		"""Gets the output directory name and creates it. Asks if
+		   overwriting it is allowed in case that's needed. Returns True
+		   on success, otherwise False.
+
+		"""
 		#get path to save to
 		try:
 			path = sys.argv[1]
@@ -59,31 +85,34 @@ class WebsiteGeneratorModule(object):
 			shutil.rmtree(path)
 
 		os.mkdir(path)
-		
+		return path
+
+	def _copyResources(self):
+		"""Copies all static website resources into place."""
+
+		copyTree = lambda name: shutil.copytree(
+			self._mm.resourcePath(name),
+			os.path.join(self._path, name)
+		)
+		copy = lambda name: shutil.copy(
+			self._mm.resourcePath(name),
+			os.path.join(self._path, name)
+		)
 		# Copy images, scripts etc.
-		shutil.copytree(self._mm.resourcePath("images"), os.path.join(path, "images"))
-		shutil.copytree(self._mm.resourcePath("scripts"), os.path.join(path, "scripts"))
-		shutil.copy(self._mm.resourcePath("style.css"), os.path.join(path, "style.css"))
-		shutil.copy(self._mm.resourcePath("index.php"), os.path.join(path, "index.php"))
-		
-		templates = ["index.shtml", "download.html", "contribute.html", "home.html", "about.html", "documentation.html"]
-		docs = ["faq.html", "install-arch.html", "install-ubuntu.html", "the-openteacher-format.html", "translator-notes.html", "using-openteacher.html"]
-		
-		constants = {
-			'siteroot': 'http://www.openteacher.org/',
-			'downloadLink': 'http://sourceforge.net/projects/openteacher/files/openteacher/3.1/openteacher-3.1-windows-setup.msi/download',
-		}
-		
+		copyTree("images")
+		copyTree("scripts")
+		copy("style.css")
+		copy("index.php")
+
+	def _generateHtml(self):
+		"""Generates all html files: first for US English and then for
+		   all the available translations.
+
+		"""
 		# The default (US English) (unicode as translate function)
-		os.mkdir(os.path.join(path, 'en'))
-		
-		# Make constants
-		cconstants = constants.copy()
-		cconstants['langroot'] = constants['siteroot'] + 'en/'
-		
-		# Generate
-		self._generatePages(templates, docs, cconstants, unicode, os.path.join(path, 'en'))
-		
+		self._tr = unicode
+		self._generatePages("en")
+
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:
@@ -94,60 +123,94 @@ class WebsiteGeneratorModule(object):
 				if not poname.endswith('.po'):
 					continue
 				langCode = os.path.splitext(poname)[0]
-				
-				langpath = os.path.join(path, langCode)
-				os.mkdir(langpath)
-				
+
 				# Set translation function
 				_, ngettext = translator.gettextFunctions(self._mm.resourcePath("translations"), language=langCode)
-				
-				# Make constants
-				cconstants = constants.copy()
-				cconstants['langroot'] = constants['siteroot'] + langCode + '/'
-				
+				self._tr = _
+
 				# Generate
-				self._generatePages(templates, docs, cconstants, _, langpath)
-		
-		print "Writing OpenTeacher website to '%s' is now done." % path
-	
-	def _generatePages(self, templates, docs, constants, tr, path):
-		# Normal pages
-		for templ in templates:
-			self._writeTemplate(self._mm.resourcePath("templ/" + templ), os.path.join(path, templ), constants, tr)
-		
-		# Documentation pages
-		os.mkdir(os.path.join(path, "documentation"))
-		for doc in docs:
-			docconsts = {
-				'docPage': self._getTemplate(self._mm.resourcePath("docs/" + doc), constants, tr),
-			}
-			docconsts.update(constants)
-			self._writeTemplate(self._mm.resourcePath("templ/docpage.html"), os.path.join(path, "documentation/" + doc), docconsts, tr)
-	
-	def _getTemplate(self, template, consts, tr):
+				self._generatePages(langCode)
+
+	def _generatePages(self, lang):
+		"""Generates all pages in a certain language in a subdirectory
+		   of the main output path. First it generates the normal pages,
+		   then the documentation ones.
+
+		"""
+		self._langDir = os.path.join(self._path, lang)
+		os.mkdir(self._langDir)
+
+		templates = ["about.html", "download.html", "documentation.html", "index.html", "contribute.html"]
+		for pageName in templates:
+			self._generatePage(pageName)
+
+		docsDir = os.path.join(self._langDir, "documentation")
+		os.mkdir(docsDir)
+		documentationTemplates = os.listdir(self._docsTemplatesDir)
+		for filename in documentationTemplates:
+			self._generateDocumentationPage(filename)
+
+	def _generateDocumentationPage(self, filename):
+		"""Combines the documentation text, with the stuff shared
+		   between all documentation pages, and wraps the result in a
+		   page.
+
+		"""
+		#the documentation text
+		templatePath = os.path.join(self._docsTemplatesDir, filename)
+		pageName = "documentation/" + filename
+		docContent = self._evaluateTemplate(templatePath, pageName)
+
+		#the documentation wrapper
+		templatePath = os.path.join(self._templatesDir, "docpage.html")
+		content = self._evaluateTemplate(templatePath, pageName, docContent=docContent)
+
+		self._writePage(pageName, content)
+
+	def _generatePage(self, pageName):
+		"""Gets the content of the page, and writes it into a page."""
+
+		filename = os.path.join(self._templatesDir, pageName)
+		content = self._evaluateTemplate(filename, pageName, downloadLink=DOWNLOAD_LINK)
+
+		self._writePage(pageName, content)
+
+	def _writePage(self, pageName, content):
+		"""Wraps content into a page template and writes the result to
+		   disk
+
+		"""
+		page = self._wrapContent(pageName, content)
+
+		with open(os.path.join(self._langDir, pageName), "w") as f:
+			f.write(page)
+
+	def _wrapContent(self, pageName, content):
+		"""Wraps content into a page template"""
+
+		filename = os.path.join(self._templatesDir, "base.html")
+		return self._evaluateTemplate(filename, pageName, pageName=pageName, content=content)
+
+	def _evaluateTemplate(self, templatePath, thisPage, **kwargs):
 		class EvalPseudoSandbox(pyratemp.EvalPseudoSandbox):
 			def __init__(self2, *args, **kwargs):
 				pyratemp.EvalPseudoSandbox.__init__(self2, *args, **kwargs)
-				self2.register("tr", tr)
-		
-		t = pyratemp.Template(filename=template, eval_class=EvalPseudoSandbox)
-		return t(**consts)
-	
-	def _writeTemplate(self, template, outfile, constants, tr):
-		result = self._getTemplate(template, constants, tr)
-		
-		with open(outfile, 'w') as f:
-			f.write(result)
-	
+				self2.register("tr", self._tr)
+				currentDir = os.path.dirname(thisPage)
+				self2.register("url", lambda name: os.path.relpath(name, currentDir))
+
+		t = pyratemp.Template(filename=templatePath, eval_class=EvalPseudoSandbox)
+		return t(**kwargs)
+
 	def enable(self):
 		global pyratemp
 		try:
 			import pyratemp
 		except ImportError:
 			sys.stderr.write("For this developer module to work, you need to have pyratemp installed.\n")
-		
+
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		
+
 		self._modules.default(type="execute").startRunning.handle(self.generateWebsite)
 
 		self.active = True
