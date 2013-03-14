@@ -127,6 +127,7 @@ class CommandLineInterfaceModule(object):
 			self._mm.mods(type="load"),
 			self._mm.mods(type="save"),
 			self._mm.mods(type="reverser"),
+			self._mm.mods(type="ocrWordListLoader"),
 		)
 		self.priorities = {
 			"cli": 0,
@@ -244,6 +245,11 @@ class CommandLineInterfaceModule(object):
 
 		self._save("words", lesson, args["output-file"])
 
+	def _ocrWordList(self, args):
+		loadWordList = self._modules.default("active", type="ocrWordListLoader").loadWordList
+		lesson = loadWordList(args["input-file"])
+		self._save("words", lesson, args["output-file"])
+
 	def _save(self, type, lesson, path):
 		#also strip the dot.
 		ext = os.path.splitext(path)[1][1:]
@@ -330,6 +336,14 @@ class CommandLineInterfaceModule(object):
 			viewWordList.add_argument("input-files", nargs="+", help="input files")
 			viewWordList.add_argument("+p", "++part", choices=["list", "title", "question-lang", "answer-lang"], default="list")
 			viewWordList.set_defaults(func=self._viewWordList)
+
+		#saver & ocrWordListLoader required
+		if set(self._mm.mods("active", type="save")) and set(self._mm.mods("active", type="ocrWordListLoader")):
+			#ocr-word-list
+			ocrWordList = subparsers.add_parser("ocr-word-list", help="load a word list from a scan or photo", prefix_chars="+")
+			ocrWordList.add_argument("input-file", help="input file")
+			ocrWordList.add_argument("output-file", help="output file")
+			ocrWordList.set_defaults(func=self._ocrWordList)
 
 		#if at least a saver is available
 		if set(self._mm.mods("active", type="save")):

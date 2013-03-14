@@ -199,7 +199,7 @@ class OpenTeacherBot(irc.IRCClient):
 
 		if msg.startswith(".qt "):
 			cls = msg.split(" ")[1]
-			url = "http://qt-project.org/doc/%s.html" % cls
+			url = "http://qt-project.org/doc/qt-4.8/%s.html" % cls
 			try:
 				urllib2.urlopen(url)
 			except urllib2.HTTPError:

@@ -60,9 +60,24 @@ class TestCase(unittest.TestCase):
 		   depend on in my opinion.
 
 		"""
-		for command in ["+h", "convert +h", "reverse-list +h", "view-word-list +h", "new-word-list +h"]:
+		for command in ["+h", "convert +h", "reverse-list +h", "view-word-list +h", "new-word-list +h", "ocr-word-list +h"]:
 			for result in self._test(command):
 				self.assertTrue(result)
+
+	def testOcrWordList(self):
+		"""ocr-word-list inputFile.png outputFile"""
+		if not self.advanced:
+			#write io, too heavy
+			return
+
+		inputFile = self._mm.resourcePath("ocr.png")
+
+		outputFile = tempfile.mkstemp(".otwd")[1]
+		#file shouldn't exist yet.
+		os.remove(outputFile)
+		for result in self._test("ocr-word-list %s %s" % (inputFile, outputFile)):
+			#removing should succeed...
+			os.remove(outputFile)
 
 	def testNewWordList(self):
 		"""new-word-list +t title +q questionLang +a answerLang
