@@ -27,7 +27,9 @@ def getWordsTableItemDelegate():
 	class WordsTableItemDelegate(QtGui.QStyledItemDelegate):
 		"""A default delegate, with the difference that it installs an event
 		   filter for some non-default keys. The equals key and return key
-		   are, from the perspective of Qt, equal to the tab key.
+		   are, from the perspective of Qt, equal to the tab key. It
+		   also allows callers to access the current editor via the
+		   currentEditor property, and paints html when displaying.
 
 		"""
 		def eventFilter(self, object, event):
@@ -41,6 +43,20 @@ def getWordsTableItemDelegate():
 					event.count()
 				)
 			return super(WordsTableItemDelegate, self).eventFilter(object, event)
+
+		def paint(self, painter, option, index):
+			self.initStyleOption(option, index)
+
+			document = QtGui.QTextDocument()
+			text = option.widget.fontMetrics().elidedText(option.text, option.textElideMode, option.rect.width() - document.documentMargin())
+			document.setHtml(text)
+
+			yPos = option.rect.center().y() - option.widget.fontMetrics().height() / 2 - document.documentMargin()
+			startPoint = QtCore.QPoint(option.rect.x(), yPos)
+
+			painter.translate(startPoint)
+			document.drawContents(painter)
+			painter.translate(-startPoint)
 
 		def createEditor(self, parent, option, index):
 			self.currentEditor = super(WordsTableItemDelegate, self).createEditor(
@@ -64,7 +80,7 @@ def getWordsTableView():
 			except AttributeError:
 				#first time.
 				pass
-			
+
 			data = super(WordsTableView, self).setModel(*args, **kwargs)
 
 			self.model().modelReset.connect(self._modelReset)
