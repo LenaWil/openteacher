@@ -21,18 +21,33 @@
 import unittest
 
 class TestCase(unittest.TestCase):
-	def _checkers(self):
-		for mod in self._mm.mods("active", type="spellChecker"):
-			yield mod.createChecker("English")
-
-	def testEnglishWord(self):
+	@property
+	def _mods(self):
 		if not self.advanced:
 			#Quite io heavy. Both detecting the language and doing the
 			#spell checking.
-			return
-		for checker in self._checkers():
-			self.assertTrue(checker.check("test"))
-			self.assertFalse(checker.check("djjdk"))
+			return set()
+		return set(self._mm.mods("active", type="spellChecker"))
+
+	def _englishCheckers(self):
+		for mod in self._mods:
+			yield mod.createChecker(u"English")
+
+	def _nonExistingLanguageCheckers(self):
+		for mod in self._mods:
+			yield mod.createChecker(u"Non existing language")
+
+	def testUnexistingLanguageCheckerWithANonExistingWord(self):
+		for checker in self._nonExistingLanguageCheckers():
+			self.assertTrue(checker.check(u"sdfsdf"))
+
+	def testEnglishWord(self):
+		for checker in self._englishCheckers():
+			self.assertTrue(checker.check(u"test"))
+
+	def testInvalidWord(self):
+		for checker in self._englishCheckers():
+			self.assertFalse(checker.check(u"djjdk"))
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

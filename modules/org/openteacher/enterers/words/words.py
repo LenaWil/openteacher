@@ -24,12 +24,35 @@ import datetime
 import weakref
 
 def getWordsTableItemDelegate():
+	class SpellingHighlighter(QtGui.QSyntaxHighlighter):
+		def __init__(self, checkWord, *args, **kwargs):
+			super(SpellingHighlighter, self).__init__(*args, **kwargs)
+
+			self._checkWord = checkWord
+
+			self._format = QtGui.QTextCharFormat()
+			self._format.setUnderlineColor(QtCore.Qt.red)
+			self._format.setUnderlineStyle(QtGui.QTextCharFormat.SpellCheckUnderline)
+
+		def highlightBlock(self, text):
+			pos = 0
+			if not text:
+				return
+			for word in unicode(text).split(" "):
+				if not (word.endswith(u"…") or self._checkWord(word)):
+					self.setFormat(pos, len(word), self._format)
+				pos += len(word) + 1 #don't forget the space...
+
 	class WordsTableItemDelegate(QtGui.QStyledItemDelegate):
 		"""A default delegate, with the difference that it installs an event
 		   filter for some non-default keys. The equals key and return key
 		   are, from the perspective of Qt, equal to the tab key. It
 		   also allows callers to access the current editor via the
 		   currentEditor property, and paints html when displaying.
+		   
+		   Next to that, it offers spell checking. Set the
+		   'checkQuestion' and 'checkAnswer' properties to a function
+		   that checks one word before using this class because of that.
 
 		"""
 		def eventFilter(self, object, event):
@@ -47,13 +70,29 @@ def getWordsTableItemDelegate():
 		def paint(self, painter, option, index):
 			self.initStyleOption(option, index)
 
+			#set up document with syntax highlighting
 			document = QtGui.QTextDocument()
+			try:
+				if index.column() == 0:
+					check = self.checkQuestion
+				elif index.column() == 1:
+					check = self.checkAnswer
+				else:
+					check = lambda item: True
+			except AttributeError:
+				check = lambda item: True
+			SpellingHighlighter(check, document)
+
+			#get elided text
 			text = option.widget.fontMetrics().elidedText(option.text, option.textElideMode, option.rect.width() - document.documentMargin())
+			#set elided text
 			document.setHtml(text)
 
+			#calculate place to start rendering
 			yPos = option.rect.center().y() - option.widget.fontMetrics().height() / 2 - document.documentMargin()
 			startPoint = QtCore.QPoint(option.rect.x(), yPos)
 
+			#move to place to start rendering, render, and move back.
 			painter.translate(startPoint)
 			document.drawContents(painter)
 			painter.translate(-startPoint)
@@ -67,29 +106,63 @@ def getWordsTableItemDelegate():
 
 def getWordsTableView():
 	class WordsTableView(QtGui.QTableView):
-		def __init__(self, *args, **kwargs):
+		def __init__(self, createChecker, *args, **kwargs):
 			super(WordsTableView, self).__init__(*args, **kwargs)
+
+			self._createChecker = createChecker
 
 			self.setItemDelegate(WordsTableItemDelegate())
 			self.setAlternatingRowColors(True)
 			self.setSortingEnabled(True)
 
+		def _questionLanguageChanged(self):
+			try:
+				lang = self.model().lesson.list["questionLanguage"]
+			except KeyError:
+				pass
+			else:
+				self.itemDelegate().checkQuestion = self._createChecker(lang).check
+				self._wholeModelChanged()
+
+		def _answerLanguageChanged(self):
+			try:
+				lang = self.model().lesson.list["answerLanguage"]
+			except KeyError:
+				pass
+			else:
+				self.itemDelegate().checkAnswer = self._createChecker(lang).check
+				self._wholeModelChanged()
+
+		def _wholeModelChanged(self):
+			self.model().dataChanged.emit(
+				self.model().index(0, 0),
+				self.model().index(self.model().rowCount() -1, self.model().columnCount() -1)
+			)
+
 		def setModel(self, *args, **kwargs):
 			try:
 				self.model().modelReset.disconnect(self._modelReset)
+				self.model().questionLanguageChanged.disconnect(self._questionLanguageChanged)
+				self.model().answerLanguageChanged.disconnect(self._answerLanguageChanged)
 			except AttributeError:
 				#first time.
 				pass
 
-			data = super(WordsTableView, self).setModel(*args, **kwargs)
+			result = super(WordsTableView, self).setModel(*args, **kwargs)
 
 			self.model().modelReset.connect(self._modelReset)
+			self.model().questionLanguageChanged.connect(self._questionLanguageChanged)
+			self.model().answerLanguageChanged.connect(self._answerLanguageChanged)
+
 			#setting the model is 'resetting' too.
 			self._modelReset()
 
-			return data
+			return result
 
 		def _modelReset(self):
+			self._questionLanguageChanged()
+			self._answerLanguageChanged()
+
 			#If the model is empty, let the user start editing
 			#(model has always one starting row.)
 			if self.model().rowCount() == 1:
@@ -136,6 +209,8 @@ class EmptyLesson(object):
 
 def getWordsTableModel():
 	class WordsTableModel(QtCore.QAbstractTableModel):
+		questionLanguageChanged = QtCore.pyqtSignal()
+		answerLanguageChanged = QtCore.pyqtSignal()
 		QUESTIONS, ANSWERS, COMMENT = xrange(3)
 
 		def __init__(self, compose, parse, *args, **kwargs):
@@ -180,10 +255,12 @@ def getWordsTableModel():
 
 		def updateQuestionLanguage(self, questionLanguage):
 			self.lesson.list["questionLanguage"] = unicode(questionLanguage)
+			self.questionLanguageChanged.emit()
 			self.lesson.changed = True
 
 		def updateAnswerLanguage(self, answerLanguage):
 			self.lesson.list["answerLanguage"] = unicode(answerLanguage)
+			self.answerLanguageChanged.emit()
 			self.lesson.changed = True
 
 		def headerData(self, section, orientation, role):
@@ -290,11 +367,11 @@ def getWordsTableModel():
 
 def getEnterWidget():
 	class EnterWidget(QtGui.QSplitter):
-		def __init__(self, keyboardWidget, compose, parse, *args, **kwargs):
+		def __init__(self, createChecker, keyboardWidget, compose, parse, *args, **kwargs):
 			super(EnterWidget, self).__init__(*args, **kwargs)
 
 			#Initialize all widgets
-			self._buildUi(keyboardWidget)
+			self._buildUi(createChecker, keyboardWidget)
 
 			#Install the table model
 			self._wordsTableModel = WordsTableModel(compose, parse)
@@ -343,14 +420,14 @@ def getEnterWidget():
 			self._wordsTableView.edit(i)
 			self._wordsTableView.itemDelegate().currentEditor.deselect()
 
-		def _buildUi(self, keyboardWidget):
+		def _buildUi(self, createChecker, keyboardWidget):
 			self._titleLabel = QtGui.QLabel()
 			self._titleTextBox = QtGui.QLineEdit(self)
 			self._questionLanguageTextBox = QtGui.QLineEdit(self)
 			self._questionLanguageLabel = QtGui.QLabel()
 			self._answerLanguageTextBox = QtGui.QLineEdit(self)
 			self._answerLanguageLabel = QtGui.QLabel()
-			self._wordsTableView = WordsTableView()
+			self._wordsTableView = WordsTableView(createChecker)
 
 			topLayout = QtGui.QGridLayout()
 			topLayout.addWidget(self._titleLabel, 0, 0)
@@ -430,6 +507,7 @@ class WordsEntererModule(object):
 		}
 		self.uses = (
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="spellChecker"),
 			self._mm.mods(type="charsKeyboard"),
 		)
 		self.requires = (
@@ -463,8 +541,20 @@ class WordsEntererModule(object):
 			type="wordsStringParser"
 		).parse
 
+	@property
+	def _createChecker(self):
+		try:
+			return self._modules.default("active", type="spellChecker").createChecker
+		except IndexError:
+			class Fallback(object):
+				def check(self, item):
+					#'everything is a well spelled word'
+					return True
+			return Fallback
+
 	def createWordsEnterer(self):
 		ew = EnterWidget(
+			self._createChecker,
 			self._charsKeyboard,
 			self._compose,
 			self._parse

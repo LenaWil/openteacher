@@ -85,6 +85,7 @@ class LanguageCodeGuesserModule(object):
 				languages=[lang.alpha2],
 				fallback=True
 			)
+			self._index[lang.alpha2] = lang.alpha2
 			self._index[self._re.split(lang.name)[0].lower()] = lang.alpha2
 			self._index[self._re.split(translation.ugettext(lang.name))[0].lower()] = lang.alpha2
 			self._index[self._re.split(nativeTranslation.ugettext(lang.name))[0].lower()] = lang.alpha2

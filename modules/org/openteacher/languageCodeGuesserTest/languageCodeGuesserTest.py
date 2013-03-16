@@ -42,6 +42,13 @@ class TestCase(unittest.TestCase):
 		#This was the 100th test to be written for OT :D
 		self._test("Frysk", "fy")
 		self._test("Frisian", "fy")
+		self._test("fy", "fy")
+
+	def testNonExistingLanguage(self):
+		self._test("jdklfjdf", None)
+
+	def testAlpha2Code(self):
+		self._test("es", "es")
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

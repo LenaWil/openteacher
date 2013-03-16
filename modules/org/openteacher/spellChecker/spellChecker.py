@@ -18,11 +18,18 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+class Fallback(object):
+	def check(self, word):
+		return True
+
 class Checker(object):
 	def __init__(self, languageCode, *args, **kwargs):
 		super(Checker, self).__init__(*args, **kwargs)
 
-		self._dict = enchant.Dict(languageCode)
+		if enchant.dict_exists(languageCode):
+			self._dict = enchant.Dict(languageCode)
+		else:
+			self._dict = Fallback()
 
 	def check(self, word):
 		return self._dict.check(word)
