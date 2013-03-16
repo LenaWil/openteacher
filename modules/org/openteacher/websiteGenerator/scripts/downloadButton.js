@@ -15,7 +15,7 @@ $(document).ready(function() {
 		}
 	});
 	// On click
-	$(document).on('click', '#toDownload', function(event) {
+	$(document).on('click', '#toTheDownloadPage', function(event) {
 		event.preventDefault();
 		loadPage('download');
 	});

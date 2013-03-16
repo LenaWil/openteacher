@@ -173,6 +173,29 @@ class CommandLineInterfaceModule(object):
 
 		self._save(type, lesson, args["output-file"])
 
+	def _merge(self, args):
+		baseType, baseLesson = self._load(args["base-file"])
+		if not baseLesson:
+			print >> sys.stderr, "Couldn't load the base file ('%s'). Not doing the merge." % args["base-file"]
+			return
+		try:
+			merge = self._modules.default("active", type="merger", dataType=baseType).merge
+		except IndexError:
+			print >> sys.stderr, "Can't merge this type of files. Stopping."
+			return
+
+		for inputFile in args["other-files"]:
+			type, lesson = self._load(inputFile)
+			if not lesson:
+				print >> sys.stderr, "Couldn't load the file '%s'. Not doing the merge." % inputFile
+				return
+			if type != baseType:
+				print >> sys.stderr, "The type of the base file ('%s') and the input file '%s' ('%s') aren't equal. Not doing the merge." % (baseType, inputFile, type)
+				return
+			baseLesson = merge(baseLesson, lesson)
+
+		self._save(baseType, baseLesson, args["output-file"])
+
 	def _convert(self, args):
 		inputPaths = self._expandPaths(args["input-files"])
 		outputFormat = args["output_format"]
@@ -321,8 +344,13 @@ class CommandLineInterfaceModule(object):
 			convert.add_argument("input-files", nargs="+", help="input files")
 			convert.set_defaults(func=self._convert)
 
-		#loader & saver required
-		if set(self._mm.mods("active", type="load")) and set(self._mm.mods("active", type="save")):
+			#merge
+			merge = subparsers.add_parser("merge", help="merge files of the same file type", prefix_chars="+")
+			merge.add_argument("output-file", help="output file")
+			merge.add_argument("base-file", help="base file")
+			merge.add_argument("other-files", help="files to merge with base file into output file", nargs="+")
+			merge.set_defaults(func=self._merge)
+
 			#reverse list
 			reverseList = subparsers.add_parser("reverse-list", help="reverse list", prefix_chars="+")
 			reverseList.add_argument("input-file", help="input files")

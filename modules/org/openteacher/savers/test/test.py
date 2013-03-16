@@ -23,6 +23,7 @@ import tempfile
 import copy
 import os
 import datetime
+import shutil
 
 class Lesson(object):
 	def __init__(self, list=None, resources=None):
@@ -51,6 +52,11 @@ class TestCase(unittest.TestCase):
 				self.assertTrue(os.path.getsize(path) > 0)
 
 				os.remove(path)
+				try:
+					#html saver
+					shutil.rmtree(path + ".resources")
+				except OSError:
+					pass
 
 			try:
 				self.assertEqual(lesson.list, lessonCopy.list)

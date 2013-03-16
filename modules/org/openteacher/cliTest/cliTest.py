@@ -60,9 +60,21 @@ class TestCase(unittest.TestCase):
 		   depend on in my opinion.
 
 		"""
-		for command in ["+h", "convert +h", "reverse-list +h", "view-word-list +h", "new-word-list +h", "ocr-word-list +h"]:
+		for command in ["+h", "convert +h", "reverse-list +h", "view-word-list +h", "new-word-list +h", "ocr-word-list +h", "merge +h"]:
 			for result in self._test(command):
 				self.assertTrue(result)
+
+	def testMerge(self):
+		"""merge outFile.otwd fileOne.otwd fileOne.otwd"""
+		if not self.advanced:
+			#write io, too heavy
+			return
+		inputFile = self._mm.resourcePath("testfile.otwd")
+		outputFile = tempfile.mkstemp(".otwd")[1]
+		#file shouldn't exist
+		os.remove(outputFile)
+		for result in self._test("merge %s %s %s" % (outputFile, inputFile, inputFile)):
+			os.remove(outputFile)
 
 	def testOcrWordList(self):
 		"""ocr-word-list inputFile.png outputFile"""

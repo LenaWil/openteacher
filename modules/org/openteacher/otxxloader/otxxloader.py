@@ -74,6 +74,7 @@ class OtxxLoaderModule(object):
 				resourceFile = zipFile.open(filename)
 				
 				shutil.copyfileobj(resourceFile, tf)
+				tf.close()
 				
 				resources[resourceKey] = path2
 
