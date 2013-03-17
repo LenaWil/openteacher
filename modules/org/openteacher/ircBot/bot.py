@@ -80,6 +80,7 @@ class OpenTeacherBot(irc.IRCClient):
 	factoids[".homepage"] = factoids[".website"]
 	factoids[".codedocumentation"] = factoids[".codedocs"]
 	factoids[".code-documentation"] = factoids[".codedocs"]
+	factoids[".code-docs"] = factoids[".codedocs"]
 	factoids[".forumtopic"] = factoids[".forum"]
 	factoids[".mailinglist"] = factoids[".mailarchive"]
 	factoids[".pastebin"] = factoids[".paste"]
