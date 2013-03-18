@@ -48,6 +48,8 @@ def installQtClasses():
 
 		def getExcision(self):
 			size = self._rect.rect().size().toSize()
+			if size.isEmpty():
+				raise ValueError("Empty selection")
 			img = QtGui.QImage(size, QtGui.QImage.Format_ARGB32_Premultiplied)
 			painter = QtGui.QPainter(img)
 			self.scene().render(painter, QtCore.QRectF(), self._rect.rect())
@@ -200,7 +202,14 @@ def installQtClasses():
 			self.setLayout(vbox)
 
 		def initializePage(self):
-			image = self.wizard().getExcision()
+			try:
+				image = self.wizard().getExcision()
+			except ValueError:
+				QtGui.QMessageBox.critical(self, _("No selection was made"), _("No selection was made. Please try again."))
+				#next event loop iteration, otherwise Qt messes up
+				#completely (combining multiple pages).
+				QtCore.QTimer.singleShot(0, self.wizard().back)
+				return
 
 			self._thread = OcrThread(self._loadWordList, image)
 			self._thread.finished.connect(self._showPreview)
