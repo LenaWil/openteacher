@@ -18,11 +18,37 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import subprocess
-import tempfile
+import HTMLParser
 
-from etree import ElementTree
+class HocrParser(HTMLParser.HTMLParser):
+	def __init__(self, *args, **kwargs):
+		HTMLParser.HTMLParser.__init__(self, *args, **kwargs)
+
+		self.rects = []
+		self.capturingData = False
+
+	def handle_starttag(self, tag, attrs):
+		attrs = dict(attrs)
+		if tag == "span" and attrs.get("class") == "ocr_line":
+			positions = attrs.get("title")
+			parts = positions.split(" ")
+
+			self.rects.append({
+				"x": int(parts[1]),
+				"y": int(parts[2]),
+				"width": int(parts[3]) - int(parts[1]),
+				"height": int(parts[4]) - int(parts[2]),
+				"text": u"",
+			})
+			self.capturingData = True
+
+	def handle_endtag(self, tag):
+		if tag == "span":
+			self.capturingData = False
+
+	def handle_data(self, data):
+		if self.capturingData:
+			self.rects[-1]["text"] += data
 
 class OcrWordListLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -32,23 +58,11 @@ class OcrWordListLoaderModule(object):
 		self.type = "ocrWordListLoader"
 		self.requires = (
 			self._mm.mods(type="wordsStringParser"),
+			self._mm.mods(type="ocrRecognizer"),
 		)
 
 	_parse = property(lambda self: self._modules.default("active", type="wordsStringParser").parse)
-
-	def _callTesseract(self, *args):
-		with open(os.devnull, "w") as f:
-			return subprocess.call(["tesseract"] + list(args), stdout=f, stderr=subprocess.STDOUT)
-
-	def _boundingRectFor(self, word):
-		positions = word.get("title")
-		parts = positions.split(" ")
-		return {
-			"x": int(parts[1]),
-			"y": int(parts[2]),
-			"width": int(parts[3]) - int(parts[1]),
-			"height": int(parts[4]) - int(parts[2])
-		}
+	_imageToHocr = property(lambda self: self._modules.default("active", type="ocrRecognizer").toHocr)
 
 	def _sortAndDetectRows(self, rects, margin):
 		rects = sorted(rects, key=lambda rect: rect["y"])
@@ -84,23 +98,10 @@ class OcrWordListLoaderModule(object):
 				lastElement = rect
 		return columnsTable
 
-	def _imageToHocr(self, imagePath):
-		hocrPath = tempfile.mkstemp(".html")[1]
-		self._callTesseract(imagePath, os.path.splitext(hocrPath)[0], "hocr")
-		with open(hocrPath) as f:
-			hocr = f.read()
-
-		os.remove(hocrPath)
-		return hocr
-
 	def _hocrToRects(self, hocr):
-		root = ElementTree.fromstring(hocr)
-		rects = []
-		for word in root.findall(".//span[@class='ocr_line']"):
-			rect = self._boundingRectFor(word)
-			rect["text"] = u"".join(word.itertext())
-			rects.append(rect)
-		return rects
+		parser = HocrParser()
+		parser.feed(hocr)
+		return parser.rects
 
 	def _makeFilteredRowsFromColumnsTable(self, columnsTable):
 		filteredRows = []
@@ -154,11 +155,6 @@ class OcrWordListLoaderModule(object):
 		return self._columnsTableToLesson(filteredColumnsTable)
 
 	def enable(self):
-		try:
-			self._callTesseract("-v")
-		except OSError:# pragma: no cover
-			#remain inactive
-			return
 		self._modules = next(iter(self._mm.mods(type="modules")))
 
 		self.active = True
