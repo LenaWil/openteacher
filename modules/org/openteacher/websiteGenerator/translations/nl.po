@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-10 21:22+0100\n"
-"PO-Revision-Date: 2013-03-17 10:54+0000\n"
+"PO-Revision-Date: 2013-03-18 15:35+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-18 04:57+0000\n"
+"X-Launchpad-Export-Date: 2013-03-19 05:56+0000\n"
 "X-Generator: Launchpad (build 16532)\n"
 
 #: templ/about.html:2
@@ -175,6 +175,12 @@ msgid ""
 "Experience also tells us that if many users want a new feature implemented, "
 "there is often a software developer who implements this."
 msgstr ""
+"Iedereen die wijzigingen in OpenTeacher wil aanbrengen kan dat doen. Als uw "
+"organisatie een gewijzigde versie van OpenTeacher wil maken, is dat prima "
+"zolang de <a href=\"https://www.gnu.org/copyleft/gpl.html\">GPL</a> "
+"nageleefd wordt. Uit ervaring is gebleken dat als veel gebruikers een "
+"bepaalde functie ondersteund willen zien, er vaak een ontwikkelaar is die "
+"deze functie implementeert."
 
 #: templ/about.html:22
 msgid ""
@@ -184,10 +190,15 @@ msgid ""
 "software, please visit the <a href=\"https://www.fsf.org/\">Free Software "
 "Foundation</a>."
 msgstr ""
+"OpenTeacher wordt compleet <strong>bestuurd door de gemeenschap</strong>. "
+"Alle medewerkers aan OpenTeacher zijn <strong>vrijwilligers</strong>, en "
+"OpenTeacher is <strong>niet gericht op het maken van winst</strong>. Bezoek "
+"u voor meer informatie over open source software alstublieft de <a "
+"href=\"https://www.fsf.org/\">Free Software Foundation</a>."
 
 #: templ/contribute.html:2 templ/index.shtml:64
 msgid "Contribute"
-msgstr ""
+msgstr "Bijdragen"
 
 #: templ/contribute.html:4
 msgid ""
@@ -200,10 +211,20 @@ msgid ""
 "chat</a> (#openteacher at irc.freenode.net), or you can e-mail us at <a "
 "href=\"mailto:contribute@openteacher.org\">contribute@openteacher.org</a>."
 msgstr ""
+"Bijdragen aan OpenTeacher is erg simpel, omdat OpenTeacher, zoals de naam al "
+"aangeeft, open source software is. Voor ons betekent dat dat niet alleen "
+"iedereen de broncode kan zien, maar ook dat iedereen bij kan dragen! Als u "
+"bij wilt dragen, kunt u daar onmiddelijk mee beginnen op het <a "
+"href=\"http://www.launchpad.net/openteacher\">Launchpad platform</a>, ons "
+"ontmoeteten in <a "
+"href=\"http://webchat.freenode.net/?channels=openteacher\">het "
+"chatkanaal</a> (#openteacher op irc.freenode.net), of ons een mailtje sturen "
+"op <a "
+"href=\"mailto:contribute@openteacher.org\">contribute@openteacher.org</a>."
 
 #: templ/contribute.html:6
 msgid "There are several ways to contribute to OpenTeacher:"
-msgstr ""
+msgstr "Er zijn verschillende manieren om bij de tragen aan OpenTeacher:"
 
 #: templ/contribute.html:9
 msgid ""
@@ -212,12 +233,18 @@ msgid ""
 "<a href=\"http://www.launchpad.net/openteacher\">Launchpad</a> and help us "
 "immediately! We are currently also looking for:"
 msgstr ""
+"<strong>Help ontwikkelen</strong><br />OpenTeacher kan altijd ontwikkelaars "
+"gebruiken. Heb je ervaring met Python en het Qt 4 framework? Ga dan naar <a "
+"href=\"http://www.launchpad.net/openteacher\">Launchpad</a> en help ons "
+"meteen! We zoeken momenteel verder:"
 
 #: templ/contribute.html:11
 msgid ""
 "<strong>Designers</strong>. It's important that OpenTeacher looks good! Do "
 "you know anything about design? Contact us."
 msgstr ""
+"<strong>Designers</strong>. Het is belangrijk dat OpenTeacher er goed uit "
+"ziet! Weet u iets van design? Neem dan contact met ons op."
 
 #: templ/contribute.html:15
 msgid ""
@@ -232,6 +259,16 @@ msgid ""
 "apps.org/content/show.php/Qt+Linguist+Download?content=89360\">Qt "
 "Linguist</a>."
 msgstr ""
+"<strong>Help vertalen</strong><br />We zijn altijd op zoek naar mensen die "
+"ons willen helpen met het vertalen van OpenTeacher! Momenteel is OpenTeacher "
+"alleen beschikbaar in het Engels en het Nederlands, dus vertalers zijn zeer "
+"welkom. Vertaalbestanden zijn beschikbaar op <a "
+"href=\"http://www.launchpad.net/openteacher\">Launchpad</a> in het Qt TS-"
+"bestandsformaat. U kunt gemakkelijk direct vertalen via <a "
+"href=\"http://www.launchpad.net/openteacher\">Launchpad</a>. Een andere "
+"optie is <a href=\"http://qt-"
+"apps.org/content/show.php/Qt+Linguist+Download?content=89360\">Qt "
+"Linguist</a>."
 
 #: templ/contribute.html:17
 msgid ""
@@ -242,6 +279,12 @@ msgid ""
 "href=\"https://bugs.launchpad.net/openteacher/+filebug\">report a bug at "
 "Launchpad</a>."
 msgstr ""
+"<strong>Help testen</strong><br />Om er zeker van te zijn dat OpenTeacher "
+"goed werkt, hebben we mensen nodig die de laatste versie van OpenTeacher "
+"testen. U kan de broncode van iedere revisie van de bzr branch "
+"lp:openteacher downloaden. Als u bugs vind, <a "
+"href=\"https://bugs.launchpad.net/openteacher/+filebug\">meld die dan "
+"alstublieft op Launchpad</a>."
 
 #: templ/contribute.html:19
 msgid ""
@@ -252,6 +295,13 @@ msgid ""
 "packaging. Also people who run Linux distributions or other systems "
 "(especially OpenSuSE) OpenTeacher isn't packaged for are welcome."
 msgstr ""
+"<strong>Help verspreiden</strong><br />Om er zeker van te zijn dat iedereen "
+"OpenTeacher kan gebruiken, is het belangrijk dat OpenTeacher uitgebracht "
+"wordt op zoveel mogelijk platformen als mogelijk. Paketten maken voor Mac OS "
+"X is lastig momenteel omdat we geen Mac hebben. We zijn op zoek naar mensen "
+"die er een hebben en kunnen helpen met paketten maken. Ook mensen die "
+"Linuxdistributies of andere systemen draaien (vooral openSUSE) waarvoor "
+"OpenTeacher nog niet beschikbaar is zijn welkom."
 
 #: templ/contribute.html:21
 msgid ""
@@ -259,72 +309,77 @@ msgid ""
 "students about OpenTeacher. The best way to make people use OpenTeacher is "
 "to tell them it exists!"
 msgstr ""
+"<strong>Help met promotie</strong><br />Vertel je vrienden, docenten en "
+"leerlingen over OpenTeacher. De beste manier om ervoor te zorgen dat mensen "
+"OpenTeacher gebruiken is ze te vertellen dat het bestaat!"
 
 #: templ/docpage.html:3
 msgid "Go back to documentation"
-msgstr ""
+msgstr "Ga terug naar de documentatie"
 
 #: templ/docpage.html:3
 msgid "Link to this page"
-msgstr ""
+msgstr "Link naar deze pagina"
 
 #: templ/documentation.html:2 templ/index.shtml:63
 msgid "Documentation"
-msgstr ""
+msgstr "Documentatie"
 
 #: templ/documentation.html:4
 msgid "User documentation"
-msgstr ""
+msgstr "Gebruikersdocumentatie"
 
 #: templ/documentation.html:5
 msgid "Using OpenTeacher 2: Quick start"
-msgstr ""
+msgstr "OpenTeacher 2 gebruiken: Snel aan de slag"
 
 #: templ/documentation.html:6 docs/install-ubuntu.html:1
 msgid "Installing OpenTeacher in Ubuntu"
-msgstr ""
+msgstr "OpenTeacher installeren in Ubuntu"
 
 #: templ/documentation.html:7 docs/install-arch.html:1
 msgid "Installing OpenTeacher in ArchLinux"
-msgstr ""
+msgstr "OpenTeacher installeren in ArchLinux"
 
 #: templ/documentation.html:8 docs/faq.html:1
 msgid "Frequently Asked Questions"
-msgstr ""
+msgstr "Veelgestelde vragen"
 
 #: templ/documentation.html:11
 msgid "Developer documentation"
-msgstr ""
+msgstr "Ontwikkelaarsdocumentatie"
 
 #: templ/documentation.html:12
 msgid "The OpenTeacher 2 file format"
-msgstr ""
+msgstr "Het OpenTeacher 2-bestandsformaat"
 
 #: templ/documentation.html:15
 msgid "Translator documentation"
-msgstr ""
+msgstr "Vertalersdocumentatie"
 
 #: templ/documentation.html:16
 msgid "Translator Notes"
-msgstr ""
+msgstr "Opmerkingen voor vertaleres"
 
 #: templ/download.html:4 templ/home.html:24
 msgid "Download OpenTeacher 3.1"
-msgstr ""
+msgstr "Download OpenTeacher 3.1"
 
 #: templ/download.html:7
 msgid ""
 "Available in Brazilian Protuguese, Chinese (Traditional), Dutch, Frysian and "
 "Spanish."
 msgstr ""
+"Beschikbaar in Braziliaans Portugees, Chinees (Traditioneel), Nederlands, "
+"Fries en Spaans."
 
 #: templ/download.html:7
 msgid "Want more languages?"
-msgstr ""
+msgstr "Wil je meer talen?"
 
 #: templ/download.html:7
 msgid "Download the older OpenTeacher 2"
-msgstr ""
+msgstr "Download de oudere OpenTeacher 2"
 
 #: templ/download.html:16
 msgid ""
@@ -333,18 +388,22 @@ msgid ""
 "3e03-4391-8a4d-074b9f2bc1bf\">Visual C++ 2008 Redistributable Package</a> to "
 "run OpenTeacher."
 msgstr ""
+"Opmerking: Windows XP-gebruikers moeten <a "
+"href=\"http://www.microsoft.com/downloads/en/details.aspx?FamilyID=9b2da534-"
+"3e03-4391-8a4d-074b9f2bc1bf\">Visual C++ 2008 Redistributable Package</a> "
+"installeren om OpenTeacher te kunnen gebruiken."
 
 #: templ/download.html:21
 msgid "For portable (USB-)drives"
-msgstr ""
+msgstr "Voor draagbare (USB-)schijven"
 
 #: templ/download.html:66
 msgid "Python 2 source with setup.py (for other Linux)"
-msgstr ""
+msgstr "Python 2 broncode met setup.py (voor ander Linuxdistro's)"
 
 #: templ/download.html:75
 msgid "Python 2 source"
-msgstr ""
+msgstr "Python 2 broncode"
 
 #: templ/home.html:5
 msgid ""
@@ -352,45 +411,52 @@ msgid ""
 "training</strong> application that helps you <strong>learn</strong> a "
 "<strong>foreign language</strong>!"
 msgstr ""
+"<strong>OpenTeacher</strong> is een open source "
+"<strong>woordjesoverhoringsprogramma</strong> dat uw helpt met het "
+"<strong>leren</strong> van een <strong>vreemde taal</strong>!"
 
 #: templ/home.html:7
 msgid ""
 "<strong>Enter a list of words</strong> in both a known and a foreign "
 "language, and OpenTeacher <strong>tests you</strong>."
 msgstr ""
+"<strong>Voer een woordenlijst in</strong> in zowel een bekende als onbekende "
+"taal, en OpenTeacher <strong>overhoort u</strong>."
 
 #: templ/home.html:9
 msgid "OpenTeacher has the following features (among others):"
-msgstr ""
+msgstr "OpenTeacher heeft (onder andere) de volgende functies:"
 
 #: templ/home.html:12
 msgid "Words, places and media lessons"
-msgstr ""
+msgstr "Woordjes-, plaatsen- en medialessen"
 
 #: templ/home.html:13
 msgid "Smart question asking and interval training"
-msgstr ""
+msgstr "Slim vragen stellen en interval training"
 
 #: templ/home.html:14
 msgid "Easy symbol, Greek and Cyrillic input"
-msgstr ""
+msgstr "Makkelijke invoer van symbolen, Grieks en Cyrillisch."
 
 #: templ/home.html:15
 msgid "Text-to-speech pronounciation"
-msgstr ""
+msgstr "Tekst-naar-spraak uitspraak"
 
 #: templ/home.html:16
 msgid ""
 "Read and write T2K (Teach2000), wrts and read ABBYY Lingvo Tutor files"
 msgstr ""
+"Lezen en schrijven van T2K (Teach2000), wrts en lezen van ABBYY Linvo Tutor-"
+"bestanden."
 
 #: templ/home.html:17
 msgid "Save and open your online WRTS lists"
-msgstr ""
+msgstr "Opslaan en laden van online WRTS-lijsten"
 
 #: templ/home.html:18
 msgid "Print your word lists"
-msgstr ""
+msgstr "Print uw woordenlijsten"
 
 #: templ/home.html:19
 msgid ""
@@ -399,40 +465,46 @@ msgid ""
 "Hungarian, Japanese, Korean, Polish, Russian, Serbian, Slovenian, Spanish, "
 "Swedish and Turkish."
 msgstr ""
+"Beschikbaar in het Arabisch, Australisch Engels, Braziliaans Portugees, "
+"Chinees (Traditioneel), Kroatisch, Tsjechisch, Deens, Nederlands, Frans, "
+"Duits, Hebreeuws, Hongaars, Japans, Koreaans, Pools, Russisch, Servisch, "
+"Sloveens, Spaans, Zweeds en Turks."
 
 #: templ/home.html:22
 msgid ""
 "OpenTeacher 3.1 is available for <strong>Linux and Windows</strong>. "
 "OpenTeacher 2.2.1 is available for <strong>Mac</strong>."
 msgstr ""
+"OpenTeacher 3.1 is beschikbaar voor <strong>Linux en Windows</strong> "
+"OpenTeacher 2.2.1 is beschikbaar voor <strong>Mac</strong>."
 
 #: templ/home.html:25
 msgid "for"
-msgstr ""
+msgstr "voor"
 
 #: templ/home.html:27
 msgid "Other systems and distro-specific packages"
-msgstr ""
+msgstr "Andere systemen en distro-specifieke paketten"
 
 #: templ/index.shtml:26
 msgid "Free exam training software"
-msgstr ""
+msgstr "Gratis overhoorsoftware"
 
 #: templ/index.shtml:60
 msgid "Home"
-msgstr ""
+msgstr "Start"
 
 #: templ/index.shtml:61
 msgid "About"
-msgstr ""
+msgstr "Over"
 
 #: templ/index.shtml:62
 msgid "Download"
-msgstr ""
+msgstr "Download"
 
 #: docs/faq.html:2
 msgid "OpenTeacher won't run on Windows!"
-msgstr ""
+msgstr "OpenTeacher start niet onder Windows!"
 
 #: docs/faq.html:3
 msgid ""
@@ -445,10 +517,18 @@ msgid ""
 "href=\"http://www.launchpad.net/openteacher\">Launchpad</a> or send an e-"
 "mail."
 msgstr ""
+"Om OpenTeacher te draaien onder windows moet u <a "
+"href=\"http://www.microsoft.com/downloads/en/details.aspx?FamilyID=9b2da534-"
+"3e03-4391-8a4d-074b9f2bc1bf\">Microsoft Visual C++ Redistributable "
+"Package</a> en <a "
+"href=\"https://www.microsoft.com/download/en/details.aspx?id=19\">.NET "
+"Framework 2.0</a> installeren. Stuur als dat niet werkt alstublieft een bug "
+"report via <a href=\"http://www.launchpad.net/openteacher\">Launchpad</a> of "
+"een mailtje."
 
 #: docs/faq.html:4
 msgid "OpenTeacher won't run on ArchLinux!"
-msgstr ""
+msgstr "OpenTeacher start niet onder ArchLinux!"
 
 #: docs/faq.html:5
 msgid ""
@@ -463,65 +543,91 @@ msgid ""
 "href=\"http://www.launchpad.net/openteacher\">Launchpad</a> or send an e-"
 "mail."
 msgstr ""
+"Zorg ervoor dat zowel <strong>python2</strong> als <strong>pyqt</strong> "
+"geïnstalleerd zijn. Als u OpenTeacher vanaf de broncode draait, moet u "
+"<strong>/usr/bin/python</strong> naar <strong>/usr/bin/python2</strong> "
+"linken in plaats van <strong>/usr/bin/python3</strong>, of de eerste lijn "
+"van <strong>bin/openteacher.py</strong> veranderen van "
+"<strong>&#35;!/usr/bin/env python</strong> in <strong>&#35;!/usr/bin/env "
+"python2</strong>. U kunt OpenTeacher ook gewoon installeren via het "
+"ArchLinux (.pkg.tar.xz)-pakket, beschikbaar op de downloadpagina. Stuur als "
+"dat niet werkt alstublieft een bug report via <a "
+"href=\"http://www.launchpad.net/openteacher\">Launchpad</a> of een mailtje."
 
 #: docs/install-arch.html:2
 msgid ""
 "This simple guide explains how to install OpenTeacher for ArchLinux. I will "
 "be using ArchLinux 2010.05."
 msgstr ""
+"Deze simpele handleiding legt uit hoe OpenTeacher te installeren onder "
+"ArchLinux. Ik zal ArchLinux 2010.05 gebruiken."
 
 #: docs/install-arch.html:4
 msgid ""
 "Download the ArchLinux package .pkg.tar.xz from the Download section of this "
 "website."
 msgstr ""
+"Download het ArcLinux-pakket .pkg.tar.xz van de downloadsectie van deze "
+"website."
 
 #: docs/install-arch.html:5
 msgid ""
 "Install the package from the terminal with <strong>pacman -U "
 "&lt;filename&gt;</strong>"
 msgstr ""
+"Installeer het pakket vanuit de terminal via <strong>pacman -U "
+"&lt;filename&gt;</strong>"
 
 #: docs/install-ubuntu.html:2
 msgid ""
 "This simple guide explains how to install OpenTeacher for Ubuntu. I will be "
 "using Ubuntu 10.10 (Maverick Meerkat) for this."
 msgstr ""
+"Deze simpele handleiding legt uit hoe OpenTeacher te installeren onder "
+"Ubuntu. Ik zal Ubuntu 10.10 (Maverick Meerkat) hiervoor gebruiken."
 
 #: docs/install-ubuntu.html:4
 msgid ""
 "Download the Ubuntu .deb file from the Download section of this website."
 msgstr ""
+"Download het Ubuntu .deb-bestand van de downloadsectie van deze website."
 
 #: docs/install-ubuntu.html:5
 msgid ""
 "When the download has completed, doubleclick the .deb file you just "
 "downloaded. This will open the Ubuntu Software Center."
 msgstr ""
+"Klik dubbel op het .deb-bestand dat u zojuist gedownload heeft, zodra de "
+"download voltooid is. Dit zal het Ubuntu softwarecentrum openen."
 
 #: docs/install-ubuntu.html:8
 msgid "Click &quot;install&quot; to start the installation."
-msgstr ""
+msgstr "Klik &quot;installeren&quot; om de installatie te starten."
 
 #: docs/install-ubuntu.html:9
 msgid ""
 "When the installation has finished, you can start OpenTeacher from "
 "Applications -> Education -> OpenTeacher."
 msgstr ""
+"Wanneer de installatie voltooid is, kunt u OpenTeacher starten door op "
+"Applicaties -> Onderwijs -> OpenTeacher te klikken."
 
 #: docs/the-openteacher-format.html:1
 msgid "The Openteacher 2 file format"
-msgstr ""
+msgstr "Het OpenTeacher 2-bestandsformaat"
 
 #: docs/the-openteacher-format.html:2
 msgid "The Openteacher 2 file format is an XML 1.0 file with UTF-8 encoding."
 msgstr ""
+"Het OpenTeacher 2-bestandsformaat is een XML 1.0-bestand met UTF-8 encoding."
 
 #: docs/the-openteacher-format.html:3
 msgid ""
 "An XML-scheme of the file format can be downloaded <a "
 "href=\"files/openteacher.xsd\">here</a>."
 msgstr ""
+"Een XML-schema van het bestandsformaat kan <a "
+"href=\"files/openteacher.xsd\">hier</a> worden gedownload."
 
 #: docs/the-openteacher-format.html:4
 msgid ""
@@ -529,42 +635,45 @@ msgid ""
 "href=\"http://sourceforge.net/apps/mediawiki/openteacher/index.php\"> the "
 "wiki."
 msgstr ""
+"OPMERKING: Kijk voor het OpenTeacher 3 bestandsformaat alstublieft op <a "
+"href=\"http://sourceforge.net/apps/mediawiki/openteacher/index.php\">de wiki."
 
 #: docs/the-openteacher-format.html:6
 msgid "Node structure"
-msgstr ""
+msgstr "Knoopstructuur"
 
 #: docs/the-openteacher-format.html:21
 msgid "The title of the word list"
-msgstr ""
+msgstr "De titel van de woordenlijst"
 
 #: docs/the-openteacher-format.html:22
 msgid "The name of the question language"
-msgstr ""
+msgstr "De naam van de taal van de vragen"
 
 #: docs/the-openteacher-format.html:23
 msgid "The name of the answer language"
-msgstr ""
+msgstr "De naam van de taal van de antwoorden"
 
 #: docs/the-openteacher-format.html:25
 msgid "This word in the question language"
-msgstr ""
+msgstr "Dit woord in de taal van de vragen"
 
 #: docs/the-openteacher-format.html:26
 msgid "This word in the answer language"
-msgstr ""
+msgstr "Dit woord in de taal van de antwoorden"
 
 #: docs/the-openteacher-format.html:27
 msgid "The results of this word in the format of 0/0"
-msgstr ""
+msgstr "De resultaten van dit woord in het formaat van 0/0"
 
 #: docs/the-openteacher-format.html:33
 msgid "Example a word list saved in the OpenTeacher 2 format"
 msgstr ""
+"Voorbeeld van een woordjeslijst opgeslagen in het OpenTeacher 2-formaat"
 
 #: docs/translator-notes.html:1
 msgid "Translator notes"
-msgstr ""
+msgstr "Vertalersopmerkingen"
 
 #: docs/translator-notes.html:3
 msgid ""
@@ -573,18 +682,22 @@ msgid ""
 "translate Ctrl+S to Strg+S, you should also translate Ctrl+Q to Strg+Q and "
 "all other keyboard shortcuts the same way)."
 msgstr ""
+"Als u OpenTeacher vertaalt, houd er dan rekening mee dat u alle "
+"toetsenbordsneltoetsen altijd op dezelfde manier zou moeten vertalen. (Duits "
+"voorbeeld: Als u Ctrl+S vertaalt als Strg+S, zou u ook Ctrl+Q in Strg+Q "
+"enzovoort moeten vertalen)."
 
 #: docs/translator-notes.html:5
 msgid "List of all keyboard shortcuts in OpenTeacher:"
-msgstr ""
+msgstr "Lijst van alle toetsenbordsneltoetsen in OpenTeacher:"
 
 #: docs/translator-notes.html:11
 msgid "deprecated, should be changed to &quot;Return&quot;"
-msgstr ""
+msgstr "verouderd, zou vervangen moeten worden door &quot;Return&quot;"
 
 #: docs/using-openteacher.html:1
 msgid "Using OpenTeacher 2: A Quick Start"
-msgstr ""
+msgstr "OpenTeacher 2 gebruiken: Snel aan de slag"
 
 #: docs/using-openteacher.html:3
 msgid ""
@@ -593,16 +706,21 @@ msgid ""
 "this example we are assuming that you already know English, and you want to "
 "learn French."
 msgstr ""
+"Deze snelgids laat u zien hoe u uzelf simpel kunt overhoren met OpenTeacher "
+"2. We gaan vandaag tellen tot tien in het Frans leren! Voor dit voorbeeld "
+"gaan we ervaan uit dat u al Engels kent, en dat u Frans wilt leren."
 
 #: docs/using-openteacher.html:5
 msgid ""
 "The screenshots are all taken in Ubuntu, but this should all work exactly "
 "the same in Windows and Mac OS X."
 msgstr ""
+"De schermafbeeldingen zijn gemaakt onder Ubuntu, maar alles zou precies "
+"hetzelfde moeten werken onder Windows en Mac OS X."
 
 #: docs/using-openteacher.html:7
 msgid "Start OpenTeacher"
-msgstr ""
+msgstr "Start OpenTeacher"
 
 #: docs/using-openteacher.html:11
 msgid ""
@@ -610,18 +728,27 @@ msgid ""
 "language, which, in our case, is English, and the foreign language (the "
 "language you want to learn), which, in our case, is French."
 msgstr ""
+"Voer een titel in voor de woordjeslijst die u gaat invoeren. Voer ook de al "
+"bekende taal in, in ons geval Engels, en de onbekende taal (de taal die u "
+"wilt leren), in ons geval Frans."
 
 #: docs/using-openteacher.html:12
 msgid ""
 "Then enter all words you want to learn, seperating the foreign and known "
 "language by =, and the words by newlines (see the screenshot for an example)."
 msgstr ""
+"Voer daarna alle woorden die u wilt leren in, scheid het onbekende en "
+"bekende woord met '=', en de woorden met nieuwe regels (zie de "
+"schermafbeelding voor een voorbeeld)."
 
 #: docs/using-openteacher.html:16
 msgid ""
 "Click \"Enter!\". Now the table of words on the bottom will be filled with "
 "your words. You have now successfully made your word list!"
 msgstr ""
+"Druk op \"Voeg in!\". De woordentabel aan de onderkant van het scherm zal "
+"gevuld worden met uw woorden. U heeft nu met succes een woordenlijst "
+"aangemaakt!"
 
 #: docs/using-openteacher.html:20
 msgid ""
@@ -630,6 +757,10 @@ msgid ""
 "it in the text field. When you have entered the translation, press Enter on "
 "your keyboard, or click \"Check!\""
 msgstr ""
+"Druk op de \"Overhoor me!\"-tab aan de bovenkant om de toets te starten. Een "
+"nieuw woord zal aan u gevraagd worden in uw eigen taal, en u moet dan de "
+"vertaling daarvan intypen in het tekstveld. Wanneer u de vertaling ingevuld "
+"hebt, druk dan op Enter op uw toetsenbord, of druk op \"Controleer!\""
 
 #: docs/using-openteacher.html:22
 msgid ""
@@ -637,9 +768,14 @@ msgid ""
 "you. If you did not enter the right translation, OpenTeacher will show you "
 "the correct answer, and the difference from your answer."
 msgstr ""
+"Als u de juiste vertailing invoerde, zal de volgende vraag gesteld worden "
+"aan u. Als dat niet het geval was, zal OpenTeacher het correcte antwoord "
+"laten zien, en het verschil met uw antwoord."
 
 #: docs/using-openteacher.html:26
 msgid ""
 "Once the test is completed, OpenTeacher will tell you if you did well by "
 "giving you a &quot;note&quot; (grade)."
 msgstr ""
+"Wanneer de toets is afgerond, zal OpenTeacher u vertellen, of u het goed "
+"heeft gedaan door een cijfer te geven."
