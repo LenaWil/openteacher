@@ -25,7 +25,7 @@ class HocrParser(HTMLParser.HTMLParser):
 		HTMLParser.HTMLParser.__init__(self, *args, **kwargs)
 
 		self.rects = []
-		self.capturingData = False
+		self.indent = -1
 
 	def handle_starttag(self, tag, attrs):
 		attrs = dict(attrs)
@@ -40,14 +40,20 @@ class HocrParser(HTMLParser.HTMLParser):
 				"height": int(parts[4]) - int(parts[2]),
 				"text": u"",
 			})
-			self.capturingData = True
+			self.indent = 0
+		elif tag == "span":
+			if self.indent is not None:
+				self.indent += 1
 
 	def handle_endtag(self, tag):
 		if tag == "span":
-			self.capturingData = False
+			if self.indent == 0:
+				self.indent = None
+			if self.indent is not None:
+				self.indent -= 1
 
 	def handle_data(self, data):
-		if self.capturingData:
+		if self.indent >= 0:
 			self.rects[-1]["text"] += data
 
 class OcrWordListLoaderModule(object):
