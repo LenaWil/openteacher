@@ -28,21 +28,10 @@ class TestCase(unittest.TestCase):
 			del item["created"]
 		return lessonData
 
-	def _normalizeLessonData(self, lessonData):
-		"""Normalize items so functions like assertEqual can do their
-		   job without worrying about list/tuple difference.
-
-		"""
-		for item in lessonData["list"]["items"]:
-			item["questions"] = map(tuple, item["questions"])
-			item["answers"] = map(tuple, item["answers"])
-		return lessonData
-
 	def _test(self, input, expectedOutput):
 		for mod in self._mm.mods("active", type="wordListStringParser"):
 			lessonData = mod.parseList(input)
 			lessonData = self._checkCreatedAndRemoveFromLessonData(lessonData)
-			lessonData = self._normalizeLessonData(lessonData)
 			self.assertEqual(lessonData["list"]["items"], expectedOutput)
 
 	def testBasicStructure(self):
@@ -68,8 +57,8 @@ class TestCase(unittest.TestCase):
 			u"a = b",
 			[{
 				"id": 0,
-				"questions": [(u"a",)],
-				"answers": [(u"b",)],
+				"questions": [[u"a"]],
+				"answers": [[u"b"]],
 			}]
 		)
 
@@ -78,8 +67,8 @@ class TestCase(unittest.TestCase):
 			u"a\tb",
 			[{
 				"id": 0,
-				"questions": [(u"a",)],
-				"answers": [(u"b",)],
+				"questions": [[u"a"]],
+				"answers": [[u"b"]],
 			}]
 		)
 
@@ -95,8 +84,8 @@ class TestCase(unittest.TestCase):
 			u"a = = b",
 			[{
 				"id": 0,
-				"questions": [("a",)],
-				"answers": [("= b",)],
+				"questions": [["a"]],
+				"answers": [["= b"]],
 			}],
 		)
 
@@ -109,13 +98,13 @@ a \\\t   \t = b
 			[
 				{
 					"id": 0,
-					"questions": [(u"a \=",)],
-					"answers": [(u"b",)],
+					"questions": [[u"a \="]],
+					"answers": [[u"b"]],
 				},
 				{
 					"id": 1,
-					"questions": [(u"a \\",)],
-					"answers": [(u"= b",)],
+					"questions": [[u"a \\"]],
+					"answers": [[u"= b"]],
 				},
 			]
 		)
@@ -125,8 +114,8 @@ a \\\t   \t = b
 			u"é = à",
 			[{
 				"id": 0,
-				"questions": [(u"é",)],
-				"answers": [(u"à",)],
+				"questions": [[u"é"]],
+				"answers": [[u"à"]],
 			}]
 		)
 
@@ -137,8 +126,8 @@ een =
 =one
 			""",
 			[
-				{"id": 0, "questions": [("een",)], "answers": []},
-				{"id": 1, "questions": [], "answers": [("one",)]},
+				{"id": 0, "questions": [["een"]], "answers": []},
+				{"id": 1, "questions": [], "answers": [["one"]]},
 			]
 		)
 
@@ -156,17 +145,17 @@ vijf	five
 			[
 				{
 					"id": 0,
-					"questions": [("een",)],
-					"answers": [("one", "uno"), ("a",)]
+					"questions": [["een"]],
+					"answers": [["one", "uno"], ["a"]]
 				},
-				{"id": 1, "questions": [("twee",)], "answers": [("two",)]},
-				{"id": 2, "questions": [("drie",)], "answers": [("three",)]},
-				{"id": 3, "questions": [("vier",)], "answers": [("four",)]},
-				{"id": 4, "questions": [("vijf",)], "answers": [("five",)]},
+				{"id": 1, "questions": [["twee"]], "answers": [["two"]]},
+				{"id": 2, "questions": [["drie"]], "answers": [["three"]]},
+				{"id": 3, "questions": [["vier"]], "answers": [["four"]]},
+				{"id": 4, "questions": [["vijf"]], "answers": [["five"]]},
 				{
 					"id": 5,
-					"questions": [("3 \= 2 + 1",)],
-					"answers": [("three equals two plus one",)],
+					"questions": [["3 \= 2 + 1"]],
+					"answers": [["three equals two plus one"]],
 				},
 			]
 		)

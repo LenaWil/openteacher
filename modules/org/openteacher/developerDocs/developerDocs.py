@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012-2013, Marten de Vries
+#	Copyright 2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,37 +18,20 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class JavascriptEventModule(object):
+class DeveloperDocumentationModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(JavascriptEventModule, self).__init__(*args, **kwargs)
+		super(DeveloperDocumentationModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "javaScriptEvent"
-		self.javaScriptImplementation = True
-
-		self.requires = (
-			self._mm.mods(type="javaScriptEvaluator"),
-		)
-
-	def createEvent(self):
-		return self._js["Event"].new()
+		self.type = "devDocs"
 
 	def enable(self):
-		self._modules = set(self._mm.mods(type="modules")).pop()
-		self._js = self._modules.default("active", type="javaScriptEvaluator").createEvaluator()
-
-		with open(self._mm.resourcePath("event.js")) as f:
-			self.code = f.read()
-		self._js.eval(self.code)
+		self.developerDocumentationBaseDirectory = self._mm.resourcePath("docs")
 
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
-		del self._modules
-		del self._js
-		del self.code
-
 def init(moduleManager):
-	return JavascriptEventModule(moduleManager)
+	return DeveloperDocumentationModule(moduleManager)

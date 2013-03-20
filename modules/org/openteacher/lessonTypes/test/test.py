@@ -29,13 +29,13 @@ class TestCase(unittest.TestCase):
 			"items": [
 				{
 					"id": 0,
-					"questions": [("een",)],
-					"answers": [("one",)],
+					"questions": [["een"]],
+					"answers": [["one"]],
 				},
 				{
 					"id": 1,
-					"questions": [("twee",)],
-					"answers": [("two",)],
+					"questions": [["twee"]],
+					"answers": [["two"]],
 				},
 			],
 		}
@@ -57,10 +57,6 @@ class TestCase(unittest.TestCase):
 
 	def testItemsInList(self):
 		def newItem(item):
-			#normalize so assertIn can do it's work
-			item["questions"] = map(tuple, item["questions"])
-			item["answers"] = map(tuple, item["answers"])
-
 			self.assertIn(item, self._list["items"])
 			lessonType.setResult({"result": "right", "itemId": item["id"]})
 

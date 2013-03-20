@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -30,7 +30,7 @@ import re
 import tempfile
 
 class ModulesHandler(object):
-	def __init__(self, moduleManager, templates, buildModuleGraph, *args, **kwargs):
+	def __init__(self, moduleManager, templates, buildModuleGraph, devDocsBaseDir, *args, **kwargs):
 		super(ModulesHandler, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
@@ -43,6 +43,7 @@ class ModulesHandler(object):
 			self._mods[self._pathToUrl(path)] = mod
 		self._templates = templates
 		self._buildModuleGraph = buildModuleGraph
+		self._devDocsBaseDir = devDocsBaseDir
 
 	def _pathToUrl(self, path):
 		path = os.path.abspath(path)
@@ -227,6 +228,43 @@ class ModulesHandler(object):
 		requirements.append(selectorResults)
 		return requirements
 
+	def _renderRstPage(self, rstPath):
+		with open(rstPath) as f:
+			parts = docutils.core.publish_parts(
+				f.read(),
+				writer_name="html",
+				settings_overrides={"report_level": 5}
+			)
+
+		t = pyratemp.Template(filename=self._templates["dev_docs"])
+		return t(**{
+			"page": parts["fragment"],
+			"title": parts["title"]
+		})
+
+	def dev_docs(self, *args):
+		if not args:
+			args = ["index.rst"]
+		requestedPath = "/".join(args)
+		requestedPath = os.path.normpath(requestedPath)
+		if os.path.isabs(requestedPath) or requestedPath.startswith(os.pardir):
+			#invalid path
+			raise cherrypy.HTTPError(404)
+		path = os.path.join(self._devDocsBaseDir, requestedPath)
+
+		if not os.path.exists(path):
+			raise cherrypy.HTTPError(404)
+
+		if path.endswith(".rst"):
+			return self._renderRstPage(path)
+		else:
+			return cherrypy.lib.static.serve_file(os.path.abspath(path))
+
+		#if all else fails
+		raise cherrypy.HTTPError(404)
+
+	dev_docs.exposed = True
+
 	def modules(self, *args):
 		args = list(args)
 		args[-1] = args[-1][:-len(".html")]
@@ -369,6 +407,7 @@ class CodeDocumentationModule(object):
 			self._mm.mods(type="metadata"),
 			self._mm.mods(type="execute"),
 			self._mm.mods(type="moduleGraphBuilder"),
+			self._mm.mods(type="devDocs"),
 		)
 		self.uses = (
 			self._mm.mods(type="profileDescription"),
@@ -380,15 +419,17 @@ class CodeDocumentationModule(object):
 
 	def showDocumentation(self):
 		buildModuleGraph = self._modules.default("active", type="moduleGraphBuilder").buildModuleGraph
+		devDocsBaseDir = self._modules.default("active", type="devDocs").developerDocumentationBaseDirectory
 		templates = {
 			"modules": self._mm.resourcePath("templ/modules.html"),
 			"priorities": self._mm.resourcePath("templ/priorities.html"),
 			"fixmes": self._mm.resourcePath("templ/fixmes.html"),
 			"module": self._mm.resourcePath("templ/module.html"),
+			"dev_docs": self._mm.resourcePath("templ/dev_docs.html"),
 			"resources": self._mm.resourcePath("resources"),
 			"logo": self._modules.default("active", type="metadata").metadata["iconPath"],
 		}
-		root = ModulesHandler(self._mm, templates, buildModuleGraph)
+		root = ModulesHandler(self._mm, templates, buildModuleGraph, devDocsBaseDir)
 
 		cherrypy.tree.mount(root)
 		cherrypy.config.update({"server.socket_host": "0.0.0.0"})

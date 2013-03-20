@@ -39,7 +39,7 @@ class WordsStringParserModule(object):
 			words = [word.strip() for word in words]
 			words = filter(lambda word: word != u"", words)
 			if words:
-				item.append(tuple(words))
+				item.append(words)
 		return item
 
 	def enable(self):

@@ -30,8 +30,12 @@
 	padding-right:1em;
 }
 
-#nav {
+#nav, #nav2 {
 	float:right;
+}
+
+#nav2 {
+	line-height: 115%;
 }
 
 #header h1 {

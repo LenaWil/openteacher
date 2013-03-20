@@ -24,50 +24,48 @@ class WordsStringParserTestCase(unittest.TestCase):
 	def _test(self, input, output):
 		for mod in self._mm.mods("active", type="wordsStringParser"):
 			data = mod.parse(input)
-			#normalize
-			data = map(tuple, data)
 			self.assertEqual(data, output)
 
 	def testSingleWord(self):
 		self._test(
 			u"one",
-			[(u"one",)]
+			[[u"one"]]
 		)
 
 	def testMultipleWords(self):
 		self._test(
 			u"one, two",
-			[(u"one", u"two")]
+			[[u"one", u"two"]]
 		)
 
 	def testMultipleSemicolonWords(self):
 		self._test(
 			u"one; two",
-			[(u"one", u"two")]
+			[[u"one", u"two"]]
 		)
 	
 	def testObligatoryWords(self):
 		self._test(
 			u"1. one 2. two",
-			[(u"one",), (u"two",)]
+			[[u"one"], [u"two"]]
 		)
 	
 	def testObligatoryAndMultipleWords(self):
 		self._test(
 			u"1. one, uno 2. two",
-			[(u"one", u"uno"), (u"two",)]
+			[[u"one", u"uno"], [u"two"]]
 		)
 
 	def testWrongObligatoryNumbers(self):
 		self._test(
 			u"1. one 3. two",
-			[(u"one",), (u"two",)]
+			[[u"one"], [u"two"]]
 		)
 
 	def testNonASCIILetters(self):
 		self._test(
 			u"être",
-			[(u"être",)]
+			[[u"être"]]
 		)
 
 	def testNumbersOnly(self):
@@ -91,25 +89,25 @@ class WordsStringParserTestCase(unittest.TestCase):
 	def testNumberEscaping(self):
 		self._test(
 			u"I like to say \\1. and \\2. You too?",
-			[("I like to say \\1. and \\2. You too?",)]
+			[["I like to say \\1. and \\2. You too?"]]
 		)
 
 	def testCommaEscaping(self):
 		self._test(
 			u"one\\, two",
-			[("one\\, two",)]
+			[["one\\, two"]]
 		)
 
 	def testSemicolonEscaping(self):
 		self._test(
 			u"one\\; two",
-			[("one\\; two",)]
+			[["one\\; two"]]
 		)
 
 	def testMultipleDigitObligatoryNumber(self):
 		self._test(
 			u"9999999999999999999. one 2222222222222222222222222222. two",
-			[("one",), ("two",)]
+			[["one"], ["two"]]
 		)
 
 class TestModule(object):

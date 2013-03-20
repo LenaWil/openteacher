@@ -75,13 +75,13 @@ class TestCase(unittest.TestCase):
 			"items": [
 				{
 					"id": 0,
-					"questions": [("een",)],
-					"answers": [("one",)],
+					"questions": [["een"]],
+					"answers": [["one"]],
 				},
 				{
 					"id": 1,
-					"questions": [("twee",)],
-					"answers": [("two",)],
+					"questions": [["twee"]],
+					"answers": [["two"]],
 				},
 			],
 		}

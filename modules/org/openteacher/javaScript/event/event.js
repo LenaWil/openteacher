@@ -21,9 +21,14 @@ var Event;
 
 Event = function () {
 	"use strict";
-	var handlers;
+	var handlers, KeyError;
 
 	handlers = [];
+	KeyError = function (key) {
+		this.name = "KeyError";
+		this.message = "No such key: " + key;
+	};
+	KeyError.prototype = new Error();
 
 	this.handle = function (handler) {
 		var index;
@@ -40,9 +45,9 @@ Event = function () {
 		index = handlers.indexOf(handler);
 		if (index !== -1) {
 			handlers.splice(index, 1);
-			return true;
-		}
-		return false;
+		} else {
+			throw new KeyError(handler);
+		};
 	};
 
 	this.send = function () {

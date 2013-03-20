@@ -70,17 +70,19 @@ class TestCase(unittest.TestCase):
 
 			self.assertTrue(now - passThroughNow < datetime.timedelta(seconds=1))
 
-	def testConvertingUnsupportedObjectToJs(self):
-		for js in self._getEvaluators():
-			with self.assertRaises(NotImplementedError):
-				class UnconvertableClass(object):
-					pass
-				js["JSON"]["stringify"](UnconvertableClass())
-
-	def testError(self):
+	def testPythonLikeError(self):
 		for js in self._getEvaluators():
 			try:
 				js.eval("This should raise some kind of error, right?")
+			except SyntaxError, e:
+				self.assertTrue(str(e))
+			else:
+				self.assertTrue(False, msg="It didn't raise an error!")# pragma: no cover
+
+	def testCustomError(self):
+		for js in self._getEvaluators():
+			try:
+				js.eval("throw {message: 'hi', name: 'test'}")
 			except js.JSError, e:
 				self.assertTrue(str(e))
 				self.assertTrue(e.name)
@@ -99,6 +101,11 @@ class TestCase(unittest.TestCase):
 					}
 				};""");
 			self.assertEqual(js["Test"].new().func(), 23)
+
+	def testSettingGlobalThingy(self):
+		for js in self._getEvaluators():
+			js["hello"] = lambda: "Hello World!"
+			self.assertEqual(js["hello"](), "Hello World!")
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

@@ -24,47 +24,47 @@ class WordsStringCheckerTestCase(unittest.TestCase):
 	def setUp(self):
 		self.word1 = {
 			"id": 0,
-			"questions": [(u"in",)],
+			"questions": [[u"in"]],
 			"comment": u"+abl",
-			"answers": [(u"in", u"op", u"bij"), (u"tijdens",)],
+			"answers": [[u"in", u"op", u"bij"], [u"tijdens"]],
 		}
 
 		self.word2 = {
 			"id": 1,
-			"questions": [(u"in",)],
+			"questions": [[u"in"]],
 			"comment": u"+acc",
-			"answers": [(u"naar(binnen)", u"in"), (u"tot", u"jegens")],
+			"answers": [[u"naar(binnen)", u"in"], [u"tot", u"jegens"]],
 		}
 
 	def testSingleRightAnswer(self):
-		self._test([(u"in",)], self.word1, "wrong")
+		self._test([[u"in"]], self.word1, "wrong")
 
 	def testMultipleRightAnswers(self):
-		self._test([(u"in", u"tijdens", u"bij")], self.word1, "right")
+		self._test([[u"in", u"tijdens", u"bij"]], self.word1, "right")
 
 	def testWrongAnswersNextToRightOnes(self):
 		#opp != op
-		self._test([(u"in", u"tijdens", u"opp")], self.word1, "wrong")
+		self._test([[u"in", u"tijdens", u"opp"]], self.word1, "wrong")
 
 	def testSingleWrongAnswer(self):
-		self._test([(u"opp",)], self.word1, "wrong")
+		self._test([[u"opp"]], self.word1, "wrong")
 
 	def testEmptyAnswer(self):
 		self._test([], self.word1, "wrong")
 
 	def testFullAnswer(self):
-		self._test([(u"in", u"op", u"bij"), (u"tijdens",)], self.word1, "right")
+		self._test([[u"in", u"op", u"bij"], [u"tijdens"]], self.word1, "right")
 
 	def testFullAnswerWithExtraWrongWords(self):
 		#gelijktijdig met isn't in the answers (however it's possibly
 		#right linguistically seen.)
-		self._test([(u"in", "op", "bij"), (u"tijdens", u"gelijktijdig met")], self.word1, "wrong")
+		self._test([[u"in", "op", "bij"], [u"tijdens", u"gelijktijdig met"]], self.word1, "wrong")
 
 	def testWordsInWeirdOrder(self):
-		self._test([(u"naar(binnen)", "jegens", "tot")], self.word2, "right")
+		self._test([[u"naar(binnen)", "jegens", "tot"]], self.word2, "right")
 
 	def testFullNotationAndDontIncludeAnNonObligatoryWord(self):
-		self._test([(u"in", u"naar(binnen)"), (u"jegens",)], self.word2, "right")
+		self._test([[u"in", u"naar(binnen)"], [u"jegens"]], self.word2, "right")
 
 	def _test(self, givenAnswer, word, output):
 		for mod in self._mm.mods("active", type="wordsStringChecker"):

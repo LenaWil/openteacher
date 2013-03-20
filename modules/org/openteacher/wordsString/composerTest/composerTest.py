@@ -31,31 +31,31 @@ class WordsStringComposerTestCase(unittest.TestCase):
 
 	def testSingleWord(self):
 		self._test(
-			[(u"one",)],
+			[[u"one"]],
 			u"one"
 		)
 	
 	def testMultipleWords(self):
 		self._test(
-			[(u"one", u"two")],
+			[[u"one", u"two"]],
 			u"one, two"
 		)
 	
 	def testObligatoryWords(self):
 		self._test(
-			[(u"one",), (u"two",)],
+			[[u"one"], [u"two"]],
 			u"1. one 2. two"
 		)
 	
 	def testObligatoryAndMultipleWords(self):
 		self._test(
-			[(u"one", u"uno"), (u"two",)],
+			[[u"one", u"uno"], [u"two"]],
 			u"1. one, uno 2. two"
 		)
 
 	def testNonASCIILetters(self):
 		self._test(
-			[(u"être",)],
+			[[u"être"]],
 			u"être"
 		)
 

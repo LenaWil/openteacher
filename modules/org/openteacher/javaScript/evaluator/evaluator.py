@@ -19,24 +19,72 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
+import exceptions
 
-class JSObject(dict):
+PYTHON_EXCEPTIONS = vars(exceptions)
+for name, exception in PYTHON_EXCEPTIONS.items():
+	if type(exception) != type(Exception):
+		#not a real exception
+		del PYTHON_EXCEPTIONS[name]
+
+class JSObject(object):
+	def __init__(self, qtScriptObj, toPython, toJS, *args, **kwargs):
+		super(JSObject, self).__init__(*args, **kwargs)
+
+		self._obj = qtScriptObj
+		self._toPython = toPython
+		self._toJs = toJS
+
 	def __getattr__(self, attr):
-		return self[attr]
+		try:
+			return super(JSObject, self).__getattr__(attr)
+		except AttributeError:
+			result = self._toPython(self._obj.property(attr), self._obj)
+			if result is None:
+				raise AttributeError("No such attribute: %s" % attr)
+			return result
 
 	def __setattr__(self, attr, value):
-		self[attr] = value
+		if attr.startswith("_"):
+			super(JSObject, self).__setattr__(attr, value)
+		else:
+			self._obj.setProperty(attr, self._toJs(value))
+
+	def __delattr__(self, attr):
+		try:
+			super(JSObject, self).__delattr__(attr)
+		except AttributeError:
+			self._obj.setProperty(attr, QtScript.QScriptValue())
+
+	def iteritems(self):
+		iterator = QtScript.QScriptValueIterator(self._obj)
+		while iterator.hasNext():
+			iterator.next()
+			yield unicode(iterator.name()), self._toPython(iterator.value(), self._obj)
+
+	def toJSObject(self):
+		return self._obj
+
+	def __eq__(self, other):
+		return sorted(self.iteritems()) == sorted(other.iteritems())
+
+	def __repr__(self):
+		return repr(dict(self.iteritems()))
+
+	__getitem__ = __getattr__
+	__setitem__ = __setattr__
+	__delitem__ = __delattr__
 
 class JSError(Exception):
-	def __init__(self, jsExc, *args, **kwargs):
+	def __init__(self, name, message, lineNumber, *args, **kwargs):
 		super(JSError, self).__init__(*args, **kwargs)
 
-		self.name = jsExc.property("name").toString()
-		self.message = jsExc.property("message").toString()
-		self.lineNumber = jsExc.property("lineNumber").toString()
+		self.name = name
+		self.message = message
+		self.lineNumber = lineNumber
 
 	def __str__(self):
-		return "%s : %s (line %s)" % (self.name, self.message, self.lineNumber)
+		return "%s: %s (line %s)" % (self.name, self.message, self.lineNumber)
 
 class JSEvaluator(object):
 	JSError = JSError
@@ -52,15 +100,29 @@ class JSEvaluator(object):
 		self._checkForErrors()
 		return self._toPythonValue(result)
 
+	def _pythonExceptionFor(self, jsExc):
+		name = unicode(jsExc.property("name").toString())
+		message = unicode(jsExc.property("message").toString())
+		lineNumber = int(jsExc.property("lineNumber").toString())
+
+		try:
+			msg = message + " (line %s)" % lineNumber
+			return PYTHON_EXCEPTIONS[name](msg)
+		except KeyError:
+			return JSError(name, message, lineNumber)
+
 	def _checkForErrors(self):
 		if self._engine.hasUncaughtException():
 			exc = self._engine.uncaughtException()
 			#clear exception
 			self._engine.evaluate("")
-			raise self.JSError(exc)
+			raise self._pythonExceptionFor(exc)
 
 	def __getitem__(self, key):
 		return self._toPythonValue(self._engine.globalObject().property(key))
+
+	def __setitem__(self, key, value):
+		self._engine.globalObject().setProperty(key, self._toJSValue(value))
 
 	def _toJSValue(self, value):
 		#null (None)
@@ -84,8 +146,8 @@ class JSEvaluator(object):
 					#kinda makes up for the fact JS doesn't support
 					#them...
 					try:
-						result = value(*args[:-1], **args[-1])
-					except (IndexError, TypeError):
+						result = value(*args[:-1], **dict(args[-1].iteritems()))
+					except (IndexError, TypeError, AttributeError):
 						result = value(*args)
 					return QtScript.QScriptValue(self._toJSValue(result))
 				self._functionCache[value] = self._engine.newFunction(wrapper)
@@ -98,6 +160,12 @@ class JSEvaluator(object):
 			pass
 		else:
 			return QtScript.QScriptValue(number)
+
+		#object (JSObject)
+		try:
+			value.toJSObject()
+		except AttributeError:
+			pass
 
 		#object (dict)
 		try:
@@ -127,6 +195,15 @@ class JSEvaluator(object):
 		else:
 			if datetime.isValid():
 				return self._engine.newDate(value)
+
+		#object (real python object)
+		try:
+			obj = self._engine.newObject()
+			for k in dir(value):
+				obj.setProperty(unicode(k), self._toJSValue(getattr(value, k)))
+			return obj
+		except AttributeError:
+			pass
 
 		raise NotImplementedError("Can't convert such a value to JavaScript")
 
@@ -174,12 +251,7 @@ class JSEvaluator(object):
 		elif value.isUndefined():
 			return None
 		elif value.isObject():
-			obj = JSObject()
-			iterator = QtScript.QScriptValueIterator(value)
-			while iterator.hasNext():
-				iterator.next()
-				obj[unicode(iterator.name())] = self._toPythonValue(iterator.value(), value)
-			return obj
+			return JSObject(value, self._toPythonValue, self._toJSValue)
 		else:# pragma : no cover
 			#can't imagine a situation in which this would happen, but
 			#if it ever does, an exception is better than going on
