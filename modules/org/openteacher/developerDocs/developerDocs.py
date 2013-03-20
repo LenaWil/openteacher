@@ -33,5 +33,7 @@ class DeveloperDocumentationModule(object):
 	def disable(self):
 		self.active = False
 
+		del self.developerDocumentationBaseDirectory
+
 def init(moduleManager):
 	return DeveloperDocumentationModule(moduleManager)

@@ -79,6 +79,7 @@ class JSInputTypingLogicModule(object):
 
 		del self._modules
 		del self._js
+		del self.code
 
 def init(moduleManager):
 	return JSInputTypingLogicModule(moduleManager)
