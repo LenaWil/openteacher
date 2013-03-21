@@ -19,7 +19,7 @@ Most important project URLs
 
 Subpages
 --------
-- `QuickStart <quickstart.rst>`_
+- `Getting started <getting_started.rst>`_
 - `File templates <file_templates.rst>`_
 - `Data format <data_format.rst>`_
 - `User agent <user_agent.rst>`_

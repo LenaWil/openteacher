@@ -43,7 +43,8 @@
 }
 
 body {
-	margin:0;
+	margin:0 auto;
+	width: 960px;
 	font-family: Ubuntu, sans-serif;
 	background-color:#F6FAFD;
 }
@@ -65,9 +66,12 @@ a {
 	color:#000;
 }
 
+table {
+	border-collapse:collapse;
+}
+
 .tablesorter {
 	width:100%;
-	border-collapse:collapse;
 }
 
 .tablesorter th {
@@ -96,4 +100,12 @@ a {
 
 .odd {
 	background-color:#eee;
+}
+
+.align-right {
+	float:right;
+}
+
+.figure {
+	padding: 0.5em;
 }

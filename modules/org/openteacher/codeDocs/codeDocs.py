@@ -233,7 +233,10 @@ class ModulesHandler(object):
 			parts = docutils.core.publish_parts(
 				f.read(),
 				writer_name="html",
-				settings_overrides={"report_level": 5}
+				settings_overrides={
+					"report_level": 5,
+					"initial_header_level": 2
+				}
 			)
 
 		t = pyratemp.Template(filename=self._templates["dev_docs"])
