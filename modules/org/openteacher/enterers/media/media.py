@@ -221,7 +221,7 @@ def getEnterWidget():
 			url, dialog = QtGui.QInputDialog.getText(
 				self,
 				_("File URL"),
-				_("Enter the URL of your website or media item.\nSupported video sites: " + sitenamesStr + ".")
+				_("Enter the URL of your website or media item.\nSupported video sites: ") + sitenamesStr + "."
 			)
 			if dialog:
 				self.addItem(str(url), True)
