@@ -47,7 +47,7 @@ Event = function () {
 			handlers.splice(index, 1);
 		} else {
 			throw new KeyError(handler);
-		};
+		}
 	};
 
 	this.send = function () {

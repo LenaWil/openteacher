@@ -12,7 +12,7 @@ dirname = function(path) {
 
 $(document).ready(function() {
 	$(document).on('click', '.linkToLinkHere', function() {
-		$(this).hide()
+		$(this).hide();
 		var url = dirname(window.location.href) + "/" + currentPage + ".html";
 		$('#linkHere').text(url).show();
 

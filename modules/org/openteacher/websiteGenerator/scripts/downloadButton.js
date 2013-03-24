@@ -4,13 +4,14 @@ $(document).ready(function() {
 	$('#downloadButton').css('background-image', 'url(../images/downloadbuttons/' + os + '-button.png');
 	// On mouseover
 	$(document).on('mouseover mouseleave', "#downloadButton", function(event){
+		var buttonImage;
 		if (event.type == 'mouseover') {
-			var buttonImage = 'url(../images/downloadbuttons/' + os + '-button-h.png)';
+			buttonImage = 'url(../images/downloadbuttons/' + os + '-button-h.png)';
 			$(this).css('background-image', buttonImage);
 		}
 		else
 		{
-			var buttonImage = 'url(../images/downloadbuttons/' + os + '-button.png)';
+			buttonImage = 'url(../images/downloadbuttons/' + os + '-button.png)';
 			$(this).css('background-image', buttonImage);
 		}
 	});

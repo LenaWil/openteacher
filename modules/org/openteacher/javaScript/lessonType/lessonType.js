@@ -110,6 +110,6 @@ LessonType = function (list, indexes) {
 	};
 
 	this.addPause = function (pause) {
-		test.pauses.push(pause)
-	}
+		test.pauses.push(pause);
+	};
 };

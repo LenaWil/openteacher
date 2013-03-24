@@ -62,7 +62,7 @@ gui = (function () {
 			//english, use a simple pass through function.
 			_ = function (str) {
 				return str;
-			}
+			};
 			doRetranslate(_);
 			if (callback) {
 				callback();
@@ -73,7 +73,7 @@ gui = (function () {
 				//use it for translating the ui.
 				_ = function (str) {
 					return translations[str] || str;
-				}
+				};
 				doRetranslate(_);
 				if (callback) {
 					callback();

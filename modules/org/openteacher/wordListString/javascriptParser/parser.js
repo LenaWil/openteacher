@@ -55,7 +55,7 @@ var parseList = (function() {
 				answerText: line.slice(firstOccurenceIndex + 2)
 			};
 		}
-	}
+	};
 
 	parseLine = function (line, id, createdDate) {
 		var splittedLine;
@@ -89,7 +89,7 @@ var parseList = (function() {
 			word = parseLine(lines[i], counter, now);
 			if (word) {
 				list.items.push(word);
-				counter += 1
+				counter += 1;
 			}
 		}
 		return {
