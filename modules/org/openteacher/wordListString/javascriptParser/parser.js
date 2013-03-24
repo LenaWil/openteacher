@@ -22,7 +22,7 @@
 var parseList = (function() {
 	"use strict";
 
-	var SeparatorError, re, parseLine;
+	var SeparatorError, re, splitLine, parseLine;
 
 	SeparatorError = function (message) {
 		this.name = "SeparatorError";

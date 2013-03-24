@@ -40,9 +40,7 @@ class MobileGeneratorModule(object):
 		]
 		self._logicModTypes = [
 			#wordsString
-			"wordsStringParser",
 			"wordsStringComposer",
-			"wordsStringChecker",
 
 			#wordListString
 			"wordListStringParser",
@@ -50,6 +48,7 @@ class MobileGeneratorModule(object):
 
 			#else
 			"javaScriptLessonType",
+			"jsInputTypingLogic",
 		]
 		for type in self._logicModTypes:
 			self.requires.append(self._mm.mods("javaScriptImplementation", type=type))
@@ -184,11 +183,20 @@ class MobileGeneratorModule(object):
 
 		#copy scripts
 		scripts = [
+			#libs
 			"jquery-1.8.2.js",
 			"jquery.mobile-1.2.0.js",
 			"taboverride.js",
 			"jquery.taboverride.js",
 			"jsdiff.js",
+			#helper files
+			"menuDialog.js",
+			"copyrightInfoDialog.js",
+			"optionsDialog.js",
+			"enterTab.js",
+			"teachTab.js",
+			"practisingModeChoiceDialog.js",
+			#main file
 			"gui.js",
 		]
 

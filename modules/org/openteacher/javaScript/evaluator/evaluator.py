@@ -27,6 +27,15 @@ for name, exception in PYTHON_EXCEPTIONS.items():
 		#not a real exception
 		del PYTHON_EXCEPTIONS[name]
 
+PYTHON_ERROR_DEFINITION = """
+var JSEvaluatorPythonError = function(name, message) {
+	this.name = name;
+	this.message = message;
+	this.lineNumber = -1;
+}
+JSEvaluatorPythonError.prototype = new Error();
+"""
+
 class JSObject(object):
 	def __init__(self, qtScriptObj, toPython, toJS, *args, **kwargs):
 		super(JSObject, self).__init__(*args, **kwargs)
@@ -95,6 +104,8 @@ class JSEvaluator(object):
 		self._engine = QtScript.QScriptEngine()
 		self._functionCache = {}
 
+		self.eval(PYTHON_ERROR_DEFINITION)
+
 	def eval(self, js):
 		result = self._engine.evaluate(js)
 		self._checkForErrors()
@@ -142,13 +153,19 @@ class JSEvaluator(object):
 					args = []
 					for i in range(context.argumentCount()):
 						args.append(self._toPythonValue(context.argument(i)))
-					#if the last arg is a dict, use keyword arguments.
-					#kinda makes up for the fact JS doesn't support
-					#them...
 					try:
-						result = value(*args[:-1], **dict(args[-1].iteritems()))
-					except (IndexError, TypeError, AttributeError):
-						result = value(*args)
+						#if the last arg is a dict, use keyword arguments.
+						#kinda makes up for the fact JS doesn't support
+						#them...
+						try:
+							result = value(*args[:-1], **dict(args[-1].iteritems()))
+						except (IndexError, TypeError, AttributeError):
+							result = value(*args)
+					except BaseException, exc:
+						#convert exceptions to JS exceptions
+						args = (exc.__class__.__name__, str(exc))
+						context.throwValue(self._toJSValue(self["JSEvaluatorPythonError"].new(*args)))
+						return
 					return QtScript.QScriptValue(self._toJSValue(result))
 				self._functionCache[value] = self._engine.newFunction(wrapper)
 			return self._functionCache[value]
@@ -221,7 +238,7 @@ class JSEvaluator(object):
 			return value.toBool()
 		elif value.isDate():
 			return value.toDateTime().toPyDateTime()
-		elif value.isFunction():
+		elif value.isFunction() or value.isError():
 			def _getJsArgs(args, kwargs):
 				if kwargs:
 					args = list(args) + [kwargs]

@@ -1,5 +1,6 @@
 /*
-	Copyright 2012, Marten de Vries
+	Copyright 2012-2013, Marten de Vries
+	Copyright 2012, Milan Boers
 
 	This file is part of OpenTeacher.
 
@@ -17,21 +18,21 @@
 	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-var logic;
+/* global $: false */
 
-logic = (function () {
-$!code!$
+var copyrightInfoDialog;
 
-	return {
-		//words string function(s)
-		compose: compose,
+copyrightInfoDialog = {
+	retranslate: function (_) {
+		"use strict";
 
-		//list string function(s)
-		parseList: parseList,
-		composeList: composeList,
+		$("#copyright-info-header").text(_("Copyright info"));
+	},
+	setupUi: function () {
+		"use strict";
 
-		//other
-		LessonType: LessonType,
-		InputTypingController: InputTypingController
+		$("#copyright-info-text")
+			.load("COPYING.txt")
+			.css("overflow", "auto");
 	}
-}());
+};

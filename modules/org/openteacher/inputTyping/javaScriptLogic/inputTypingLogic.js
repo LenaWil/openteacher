@@ -18,9 +18,9 @@
 */
 
 /*global Event: false, compose: false, parse: false, check: false, _: false */
-var Controller;
+var InputTypingController;
 
-Controller = function () {
+InputTypingController = function () {
 	"use strict";
 	var AttributeError, ValueError, showingCorrection, installEvents,
 		lessonType, lastWord, activity, enableUi, disableUi, onNewWord,
@@ -35,7 +35,7 @@ Controller = function () {
 		this.name = "AttributeError";
 		this.message = "No such attribute: '" + attr + "'";
 	};
-	AttributeError.prototoype = new Error();
+	AttributeError.prototype = new Error();
 
 	ValueError = function (msg) {
 		this.name = "ValueError";
@@ -181,7 +181,7 @@ Controller = function () {
 		assertShowingCorrection();
 		showingCorrection = false;
 
-		this.hideCorrection.send();
+		that.hideCorrection.send();
 		tellLessonTypeAboutTheResult();
 		enableUi();
 	};
@@ -197,7 +197,7 @@ Controller = function () {
 		assertLessonActive();
 		assertNotShowingCorrection();
 
-		this.lessonType.skip();
+		that.lessonType.skip();
 	};
 
 	this.correctAnywayTriggered = function () {
@@ -205,13 +205,13 @@ Controller = function () {
 		assertLessonActive();
 
 		if (showingCorrection) {
-			this.correctionShowingDone();
+			that.correctionShowingDone();
 		}
 		lastResult.result = "right";
 		lastResult.givenAnswer= _("Corrected: %s").replace("%s", lastResult.givenAnswer);
 
-		this.lessonType.correctLastAnswer(lastResult);
-		this.disableCorrectAnyway.send();
+		that.lessonType.correctLastAnswer(lastResult);
+		that.disableCorrectAnyway.send();
 	};
 
 	//setup object

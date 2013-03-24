@@ -38,7 +38,7 @@ class JSInputTypingLogicModule(object):
 		self.filesWithTranslations = ("inputTypingLogic.js",)
 
 	def createController(self, *args, **kwargs):
-		return self._js["Controller"].new(*args, **kwargs)
+		return self._js["InputTypingController"].new(*args, **kwargs)
 
 	def enable(self):
 		self._modules = next(iter(self._mm.mods(type="modules")))
