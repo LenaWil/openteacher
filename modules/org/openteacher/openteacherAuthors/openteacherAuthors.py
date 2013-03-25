@@ -87,6 +87,9 @@ class OpenTeacherAuthorsModule(object):
 		#IRC channel spammers
 		r.add(a.registerAuthor(_("Chat channel spammer"), u"Stefan de Vries"))
 
+		#Bug hunters
+		r.add(a.registerAuthor(_("Bug hunter"), u"Michael Tel"))
+
 		#Translators
 		r.add(a.registerAuthor(_("Translator (%s)") % "Afrikaans", u"computergeoffrey"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Arabic", u"Aminos Amigos"))

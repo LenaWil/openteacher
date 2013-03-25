@@ -122,6 +122,7 @@ class CommandLineInterfaceModule(object):
 			self._mm.mods(type="event"),
 			self._mm.mods(type="inputTypingLogic"),
 			self._mm.mods(type="wordsStringComposer"),
+			self._mm.mods(type="authors"),
 		)
 		self.uses = (
 			self._mm.mods(type="load"),
@@ -297,6 +298,15 @@ class CommandLineInterfaceModule(object):
 			lts.append(mod.name.encode(sys.stdin.encoding or "UTF-8"))
 		return lts
 
+	def _authors(self, args):
+		authors = self._modules.default("active", type="authors").registeredAuthors
+		if args["category"] is not None:
+			authors = filter(lambda (c, n): c == args["category"], authors)
+		output = []
+		for category, name in sorted(authors):
+			output.append("%s: %s" % (name, category))
+		print "\n\n".join(output)
+
 	def _practiseWordList(self, args):
 		inputFile = args["file"]
 
@@ -335,6 +345,10 @@ class CommandLineInterfaceModule(object):
 		parser.add_argument("+v", "++version", action="version", version=version)
 
 		subparsers = parser.add_subparsers()
+
+		authors = subparsers.add_parser("authors", help="show OpenTeacher's authors", prefix_chars="+")
+		authors.add_argument("+c", "++category", help="only show authors in the specified category")
+		authors.set_defaults(func=self._authors)
 
 		#if at least one saver and loader available:
 		if set(self._mm.mods("active", type="load")) and set(self._mm.mods("active", type="save")):

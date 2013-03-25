@@ -54,13 +54,19 @@ class TestCase(unittest.TestCase):
 		for result in self._test("+v"):
 			self.assertTrue(result)
 
+	def testAuthors(self):
+		"""authors"""
+
+		for result in self._test("authors"):
+			self.assertTrue(result)
+
 	def testHelp(self):
 		"""Test the most import help commands. practise-word-list not
 		   because it depends on urwid which this test suite shouldn't
 		   depend on in my opinion.
 
 		"""
-		for command in ["+h", "convert +h", "reverse-list +h", "view-word-list +h", "new-word-list +h", "ocr-word-list +h", "merge +h"]:
+		for command in ["+h", "convert +h", "reverse-list +h", "view-word-list +h", "new-word-list +h", "ocr-word-list +h", "merge +h", "authors +h"]:
 			for result in self._test(command):
 				self.assertTrue(result)
 
