@@ -118,6 +118,7 @@ def getHangmanTeachWidget():
 				return
 			wordLabelList = list(self.wordLabel.text())
 			if len(guess) == 1:
+				self.guesses.append(guess)
 				results = self.word.guessCharacter(guess)
 				if results:
 					for i in results:
@@ -136,6 +137,7 @@ def getHangmanTeachWidget():
 					if self.word.mistakes >= 6:
 						self.showEndOfGame(False)
 			elif len(guess) > 1:
+				self.guesses.append(guess)
 				if self.word.guessWord(guess):
 					self.showEndOfGame(True)
 				else:
@@ -143,8 +145,9 @@ def getHangmanTeachWidget():
 					self.hgraph.update()
 					if self.word.mistakes >= 6:
 						self.showEndOfGame(False)
-			self.guesses.append(guess)
 			self.inputLineEdit.clear()
+			if self.inputLineEdit.isVisible():
+				self.inputLineEdit.setFocus(True)
 			
 		def showEndOfGame(self, win):
 			if win:
@@ -158,6 +161,8 @@ def getHangmanTeachWidget():
 				"itemId": self.otWord["id"],
 				"givenAnswer": givenAnswer,
 			})
+			
+			self.guesses = []
 			
 			try:
 				self._end
