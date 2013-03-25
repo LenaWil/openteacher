@@ -405,7 +405,13 @@ class GuiModule(object):
 			self._widget.menuBar().setNativeMenuBar(False)
 			self._widget.showFullScreen()
 		else:
-			self._widget.menuBar().setNativeMenuBar(True)
+			if platform.linux_distribution()[0] != "Ubuntu":
+				#on Unity, we don't re-enable the native menu bar,
+				#because a re-enabled native menu bar doesn't work ok.
+				#
+				#FIXME maybe: if this is ever fixed, remove the platform
+				#check again.
+				self._widget.menuBar().setNativeMenuBar(True)
 			self._widget.showNormal()
 
 	def hide(self):
