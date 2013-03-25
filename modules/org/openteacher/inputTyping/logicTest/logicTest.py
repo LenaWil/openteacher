@@ -26,8 +26,6 @@ class CheckCall(object):
 		super(CheckCall, self).__init__(*args, **kwargs)
 
 		self.reset()
-		self.args = ()
-		self.kwargs = {}
 
 	def __call__(self, *args, **kwargs):
 		self.called = True
@@ -36,6 +34,8 @@ class CheckCall(object):
 
 	def reset(self):
 		self.called = False
+		self.args = ()
+		self.kwargs = {}
 
 class UiEnablerWatcher(object):
 	def __init__(self, controller, *args, **kwargs):

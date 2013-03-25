@@ -110,7 +110,8 @@ def installQtClasses():
 			self._listView = QtGui.QListView()
 			self._model = Model(choices)
 			self._listView.setModel(self._model)
-			self._listView.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
+			if not self.singleOnly:
+				self._listView.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
 			self._listView.doubleClicked.connect(self.accept)
 
 			buttonBox = QtGui.QDialogButtonBox(
@@ -131,11 +132,13 @@ def installQtClasses():
 			return [self._model.getChoice(i) for i in self._listView.selectedIndexes()]
 
 	class CategorySelectDialog(AbstractSelectDialog):
+		singleOnly = True
 		def retranslate(self):
 			self.setWindowTitle(_("Select category"))
 			self.label.setText(_("Please select a category"))
 
 	class ListSelectDialog(AbstractSelectDialog):
+		singleOnly = False
 		def retranslate(self):
 			self.setWindowTitle(_("Select list"))
 			self.label.setText(_("Please select a list"))
@@ -242,18 +245,18 @@ class StudyStackApiModule(object):
 	def _import(self):
 		try:
 			d = self._showDialog(CategorySelectDialog(self._api.getCategories()))
-			if not d:
+			if not d.result():
 				return
-			for categoryId in d.chosenItems:
-				d = self._showDialog(ListSelectDialog(self._api.getLists(categoryId)))
-				if not d:
-					continue
-				for listId in d.chosenItems:
-					list = self._api.getList(listId)
-					try:
-						self._loadList(list)
-					except NotImplementedError:
-						return
+			categoryId = d.chosenItems[0]
+			d = self._showDialog(ListSelectDialog(self._api.getLists(categoryId)))
+			if not d.result():
+				return
+			for listId in d.chosenItems:
+				list = self._api.getList(listId)
+				try:
+					self._loadList(list)
+				except NotImplementedError:
+					return
 		except urllib2.URLError, e:
 			#for debugging purposes
 			print e

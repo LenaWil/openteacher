@@ -98,8 +98,9 @@ def installQtClasses():
 			self._listView = QtGui.QListView()
 			self._model = Model(choices)
 			self._listView.setModel(self._model)
-			self._listView.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
 			self._listView.doubleClicked.connect(self.accept)
+			if not self.singleOnly:
+				self._listView.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
 
 			buttonBox = QtGui.QDialogButtonBox(
 				QtGui.QDialogButtonBox.Cancel | QtGui.QDialogButtonBox.Ok,
@@ -119,16 +120,19 @@ def installQtClasses():
 			return [self._model.getChoice(i) for i in self._listView.selectedIndexes()]
 
 	class CategorySelectDialog(AbstractSelectDialog):
+		singleOnly = True
 		def retranslate(self):
 			self.setWindowTitle(_("Select category"))
 			self.label.setText(_("Please select a category"))
 
 	class BookSelectDialog(AbstractSelectDialog):
+		singleOnly = True
 		def retranslate(self):
 			self.setWindowTitle(_("Select book"))
 			self.label.setText(_("Please select a book"))
 
 	class ListSelectDialog(AbstractSelectDialog):
+		singleOnly = False
 		def retranslate(self):
 			self.setWindowTitle(_("Select list"))
 			self.label.setText(_("Please select a list"))
@@ -252,22 +256,22 @@ class VocatrainApiModule(object):
 		serviceName = api.service[7:-1]
 		try:
 			d = self._showDialog(CategorySelectDialog(api.getCategories()))
-			if not d:
+			if not d.result():
 				return
-			for categoryId in d.chosenItems:
-				d = self._showDialog(BookSelectDialog(api.getBook(categoryId)))
-				if not d:
-					continue
-				for bookId in d.chosenItems:
-					d = self._showDialog(ListSelectDialog(api.getLists(bookId)))
-					if not d:
-						continue
-					for listId in d.chosenItems:
-						list = api.getList(listId)
-						try:
-							self._loadList(list)
-						except NotImplementedError:
-							return
+			categoryId = d.chosenItems[0]
+			d = self._showDialog(BookSelectDialog(api.getBook(categoryId)))
+			if not d.result():
+				return
+			bookId = d.chosenItems[0]
+			d = self._showDialog(ListSelectDialog(api.getLists(bookId)))
+			if not d.result():
+				return
+			for listId in d.chosenItems:
+				list = api.getList(listId)
+				try:
+					self._loadList(list)
+				except NotImplementedError:
+					return
 		except urllib2.URLError, e:
 			#for debugging purposes
 			print e

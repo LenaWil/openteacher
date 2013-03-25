@@ -312,6 +312,9 @@ class FlashcardexchangeApiModule(object):
 			self._retranslate()
 			self._dialog.exec_()
 
+			if not self._dialog.result():
+				return
+
 			for setId in self._dialog.chosenResults:
 				list = self._api.downloadSet(setId)
 				try:
