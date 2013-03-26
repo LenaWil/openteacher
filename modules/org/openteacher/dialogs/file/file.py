@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -22,6 +22,8 @@
 import os
 
 class FileDialogsModule(object):
+	"""The file dialogs; used to get filenames for loading and saving."""
+
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(FileDialogsModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager

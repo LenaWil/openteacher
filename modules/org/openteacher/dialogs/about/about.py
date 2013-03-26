@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #	Copyright 2008-2011, Roel Huybrechts
 #
 #	This file is part of OpenTeacher.
@@ -28,7 +28,7 @@ def getAboutTextLabel():
 	class AboutTextLabel(QtGui.QLabel):
 		def __init__(self, metadata, templatePath, *args, **kwargs):
 			super(AboutTextLabel, self).__init__(*args, **kwargs)
-			
+
 			self._metadata = metadata
 			self._templatePath = templatePath
 
@@ -55,6 +55,8 @@ def getAboutImageLabel():
 
 def getAboutWidget():
 	class AboutWidget(QtGui.QWidget):
+		"""The about page (shows some metadata)."""
+
 		def __init__(self, metadata, templatePath, *args, **kwargs):
 			super(AboutWidget, self).__init__(*args, **kwargs)
 
@@ -107,6 +109,10 @@ def getLongLicenseWidget():
 
 def getLicenseWidget():
 	class LicenseWidget(QtGui.QStackedWidget):
+		"""The license page. Can show both the short copyright notice,
+		   and the full license.
+
+		"""
 		def __init__(self, metadata, *args, **kwargs):
 			super(LicenseWidget, self).__init__(*args, **kwargs)
 
@@ -176,6 +182,10 @@ def getPersonWidget():
 
 def getAuthorsWidget():
 	class AuthorsWidget(QtGui.QWidget):
+		"""The authors widget. Displays all authors of OpenTeacher with
+		   a fade animation.
+
+		"""
 		def __init__(self, authors, *args, **kwargs):
 			super(AuthorsWidget, self).__init__(*args, **kwargs)
 			
@@ -225,6 +235,10 @@ def getAuthorsWidget():
 
 def getAboutDialog():
 	class AboutDialog(QtGui.QTabWidget):
+		"""The about dialog, consists of an about page, a license page
+		   and an authors page.
+
+		"""
 		def __init__(self, authors, metadata, templatePath, *args, **kwargs):
 			super(AboutDialog, self).__init__(*args, **kwargs)
 
@@ -257,6 +271,8 @@ def getAboutDialog():
 	return AboutDialog
 
 class AboutDialogModule(object):
+	"""Provides the about dialog."""
+
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(AboutDialogModule, self).__init__(*args, **kwargs)
 

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Milan Boers
+#	Copyright 2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -132,6 +133,14 @@ class DialogShower(object):
 		tabLayout.insertWidget(0, dialog)
 
 class DialogShowerModule(object):
+	"""This module allows to show a message in a in the main window
+	   embedded dialog.
+
+	   To do that, you need to call .send() on one of the events defined
+	   in this class. The arguments are the tab on which it needs to be
+	   shown, and the text of the message.
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(DialogShowerModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager

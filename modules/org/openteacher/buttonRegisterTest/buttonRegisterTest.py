@@ -21,6 +21,8 @@
 import unittest
 
 class TestCase(unittest.TestCase):
+	"""Tests for the buttonRegister module"""
+
 	def testAddButton(self):
 		"""Test if the addButton event works"""
 

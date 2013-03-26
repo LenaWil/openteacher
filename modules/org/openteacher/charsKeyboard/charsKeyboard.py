@@ -23,6 +23,11 @@ import weakref
 
 def getCharsKeyboardWidget():
 	class CharsKeyboardWidget(QtGui.QWidget):
+		"""A keyboard widget that displays all characters passed to it
+		   in the constructor, and emits the letterChosen signal when
+		   one is clicked.
+
+		"""
 		letterChosen = QtCore.pyqtSignal([object])
 
 		def __init__(self, characters, *args,  **kwargs):
@@ -80,6 +85,10 @@ def getCharsKeyboardWidget():
 
 def getKeyboadsWidget():
 	class KeyboardsWidget(QtGui.QTabWidget):
+		"""A container of keyboard widgets, it has one keyboard widget
+		   for every different table of characters.
+
+		"""
 		def __init__(self, createEvent, data, *args, **kwargs):
 			super(KeyboardsWidget, self).__init__(*args, **kwargs)
 
@@ -102,6 +111,10 @@ def getKeyboadsWidget():
 	return KeyboardsWidget
 
 class CharsKeyboardModule(object):
+	"""This module offers an onscreen character keyboard widget, which
+	   makes use of the char modules as its data source.
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(CharsKeyboardModule, self).__init__(*args, **kwargs)
 
@@ -143,6 +156,11 @@ class CharsKeyboardModule(object):
 		del self._widgets
 
 	def createWidget(self):
+		"""Creates a keyboard widget. It has one OT-style event:
+		   letterChosen. Handlers should add the as argument passed char
+		   to their input box.
+
+		"""
 		kw = KeyboardsWidget(
 			self._modules.default(type="event").createEvent,
 			self._modules.sort("active", type="chars")

@@ -21,16 +21,25 @@
 import unittest
 
 class TestCase(unittest.TestCase):
+	"""A test that specifies how the interface of a character table
+	   module ('chars') should be.
+
+	"""
 	def testAmountOfColumns(self):
+		"""It should have 6 columns"""
+
 		for mod in self._mm.mods("active", type="chars"):
 			for row in mod.data:
 				self.assertEquals(len(row), 6)
 
 	def testRowLengthNotZero(self):
+		"""It should have rows"""
 		for mod in self._mm.mods("active", type="chars"):
 			self.assertFalse(len(mod.data) == 0)
 
 	def testUpdated(self):
+		"""If a mod allows notification on update, check if it works."""
+
 		def func():
 			data["called"] = True
 

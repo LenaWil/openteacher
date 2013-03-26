@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -23,6 +23,11 @@ import os
 
 def getOpenTeacherWebPage():
 	class OpenTeacherWebPage(QtWebKit.QWebPage):
+		"""A QWebPage that tries to fetch the online page, and if that
+		   doesn't succeed, fetches the offline page. It also supports
+		   retranslated.
+
+		"""
 		def __init__(self, url, userAgent, fallbackPath, *args, **kwargs):
 			super(OpenTeacherWebPage, self).__init__(*args, **kwargs)
 
@@ -50,6 +55,12 @@ def getOpenTeacherWebPage():
 
 def getDocumentationDialog():
 	class DocumentationDialog(QtWebKit.QWebView):
+		"""The documentation dialog. It shows the (html) user
+		   documentation of OpenTeacher. First it tries to fetch the
+		   online resource (it can be newer), otherwise it uses the
+		   offline fallback.
+
+		"""
 		def __init__(self, url, userAgent, fallbackPath, *args, **kwargs):
 			super(DocumentationDialog, self).__init__(*args, **kwargs)
 
@@ -66,6 +77,8 @@ def getDocumentationDialog():
 	return DocumentationDialog
 
 class DocumentationModule(object):
+	"""This module provides the documentation dialog."""
+
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(DocumentationModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager

@@ -19,6 +19,10 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 class DataTypeIconsModule(object):
+	"""This module provides icons for types of data OpenTeacher can
+	   handle, one example is for 'words'.
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(DataTypeIconsModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
@@ -26,8 +30,10 @@ class DataTypeIconsModule(object):
 		self.type = "dataTypeIcons"
 
 	def findIcon(self, type):
-		"""Raises KeyError if no icon can be found for 'type'."""
+		"""Returns a file path for the data type 'type'. Raises KeyError
+		   if no icon can be found for 'type'.
 
+		"""
 		return {
 			"words": self._mm.resourcePath("icons/words.png"),
 			"topo": self._mm.resourcePath("icons/topo.png"),

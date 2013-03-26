@@ -19,6 +19,11 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 class CyrillicModule(object):
+	"""Keeps a list of all cyrillic characters in table format in the
+	   'data' attribute, and the (translated) term 'Cyrillic' in the
+	   name attribute.
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(CyrillicModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager

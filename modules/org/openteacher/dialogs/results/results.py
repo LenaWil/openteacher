@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
+#	Copyright 2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -21,6 +22,10 @@
 import weakref
 
 class ResultsDialogModule(object):
+	"""An in the main window embedded dialog that can be used to view
+	   test results.
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(ResultsDialogModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
@@ -61,6 +66,10 @@ class ResultsDialogModule(object):
 		del self._dialogs
 
 	def showResults(self, list, dataType, test):
+		"""Show results of a test. It's assumes that list has the type
+		   'dataType', and that 'test' is a test about it.
+
+		"""
 		resultsWidget = self._modules.default(
 			"active",
 			type="testViewer"

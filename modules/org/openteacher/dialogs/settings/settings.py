@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -25,6 +25,10 @@ import copy
 
 def getCategoryTab():
 	class CategoryTab(QtGui.QWidget):
+		"""A category tab. It consists out of subcategory group boxes,
+		   which contain the actual settings.
+
+		"""
 		def __init__(self, byKey, widgets, name, inCategory, *args, **kwargs):
 			super(CategoryTab, self).__init__(*args, **kwargs)
 
@@ -66,6 +70,8 @@ def getCategoryTab():
 
 def getSettingsDialog():
 	class SettingsDialog(QtGui.QTabWidget):
+		"""The actual settings dialog. It consists of category tabs."""
+
 		def __init__(self, byKey, settings, widgets, *args, **kwargs):
 			super(SettingsDialog, self).__init__(*args, **kwargs)
 
@@ -156,6 +162,10 @@ def getSettingsDialog():
 	return SettingsDialog
 
 class SettingsDialogModule(object):
+	"""The settings dialog, which shows all registered settings in the
+	   UI.
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(SettingsDialogModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
@@ -234,6 +244,10 @@ class SettingsDialogModule(object):
 		del self._activeDialogs
 
 	def show(self):
+		"""Shows the settings dialog. Normally there's no need to call
+		   this manually, but it's possible.
+
+		"""
 		dialog = SettingsDialog(
 			self._settingsFilterer.byKey,
 			self._settings.registeredSettings,

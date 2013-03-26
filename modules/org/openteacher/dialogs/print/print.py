@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -20,6 +20,8 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 class PrintDialogModule(object):
+	"""The print dialog."""
+
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(PrintDialogModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager

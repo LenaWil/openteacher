@@ -20,6 +20,11 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 class GreekModule(object):
+	"""Keeps a list of all greek characters in table format in the
+	   'data' attribute, and the (translated) term 'Greek' in the
+	   name attribute.
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(GreekModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager

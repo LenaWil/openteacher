@@ -29,6 +29,9 @@ import sys
 import re
 import tempfile
 
+import __builtin__
+BUILTIN_TYPES = [t for t in __builtin__.__dict__.itervalues() if isinstance(t, type)]
+
 class ModulesHandler(object):
 	def __init__(self, moduleManager, templates, buildModuleGraph, devDocsBaseDir, *args, **kwargs):
 		super(ModulesHandler, self).__init__(*args, **kwargs)
@@ -289,15 +292,14 @@ class ModulesHandler(object):
 
 		propertyDocs = {}
 		for property in properties:
-			try:
-				propertyObj = getattr(mod.__class__, property)
-			except AttributeError:
-				#no @property
+			propertyObj = getattr(mod, property)
+			if propertyObj.__class__ != type and propertyObj.__class__ in BUILTIN_TYPES:
+				#docstring is uninteresting
 				continue
 			try:
 				propertyDocs[property] = self._format(propertyObj.__doc__)
 			except AttributeError:
-				#also no @property
+				#no docstring.
 				continue
 
 		#uses

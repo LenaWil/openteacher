@@ -19,6 +19,12 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 class DeveloperDocumentationModule(object):
+	"""A centralized place for all OpenTeacher developer documentation.
+	   The directory tree of restructuredtext files that contains the
+	   actual documentation is available via the
+	   'developerDocumentationBaseDirectory' attribute.
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(DeveloperDocumentationModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager

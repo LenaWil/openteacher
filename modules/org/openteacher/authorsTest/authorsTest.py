@@ -23,6 +23,8 @@ import math
 import uuid
 
 class TestCase(unittest.TestCase):
+	"""Tests for the authors module."""
+
 	def setUp(self):
 		for mod in self._mm.mods("active", type="authors"):
 			#should clear state between runs
@@ -35,6 +37,8 @@ class TestCase(unittest.TestCase):
 			self.assertIn((u"some work", u"name"), mod.registeredAuthors)
 
 	def testAddingMultipleTimes(self):
+		"""Persons added twice should only appear once."""
+
 		for mod in self._mm.mods("active", type="authors"):
 			#never seen somebody called 3.1415...?
 			mod.registerAuthor("Being great with circles", math.pi)
@@ -44,6 +48,10 @@ class TestCase(unittest.TestCase):
 			self.assertEqual(list(mod.registeredAuthors).count(item), 1)
 
 	def testAddingMultipleTimesAndRemoving(self):
+		"""Persons added multiple times but that are removed only once
+		   should still be there.
+
+		"""
 		for mod in self._mm.mods("active", type="authors"):
 			remove1 = mod.registerAuthor("Being great with circles", math.pi)
 			remove2 = mod.registerAuthor("Being great with circles", math.pi)
@@ -57,6 +65,10 @@ class TestCase(unittest.TestCase):
  			self.assertEqual(list(mod.registeredAuthors).count(item), 0)
 
 	def testModifyingMods(self):
+		"""The registeredAuthors attribute should not expose the
+		   internal data structure.
+
+		"""
 		for mod in self._mm.mods("active", type="authors"):
 			#pretty sure it's unique
 			value = uuid.uuid4()
@@ -68,6 +80,8 @@ class TestCase(unittest.TestCase):
 			self.assertNotIn(value, mod.registeredAuthors)
 
 	def testNotEasyUnicodifyable(self):
+		"""Data should be unicode or easily unicodifyable."""
+
 		for mod in self._mm.mods("active", type="authors"):
 			with self.assertRaises(UnicodeDecodeError):
 				mod.registerAuthor("a", "é".encode("UTF-8"))

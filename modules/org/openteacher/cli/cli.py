@@ -46,6 +46,10 @@ def getEnterEdit(Event):
 	return EnterEdit
 
 class PractisingInterface(object):
+	"""A command line interface for practising words, using the urwid
+	   toolkit.
+
+	"""
 	def __init__(self, createController, lessonType, *args, **kwargs):
 		super(PractisingInterface, self).__init__(*args, **kwargs)
 
@@ -108,6 +112,11 @@ class PractisingInterface(object):
 		self._txt.set_text("QUESTION: %s" % question)
 
 class CommandLineInterfaceModule(object):
+	"""This module provides a command line interface to a lot of
+	   OpenTeacher's functions, including list management, list
+	   practising, OCR, and viewing some program metadata.
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(CommandLineInterfaceModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
@@ -331,6 +340,11 @@ class CommandLineInterfaceModule(object):
 		self._ui.setNextItem(question)
 
 	def run(self, argList=None):
+		"""Runs the command line interface. Called by this module itself
+		   indirectly when in the 'cli' profile. Otherwise, you can call
+		   it with an optional argList. (defaults to sys.argv)
+
+		"""
 		if argList is None:
 			argList = sys.argv
 		#setup parser: using + instead of - to distinguish from the

@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #	Copyright 2012, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -23,6 +23,10 @@ import threading
 
 def getUpdatesDialog():
 	class UpdatesDialog(QtGui.QDialog):
+		"""The updates dialog; it asks the user if he/she wants to
+		   install updates.
+
+		"""
 		def __init__(self, updates, rememberChoice, *args, **kwargs):
 			super(UpdatesDialog, self).__init__(*args, **kwargs)
 
@@ -67,6 +71,10 @@ def getUpdatesDialog():
 	return UpdatesDialog
 
 class UpdatesDialogModule(object):
+	"""Provides the updates dialog. It is completely self-contained, so
+	   no public API.
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(UpdatesDialogModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager

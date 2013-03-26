@@ -24,6 +24,11 @@ import os
 import atexit
 
 class JSONShelve(dict):
+	"""A dict-like object of which the keys and values are persistent.
+	   Note that all keys need to be strings and that all values need
+	   to be JSON serializable.
+
+	"""
 	def __init__(self, filepath, *args, **kwargs):
 		super(JSONShelve, self).__init__(*args, **kwargs)
 

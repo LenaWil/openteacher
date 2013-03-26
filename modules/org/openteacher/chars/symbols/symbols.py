@@ -20,6 +20,11 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 class SymbolsModule(object):
+	"""Keeps a list of often used symbols in table format in the 'data'
+	   attribute. The 'name' attribute contains the translated text
+	   'Symbols'.
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(SymbolsModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
