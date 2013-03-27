@@ -25,6 +25,7 @@ import platform
 
 class MacPackagerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
+		print "test"
 		super(MacPackagerModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 

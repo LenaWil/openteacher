@@ -89,9 +89,9 @@ if not sys.frozen:
 		pass
 	from xml.etree import ElementTree
 
-with open("/tmp/ot-output.txt", "w") as f:
-	sys.stdout = f
-	sys.stderr = f
+f = open("/tmp/ot-output.txt", "w")
+sys.stdout = f
+sys.stderr = f
 
 sys.path.insert(0, os.path.join(os.path.dirname(sys.executable), 'source'))
 sys.exit(__import__('openteacher').ModuleApplication().run())
