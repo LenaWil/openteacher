@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-03-10 21:22+0100\n"
-"PO-Revision-Date: 2013-02-02 15:18+0000\n"
-"Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
+"PO-Revision-Date: 2013-03-26 19:09+0000\n"
+"Last-Translator: Michael Tel <m.tel@xs4all.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-03-11 05:05+0000\n"
-"X-Generator: Launchpad (build 16523)\n"
+"X-Launchpad-Export-Date: 2013-03-27 05:05+0000\n"
+"X-Generator: Launchpad (build 16540)\n"
 "Language: nl\n"
 
 #: model.py:95
@@ -101,14 +101,14 @@ msgstr ""
 
 #: model.py:220
 msgid "To archieve that, you might try slowing down a bit."
-msgstr "Om dat te bereiken, kan u proberen wat langzamer te gaan."
+msgstr "Om dat te bereiken, kunt u proberen wat langzamer te gaan."
 
 #: model.py:224
 msgid ""
 "You made zero mistakes and are typing fast enough, so you can continue "
 "practising some new letter combinations. Keep up the good work!"
 msgstr ""
-"U maakte nul fouten en typt snel genoeg, dus u kan doorgaan met het oefenen "
+"U maakte nul fouten en typt snel genoeg, dus u kunt doorgaan met het oefenen "
 "van een paar nieuwe lettercombinaties. Ga zo door!"
 
 #: model.py:225
@@ -137,11 +137,11 @@ msgid ""
 "on the current row. Make sure you return your finger to its position on the "
 "home row when you're typing another letter."
 msgstr ""
-"De toetsen die u gaat oefenen worden getyped met de linker en rechter "
-"wijsvinger en liggen verder weg van deze  vingers dan de andere toetsen die "
-"we hebben geoefend op de huidige rij. Zorg ervoor dat u uw vinger "
-"terugbrengt naar de uitgangspositie op de thuisrij wanneer u een andere "
-"letter typt."
+"De toetsen die u gaat oefenen worden getyped met de linker- en "
+"rechterwijsvinger en liggen verder weg van deze vingers dan de andere "
+"toetsen die we hebben geoefend op de huidige rij. Zorg ervoor dat u uw "
+"vinger terugbrengt naar de uitgangspositie op de thuisrij wanneer u een "
+"andere letter typt."
 
 #: model.py:236
 msgid ""

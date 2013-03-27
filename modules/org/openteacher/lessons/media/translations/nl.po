@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-03-10 21:22+0100\n"
-"PO-Revision-Date: 2012-09-02 16:56+0000\n"
-"Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
+"PO-Revision-Date: 2013-03-26 18:49+0000\n"
+"Last-Translator: Michael Tel <m.tel@xs4all.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-11 05:03+0000\n"
-"X-Generator: Launchpad (build 16523)\n"
+"X-Launchpad-Export-Date: 2013-03-27 05:05+0000\n"
+"X-Generator: Launchpad (build 16540)\n"
 "Language: \n"
 
 #: media.py:163 media.py:219 media.py:221
@@ -33,8 +33,7 @@ msgstr "Lege vraag of antwoord"
 
 #: media.py:284
 msgid "Please enter at least one question and one answer for every item."
-msgstr ""
-"Vul alstublieft ten minste een vraag of een antwoord in voor ieder item."
+msgstr "Vul voor ieder item ten minste één vraag of één antwoord in."
 
 #~ msgid "Remove"
 #~ msgstr "Verwijder"

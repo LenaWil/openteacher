@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-03-10 21:23+0100\n"
-"PO-Revision-Date: 2013-03-24 14:35+0000\n"
-"Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
+"PO-Revision-Date: 2013-03-26 17:51+0000\n"
+"Last-Translator: Michael Tel <m.tel@xs4all.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-25 04:50+0000\n"
+"X-Launchpad-Export-Date: 2013-03-27 05:05+0000\n"
 "X-Generator: Launchpad (build 16540)\n"
 "Language: nl\n"
 
@@ -68,7 +68,7 @@ msgstr ""
 
 #: wrtsApi.py:261
 msgid "No word list metadata given."
-msgstr "Geen woordenlijstinformatie opgegeven"
+msgstr "Geen woordenlijstinformatie opgegeven."
 
 #: wrtsApi.py:262
 msgid ""
@@ -103,7 +103,7 @@ msgstr "U heeft geen lijst geselecteerd. Probeer opnieuw."
 
 #: wrtsApi.py:371
 msgid "The word list was imported from WRDS successfully."
-msgstr "De woordjeslijst is met succes van WRTS geimporteerd."
+msgstr "De woordjeslijst is met succes van WRTS geïmporteerd."
 
 #: ui.py:72
 msgid "WRDS - login please:"
