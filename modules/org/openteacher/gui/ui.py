@@ -167,7 +167,7 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 		self.fileMenu = self.menuBar().addMenu("")
 
 		self.newAction = self.fileMenu.addAction(
-			QtGui.QIcon.fromTheme("filenew",
+			QtGui.QIcon.fromTheme("document-new",
 				QtGui.QIcon(ICON_PATH + "new.png"),
 			),
 			""
@@ -175,7 +175,7 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 		self.newAction.setShortcut(QtGui.QKeySequence.New)
 
 		self.openAction = self.fileMenu.addAction(
-			QtGui.QIcon.fromTheme("fileopen",
+			QtGui.QIcon.fromTheme("document-open",
 				QtGui.QIcon(ICON_PATH + "open.png")
 			),
 			""
@@ -185,7 +185,7 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 		self.fileMenu.addSeparator()
 
 		self.saveAction = self.fileMenu.addAction(
-			QtGui.QIcon.fromTheme("filesave",
+			QtGui.QIcon.fromTheme("document-save",
 				QtGui.QIcon(ICON_PATH + "save.png")
 			),
 			""
@@ -193,7 +193,7 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 		self.saveAction.setShortcut(QtGui.QKeySequence.Save)
 
 		self.saveAsAction = self.fileMenu.addAction(
-			QtGui.QIcon.fromTheme("filesaveas",
+			QtGui.QIcon.fromTheme("document-save-as",
 				QtGui.QIcon(ICON_PATH + "save_as.png"),
 			),
 			""
@@ -203,7 +203,7 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 		self.fileMenu.addSeparator()
 
 		self.printAction = self.fileMenu.addAction(
-			QtGui.QIcon.fromTheme("fileprint",
+			QtGui.QIcon.fromTheme("document-print",
 				QtGui.QIcon(ICON_PATH + "print.png")
 			),
 			""
@@ -213,7 +213,7 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 		self.fileMenu.addSeparator()
 
 		self.quitAction = self.fileMenu.addAction(
-			QtGui.QIcon.fromTheme("exit",
+			QtGui.QIcon.fromTheme("application-exit",
 				QtGui.QIcon(ICON_PATH + "quit.png")
 			),
 			""

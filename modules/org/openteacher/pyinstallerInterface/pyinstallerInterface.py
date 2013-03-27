@@ -113,6 +113,8 @@ sys.exit(__import__('openteacher').ModuleApplication().run())
 		sourcePath = self._saveSource()
 		shutil.copytree(sourcePath, os.path.join(resultPath, "source"))
 
+		raw_input(path)
+
 		return resultPath
 
 	def _cleanup(self):
