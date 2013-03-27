@@ -116,7 +116,7 @@ class TextToSpeechModule(object):
 		self.filesWithTranslations = ("textToSpeech.py",)
 
 	def enable(self):
-		if platform.system() == "darwin":
+		if platform.system() == "Darwin":
 			#FIXME: remain disabled for now, but that should change once
 			#...
 			return
