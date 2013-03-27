@@ -89,6 +89,10 @@ if not sys.frozen:
 		pass
 	from xml.etree import ElementTree
 
+with open("/tmp/ot-output.txt", "w") as f:
+	sys.stdout = f
+	sys.stderr = f
+
 sys.path.insert(0, os.path.join(os.path.dirname(sys.executable), 'source'))
 sys.exit(__import__('openteacher').ModuleApplication().run())
 			""")
@@ -108,12 +112,17 @@ sys.exit(__import__('openteacher').ModuleApplication().run())
 		])
 		os.chdir(cwd)
 
-		resultPath = os.path.join(path, "dist", self._metadata["name"].lower())
+		if platform.system() == "Darwin":
+			resultPath = os.path.join(path, "dist", self._metadata["name"].lower() + ".app")
+		else:
+			resultPath = os.path.join(path, "dist", self._metadata["name"].lower())
 
 		sourcePath = self._saveSource()
-		shutil.copytree(sourcePath, os.path.join(resultPath, "source"))
 
-		raw_input(path)
+		if platform.system() == "Darwin":
+			shutil.copytree(sourcePath, os.path.join(resultPath, "Contents/MacOS/source"))
+		else:
+			shutil.copytree(sourcePath, os.path.join(resultPath, "source"))
 
 		return resultPath
 

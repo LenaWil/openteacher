@@ -52,8 +52,9 @@ class MacPackagerModule(object):
 
 	def enable(self):
 		if platform.system() != "Darwin":
+			pass
 			#remain inactive
-			return
+#			return
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._pyinstaller = self._modules.default("active", type="pyinstallerInterface")
 
