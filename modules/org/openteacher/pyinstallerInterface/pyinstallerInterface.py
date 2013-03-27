@@ -100,7 +100,7 @@ sys.exit(__import__('openteacher').ModuleApplication().run())
 			pythonExecutable = "python"
 		subprocess.check_call([
 			pythonExecutable,
-			os.path.join(cwd, "pyinstaller-2.0", "pyinstaller.py"),
+			os.path.join(cwd, "pyinstaller-dev", "pyinstaller.py"),
 			"--windowed",
 			"--name", self._metadata["name"].lower(),
 			"--icon", "icon.ico",
