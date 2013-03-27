@@ -81,6 +81,7 @@ if not sys.frozen:
 	import chardet
 	import contextlib
 	import bisect
+	import HTMLParser
 	#windows only, so wrapped.
 	try:
 		import win32com
@@ -93,9 +94,13 @@ sys.exit(__import__('openteacher').ModuleApplication().run())
 			""")
 		cwd = os.getcwd()
 		os.chdir(path)
+		if platform.system() == "Windows":
+			pythonExecutable = "C:\Python{0}{1}\python.exe".format(*platform.python_version_tuple())
+		else:
+			pythonExecutable = "python"
 		subprocess.check_call([
-			"C:\Python{0}{1}\python.exe".format(*platform.python_version_tuple()),
-			os.path.join(cwd, "pyinstaller-2.0\pyinstaller.py"),
+			pythonExecutable,
+			os.path.join(cwd, "pyinstaller-2.0", "pyinstaller.py"),
 			"--windowed",
 			"--name", self._metadata["name"].lower(),
 			"--icon", "icon.ico",

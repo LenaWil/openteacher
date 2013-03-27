@@ -24,7 +24,7 @@ import subprocess
 import threading
 import shlex
 import StringIO
-
+import platform
 import sys
 
 class DependencyError(Exception): pass
@@ -116,6 +116,10 @@ class TextToSpeechModule(object):
 		self.filesWithTranslations = ("textToSpeech.py",)
 
 	def enable(self):
+		if platform.system() == "darwin":
+			#FIXME: remain disabled for now, but that should change once
+			#...
+			return
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		
 		#load translator
