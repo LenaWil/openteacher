@@ -69,7 +69,11 @@ def initializeWidgets():
 			return QtGui.QColor.fromHsvF(self._h, 0.3, 0.9)
 
 		def paintEvent(self, event):
-			cellSize = int(math.floor(self.width() / 15.0))
+			#make the keyboard as large as possible, but don't let it
+			#be partly drawn outside the visible widget area.
+			widthCellSize = int(math.floor(self.width() / 15.0)) -1
+			heightCellSize = int(math.floor(self.height() / 5.0)) -1
+			cellSize = min(widthCellSize, heightCellSize)
 
 			p = QtGui.QPainter()
 			p.begin(self)
