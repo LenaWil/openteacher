@@ -20,7 +20,6 @@
 
 # cherrypy, pygments, pyratemp & docutils.core are imported in enable()
 
-import webbrowser
 import inspect
 import os
 import types

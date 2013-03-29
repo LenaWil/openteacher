@@ -21,7 +21,6 @@
 
 #pyratemp, QtCore & QtGui imported in enable()
 import random
-import gettext
 import weakref
 
 def getAboutTextLabel():

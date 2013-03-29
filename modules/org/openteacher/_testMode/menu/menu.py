@@ -33,20 +33,15 @@ class TestMenuModule(object):
 			"default": -1,
 		}
 
-		self.uses = (
-			self._mm.mods(type="translator"),
-		)
 		self.requires = (
 			self._mm.mods(type="ui"),
+		)
+		self.uses = (
+			self._mm.mods(type="translator"),
 		)
 		self.filesWithTranslations = ("menu.py",)
 
 	def enable(self):
-		global QtGui
-		try:
-			from PyQt4 import QtGui
-		except ImportError:
-			return
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		ui = self._modules.default("active", type="ui")

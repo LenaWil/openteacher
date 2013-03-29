@@ -19,8 +19,6 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import cherrypy
-import cherrypy.wsgiserver
-import cherrypy.wsgiserver.ssl_builtin
 
 import os
 import sys

@@ -40,7 +40,6 @@ class TestModeUploaderModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.requires = (
-			self._mm.mods(type="ui"),
 			self._mm.mods(type="fileDialogs"),
 			self._mm.mods(type="testModeConnection"),
 			self._mm.mods(type="testMenu"),
@@ -49,11 +48,6 @@ class TestModeUploaderModule(object):
 		self.filesWithTranslations = ("uploader.py",)
 
 	def enable(self):
-		global QtCore, QtGui
-		try:
-			from PyQt4 import QtCore, QtGui
-		except ImportError:
-			return
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._fileDialogs = self._modules.default("active", type="fileDialogs")
 

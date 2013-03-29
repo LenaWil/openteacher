@@ -189,6 +189,8 @@ class WebsiteGeneratorModule(object):
 		"""Wraps content into a page template"""
 
 		filename = os.path.join(self._templatesDir, "base.html")
+		templatePath = pageName
+		pageName = os.path.splitext(pageName)[0]
 		return self._evaluateTemplate(filename, pageName, pageName=pageName, content=content)
 
 	def _evaluateTemplate(self, templatePath, thisPage, **kwargs):

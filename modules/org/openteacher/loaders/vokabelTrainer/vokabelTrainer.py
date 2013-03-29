@@ -19,8 +19,6 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 from etree import ElementTree
-import locale
-import datetime
 
 class VokabelTrainerLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

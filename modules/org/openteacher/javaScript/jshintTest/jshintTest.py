@@ -21,7 +21,6 @@
 import unittest
 import subprocess
 import os
-import StringIO
 
 class TestCase(unittest.TestCase):
 	def _jsFiles(self):

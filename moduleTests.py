@@ -22,7 +22,6 @@ import pyximport; pyximport.install()
 import moduleManager
 import unittest
 import openteacher
-import json
 import faulthandler; faulthandler.enable()
 
 class ModulesTest(unittest.TestCase):

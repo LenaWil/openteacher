@@ -23,11 +23,10 @@ import os
 import subprocess
 import threading
 import shlex
-import StringIO
 import platform
-import sys
 
-class DependencyError(Exception): pass
+class DependencyError(Exception):
+	pass
 
 class SpeakThread(threading.Thread):
 	def __init__(self,engine,voiceid,text):

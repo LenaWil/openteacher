@@ -18,8 +18,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import collections
-
 # Created by Raymond Hettinger on Mon, 12 Jan 2009 (MIT) 
 ## {{{ http://code.activestate.com/recipes/576611/ (r11)
 from operator import itemgetter

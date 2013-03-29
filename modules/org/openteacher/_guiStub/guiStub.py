@@ -47,9 +47,9 @@ class GuiModule(object):
 		self.type = "ui"
 
 	def enable(self):
-		global QtCore, QtGui
+		global QtGui
 		try:
-			from PyQt4 import QtCore, QtGui
+			from PyQt4 import QtGui
 		except ImportError:
 			return
 

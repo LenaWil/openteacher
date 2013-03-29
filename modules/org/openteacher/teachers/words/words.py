@@ -21,7 +21,6 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
-import copy
 import weakref
 
 def getTeachSettingsWidget():

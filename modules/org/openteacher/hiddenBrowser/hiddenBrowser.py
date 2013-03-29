@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 #	Copyright 2011-2012, Cas Widdershoven
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,8 +18,6 @@
 #
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
-
-import os
 
 def getWebBrowserWidget():
 	class WebBrowserWidget(QtGui.QWidget):

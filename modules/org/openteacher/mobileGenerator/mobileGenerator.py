@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -24,7 +24,6 @@ import os
 import json
 import urllib2
 import urllib
-import re
 
 class MobileGeneratorModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

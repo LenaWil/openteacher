@@ -43,11 +43,6 @@ class TestModule(object):
 		)
 
 	def enable(self):
-		global QtScript
-		try:
-			from PyQt4 import QtScript
-		except ImportError:
-			return
 		self.TestCase = TestCase
 		self.TestCase._mm = self._mm
 		self.active = True

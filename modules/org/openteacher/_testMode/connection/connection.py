@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Milan Boers
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -22,8 +22,6 @@
 import os
 import urllib
 import urllib2
-import cookielib
-import hashlib
 import socket
 import json
 
@@ -277,9 +275,9 @@ class TestModeConnectionModule(object):
 		self.connection.retranslate()
 
 	def enable(self):
-		global QtCore, QtGui
+		global QtGui
 		try:
-			from PyQt4 import QtCore, QtGui
+			from PyQt4 import QtGui
 		except ImportError:
 			return
 		global ConnectLoginWidget, ConnectWidget, LoginWidget

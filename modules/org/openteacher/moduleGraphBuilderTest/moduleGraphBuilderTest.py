@@ -20,7 +20,6 @@
 
 import unittest
 import tempfile
-import shutil
 import os
 
 class TestCase(unittest.TestCase):

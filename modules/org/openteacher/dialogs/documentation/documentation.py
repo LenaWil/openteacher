@@ -110,9 +110,9 @@ class DocumentationModule(object):
 		self._retranslate()
 
 	def enable(self):
-		global QtCore, QtGui, QtWebKit, QtNetwork
+		global QtCore, QtWebKit, QtNetwork
 		try:
-			from PyQt4 import QtCore, QtGui, QtWebKit, QtNetwork
+			from PyQt4 import QtCore, QtWebKit, QtNetwork
 		except ImportError:
 			return
 		global DocumentationDialog, OpenTeacherWebPage

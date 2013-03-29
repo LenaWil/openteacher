@@ -19,8 +19,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import datetime
-
 class KvtmlSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(KvtmlSaverModule, self).__init__(*args, **kwargs)

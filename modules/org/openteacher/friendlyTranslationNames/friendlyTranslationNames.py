@@ -19,8 +19,6 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import locale
-import collections
 
 class KeyAsDefaultDict(dict):
 	def __missing__(self, key):

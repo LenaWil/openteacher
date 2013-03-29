@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #	Copyright 2009 Nokia Corporation and/or its subsidiary(-ies)
 #
 #	This file is part of OpenTeacher.
@@ -20,7 +20,6 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt4 import QtCore, QtGui
-import os
 
 #INFO: ICON_PATH is set by gui.py . Set it yourself when re-using this
 #code in another context.

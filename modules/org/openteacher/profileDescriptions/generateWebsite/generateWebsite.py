@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2013, Milan Boers
+#	Copyright 2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -17,8 +18,6 @@
 #
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
-
-import os
 
 class ProfileDescriptionModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

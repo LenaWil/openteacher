@@ -53,11 +53,6 @@ class RpmPackagerModule(object):
 		}
 
 	def enable(self):
-		global QtGui
-		try:
-			from PyQt4 import QtGui
-		except ImportError:
-			return
 		if not platform.linux_distribution()[0].strip() in ("Fedora", "openSUSE"):
 			return #rpm based distro only module, remain inactive
 		self._modules = set(self._mm.mods(type="modules")).pop()
