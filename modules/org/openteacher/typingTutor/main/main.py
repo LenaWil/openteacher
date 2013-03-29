@@ -314,8 +314,9 @@ def initializeWidgets():
 		def _showLoginWidget(self):
 			self.setCurrentWidget(self._loginWidget)
 
-		def _showNewUser(self):
-			self._newUserDialog.clear()
+		def _showNewUser(self, clear=True):
+			if clear:
+				self._newUserDialog.clear()
 			self.setCurrentWidget(self._newUserDialog)
 
 		def _newUser(self):
@@ -329,14 +330,14 @@ def initializeWidgets():
 					_("Username empty"),
 					_("The username should not be empty. Please try again.")
 				)
-				self._showNewUser()
+				self._showNewUser(clear=False)
 			except self._model.UsernameTakenError:
 				QtGui.QMessageBox.critical(
 					self,
 					_("Username taken"),
 					_("That username is already taken. Please try again."),
 				)
-				self._showNewUser()
+				self._showNewUser(clear=False)
 			else:
 				self._userKnown(username)
 

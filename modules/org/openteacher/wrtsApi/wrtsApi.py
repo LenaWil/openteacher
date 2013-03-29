@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #	Copyright 2011, Cas Widdershoven
 #
 #	This file is part of OpenTeacher.
@@ -28,7 +28,6 @@ class WrtsApiModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 			self._mm.mods(type="settings"),
-			self._mm.mods(type="lesson"),
 		)
 		self.requires = (
 			self._mm.mods(type="ui"),
@@ -51,12 +50,9 @@ class WrtsApiModule(object):
 		}
 		self.filesWithTranslations = ("wrtsApi.py", "ui.py")
 
-	def _updateMenuItemsWrapper(self, *args, **kwargs):
-		self._updateMenuItems()
-
 	def _updateMenuItems(self):
 		lesson = self._lessonTracker.currentLesson
-		canExport = bool(lesson) and lesson.module.dataType == "words"
+		canExport = bool(lesson) and lesson.dataType == "words"
 		self._action.enabled = canExport
 
 	def enable(self):
@@ -81,11 +77,8 @@ class WrtsApiModule(object):
 		self._action = self._uiModule.fileMenu.addAction(self.priorities["all"])
 		self._action.triggered.handle(self.exportToWrts)
 
-		self._uiModule.tabChanged.handle(self._updateMenuItems)
+		self._lessonTracker.lessonChanged.handle(self._updateMenuItems)
 		self._updateMenuItems()
-
-		for module in self._mm.mods("active", type="lesson"):
-			module.lessonCreationFinished.handle(self._updateMenuItemsWrapper)
 
 		try:
 			self._settings = self._modules.default(type="settings")
@@ -131,10 +124,7 @@ class WrtsApiModule(object):
 
 		self._action.remove()
 
-		self._uiModule.tabChanged.unhandle(self._updateMenuItems)
-
-		for module in self._mm.mods("active", type="lesson"):
-			module.lessonCreationFinished.unhandle(self._updateMenuItemsWrapper)
+		self._lessonTracker.lessonChanged.unhandle(self._updateMenuItems)
 
 		del self._modules
 		del self._uiModule

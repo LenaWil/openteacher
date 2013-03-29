@@ -82,6 +82,7 @@ if not sys.frozen:
 	import contextlib
 	import bisect
 	import HTMLParser
+	import traceback
 	#windows only, so wrapped.
 	try:
 		import win32com

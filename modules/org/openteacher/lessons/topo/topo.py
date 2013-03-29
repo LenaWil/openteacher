@@ -154,40 +154,13 @@ class TeachTopoLessonModule(object):
 		self.counter += 1
 		self.lessonCreationFinished.send()
 		return lesson
-	
-	def loadFromLesson(self, lessonl):
-		lesson = self.createLesson()
-		#TRANSLATORS: used as a label in case a filename of a topo
-		#TRANSLATORS: lesson isn't available. (E.g. because it's
-		#TRANSLATORS: downloaded from some kind of web service.)
-		fileName = lessonl["path"] if "path" in lessonl else _("Import source")
-		lesson.enterWidget.mapChooser.setCurrentIndex(0)
-
-		lesson.enterWidget.mapChooser.insertItem(0, fileName, unicode({'mapPath': lessonl["resources"]["mapPath"], 'knownPlaces': ''}))
-		lesson.enterWidget.mapChooser.setCurrentIndex(0)
-		
-		# Load the list
-		lesson.enterWidget.list = lessonl["list"]
-		# Update the widgets
-		lesson.enterWidget.updateWidgets()
-		# Update results widget
-		lesson.resultsWidget.updateList(lessonl["list"], "topo")
-
-		#Set if the file was changed and the file's path if one
-		if "changed" in lessonl:
-			lesson.changed = lessonl["changed"]
-		if "path" in lessonl:
-			lesson.path = lessonl["path"]
-		
-		# Update title
-		self.fileTab.title = _("Topo lesson: %s") % os.path.basename(lesson.path)
 
 class Lesson(object):
 	"""Lesson object (that means: this techwidget+enterwidget)"""
 
 	def __init__(self, modules, fileTab, enterWidget, teachWidget, resultsWidget, counter, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
-		
+
 		self._modules = modules
 		self._tempFiles = set()
 		atexit.register(self._removeTempFiles)
@@ -202,10 +175,10 @@ class Lesson(object):
 		self._changed = False
 
 		self.stopped = self._modules.default(type="event").createEvent()
-		
+
 		self.module = self
 		self.dataType = "topo"
-		
+
 		fileTab.closeRequested.handle(self.stop)
 		fileTab.tabChanged.handle(self.tabChanged)
 		self.teachWidget.lessonDone.connect(self.toEnterTab)
@@ -233,6 +206,34 @@ class Lesson(object):
 		return self.enterWidget.list
 
 	@property
+	def path(self):
+		return self._path
+
+	@path.setter
+	def path(self, path):
+		"""Should only be set one time per lesson object.""" #FIXME: change that?
+
+		#TRANSLATORS: used as a label in case a filename of a topo
+		#TRANSLATORS: lesson isn't available. (E.g. because it's
+		#TRANSLATORS: downloaded from some kind of web service.)
+		fileName = path or _("Import source")
+
+		self.enterWidget.mapChooser.insertItem(0, fileName, unicode({'mapPath': self._resources["mapPath"], 'knownPlaces': ''}))
+		self.enterWidget.mapChooser.setCurrentIndex(0)
+
+		# Update title
+		self.fileTab.title = _("Topo lesson: %s") % os.path.basename(path)
+
+	@list.setter
+	def list(self, list):
+		# Load the list
+		self.enterWidget.list = list
+		# Update the widgets
+		self.enterWidget.updateWidgets()
+		# Update results widget
+		self.resultsWidget.updateList(list, "topo")
+
+	@property
 	def resources(self):
 		screenshotPath = tempfile.mkstemp()[1]
 		self._tempFiles.add(screenshotPath)
@@ -244,6 +245,10 @@ class Lesson(object):
 			"mapPath": self.enterWidget.mapChooser.currentMap["mapPath"],
 			"mapScreenshot": screenshotPath,
 		}
+
+	@resources.setter
+	def resources(self, resources):
+		self._resources = resources
 	
 	def stop(self):
 		#close current lesson (if one). Just reuse all the logic.

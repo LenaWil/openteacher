@@ -144,24 +144,7 @@ class MediaLessonModule(object):
 		self.counter += 1
 		self.lessonCreationFinished.send()
 		return lesson
-
-	def loadFromLesson(self, lessonl):
-		lesson = self.createLesson()
-		# Load the list
-		self.enterWidget.list = lessonl["list"]
-		# Update the widgets
-		self.enterWidget.updateWidgets()
-		# Update the results widget
-		self.resultsWidget.updateList(lessonl["list"], "media")
-
-		if "path" in lessonl:
-			lesson.path = lessonl["path"]
-		if "changed" in lessonl:
-			lesson.changed = lessonl["changed"]
-		
-		# Update title
-		self.fileTab.title = _("Media lesson: %s") % os.path.basename(lesson.path)
-		
+	
 	def _retranslate(self):
 		#Translations
 		global _
@@ -236,7 +219,26 @@ class Lesson(object):
 	@property
 	def list(self):
 		return self.enterWidget.list
-	
+
+	@list.setter
+	def list(self, list):
+		# Load the list
+		self.enterWidget.list = list
+		# Update the widgets
+		self.enterWidget.updateWidgets()
+		# Update the results widget
+		self.resultsWidget.updateList(list, "media")
+
+	@property
+	def path(self):
+		return self._path
+
+	@path.setter
+	def path(self, path):
+		self._path = path
+		# Update title
+		self.fileTab.title = _("Media lesson: %s") % os.path.basename(self.path)
+
 	def stop(self):
 		#close current lesson (if one). Just reuse all the logic.
 		self.fileTab.currentTab = self.enterWidget

@@ -29,7 +29,7 @@ class ProfileDescriptionModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ("packageWindowsPortable.py",)
+		self.filesWithTranslations = ("packageMac.py",)
 
 	def _retranslate(self):
 		try:

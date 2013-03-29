@@ -57,9 +57,12 @@ class MetadataModule(object):
 			#translate or transliterate it if you've got a good reason
 			#to do so.
 			"name": _("OpenTeacher"),
+			#TRANSLATORS: This is OpenTeacher's version number.
 			"version": _("3.2"),
 			"authors": _("OpenTeacher authors"),
-			"copyrightYears": _("2008-2012"),
+			#TRANSLATORS: This are the copyrightable years for
+			#TRANSLATORS: OpenTeacher.
+			"copyrightYears": _("2008-2013"),
 			#TRANSLATORS: If you want to change this to another, e.g.
 			#localized website, please contact us
 			#(openteachermaintainers@lists.launchpad.net) first.

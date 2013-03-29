@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -35,16 +35,12 @@ class Loader(object):
 		if isinstance(self.path, unicode):
 			#recently opened case
 			self.path = self.path.encode(sys.getfilesystemencoding())
-		lesson = self.loadModule.load(self.path)
-		lesson.update({
-			"changed": False,
-			"path": self.path,
-		})
+		lessonData = self.loadModule.load(self.path)
 
 		if self.addToRecentlyOpened:
 			# Add to recently opened
 			self.addToRecentlyOpened(**{
-				"label": lesson["list"].get("title", "") or os.path.basename(self.path),
+				"label": lessonData["list"].get("title", "") or os.path.basename(self.path),
 				"args": {},
 				"kwargs": {"path": unicode(self.path, sys.getfilesystemencoding())},
 				"method": "load",
@@ -52,7 +48,13 @@ class Loader(object):
 				"moduleKwargsSelectors": {"type": "loader"},
 			})
 
-		self.guiModule.loadFromLesson(lesson)
+		#FIXME: the topo lesson requires this ordering of assignments.
+		#that's pretty annoying.
+		lesson = self.guiModule.createLesson()
+		lesson.resources = lessonData["resources"]
+		lesson.changed = False
+		lesson.path = self.path
+		lesson.list = lessonData["list"]
 
 class LoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -119,8 +121,6 @@ class LoaderModule(object):
 		for loadModule in self._modules.sort("active", type="load"):
 			fileType = loadModule.getFileTypeOf(path)
 			for guiModule in self._modules.sort("active", type="lesson"):
-				if not hasattr(guiModule, "loadFromLesson"):
-					continue
 				if guiModule.dataType == fileType:
 					loaders.append(Loader(loadModule, guiModule, path, self._addToRecentlyOpened))
 
@@ -130,15 +130,19 @@ class LoaderModule(object):
 
 		loader.load()
 
-	def loadFromLesson(self, dataType, lesson):
+	def loadFromLesson(self, dataType, lessonData):
 		loaders = []
 		for loader in self._modules.sort("active", type="lesson"):
-			if loader.dataType == dataType and hasattr(loader, "loadFromLesson"):
+			if loader.dataType == dataType:
 				loaders.append(loader)
 		if len(loaders) == 0:
 			raise NotImplementedError()
 		loader = loaders[0]
-		loader.loadFromLesson(lesson)
+		lesson = loader.createLesson()
+		lesson.list = lessonData["list"]
+		lesson.resources = lessonData["resources"]
+		if "changed" in lessonData:
+			lesson.changed = lessonData["changed"]
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

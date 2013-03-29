@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -24,6 +24,8 @@ import os
 import platform
 
 class Action(object):
+	"""A high-level interface to a menu and/or a toolbar item."""
+
 	def __init__(self, createEvent, qtMenu, qtAction, *args, **kwargs):
 		super(Action, self).__init__(*args, **kwargs)
 
@@ -51,6 +53,8 @@ class Action(object):
 	)
 
 class Menu(object):
+	"""A high-level interface to a menu (as in File, Edit, etc.)."""
+
 	def __init__(self, event, qtMenu, *args, **kwargs):
 		super(Menu, self).__init__(*args, **kwargs)
 
@@ -95,6 +99,7 @@ class Menu(object):
 	)
 
 class StatusViewer(object):
+	"""A high-level interface to the status bar."""
 	def __init__(self, statusBar, *args, **kwargs):
 		super(StatusViewer, self).__init__(*args, **kwargs)
 
@@ -203,7 +208,18 @@ class GuiModule(object):
 		createEvent = self._modules.default(type="event").createEvent
 
 		self.tabChanged = createEvent()
+		self.tabChanged.__doc__ = (
+			"This ``Event`` allows you to detect when the user " +
+			"switches to another tab."
+		)
 		self.applicationActivityChanged = createEvent()
+		self.applicationActivityChanged.__doc__ = (
+			"Handlers of this ``Event`` are called whenever the user " +
+			"is switching between OpenTeacher and some other " +
+			"program. They get one argument: ``'active'`` or " +
+			"``'inactive'`` depending on if the user started to use " +
+			"OpenTeacher or stopped using it."
+		)
 
 		self._ui = self._mm.import_("ui")
 		self._ui.ICON_PATH = self._mm.resourcePath("icons/")
@@ -264,6 +280,7 @@ class GuiModule(object):
 		self.fileMenu = Menu(createEvent, self._widget.fileMenu)
 		self.newAction = Action(createEvent, self._widget.fileMenu, self._widget.newAction)
 		self.openAction = Action(createEvent, self._widget.fileMenu, self._widget.openAction)
+		self.openIntoAction = Action(createEvent, self._widget.fileMenu, self._widget.openIntoAction)
 		self.saveAction = Action(createEvent, self._widget.fileMenu, self._widget.saveAction)
 		self.saveAsAction = Action(createEvent, self._widget.fileMenu, self._widget.saveAsAction)
 		self.printAction = Action(createEvent, self._widget.fileMenu, self._widget.printAction)
@@ -271,6 +288,7 @@ class GuiModule(object):
 
 		#edit
 		self.editMenu = Menu(createEvent, self._widget.editMenu)
+		self.reverseAction = Action(createEvent, self._widget.editMenu, self._widget.reverseAction)
 		self.settingsAction = Action(createEvent, self._widget.editMenu, self._widget.settingsAction)
 
 		#view
@@ -282,9 +300,7 @@ class GuiModule(object):
 		self.documentationAction = Action(createEvent, self._widget.helpMenu, self._widget.docsAction)
 		self.aboutAction = Action(createEvent, self._widget.helpMenu, self._widget.aboutAction)
 
-		self._widget.tabWidget.currentChanged.connect(
-			lambda: self.tabChanged.send()
-		)
+		self._widget.tabWidget.currentChanged.connect(self._onTabChanged)
 		self._widget.activityChanged.connect(
 			lambda activity: self.applicationActivityChanged.send(
 				"active" if activity else "inactive"
@@ -307,7 +323,15 @@ class GuiModule(object):
 			translator.languageChanged.handle(self._retranslate)
 		self._retranslate()
 
+		self._addingTab = False
+
 		self.active = True
+
+	def _onTabChanged(self):
+		#when adding a tab, this triggers a bit too early. Because of
+		#that, it's called manually by the functions that add a tab.
+		if not self._addingTab:
+			self.tabChanged.send()
 
 	def disable(self):
 		self.active = False
@@ -396,9 +420,17 @@ class GuiModule(object):
 		return self._closeCallback()
 
 	def interrupt(self):
+		"""Closes all windows currently opened. (Including windows from
+		   other modules.)
+
+		"""
 		self._app.closeAllWindows()
 
 	def setFullscreen(self, bool):
+		"""Enables or disables full screen depending on the ``bool``
+		   argument.
+   
+		"""
 		#native menubar enable/disable to keep it into view while
 		#fullscreen in at least unity.
 		if bool:
@@ -414,24 +446,40 @@ class GuiModule(object):
 				self._widget.menuBar().setNativeMenuBar(True)
 			self._widget.showNormal()
 
-	def hide(self):
-		self._widget.hide()
-
 	@property
 	def startTab(self):
+		"""Gives access to the start tab widget."""
+
 		return self._widget.tabWidget.startWidget
 
 	def showStartTab(self):
+		"""Changes the current tab to be the same as the one shown on
+		   application start.
+
+		"""
 		self._widget.tabWidget.setCurrentWidget(self._widget.tabWidget.startWidget)
 
 	def addFileTab(self, enterWidget=None, teachWidget=None, resultsWidget=None, previousTabOnClose=False):
+		"""The same as ``addCustomTab``, except that it takes three
+		   widgets (one for enteringItems, on for teaching them and one
+		   for showing the teaching results) that are combined into a
+		   single tab.
+
+		"""
 		widget = self._ui.LessonTabWidget(enterWidget, teachWidget, resultsWidget)
-		
 
 		return self.addCustomTab(widget, previousTabOnClose)
 
 	def addCustomTab(self, widget, previousTabOnClose=False):
-		# We wrap the layout in a QVBoxLayout widget, so messages can be added on top of the tab.
+		"""Adds ``widget`` as a tab in the main window. If
+		   ``previousTabOnClose`` is true, the currently visible tab is
+		   shown again when the created tab is closed.
+   
+		"""
+		#FIXME: move this into FileTab class. Or maybe even further down
+		#this module so the shared code with the StartWidget goes away?
+		#We wrap the layout in a QVBoxLayout widget, so messages can be
+		#added on top of the tab.
 		wrapperWidget = QtGui.QWidget()
 		wrapperLayout = QtGui.QVBoxLayout()
 		#no borders
@@ -445,7 +493,9 @@ class GuiModule(object):
 		else:
 			lastWidget = None
 
+		self._addingTab = True
 		self._widget.tabWidget.addTab(wrapperWidget, "")
+		self._addingTab = False
 
 		args = (self._mm, self._widget.tabWidget, wrapperWidget, widget, lastWidget)
 
@@ -453,10 +503,17 @@ class GuiModule(object):
 			fileTab = self._fileTabs[wrapperWidget] = LessonFileTab(*args)
 		else:
 			fileTab = self._fileTabs[wrapperWidget] = FileTab(*args)
+		#HERE: This doesn't fix anything, this event just needs to be
+		#replaced with something on a higher level :S.
+		self._onTabChanged()
 		return fileTab
 
 	@property
 	def currentFileTab(self):
+		"""Gives access to the currently shown file tab (if any,
+		   otherwise this returns ``None``.)
+
+		"""
 		try:
 			return self._fileTabs[self._widget.tabWidget.currentWidget()]
 		except KeyError:
@@ -470,9 +527,15 @@ class GuiModule(object):
 				self._widget.tabWidget.setCurrentWidget(widget)
 
 	def addStyleSheetRules(self, rules):
+		"""Adds global Qt style sheet rules to the current QApplication.
+		   An example use is to theme OpenTeacher.
+
+		"""
 		self._app.setStyleSheet(self._app.styleSheet() + "\n\n" + rules)
 
 	def setStyle(self, style):
+		"""Allows you to set an app-wide QStyle. Handy for theming."""
+
 		self._app.setStyle(style)
 
 	@property
@@ -486,6 +549,10 @@ class GuiModule(object):
 
 	@property
 	def startTabActive(self):
+		"""Tells you if the start tab is active at the moment this
+		   property is accessed.
+
+		"""
 		return self._widget.tabWidget.startWidget == self._widget.tabWidget.currentWidget()
 
 def init(moduleManager):

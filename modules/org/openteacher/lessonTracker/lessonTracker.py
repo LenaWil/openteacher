@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -46,9 +46,8 @@ class LessonTrackerModule(object):
 		   in the user interface.
 
 		"""
-		uiModule = self._modules.default("active", type="ui")
 		try:
-			return self._lessons[uiModule.currentFileTab]
+			return self._lessons[self._uiModule.currentFileTab]
 		except KeyError:
 			return
 
@@ -57,25 +56,36 @@ class LessonTrackerModule(object):
 		lesson.stopped.handle(
 			lambda: self._removeLesson(lesson.fileTab)
 		)
+		self.lessonChanged.send()
 
 	def _removeLesson(self, fileTab):
 		del self._lessons[fileTab]
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
+		self._uiModule = self._modules.default("active", type="ui")
 		self._lessons = {}
 
 		#Keeps track of all created lessons
 		for module in self._mm.mods("active", type="lesson"):
 			module.lessonCreated.handle(self._lessonAdded)
 
+		self.lessonChanged = self._modules.default(type="event").createEvent()
+		self.lessonChanged.__doc__ = "Tells you when ``currentLesson`` changes."
+
+		self._uiModule.tabChanged.handle(self.lessonChanged.send)
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
 
+		self._uiModule.tabChanged.unhandle(self.lessonChanged.send)
+
 		del self._modules
+		del self._uiModule
 		del self._lessons
+		del self.lessonChanged
 
 		#Keeps track of all created lessons
 		for module in self._mm.mods("active", type="lesson"):

@@ -46,7 +46,7 @@ class PrinterModule(object):
 	def print_(self, printer):
 		printers = []
 
-		dataType = self._lessonTracker.currentLesson.module.dataType
+		dataType = self._lessonTracker.currentLesson.dataType
 		for module in self._modules.sort("active", type="print"):
 			if dataType in module.prints:
 				printers.append(Printer(module, dataType, self._lessonTracker.currentLesson, printer))
@@ -63,7 +63,7 @@ class PrinterModule(object):
 		#Checks for printer modules, and if there is a gui module for
 		#the data type(s) they can provide
 		try:
-			dataType = self._lessonTracker.currentLesson.module.dataType
+			dataType = self._lessonTracker.currentLesson.dataType
 		except AttributeError:
 			return False
 		for module in self._mm.mods("active", type="print"):

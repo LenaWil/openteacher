@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #	Copyright 2011, Cas Widdershoven
 #	Copyright 2011, Milan Boers
 #
@@ -25,23 +25,29 @@ import weakref
 
 def getWordsTableItemDelegate():
 	class SpellingHighlighter(QtGui.QSyntaxHighlighter):
-		def __init__(self, checkWord, *args, **kwargs):
+		_format = QtGui.QTextCharFormat()
+		_format.setUnderlineColor(QtCore.Qt.red)
+		_format.setUnderlineStyle(QtGui.QTextCharFormat.SpellCheckUnderline)
+
+		def __init__(self, checkWord, splitWords, *args, **kwargs):
 			super(SpellingHighlighter, self).__init__(*args, **kwargs)
 
 			self._checkWord = checkWord
-
-			self._format = QtGui.QTextCharFormat()
-			self._format.setUnderlineColor(QtCore.Qt.red)
-			self._format.setUnderlineStyle(QtGui.QTextCharFormat.SpellCheckUnderline)
+			self._splitWords = splitWords
 
 		def highlightBlock(self, text):
-			pos = 0
-			if not text:
-				return
-			for word in unicode(text).split(" "):
-				if not (word.endswith(u"…") or self._checkWord(word)):
+			text = unicode(text)
+			if text.endswith(u"…"):
+				#might not be the best tokenization, but better than
+				#what enchant can do in this situation...
+				if u" " in text:
+					text = text.rsplit(u" ", 1)[0]
+				else:
+					text = u""
+
+			for word, pos in self._splitWords(text):
+				if not self._checkWord(word):
 					self.setFormat(pos, len(word), self._format)
-				pos += len(word) + 1 #don't forget the space...
 
 	class WordsTableItemDelegate(QtGui.QStyledItemDelegate):
 		"""A default delegate, with the difference that it installs an event
@@ -49,7 +55,7 @@ def getWordsTableItemDelegate():
 		   are, from the perspective of Qt, equal to the tab key. It
 		   also allows callers to access the current editor via the
 		   currentEditor property, and paints html when displaying.
-		   
+
 		   Next to that, it offers spell checking. Set the
 		   'checkQuestion' and 'checkAnswer' properties to a function
 		   that checks one word before using this class because of that.
@@ -72,16 +78,19 @@ def getWordsTableItemDelegate():
 
 			#set up document with syntax highlighting
 			document = QtGui.QTextDocument()
+
+			check = lambda item: True
+			split = lambda words: []
 			try:
 				if index.column() == 0:
 					check = self.checkQuestion
+					split = self.splitQuestion
 				elif index.column() == 1:
 					check = self.checkAnswer
-				else:
-					check = lambda item: True
+					split = self.splitAnswer
 			except AttributeError:
-				check = lambda item: True
-			SpellingHighlighter(check, document)
+				pass
+			SpellingHighlighter(check, split, document)
 
 			#get elided text
 			text = option.widget.fontMetrics().elidedText(option.text, option.textElideMode, option.rect.width() - document.documentMargin())
@@ -121,7 +130,9 @@ def getWordsTableView():
 			except KeyError:
 				pass
 			else:
-				self.itemDelegate().checkQuestion = self._createChecker(lang).check
+				checker = self._createChecker(lang)
+				self.itemDelegate().checkQuestion = checker.check
+				self.itemDelegate().splitQuestion = checker.split
 				self._wholeModelChanged()
 
 		def _answerLanguageChanged(self):
@@ -130,7 +141,9 @@ def getWordsTableView():
 			except KeyError:
 				pass
 			else:
-				self.itemDelegate().checkAnswer = self._createChecker(lang).check
+				checker = self._createChecker(lang)
+				self.itemDelegate().checkAnswer = checker.check
+				self.itemDelegate().splitAnswer = checker.split
 				self._wholeModelChanged()
 
 		def _wholeModelChanged(self):
@@ -550,6 +563,9 @@ class WordsEntererModule(object):
 				def check(self, item):
 					#'everything is a well spelled word'
 					return True
+				def split(self, words):
+					#'no words in there'
+					return []
 			return Fallback
 
 	def createWordsEnterer(self):

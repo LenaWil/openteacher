@@ -49,6 +49,27 @@ class TestCase(unittest.TestCase):
 		for checker in self._englishCheckers():
 			self.assertFalse(checker.check(u"djjdk"))
 
+	def testSplit(self):
+		for checker in self._englishCheckers():
+			self.assertEqual(checker.split("what's new?'"), [
+				("what's", 0),
+				("new", 7),
+			])
+
+	def testSplitNonExistingLanguage(self):
+		for checker in self._nonExistingLanguageCheckers():
+			self.assertEqual(checker.split(u"just'tésting"), [
+				(u"just", 0),
+				(u"tésting", 5),
+			])
+
+	def testSplitNonExistingLanguageWithDoubleSeparator(self):
+		for checker in self._nonExistingLanguageCheckers():
+			self.assertEqual(checker.split(u"een, uno"), [
+				(u"een", 0),
+				(u"uno", 5),
+			])
+
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestModule, self).__init__(*args, **kwargs)

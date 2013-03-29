@@ -50,7 +50,7 @@ class SaverModule(object):
 	def usableExtensions(self):
 		extensions = []
 
-		dataType = self._lessonTracker.currentLesson.module.dataType
+		dataType = self._lessonTracker.currentLesson.dataType
 
 		#Collect exts the loader modules support, if there is a gui
 		#module for the data type(s) they can provide
@@ -69,7 +69,7 @@ class SaverModule(object):
 		path = path.encode(sys.getfilesystemencoding())
 		savers = []
 
-		dataType = self._lessonTracker.currentLesson.module.dataType
+		dataType = self._lessonTracker.currentLesson.dataType
 		for module in self._modules.sort("active", type="save"):
 			if dataType in module.saves:
 				for ext in module.saves[dataType]:

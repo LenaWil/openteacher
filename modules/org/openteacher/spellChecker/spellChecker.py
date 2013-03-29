@@ -18,21 +18,44 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class Fallback(object):
+import re
+
+class DictFallback(object):
 	def check(self, word):
 		return True
+
+class TokenizerFallback(object):
+	_pattern = re.compile(r"\W", re.UNICODE)
+
+	def __call__(self, text):
+		pos = 0
+		for word in self._pattern.split(text):
+			if word:
+				yield word, pos
+			pos += len(word) + 1
 
 class Checker(object):
 	def __init__(self, languageCode, *args, **kwargs):
 		super(Checker, self).__init__(*args, **kwargs)
 
-		if enchant.dict_exists(languageCode):
+		if languageCode is None:
+			languageCode = "this is the easiest way to make enchant raise an error."
+
+		try:
 			self._dict = enchant.Dict(languageCode)
-		else:
-			self._dict = Fallback()
+		except enchant.errors.DictNotFoundError:
+			self._dict = DictFallback()
+
+		try:
+			self._tokenizer = enchant.tokenize.get_tokenizer(languageCode)
+		except enchant.errors.TokenizerNotFoundError:
+			self._tokenizer = TokenizerFallback()
 
 	def check(self, word):
 		return self._dict.check(word)
+
+	def split(self, text):
+		return list(self._tokenizer(text))
 
 class SpellCheckModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -54,6 +77,8 @@ class SpellCheckModule(object):
 		global enchant
 		try:
 			import enchant
+			import enchant.errors
+			import enchant.tokenize
 		except ImportError:
 			return
 		self._modules = next(iter(self._mm.mods(type="modules")))

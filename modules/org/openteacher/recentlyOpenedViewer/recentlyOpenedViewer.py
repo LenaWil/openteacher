@@ -20,6 +20,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import weakref
+import traceback
 
 def getRecentlyOpenedModel():
 	class RecentlyOpenedModel(QtCore.QAbstractListModel):
@@ -80,9 +81,10 @@ def getRecentlyOpenedModel():
 					*item["args"],
 					**item["kwargs"]
 				)
-			except Exception, e:
+			except Exception:
 				#for debugging purposes
-				print e
+				traceback.print_exc()
+
 				QtGui.QMessageBox.critical(
 					parent,
 					_("Can't open anymore"),

@@ -292,7 +292,22 @@ class ModulesHandler(object):
 
 		propertyDocs = {}
 		for property in properties:
-			propertyObj = getattr(mod, property)
+			#first try if the class attribute has a doc string. This
+			#catches e.g. @property-decorated function docstrings.
+			try:
+				propertyDocs[property] = self._format(getattr(mod.__class__, property).__doc__)
+			except:
+				#all errors aren't important enough to fail for
+				pass
+			else:
+				#success!
+				continue
+			#then try to get the docstring of the object itself.
+			try:
+				propertyObj = getattr(mod, property)
+			except:
+				#errors aren't important enough to fail for.
+				continue
 			if propertyObj.__class__ != type and propertyObj.__class__ in BUILTIN_TYPES:
 				#docstring is uninteresting
 				continue

@@ -102,7 +102,6 @@ class FilesTabWidget(QtGui.QTabWidget):
 	def __init__(self, startWidget, *args, **kwargs):
 		super(FilesTabWidget, self).__init__(*args, **kwargs)
 
-
 		#FIXME > 3.0: make sure the following isn't duplicate anymore.
 		##START DUPLICATE CODE gui.py
 		# We wrap the layout in a QVBoxLayout widget, so messages can be added on top of the tab.
@@ -182,6 +181,8 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 		)
 		self.openAction.setShortcut(QtGui.QKeySequence.Open)
 
+		self.openIntoAction = self.fileMenu.addAction("")
+
 		self.fileMenu.addSeparator()
 
 		self.saveAction = self.fileMenu.addAction(
@@ -222,6 +223,7 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 
 		#Edit
 		self.editMenu = self.menuBar().addMenu("")
+		self.reverseAction = self.editMenu.addAction("")
 		self.settingsAction = self.editMenu.addAction(
 			QtGui.QIcon.fromTheme("preferences-system",
 				QtGui.QIcon(ICON_PATH + "settings.png")
@@ -296,12 +298,14 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 		self.fileMenu.setTitle(_("&File"))
 		self.newAction.setText(_("&New"))
 		self.openAction.setText(_("&Open"))
+		self.openIntoAction.setText(_("Open &into current list"))
 		self.saveAction.setText(_("&Save"))
 		self.saveAsAction.setText(_("Save &As"))
 		self.printAction.setText(_("&Print"))
 		self.quitAction.setText(_("&Quit"))
 
 		self.editMenu.setTitle(_("&Edit"))
+		self.reverseAction.setText(_("&Reverse list"))
 		self.settingsAction.setText(_("&Settings"))
 
 		self.viewMenu.setTitle(_("&View"))

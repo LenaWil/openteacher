@@ -21,6 +21,7 @@
 
 import os
 import sys
+import traceback
 
 class UiControllerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -46,6 +47,7 @@ class UiControllerModule(object):
 			self._mm.mods(type="lessonTracker"),
 			self._mm.mods(type="dataStore"),
 			self._mm.mods(type="dialogShower"),
+			self._mm.mods(type="reverser"),
 		)
 		self.filesWithTranslations = ("uiController.py",)
 		self.priorities = {
@@ -181,23 +183,26 @@ class UiControllerModule(object):
 		if path:
 			try:
 				loader.load(path)
-			except NotImplementedError, e:
-				print e
+			except NotImplementedError:
+				traceback.print_exc()
 				self._showError(_("Couldn't open the file, because the file type is unknown or it can't be shown."))
-			except IOError, e:
-				print e
+			except IOError:
+				traceback.print_exc()
 				self._showError(_("Couldn't open the file, is it still there and do we have the right to open it?"))
-			except Exception, e:
-				print e
+			except Exception:
+				traceback.print_exc()
 				self._showError(_("Couldn't open the file, it seems to be corrupted."))
 			self._lastPath = path
 		self._uiModule.statusViewer.show(_("File opened succesfully."))
 
+	def openInto(self):
+		pass
+
 	def _doSave(self, path):
 		try:
 			self._saver.save(path)
-		except IOError, e:
-			print e
+		except IOError:
+			traceback.print_exc()
 			self._showError(_("Couldn't save the file, is there enough free disk space and do we have the right to write to the specified location?"))
 		else:
 			self._uiModule.statusViewer.show(_("File saved succesfully."))
@@ -235,19 +240,18 @@ class UiControllerModule(object):
 		printer = self._modules.default("active", type="printer")
 		printer.print_(qtPrinter)
 
-	def _connectEvents(self):
-		for module in self._mm.mods("active", type="lesson"):
-			module.lessonCreationFinished.handle(self._updateMenuItemsWrapper)
- 
+	def _connectEvents(self): 
 		#file
 		self._uiModule.newAction.triggered.handle(self.new)
 		self._uiModule.openAction.triggered.handle(self.open_)
+		self._uiModule.openIntoAction.triggered.handle(self.openInto)
 		self._uiModule.saveAction.triggered.handle(self.save)
 		self._uiModule.saveAsAction.triggered.handle(self.saveAs)
 		self._uiModule.printAction.triggered.handle(self.print_)
 		self._uiModule.quitAction.triggered.handle(self.quit_)
 
 		#edit
+		self._uiModule.reverseAction.triggered.handle(self.reverse)
 		self._uiModule.settingsAction.triggered.handle(self.settings)
 
 		#view
@@ -257,23 +261,24 @@ class UiControllerModule(object):
 		self._uiModule.aboutAction.triggered.handle(self.about)
 		self._uiModule.documentationAction.triggered.handle(self.documentation)
 
-		self._uiModule.tabChanged.handle(self._updateMenuItems)
+		self._lessonTracker.lessonChanged.handle(self._updateMenuItems)
 
 	def _disconnectEvents(self):
-		for module in self._mm.mods("active", type="lesson"):
-			module.lessonCreationFinished.unhandle(self._updateMenuItemsWrapper)
-
 		self._uiModule.newAction.triggered.unhandle(self.new)
 		self._uiModule.openAction.triggered.unhandle(self.open_)
+		self._uiModule.openIntoAction.triggered.unhandle(self.openInto)
 		self._uiModule.saveAction.triggered.unhandle(self.save)
 		self._uiModule.saveAsAction.triggered.unhandle(self.saveAs)
 		self._uiModule.printAction.triggered.unhandle(self.print_)
-		self._uiModule.settingsAction.triggered.unhandle(self.settings)
-		self._uiModule.aboutAction.triggered.unhandle(self.about)
-		self._uiModule.documentationAction.triggered.unhandle(self.documentation)
 		self._uiModule.quitAction.triggered.unhandle(self.quit_)
 
-		self._uiModule.tabChanged.unhandle(self._updateMenuItems)
+		self._uiModule.reverseAction.triggered.unhandle(self.reverse)
+		self._uiModule.settingsAction.triggered.unhandle(self.settings)
+
+		self._uiModule.aboutAction.triggered.unhandle(self.about)
+		self._uiModule.documentationAction.triggered.unhandle(self.documentation)
+
+		self._lessonTracker.lessonChanged.unhandle(self._updateMenuItems)
 
 	def _updateMenuItems(self):
 		#subscribe self to the lesson (if it's there nothing happens
@@ -295,6 +300,9 @@ class UiControllerModule(object):
 			openSupport = loader.openSupport
 		openSupport = openSupport and self._fileDialogs is not None
 		self._uiModule.openAction.enabled = openSupport
+
+		#open into
+		pass
 
 		#save
 		if self._saver:
@@ -320,6 +328,15 @@ class UiControllerModule(object):
 		printSupport = printSupport and self._printDialog is not None
 		self._uiModule.printAction.enabled = printSupport
 
+		#reverse
+		try:
+			dataType = self._lessonTracker.currentLesson.dataType
+		except AttributeError:
+			reverserSupport = False
+		else:
+			reverserSupport = len(set(self._mm.mods("active", type="reverser", dataType=dataType))) != 0
+		self._uiModule.reverseAction.enabled = reverserSupport
+
 		#settings
 		settingsSupport = len(set(self._mm.mods("active", type="settingsDialog"))) != 0
 		self._uiModule.settingsAction.enabled = settingsSupport
@@ -332,8 +349,13 @@ class UiControllerModule(object):
 		docSupport = len(set(self._mm.mods("active", type="documentation"))) != 0
 		self._uiModule.documentationAction.enabled = docSupport
 
-	def _updateMenuItemsWrapper(self, *args, **kwargs):
-		self._updateMenuItems()
+	def reverse(self):
+		l = self._lessonTracker.currentLesson
+		reverse = self._modules.default("active", type="reverser", dataType=l.dataType).reverse
+		theList = l.list
+		reverse(theList)
+		l.list = theList
+		l.changed = True
 
 	def settings(self):
 		self._modules.default("active", type="settingsDialog").show()

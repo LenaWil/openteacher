@@ -22,43 +22,48 @@
 
 import weakref
 
+DATA_TYPE = "words"
+
 class Lesson(object):
-	def __init__(self, moduleManager, fileTab, module, lessonData, enterWidget, teachWidget, resultsWidget=None, *args, **kwargs):
+	def __init__(self, fileTab, Event, okToClose, onTabChanged, enterWidget, teachWidget, resultsWidget=None, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
-
-		self.resources = {}
-
-		self._mm = moduleManager
-		self._modules = set(self._mm.mods(type="modules")).pop()
-
-		self.module = module
 
 		self.fileTab = fileTab
 		self.fileTab.closeRequested.handle(self.stop)
-		self.stopped = self._modules.default(type="event").createEvent()
+		self.fileTab.tabChanged.handle(self._tabChanged)
 
-		self.changedEvent = self._modules.default(type="event").createEvent()
+		self.stopped = Event()
+		self.changedEvent = Event()
 
-		self.list = lessonData["list"]
-		if "changed" in lessonData:
-			self.changed = lessonData["changed"]
-		else:
-			self.changed = False
-		if "path" in lessonData:
-			self.path = lessonData["path"]
+		self._okToClose = okToClose
+		self._onTabChanged = onTabChanged
 
 		self._enterWidget = enterWidget
 		self._teachWidget = teachWidget
 		if resultsWidget:
 			self._resultsWidget = resultsWidget
 
-		self._enterWidget.updateLesson(self)
-		self._teachWidget.updateLesson(self)
-
 		self._teachWidget.lessonDone.connect(self._lessonDone)
 		self._teachWidget.listChanged.connect(self._updateResultsWidgetWrapper)
 
+		self.list = {}
+		self.resources = {}
+		self.changed = False
+		self.dataType = DATA_TYPE
+
 		self.retranslate()
+
+	@property
+	def list(self):
+		return self._list
+
+	@list.setter
+	def list(self, list):
+		self._list = list
+
+		self._enterWidget.updateLesson(self)
+		self._teachWidget.updateLesson(self)
+		self._updateUi()
 
 	@property
 	def changed(self):
@@ -67,9 +72,12 @@ class Lesson(object):
 	@changed.setter
 	def changed(self, value):
 		self._changed = value
+		self._updateUi()
+		self.changedEvent.send()
+
+	def _updateUi(self):
 		self._updateTabTitle()
 		self._updateResultsWidget()
-		self.changedEvent.send()
 
 	def _updateTabTitle(self):
 		title = self.list.get("title", "") or _("Unnamed")
@@ -85,22 +93,21 @@ class Lesson(object):
 
 	def _updateResultsWidget(self):
 		try:
-			self._resultsWidget.updateList(self.list, "words")
+			self._resultsWidget.updateList(self.list, DATA_TYPE)
 		except AttributeError:
 			pass
 
 	def stop(self):
 		#close current lesson (if one). Just reuse all the logic.
 		self.fileTab.currentTab = self._enterWidget
-		self.tabChanged()
+		self._tabChanged()
 		if self.fileTab.currentTab == self._teachWidget:
 			#the tab change wasn't allowed.
 			return False
 
 		#ask if the user wants to save
 		if self.changed:
-			lessonDialogsModule = self._modules.default("active", type="lessonDialogs")
-			if not lessonDialogsModule.okToClose(parent=self.fileTab.currentTab):
+			if not self._okToClose(parent=self.fileTab.currentTab):
 				return False
 
 		#it's ok, just close.
@@ -108,13 +115,13 @@ class Lesson(object):
 		self.stopped.send()
 		return True
 
-	def tabChanged(self):
+	def _tabChanged(self):
 		"""First do checks that apply to all lessons. In case they don't
 		   show any problems, the callback with word specific checks is
 		   called.
 
 		"""
-		#FIXME 3.1: move into separate module since this uses QtGui?
+		#FIXME > 3.1: move into separate module since this uses QtGui?
 		def callback():
 			#words specific checks
 			for item in self._enterWidget.lesson.list["items"]:
@@ -128,8 +135,7 @@ class Lesson(object):
 					break
 
 		#generic checks
-		lessonDialogsModule = self._modules.default("active", type="lessonDialogs")
-		lessonDialogsModule.onTabChanged(self.fileTab, self._enterWidget, self._teachWidget, callback)
+		self._onTabChanged(self.fileTab, self._enterWidget, self._teachWidget, callback)
 
 class WordsLessonModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -169,7 +175,7 @@ class WordsLessonModule(object):
 			from PyQt4 import QtGui
 		except ImportError:
 			return
-		self.dataType = "words"
+		self.dataType = DATA_TYPE
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._uiModule = self._modules.default("active", type="ui")
@@ -179,7 +185,7 @@ class WordsLessonModule(object):
 		self._button = self._modules.default("active", type="buttonRegister").registerButton("create")
 		self._button.clicked.handle(self.createLesson)
 		try:
-			iconPath = self._modules.default("active", type="dataTypeIcons").findIcon(self.dataType)
+			iconPath = self._modules.default("active", type="dataTypeIcons").findIcon(DATA_TYPE)
 		except (IndexError, KeyError):
 			pass
 		else:
@@ -196,7 +202,6 @@ class WordsLessonModule(object):
 		self._retranslate()
 
 		self.lessonCreated = self._modules.default(type="event").createEvent()
-		self.lessonCreationFinished = self._modules.default(type="event").createEvent()
 
 		self.active = True
 
@@ -231,15 +236,16 @@ class WordsLessonModule(object):
 		del self._lessons
 		del self.lessonCreated
 		del self._button
-		del self.lessonCreationFinished
 
-	def createLesson(self, lessonData=None):
-		if not lessonData:
-			lessonData = {
-				"list": {},
-				"resources": {},
-			}
+	_createEvent = property(
+		lambda self: self._modules.default(type="event").createEvent
+	)
 
+	_lessonDialogs = property(
+		lambda self: self._modules.default("active", type="lessonDialogs")
+	)
+
+	def createLesson(self):
 		#create widgets
 		self.enterWidget = self._modules.default(
 			"active",
@@ -263,31 +269,22 @@ class WordsLessonModule(object):
 		except IndexError:
 			pass
 		else:
-			resultsWidget.updateList(lessonData["list"], "words")
 			widgets.append(resultsWidget)
 
 		self.fileTab = self._uiModule.addFileTab(*widgets)
 
-		lesson = Lesson(self._mm, self.fileTab, self, lessonData, *widgets)
-		self.fileTab.tabChanged.handle(lesson.tabChanged)
+		lesson = Lesson(
+			self.fileTab,
+			self._createEvent,
+			self._lessonDialogs.okToClose,
+			self._lessonDialogs.onTabChanged,
+			*widgets
+		)
 		self._lessons.add(weakref.ref(lesson))
 
 		self.lessonCreated.send(lesson)
-		self.lessonCreationFinished.send()
 
 		return lesson
-
-	@property
-	def _onscreenKeyboard(self):
-		keyboards = set(self._mm.mods("active", type="onscreenKeyboard"))
-		try:
-			keyboard = self._modules.chooseItem(keyboards)
-		except IndexError:
-			return
-		return keyboard.createWidget()
-
-	def loadFromLesson(self, lesson):
-		self.createLesson(lesson)
 
 def init(moduleManager):
 	return WordsLessonModule(moduleManager)

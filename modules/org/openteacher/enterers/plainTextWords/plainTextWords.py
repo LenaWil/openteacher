@@ -187,6 +187,7 @@ class PlainTextWordsEntererModule(object):
 		if eptd.result():
 			lesson = eptd.lesson
 			if lesson:
+				lesson["changed"] = True
 				try:
 					self._modules.default("active", type="loaderGui").loadFromLesson("words", lesson)
 				except NotImplementedError:
