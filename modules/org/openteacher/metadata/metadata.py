@@ -50,8 +50,6 @@ class MetadataModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		#FIXME 3.1: move some colors in here for codeDocs and
-		#moduleGraph. (The blue OT website colors.)
 		self.metadata = {
 			#TRANSLATORS: OpenTeacher is a name, so please only
 			#translate or transliterate it if you've got a good reason
@@ -78,10 +76,10 @@ class MetadataModule(object):
 			"licenseIntro": open(self._mm.resourcePath("license_intro.txt")).read(),
 			"license": open(self._mm.resourcePath("license.txt")).read(),
 			"comicPath": self._mm.resourcePath("comic.png"),
+			"mainColorHue": 196, #OpenTeacher blue = 196; green = 120
 			#Not translated because this is for the packaging only,
 			#packages are normally translated in other ways.
 			"short_description": "Your personal tutor",
-			"mainColorHue": 194, #OpenTeacher blue = 194; green = 120
 			"description": """OpenTeacher is an opensource application that helps you learning a variety
 of subjects. You just enter the questions and the answers, or download them from
 the internet, and OpenTeacher tests you.

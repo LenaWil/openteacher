@@ -32,7 +32,7 @@ import __builtin__
 BUILTIN_TYPES = [t for t in __builtin__.__dict__.itervalues() if isinstance(t, type)]
 
 class ModulesHandler(object):
-	def __init__(self, moduleManager, templates, buildModuleGraph, devDocsBaseDir, *args, **kwargs):
+	def __init__(self, moduleManager, templates, buildModuleGraph, devDocsBaseDir, hue, *args, **kwargs):
 		super(ModulesHandler, self).__init__(*args, **kwargs)
 
 		self._mm = moduleManager
@@ -46,6 +46,7 @@ class ModulesHandler(object):
 		self._templates = templates
 		self._buildModuleGraph = buildModuleGraph
 		self._devDocsBaseDir = devDocsBaseDir
+		self._hue = hue
 
 	def _pathToUrl(self, path):
 		path = os.path.abspath(path)
@@ -81,6 +82,17 @@ class ModulesHandler(object):
 		finally:
 			os.remove(path)
 	module_graph_svg.exposed = True
+
+	def style_css(self):
+		t = pyratemp.Template(filename=self._templates["style"])
+		cherrypy.response.headers["Content-Type"] = "text/css"
+		return t(**{
+			"headerBackgroundColor": QtGui.QColor.fromHsv(self._hue, 41, 250).name(),
+			"bodyBackgroundColor": QtGui.QColor.fromHsv(self._hue, 7, 253, 255).name(),
+			"footerBackgroundColor": QtGui.QColor.fromHsv(self._hue, 30, 228).name(),
+		})
+
+	style_css.exposed = True
 
 	def resources(self, *args):
 		path = "/".join(args)
@@ -427,6 +439,7 @@ class CodeDocumentationModule(object):
 			self._mm.mods(type="execute"),
 			self._mm.mods(type="moduleGraphBuilder"),
 			self._mm.mods(type="devDocs"),
+			self._mm.mods(type="qtApp"),
 		)
 		self.uses = (
 			self._mm.mods(type="profileDescription"),
@@ -437,6 +450,8 @@ class CodeDocumentationModule(object):
 		}
 
 	def showDocumentation(self):
+		metadata = self._modules.default("active", type="metadata").metadata
+
 		buildModuleGraph = self._modules.default("active", type="moduleGraphBuilder").buildModuleGraph
 		devDocsBaseDir = self._modules.default("active", type="devDocs").developerDocumentationBaseDirectory
 		templates = {
@@ -446,9 +461,11 @@ class CodeDocumentationModule(object):
 			"module": self._mm.resourcePath("templ/module.html"),
 			"dev_docs": self._mm.resourcePath("templ/dev_docs.html"),
 			"resources": self._mm.resourcePath("resources"),
-			"logo": self._modules.default("active", type="metadata").metadata["iconPath"],
+			"style": self._mm.resourcePath("templ/style.css"),
+			"logo": metadata["iconPath"],
 		}
-		root = ModulesHandler(self._mm, templates, buildModuleGraph, devDocsBaseDir)
+		hue = metadata["mainColorHue"]
+		root = ModulesHandler(self._mm, templates, buildModuleGraph, devDocsBaseDir, hue)
 
 		cherrypy.tree.mount(root)
 		cherrypy.config.update({"server.socket_host": "0.0.0.0"})
@@ -466,7 +483,7 @@ class CodeDocumentationModule(object):
 		cherrypy.engine.exit()
 
 	def enable(self):
-		global cherrypy, pygments, pyratemp, docutils
+		global cherrypy, pygments, pyratemp, docutils, QtGui
 		try:
 			import cherrypy
 			import pygments
@@ -475,6 +492,7 @@ class CodeDocumentationModule(object):
 			import pygments.util
 			import pyratemp
 			import docutils.core
+			from PyQt4 import QtGui
 		except ImportError:
 			sys.stderr.write("For this developer module to work, you need to have cherrypy, pygments, pyratemp and docutils installed. And indirectly, pygraphviz.\n")
 			return #leave disabled

@@ -376,7 +376,7 @@ class WebsiteGeneratorModule(object):
 		page = self._wrapContent(pageName, content)
 
 		with open(os.path.join(self._langDir, pageName), "w") as f:
-			f.write(page)
+			f.write(page.encode("UTF-8"))
 
 	def _wrapContent(self, pageName, content):
 		"""Wraps content into a page template"""
@@ -395,7 +395,7 @@ class WebsiteGeneratorModule(object):
 				self2.register("url", lambda name: os.path.relpath(name, currentDir))
 
 		t = pyratemp.Template(filename=templatePath, eval_class=EvalPseudoSandbox)
-		return t(**kwargs).encode("UTF-8")
+		return t(**kwargs)
 
 	def enable(self):
 		global pyratemp, QtCore, QtGui

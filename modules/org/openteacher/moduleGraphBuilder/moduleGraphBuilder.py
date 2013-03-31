@@ -28,6 +28,7 @@ class ModuleGraphBuilderModule(object):
 		self.type = "moduleGraphBuilder"
 
 		self.requires = (
+			self._mm.mods(type="qtApp"),
 			self._mm.mods(type="metadata"),
 		)
 
@@ -45,7 +46,10 @@ class ModuleGraphBuilderModule(object):
 			"strict": False,
 		})
 		graph.node_attr["style"] = "filled"
-		graph.node_attr["fillcolor"] = "#D1E9FA"
+
+		hue = self._metadata["mainColorHue"]
+		color = unicode(QtGui.QColor.fromHsv(hue, 41, 250).name())
+		graph.node_attr["fillcolor"] = color
 		for mod in self._mm.mods:
 			if not hasattr(mod, "type"):
 				continue
@@ -58,9 +62,10 @@ class ModuleGraphBuilderModule(object):
 		graph.draw(path, prog="dot")
 
 	def enable(self):
-		global pygraphviz
+		global pygraphviz, QtGui
 		try:
 			import pygraphviz
+			from PyQt4 import QtGui
 		except ImportError:
 			return #remaining inactive
 
