@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -81,6 +81,7 @@ class MetadataModule(object):
 			#Not translated because this is for the packaging only,
 			#packages are normally translated in other ways.
 			"short_description": "Your personal tutor",
+			"mainColorHue": 194, #OpenTeacher blue = 194; green = 120
 			"description": """OpenTeacher is an opensource application that helps you learning a variety
 of subjects. You just enter the questions and the answers, or download them from
 the internet, and OpenTeacher tests you.
