@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-11-30 20:19+0100\n"
+"POT-Creation-Date: 2013-03-31 10:39+0200\n"
 "PO-Revision-Date: 2012-04-06 11:41+0000\n"
 "Last-Translator: EmmanuelLeNormand <manu@ubuntu-fr.org>\n"
 "Language-Team: French <fr@li.org>\n"
@@ -19,13 +19,13 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-10-02 05:36+0000\n"
 "X-Generator: Launchpad (build 16061)\n"
 
-#: updates.py:53
+#: updates.py:57
 msgid "Update available"
 msgid_plural "Updates available"
 msgstr[0] "Mise à jour disponible"
 msgstr[1] "Mises à jour disponibles"
 
-#: updates.py:58
+#: updates.py:62
 #, python-format
 msgid "There is %s update available, do you want to update?"
 msgid_plural "There are %s updates available, do you want to update?"
@@ -34,23 +34,23 @@ msgstr[0] ""
 msgstr[1] ""
 "Il y a %s de mises à jour disponibles, voulez vous faire les mises à jour?"
 
-#: updates.py:62
+#: updates.py:66
 msgid "Remember my choice"
 msgstr "Se souvenir de mon choix"
 
-#: updates.py:105 updates.py:109
+#: updates.py:113 updates.py:117
 msgid "Updates"
 msgstr "Mises à jour"
 
-#: updates.py:108
+#: updates.py:116
 msgid "Remember if I want to install updates or not"
 msgstr "Se souvenir si je veux installer ou non les mises à jours"
 
-#: updates.py:191
+#: updates.py:199
 msgid "Updating completed"
 msgstr "Mise à jour terminée"
 
-#: updates.py:191
+#: updates.py:199
 msgid ""
 "All updates were succesfully installed. In order for the changes to take "
 "effect, please restart the application."

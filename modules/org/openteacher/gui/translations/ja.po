@@ -7,93 +7,102 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-03-10 21:22+0100\n"
+"POT-Creation-Date: 2013-03-31 10:38+0200\n"
 "PO-Revision-Date: 2012-05-08 05:59+0000\n"
 "Last-Translator: LeeAnna Kobayashi <kobayashi.leeanna@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-03-11 05:03+0000\n"
 "X-Generator: Launchpad (build 16523)\n"
-"Language: ja\n"
 
-#: gui.py:376
+#: gui.py:400
 msgid "Open from file"
 msgstr "ファイルから開く"
 
-#: ui.py:34
+#: ui.py:33
 msgid "Close Tab"
 msgstr "タブを閉じる"
 
-#: ui.py:97
+#: ui.py:96
 msgid "Enter list"
 msgstr "リストの入力"
 
-#: ui.py:98
+#: ui.py:97
 msgid "Teach me!"
 msgstr "教えて！"
 
-#: ui.py:99
+#: ui.py:98
 msgid "Show results"
 msgstr "結果を見せて"
 
-#: ui.py:296
+#: ui.py:297
 msgid "&File"
 msgstr "&ファイル"
 
-#: ui.py:297
+#: ui.py:298
 msgid "&New"
 msgstr ""
 
-#: ui.py:298
+#: ui.py:299
 msgid "&Open"
 msgstr "開く"
 
-#: ui.py:299
+#: ui.py:300
+msgid "Open &into current list"
+msgstr ""
+
+#: ui.py:301
 msgid "&Save"
 msgstr "保存"
 
-#: ui.py:300
+#: ui.py:302
 msgid "Save &As"
 msgstr "別名で保存"
 
-#: ui.py:301
+#: ui.py:303
 msgid "&Print"
 msgstr "印刷"
 
-#: ui.py:302
+#: ui.py:304
 msgid "&Quit"
 msgstr "終了"
 
-#: ui.py:304
+#: ui.py:306
 msgid "&Edit"
 msgstr ""
 
-#: ui.py:305
+#: ui.py:307
+#, fuzzy
+msgid "&Reverse list"
+msgstr "リストの入力"
+
+#: ui.py:308
 msgid "&Settings"
 msgstr "設定"
 
-#: ui.py:307
+#: ui.py:310
 msgid "&View"
 msgstr ""
 
-#: ui.py:308
+#: ui.py:311
 msgid "Fullscreen"
 msgstr ""
 
-#: ui.py:310
+#: ui.py:313
 msgid "&Help"
 msgstr "ヘルプ"
 
-#: ui.py:311
+#: ui.py:314
 msgid "&Documentation"
 msgstr "ドキュメンテーション"
 
-#: ui.py:312
+#: ui.py:315
 msgid "&About"
 msgstr "情報"
 
-#: ui.py:314
+#: ui.py:317
 msgid "Toolbar"
 msgstr "ツールバー"

@@ -7,212 +7,171 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-03-10 21:22+0100\n"
+"POT-Creation-Date: 2013-03-31 10:41+0200\n"
 "PO-Revision-Date: 2012-12-26 21:21+0000\n"
 "Last-Translator: Adriano Steffler <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-03-11 05:05+0000\n"
 "X-Generator: Launchpad (build 16523)\n"
-"Language: pt_BR\n"
 
-#: scr/gui.js:167 scr/gui.js:625
+#: scr/gui.js:39
 msgid "Menu"
 msgstr "Menu"
 
-#: scr/gui.js:168
-msgid "New list"
-msgstr "Nova lista"
-
-#: scr/gui.js:169 scr/gui.js:187
-msgid "Load list"
-msgstr "Carregar a lista"
-
-#: scr/gui.js:170 scr/gui.js:175
-msgid "Save list"
-msgstr "Salvar a lista"
-
-#: scr/gui.js:171 scr/gui.js:192
-msgid "Remove list"
-msgstr "Remover a lista"
-
-#: scr/gui.js:172 scr/gui.js:277
-msgid "Options"
-msgstr "Opções"
-
-#: scr/gui.js:176
-msgid "Please choose a name for the current list, so it can be saved."
-msgstr ""
-"Por favor, escolha um nome para a lista atual, para que ela possa ser salva."
-
-#: scr/gui.js:177
-msgid "Name:"
-msgstr "Nome:"
-
-#: scr/gui.js:178
-msgid "Done"
-msgstr "Concluído"
-
-#: scr/gui.js:180
-msgid "Warning"
-msgstr "Atenção"
-
-#: scr/gui.js:181
-msgid "There is already a list named like that."
-msgstr "Já há uma lista com esse nome."
-
-#: scr/gui.js:182
-msgid "If you continue, it will be overwritten. Continue?"
-msgstr "Se você continuar, ela será sobrescrita. Deseja continuar?"
-
-#: scr/gui.js:183
-msgid "Yes"
-msgstr "Sim"
-
-#: scr/gui.js:184
-msgid "No"
-msgstr "Não"
-
-#: scr/gui.js:188
-msgid "Please choose the list you want to load."
-msgstr "Por favor, selecione a lista que você deseja carregar."
-
-#: scr/gui.js:189 scr/gui.js:194
-msgid "Filter lists..."
-msgstr "Filtrar as listas…"
-
-#: scr/gui.js:193
-msgid "Please choose the list you want to remove."
-msgstr "Por favor, selecione a lista que você deseja remover."
-
-#: scr/gui.js:201 scr/gui.js:284
-msgid "Copyright info"
-msgstr "Informações de copirraite"
-
-#: scr/gui.js:278
-msgid "Language:"
-msgstr "Idioma:"
-
-#: scr/gui.js:280
-msgid "Practising mode:"
-msgstr "Modo de prática:"
-
-#: scr/gui.js:281 scr/gui.js:604
-msgid "Think answer"
-msgstr "Pensar na resposta"
-
-#: scr/gui.js:282 scr/gui.js:605
-msgid "Type answer"
-msgstr "Digitar a resposta"
-
-#: scr/gui.js:307 scr/gui.js:628
+#: scr/gui.js:42
 msgid "Enter list"
 msgstr "Inserir lista"
 
-#: scr/gui.js:308
-msgid "Word list:"
-msgstr "Lista de palavras:"
-
-#: scr/gui.js:309
-msgid ""
-"Welcome = Welkom\n"
-"to = bij\n"
-"OpenTeacher mobile = OpenTeacher mobile\n"
-msgstr ""
-"Bem-vindo = Welkom\n"
-"para = bij\n"
-"OpenTeacher mobile = OpenTeacher mobile\n"
-
-#: scr/gui.js:311
-msgid "Error"
-msgstr "Erro"
-
-#: scr/gui.js:312
-msgid "Missing equals sign or tab"
-msgstr "Está faltando o sinal de igual ou a tabulação"
-
-#: scr/gui.js:313
-msgid ""
-"Please make sure every line contains an '='-sign or tab between the "
-"questions and answers."
-msgstr ""
-"Por favor, certifique-se de que cada linha contenha um sinal de igual (=) ou "
-"uma tabulação entre as perguntas e as respostas."
-
-#: scr/gui.js:314 scr/gui.js:547
-msgid "Ok"
-msgstr "Aceitar"
-
-#: scr/gui.js:532 scr/gui.js:629
+#: scr/gui.js:43
 msgid "Teach me!"
 msgstr "Ensine-me!"
 
-#: scr/gui.js:533
-msgid "Question:"
-msgstr "Pergunta:"
+#~ msgid "New list"
+#~ msgstr "Nova lista"
 
-#: scr/gui.js:534
-msgid "Answer:"
-msgstr "Resposta:"
+#~ msgid "Load list"
+#~ msgstr "Carregar a lista"
 
-#: scr/gui.js:535
-msgid "Check!"
-msgstr "Verificar!"
+#~ msgid "Save list"
+#~ msgstr "Salvar a lista"
 
-#: scr/gui.js:536
-msgid "Skip"
-msgstr "Pular"
+#~ msgid "Remove list"
+#~ msgstr "Remover a lista"
 
-#: scr/gui.js:537
-msgid "Correct anyway"
-msgstr "Corrigir de qualquer maneira"
+#~ msgid "Options"
+#~ msgstr "Opções"
 
-#: scr/gui.js:538
-msgid ""
-"Think about the answer, and press the 'View answer' button when you're done."
-msgstr ""
-"Pense na resposta e aperte o botão de \"Ver resposta\" quando você tiver "
-"terminado."
+#~ msgid "Please choose a name for the current list, so it can be saved."
+#~ msgstr ""
+#~ "Por favor, escolha um nome para a lista atual, para que ela possa ser "
+#~ "salva."
 
-#: scr/gui.js:539
-msgid "View answer"
-msgstr "Ver a resposta"
+#~ msgid "Name:"
+#~ msgstr "Nome:"
 
-#: scr/gui.js:540
-msgid "Translation:"
-msgstr "Tradução:"
+#~ msgid "Done"
+#~ msgstr "Concluído"
 
-#: scr/gui.js:541
-msgid "I was right"
-msgstr "Eu estava certo"
+#~ msgid "Warning"
+#~ msgstr "Atenção"
 
-#: scr/gui.js:542
-msgid "I was wrong"
-msgstr "Eu estava errado"
+#~ msgid "There is already a list named like that."
+#~ msgstr "Já há uma lista com esse nome."
 
-#: scr/gui.js:545 scr/gui.js:546
-msgid "Test completed!"
-msgstr "Teste completado!"
+#~ msgid "If you continue, it will be overwritten. Continue?"
+#~ msgstr "Se você continuar, ela será sobrescrita. Deseja continuar?"
 
-#: scr/gui.js:548
-#, python-format
-msgid "Your note: %s"
-msgstr "A sua nota: %s"
+#~ msgid "Yes"
+#~ msgstr "Sim"
 
-#: scr/gui.js:602
-msgid "Practising mode choice"
-msgstr "Escolha do modo de prática"
+#~ msgid "No"
+#~ msgstr "Não"
 
-#: scr/gui.js:603
-msgid "Please choose the practising mode you want to use:"
-msgstr "Por favor, escolha o modo de prática que você deseja utilizar:"
+#~ msgid "Please choose the list you want to load."
+#~ msgstr "Por favor, selecione a lista que você deseja carregar."
 
-#: scr/gui.js:606
-msgid ""
-"If you ever want to change your choice, you can do so in the options dialog, "
-"which is accessable by clicking 'Menu' and then 'Options'."
-msgstr ""
-"Se você quiser alterar a sua escolha, você pode fazê-lo na janela de opções, "
-"que pode ser acessada clicando em “Menu” e depois em “Opções”."
+#~ msgid "Filter lists..."
+#~ msgstr "Filtrar as listas…"
+
+#~ msgid "Please choose the list you want to remove."
+#~ msgstr "Por favor, selecione a lista que você deseja remover."
+
+#~ msgid "Copyright info"
+#~ msgstr "Informações de copirraite"
+
+#~ msgid "Language:"
+#~ msgstr "Idioma:"
+
+#~ msgid "Practising mode:"
+#~ msgstr "Modo de prática:"
+
+#~ msgid "Think answer"
+#~ msgstr "Pensar na resposta"
+
+#~ msgid "Type answer"
+#~ msgstr "Digitar a resposta"
+
+#~ msgid "Word list:"
+#~ msgstr "Lista de palavras:"
+
+#~ msgid ""
+#~ "Welcome = Welkom\n"
+#~ "to = bij\n"
+#~ "OpenTeacher mobile = OpenTeacher mobile\n"
+#~ msgstr ""
+#~ "Bem-vindo = Welkom\n"
+#~ "para = bij\n"
+#~ "OpenTeacher mobile = OpenTeacher mobile\n"
+
+#~ msgid "Error"
+#~ msgstr "Erro"
+
+#~ msgid "Missing equals sign or tab"
+#~ msgstr "Está faltando o sinal de igual ou a tabulação"
+
+#~ msgid ""
+#~ "Please make sure every line contains an '='-sign or tab between the "
+#~ "questions and answers."
+#~ msgstr ""
+#~ "Por favor, certifique-se de que cada linha contenha um sinal de igual (=) "
+#~ "ou uma tabulação entre as perguntas e as respostas."
+
+#~ msgid "Ok"
+#~ msgstr "Aceitar"
+
+#~ msgid "Question:"
+#~ msgstr "Pergunta:"
+
+#~ msgid "Answer:"
+#~ msgstr "Resposta:"
+
+#~ msgid "Check!"
+#~ msgstr "Verificar!"
+
+#~ msgid "Skip"
+#~ msgstr "Pular"
+
+#~ msgid "Correct anyway"
+#~ msgstr "Corrigir de qualquer maneira"
+
+#~ msgid ""
+#~ "Think about the answer, and press the 'View answer' button when you're "
+#~ "done."
+#~ msgstr ""
+#~ "Pense na resposta e aperte o botão de \"Ver resposta\" quando você tiver "
+#~ "terminado."
+
+#~ msgid "View answer"
+#~ msgstr "Ver a resposta"
+
+#~ msgid "Translation:"
+#~ msgstr "Tradução:"
+
+#~ msgid "I was right"
+#~ msgstr "Eu estava certo"
+
+#~ msgid "I was wrong"
+#~ msgstr "Eu estava errado"
+
+#~ msgid "Test completed!"
+#~ msgstr "Teste completado!"
+
+#~ msgid "Your note: %s"
+#~ msgstr "A sua nota: %s"
+
+#~ msgid "Practising mode choice"
+#~ msgstr "Escolha do modo de prática"
+
+#~ msgid "Please choose the practising mode you want to use:"
+#~ msgstr "Por favor, escolha o modo de prática que você deseja utilizar:"
+
+#~ msgid ""
+#~ "If you ever want to change your choice, you can do so in the options "
+#~ "dialog, which is accessable by clicking 'Menu' and then 'Options'."
+#~ msgstr ""
+#~ "Se você quiser alterar a sua escolha, você pode fazê-lo na janela de "
+#~ "opções, que pode ser acessada clicando em “Menu” e depois em “Opções”."

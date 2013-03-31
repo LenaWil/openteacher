@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-03-10 21:22+0100\n"
+"POT-Creation-Date: 2013-03-31 10:35+0200\n"
 "PO-Revision-Date: 2013-01-31 18:27+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-03-11 05:05+0000\n"
 "X-Generator: Launchpad (build 16523)\n"
-"Language: ru\n"
 
 #: main.py:101
 msgid "That's a mistake :(."
@@ -71,23 +71,23 @@ msgstr "Количество ошибок"
 msgid "Start exercise"
 msgstr "Начать занятие"
 
-#: main.py:329
+#: main.py:330
 msgid "Username empty"
 msgstr "Пустое имя пользователя"
 
-#: main.py:330
+#: main.py:331
 msgid "The username should not be empty. Please try again."
 msgstr ""
 "Имя пользователя не должно быть пустым. Пожалуйста, попробуйте еще раз."
 
-#: main.py:336
+#: main.py:337
 msgid "Username taken"
 msgstr "Имя пользователя получено"
 
-#: main.py:337
+#: main.py:338
 msgid "That username is already taken. Please try again."
 msgstr "Это имя пользователя уже существует. Попробуйте другое."
 
-#: main.py:437 main.py:447
+#: main.py:438 main.py:448
 msgid "Typing Tutor"
 msgstr "Урок машинописи"

@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-03-10 21:22+0100\n"
+"POT-Creation-Date: 2013-03-31 10:39+0200\n"
 "PO-Revision-Date: 2012-04-23 16:10+0000\n"
 "Last-Translator: El Achèche ANIS <elachecheanis@gmail.com>\n"
 "Language-Team: Arabic <ar@li.org>\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-03-11 05:05+0000\n"
 "X-Generator: Launchpad (build 16523)\n"
-"Language: ar\n"
 
 #: openteacherAuthors.py:71 openteacherAuthors.py:72 openteacherAuthors.py:73
 msgid "Core developer"
@@ -42,7 +42,10 @@ msgstr ""
 msgid "Chat channel spammer"
 msgstr ""
 
-#: openteacherAuthors.py:91 openteacherAuthors.py:92 openteacherAuthors.py:93
+#: openteacherAuthors.py:91
+msgid "Bug hunter"
+msgstr ""
+
 #: openteacherAuthors.py:94 openteacherAuthors.py:95 openteacherAuthors.py:96
 #: openteacherAuthors.py:97 openteacherAuthors.py:98 openteacherAuthors.py:99
 #: openteacherAuthors.py:100 openteacherAuthors.py:101
@@ -82,7 +85,8 @@ msgstr ""
 #: openteacherAuthors.py:168 openteacherAuthors.py:169
 #: openteacherAuthors.py:170 openteacherAuthors.py:171
 #: openteacherAuthors.py:172 openteacherAuthors.py:173
-#: openteacherAuthors.py:174
+#: openteacherAuthors.py:174 openteacherAuthors.py:175
+#: openteacherAuthors.py:176 openteacherAuthors.py:177
 #, python-format
 msgid "Translator (%s)"
 msgstr ""

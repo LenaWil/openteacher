@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenTeacher 3.1\n"
+"Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-03-10 21:22+0100\n"
+"POT-Creation-Date: 2013-03-31 10:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,7 +41,10 @@ msgstr ""
 msgid "Chat channel spammer"
 msgstr ""
 
-#: openteacherAuthors.py:91 openteacherAuthors.py:92 openteacherAuthors.py:93
+#: openteacherAuthors.py:91
+msgid "Bug hunter"
+msgstr ""
+
 #: openteacherAuthors.py:94 openteacherAuthors.py:95 openteacherAuthors.py:96
 #: openteacherAuthors.py:97 openteacherAuthors.py:98 openteacherAuthors.py:99
 #: openteacherAuthors.py:100 openteacherAuthors.py:101
@@ -81,7 +84,8 @@ msgstr ""
 #: openteacherAuthors.py:168 openteacherAuthors.py:169
 #: openteacherAuthors.py:170 openteacherAuthors.py:171
 #: openteacherAuthors.py:172 openteacherAuthors.py:173
-#: openteacherAuthors.py:174
+#: openteacherAuthors.py:174 openteacherAuthors.py:175
+#: openteacherAuthors.py:176 openteacherAuthors.py:177
 #, python-format
 msgid "Translator (%s)"
 msgstr ""

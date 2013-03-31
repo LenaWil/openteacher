@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenTeacher 3.1\n"
+"Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-03-10 21:22+0100\n"
+"POT-Creation-Date: 2013-03-31 10:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,30 +17,30 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: words.py:134
+#: words.py:238
 msgid "Questions"
 msgstr ""
 
-#: words.py:134
+#: words.py:238
 msgid "Answers"
 msgstr ""
 
-#: words.py:134
+#: words.py:238
 msgid "Comment"
 msgstr ""
 
-#: words.py:379
+#: words.py:485
 msgid "Title:"
 msgstr ""
 
-#: words.py:380
+#: words.py:486
 msgid "Question language:"
 msgstr ""
 
-#: words.py:381
+#: words.py:487
 msgid "Answer language:"
 msgstr ""
 
-#: words.py:382
+#: words.py:488
 msgid "Remove selected row(s)"
 msgstr ""

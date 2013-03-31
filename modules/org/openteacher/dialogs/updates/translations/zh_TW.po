@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-11-30 20:19+0100\n"
+"POT-Creation-Date: 2013-03-31 10:39+0200\n"
 "PO-Revision-Date: 2012-07-18 09:47+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
@@ -19,34 +19,34 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-10-02 05:36+0000\n"
 "X-Generator: Launchpad (build 16061)\n"
 
-#: updates.py:53
+#: updates.py:57
 msgid "Update available"
 msgid_plural "Updates available"
 msgstr[0] "有可用更新"
 
-#: updates.py:58
+#: updates.py:62
 #, python-format
 msgid "There is %s update available, do you want to update?"
 msgid_plural "There are %s updates available, do you want to update?"
 msgstr[0] "有 %s 可用更新，要更新嗎?"
 
-#: updates.py:62
+#: updates.py:66
 msgid "Remember my choice"
 msgstr "記住我的選擇"
 
-#: updates.py:105 updates.py:109
+#: updates.py:113 updates.py:117
 msgid "Updates"
 msgstr "更新"
 
-#: updates.py:108
+#: updates.py:116
 msgid "Remember if I want to install updates or not"
 msgstr "記住我要或不要更新"
 
-#: updates.py:191
+#: updates.py:199
 msgid "Updating completed"
 msgstr "更新完成"
 
-#: updates.py:191
+#: updates.py:199
 msgid ""
 "All updates were succesfully installed. In order for the changes to take "
 "effect, please restart the application."

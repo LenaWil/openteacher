@@ -7,94 +7,103 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-03-10 21:22+0100\n"
+"POT-Creation-Date: 2013-03-31 10:38+0200\n"
 "PO-Revision-Date: 2013-01-28 11:24+0000\n"
 "Last-Translator: Phillip Sz <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-03-11 05:03+0000\n"
 "X-Generator: Launchpad (build 16523)\n"
-"Language: de\n"
 
-#: gui.py:376
+#: gui.py:400
 msgid "Open from file"
 msgstr "Aus Datei öffnen"
 
-#: ui.py:34
+#: ui.py:33
 msgid "Close Tab"
 msgstr "Reiter schließen"
 
-#: ui.py:97
+#: ui.py:96
 msgid "Enter list"
 msgstr "Liste eingeben"
 
-#: ui.py:98
+#: ui.py:97
 msgid "Teach me!"
 msgstr "Bring es mir bei!"
 
-#: ui.py:99
+#: ui.py:98
 msgid "Show results"
 msgstr "Ergebnisse anzeigen"
 
-#: ui.py:296
+#: ui.py:297
 msgid "&File"
 msgstr "&Datei"
 
-#: ui.py:297
+#: ui.py:298
 msgid "&New"
 msgstr "&Neu"
 
-#: ui.py:298
+#: ui.py:299
 msgid "&Open"
 msgstr "Ö&ffnen"
 
-#: ui.py:299
+#: ui.py:300
+msgid "Open &into current list"
+msgstr ""
+
+#: ui.py:301
 msgid "&Save"
 msgstr "&Speichern"
 
-#: ui.py:300
+#: ui.py:302
 msgid "Save &As"
 msgstr "Speichern &unter"
 
-#: ui.py:301
+#: ui.py:303
 msgid "&Print"
 msgstr "&Drucken"
 
-#: ui.py:302
+#: ui.py:304
 msgid "&Quit"
 msgstr "&Beenden"
 
-#: ui.py:304
+#: ui.py:306
 msgid "&Edit"
 msgstr "&Bearbeiten"
 
-#: ui.py:305
+#: ui.py:307
+#, fuzzy
+msgid "&Reverse list"
+msgstr "Liste eingeben"
+
+#: ui.py:308
 msgid "&Settings"
 msgstr "&Einstellungen"
 
-#: ui.py:307
+#: ui.py:310
 msgid "&View"
 msgstr "&Ansicht"
 
-#: ui.py:308
+#: ui.py:311
 msgid "Fullscreen"
 msgstr "Vollbild"
 
-#: ui.py:310
+#: ui.py:313
 msgid "&Help"
 msgstr "&Hilfe"
 
-#: ui.py:311
+#: ui.py:314
 msgid "&Documentation"
 msgstr "&Dokumentation"
 
-#: ui.py:312
+#: ui.py:315
 msgid "&About"
 msgstr "&Info"
 
-#: ui.py:314
+#: ui.py:317
 msgid "Toolbar"
 msgstr "Werkzeugleiste"
 

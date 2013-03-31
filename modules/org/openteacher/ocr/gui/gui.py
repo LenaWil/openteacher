@@ -277,6 +277,7 @@ class OcrGuiModule(object):
 		self.priorities = {
 			"all": 975,
 		}
+		self.filesWithTranslations = ("gui.py",)
 
 	def enable(self):
 		global QtCore, QtGui

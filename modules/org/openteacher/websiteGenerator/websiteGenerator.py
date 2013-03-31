@@ -22,7 +22,6 @@
 import sys
 import os
 import shutil
-import glob
 
 DOWNLOAD_LINK = "http://sourceforge.net/projects/openteacher/files/openteacher/3.1/openteacher-3.1-windows-setup.msi/download"
 
@@ -50,8 +49,8 @@ class WebsiteGeneratorModule(object):
 		self._templatesDir = self._mm.resourcePath("templates")
 		self._docsTemplatesDir = self._mm.resourcePath("docsTemplates")
 
-		templatesFiles = glob.glob(os.path.join(self._templatesDir, "/*"))
-		docTemplatesFiles = glob.glob(os.path.join(self._docsTemplatesDir, "/*"))
+		templatesFiles = [os.path.join("templates", f) for f in os.listdir(self._templatesDir)]
+		docTemplatesFiles = [os.path.join("docsTemplates", f) for f in os.listdir(self._docsTemplatesDir)]
 		self.filesWithTranslations = templatesFiles + docTemplatesFiles
 
 	def generateWebsite(self):

@@ -7,42 +7,42 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-03-10 21:22+0100\n"
+"POT-Creation-Date: 2013-03-31 10:35+0200\n"
 "PO-Revision-Date: 2013-02-17 00:26+0000\n"
 "Last-Translator: Adriano Steffler <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-03-11 05:05+0000\n"
 "X-Generator: Launchpad (build 16523)\n"
-"Language: pt_BR\n"
 
-#: studyStackApi.py:135
+#: studyStackApi.py:137
 msgid "Select category"
 msgstr "Selecione uma categoria"
 
-#: studyStackApi.py:136
+#: studyStackApi.py:138
 msgid "Please select a category"
 msgstr "Por favor, selecione uma categoria"
 
-#: studyStackApi.py:140
+#: studyStackApi.py:143
 msgid "Select list"
 msgstr "Selecione uma lista"
 
-#: studyStackApi.py:141
+#: studyStackApi.py:144
 msgid "Please select a list"
 msgstr "Por favor, selecione uma lista"
 
-#: studyStackApi.py:217
+#: studyStackApi.py:220
 msgid "Import from studystack.com"
 msgstr "Importar do sítio studystack.com"
 
-#: studyStackApi.py:262
+#: studyStackApi.py:265
 msgid "No Study Stack connection"
 msgstr "Não há conexão com o sítio do Study Stack"
 
-#: studyStackApi.py:263
+#: studyStackApi.py:266
 msgid ""
 "Study Stack didn't accept the connection. Are you sure that your internet "
 "connection works and http://www.studystack.com/ is online?"
@@ -51,6 +51,6 @@ msgstr ""
 "conexão de Internet está funcionando e de o sítio http://www.studystack.com/ "
 "está online?"
 
-#: studyStackApi.py:268
+#: studyStackApi.py:271
 msgid "The word list was imported from Study Stack successfully."
 msgstr "A lista de palavras foi importada do sítio Study Stack com sucesso."

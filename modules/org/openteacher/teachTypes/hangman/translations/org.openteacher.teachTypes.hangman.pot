@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenTeacher 3.1\n"
+"Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-03-10 21:22+0100\n"
+"POT-Creation-Date: 2013-03-31 10:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,18 +25,18 @@ msgstr ""
 msgid "You have already tried this character / word"
 msgstr ""
 
-#: hangman.py:133
+#: hangman.py:134
 msgid "Mistakes:  "
 msgstr ""
 
-#: hangman.py:155
+#: hangman.py:158
 msgid "hanged man"
 msgstr ""
 
-#: hangman.py:177
+#: hangman.py:182
 msgid "You lose, the answer was: "
 msgstr ""
 
-#: hangman.py:275
+#: hangman.py:280
 msgid "Play hangman"
 msgstr ""

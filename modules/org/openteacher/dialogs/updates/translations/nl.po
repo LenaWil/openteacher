@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2012-11-30 20:19+0100\n"
+"POT-Creation-Date: 2013-03-31 10:39+0200\n"
 "PO-Revision-Date: 2012-03-30 22:19+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -19,36 +19,36 @@ msgstr ""
 "X-Launchpad-Export-Date: 2012-10-02 05:36+0000\n"
 "X-Generator: Launchpad (build 16061)\n"
 
-#: updates.py:53
+#: updates.py:57
 msgid "Update available"
 msgid_plural "Updates available"
 msgstr[0] "Update beschikbaar"
 msgstr[1] "Updates beschikbaar"
 
-#: updates.py:58
+#: updates.py:62
 #, python-format
 msgid "There is %s update available, do you want to update?"
 msgid_plural "There are %s updates available, do you want to update?"
 msgstr[0] "Er is %s update beschikbaar, wilt u bijwerken?"
 msgstr[1] "Er zijn %s updates beschikbaar, wilt u bijwerken?"
 
-#: updates.py:62
+#: updates.py:66
 msgid "Remember my choice"
 msgstr "Onthoud mijn keuze"
 
-#: updates.py:105 updates.py:109
+#: updates.py:113 updates.py:117
 msgid "Updates"
 msgstr "Updates"
 
-#: updates.py:108
+#: updates.py:116
 msgid "Remember if I want to install updates or not"
 msgstr "Onthoud of ik updates wil installeren of niet"
 
-#: updates.py:191
+#: updates.py:199
 msgid "Updating completed"
 msgstr "Klaar met bijwerken"
 
-#: updates.py:191
+#: updates.py:199
 msgid ""
 "All updates were succesfully installed. In order for the changes to take "
 "effect, please restart the application."

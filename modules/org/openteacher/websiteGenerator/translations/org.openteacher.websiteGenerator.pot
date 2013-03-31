@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenTeacher 3.1\n"
+"Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-03-10 21:22+0100\n"
+"POT-Creation-Date: 2013-03-31 10:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,15 +17,15 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: templ/about.html:2
+#: templates/about.html:6
 msgid "OpenTeacher helps you learn"
 msgstr ""
 
-#: templ/about.html:4
+#: templates/about.html:8
 msgid "Improve your results with OpenTeacher"
 msgstr ""
 
-#: templ/about.html:5
+#: templates/about.html:9
 msgid ""
 "OpenTeacher <strong>helps you learn</strong> what you need to know for you "
 "next test. OpenTeacher allows you to make use of a lesson type where you are "
@@ -34,18 +34,18 @@ msgid ""
 "without being overwhelmed by it's size."
 msgstr ""
 
-#: templ/about.html:6
+#: templates/about.html:10
 msgid ""
 "You can also be tested by OpenTeacher. While OpenTeacher tests you, it keeps "
 "track of your progress and tells you how much you know. In this way you can "
 "<strong>make sure that you know enough to pass your next test</strong>!"
 msgstr ""
 
-#: templ/about.html:8
+#: templates/about.html:12
 msgid "Learn on many locations"
 msgstr ""
 
-#: templ/about.html:9
+#: templates/about.html:13
 msgid ""
 "The OpenTeacher file format makes sure you can always save the information "
 "(&quot;lists&quot;) you enter. You can take these files everywhere you go! "
@@ -56,7 +56,7 @@ msgid ""
 "understand), you can take it with you!"
 msgstr ""
 
-#: templ/about.html:10
+#: templates/about.html:14
 msgid ""
 "OpenTeacher has excellent integration with the online language tutor Wrts "
 "(also known as <a href=\"http://www.wrds.eu/\">Wrds</a>). You can access, "
@@ -65,15 +65,15 @@ msgid ""
 "lists everywhere you go</strong>!"
 msgstr ""
 
-#: templ/about.html:12
+#: templates/about.html:16
 msgid "OpenTeacher helps you teach"
 msgstr ""
 
-#: templ/about.html:13
+#: templates/about.html:17
 msgid "Offer your students the help they need"
 msgstr ""
 
-#: templ/about.html:14
+#: templates/about.html:18
 msgid ""
 "While OpenTeacher is primarily focussed on students, OpenTeacher also works "
 "great as a <strong>tool to help teachers</strong> give their students the "
@@ -82,7 +82,7 @@ msgid ""
 "<strong>improve the student's results</strong> and saves the teacher time."
 msgstr ""
 
-#: templ/about.html:15
+#: templates/about.html:19
 msgid ""
 "<strong>Transferring information</strong> from the teacher to the student "
 "can be done easily thanks to the OpenTeacher file format. The teacher "
@@ -94,11 +94,11 @@ msgid ""
 "(Teach2000), Wrts, and ABBYY Lingvo Tutor."
 msgstr ""
 
-#: templ/about.html:17
+#: templates/about.html:21
 msgid "Open source in the classroom"
 msgstr ""
 
-#: templ/about.html:18
+#: templates/about.html:22
 msgid ""
 "One of the important things about OpenTeacher is that it's open source "
 "software released under the <a href=\"https://www.gnu.org/copyleft/gpl.html"
@@ -108,7 +108,7 @@ msgid ""
 "be reused by others</strong>."
 msgstr ""
 
-#: templ/about.html:20
+#: templates/about.html:24
 msgid ""
 "Because OpenTeacher is opensource software, it is also very accessible. "
 "OpenTeacher code can be used to create OpenTeacher for almost any platform. "
@@ -117,7 +117,7 @@ msgid ""
 "use it."
 msgstr ""
 
-#: templ/about.html:21
+#: templates/about.html:25
 msgid ""
 "Anyone who wants to make modifications to OpenTeacher can also do so. If "
 "your organisation needs to make a modified version of OpenTeacher, this is "
@@ -127,7 +127,7 @@ msgid ""
 "implements this."
 msgstr ""
 
-#: templ/about.html:22
+#: templates/about.html:26
 msgid ""
 "OpenTeacher is completely <strong>community-driven</strong>. All OpenTeacher "
 "contributors are <strong>volunteers</strong>, and OpenTeacher is <strong>not "
@@ -136,11 +136,155 @@ msgid ""
 "Foundation</a>."
 msgstr ""
 
-#: templ/contribute.html:2 templ/index.shtml:64
+#: templates/download.html:8 templates/index.html:27
+msgid "Download OpenTeacher 3.1"
+msgstr ""
+
+#: templates/download.html:11
+msgid ""
+"Available in Brazilian Protuguese, Chinese (Traditional), Dutch, Frysian and "
+"Spanish."
+msgstr ""
+
+#: templates/download.html:11
+msgid "Want more languages?"
+msgstr ""
+
+#: templates/download.html:11
+msgid "Download the older OpenTeacher 2"
+msgstr ""
+
+#: templates/download.html:20
+msgid ""
+"Note: Windows XP users must install the <a href=\"http://www.microsoft.com/"
+"downloads/en/details.aspx?FamilyID=9b2da534-3e03-4391-8a4d-074b9f2bc1bf"
+"\">Visual C++ 2008 Redistributable Package</a> to run OpenTeacher."
+msgstr ""
+
+#: templates/download.html:25
+msgid "For portable (USB-)drives"
+msgstr ""
+
+#: templates/download.html:70
+msgid "Python 2 source with setup.py (for other Linux)"
+msgstr ""
+
+#: templates/download.html:79
+msgid "Python 2 source"
+msgstr ""
+
+#: templates/documentation.html:6 templates/base.html:53
+msgid "Documentation"
+msgstr ""
+
+#: templates/documentation.html:8
+msgid "User documentation"
+msgstr ""
+
+#: templates/documentation.html:9
+msgid "Using OpenTeacher 2: Quick start"
+msgstr ""
+
+#: templates/documentation.html:10 docsTemplates/install-ubuntu.html:5
+msgid "Installing OpenTeacher in Ubuntu"
+msgstr ""
+
+#: templates/documentation.html:11 docsTemplates/install-arch.html:5
+msgid "Installing OpenTeacher in ArchLinux"
+msgstr ""
+
+#: templates/documentation.html:12 docsTemplates/faq.html:5
+msgid "Frequently Asked Questions"
+msgstr ""
+
+#: templates/documentation.html:15
+msgid "Developer documentation"
+msgstr ""
+
+#: templates/documentation.html:16
+msgid "The OpenTeacher 2 file format"
+msgstr ""
+
+#: templates/documentation.html:19
+msgid "Translator documentation"
+msgstr ""
+
+#: templates/documentation.html:20
+msgid "Translator Notes"
+msgstr ""
+
+#: templates/index.html:8
+msgid ""
+"<strong>OpenTeacher</strong> is an opensource <strong>vocabulary training</"
+"strong> application that helps you <strong>learn</strong> a <strong>foreign "
+"language</strong>!"
+msgstr ""
+
+#: templates/index.html:10
+msgid ""
+"<strong>Enter a list of words</strong> in both a known and a foreign "
+"language, and OpenTeacher <strong>tests you</strong>."
+msgstr ""
+
+#: templates/index.html:12
+msgid "OpenTeacher has the following features (among others):"
+msgstr ""
+
+#: templates/index.html:15
+msgid "Words, places and media lessons"
+msgstr ""
+
+#: templates/index.html:16
+msgid "Smart question asking and interval training"
+msgstr ""
+
+#: templates/index.html:17
+msgid "Easy symbol, Greek and Cyrillic input"
+msgstr ""
+
+#: templates/index.html:18
+msgid "Text-to-speech pronounciation"
+msgstr ""
+
+#: templates/index.html:19
+msgid "Read and write T2K (Teach2000), wrts and read ABBYY Lingvo Tutor files"
+msgstr ""
+
+#: templates/index.html:20
+msgid "Save and open your online WRTS lists"
+msgstr ""
+
+#: templates/index.html:21
+msgid "Print your word lists"
+msgstr ""
+
+#: templates/index.html:22
+msgid ""
+"Available in Arabic, Australian English, Brazilian Protuguese, Chinese "
+"(Traditional), Croatian, Czech, Danish, Dutch, French, German, Hebrew, "
+"Hungarian, Japanese, Korean, Polish, Russian, Serbian, Slovenian, Spanish, "
+"Swedish and Turkish."
+msgstr ""
+
+#: templates/index.html:25
+msgid ""
+"OpenTeacher 3.1 is available for <strong>Linux and Windows</strong>. "
+"OpenTeacher 2.2.1 is available for <strong>Mac</strong>."
+msgstr ""
+
+#: templates/index.html:28
+msgid "for"
+msgstr ""
+
+#: templates/index.html:30
+msgid "Other systems and distro-specific packages"
+msgstr ""
+
+#: templates/contribute.html:6 templates/base.html:54
 msgid "Contribute"
 msgstr ""
 
-#: templ/contribute.html:4
+#: templates/contribute.html:8
 msgid ""
 "Contributing to OpenTeacher is very easy, because OpenTeacher is, as the "
 "name implies, open source software. For us, this not only means that "
@@ -152,11 +296,11 @@ msgid ""
 "contribute@openteacher.org\">contribute@openteacher.org</a>."
 msgstr ""
 
-#: templ/contribute.html:6
+#: templates/contribute.html:10
 msgid "There are several ways to contribute to OpenTeacher:"
 msgstr ""
 
-#: templ/contribute.html:9
+#: templates/contribute.html:13
 msgid ""
 "<strong>Help developing</strong><br />OpenTeacher can always use developers. "
 "Are you experienced in the Python language and the Qt4 framework? Then go to "
@@ -164,13 +308,13 @@ msgid ""
 "immediately! We are currently also looking for:"
 msgstr ""
 
-#: templ/contribute.html:11
+#: templates/contribute.html:15
 msgid ""
 "<strong>Designers</strong>. It's important that OpenTeacher looks good! Do "
 "you know anything about design? Contact us."
 msgstr ""
 
-#: templ/contribute.html:15
+#: templates/contribute.html:19
 msgid ""
 "<strong>Help translating</strong><br />We are always looking for people who "
 "want to help us translate OpenTeacher! Currently OpenTeacher is only "
@@ -182,7 +326,7 @@ msgid ""
 "content=89360\">Qt Linguist</a>."
 msgstr ""
 
-#: templ/contribute.html:17
+#: templates/contribute.html:21
 msgid ""
 "<strong>Help testing</strong><br />To make sure OpenTeacher works fine, we "
 "need people to test the latest revisions of OpenTeacher. You can download "
@@ -192,7 +336,7 @@ msgid ""
 "Launchpad</a>."
 msgstr ""
 
-#: templ/contribute.html:19
+#: templates/contribute.html:23
 msgid ""
 "<strong>Help distributing</strong><br />To make sure everyone can use "
 "OpenTeacher, it is important that OpenTeacher is being released on as many "
@@ -202,186 +346,159 @@ msgid ""
 "(especially OpenSuSE) OpenTeacher isn't packaged for are welcome."
 msgstr ""
 
-#: templ/contribute.html:21
+#: templates/contribute.html:25
 msgid ""
 "<strong>Help promoting</strong><br />Tell your friends, teachers and "
 "students about OpenTeacher. The best way to make people use OpenTeacher is "
 "to tell them it exists!"
 msgstr ""
 
-#: templ/docpage.html:3
-msgid "Go back to documentation"
-msgstr ""
-
-#: templ/docpage.html:3
-msgid "Link to this page"
-msgstr ""
-
-#: templ/documentation.html:2 templ/index.shtml:63
-msgid "Documentation"
-msgstr ""
-
-#: templ/documentation.html:4
-msgid "User documentation"
-msgstr ""
-
-#: templ/documentation.html:5
-msgid "Using OpenTeacher 2: Quick start"
-msgstr ""
-
-#: templ/documentation.html:6 docs/install-ubuntu.html:1
-msgid "Installing OpenTeacher in Ubuntu"
-msgstr ""
-
-#: templ/documentation.html:7 docs/install-arch.html:1
-msgid "Installing OpenTeacher in ArchLinux"
-msgstr ""
-
-#: templ/documentation.html:8 docs/faq.html:1
-msgid "Frequently Asked Questions"
-msgstr ""
-
-#: templ/documentation.html:11
-msgid "Developer documentation"
-msgstr ""
-
-#: templ/documentation.html:12
-msgid "The OpenTeacher 2 file format"
-msgstr ""
-
-#: templ/documentation.html:15
-msgid "Translator documentation"
-msgstr ""
-
-#: templ/documentation.html:16
-msgid "Translator Notes"
-msgstr ""
-
-#: templ/download.html:4 templ/home.html:24
-msgid "Download OpenTeacher 3.1"
-msgstr ""
-
-#: templ/download.html:7
-msgid ""
-"Available in Brazilian Protuguese, Chinese (Traditional), Dutch, Frysian and "
-"Spanish."
-msgstr ""
-
-#: templ/download.html:7
-msgid "Want more languages?"
-msgstr ""
-
-#: templ/download.html:7
-msgid "Download the older OpenTeacher 2"
-msgstr ""
-
-#: templ/download.html:16
-msgid ""
-"Note: Windows XP users must install the <a href=\"http://www.microsoft.com/"
-"downloads/en/details.aspx?FamilyID=9b2da534-3e03-4391-8a4d-074b9f2bc1bf"
-"\">Visual C++ 2008 Redistributable Package</a> to run OpenTeacher."
-msgstr ""
-
-#: templ/download.html:21
-msgid "For portable (USB-)drives"
-msgstr ""
-
-#: templ/download.html:66
-msgid "Python 2 source with setup.py (for other Linux)"
-msgstr ""
-
-#: templ/download.html:75
-msgid "Python 2 source"
-msgstr ""
-
-#: templ/home.html:5
-msgid ""
-"<strong>OpenTeacher</strong> is an opensource <strong>vocabulary training</"
-"strong> application that helps you <strong>learn</strong> a <strong>foreign "
-"language</strong>!"
-msgstr ""
-
-#: templ/home.html:7
-msgid ""
-"<strong>Enter a list of words</strong> in both a known and a foreign "
-"language, and OpenTeacher <strong>tests you</strong>."
-msgstr ""
-
-#: templ/home.html:9
-msgid "OpenTeacher has the following features (among others):"
-msgstr ""
-
-#: templ/home.html:12
-msgid "Words, places and media lessons"
-msgstr ""
-
-#: templ/home.html:13
-msgid "Smart question asking and interval training"
-msgstr ""
-
-#: templ/home.html:14
-msgid "Easy symbol, Greek and Cyrillic input"
-msgstr ""
-
-#: templ/home.html:15
-msgid "Text-to-speech pronounciation"
-msgstr ""
-
-#: templ/home.html:16
-msgid "Read and write T2K (Teach2000), wrts and read ABBYY Lingvo Tutor files"
-msgstr ""
-
-#: templ/home.html:17
-msgid "Save and open your online WRTS lists"
-msgstr ""
-
-#: templ/home.html:18
-msgid "Print your word lists"
-msgstr ""
-
-#: templ/home.html:19
-msgid ""
-"Available in Arabic, Australian English, Brazilian Protuguese, Chinese "
-"(Traditional), Croatian, Czech, Danish, Dutch, French, German, Hebrew, "
-"Hungarian, Japanese, Korean, Polish, Russian, Serbian, Slovenian, Spanish, "
-"Swedish and Turkish."
-msgstr ""
-
-#: templ/home.html:22
-msgid ""
-"OpenTeacher 3.1 is available for <strong>Linux and Windows</strong>. "
-"OpenTeacher 2.2.1 is available for <strong>Mac</strong>."
-msgstr ""
-
-#: templ/home.html:25
-msgid "for"
-msgstr ""
-
-#: templ/home.html:27
-msgid "Other systems and distro-specific packages"
-msgstr ""
-
-#: templ/index.shtml:26
+#: templates/base.html:16
 msgid "Free exam training software"
 msgstr ""
 
-#: templ/index.shtml:60
+#: templates/base.html:50
 msgid "Home"
 msgstr ""
 
-#: templ/index.shtml:61
+#: templates/base.html:51
 msgid "About"
 msgstr ""
 
-#: templ/index.shtml:62
+#: templates/base.html:52
 msgid "Download"
 msgstr ""
 
-#: docs/faq.html:2
+#: templates/docpage.html:8
+msgid "Go back to documentation"
+msgstr ""
+
+#: templates/docpage.html:9
+msgid "Link to this page"
+msgstr ""
+
+#: docsTemplates/translator-notes.html:5
+msgid "Translator notes"
+msgstr ""
+
+#: docsTemplates/translator-notes.html:7
+msgid ""
+"When you're translating for OpenTeacher, keep in mind that you should "
+"translate keyboard shortcuts always in the same way (German example: if you "
+"translate Ctrl+S to Strg+S, you should also translate Ctrl+Q to Strg+Q and "
+"all other keyboard shortcuts the same way)."
+msgstr ""
+
+#: docsTemplates/translator-notes.html:9
+msgid "List of all keyboard shortcuts in OpenTeacher:"
+msgstr ""
+
+#: docsTemplates/translator-notes.html:15
+msgid "deprecated, should be changed to &quot;Return&quot;"
+msgstr ""
+
+#: docsTemplates/install-arch.html:6
+msgid ""
+"This simple guide explains how to install OpenTeacher for ArchLinux. I will "
+"be using ArchLinux 2010.05."
+msgstr ""
+
+#: docsTemplates/install-arch.html:8
+msgid ""
+"Download the ArchLinux package .pkg.tar.xz from the Download section of this "
+"website."
+msgstr ""
+
+#: docsTemplates/install-arch.html:9
+msgid ""
+"Install the package from the terminal with <strong>pacman -U &lt;filename&gt;"
+"</strong>"
+msgstr ""
+
+#: docsTemplates/install-ubuntu.html:6
+msgid ""
+"This simple guide explains how to install OpenTeacher for Ubuntu. I will be "
+"using Ubuntu 10.10 (Maverick Meerkat) for this."
+msgstr ""
+
+#: docsTemplates/install-ubuntu.html:8
+msgid ""
+"Download the Ubuntu .deb file from the Download section of this website."
+msgstr ""
+
+#: docsTemplates/install-ubuntu.html:9
+msgid ""
+"When the download has completed, doubleclick the .deb file you just "
+"downloaded. This will open the Ubuntu Software Center."
+msgstr ""
+
+#: docsTemplates/install-ubuntu.html:12
+msgid "Click &quot;install&quot; to start the installation."
+msgstr ""
+
+#: docsTemplates/install-ubuntu.html:13
+msgid ""
+"When the installation has finished, you can start OpenTeacher from "
+"Applications -> Education -> OpenTeacher."
+msgstr ""
+
+#: docsTemplates/the-openteacher-format.html:5
+msgid "The Openteacher 2 file format"
+msgstr ""
+
+#: docsTemplates/the-openteacher-format.html:6
+msgid "The Openteacher 2 file format is an XML 1.0 file with UTF-8 encoding."
+msgstr ""
+
+#: docsTemplates/the-openteacher-format.html:7
+msgid ""
+"An XML-scheme of the file format can be downloaded <a href=\"files/"
+"openteacher.xsd\">here</a>."
+msgstr ""
+
+#: docsTemplates/the-openteacher-format.html:8
+msgid ""
+"NOTE: For the OpenTeacher 3 file format, please refer to <a href=\"http://"
+"sourceforge.net/apps/mediawiki/openteacher/index.php\"> the wiki.</a>"
+msgstr ""
+
+#: docsTemplates/the-openteacher-format.html:10
+msgid "Node structure"
+msgstr ""
+
+#: docsTemplates/the-openteacher-format.html:25
+msgid "The title of the word list"
+msgstr ""
+
+#: docsTemplates/the-openteacher-format.html:26
+msgid "The name of the question language"
+msgstr ""
+
+#: docsTemplates/the-openteacher-format.html:27
+msgid "The name of the answer language"
+msgstr ""
+
+#: docsTemplates/the-openteacher-format.html:29
+msgid "This word in the question language"
+msgstr ""
+
+#: docsTemplates/the-openteacher-format.html:30
+msgid "This word in the answer language"
+msgstr ""
+
+#: docsTemplates/the-openteacher-format.html:31
+msgid "The results of this word in the format of 0/0"
+msgstr ""
+
+#: docsTemplates/the-openteacher-format.html:37
+msgid "Example a word list saved in the OpenTeacher 2 format"
+msgstr ""
+
+#: docsTemplates/faq.html:6
 msgid "OpenTeacher won't run on Windows!"
 msgstr ""
 
-#: docs/faq.html:3
+#: docsTemplates/faq.html:7
 msgid ""
 "To run OpenTeacher on Windows you need to install the <a href=\"http://www."
 "microsoft.com/downloads/en/details.aspx?"
@@ -392,11 +509,11 @@ msgid ""
 "\">Launchpad</a> or send an e-mail."
 msgstr ""
 
-#: docs/faq.html:4
+#: docsTemplates/faq.html:8
 msgid "OpenTeacher won't run on ArchLinux!"
 msgstr ""
 
-#: docs/faq.html:5
+#: docsTemplates/faq.html:9
 msgid ""
 "Make sure that both <strong>python2</strong> and <strong>pyqt</strong> are "
 "installed. If you use OpenTeacher from source, you have to link <strong>/usr/"
@@ -409,128 +526,11 @@ msgid ""
 "\"http://www.launchpad.net/openteacher\">Launchpad</a> or send an e-mail."
 msgstr ""
 
-#: docs/install-arch.html:2
-msgid ""
-"This simple guide explains how to install OpenTeacher for ArchLinux. I will "
-"be using ArchLinux 2010.05."
-msgstr ""
-
-#: docs/install-arch.html:4
-msgid ""
-"Download the ArchLinux package .pkg.tar.xz from the Download section of this "
-"website."
-msgstr ""
-
-#: docs/install-arch.html:5
-msgid ""
-"Install the package from the terminal with <strong>pacman -U &lt;filename&gt;"
-"</strong>"
-msgstr ""
-
-#: docs/install-ubuntu.html:2
-msgid ""
-"This simple guide explains how to install OpenTeacher for Ubuntu. I will be "
-"using Ubuntu 10.10 (Maverick Meerkat) for this."
-msgstr ""
-
-#: docs/install-ubuntu.html:4
-msgid ""
-"Download the Ubuntu .deb file from the Download section of this website."
-msgstr ""
-
-#: docs/install-ubuntu.html:5
-msgid ""
-"When the download has completed, doubleclick the .deb file you just "
-"downloaded. This will open the Ubuntu Software Center."
-msgstr ""
-
-#: docs/install-ubuntu.html:8
-msgid "Click &quot;install&quot; to start the installation."
-msgstr ""
-
-#: docs/install-ubuntu.html:9
-msgid ""
-"When the installation has finished, you can start OpenTeacher from "
-"Applications -> Education -> OpenTeacher."
-msgstr ""
-
-#: docs/the-openteacher-format.html:1
-msgid "The Openteacher 2 file format"
-msgstr ""
-
-#: docs/the-openteacher-format.html:2
-msgid "The Openteacher 2 file format is an XML 1.0 file with UTF-8 encoding."
-msgstr ""
-
-#: docs/the-openteacher-format.html:3
-msgid ""
-"An XML-scheme of the file format can be downloaded <a href=\"files/"
-"openteacher.xsd\">here</a>."
-msgstr ""
-
-#: docs/the-openteacher-format.html:4
-msgid ""
-"NOTE: For the OpenTeacher 3 file format, please refer to <a href=\"http://"
-"sourceforge.net/apps/mediawiki/openteacher/index.php\"> the wiki."
-msgstr ""
-
-#: docs/the-openteacher-format.html:6
-msgid "Node structure"
-msgstr ""
-
-#: docs/the-openteacher-format.html:21
-msgid "The title of the word list"
-msgstr ""
-
-#: docs/the-openteacher-format.html:22
-msgid "The name of the question language"
-msgstr ""
-
-#: docs/the-openteacher-format.html:23
-msgid "The name of the answer language"
-msgstr ""
-
-#: docs/the-openteacher-format.html:25
-msgid "This word in the question language"
-msgstr ""
-
-#: docs/the-openteacher-format.html:26
-msgid "This word in the answer language"
-msgstr ""
-
-#: docs/the-openteacher-format.html:27
-msgid "The results of this word in the format of 0/0"
-msgstr ""
-
-#: docs/the-openteacher-format.html:33
-msgid "Example a word list saved in the OpenTeacher 2 format"
-msgstr ""
-
-#: docs/translator-notes.html:1
-msgid "Translator notes"
-msgstr ""
-
-#: docs/translator-notes.html:3
-msgid ""
-"When you're translating for OpenTeacher, keep in mind that you should "
-"translate keyboard shortcuts always in the same way (German example: if you "
-"translate Ctrl+S to Strg+S, you should also translate Ctrl+Q to Strg+Q and "
-"all other keyboard shortcuts the same way)."
-msgstr ""
-
-#: docs/translator-notes.html:5
-msgid "List of all keyboard shortcuts in OpenTeacher:"
-msgstr ""
-
-#: docs/translator-notes.html:11
-msgid "deprecated, should be changed to &quot;Return&quot;"
-msgstr ""
-
-#: docs/using-openteacher.html:1
+#: docsTemplates/using-openteacher.html:5
 msgid "Using OpenTeacher 2: A Quick Start"
 msgstr ""
 
-#: docs/using-openteacher.html:3
+#: docsTemplates/using-openteacher.html:7
 msgid ""
 "This quick start guide shows you how to do a simple self-test using "
 "OpenTeacher 2. We're going to learn counting to ten in French today! For "
@@ -538,36 +538,36 @@ msgid ""
 "learn French."
 msgstr ""
 
-#: docs/using-openteacher.html:5
+#: docsTemplates/using-openteacher.html:9
 msgid ""
 "The screenshots are all taken in Ubuntu, but this should all work exactly "
 "the same in Windows and Mac OS X."
 msgstr ""
 
-#: docs/using-openteacher.html:7
+#: docsTemplates/using-openteacher.html:11
 msgid "Start OpenTeacher"
 msgstr ""
 
-#: docs/using-openteacher.html:11
+#: docsTemplates/using-openteacher.html:15
 msgid ""
 "Enter a title for the word list you are going to enter. Also enter the known "
 "language, which, in our case, is English, and the foreign language (the "
 "language you want to learn), which, in our case, is French."
 msgstr ""
 
-#: docs/using-openteacher.html:12
+#: docsTemplates/using-openteacher.html:16
 msgid ""
 "Then enter all words you want to learn, seperating the foreign and known "
 "language by =, and the words by newlines (see the screenshot for an example)."
 msgstr ""
 
-#: docs/using-openteacher.html:16
+#: docsTemplates/using-openteacher.html:20
 msgid ""
 "Click \"Enter!\". Now the table of words on the bottom will be filled with "
 "your words. You have now successfully made your word list!"
 msgstr ""
 
-#: docs/using-openteacher.html:20
+#: docsTemplates/using-openteacher.html:24
 msgid ""
 "Click the \"Teach me!\" tab on the top to start the test. A word will now be "
 "asked to you in your own language, and you have to type the translation of "
@@ -575,14 +575,14 @@ msgid ""
 "your keyboard, or click \"Check!\""
 msgstr ""
 
-#: docs/using-openteacher.html:22
+#: docsTemplates/using-openteacher.html:26
 msgid ""
 "If you entered the right translation, the next question will be asked to "
 "you. If you did not enter the right translation, OpenTeacher will show you "
 "the correct answer, and the difference from your answer."
 msgstr ""
 
-#: docs/using-openteacher.html:26
+#: docsTemplates/using-openteacher.html:30
 msgid ""
 "Once the test is completed, OpenTeacher will tell you if you did well by "
 "giving you a &quot;note&quot; (grade)."

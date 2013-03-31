@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenTeacher 3.1\n"
+"Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-03-10 21:22+0100\n"
+"POT-Creation-Date: 2013-03-31 10:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,22 +66,22 @@ msgstr ""
 msgid "Start exercise"
 msgstr ""
 
-#: main.py:329
+#: main.py:330
 msgid "Username empty"
 msgstr ""
 
-#: main.py:330
+#: main.py:331
 msgid "The username should not be empty. Please try again."
 msgstr ""
 
-#: main.py:336
+#: main.py:337
 msgid "Username taken"
 msgstr ""
 
-#: main.py:337
+#: main.py:338
 msgid "That username is already taken. Please try again."
 msgstr ""
 
-#: main.py:437 main.py:447
+#: main.py:438 main.py:448
 msgid "Typing Tutor"
 msgstr ""
