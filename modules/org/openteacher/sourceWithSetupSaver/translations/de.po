@@ -85,4 +85,4 @@ msgstr "AUTOR"
 
 #: manpage.templ:61
 msgid "Contact: {email}"
-msgstr "Kontakt: {E-Mail}"
+msgstr "Kontakt: {email}"
