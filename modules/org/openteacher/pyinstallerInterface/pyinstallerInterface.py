@@ -90,9 +90,8 @@ if not sys.frozen:
 		pass
 	from xml.etree import ElementTree
 
-f = open("/tmp/ot-output.txt", "w")
-sys.stdout = f
-sys.stderr = f
+#filter the -psn argument passed by mac os x out.
+sys.argv = [a for a in sys.argv if not a.startswith("-psn")]
 
 sys.path.insert(0, os.path.join(os.path.dirname(sys.executable), 'source'))
 sys.exit(__import__('openteacher').ModuleApplication().run())
