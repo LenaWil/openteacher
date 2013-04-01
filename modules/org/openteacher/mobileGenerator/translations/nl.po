@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-03-31 10:41+0200\n"
+"POT-Creation-Date: 2013-03-31 12:14+0200\n"
 "PO-Revision-Date: 2013-03-26 17:02+0000\n"
 "Last-Translator: Michael Tel <m.tel@xs4all.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-27 05:05+0000\n"
-"X-Generator: Launchpad (build 16540)\n"
+"X-Launchpad-Export-Date: 2013-04-01 05:16+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
+"Language: nl\n"
 
 #: scr/gui.js:39
 msgid "Menu"
@@ -29,149 +29,3 @@ msgstr "Lijst invoeren"
 #: scr/gui.js:43
 msgid "Teach me!"
 msgstr "Overhoor me!"
-
-#~ msgid "New list"
-#~ msgstr "Nieuwe lijst"
-
-#~ msgid "Load list"
-#~ msgstr "Laad lijst"
-
-#~ msgid "Save list"
-#~ msgstr "Lijst opslaan"
-
-#~ msgid "Remove list"
-#~ msgstr "Verwijder lijst"
-
-#~ msgid "Options"
-#~ msgstr "Opties"
-
-#~ msgid "Please choose a name for the current list, so it can be saved."
-#~ msgstr ""
-#~ "Kies alstublieft een naam voor de huidige lijst, zodat deze opgeslagen "
-#~ "kan worden."
-
-#~ msgid "Name:"
-#~ msgstr "Naam:"
-
-#~ msgid "Done"
-#~ msgstr "Klaar"
-
-#~ msgid "Warning"
-#~ msgstr "Waarschuwing"
-
-#~ msgid "There is already a list named like that."
-#~ msgstr "Er is al een lijst die zo heet."
-
-#~ msgid "If you continue, it will be overwritten. Continue?"
-#~ msgstr "Als u doorgaat, zal deze overschreven worden. Doorgaan?"
-
-#~ msgid "Yes"
-#~ msgstr "Ja"
-
-#~ msgid "No"
-#~ msgstr "Nee"
-
-#~ msgid "Please choose the list you want to load."
-#~ msgstr "Kies alstublieft de lijst die u wilt laden."
-
-#~ msgid "Filter lists..."
-#~ msgstr "Filter lijsten..."
-
-#~ msgid "Please choose the list you want to remove."
-#~ msgstr "Kies alstublieft de lijst die u wilt verwijderen."
-
-#~ msgid "Copyright info"
-#~ msgstr "Copyrightinformatie"
-
-#~ msgid "Language:"
-#~ msgstr "Taal:"
-
-#~ msgid "Practising mode:"
-#~ msgstr "Oefenmodus:"
-
-#~ msgid "Think answer"
-#~ msgstr "Denk antwoord"
-
-#~ msgid "Type answer"
-#~ msgstr "Typ antwoord"
-
-#~ msgid "Word list:"
-#~ msgstr "Woordenlijst:"
-
-#~ msgid ""
-#~ "Welcome = Welkom\n"
-#~ "to = bij\n"
-#~ "OpenTeacher mobile = OpenTeacher mobile\n"
-#~ msgstr ""
-#~ "Welcome = Welkom\n"
-#~ "to = bij\n"
-#~ "OpenTeacher mobile = OpenTeacher mobile\n"
-
-#~ msgid "Error"
-#~ msgstr "Fout"
-
-#~ msgid "Missing equals sign or tab"
-#~ msgstr "Missend gelijkheidsteken of tab"
-
-#~ msgid ""
-#~ "Please make sure every line contains an '='-sign or tab between the "
-#~ "questions and answers."
-#~ msgstr ""
-#~ "Zorg er alstublieft voor dat iedere regel een '='-teken of een tab tussen "
-#~ "de vragen en de antwoorden bevat."
-
-#~ msgid "Ok"
-#~ msgstr "Ok"
-
-#~ msgid "Question:"
-#~ msgstr "Vraag:"
-
-#~ msgid "Answer:"
-#~ msgstr "Antwoord:"
-
-#~ msgid "Check!"
-#~ msgstr "Controleer!"
-
-#~ msgid "Skip"
-#~ msgstr "Sla over"
-
-#~ msgid "Correct anyway"
-#~ msgstr "Toch goed"
-
-#~ msgid ""
-#~ "Think about the answer, and press the 'View answer' button when you're "
-#~ "done."
-#~ msgstr ""
-#~ "Denk na over het antwoord en druk op de 'Toon antwoord'-knop wanneer u "
-#~ "klaar bent."
-
-#~ msgid "View answer"
-#~ msgstr "Toon antwoord"
-
-#~ msgid "Translation:"
-#~ msgstr "Vertaling:"
-
-#~ msgid "I was right"
-#~ msgstr "Ik had het goed"
-
-#~ msgid "I was wrong"
-#~ msgstr "Ik had het fout"
-
-#~ msgid "Test completed!"
-#~ msgstr "Toets afgerond!"
-
-#~ msgid "Your note: %s"
-#~ msgstr "Uw cijfer: %s"
-
-#~ msgid "Practising mode choice"
-#~ msgstr "Oefenmoduskeuze"
-
-#~ msgid "Please choose the practising mode you want to use:"
-#~ msgstr "Kies alstublieft de oefenmodus die u wilt gebruiken:"
-
-#~ msgid ""
-#~ "If you ever want to change your choice, you can do so in the options "
-#~ "dialog, which is accessable by clicking 'Menu' and then 'Options'."
-#~ msgstr ""
-#~ "Als u ooit uw keuze wilt veranderen, kunt u dat doen in het "
-#~ "optiesvenster, dat bereikbaar is door te klikken op 'Menu' en 'Opties'."
