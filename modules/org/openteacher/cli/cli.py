@@ -132,9 +132,9 @@ class CommandLineInterfaceModule(object):
 			self._mm.mods(type="inputTypingLogic"),
 			self._mm.mods(type="wordsStringComposer"),
 			self._mm.mods(type="authors"),
+			self._mm.mods(type="loader"),
 		)
 		self.uses = (
-			self._mm.mods(type="load"),
 			self._mm.mods(type="save"),
 			self._mm.mods(type="reverser"),
 			self._mm.mods(type="ocrWordListLoader"),
@@ -154,14 +154,7 @@ class CommandLineInterfaceModule(object):
 						yield ext
 
 	def _load(self, path):
-		for mod in self._modules.sort("active", type="load"):
-			type = mod.getFileTypeOf(path)
-			if type is None:
-				#file not supported by this mod
-				continue
-			lesson = mod.load(path)
-			return type, lesson
-		return None, None
+		return self._modules.default("active", type="loader").loadToLesson(path)
 
 	def _expandPaths(self, paths):
 		newPaths = []
@@ -365,7 +358,7 @@ class CommandLineInterfaceModule(object):
 		authors.set_defaults(func=self._authors)
 
 		#if at least one saver and loader available:
-		if set(self._mm.mods("active", type="load")) and set(self._mm.mods("active", type="save")):
+		if set(self._mm.mods("active", type="loader")) and set(self._mm.mods("active", type="save")):
 			#convert
 			convert = subparsers.add_parser("convert", help="convert word, topo and media files", prefix_chars="+")
 			convert.add_argument("+f", "++output-format", help="output format", default="otwd", choices=list(self._saveExts()))
@@ -386,7 +379,7 @@ class CommandLineInterfaceModule(object):
 			reverseList.set_defaults(func=self._reverseList)
 
 		#if at least a loader is available.
-		if set(self._mm.mods("active", type="load")):
+		if set(self._mm.mods("active", type="loader")):
 			#view-word-list
 			viewWordList = subparsers.add_parser("view-word-list", help="show a word list", prefix_chars="+")
 			viewWordList.add_argument("input-files", nargs="+", help="input files")
@@ -414,7 +407,7 @@ class CommandLineInterfaceModule(object):
 
 		#if curses framework used for practising and at least one loader
 		#is available.
-		if urwid and set(self._mm.mods("active", type="load")):
+		if urwid and set(self._mm.mods("active", type="loader")):
 			#practise-word-list
 			practiseWordList = subparsers.add_parser("practise-word-list", help="practise a word list", prefix_chars="+")
 			practiseWordList.add_argument("file", help="the file to practise")

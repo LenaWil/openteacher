@@ -22,39 +22,9 @@
 import os
 import sys
 
-class Loader(object):
-	def __init__(self, loadModule, guiModule, path, addToRecentlyOpened=None, *args, **kwargs):
-		super(Loader, self).__init__(*args, **kwargs)
-
-		self.loadModule = loadModule
-		self.guiModule = guiModule
-		self.path = path
-		self.addToRecentlyOpened = addToRecentlyOpened
-
-	def load(self):
-		if isinstance(self.path, unicode):
-			#recently opened case
-			self.path = self.path.encode(sys.getfilesystemencoding())
-		lessonData = self.loadModule.load(self.path)
-
-		if self.addToRecentlyOpened:
-			# Add to recently opened
-			self.addToRecentlyOpened(**{
-				"label": lessonData["list"].get("title", "") or os.path.basename(self.path),
-				"args": {},
-				"kwargs": {"path": unicode(self.path, sys.getfilesystemencoding())},
-				"method": "load",
-				"moduleArgsSelectors": ["active"],
-				"moduleKwargsSelectors": {"type": "loader"},
-			})
-
-		#FIXME: the topo lesson requires this ordering of assignments.
-		#that's pretty annoying.
-		lesson = self.guiModule.createLesson()
-		lesson.resources = lessonData["resources"]
-		lesson.changed = False
-		lesson.path = self.path
-		lesson.list = lessonData["list"]
+class Everything(object):
+	def __contains__(self, item):
+		return True
 
 class LoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -101,6 +71,10 @@ class LoaderModule(object):
 
 	@property
 	def openSupport(self):
+		"""Tells if there's a chance that calling load() will succeed
+		   (and not fail with a NotImplementedError)
+
+		"""
 		return len(self.usableExtensions) != 0
 
 	@property
@@ -112,25 +86,49 @@ class LoaderModule(object):
 		return recentlyOpenedModule.add
 
 	def load(self, path):
-		loaders = []
+		""""Opens the file at ``path`` in the GUI."""
 
-		#Checks if loader modules can open it, and which type they would
-		#return if they would load it only adds it as a possibility if
-		#there also is a gui module for that type
+		if isinstance(path, unicode):
+			#recently opened case
+			path = path.encode(sys.getfilesystemencoding())
 
+		type, lessonData = self.loadToLesson(path, self._supportedFileTypes)
+
+		if self._addToRecentlyOpened:
+			# Add to recently opened
+			self._addToRecentlyOpened(**{
+				"label": lessonData["list"].get("title", "") or os.path.basename(path),
+				"args": {},
+				"kwargs": {"path": unicode(path, sys.getfilesystemencoding())},
+				"method": "load",
+				"moduleArgsSelectors": ["active"],
+				"moduleKwargsSelectors": {"type": "loader"},
+			})
+
+		self.loadFromLesson(type, lessonData)
+
+	def loadToLesson(self, path, dataTypes=None):
+		"""Loads the file in ``path`` and returns a tuple containing
+		   ``(dataType, lessonData)`` or raises NotImplementedError if
+		   that is impossible. When a list is passed to ``dataTypes``,
+		   it only loads the file if it can do so returning lessonData
+		   of one of the dataTypes in the list. By default, it returns
+		   lessonData of any type.
+
+		"""
+		if dataTypes is None:
+			dataTypes = Everything()
 		for loadModule in self._modules.sort("active", type="load"):
 			fileType = loadModule.getFileTypeOf(path)
-			for guiModule in self._modules.sort("active", type="lesson"):
-				if guiModule.dataType == fileType:
-					loaders.append(Loader(loadModule, guiModule, path, self._addToRecentlyOpened))
-
-		if len(loaders) == 0:
-			raise NotImplementedError()
-		loader = loaders[0]
-
-		loader.load()
+			if fileType is not None and fileType in dataTypes:
+				return fileType, loadModule.load(path)
+		raise NotImplementedError()
 
 	def loadFromLesson(self, dataType, lessonData):
+		"""Tries to show ``lessonData`` of type ``type`` in a GUI
+		   lesson.
+
+		"""
 		loaders = []
 		for loader in self._modules.sort("active", type="lesson"):
 			if loader.dataType == dataType:

@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -80,6 +80,11 @@ class UiControllerModule(object):
 		except IndexError:
 			self._lessonTracker = None
 		try:
+			self._loader = self._modules.default("active", type="loader")
+		except IndexError:
+			self._loader = None
+
+		try:
 			self._saver = self._modules.default("active", type="saver")
 		except IndexError:
 			self._saver = None
@@ -119,6 +124,7 @@ class UiControllerModule(object):
 		del self._fileDialogs
 		del self._printDialog
 		del self._lessonTracker
+		del self._loader
 		del self._saver
 		del self._execute
 		del self._store
@@ -163,6 +169,11 @@ class UiControllerModule(object):
 	def _lastPath(self, path):
 		self._store["org.openteacher.uiController.lastPath"] = path
 
+	def _showErrorAndPrintException(self, msg):
+		print >> sys.stderr, "Catched exception:"
+		traceback.print_exc()
+		self._showError(msg)
+
 	def _showError(self, msg):
 		tab = self._uiModule.currentFileTab or self._uiModule.startTab
 		try:
@@ -171,39 +182,66 @@ class UiControllerModule(object):
 			#fallback
 			print msg
 
-	def open_(self, path=None):
-		loader = self._modules.default("active", type="loader")
+	def _getFilePath(self):
+		usableExtensions = self._loader.usableExtensions
+		return self._fileDialogs.getLoadPath(
+			self._lastPath,
+			usableExtensions
+		)
 
-		usableExtensions = loader.usableExtensions
+	def _handleLoadException(self, exc):
+		if isinstance(exc, NotImplementedError):
+			self._showErrorAndPrintException(_("Couldn't open the file, because the file type is unknown or it can't be shown."))
+		elif isinstance(exc, IOError):
+			self._showErrorAndPrintException(_("Couldn't open the file, is it still there and do we have the right to open it?"))
+		else:
+			self._showErrorAndPrintException(_("Couldn't open the file, it seems to be corrupted."))
+
+	def open_(self, path=None):
 		if not path:
-			path = self._fileDialogs.getLoadPath(
-				self._lastPath,
-				usableExtensions
-			)
+			path = self._getFilePath()
 		if path:
 			try:
-				loader.load(path)
-			except NotImplementedError:
-				traceback.print_exc()
-				self._showError(_("Couldn't open the file, because the file type is unknown or it can't be shown."))
-			except IOError:
-				traceback.print_exc()
-				self._showError(_("Couldn't open the file, is it still there and do we have the right to open it?"))
-			except Exception:
-				traceback.print_exc()
-				self._showError(_("Couldn't open the file, it seems to be corrupted."))
-			self._lastPath = path
-		self._uiModule.statusViewer.show(_("File opened succesfully."))
+				self._loader.load(path)
+			except Exception, e:
+				self._handleLoadException(e)
+			else:
+				self._lastPath = path
+				self._uiModule.statusViewer.show(_("File opened succesfully."))
 
 	def openInto(self):
-		pass
+		tab = self._lessonTracker.currentLesson.fileTab
+		path = self._getFilePath()
+		self._uiModule.currentFileTab = tab
+		if path:
+			currentLesson = self._lessonTracker.currentLesson
+			dataType = currentLesson.dataType
+			try:
+				type, lessonData = self._loader.loadToLesson(path, [dataType])
+			except NotImplementedError:
+				self._showError(_("Can't merge files of different file types."))
+			except Exception, e:
+				self._handleLoadException(e)
+			else:
+				self._mergeIntoCurrentLesson(currentLesson, type, lessonData)
+
+	def _mergeIntoCurrentLesson(self, currentLesson, type, otherLessonData):
+		merge = self._modules.default("active", type="merger", dataType=type).merge
+
+		currentLessonData = merge({
+			"list": currentLesson.list,
+			"resources": currentLesson.resources,
+		}, otherLessonData)
+		currentLesson.list = currentLessonData["list"]
+		currentLesson.resources = currentLessonData["resources"]
+
+		self._uiModule.statusViewer.show(_("Opened file into the current list succesfully."))
 
 	def _doSave(self, path):
 		try:
 			self._saver.save(path)
 		except IOError:
-			traceback.print_exc()
-			self._showError(_("Couldn't save the file, is there enough free disk space and do we have the right to write to the specified location?"))
+			self._showErrorAndPrintException(_("Couldn't save the file, is there enough free disk space and do we have the right to write to the specified location?"))
 		else:
 			self._uiModule.statusViewer.show(_("File saved succesfully."))
 
@@ -293,16 +331,21 @@ class UiControllerModule(object):
 
 		#open
 		try:
-			loader = self._modules.default("active", type="loader")
-		except IndexError:
+			openSupport = self._loader.openSupport
+		except TypeError:
 			openSupport = False
-		else:
-			openSupport = loader.openSupport
 		openSupport = openSupport and self._fileDialogs is not None
 		self._uiModule.openAction.enabled = openSupport
 
 		#open into
-		pass
+		try:
+			dataType = self._lessonTracker.currentLesson.dataType
+		except AttributeError:
+			openIntoSupport = False
+		else:
+			openIntoSupport = len(set(self._mm.mods("active", type="merger", dataType=dataType))) != 0
+		openIntoSupport = openIntoSupport and openSupport
+		self._uiModule.openIntoAction.enabled = openIntoSupport
 
 		#save
 		if self._saver:
