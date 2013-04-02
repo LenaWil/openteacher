@@ -188,16 +188,14 @@ class ModulesHandler(object):
 					match = rePattern.search(line)
 					if not match:
 						continue
-					try:
-						lines[i - 2]
-					except IndexError:
-						startNumber = 0
-					else:
+					if i - 2 > 0:
 						startNumber = i - 2
+					else:
+						startNumber = 0
 					try:
 						lines[i + 5]
 					except IndexError:
-						endNumber = len(lines) - 1
+						endNumber = len(lines)
 					else:
 						endNumber = i + 5
 					relevantLines = lines[startNumber:endNumber]
