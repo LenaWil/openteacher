@@ -21,29 +21,29 @@
 import weakref
 import os
 
-def getOpenTeacherWebPage():
+def installQtClasses():
+	global OpenTeacherWebPage, DocumentationDialog
+
 	class OpenTeacherWebPage(QtWebKit.QWebPage):
 		"""A QWebPage that tries to fetch the online page, and if that
 		   doesn't succeed, fetches the offline page. It also supports
 		   retranslated.
 
 		"""
-		def __init__(self, url, userAgent, fallbackPath, *args, **kwargs):
+		def __init__(self, url, userAgent, getFallbackHtml, *args, **kwargs):
 			super(OpenTeacherWebPage, self).__init__(*args, **kwargs)
 
 			self.url = url
 			self.userAgent = userAgent
-			self.fallbackPath = fallbackPath
+			self.getFallbackHtml = getFallbackHtml
 
 		def userAgentForUrl(self, url):
 			return self.userAgent
 
 		def updateStatus(self, ok):
 			if not ok:
-				html = open(self.fallbackPath).read()
-				self.mainFrame().setHtml(html, QtCore.QUrl.fromLocalFile(
-					os.path.abspath(self.fallbackPath)
-				))
+				html = self.getFallbackHtml()
+				self.mainFrame().setHtml(html)
 
 		def updateLanguage(self, language):
 			request = QtNetwork.QNetworkRequest(QtCore.QUrl(self.url))
@@ -51,9 +51,7 @@ def getOpenTeacherWebPage():
 			self.mainFrame().load(request)
 
 			self.loadFinished.connect(self.updateStatus)
-	return OpenTeacherWebPage
 
-def getDocumentationDialog():
 	class DocumentationDialog(QtWebKit.QWebView):
 		"""The documentation dialog. It shows the (html) user
 		   documentation of OpenTeacher. First it tries to fetch the
@@ -61,10 +59,10 @@ def getDocumentationDialog():
 		   offline fallback.
 
 		"""
-		def __init__(self, url, userAgent, fallbackPath, *args, **kwargs):
+		def __init__(self, url, userAgent, getFallbackHtml, *args, **kwargs):
 			super(DocumentationDialog, self).__init__(*args, **kwargs)
 
-			self.page = OpenTeacherWebPage(url, userAgent, fallbackPath)
+			self.page = OpenTeacherWebPage(url, userAgent, getFallbackHtml)
 			self.setPage(self.page)
 
 		def retranslate(self):
@@ -74,7 +72,6 @@ def getDocumentationDialog():
 
 		def updateLanguage(self, language):
 			self.page.updateLanguage(language)
-	return DocumentationDialog
 
 class DocumentationModule(object):
 	"""This module provides the documentation dialog."""
@@ -87,11 +84,20 @@ class DocumentationModule(object):
 		self.requires = (
 			self._mm.mods(type="metadata"),
 			self._mm.mods(type="ui"),
+			self._mm.mods(type="userDocumentation"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
 		self.filesWithTranslations = ("documentation.py",)
+
+	def _getFallbackHtml(self):
+		userDocumentationModule = self._modules.default("active", type="userDocumentation")
+
+		baseUrl = "file://" + os.path.abspath(userDocumentationModule.resourcesPath)
+		html = userDocumentationModule.getHtml(baseUrl)
+		t = pyratemp.Template(filename=self._mm.resourcePath("wrapper.html"))
+		return t(content=html)
 
 	def show(self):
 		metadata = self._modules.default("active", type="metadata").metadata
@@ -100,7 +106,7 @@ class DocumentationModule(object):
 		dialog = DocumentationDialog(
 			metadata["documentationUrl"],
 			metadata["userAgent"],
-			self._mm.resourcePath("docs/index.html")
+			self._getFallbackHtml
 		)
 		tab = uiModule.addCustomTab(dialog)
 		dialog.tab = tab
@@ -110,14 +116,14 @@ class DocumentationModule(object):
 		self._retranslate()
 
 	def enable(self):
-		global QtCore, QtWebKit, QtNetwork
+		global QtCore, QtWebKit, QtNetwork, pyratemp
 		try:
 			from PyQt4 import QtCore, QtWebKit, QtNetwork
+			import pyratemp
 		except ImportError:
 			return
-		global DocumentationDialog, OpenTeacherWebPage
-		DocumentationDialog = getDocumentationDialog()
-		OpenTeacherWebPage = getOpenTeacherWebPage()
+
+		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._activeDialogs = set()

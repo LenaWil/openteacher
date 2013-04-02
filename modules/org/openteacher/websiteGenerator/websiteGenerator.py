@@ -22,6 +22,8 @@
 import sys
 import os
 import shutil
+import tempfile
+import atexit
 
 DOWNLOAD_LINK = "http://sourceforge.net/projects/openteacher/files/openteacher/3.1/openteacher-3.1-windows-setup.msi/download"
 
@@ -36,6 +38,7 @@ class WebsiteGeneratorModule(object):
 			self._mm.mods(type="execute"),
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="metadata"),
+			self._mm.mods(type="userDocumentation"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -52,6 +55,13 @@ class WebsiteGeneratorModule(object):
 		templatesFiles = [os.path.join("templates", f) for f in os.listdir(self._templatesDir)]
 		docTemplatesFiles = [os.path.join("docsTemplates", f) for f in os.listdir(self._docsTemplatesDir)]
 		self.filesWithTranslations = templatesFiles + docTemplatesFiles
+
+		self._tempPaths = []
+		atexit.register(self._removeTempDirs)
+
+	def _removeTempDirs(self):
+		for path in self._tempPaths:
+			shutil.rmtree(path)
 
 	def generateWebsite(self):
 		"""Generates the complete OT website into a directory specified
@@ -90,6 +100,10 @@ class WebsiteGeneratorModule(object):
 		os.mkdir(path)
 		return path
 
+	@property
+	def _userDocMod(self):
+		return self._modules.default("active", type="userDocumentation")
+
 	def _copyResources(self):
 		"""Copies all static website resources into place."""
 
@@ -106,16 +120,25 @@ class WebsiteGeneratorModule(object):
 		copyTree("scripts")
 		copy("index.php")
 
+		#Copy user documentation's static files
+		shutil.copytree(
+			self._userDocMod.resourcesPath,
+			os.path.join(self._path, "images/docs/3"),
+		)
+
 	def _generateResources(self):
 		"""Generates a few resources."""
 
 		toPath = lambda part: os.path.join(self._path, part)
 		fromPath = lambda part: self._mm.resourcePath(os.path.join("images/oslogos/", part))
 
+		#stylesheet
 		self._generateStyle(toPath("style.css"))
+		#images
 		self._generateBackground(toPath("images/bg.png"))
 		self._generateBodyBackground(toPath("images/body.png"))
 		self._generateLight(toPath("images/light.png"))
+		#button backgrounds (which include logos)
 		self._generateButtons([
 			(fromPath("fedoralogo.png"), toPath("images/downloadbuttons/fedora-button")),
 			(fromPath("tuxlogo.png"), toPath("images/downloadbuttons/linux-button")),
@@ -125,6 +148,10 @@ class WebsiteGeneratorModule(object):
 		])
 
 	def _generateStyle(self, path):
+		"""Generates the style sheet of OpenTeacher using ``self._hue``
+		   (which comes from metadata) for the colors.
+
+		"""
 		t = pyratemp.Template(filename=self._mm.resourcePath("style.css"))
 		with open(path, "w") as f:
 			f.write(t(**{
@@ -140,6 +167,10 @@ class WebsiteGeneratorModule(object):
 			}).encode("UTF-8"))
 
 	def _generateBackground(self, path):
+		"""Generates the background file: a small bug high file with
+		   nothing but a gradient inside.
+
+		"""
 		width = 1
 		height = 1000
 		startColor = QtGui.QColor.fromHsv(self._hue, 43, 250)
@@ -160,14 +191,17 @@ class WebsiteGeneratorModule(object):
 		img.save(path)
 
 	def _generateBodyBackground(self, path):
+		"""Generate the body background, which includes:
+		    - a rounded lighter area, on which the content is shown
+		    - the logo
+		    - the application name
+
+		"""
+		#set some values
 		width = 1000
 		height = 5000
 		sideMargin = 27
 		topMargin = 64
-
-		textColor = QtGui.QColor.fromHsv(self._hue, 119, 47)
-		gradientTopColor = QtGui.QColor.fromHsv(self._hue, 7, 253)
-		gradientBottomColor = QtGui.QColor.fromHsv(self._hue, 12, 243)
 
 		xRadius = 9
 		yRadius = xRadius * 0.7
@@ -179,6 +213,12 @@ class WebsiteGeneratorModule(object):
 		textXStart = 124
 		textYBaseline = 58
 
+		#determine colors
+		textColor = QtGui.QColor.fromHsv(self._hue, 119, 47)
+		gradientTopColor = QtGui.QColor.fromHsv(self._hue, 7, 253)
+		gradientBottomColor = QtGui.QColor.fromHsv(self._hue, 12, 243)
+
+		#create image
 		img = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32_Premultiplied)
 		img.fill(QtCore.Qt.transparent)
 
@@ -232,9 +272,14 @@ class WebsiteGeneratorModule(object):
 		painter.drawText(textXPos, textYBaseline, "EACHER")
 		painter.end()
 
+		#and save it.
 		img.save(path)
 
 	def _generateLight(self, path):
+		"""Generates a half circle filled with a gradient to be used to
+		   show which menu item the mouse is at/which page is active.
+
+		"""
 		width = 26
 		height = 13
 		color = QtGui.QColor.fromHsv(self._hue, 59, 240, 255)
@@ -339,19 +384,32 @@ class WebsiteGeneratorModule(object):
 
 		docsDir = os.path.join(self._langDir, "documentation")
 		os.mkdir(docsDir)
-		documentationTemplates = os.listdir(self._docsTemplatesDir)
-		for filename in documentationTemplates:
+		documentationTemplatePaths = [
+			os.path.join(self._docsTemplatesDir, f)
+			for f in os.listdir(self._docsTemplatesDir)
+		]
+		documentationTemplatePaths.append(self._getUsingOpenTeacher3Path())
+		for filename in documentationTemplatePaths:
 			self._generateDocumentationPage(filename)
 
-	def _generateDocumentationPage(self, filename):
+	def _getUsingOpenTeacher3Path(self):
+		path = tempfile.mkdtemp()
+		#make sure it's cleaned up...
+		self._tempPaths.append(path)
+
+		filePath = os.path.join(path, "using-openteacher-3.html")
+		with open(filePath, "w") as f:
+			f.write(self._userDocMod.getHtml("../images/docs/3"))
+		return filePath
+
+	def _generateDocumentationPage(self, templatePath):
 		"""Combines the documentation text, with the stuff shared
 		   between all documentation pages, and wraps the result in a
 		   page.
 
 		"""
 		#the documentation text
-		templatePath = os.path.join(self._docsTemplatesDir, filename)
-		pageName = "documentation/" + filename
+		pageName = "documentation/" + os.path.basename(templatePath)
 		docContent = self._evaluateTemplate(templatePath, pageName)
 
 		#the documentation wrapper
