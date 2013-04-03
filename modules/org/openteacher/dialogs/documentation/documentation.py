@@ -97,15 +97,18 @@ class DocumentationModule(object):
 		baseUrl = "file://" + os.path.abspath(userDocumentationModule.resourcesPath)
 		html = userDocumentationModule.getHtml(baseUrl)
 		t = pyratemp.Template(filename=self._mm.resourcePath("wrapper.html"))
-		return t(content=html)
+		return t(**{
+			"content": html,
+			"QColor": QtGui.QColor,
+			"hue": self._metadata["mainColorHue"],
+		})
 
 	def show(self):
-		metadata = self._modules.default("active", type="metadata").metadata
 		uiModule = self._modules.default("active", type="ui")
 
 		dialog = DocumentationDialog(
-			metadata["documentationUrl"],
-			metadata["userAgent"],
+			self._metadata["documentationUrl"],
+			self._metadata["userAgent"],
 			self._getFallbackHtml
 		)
 		tab = uiModule.addCustomTab(dialog)
@@ -116,9 +119,9 @@ class DocumentationModule(object):
 		self._retranslate()
 
 	def enable(self):
-		global QtCore, QtWebKit, QtNetwork, pyratemp
+		global QtCore, QtGui, QtWebKit, QtNetwork, pyratemp
 		try:
-			from PyQt4 import QtCore, QtWebKit, QtNetwork
+			from PyQt4 import QtCore, QtGui, QtWebKit, QtNetwork
 			import pyratemp
 		except ImportError:
 			return
@@ -126,6 +129,7 @@ class DocumentationModule(object):
 		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
+		self._metadata = self._modules.default("active", type="metadata").metadata
 		self._activeDialogs = set()
 
 		#load translator
@@ -166,6 +170,7 @@ class DocumentationModule(object):
 		self.active = False
 
 		del self._modules
+		del self._metadata
 		del self._activeDialogs
 
 def init(moduleManager):

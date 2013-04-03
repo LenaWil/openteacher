@@ -118,7 +118,9 @@ class WebsiteGeneratorModule(object):
 		# Copy images, scripts etc.
 		copyTree("images")
 		copyTree("scripts")
+		copyTree("inAppDocs")
 		copy("index.php")
+		copy("documentation.html")
 
 		#Copy user documentation's static files
 		shutil.copytree(
@@ -344,7 +346,9 @@ class WebsiteGeneratorModule(object):
 
 	def _generateHtml(self):
 		"""Generates all html files: first for US English and then for
-		   all the available translations.
+		   all the available translations. If that's done, it generates
+		   the in app documentation pages (that are in a separate
+		   directory).
 
 		"""
 		# The default (US English) (unicode as translate function)
@@ -369,6 +373,12 @@ class WebsiteGeneratorModule(object):
 				# Generate
 				self._generatePages(langCode)
 
+		# Generate inAppDocumentation pages.
+		for lang in list(self._userDocMod.availableTranslations) + ["en"]:
+			source = self._getUsingOpenTeacher3Path(lang)
+			destination = os.path.join(self._path, "inAppDocs", lang + ".html")
+			shutil.copy(source, destination)
+
 	def _generatePages(self, lang):
 		"""Generates all pages in a certain language in a subdirectory
 		   of the main output path. First it generates the normal pages,
@@ -388,18 +398,18 @@ class WebsiteGeneratorModule(object):
 			os.path.join(self._docsTemplatesDir, f)
 			for f in os.listdir(self._docsTemplatesDir)
 		]
-		documentationTemplatePaths.append(self._getUsingOpenTeacher3Path())
+		documentationTemplatePaths.append(self._getUsingOpenTeacher3Path(lang))
 		for filename in documentationTemplatePaths:
 			self._generateDocumentationPage(filename)
 
-	def _getUsingOpenTeacher3Path(self):
+	def _getUsingOpenTeacher3Path(self, lang):
 		path = tempfile.mkdtemp()
 		#make sure it's cleaned up...
 		self._tempPaths.append(path)
 
 		filePath = os.path.join(path, "using-openteacher-3.html")
 		with open(filePath, "w") as f:
-			f.write(self._userDocMod.getHtml("../images/docs/3"))
+			f.write(self._userDocMod.getHtml("../images/docs/3", lang))
 		return filePath
 
 	def _generateDocumentationPage(self, templatePath):
