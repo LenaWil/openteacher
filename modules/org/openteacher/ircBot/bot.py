@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #	Copyright 2012, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -152,7 +152,7 @@ class OpenTeacherBot(irc.IRCClient):
 		target = channel if channel in self.factory.channels else user.split("!")[0]
 
 		#bugs
-		match = re.search("(?:bugs? ?/?|#)([0-9]+)", msg)
+		match = re.search("(?:bugs? ?/?|#|lp:)([0-9]+)", msg)
 		if match:
 			number = match.group(1)
 			bug = self.factory.launchpad.bugs[number]
