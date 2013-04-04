@@ -85,6 +85,7 @@ class DocumentationModule(object):
 			self._mm.mods(type="metadata"),
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="userDocumentation"),
+			self._mm.mods(type="userDocumentationWrapper"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -93,15 +94,11 @@ class DocumentationModule(object):
 
 	def _getFallbackHtml(self):
 		userDocumentationModule = self._modules.default("active", type="userDocumentation")
+		userDocumentationWrapperModule = self._modules.default("active", type="userDocumentationWrapper")
 
 		baseUrl = "file://" + os.path.abspath(userDocumentationModule.resourcesPath)
 		html = userDocumentationModule.getHtml(baseUrl)
-		t = pyratemp.Template(filename=self._mm.resourcePath("wrapper.html"))
-		return t(**{
-			"content": html,
-			"QColor": QtGui.QColor,
-			"hue": self._metadata["mainColorHue"],
-		})
+		return userDocumentationWrapperModule.wrap(html)
 
 	def show(self):
 		uiModule = self._modules.default("active", type="ui")
@@ -119,10 +116,9 @@ class DocumentationModule(object):
 		self._retranslate()
 
 	def enable(self):
-		global QtCore, QtGui, QtWebKit, QtNetwork, pyratemp
+		global QtCore, QtWebKit, QtNetwork
 		try:
-			from PyQt4 import QtCore, QtGui, QtWebKit, QtNetwork
-			import pyratemp
+			from PyQt4 import QtCore, QtWebKit, QtNetwork
 		except ImportError:
 			return
 

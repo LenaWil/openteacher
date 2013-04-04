@@ -39,6 +39,7 @@ class WebsiteGeneratorModule(object):
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="metadata"),
 			self._mm.mods(type="userDocumentation"),
+			self._mm.mods(type="userDocumentationWrapper"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -103,6 +104,10 @@ class WebsiteGeneratorModule(object):
 	@property
 	def _userDocMod(self):
 		return self._modules.default("active", type="userDocumentation")
+
+	@property
+	def _userDocWrapperMod(self):
+		return self._modules.default("active", type="userDocumentationWrapper")
 
 	def _copyResources(self):
 		"""Copies all static website resources into place."""
@@ -375,9 +380,9 @@ class WebsiteGeneratorModule(object):
 
 		# Generate inAppDocumentation pages.
 		for lang in list(self._userDocMod.availableTranslations) + ["en"]:
-			source = self._getUsingOpenTeacher3Path(lang)
 			destination = os.path.join(self._path, "inAppDocs", lang + ".html")
-			shutil.copy(source, destination)
+			with open(destination, "w") as f:
+				f.write(self._getWrappedUserDocumentation(lang))
 
 	def _generatePages(self, lang):
 		"""Generates all pages in a certain language in a subdirectory
@@ -411,6 +416,10 @@ class WebsiteGeneratorModule(object):
 		with open(filePath, "w") as f:
 			f.write(self._userDocMod.getHtml("../images/docs/3", lang))
 		return filePath
+
+	def _getWrappedUserDocumentation(self, lang):
+		html = self._userDocMod.getHtml("../images/docs/3", lang)
+		return self._userDocWrapperMod.wrap(html)
 
 	def _generateDocumentationPage(self, templatePath):
 		"""Combines the documentation text, with the stuff shared
