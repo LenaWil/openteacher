@@ -40,6 +40,7 @@ class WebsiteGeneratorModule(object):
 			self._mm.mods(type="metadata"),
 			self._mm.mods(type="userDocumentation"),
 			self._mm.mods(type="userDocumentationWrapper"),
+			self._mm.mods(type="backgroundImageGenerator"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -198,86 +199,7 @@ class WebsiteGeneratorModule(object):
 		img.save(path)
 
 	def _generateBodyBackground(self, path):
-		"""Generate the body background, which includes:
-		    - a rounded lighter area, on which the content is shown
-		    - the logo
-		    - the application name
-
-		"""
-		#set some values
-		width = 1000
-		height = 5000
-		sideMargin = 27
-		topMargin = 64
-
-		xRadius = 9
-		yRadius = xRadius * 0.7
-		topLineY = 94
-
-		logoTopX = 6
-		logoSize = 107
-
-		textXStart = 124
-		textYBaseline = 58
-
-		#determine colors
-		textColor = QtGui.QColor.fromHsv(self._hue, 119, 47)
-		gradientTopColor = QtGui.QColor.fromHsv(self._hue, 7, 253)
-		gradientBottomColor = QtGui.QColor.fromHsv(self._hue, 12, 243)
-
-		#create image
-		img = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32_Premultiplied)
-		img.fill(QtCore.Qt.transparent)
-
-		gradient = QtGui.QLinearGradient(0, 0, 0, height)
-		gradient.setColorAt(0, gradientTopColor)
-		gradient.setColorAt(1, gradientBottomColor)
-
-		font = QtGui.QFont("Verdana", 37)
-		font.setWeight(55)
-		font.setLetterSpacing(QtGui.QFont.PercentageSpacing, 95)
-
-		smallFont = QtGui.QFont(font)
-		smallFont.setPointSize(smallFont.pointSize() - 8)
-
-		painter = QtGui.QPainter(img)
-		painter.setPen(self._lineColor)
-		painter.setBrush(gradient)
-		painter.drawRoundedRect(
-			sideMargin,
-			topMargin,
-			width - sideMargin * 2,
-			height,
-			xRadius,
-			yRadius
-		)
-		painter.drawLine(
-			sideMargin,
-			topLineY,
-			width - sideMargin,
-			topLineY
-		)
-		painter.drawImage(
-			QtCore.QPoint(logoTopX, 0),
-			QtGui.QImage(self._logo).scaledToHeight(logoSize, QtCore.Qt.SmoothTransformation)
-		)
-
-		textPen = QtGui.QColor(textColor)
-		textPen.setAlpha(200)
-		painter.setPen(textPen)
-		painter.setFont(font)
-		textXPos = textXStart
-		painter.drawText(textXPos, textYBaseline, "O")
-		textXPos += QtGui.QFontMetrics(font).width("O")
-		painter.setFont(smallFont)
-		painter.drawText(textXPos, textYBaseline, "PEN")
-		textXPos += QtGui.QFontMetrics(smallFont).width("PEN")
-		painter.setFont(font)
-		painter.drawText(textXPos, textYBaseline, "T")
-		textXPos += QtGui.QFontMetrics(font).width("T")
-		painter.setFont(smallFont)
-		painter.drawText(textXPos, textYBaseline, "EACHER")
-		painter.end()
+		img = self._modules.default("active", type="backgroundImageGenerator").generate()
 
 		#and save it.
 		img.save(path)
@@ -482,13 +404,12 @@ class WebsiteGeneratorModule(object):
 		except ImportError:
 			sys.stderr.write("For this developer module to work, you need to have pyratemp & PyQt4 installed.\n")
 
-		self._modules = set(self._mm.mods(type="modules")).pop()
+		self._modules = next(iter(self._mm.mods(type="modules")))
 		self._modules.default(type="execute").startRunning.handle(self.generateWebsite)
 
 		metadata = self._modules.default("active", type="metadata").metadata
 		self._hue = metadata["mainColorHue"]
-		self._lineColor = QtGui.QColor.fromHsv(self._hue, 28, 186)
-		self._logo = metadata["iconPath"]
+		self._lineColor = self._modules.default("active", type="backgroundImageGenerator").lineColor
 
 		self.active = True
 
@@ -498,7 +419,6 @@ class WebsiteGeneratorModule(object):
 		del self._modules
 		del self._hue
 		del self._lineColor
-		del self._logo
 
 def init(moduleManager):
 	return WebsiteGeneratorModule(moduleManager)

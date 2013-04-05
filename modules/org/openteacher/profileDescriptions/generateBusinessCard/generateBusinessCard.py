@@ -26,11 +26,12 @@ class ProfileDescriptionModule(object):
 		self.type = "profileDescription"
 
 	def enable(self):
-		if len(set(self._mm.mods(type="sourceWithSetupPackager"))) == 0: # pragma: no cover
+		if len(set(self._mm.mods(type="businessCardGenerator"))) == 0: # pragma: no cover
 			return #remain inactive
+
 		self.desc = {
-			"name": "package-source-with-setup",
-			"niceName": _("Packages the source of this installation into a tarball, and includes a setup.py file."),
+			"name": "generate-business-card",
+			"niceName": "Generates OT 'business card'. (Handy for promoting).",
 			"advanced": True,
 		}
 

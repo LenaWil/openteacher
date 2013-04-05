@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -26,45 +26,24 @@ class ProfileDescriptionModule(object):
 		self._mm = moduleManager
 
 		self.type = "profileDescription"
-		self.uses = (
-			self._mm.mods(type="translator"),
-		)
-		self.filesWithTranslations = ("packageDebian.py",)
-
-	def _retranslate(self):
-		try:
-			translator = self._modules.default("active", type="translator")
-		except IndexError:
-			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
-		else:
-			_, ngettext = translator.gettextFunctions(
-				self._mm.resourcePath("translations")
-			)
-		self.desc = {
-			"name": "package-debian",
-			"niceName": _("Packages this installation into a .deb package."),
-			"advanced": True,
-		}
 
 	def enable(self):
 		if len(set(self._mm.mods(type="debianPackager"))) == 0: # pragma: no cover
 			return #remain inactive
 		if not platform.linux_distribution()[0] in ("Debian", "Ubuntu"): # pragma: no cover
 			return #debian-based only module, remain inactive
-		self._modules = set(self._mm.mods(type="modules")).pop()
-		try:
-			translator = self._modules.default("active", type="translator")
-		except IndexError:
-			pass
-		else:
-			translator.languageChanged.handle(self._retranslate)
-		self._retranslate()
+
+		self.desc = {
+			"name": "package-debian",
+			"niceName": "Packages this installation into a .deb package.",
+			"advanced": True,
+		}
 
 		self.active = True
 
 	def disable(self):
 		self.active = False
-		del self._modules
+
 		del self.desc
 
 def init(moduleManager):
