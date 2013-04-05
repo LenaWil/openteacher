@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-03-31 12:14+0200\n"
+"POT-Creation-Date: 2013-04-05 10:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -182,34 +182,38 @@ msgid "User documentation"
 msgstr ""
 
 #: templates/documentation.html:9
+msgid "Using OpenTeacher 3: Quick start"
+msgstr ""
+
+#: templates/documentation.html:10
 msgid "Using OpenTeacher 2: Quick start"
 msgstr ""
 
-#: templates/documentation.html:10 docsTemplates/install-ubuntu.html:5
+#: templates/documentation.html:11 docsTemplates/install-ubuntu.html:5
 msgid "Installing OpenTeacher in Ubuntu"
 msgstr ""
 
-#: templates/documentation.html:11 docsTemplates/install-arch.html:5
+#: templates/documentation.html:12 docsTemplates/install-arch.html:5
 msgid "Installing OpenTeacher in ArchLinux"
 msgstr ""
 
-#: templates/documentation.html:12 docsTemplates/faq.html:5
+#: templates/documentation.html:13 docsTemplates/faq.html:5
 msgid "Frequently Asked Questions"
 msgstr ""
 
-#: templates/documentation.html:15
+#: templates/documentation.html:16
 msgid "Developer documentation"
 msgstr ""
 
-#: templates/documentation.html:16
+#: templates/documentation.html:17
 msgid "The OpenTeacher 2 file format"
 msgstr ""
 
-#: templates/documentation.html:19
+#: templates/documentation.html:20
 msgid "Translator documentation"
 msgstr ""
 
-#: templates/documentation.html:20
+#: templates/documentation.html:21
 msgid "Translator Notes"
 msgstr ""
 
@@ -397,6 +401,68 @@ msgstr ""
 msgid "deprecated, should be changed to &quot;Return&quot;"
 msgstr ""
 
+#: docsTemplates/using-openteacher-2.html:5
+msgid "Using OpenTeacher 2: A Quick Start"
+msgstr ""
+
+#: docsTemplates/using-openteacher-2.html:7
+msgid ""
+"This quick start guide shows you how to do a simple self-test using "
+"OpenTeacher 2. We're going to learn counting to ten in French today! For "
+"this example we are assuming that you already know English, and you want to "
+"learn French."
+msgstr ""
+
+#: docsTemplates/using-openteacher-2.html:9
+msgid ""
+"The screenshots are all taken in Ubuntu, but this should all work exactly "
+"the same in Windows and Mac OS X."
+msgstr ""
+
+#: docsTemplates/using-openteacher-2.html:11
+msgid "Start OpenTeacher"
+msgstr ""
+
+#: docsTemplates/using-openteacher-2.html:15
+msgid ""
+"Enter a title for the word list you are going to enter. Also enter the known "
+"language, which, in our case, is English, and the foreign language (the "
+"language you want to learn), which, in our case, is French."
+msgstr ""
+
+#: docsTemplates/using-openteacher-2.html:16
+msgid ""
+"Then enter all words you want to learn, seperating the foreign and known "
+"language by =, and the words by newlines (see the screenshot for an example)."
+msgstr ""
+
+#: docsTemplates/using-openteacher-2.html:20
+msgid ""
+"Click \"Enter!\". Now the table of words on the bottom will be filled with "
+"your words. You have now successfully made your word list!"
+msgstr ""
+
+#: docsTemplates/using-openteacher-2.html:24
+msgid ""
+"Click the \"Teach me!\" tab on the top to start the test. A word will now be "
+"asked to you in your own language, and you have to type the translation of "
+"it in the text field. When you have entered the translation, press Enter on "
+"your keyboard, or click \"Check!\""
+msgstr ""
+
+#: docsTemplates/using-openteacher-2.html:26
+msgid ""
+"If you entered the right translation, the next question will be asked to "
+"you. If you did not enter the right translation, OpenTeacher will show you "
+"the correct answer, and the difference from your answer."
+msgstr ""
+
+#: docsTemplates/using-openteacher-2.html:30
+msgid ""
+"Once the test is completed, OpenTeacher will tell you if you did well by "
+"giving you a &quot;note&quot; (grade)."
+msgstr ""
+
 #: docsTemplates/install-arch.html:6
 msgid ""
 "This simple guide explains how to install OpenTeacher for ArchLinux. I will "
@@ -524,66 +590,4 @@ msgid ""
 "OpenTeacher via the ArchLinux (.pkg.tar.xz) package, available on the "
 "Download page. If that does not work, please file a bug report in <a href="
 "\"http://www.launchpad.net/openteacher\">Launchpad</a> or send an e-mail."
-msgstr ""
-
-#: docsTemplates/using-openteacher.html:5
-msgid "Using OpenTeacher 2: A Quick Start"
-msgstr ""
-
-#: docsTemplates/using-openteacher.html:7
-msgid ""
-"This quick start guide shows you how to do a simple self-test using "
-"OpenTeacher 2. We're going to learn counting to ten in French today! For "
-"this example we are assuming that you already know English, and you want to "
-"learn French."
-msgstr ""
-
-#: docsTemplates/using-openteacher.html:9
-msgid ""
-"The screenshots are all taken in Ubuntu, but this should all work exactly "
-"the same in Windows and Mac OS X."
-msgstr ""
-
-#: docsTemplates/using-openteacher.html:11
-msgid "Start OpenTeacher"
-msgstr ""
-
-#: docsTemplates/using-openteacher.html:15
-msgid ""
-"Enter a title for the word list you are going to enter. Also enter the known "
-"language, which, in our case, is English, and the foreign language (the "
-"language you want to learn), which, in our case, is French."
-msgstr ""
-
-#: docsTemplates/using-openteacher.html:16
-msgid ""
-"Then enter all words you want to learn, seperating the foreign and known "
-"language by =, and the words by newlines (see the screenshot for an example)."
-msgstr ""
-
-#: docsTemplates/using-openteacher.html:20
-msgid ""
-"Click \"Enter!\". Now the table of words on the bottom will be filled with "
-"your words. You have now successfully made your word list!"
-msgstr ""
-
-#: docsTemplates/using-openteacher.html:24
-msgid ""
-"Click the \"Teach me!\" tab on the top to start the test. A word will now be "
-"asked to you in your own language, and you have to type the translation of "
-"it in the text field. When you have entered the translation, press Enter on "
-"your keyboard, or click \"Check!\""
-msgstr ""
-
-#: docsTemplates/using-openteacher.html:26
-msgid ""
-"If you entered the right translation, the next question will be asked to "
-"you. If you did not enter the right translation, OpenTeacher will show you "
-"the correct answer, and the difference from your answer."
-msgstr ""
-
-#: docsTemplates/using-openteacher.html:30
-msgid ""
-"Once the test is completed, OpenTeacher will tell you if you did well by "
-"giving you a &quot;note&quot; (grade)."
 msgstr ""

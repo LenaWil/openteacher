@@ -29,7 +29,7 @@ class WordsHtmlGeneratorModule(object):
 			self._mm.mods(type="wordsStringComposer"),
 		)
 
-	def generate(self, lesson, margin="0"):
+	def generate(self, lesson, margin="0", coloredRows=True):
 		class EvalPseudoSandbox(pyratemp.EvalPseudoSandbox):
 			def __init__(self2, *args, **kwargs):
 				pyratemp.EvalPseudoSandbox.__init__(self2, *args, **kwargs)
@@ -43,7 +43,8 @@ class WordsHtmlGeneratorModule(object):
 		)
 		return t(**{
 			"list": lesson.list,
-			"margin": margin
+			"margin": margin,
+			"coloredRows": coloredRows,
 		})
 
 	@property

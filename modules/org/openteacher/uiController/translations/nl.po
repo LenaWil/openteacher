@@ -7,18 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-03-31 12:14+0200\n"
+"POT-Creation-Date: 2013-04-05 10:53+0200\n"
 "PO-Revision-Date: 2012-07-07 20:22+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-04-01 05:16+0000\n"
 "X-Generator: Launchpad (build 16546)\n"
-"Language: nl\n"
 
-#: uiController.py:188
+#: uiController.py:194
 msgid ""
 "Couldn't open the file, because the file type is unknown or it can't be "
 "shown."
@@ -26,7 +26,7 @@ msgstr ""
 "Kon het bestand niet openen, omdat het bestandstype onbekend is of niet "
 "weergeven kan worden."
 
-#: uiController.py:191
+#: uiController.py:196
 msgid ""
 "Couldn't open the file, is it still there and do we have the right to open "
 "it?"
@@ -34,15 +34,23 @@ msgstr ""
 "Kon het bestand niet openen, is het nog steeds aanwezig en hebben we de "
 "rechten om het te openen?"
 
-#: uiController.py:194
+#: uiController.py:198
 msgid "Couldn't open the file, it seems to be corrupted."
 msgstr "Kon het bestand niet openen, het lijkt beschadigd te zijn."
 
-#: uiController.py:196
+#: uiController.py:210
 msgid "File opened succesfully."
 msgstr "Bestand succesvol geopend"
 
-#: uiController.py:206
+#: uiController.py:222
+msgid "Can't merge files of different file types."
+msgstr ""
+
+#: uiController.py:238
+msgid "Opened file into the current list succesfully."
+msgstr ""
+
+#: uiController.py:244
 msgid ""
 "Couldn't save the file, is there enough free disk space and do we have the "
 "right to write to the specified location?"
@@ -50,6 +58,6 @@ msgstr ""
 "Kon het bestand niet opslaan, is er genoeg vrije ruimte en zijn we "
 "gemachtigd te schrijven op de aangewezen locatie?"
 
-#: uiController.py:208
+#: uiController.py:246
 msgid "File saved succesfully."
 msgstr "Bestand succesvol opgeslagen."
