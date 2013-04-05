@@ -61,6 +61,14 @@ other. When writing a module that implements, say, a game for the words
 lesson as an OpenTeacher developer, you'd for example store it in here:
 ``modules/org/openteacher/games/words``.
 
+.. figure:: interface.jpg
+   :width: 400px
+   :figwidth: 420px
+   :align: left
+
+   To make communication between modules easy, use the same interface
+   everywhere.
+
 Which attributes should an OpenTeacher module object have?
 ----------------------------------------------------------
 Although not enforced by the module manager, (almost) all modules have
@@ -91,12 +99,19 @@ a few standard attributes:
   modules this module can use, but aren't required by it. Before
   ``enable()`` is called, the ``modules`` module (which handles that)
   tries to ``enable()`` as much of them as possible first.
-- ``priorities``: TODO
+- ``priorities``: optional. A python dictionary that specifies a
+  priority (a number between -1000 and 1000 normally) for every profile.
+  To get a list of profiles, execute:
+  ``python openteacher.py -p help``
+  When a priority is negative, the current module isn't enabled when
+  OpenTeacher is run in that profile. When it's positive, it can be used
+  to sort modules that do the same thing. When using 0, the module
+  priority is very high, when it's 1000, the priority is very low.
 
 Useful modules
 ==============
 When writing an OpenTeacher module, you have access to every other
-module. In a lot of situations, you're only interested in a few. Next to
+module. In a lot of situations, you're only interested in a few next to
 modules that your module directly needs to do it's job. (E.g. a module
 that represents a word list as a string, needs the module that
 represents a word as a string), there are a few modules that provide
@@ -120,8 +135,22 @@ services useful for a much broader set of modules. They are:
 - metadata_; keeps all kind of info about the 'brand' OpenTeacher. Like
   the name, the logo, a description of what OT is/does, the license,
   etc.
-- TODO: expand. (event, buttonRegister, javaScriptEvaluator?, authors?,
-  qtApp?)
+- event_; exposes a simple 'Event' (A PyQt4 signal-like object) via its
+  ``createEvent()`` method. Used all throughout OpenTeacher.
+- buttonRegister_; allows you to register a button that is displayed on
+  the start tab.
+- javaScriptEvaluator_; allows you to easily call JavaScript code from
+  Python. This way, you can do module implementations in JavaScript and
+  that way share code with web apps.
+- authors_; allows you to register your name so it's shown in (among
+  others) the about dialog. For authors of modules that are part of
+  OpenTeacher, there is the openteacherAuthors_ module.
+- qtApp_; when your module requires this module, it can be sure that
+  a QApplication is running. It's not guaranteed there's an X server
+  running on linux, though, use gui_ for that.
+- gui_; the most important function of this module is that it allows you
+  to add your own tabs to the user interface. When depending on this,
+  you can be sure that a QApplication is active and an X server too.
 
 .. _modules: ../modules/org/openteacher/modules.html
 .. _settings: ../modules/org/openteacher/settings.html
@@ -129,3 +158,10 @@ services useful for a much broader set of modules. They are:
 .. _dataStore: ../modules/org/openteacher/dataStore.html
 .. _settings: ../modules/org/openteacher/settings.html
 .. _metadata: ../modules/org/openteacher/metadata.html
+.. _event: ../modules/org/openteacher/event.html
+.. _buttonRegister: ../modules/org/openteacher/buttonRegister.html
+.. _javaScriptEvaluator: ../modules/org/openteacher/javaScript/evaluator.html
+.. _authors: ../modules/org/openteacher/authors.html
+.. _openteacherAuthors: ../modules/org/openteacher/openteacherAuthors.html
+.. _qtApp: ../modules/org/openteacher/qtApp.html
+.. _gui: ../modules/org/openteacher/gui.html

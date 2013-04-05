@@ -45,6 +45,16 @@ class EventModule(object):
 
 	@staticmethod
 	def createEvent(*args, **kwargs):
+		"""Builds an event; an object similar to a PyQt4 signal but then
+		   implemented in pure Python and differently named methods to
+		   distinguish it from a signal. Methods are:
+
+		   - ``handle(func)``; adds a handler
+		   - ``unhandle(func)``; removes a handler
+		   - ``send(*args, **kwargs)``; calls all handlers with the
+		     arguments passed to itself. No calling order is guaranteed.
+
+		"""
 		return Event(*args, **kwargs)
 
 def init(moduleManager):

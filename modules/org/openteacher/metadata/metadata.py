@@ -103,6 +103,17 @@ OpenTeacher is available for Linux, Windows and Mac OS X."""
 			self.metadata["version"],
 			self.metadata["website"]
 		)
+		#build doc string
+		self.__doc__ = (
+			"Provides access to all kinds of stuff related to the " +
+			"'OpenTeacher' brand. Available keys in the ``metadata`` " +
+			"property with a small preview of their current values):" +
+			"\n\n" + 
+			"\n".join((
+				"- `%s`: %s" % (k, unicode(v).split("\n")[0])
+				for k, v in sorted(self.metadata.items())
+			))
+		)
 
 		self.active = True
 

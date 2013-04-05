@@ -2,9 +2,10 @@
 OpenTeacher developer documentation
 ===================================
 
-**OpenTeacher** is an **opensource application** that helps you **learning a variety
-of subjects**. You just **enter** the questions and the answers, or **download** them from
-the internet, and OpenTeacher **tests** you.
+**OpenTeacher** is an **opensource application** that helps you **learn
+a variety of subjects**. You just **enter** the questions and the
+answers, or **download** them from the internet, and OpenTeacher
+**tests** you.
 
 Most important project URLs
 ---------------------------

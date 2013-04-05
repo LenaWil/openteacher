@@ -286,6 +286,21 @@ class JSEvaluatorModule(object):
 		)
 
 	def createEvaluator(self):
+		"""Returns an object that helps you interacting with JS code
+		   from Python. It can be used dict-like to modify the JS global
+		   scope, and evaluate JavaScript code via its ``eval`` method.
+
+		   You can also call JS functions by accessing them in the dict-
+		   like way, e.g.:
+
+		   ``evaluator["JSON"]["stringify"]({"test": True})``
+
+		   Or use the .new() on a value to make an instance as with the
+		   JS new keyword:
+
+		   ``evaluator["Date"].new()``
+
+		"""
 		return JSEvaluator()
 
 	def enable(self):

@@ -25,9 +25,11 @@ class Button(object):
 	   events with arguments.
 
 	   Properties:
+
 	   - category (read-only)
 
 	   Events:
+
 	   - clicked() -> gui to user
 	   - changeText(text) -> user to gui
 	   - changeIcon(icon_path) -> user to gui
@@ -54,6 +56,11 @@ class Button(object):
 class ButtonRegisterModule(object):
 	"""Module that provides a register of all 'buttons', a way for
 	   features to present themselves to the user next to the menus.
+
+	   UI's keep track of all registered an unregistered buttons by
+	   handling the ``addButton`` and ``removeButton`` events. They get
+	   passed the same kind of object as the caller of
+	   ``registerButton`` gets back.
 
 	"""
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -89,10 +96,13 @@ class ButtonRegisterModule(object):
 		   if you want your button to be shown using a string with value
 		   'load' or 'create' is a good idea.
 
+			Returns an object, the docstring of that objects is:
+
 		"""
 		b = Button(category, self._createEvent)
 		self.addButton.send(b)
 		return b
+	registerButton.__doc__ += Button.__doc__
 
 	def unregisterButton(self, b):
 		"""Tell 'the world' the button `b` isn't in use anymore. User

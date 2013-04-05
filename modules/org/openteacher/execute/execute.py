@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -22,6 +22,16 @@ import argparse
 import sys
 
 class ExecuteModule(object):
+	"""When OpenTeacher is run, this module sets a profile, controls
+	   enabling of all modules in the current profile, sends an event
+	   (``startRunning``) when that's done so other modules can take
+	   over control at the right time, and handles exiting gracefully
+	   after that by sending the ``aboutToExit`` event.
+
+	   In other words, this module controls the complete execution of
+	   OpenTeacher from the moment on the moduleManager is initialized.
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(ExecuteModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
