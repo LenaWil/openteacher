@@ -30,7 +30,7 @@ class ProfileDescriptionModule(object):
 			return #remain inactive
 		self.desc = {
 			"name": "update-translations",
-			"niceName": _("Updater for all .pot and .po files."),
+			"niceName": "Updater for all .pot and .po files.",
 			"advanced": True,
 		}
 

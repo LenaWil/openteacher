@@ -31,7 +31,7 @@ class ProfileDescriptionModule(object):
 
 		self.desc = {
 			"name": "update-rosetta-priorities",
-			"niceName": _("Updates the translation priorities of OpenTeacher on Launchpad."),
+			"niceName": "Updates the translation priorities of OpenTeacher on Launchpad.",
 			"advanced": True,
 		}
 

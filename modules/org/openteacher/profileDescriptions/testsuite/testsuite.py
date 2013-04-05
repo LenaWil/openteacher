@@ -30,7 +30,7 @@ class ProfileDescriptionModule(object):
 			return #remain inactive
 		self.desc = {
 			"name": "test-suite",
-			"niceName": _("Run the test suite"),
+			"niceName": "Run the test suite",
 			"advanced": True,
 		}
 

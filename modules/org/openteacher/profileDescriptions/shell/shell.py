@@ -31,7 +31,7 @@ class ProfileDescriptionModule(object):
 
 		self.desc = {
 			"name": "shell",
-			"niceName": _("Starts an interactive python shell with a module manager with all modules loaded."),
+			"niceName": "Starts an interactive python shell with a module manager with all modules loaded.",
 			"advanced": True,
 		}
 

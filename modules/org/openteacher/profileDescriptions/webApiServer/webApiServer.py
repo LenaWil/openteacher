@@ -31,7 +31,7 @@ class ProfileDescriptionModule(object):
 
 		self.desc = {
 			"name": "web-api-server",
-			"niceName": _("Web API server"),
+			"niceName": "Web API server",
 			"advanced": True,
 		}
 

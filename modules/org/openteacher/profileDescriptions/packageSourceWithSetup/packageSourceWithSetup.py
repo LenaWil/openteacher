@@ -30,7 +30,7 @@ class ProfileDescriptionModule(object):
 			return #remain inactive
 		self.desc = {
 			"name": "package-source-with-setup",
-			"niceName": _("Packages the source of this installation into a tarball, and includes a setup.py file."),
+			"niceName": "Packages the source of this installation into a tarball, and includes a setup.py file.",
 			"advanced": True,
 		}
 
