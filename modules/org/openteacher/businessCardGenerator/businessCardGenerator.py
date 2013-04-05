@@ -32,7 +32,7 @@ class BusinessCardGeneratorModule(object):
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="execute"),
 		)
-		self.profiles = {
+		self.priorities = {
 			"default": -1,
 			"generate-business-card": 0,
 		}
