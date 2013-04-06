@@ -17,6 +17,10 @@
 	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+	text-decoration: none;
+}
+
 #header {
 	background-color:@!headerBackgroundColor!@;
 	margin:0;

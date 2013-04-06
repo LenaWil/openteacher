@@ -402,7 +402,7 @@ class TypingTutorModule(object):
 		self._uiModule = self._modules.default("active", type="ui")
 
 		self._buttonRegister = self._modules.default("active", type="buttonRegister")
-		#FIXME? create doesn't really make sense.
+
 		self._button = self._buttonRegister.registerButton("create")
 		self._button.clicked.handle(self._show)
 		self._button.changeIcon.send(self._mm.resourcePath("typingTutor.png"))

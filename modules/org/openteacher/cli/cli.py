@@ -305,9 +305,13 @@ class CommandLineInterfaceModule(object):
 		if args["category"] is not None:
 			authors = filter(lambda (c, n): c == args["category"], authors)
 		output = []
+		lastCategory = None
 		for category, name in sorted(authors):
+			if lastCategory is not None and lastCategory != category:
+				output.append("")
+			lastCategory = category
 			output.append("%s: %s" % (name, category))
-		print "\n\n".join(output)
+		print "\n".join(output)
 
 	def _practiseWordList(self, args):
 		inputFile = args["file"]

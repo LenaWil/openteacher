@@ -178,6 +178,9 @@ class ModulesHandler(object):
 				if "words.txt" in fpath:
 					#we don't care
 					continue
+				if "dev_tools.rst" in fpath:
+					#same
+					continue
 				with open(fpath, "r") as f:
 					lines = f.readlines()
 

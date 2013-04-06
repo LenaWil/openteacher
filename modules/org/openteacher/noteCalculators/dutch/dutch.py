@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2009-2012, Marten de Vries
+#	Copyright 2009-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -52,11 +52,8 @@ class DutchNoteCalculatorModule(object):
 		return self._formatNote(self._calculateFloat(test))
 
 	def calculateAverageNote(self, tests):
-		note = 0
-		for test in tests:
-			note += self._calculateFloat(test)
-		note /= len(tests)
-		return self._formatNote(note)
+		noteSum = sum((self._calculateFloat(test) for test in tests))
+		return self._formatNote(noteSum / len(tests))
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

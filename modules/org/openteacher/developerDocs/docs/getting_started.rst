@@ -2,6 +2,8 @@
 Getting started
 ===============
 
+.. contents:: `Contents:`
+
 Introduction
 ============
 
@@ -120,7 +122,7 @@ services useful for a much broader set of modules. They are:
 - modules_; can be used to query other modules based on their
   priorities (via ``default`` and ``sort``). There's guaranteed to be
   only one modules module. To get it, use this snippet:
-  ``next(iter(self._mm.mods(type="modules")))`` (self._mm being the
+  ``next(iter(self._mm.mods(type="modules")))`` (``self._mm`` being the
   module manager.)
 - execute_; modules that can control the program flow (e.g. GUIs, CLIs,
   webservers in OT), handle the ``startRunning`` event of this module.
@@ -165,3 +167,15 @@ services useful for a much broader set of modules. They are:
 .. _openteacherAuthors: ../modules/org/openteacher/openteacherAuthors.html
 .. _qtApp: ../modules/org/openteacher/qtApp.html
 .. _gui: ../modules/org/openteacher/gui.html
+
+See also
+========
+While this should give you a start, there are a few other pages on this
+site that might be helpful:
+
+- `The data format page <data_format.rst>`_; it provides info about the
+  internal data format used by OpenTeacher. Also handy to understand the
+  default file format.
+- `The development tools page <dev_tools.rst>`_; it provides a
+  description of tools that can help you while developing for
+  OpenTeacher.
