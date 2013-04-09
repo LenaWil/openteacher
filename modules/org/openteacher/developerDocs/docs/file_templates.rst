@@ -4,7 +4,7 @@ File templates
 
 Normal module
 =============
-::
+.. sourcecode:: python
 
 	#! /usr/bin/env python
 	# -*- coding: utf-8 -*-
@@ -44,7 +44,7 @@ Normal module
 
 Test module
 ===========
-::
+.. sourcecode:: python
 
 	#! /usr/bin/env python
 	# -*- coding: utf-8 -*-

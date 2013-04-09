@@ -48,6 +48,13 @@ class ModulesHandler(object):
 		self._devDocsBaseDir = devDocsBaseDir
 		self._hue = hue
 
+		#use last formatter if it exists
+		self._formatter = pygments.formatters.HtmlFormatter(**{
+			"linenos": "table",
+			"anchorlinenos": True,
+			"lineanchors": self._pathToUrl(path),
+		})
+
 	def _pathToUrl(self, path):
 		path = os.path.abspath(path)
 
@@ -90,6 +97,7 @@ class ModulesHandler(object):
 			"headerBackgroundColor": QtGui.QColor.fromHsv(self._hue, 41, 250).name(),
 			"bodyBackgroundColor": QtGui.QColor.fromHsv(self._hue, 7, 253, 255).name(),
 			"footerBackgroundColor": QtGui.QColor.fromHsv(self._hue, 30, 228).name(),
+			"pygmentsStyle": self._formatter.get_style_defs('.highlight'),
 		})
 
 	style_css.exposed = True
@@ -218,8 +226,6 @@ class ModulesHandler(object):
 		t = pyratemp.Template(filename=self._templates["fixmes"])
 		return t(**{
 			"fixmes": fixmes,
-			#use last formatter if it's still there
-			"pygmentsStyle": formatter.get_style_defs('.source') if "formatter" in vars() else "",
 		})
 	fixmes_html.exposed = True
 
@@ -361,12 +367,7 @@ class ModulesHandler(object):
 				code = open(path).read()
 
 				lexer = pygments.lexers.get_lexer_for_filename(path)
-				formatter = pygments.formatters.HtmlFormatter(**{
-					"linenos": "table",
-					"anchorlinenos": True,
-					"lineanchors": self._pathToUrl(path),
-				})
-				source = pygments.highlight(code, lexer, formatter)
+				source = pygments.highlight(code, lexer, self._formatter)
 				commonLength = len(os.path.commonprefix([
 					path,
 					os.path.dirname(mod.__class__.__file__)
@@ -386,8 +387,6 @@ class ModulesHandler(object):
 			"properties": sorted(properties),
 			"propertyDocs": propertyDocs,
 			"files": fileData,
-			#use last formatter if it exists
-			"pygmentsStyle": formatter.get_style_defs('.source') if "formatter" in vars() else "",
 		})
 	modules.exposed = True
 
@@ -497,6 +496,9 @@ class CodeDocumentationModule(object):
 		except ImportError:
 			sys.stderr.write("For this developer module to work, you need to have cherrypy, pygments, pyratemp and docutils installed. And indirectly, pygraphviz.\n")
 			return #leave disabled
+
+		#enable syntax highlighting
+		self._mm.import_("rst-directive")
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._modules.default(type="execute").startRunning.handle(self.showDocumentation)
