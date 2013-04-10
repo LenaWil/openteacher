@@ -49,7 +49,6 @@ class OpenTeacherBot(irc.IRCClient):
 		".codedocs": "http://vps.marten-de-vries.nl/openteacher-code-documentation/",
 		".contribute": "http://openteacher.org/contribute.html",
 		".forum": "http://forum.ubuntu-nl.org/etalage/openteacher-overhoorprogramma-voor-linux/new/#new",
-		".wiki": "http://sourceforge.net/apps/mediawiki/openteacher/index.php",
 		".ogd": "http://opengamedesigner.org/",
 		".ogd-lp": "https://launchpad.net/opengamedesigner",
 		".twitter": "http://twitter.com/#!/openteacher",
@@ -110,6 +109,7 @@ class OpenTeacherBot(irc.IRCClient):
 	factoids[".devdocs"] = factoids[".developer-documentation"]
 	factoids[".developer-docs"] = factoids[".developer-documentation"]
 	factoids[".dev-documentation"] = factoids[".developer-documentation"]
+	factoids[".wiki"] = factoids[".developer-documentation"]
 
 	@property
 	def nickname(self):
