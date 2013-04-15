@@ -126,15 +126,15 @@ class OpenTeacherBot(irc.IRCClient):
 	def signedOn(self):
 		print "Signed on. Now getting key and joining channels."
 		
-		self.setSessionKey()
+		self._setSessionKey()
 		
 		for channel in self.factory.channels:
 			self.join(channel)
 
 	def joined(self, channel):
 		print "Joined %s." % (channel,)
-	
-	def setSessionKey(self):
+
+	def _setSessionKey(self):
 		# Get a session key from appspot
 		shellSite = urllib2.urlopen("http://shell.appspot.com/")
 		
@@ -147,10 +147,7 @@ class OpenTeacherBot(irc.IRCClient):
 				return True
 		return False
 
-	def privmsg(self, user, channel, msg):
-		print "%s: %s: %s" % (user.split("!")[0], channel, msg)
-		target = channel if channel in self.factory.channels else user.split("!")[0]
-
+	def _buildBugResponse(self, msg, user):
 		#bugs
 		match = re.search("(?:bugs? ?/?|#|lp:)([0-9]+)", msg)
 		if match:
@@ -162,16 +159,15 @@ class OpenTeacherBot(irc.IRCClient):
 				except IndexError:
 					pass
 				else:
-					text = "bug #%s: %s (status: %s, importance: %s) - %s" % (
+					return "bug #%s: %s (status: %s, importance: %s) - %s" % (
 						bug.id,
 						bug.title,
 						task.status,
 						task.importance,
 						bug.web_link
 					)
-					self.msg(target, text.encode("UTF-8"))
-					return
 
+	def _buildBranchResponse(self, msg, user):
 		#branches
 		match = re.search("lp:[^ ]*(?=[^,.?!])[^ ]", msg)
 		if match:
@@ -183,58 +179,43 @@ class OpenTeacherBot(irc.IRCClient):
 					branch.revision_count,
 					branch.web_link,
 				)
-				self.msg(target, text.encode("UTF-8"))
-				return
+				return text
 
+	def _buildPyModResponse(self, msg, user):
 		if msg.startswith(".pymod "):
 			mod = msg.split(" ")[1]
-			url = "http://docs.python.org/library/%s.html" % mod
+			url = u"http://docs.python.org/library/%s.html" % mod
 			try:
 				urllib2.urlopen(url)
 			except urllib2.HTTPError:
-				self.msg(target, "Can't find documentation for that module.")
+				return u"Can't find documentation for that module."
 			else:
-				self.msg(target, url)
-			return
+				return url
 
+	def _buildGoogleResponse(self, msg, user):
 		if msg.startswith(".google "):
 			q = msg.split(" ", 1)[1]
 			q = urllib.quote_plus(q)
-			self.msg(target, "http://google.com/search?q=%s" % q)
-			return
+			return u"http://google.com/search?q=%s" % q
 
+	def _buildQtResponse(self, msg, user):
 		if msg.startswith(".qt "):
 			cls = msg.split(" ")[1]
-			url = "http://qt-project.org/doc/qt-4.8/%s.html" % cls
+			url = u"http://qt-project.org/doc/qt-4.8/%s.html" % cls
 			try:
 				urllib2.urlopen(url)
 			except urllib2.HTTPError:
-				self.msg(target, "Can't find documentation for that class.")
+				return u"Can't find documentation for that class."
 			else:
-				self.msg(target, url)
-			return
+				return url
 
+	def _buildAnswerResponse(self, msg, user):
 		if msg.startswith(".answer ") or msg.startswith(".ask ") or msg.startswith(".question "):
 			q = msg.split(" ", 1)[1].replace(self.nickname, "")
 			q = urllib.quote_plus(q)
-			self.msg(target, "http://www.wolframalpha.com/input/?i=%s" % q)
-			return
+			return u"http://www.wolframalpha.com/input/?i=%s" % q
 
-		if msg.startswith(".pep "):
-			try:
-				number = int(msg.split(" ", 1)[1].replace(self.nickname, ""))
-			except ValueError:
-				self.msg(target, "Couldn't parse pep number.")
-			else:
-				url = "http://www.python.org/dev/peps/pep-%04d/" % number
-				try:
-					urllib2.urlopen(url)
-				except urllib2.HTTPError:
-					self.msg(target, "No pep found for that number.")
-				else:
-					self.msg(target, url)
-			return
-
+	def _buildPythonResponse(self, msg, user):
 		#python evaluation
 		if msg.startswith(".py "):
 			statement = msg[4:]
@@ -243,32 +224,48 @@ class OpenTeacherBot(irc.IRCClient):
 				"statement": statement,
 				"session": self.sessionKey,
 			})
-			data = urllib2.urlopen("http://shell.appspot.com/shell.do?" + data).read()
+			data = unicode(urllib2.urlopen("http://shell.appspot.com/shell.do?" + data).read(), encoding="UTF-8")
 			result = data.strip().split("\n")[-1]
 			if len(result) > 350:
 				result = result[len(result) - 350:]
-			self.msg(target, result)
-			return
+			return result
 
+	def _buildPythonResetResponse(self, msg, user):
 		#reset python shell
 		if msg == ".reset" and user in self.factory.admins:
-			if self.setSessionKey():
-				self.msg(target, "I've been reset.")
+			if self._setSessionKey():
+				return u"I've been reset."
 			else:
-				self.msg(target, "Could not reset. Is appspot down?")
-			return
+				return u"Could not reset. Is appspot down?"
 
+	def _buildPepResponse(self, msg, user):
+		if msg.startswith(".pep "):
+			try:
+				number = int(msg.split(" ", 1)[1].replace(self.nickname, ""))
+			except ValueError:
+				return u"Couldn't parse pep number."
+			else:
+				url = u"http://www.python.org/dev/peps/pep-%04d/" % number
+				try:
+					urllib2.urlopen(url)
+				except urllib2.HTTPError:
+					return u"No pep found for that number."
+				else:
+					return url
+
+	def _buildQuitResponse(self, msg, user):
 		#quit client
 		if msg == ".quit" and user in self.factory.admins:
 			self.factory.timeToQuit = True
 			self.quit()
 
+	def _buildBlueprintResponse(self, msg, user):
 		#blueprints
 		match = re.search("(?:specs?[ /]+|blueprints? )([^ ,.?!/]+)", msg)
 		if match:
 			spec = self.factory.launchpad.projects["openteacher"].getSpecification(name=match.group(1))
 			if spec:
-				text = u"blueprint %s: %s (def. status: %s, impl. status: %s, priority: %s) - %s" % (
+				return u"blueprint %s: %s (def. status: %s, impl. status: %s, priority: %s) - %s" % (
 					spec.name,
 					spec.title,
 					spec.definition_status,
@@ -276,19 +273,45 @@ class OpenTeacherBot(irc.IRCClient):
 					spec.priority,
 					spec.web_link,
 				)
-				self.msg(target, text.encode("UTF-8"))
-				return
 
+	def _buildFactoidResponse(self, msg, user):
 		#factoids
 		#sorted on key so the longest factoid keys are tried first.
 		#Needed in this situation: .codedocumentation while there's a
 		#factoid .code.
 		for key, factoid in reversed(sorted(self.factoids.iteritems(), key=lambda t: len(t[0]))):
 			if key in msg:
-				self.msg(target, factoid)
-				#stop the loop, otherwise OTbot might spam the channel
-				#on one command.
-				return
+				return factoid
+
+	def privmsg(self, user, channel, msg):
+		print "%s: %s: %s" % (user.split("!")[0], channel, msg)
+		target = channel if channel in self.factory.channels else user.split("!")[0]
+
+		builders = [
+			self._buildBugResponse,
+			self._buildBranchResponse,
+			self._buildPyModResponse,
+			self._buildGoogleResponse,
+			self._buildAnswerResponse,
+			self._buildPythonResponse,
+			self._buildPythonResetResponse,
+			self._buildPepResponse,
+			self._buildQuitResponse,
+			self._buildBlueprintResponse,
+			self._buildFactoidResponse,
+		]
+
+		for buildResponse in builders:
+			resp = buildResponse(msg, user)
+			if resp is not None:
+				#found a message
+				break
+		else:
+			#no message found
+			return
+
+		#send the message
+		self.msg(target, resp.encode("UTF-8"))
 
 class OpenTeacherBotFactory(protocol.ClientFactory):
 	protocol = OpenTeacherBot
@@ -326,7 +349,7 @@ on irc. Then press ctrl+c here.\n"""
 		"password": None,
 		"admins": [
 			"CasW!~cas@unaffiliated/casw",
-			"commandoline!~Thunderbi@ubuntu/member/commandoline",
+			"commandoline!~commandol@ubuntu/member/commandoline",
 			"lordnoid!~lordnoid@53537359.cm-6-4b.dynamic.ziggo.nl",
 		]
 	}
