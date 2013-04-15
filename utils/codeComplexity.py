@@ -26,7 +26,7 @@ import itertools
 ComplexityResult = collections.namedtuple("ComplexityResult", "path position complexity")
 
 def pythonPaths():
-	for root, dir, files in os.walk(".."):
+	for root, dir, files in os.walk("."):
 		for file in files:
 			if not file.endswith(".py"):
 				continue

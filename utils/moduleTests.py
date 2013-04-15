@@ -18,10 +18,8 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import sys
-os.chdir("..")
-sys.path.insert(0, os.getcwd())
+sys.path.insert(0, ".")
 
 import pyximport; pyximport.install()
 import faulthandler; faulthandler.enable()

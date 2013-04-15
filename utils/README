@@ -1,0 +1,2 @@
+Execute those from the parent directory. E.g.:
+python utils/moduleTests.py

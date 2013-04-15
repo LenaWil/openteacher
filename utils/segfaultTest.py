@@ -21,5 +21,5 @@
 import subprocess
 
 while True:
-	if subprocess.call("python moduleTests.py".split(" ")):
+	if subprocess.call("python utils/moduleTests.py".split(" ")):
 		break
