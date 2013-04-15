@@ -48,87 +48,102 @@ class SourceWithSetupSaverModule(object):
 		)
 		self.filesWithTranslations = ("manpage.templ",)
 
-	def _addSetupAndOtherFiles(self, sourcePath):
+	def _moveIntoPythonPackage(self):
+		os.mkdir(self._packagePath)
+
 		#move into python package
-		packageName = os.path.basename(sys.argv[0])
-		if packageName.endswith(".py"):
-			packageName = packageName[:-3]
-		packagePath = os.path.join(sourcePath, packageName)
-		os.mkdir(packagePath)
-		for item in os.listdir(sourcePath):
-			if item != packageName:
+		for item in os.listdir(self._sourcePath):
+			if item != self._packageName:
 				os.rename(
-					os.path.join(sourcePath, item),
-					os.path.join(packagePath, item)
+					os.path.join(self._sourcePath, item),
+					os.path.join(self._packagePath, item)
 				)
 
 		#write __init__.py
-		open(os.path.join(packagePath, "__init__.py"), "a").close()
+		open(os.path.join(self._packagePath, "__init__.py"), "a").close()
 
+	def _findPackageData(self):
 		#find all files for package_data
-		modulePath = os.path.join(packagePath, "modules")
+		modulePath = os.path.join(self._packagePath, "modules")
 		def getDifference(root):
-			return root[len(os.path.commonprefix([packagePath, root])) +1:]
+			return root[len(os.path.commonprefix([self._packagePath, root])) +1:]
 
-		packageData = []
 		for root, dirs, files in os.walk(modulePath):
 			if len(files) == 0:
 				continue
 			root = getDifference(root)
 			for file in files:
-				packageData.append(os.path.join(root, file))
+				yield os.path.join(root, file)
 
-		mimetypes = []
-		imagePaths = {}
+	def _findMimetypes(self):
 		for mod in self._modules.sort("active", type="load"):
 			if not hasattr(mod, "mimetype"):
 				continue
 			for ext in mod.loads.keys():
-				mimetypes.append((ext, mod.name, mod.mimetype))
-			imagePaths[mod.mimetype] = "linux/" + mod.mimetype.replace("/", "-") + ".png"
+				yield ext, mod.name, mod.mimetype
 
+	def _findImagePaths(self, mimetypes):
+		imagePaths = {}
+		for ext, name, mimetype in mimetypes:
+			imagePaths[mimetype] = "linux/" + mimetype.replace("/", "-") + ".png"
+		return imagePaths
+
+	def _buildStartupScript(self):
 		#bin/package
-		os.mkdir(os.path.join(sourcePath, "bin"))
-		with open(os.path.join(sourcePath, "bin", packageName), "w") as f:
+		os.mkdir(os.path.join(self._sourcePath, "bin"))
+		with open(os.path.join(self._sourcePath, "bin", self._packageName), "w") as f:
 			templ = pyratemp.Template(filename=self._mm.resourcePath("runner.templ"))
 			#ascii since the file doesn't have a encoding directive
-			f.write(templ(name=packageName).encode("ascii"))
+			f.write(templ(name=self._packageName).encode("ascii"))
 
+	def _buildDesktopFile(self, linuxDir, mimetypes):
 		#linux/package.desktop
-		os.mkdir(os.path.join(sourcePath, "linux"))
-		with open(os.path.join(sourcePath, "linux", packageName + ".desktop"), "w") as f:
+		with open(os.path.join(linuxDir, self._packageName + ".desktop"), "w") as f:
 			templ = pyratemp.Template(filename=self._mm.resourcePath("desktop.templ"))
 
 			mimetypeList = sorted(set((m[2] for m in mimetypes)))
-			f.write(templ(package=packageName, mimetypes=";".join(mimetypeList), **self._metadata).encode("UTF-8"))
+			f.write(templ(package=self._packageName, mimetypes=";".join(mimetypeList), **self._metadata).encode("UTF-8"))
 
+	def _makeLinuxDir(self):
+		path = os.path.join(self._sourcePath, "linux")
+		os.mkdir(path)
+		return path
+
+	def _buildMenuFile(self, linuxDir):
 		#linux/package.menu
-		with open(os.path.join(sourcePath, "linux", packageName), "w") as f:
+		with open(os.path.join(linuxDir, self._packageName), "w") as f:
 			templ = pyratemp.Template(filename=self._mm.resourcePath("menu.templ"))
-			f.write(templ(package=packageName, **self._metadata).encode("UTF-8"))
+			f.write(templ(package=self._packageName, **self._metadata).encode("UTF-8"))
 
+	def _buildManPages(self, linuxDir):
 		#english man page
-		self._buildManPage(sourcePath, packageName, "C")
+		self._buildManPage(linuxDir, "C")
 		#other languages
 		translator = self._modules.default("active", type="translator")
-		for file in glob.glob(self._mm.resourcePath("translations/*.po")):
+		for file in glob.glob(self._mm.resourcePath("translations/*.mo")):
 			lang = os.path.splitext(os.path.basename(file))[0]
-			self._buildManPage(sourcePath, packageName, lang)
+			self._buildManPage(linuxDir, lang)
 
+	def _buildMimetypeFile(self, linuxDir, mimetypes):
 		#linux/package.xml
-		with open(os.path.join(sourcePath, "linux", packageName + ".xml"), "w") as f:
+		with open(os.path.join(linuxDir, self._packageName + ".xml"), "w") as f:
 			templ = pyratemp.Template(filename=self._mm.resourcePath("mimetypes.xml"))
 			f.write(templ(data=mimetypes).encode("UTF-8"))
 
+	def _getLogoAsQImage(self):
+		return QtGui.QImage(self._metadata["iconPath"])
+
+	def _buildPngIcon(self, linuxDir, qImage):
 		#generate png icon
-		image = QtGui.QImage(self._metadata["iconPath"])
-		image128 = image.scaled(128, 128, QtCore.Qt.KeepAspectRatio)
-		image128.save(os.path.join(sourcePath, "linux/openteacher.png"))
+		image128 = qImage.scaled(128, 128, QtCore.Qt.KeepAspectRatio)
+		image128.save(os.path.join(self._sourcePath, os.path.join(linuxDir, self._packageName + ".png")))
 
+	def _buildXpmIcon(self, linuxDir, qImage):
 		#generate openteacher.xpm
-		image32 = image.scaled(32, 32, QtCore.Qt.KeepAspectRatio)
-		image32.save(os.path.join(sourcePath, "linux/" + packageName + ".xpm"))
+		image32 = qImage.scaled(32, 32, QtCore.Qt.KeepAspectRatio)
+		image32.save(os.path.join(linuxDir, self._packageName + ".xpm"))
 
+	def _buildFileIcons(self, imagePaths, qImage):
 		#generate file icons
 		def findSubIcon(type):
 			try:
@@ -137,7 +152,7 @@ class SourceWithSetupSaverModule(object):
 				return QtGui.QImage()
 
 		for mimeType, imagePath in imagePaths.iteritems():
-			copy = image128.copy()
+			copy = qImage.scaled(128, 128, QtCore.Qt.KeepAspectRatio)
 			if mimeType == "application/x-openteachingwords":
 				otherImage = findSubIcon("words")
 			elif mimeType == "application/x-openteachingtopography":
@@ -154,50 +169,82 @@ class SourceWithSetupSaverModule(object):
 			p.drawImage(64, 64, otherImage)
 			p.end()
 
-			copy.save(os.path.join(sourcePath, imagePath))
+			copy.save(os.path.join(self._sourcePath, imagePath))
 
+	def _buildLinuxFilesCopying(self, linuxDir):
 		#make a COPYING file in place for the generated files
-		with open(os.path.join(sourcePath, "linux/COPYING"), "w") as f:
+		with open(os.path.join(linuxDir, "COPYING"), "w") as f:
 			f.write("application-x-openteachingwords.png, application-x-openteachingtopo.png and application-x-openteachingmedia.png are based on the files words.png, topo.png and media.png of which the licenses are described elsewhere in this package.\n")
 
+	def _findCExtensions(self):
 		#gather extensions to compile
-		exts = []
-		for f in os.listdir(packagePath):
+		for f in os.listdir(self._packagePath):
 			if f.endswith(".c"):
-				exts.append((os.path.splitext(f)[0], f))
+				yield os.path.splitext(f)[0], f
 
+	def _buildSetupPy(self, packageData, imagePaths, exts):
 		data = self._metadata.copy()
 		data.update({
-			"package": packageName,
+			"package": self._packageName,
 			"package_data": packageData,
 			"image_paths": repr(imagePaths.values()),
-			"extensions": exts
+			"extensions": exts,
 		})
 
 		#setup.py
-		with open(os.path.join(sourcePath, "setup.py"), "w") as f:
+		with open(os.path.join(self._sourcePath, "setup.py"), "w") as f:
 			templ = pyratemp.Template(filename=self._mm.resourcePath("setup.py.templ"))
 			f.write(templ(**data).encode("UTF-8"))
 
-		return sourcePath
+	def _addSetupAndOtherFiles(self):
+		#set main path variables
+		self._packageName = os.path.basename(sys.argv[0])
+		if self._packageName.endswith(".py"):
+			self._packageName = self._packageName[:-3]
+		self._packagePath = os.path.join(self._sourcePath, self._packageName)
+
+		self._moveIntoPythonPackage()
+		self._buildStartupScript()
+
+		linuxDir = self._makeLinuxDir()
+		self._buildMenuFile(linuxDir)
+		self._buildLinuxFilesCopying(linuxDir)
+		self._buildManPages(linuxDir)
+
+		qIcon = self._getLogoAsQImage()
+		self._buildPngIcon(linuxDir, qIcon)
+		self._buildXpmIcon(linuxDir, qIcon)
+
+		mimetypes = list(self._findMimetypes())
+		self._buildMimetypeFile(linuxDir, mimetypes)
+		self._buildDesktopFile(linuxDir, mimetypes)
+
+		imagePaths = self._findImagePaths(mimetypes)
+		self._buildFileIcons(imagePaths, qIcon)
+
+		packageData = self._findPackageData()
+		exts = self._findCExtensions()
+		self._buildSetupPy(packageData, imagePaths, exts)
 
 	def saveSourceWithCExtensions(self):
-		sourcePath = self._sourceSaver.saveSourceWithCExtensions()
-		return self._addSetupAndOtherFiles(sourcePath)
+		self._sourcePath = self._sourceSaver.saveSourceWithCExtensions()
+		self._addSetupAndOtherFiles()
+		return self._sourcePath
 
 	def saveSource(self):
-		sourcePath = self._sourceSaver.saveSource()
-		return self._addSetupAndOtherFiles(sourcePath)
+		self._sourcePath = self._sourceSaver.saveSource()
+		self._addSetupAndOtherFiles()
+		return self._sourcePath
 
 	_sourceSaver = property(lambda self: self._modules.default("active", type="sourceSaver"))
 
-	def _buildManPage(self, sourcePath, packageName, lang):
+	def _buildManPage(self, linuxDir, lang):
 		translator = self._modules.default("active", type="translator")
 		#temporarily switch the application language
 		oldLanguage = translator.language
 		translator.language = lang
 
-		rstPath = os.path.join(sourcePath, "linux", "manpage.rst")
+		rstPath = os.path.join(linuxDir, "manpage.rst")
 		with open(rstPath, "w") as f:
 			_, ngettext = translator.gettextFunctions(self._mm.resourcePath("translations"))
 
@@ -205,7 +252,7 @@ class SourceWithSetupSaverModule(object):
 			authors = self._modules.default("active", type="authors").registeredAuthors
 			profileMods = self._modules.sort("active", type="profileDescription")
 			args = {
-				"package": packageName,
+				"package": self._packageName,
 				"now": datetime.datetime.now(),
 				#someone may appear in multiple categories, so set.
 				"otAuthors": set([a[1] for a in authors]),
@@ -218,10 +265,10 @@ class SourceWithSetupSaverModule(object):
 			f.write(templ(**args).encode("UTF-8"))
 
 		if lang == "C":
-			manName = packageName + ".1"
+			manName = self._packageName + ".1"
 		else:
-			manName = packageName + "." + lang + ".1"
-		subprocess.check_call(["rst2man", rstPath, os.path.join(sourcePath, "linux", manName)])
+			manName = self._packageName + "." + lang + ".1"
+		subprocess.check_call(["rst2man", rstPath, os.path.join(linuxDir, manName)])
 		os.remove(rstPath)
 
 		#restore the default application language again.
