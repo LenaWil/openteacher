@@ -18,7 +18,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-def getMultiOptionListModel():
+def installQtClasses():
+	global MultiOptionListModel, SettingsWidget
+
 	class MultiOptionListModel(QtCore.QAbstractListModel):
 		def __init__(self, options, active, *args, **kwargs):
 			super(MultiOptionListModel, self).__init__(*args, **kwargs)
@@ -73,9 +75,7 @@ def getMultiOptionListModel():
 				if option in self.active:
 					list.append(option[1])
 			return list
-	return MultiOptionListModel
 
-def getSettingsWidget():
 	class SettingsWidget(QtGui.QListView):
 		def __init__(self, setting, *args, **kwargs):
 			super(SettingsWidget, self).__init__(*args, **kwargs)
@@ -88,8 +88,6 @@ def getSettingsWidget():
 
 		def _valueChanged(self, topLeft, bottomRight):
 			self._setting["value"] = self.model().value
-
-	return SettingsWidget
 
 class SettingsWidgetModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -111,9 +109,7 @@ class SettingsWidgetModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		global MultiOptionListModel, SettingsWidget
-		MultiOptionListModel = getMultiOptionListModel()
-		SettingsWidget = getSettingsWidget()
+		installQtClasses()
 
 		self.widgetType = "multiOption"
 		self.active = True

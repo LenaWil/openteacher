@@ -21,9 +21,8 @@
 import subprocess
 import os
 import collections
-import itertools
 
-ComplexityResult = collections.namedtuple("ComplexityResult", "path position complexity")
+ComplexityResult = collections.namedtuple("ComplexityResult", "position complexity")
 
 def pythonPaths():
 	for root, dir, files in os.walk("."):
@@ -36,20 +35,28 @@ def pythonPaths():
 				continue
 			yield os.path.join(root, file)
 
-def complexCode():
+def complexityInfo(output):
+	for line in output.split("\n"):
+		if not line:
+			continue
+		result = ComplexityResult._make(eval(line))
+		if not "installQtClasses" in result.position:
+			yield result
+
+def complexityForPaths():
 	for path in pythonPaths():
 		output = subprocess.check_output(["python", "-m", "mccabe", "--min=10", path]).strip()
-		if output:
-			for line in output.split("\n"):
-				result = ComplexityResult._make([path] + list(eval(line)))
-				if not "installQt" in result.position:
-					yield result
+		info = list(complexityInfo(output))
+		if info:
+			yield path, info
 
 def main():
-	results = reversed(sorted(complexCode(), key=lambda r: r.complexity))
-	for path, results in itertools.groupby(results, key=lambda r: r.path):
+	def highestComplexity((path, results)):
+		return max(r.complexity for r in results)
+
+	for path, results in reversed(sorted(complexityForPaths(), key=highestComplexity)):
 		print path
-		for result in results:
+		for result in reversed(sorted(results, key=lambda r: r.complexity)):
 			print "Complexity:", result.complexity, "Position:", result.position
 		print ""
 
