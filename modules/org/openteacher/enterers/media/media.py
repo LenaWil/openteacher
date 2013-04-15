@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -22,7 +22,12 @@
 import os
 import weakref
 
-def getEnterItemListModel():
+class DummyLesson(object):
+	pass
+
+def installQtClasses():
+	global EnterItemListModel, EnterItemList, EnterWidget
+
 	class EnterItemListModel(QtCore.QAbstractListModel):
 		"""The model for the list widget with media items (this construction
 		   because without model Qt produces a bug)
@@ -57,9 +62,7 @@ def getEnterItemListModel():
 		
 		def textAtIndex(self,index):
 			return self.listData[index]
-	return EnterItemListModel
 
-def getEnterItemList():
 	class EnterItemList(QtGui.QListView):
 		"""The list widget with media items"""
 
@@ -81,12 +84,7 @@ def getEnterItemList():
 		def setRightActiveItem(self):
 			if len(self.enterWidget.list["items"]) > 0:
 				self.enterWidget.setActiveItem(self.enterWidget.list["items"][self.currentIndex().row()])
-	return EnterItemList
 
-class DummyLesson(object):
-	pass
-
-def getEnterWidget():
 	class EnterWidget(QtGui.QSplitter):
 		"""The enter tab"""
 
@@ -324,7 +322,6 @@ def getEnterWidget():
 			if self.activeitem["answer"] != unicode(self.enterAnswer.text()):
 				self.activeitem["answer"] = unicode(self.enterAnswer.text())
 				self.lesson.changed = True
-	return EnterWidget
 
 class MediaEntererModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -355,10 +352,7 @@ class MediaEntererModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		global EnterItemListModel, EnterItemList, EnterWidget
-		EnterItemListModel = getEnterItemListModel()
-		EnterItemList = getEnterItemList()
-		EnterWidget = getEnterWidget()
+		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 

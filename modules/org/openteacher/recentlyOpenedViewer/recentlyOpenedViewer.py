@@ -22,7 +22,9 @@
 import weakref
 import traceback
 
-def getRecentlyOpenedModel():
+def installQtClasses():
+	global RecentlyOpenedModel, RecentlyOpenedViewer
+
 	class RecentlyOpenedModel(QtCore.QAbstractListModel):
 		def __init__(self, modules, *args, **kwargs):
 			super(RecentlyOpenedModel, self).__init__(*args, **kwargs)
@@ -90,9 +92,7 @@ def getRecentlyOpenedModel():
 					_("Can't open anymore"),
 					_("It's not possible anymore to open this list.")
 				)
-	return RecentlyOpenedModel
 
-def getRecentlyOpenedViewer():
 	class RecentlyOpenedViewer(QtGui.QListView):
 		def __init__(self, modules, *args, **kwargs):
 			super(RecentlyOpenedViewer, self).__init__(*args, **kwargs)
@@ -102,7 +102,6 @@ def getRecentlyOpenedViewer():
 
 		def _doubleClicked(self, index):
 			self.model().open(self, index.row())
-	return RecentlyOpenedViewer
 
 class RecentlyOpenedViewerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -124,9 +123,7 @@ class RecentlyOpenedViewerModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		global RecentlyOpenedModel, RecentlyOpenedViewer
-		RecentlyOpenedModel = getRecentlyOpenedModel()
-		RecentlyOpenedViewer = getRecentlyOpenedViewer()
+		installQtClasses()
 
 		self._viewers = set()
 

@@ -23,7 +23,9 @@
 import datetime
 import weakref
 
-def getTeachSettingsWidget():
+def installQtClasses():
+	global TeachLessonWidget, TeachSettingsWidget, TeachWidget
+
 	class TeachSettingsWidget(QtGui.QWidget):
 		def __init__(self, settings, widgets, *args, **kwargs):
 			super(TeachSettingsWidget, self).__init__(*args, **kwargs)
@@ -65,9 +67,7 @@ def getTeachSettingsWidget():
 				w.setText(setting["name"])
 
 				i += 1
-	return TeachSettingsWidget
 
-def getTeachLessonWidget():
 	class TeachLessonWidget(QtGui.QSplitter):
 		def __init__(self, keyboardWidget, *args, **kwargs):
 			super(TeachLessonWidget, self).__init__(*args, **kwargs)
@@ -127,9 +127,7 @@ def getTeachLessonWidget():
 
 		def removeSideWidget(self, widget):
 			widget.setParent(None)
-	return TeachLessonWidget
 
-def getTeachWidget():
 	class TeachWidget(QtGui.QStackedWidget):
 		tabChanged = QtCore.pyqtSignal([object])
 		lessonDone = QtCore.pyqtSignal()
@@ -299,7 +297,6 @@ def getTeachWidget():
 
 			#change lesson settings button
 			self._lessonWidget.changeSettingsButton.clicked.connect(self._showSettings)
-	return TeachWidget
 
 class WordsTeacherModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -359,10 +356,7 @@ class WordsTeacherModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		global TeachLessonWidget, TeachSettingsWidget, TeachWidget
-		TeachLessonWidget = getTeachLessonWidget()
-		TeachSettingsWidget = getTeachSettingsWidget()
-		TeachWidget = getTeachWidget()
+		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._activeWidgets = set()

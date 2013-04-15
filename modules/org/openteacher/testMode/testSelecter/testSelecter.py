@@ -23,7 +23,9 @@ import os
 import weakref
 import json
 
-def getTestSelecter():
+def installQtClasses():
+	global TestSelecter
+
 	class TestSelecter(QtGui.QListWidget):
 		# Parameter: The current test (tests/<id>)
 		testChosen = QtCore.pyqtSignal(dict)
@@ -100,8 +102,7 @@ class TestModeTestSelecterModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		global TestSelecter
-		TestSelecter = getTestSelecter()
+		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.connection = self._modules.default("active", type="testModeConnection").getConnection()

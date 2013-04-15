@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -28,7 +28,9 @@ def total_seconds(td):
 	"""
 	return int(round((td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / float(10**6)))
 
-def getGraph():
+def installQtClasses():
+	global Graph, ProgressViewer
+
 	class Graph(QtGui.QFrame):
 		def __init__(self, test, *args, **kwargs):
 			"""Raises KeyError if 'test' doesn't contain time info."""
@@ -135,9 +137,7 @@ def getGraph():
 
 		def sizeHint(self):
 			return QtCore.QSize(200, 30)
-	return Graph
 
-def getProgressViewer():
 	class ProgressViewer(QtGui.QWidget):
 		def __init__(self, test, *args, **kwargs):
 			super(ProgressViewer, self).__init__(*args, **kwargs)
@@ -157,7 +157,6 @@ def getProgressViewer():
 			mainLayout.addWidget(self.graph)
 			
 			self.setLayout(mainLayout)
-	return ProgressViewer
 
 class ProgressViewerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -182,9 +181,7 @@ class ProgressViewerModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		global Graph, ProgressViewer
-		Graph = getGraph()
-		ProgressViewer = getProgressViewer()
+		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._progressViewers = set()

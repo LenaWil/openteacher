@@ -21,7 +21,7 @@
 import weakref
 import datetime
 
-def initializeWidgets():
+def installQtClasses():
 	global ExerciseWidget, InstructionsWidget, LoginWidget, MasterWidget, ReadOnlyStringModel
 
 	class ExerciseWidget(QtGui.QWidget):
@@ -395,7 +395,7 @@ class TypingTutorModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		initializeWidgets()
+		installQtClasses()
 
 		self._modules = next(iter(self._mm.mods(type="modules")))
 

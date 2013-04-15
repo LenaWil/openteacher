@@ -22,7 +22,9 @@
 import weakref
 import copy
 
-def getCategoryTab():
+def installQtClasses():
+	global CategoryTab, SettingsDialog
+
 	class CategoryTab(QtGui.QWidget):
 		"""A category tab. It consists out of subcategory group boxes,
 		   which contain the actual settings.
@@ -65,9 +67,7 @@ def getCategoryTab():
 
 		def retranslate(self):
 			pass
-	return CategoryTab
 
-def getSettingsDialog():
 	class SettingsDialog(QtGui.QTabWidget):
 		"""The actual settings dialog. It consists of category tabs."""
 
@@ -158,7 +158,6 @@ def getSettingsDialog():
 			self.update()
 
 			self.advancedButton.show()
-	return SettingsDialog
 
 class SettingsDialogModule(object):
 	"""The settings dialog, which shows all registered settings in the
@@ -188,9 +187,7 @@ class SettingsDialogModule(object):
 		except ImportError:
 			#remain inactive
 			return
-		global CategoryTab, SettingsDialog
-		CategoryTab = getCategoryTab()
-		SettingsDialog = getSettingsDialog()
+		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._uiModule = self._modules.default("active", type="ui")

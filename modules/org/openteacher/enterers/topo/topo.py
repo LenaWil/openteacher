@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -22,7 +22,12 @@
 import os
 import weakref
 
-def getEnterPlacesWidget():
+class DummyLesson(object):
+	pass
+
+def installQtClasses():
+	global EnterMapChooser, EnterPlaceByName, EnterPlacesWidget, EnterWidget
+
 	class EnterPlacesWidget(QtGui.QListWidget):
 		"""List widget of all the places"""
 
@@ -37,9 +42,7 @@ def getEnterPlacesWidget():
 			# Add all the places to the list
 			for place in self.enterWidget.list["items"]:
 				self.addItem(place["name"] + " (" + unicode(place["x"]) + "," + unicode(place["y"]) + ")")
-	return EnterPlacesWidget
 
-def getEnterMapChooser():
 	class EnterMapChooser(QtGui.QComboBox):
 		"""The dropdown menu for choosing the map"""
 
@@ -121,9 +124,7 @@ def getEnterMapChooser():
 		@property
 		def currentMap(self):
 			return eval(unicode(self.itemData(self.currentIndex()).toString()))
-	return EnterMapChooser
 
-def getEnterPlaceByName():
 	class EnterPlaceByName(QtGui.QLineEdit):
 		"""The add-place-by-name edit"""
 
@@ -145,12 +146,7 @@ def getEnterPlaceByName():
 			self.completer = QtGui.QCompleter(self._getNames(knownPlaces))
 			self.completer.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
 			self.setCompleter(self.completer)
-	return EnterPlaceByName
 
-class DummyLesson(object):
-	pass
-
-def getEnterWidget():
 	class EnterWidget(QtGui.QSplitter):
 		"""The enter tab"""
 
@@ -297,7 +293,6 @@ def getEnterWidget():
 						self.list["items"].remove(place)
 				self.lesson.changed = True
 			self.updateWidgets()
-	return EnterWidget
 
 class TopoEntererModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -330,11 +325,7 @@ class TopoEntererModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		global EnterMapChooser, EnterPlaceByName, EnterPlacesWidget, EnterWidget
-		EnterMapChooser = getEnterMapChooser()
-		EnterPlaceByName = getEnterPlaceByName()
-		EnterPlacesWidget = getEnterPlacesWidget()
-		EnterWidget = getEnterWidget()
+		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._widgets = set()

@@ -19,7 +19,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-def getMediaControlDisplay():
+def installQtClasses():
+	global MediaControlDisplay, MediaDisplay
+
 	class MediaControlDisplay(QtGui.QWidget):
 		"""The video player and web viewer combination widget with controls
 
@@ -114,9 +116,7 @@ def getMediaControlDisplay():
 			self.pauseButton.setEnabled(enabled)
 			self.volumeSlider.setEnabled(enabled)
 			self.seekSlider.setEnabled(enabled)
-	return MediaControlDisplay
 
-def getMediaDisplay():
 	class MediaDisplay(QtGui.QStackedWidget):
 		"""The video player and web viewer combination widget"""
 
@@ -180,9 +180,7 @@ class MediaDisplayModule(object):
 			from PyQt4.phonon import Phonon
 		except ImportError:
 			return
-		global MediaControlDisplay, MediaDisplay
-		MediaControlDisplay = getMediaControlDisplay()
-		MediaDisplay = getMediaDisplay()
+		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.active = True

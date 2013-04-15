@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Cas Widdershoven
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -23,7 +23,9 @@
 import random
 import weakref
 
-def getShuffleAnswerTeachWidget():
+def installQtClasses():
+	global ShuffleAnswerTeachWidget
+
 	class ShuffleAnswerTeachWidget(QtGui.QWidget):
 		def __init__(self, inputWidget, compose, *args, **kwargs):
 			super(ShuffleAnswerTeachWidget, self).__init__(*args, **kwargs)
@@ -121,8 +123,7 @@ class ShuffleAnswerTeachTypeModule(object):
 			from PyQt4 import QtGui
 		except ImportError:
 			return
-		global ShuffleAnswerTeachWidget
-		ShuffleAnswerTeachWidget = getShuffleAnswerTeachWidget()
+		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._activeWidgets = set()

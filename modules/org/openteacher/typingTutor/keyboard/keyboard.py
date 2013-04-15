@@ -21,7 +21,7 @@
 import math
 import random
 
-def initializeWidgets():
+def installQtClasses():
 	global KeyboardWidget
 
 	class KeyboardWidget(QtGui.QWidget):
@@ -153,7 +153,7 @@ class TypingTutorKeyboardModule(object):
 		except ImportError:
 			return
 
-		initializeWidgets()
+		installQtClasses()
 
 		self.active = True
 

@@ -25,15 +25,15 @@ import urllib2
 import copy
 import json
 
-def getPropertyLabel():
+def installQtClasses():
+	global AnswerChecker, PersonAdderWidget, PropertyLabel, StudentsInTestWidget, TakenTestWidget, TeacherPanel, TestActionWidget, TestInfoWidget, TestWidget, TestsWidget
+
 	class PropertyLabel(QtGui.QLabel):
 		def __init__(self, *args, **kwargs):
 			super(PropertyLabel, self).__init__(*args, **kwargs)
 
 			self.setAlignment(QtCore.Qt.AlignRight)
-	return PropertyLabel
 
-def getTestsWidget():
 	class TestsWidget(QtGui.QWidget):
 		"""Widget that shows all the tests"""
 
@@ -65,9 +65,7 @@ def getTestsWidget():
 		def retranslate(self):
 			self.testsLabel.setText(_("Tests"))
 			self.addLessonButton.setText(_("Add lesson"))
-	return TestsWidget
 
-def getPersonAdderWidget():
 	class PersonAdderWidget(QtGui.QWidget):
 		"""The widget you see when you press 'Add student'"""
 
@@ -130,9 +128,7 @@ def getPersonAdderWidget():
 					pass
 			
 			self.back.emit()
-	return PersonAdderWidget
 
-def getStudentsInTestWidget():
 	class StudentsInTestWidget(QtGui.QListWidget):
 		"""Widget with the students in a test (second column, middle)"""
 
@@ -195,9 +191,7 @@ def getStudentsInTestWidget():
 
 		def getCurrentStudentInTest(self):
 			return self.studentInTests[self.currentRow()]
-	return StudentsInTestWidget
 
-def getTestInfoWidget():
 	class TestInfoWidget(QtGui.QWidget):
 		# Parameter = dictionary as parsed tests/<id>/students/<id>
 		takenTestSelected = QtCore.pyqtSignal(dict)
@@ -233,9 +227,7 @@ def getTestInfoWidget():
 			self.addPersonButton.setText(_("Add person"))
 
 			self.studentsInTest.retranslate()
-	return TestInfoWidget
 
-def getTestActionWidget():
 	class TestActionWidget(QtGui.QStackedWidget):
 		# Parameter = dictionary as parsed tests/<id>/students/<id>
 		takenTestSelected = QtCore.pyqtSignal(dict)
@@ -262,9 +254,7 @@ def getTestActionWidget():
 		def retranslate(self):
 			self.testInfoWidget.retranslate()
 			self.personAdderWidget.retranslate()
-	return TestActionWidget
 
-def getTestWidget():
 	class TestWidget(QtGui.QWidget):
 		"""Widget that shows the currently selected test (second column)"""
 
@@ -337,9 +327,7 @@ def getTestWidget():
 			self.answerChecker.publishAnswers(self.info["id"])
 			# Show message
 			self.message.emit(_("Student's results have been (re)published!"))
-	return TestWidget
 
-def getAnswerChecker():
 	class AnswerChecker(QtCore.QObject):
 		answersChanged = QtCore.pyqtSignal()
 		def __init__(self, connection, testChecker, *args, **kwargs):
@@ -418,9 +406,7 @@ def getAnswerChecker():
 			for item in items:
 				if item["id"] == id:
 					return item
-	return AnswerChecker
 
-def getTakenTestWidget():
 	class TakenTestWidget(QtGui.QWidget):
 		"""Widget that shows the currently selected person in a test (third column)"""
 
@@ -579,9 +565,7 @@ def getTakenTestWidget():
 			
 			# Update labels
 			self.fillLabels()
-	return TakenTestWidget
 
-def getTeacherPanel():
 	class TeacherPanel(QtGui.QSplitter):
 		message = QtCore.pyqtSignal(str)
 		def __init__(self, connection, studentsView, testSelecter, uploaderModule, answerChecker, compose, *args, **kwargs):
@@ -628,7 +612,6 @@ def getTeacherPanel():
 					#splitter handle
 					continue
 				widget.retranslate()
-	return TeacherPanel
 
 class TestModeTeacherPanelModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -665,17 +648,6 @@ class TestModeTeacherPanelModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		global AnswerChecker, PersonAdderWidget, PropertyLabel, StudentsInTestWidget, TakenTestWidget, TeacherPanel, TestActionWidget, TestInfoWidget, TestWidget, TestsWidget
-		AnswerChecker = getAnswerChecker()
-		PersonAdderWidget = getPersonAdderWidget()
-		PropertyLabel = getPropertyLabel()
-		StudentsInTestWidget = getStudentsInTestWidget()
-		TakenTestWidget = getTakenTestWidget()
-		TeacherPanel = getTeacherPanel()
-		TestActionWidget = getTestActionWidget()
-		TestInfoWidget = getTestInfoWidget()
-		TestWidget = getTestWidget()
-		TestsWidget = getTestsWidget()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 

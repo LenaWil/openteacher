@@ -22,7 +22,9 @@
 import datetime
 import weakref
 
-def getTeachLessonTypeChooser():
+def installQtClasses():
+	global TeachLessonTypeChooser, TeachWidget
+
 	class TeachLessonTypeChooser(QtGui.QComboBox):
 		"""The dropdown menu to choose lesson type"""
 
@@ -63,9 +65,7 @@ def getTeachLessonTypeChooser():
 			"""Get the current lesson type"""
 
 			return self._lessonTypeModules[self.currentIndex()]
-	return TeachLessonTypeChooser
 
-def getTeachWidget():
 	class TeachWidget(QtGui.QWidget):
 		"""The teach tab"""
 
@@ -157,7 +157,7 @@ def getTeachWidget():
 			self.lesson.checkAnswer()
 			self.answerField.clear()
 			self.answerField.setFocus()
-	return TeachWidget
+
 
 class TeachMediaLesson(object):	
 	"""The lesson itself (being teached)"""
@@ -291,9 +291,7 @@ class MediaTeacherModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		global TeachLessonTypeChooser, TeachWidget
-		TeachLessonTypeChooser = getTeachLessonTypeChooser()
-		TeachWidget = getTeachWidget()
+		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 

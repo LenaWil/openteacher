@@ -21,7 +21,9 @@
 
 import datetime
 
-def getHangmanTeachWidget():
+def installQtClasses():
+	global HangmanTeachWidget
+
 	class HangmanTeachWidget(QtGui.QWidget):
 		def __init__(self, wordModule, graphicsWidget, letterChosen, *args, **kwargs):
 			super(HangmanTeachWidget, self).__init__(*args, **kwargs)
@@ -207,7 +209,6 @@ def getHangmanTeachWidget():
 			self.hgraph.update()
 			
 			self.lessonType.setResult(self._previousResult)
-	return HangmanTeachWidget
 
 class TypingTeachTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -237,8 +238,7 @@ class TypingTeachTypeModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		global HangmanTeachWidget
-		HangmanTeachWidget = getHangmanTeachWidget()
+		installQtClasses()
 
 		self.graphics = self._mm.import_("graphics")
 		self.word = self._mm.import_("word")

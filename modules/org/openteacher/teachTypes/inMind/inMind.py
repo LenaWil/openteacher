@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #	Copyright 2011, Milan Boers
 #	Copyright 2012, Cas Widdershoven
 #
@@ -23,7 +23,9 @@
 import datetime
 import weakref
 
-def getThinkWidget():
+def installQtClasses():
+	global ThinkWidget, AnswerWidget, InMindTeachWidget
+
 	class ThinkWidget(QtGui.QWidget):
 		def __init__(self, *args, **kwargs):
 			super(ThinkWidget, self).__init__(*args, **kwargs)
@@ -44,9 +46,7 @@ def getThinkWidget():
 			self.label.setText(_("Think about the answer, and press the 'View answer' button when you're done."))
 			self.viewAnswerButton.setText(_("View answer"))
 			self.skipButton.setText(_("Skip"))
-	return ThinkWidget
 
-def getAnswerWidget():
 	class AnswerWidget(QtGui.QWidget):
 		def __init__(self, *args, **kwargs):
 			super(AnswerWidget, self).__init__(*args, **kwargs)
@@ -68,9 +68,7 @@ def getAnswerWidget():
 		def retranslate(self):
 			self.rightButton.setText(_("I was right"))
 			self.wrongButton.setText(_("I was wrong"))
-	return AnswerWidget
 
-def getInMindTeachWidget():
 	class InMindTeachWidget(QtGui.QStackedWidget):
 		def __init__(self, compose, *args, **kwargs):
 			super(InMindTeachWidget, self).__init__(*args, **kwargs)
@@ -143,7 +141,6 @@ def getInMindTeachWidget():
 		def startAnswering(self):
 			self.end = datetime.datetime.now()
 			self.setCurrentWidget(self.answerWidget)
-	return InMindTeachWidget
 
 class InMindTeachTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -170,10 +167,7 @@ class InMindTeachTypeModule(object):
 			from PyQt4 import QtGui
 		except ImportError:
 			return
-		global AnswerWidget, InMindTeachWidget, ThinkWidget
-		AnswerWidget = getAnswerWidget()
-		InMindTeachWidget = getInMindTeachWidget()
-		ThinkWidget = getThinkWidget()
+		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 

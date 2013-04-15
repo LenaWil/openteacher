@@ -20,7 +20,9 @@
 
 import weakref
 
-def getLargeStartWidgetButton():
+def installQtClasses():
+	global ButtonsGroupBox, StartWidget, LargeStartWidgetButton
+
 	class LargeStartWidgetButton(QtGui.QPushButton):
 		def __init__(self, *args, **kwargs):
 			super(LargeStartWidgetButton, self).__init__(*args, **kwargs)
@@ -87,9 +89,7 @@ def getLargeStartWidgetButton():
 			result = self._splitLines()
 			super(LargeStartWidgetButton, self).setText(result)
 			super(LargeStartWidgetButton, self).resizeEvent(*args, **kwargs)
-	return LargeStartWidgetButton
 
-def getButtonsGroupBox():
 	class ButtonsGroupBox(QtGui.QGroupBox):
 		def __init__(self, *args, **kwargs):
 			super(ButtonsGroupBox, self).__init__(*args, **kwargs)
@@ -175,9 +175,6 @@ def getButtonsGroupBox():
 			self._buttons[button]["size"] = size
 			self._updateLayout()
 
-	return ButtonsGroupBox
-
-def getStartWidget():
 	class StartWidget(QtGui.QSplitter):
 		def __init__(self, recentlyOpenedViewer, *args, **kwargs):
 			super(StartWidget, self).__init__(*args, **kwargs)
@@ -233,7 +230,6 @@ def getStartWidget():
 				self.createLessonGroupBox.removeButton(button)
 			elif button.category == "load":
 				self.loadLessonGroupBox.removeButton(button)
-	return StartWidget
 
 class StartWidgetModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -296,10 +292,7 @@ class StartWidgetModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		global ButtonsGroupBox, StartWidget, LargeStartWidgetButton
-		ButtonsGroupBox = getButtonsGroupBox()
-		StartWidget = getStartWidget()
-		LargeStartWidgetButton = getLargeStartWidgetButton()
+		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._register = self._modules.default("active", type="buttonRegister")

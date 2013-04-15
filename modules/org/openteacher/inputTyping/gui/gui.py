@@ -24,7 +24,9 @@ import datetime
 import weakref
 import difflib
 
-def getInputTypingWidget():
+def installQtClasses():
+	global InputTypingWidget
+
 	class InputTypingWidget(QtGui.QWidget):
 		def __init__(self, createController, getFadeTime, letterChosen, *args, **kwargs):
 			super(InputTypingWidget, self).__init__(*args, **kwargs)
@@ -168,8 +170,6 @@ def getInputTypingWidget():
 			stylesheet = "QLineEdit {color: rgb(%s, %s, %s, %s)}" % (255, 00, 00, 255-step)
 			self.inputLineEdit.setStyleSheet(stylesheet)
 
-	return InputTypingWidget
-
 class InputTypingModule(object):
 	_createController = property(lambda self: self._modules.default("active", type="inputTypingLogic").createController)
 
@@ -194,8 +194,7 @@ class InputTypingModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		global InputTypingWidget
-		InputTypingWidget = getInputTypingWidget()
+		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._activeWidgets = set()

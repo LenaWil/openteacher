@@ -21,7 +21,9 @@
 
 import weakref
 
-def getTestsModel():
+def installQtClasses():
+	global DetailsWidget, NotesWidget, TestViewerWidget, TestsModel, TestsViewer, TestsViewerWidget
+
 	class TestsModel(QtCore.QAbstractTableModel):
 		DATE, NOTE, COMPLETED = xrange(3)
 
@@ -91,9 +93,7 @@ def getTestsModel():
 			self.reset()
 
 		list = property(_getList, _setList)
-	return TestsModel
 
-def getNotesWidget():
 	class NotesWidget(QtGui.QWidget):
 		def __init__(self, noteCalculator, calculatePercents, *args, **kwargs):
 			super(NotesWidget, self).__init__(*args, **kwargs)
@@ -147,9 +147,7 @@ def getNotesWidget():
 			except (ZeroDivisionError, KeyError):
 				average = _("-")
 			self.averageLabel.setText(unicode(average))
-	return NotesWidget
 
-def getDetailsWidget():
 	class DetailsWidget(QtGui.QWidget):
 		def __init__(self, testTypes, *args, **kwargs):
 			super(DetailsWidget, self).__init__(*args, **kwargs)
@@ -180,9 +178,7 @@ def getDetailsWidget():
 							self.labels[i].setText(list.get(property[1], _("-")))
 							i += 1
 					break
-	return DetailsWidget
 
-def getTestsViewerWidget():
 	class TestsViewerWidget(QtGui.QSplitter):
 		testActivated = QtCore.pyqtSignal([object, object, object])
 
@@ -231,9 +227,7 @@ def getTestsViewerWidget():
 		def retranslate(self):
 			self.notesWidget.retranslate()
 			self.testsModel.retranslate()
-	return TestsViewerWidget
 
-def getTestViewerWidget():
 	class TestViewerWidget(QtGui.QWidget):
 		backActivated = QtCore.pyqtSignal()
 
@@ -252,9 +246,7 @@ def getTestViewerWidget():
 
 		def retranslate(self):
 			self.backButton.setText(_("Back"))
-	return TestViewerWidget
 
-def getTestsViewer():
 	class TestsViewer(QtGui.QStackedWidget):
 		def __init__(self, testTypes, noteCalculator, calculatePercents, createTestViewer, createPercentNotesViewer=None,  *args, **kwargs):
 			super(TestsViewer, self).__init__(*args, **kwargs)
@@ -281,7 +273,6 @@ def getTestsViewer():
 		def retranslate(self):
 			for i in range(self.count()):
 				self.widget(i).retranslate()
-	return TestsViewer
 
 class TestsViewerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -306,13 +297,7 @@ class TestsViewerModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		global DetailsWidget, NotesWidget, TestViewerWidget, TestsModel, TestsViewer, TestsViewerWidget
-		DetailsWidget = getDetailsWidget()
-		NotesWidget = getNotesWidget()
-		TestViewerWidget = getTestViewerWidget()
-		TestsModel = getTestsModel()
-		TestsViewer = getTestsViewer()
-		TestsViewerWidget = getTestsViewerWidget()
+		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 

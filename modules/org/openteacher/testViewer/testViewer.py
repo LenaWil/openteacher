@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2009-2012, Marten de Vries
+#	Copyright 2009-2013, Marten de Vries
 #	Copyright 2008-2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -29,7 +29,9 @@ def total_seconds(td):
 	"""
 	return int(round((td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / float(10**6)))
 
-def getTestModel():
+def installQtClasses():
+	global TestModel, TestViewer
+
 	class TestModel(QtCore.QAbstractTableModel):
 		def __init__(self, moduleManager, list, dataType, test, *args, **kwargs):
 			super(TestModel, self).__init__(*args, **kwargs)
@@ -71,9 +73,7 @@ def getTestModel():
 
 		def columnCount(self, parent):
 			return len(self.testTable.header)
-	return TestModel
 
-def getTestViewer():
 	class TestViewer(QtGui.QSplitter):
 		def __init__(self, moduleManager, list, dataType, test, *args, **kwargs):
 			super(TestViewer, self).__init__(QtCore.Qt.Vertical, *args, **kwargs)
@@ -175,7 +175,6 @@ def getTestViewer():
 				if "active" in result:
 					totalThinkingTime += result["active"]["end"] - result["active"]["start"]
 			return total_seconds(totalThinkingTime)
-	return TestViewer
 
 class TestViewerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -207,9 +206,7 @@ class TestViewerModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		global TestModel, TestViewer
-		TestModel = getTestModel()
-		TestViewer = getTestViewer()
+		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 

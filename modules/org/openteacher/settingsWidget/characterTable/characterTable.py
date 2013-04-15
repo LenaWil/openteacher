@@ -18,7 +18,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-def getModel():
+def installQtClasses():
+	global Model, SettingsWidget
+
 	class Model(QtCore.QAbstractTableModel):
 		def __init__(self, data, *args, **kwargs):
 			super(Model, self).__init__(*args, **kwargs)
@@ -51,9 +53,7 @@ def getModel():
 			if index.isValid():
 				flags = flags | QtCore.Qt.EditRole
 			return flags
-	return Model
 
-def getSettingsWidget():
 	class SettingsWidget(QtGui.QTableView):
 		def __init__(self, setting, *args, **kwargs):
 			super(SettingsWidget, self).__init__(*args, **kwargs)
@@ -73,7 +73,6 @@ def getSettingsWidget():
 		def _resetValue(self):
 			"""To make the settings callback get called"""
 			self._setting["value"] = self.model().data
-	return SettingsWidget
 
 class SettingsWidgetModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -95,9 +94,7 @@ class SettingsWidgetModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		global Model, SettingsWidget
-		Model = getModel()
-		SettingsWidget = getSettingsWidget()
+		installQtClasses()
 
 		self.widgetType = "character_table"
 		self.active = True

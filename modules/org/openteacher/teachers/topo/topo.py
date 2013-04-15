@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Milan Boers
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -25,7 +25,9 @@ import weakref
 class Order(object):
 	Normal, Inversed = xrange(2)
 
-def getTeachLessonTypeChooser():
+def installQtClasses():
+	global TeachLessonOrderChooser, TeachLessonTypeChooser, TeachWidget
+
 	class TeachLessonTypeChooser(QtGui.QComboBox):
 		"""The dropdown menu to choose lesson type"""
 
@@ -70,9 +72,7 @@ def getTeachLessonTypeChooser():
 			"""Get the current lesson type"""
 
 			return self._lessonTypeModules[self.currentIndex()]
-	return TeachLessonTypeChooser
 
-def getTeachLessonOrderChooser():
 	class TeachLessonOrderChooser(QtGui.QComboBox):
 		"""The dropdown menu to choose lesson order"""
 
@@ -105,7 +105,135 @@ def getTeachLessonOrderChooser():
 
 			if self.teachWidget.inLesson:
 				self.teachWidget.restartLesson()
-	return TeachLessonOrderChooser
+
+	class TeachWidget(QtGui.QWidget):
+		"""The teach tab"""
+
+		lessonDone = QtCore.pyqtSignal()
+		listChanged = QtCore.pyqtSignal([object])
+		def __init__(self, *args, **kwargs):
+			super(TeachWidget, self).__init__(*args, **kwargs)
+			
+			self.inLesson = False
+			
+			## GUI Drawing
+			# Top
+			top = QtGui.QHBoxLayout()
+
+			self.lessonTypeLabel = QtGui.QLabel()
+			self.lessonTypeChooser = TeachLessonTypeChooser(self)
+			
+			top.addWidget(self.lessonTypeLabel)
+			top.addWidget(self.lessonTypeChooser)
+
+			self.lessonOrderLabel = QtGui.QLabel()
+			self.lessonOrderChooser = TeachLessonOrderChooser(self)
+
+			top.addWidget(self.lessonOrderLabel)
+			top.addWidget(self.lessonOrderChooser)
+			
+			# Middle
+			self.mapBox = base._modules.default("active", type="topoMaps").getTeachMap(self)
+			
+			# Bottom
+			bottom = QtGui.QHBoxLayout()
+			
+			self.label = QtGui.QLabel()
+			self.answerfield = QtGui.QLineEdit()
+			self.checkanswerbutton = QtGui.QPushButton()
+			self.answerfield.returnPressed.connect(self._checkAnswerButtonClick)
+			self.answerfield.textEdited.connect(self._answerChanged)
+			
+			self.checkanswerbutton.clicked.connect(self._checkAnswerButtonClick)
+			
+			self.questionLabel = QtGui.QLabel()
+			
+			self.progress = QtGui.QProgressBar()
+			
+			bottom.addWidget(self.label)
+			bottom.addWidget(self.answerfield)
+			bottom.addWidget(self.checkanswerbutton)
+			bottom.addWidget(self.questionLabel)
+			bottom.addWidget(self.progress)
+			
+			# Total
+			layout = QtGui.QVBoxLayout()
+			layout.addLayout(top)
+			layout.addWidget(self.mapBox)
+			layout.addLayout(bottom)
+			
+			self.setLayout(layout)
+
+			self.retranslate()
+
+		def retranslate(self):
+			self.lessonTypeLabel.setText(_("Lesson type:"))
+			self.lessonOrderLabel.setText(_("Lesson order:"))
+			self.label.setText(_("Which place is here?"))
+			#TRANSLATORS: A button the user clicks to let the computer check the given answer.
+			self.checkanswerbutton.setText(_("Check"))
+			self.questionLabel.setText(_("Please click this place:"))
+
+			self.lessonTypeChooser.retranslate()
+			self.lessonOrderChooser.retranslate()
+
+		def initiateLesson(self, places, mapPath):
+			"""Starts the lesson"""
+
+			self.places = places
+			self.mapPath = mapPath
+			
+			self.lesson = TeachTopoLesson(places, mapPath, self)
+			self.answerfield.setFocus()
+
+		def restartLesson(self):
+			"""Restarts the lesson"""
+
+			self.initiateLesson(self.places, self.mapPath)
+		
+		def stopLesson(self, showResults=True):
+			"""Stops the lesson"""
+
+			self.lesson.endLesson(showResults)
+			
+			del self.lesson
+		
+		def _answerChanged(self):
+			"""What happens when the answer in the textbox has changed"""
+
+			try:
+				self.lesson.endThinkingTime
+			except AttributeError:
+				self.lesson.endThinkingTime = datetime.datetime.now()
+			else:
+				if self.answerfield.text() == "":
+					del self.lesson.endThinkingTime
+		
+		def _checkAnswerButtonClick(self):
+			"""What happens when you click the check answer button"""
+
+			# Check the answer
+			self.lesson.checkAnswer()
+			# Clear the answer field
+			self.answerfield.clear()
+			# Focus the answer field
+			self.answerfield.setFocus()
+		
+		def setWidgets(self, order):
+			"""Sets the bottom widgets to either the in-order version (False) or
+			   the inversed-order (True)
+
+			"""
+			if order == Order.Inversed:
+				self.label.setVisible(False)
+				self.answerfield.setVisible(False)
+				self.checkanswerbutton.setVisible(False)
+				self.questionLabel.setVisible(True)
+			else:
+				self.label.setVisible(True)
+				self.answerfield.setVisible(True)
+				self.checkanswerbutton.setVisible(True)
+				self.questionLabel.setVisible(False)
 
 class TeachTopoLesson(object):
 	"""The lesson itself"""
@@ -238,137 +366,6 @@ class TeachTopoLesson(object):
 	def order(self):
 		return self.teachWidget.lessonOrderChooser.currentIndex()
 
-def getTeachWidget():
-	class TeachWidget(QtGui.QWidget):
-		"""The teach tab"""
-
-		lessonDone = QtCore.pyqtSignal()
-		listChanged = QtCore.pyqtSignal([object])
-		def __init__(self, *args, **kwargs):
-			super(TeachWidget, self).__init__(*args, **kwargs)
-			
-			self.inLesson = False
-			
-			## GUI Drawing
-			# Top
-			top = QtGui.QHBoxLayout()
-
-			self.lessonTypeLabel = QtGui.QLabel()
-			self.lessonTypeChooser = TeachLessonTypeChooser(self)
-			
-			top.addWidget(self.lessonTypeLabel)
-			top.addWidget(self.lessonTypeChooser)
-
-			self.lessonOrderLabel = QtGui.QLabel()
-			self.lessonOrderChooser = TeachLessonOrderChooser(self)
-
-			top.addWidget(self.lessonOrderLabel)
-			top.addWidget(self.lessonOrderChooser)
-			
-			# Middle
-			self.mapBox = base._modules.default("active", type="topoMaps").getTeachMap(self)
-			
-			# Bottom
-			bottom = QtGui.QHBoxLayout()
-			
-			self.label = QtGui.QLabel()
-			self.answerfield = QtGui.QLineEdit()
-			self.checkanswerbutton = QtGui.QPushButton()
-			self.answerfield.returnPressed.connect(self._checkAnswerButtonClick)
-			self.answerfield.textEdited.connect(self._answerChanged)
-			
-			self.checkanswerbutton.clicked.connect(self._checkAnswerButtonClick)
-			
-			self.questionLabel = QtGui.QLabel()
-			
-			self.progress = QtGui.QProgressBar()
-			
-			bottom.addWidget(self.label)
-			bottom.addWidget(self.answerfield)
-			bottom.addWidget(self.checkanswerbutton)
-			bottom.addWidget(self.questionLabel)
-			bottom.addWidget(self.progress)
-			
-			# Total
-			layout = QtGui.QVBoxLayout()
-			layout.addLayout(top)
-			layout.addWidget(self.mapBox)
-			layout.addLayout(bottom)
-			
-			self.setLayout(layout)
-
-			self.retranslate()
-
-		def retranslate(self):
-			self.lessonTypeLabel.setText(_("Lesson type:"))
-			self.lessonOrderLabel.setText(_("Lesson order:"))
-			self.label.setText(_("Which place is here?"))
-			#TRANSLATORS: A button the user clicks to let the computer check the given answer.
-			self.checkanswerbutton.setText(_("Check"))
-			self.questionLabel.setText(_("Please click this place:"))
-
-			self.lessonTypeChooser.retranslate()
-			self.lessonOrderChooser.retranslate()
-
-		def initiateLesson(self, places, mapPath):
-			"""Starts the lesson"""
-
-			self.places = places
-			self.mapPath = mapPath
-			
-			self.lesson = TeachTopoLesson(places, mapPath, self)
-			self.answerfield.setFocus()
-
-		def restartLesson(self):
-			"""Restarts the lesson"""
-
-			self.initiateLesson(self.places, self.mapPath)
-		
-		def stopLesson(self, showResults=True):
-			"""Stops the lesson"""
-
-			self.lesson.endLesson(showResults)
-			
-			del self.lesson
-		
-		def _answerChanged(self):
-			"""What happens when the answer in the textbox has changed"""
-
-			try:
-				self.lesson.endThinkingTime
-			except AttributeError:
-				self.lesson.endThinkingTime = datetime.datetime.now()
-			else:
-				if self.answerfield.text() == "":
-					del self.lesson.endThinkingTime
-		
-		def _checkAnswerButtonClick(self):
-			"""What happens when you click the check answer button"""
-
-			# Check the answer
-			self.lesson.checkAnswer()
-			# Clear the answer field
-			self.answerfield.clear()
-			# Focus the answer field
-			self.answerfield.setFocus()
-		
-		def setWidgets(self, order):
-			"""Sets the bottom widgets to either the in-order version (False) or
-			   the inversed-order (True)
-
-			"""
-			if order == Order.Inversed:
-				self.label.setVisible(False)
-				self.answerfield.setVisible(False)
-				self.checkanswerbutton.setVisible(False)
-				self.questionLabel.setVisible(True)
-			else:
-				self.label.setVisible(True)
-				self.answerfield.setVisible(True)
-				self.checkanswerbutton.setVisible(True)
-				self.questionLabel.setVisible(False)
-	return TeachWidget
-
 class TopoTeacherModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TopoTeacherModule, self).__init__(*args, **kwargs)
@@ -399,10 +396,7 @@ class TopoTeacherModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		global TeachLessonOrderChooser, TeachLessonTypeChooser, TeachWidget
-		TeachLessonOrderChooser = getTeachLessonOrderChooser()
-		TeachLessonTypeChooser = getTeachLessonTypeChooser()
-		TeachWidget = getTeachWidget()
+		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 

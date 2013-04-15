@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Milan Boers
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -21,7 +21,9 @@
 
 import os
 
-def getStudentsView():
+def installQtClasses():
+	global StudentsView
+
 	class StudentsView(QtGui.QTreeWidget):
 		def __init__(self, connection, *args, **kwargs):
 			super(StudentsView, self).__init__(*args, **kwargs)
@@ -86,7 +88,6 @@ def getStudentsView():
 				return feedback
 			else:
 				return self.connection.get(self.nameToUrl[unicode(self.currentItem().text(0))])
-	return StudentsView
 
 class TestModeStudentsViewModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -110,8 +111,7 @@ class TestModeStudentsViewModule(object):
 			from PyQt4 import QtGui
 		except ImportError:
 			return
-		global StudentsView
-		StudentsView = getStudentsView()
+		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self.active = True

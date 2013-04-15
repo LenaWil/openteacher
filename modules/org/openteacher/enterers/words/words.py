@@ -23,7 +23,15 @@
 import datetime
 import weakref
 
-def getWordsTableItemDelegate():
+class EmptyLesson(object):
+	def __init__(self, *args, **kwargs):
+		super(EmptyLesson, self).__init__(*args, **kwargs)
+
+		self.list = {}
+
+def installQtClasses():
+	global SpellingHighlighter, WordsTableView, WordsTableModel, EnterWidget
+
 	class SpellingHighlighter(QtGui.QSyntaxHighlighter):
 		_format = QtGui.QTextCharFormat()
 		_format.setUnderlineColor(QtCore.Qt.red)
@@ -111,9 +119,7 @@ def getWordsTableItemDelegate():
 				parent, option, index
 			)
 			return self.currentEditor
-	return WordsTableItemDelegate
 
-def getWordsTableView():
 	class WordsTableView(QtGui.QTableView):
 		def __init__(self, createChecker, *args, **kwargs):
 			super(WordsTableView, self).__init__(*args, **kwargs)
@@ -212,15 +218,7 @@ def getWordsTableView():
 					row = self.model().rowCount() -1
 			
 			return self.model().index(row, column)
-	return WordsTableView
 
-class EmptyLesson(object):
-	def __init__(self, *args, **kwargs):
-		super(EmptyLesson, self).__init__(*args, **kwargs)
-
-		self.list = {}
-
-def getWordsTableModel():
 	class WordsTableModel(QtCore.QAbstractTableModel):
 		questionLanguageChanged = QtCore.pyqtSignal()
 		answerLanguageChanged = QtCore.pyqtSignal()
@@ -376,9 +374,7 @@ def getWordsTableModel():
 					self.indexes[i] -= 1
 			del self.lesson.list["items"][listIndex]
 			self.endRemoveRows()
-	return WordsTableModel
 
-def getEnterWidget():
 	class EnterWidget(QtGui.QSplitter):
 		def __init__(self, createChecker, keyboardWidget, compose, parse, *args, **kwargs):
 			super(EnterWidget, self).__init__(*args, **kwargs)
@@ -507,7 +503,6 @@ def getEnterWidget():
 			self._answerLanguageTextBox.textEdited.connect(
 				self._wordsTableModel.updateAnswerLanguage
 			)
-	return EnterWidget
 
 class WordsEntererModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -586,11 +581,7 @@ class WordsEntererModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			pass
-		global EnterWidget, WordsTableItemDelegate, WordsTableModel, WordsTableView
-		EnterWidget = getEnterWidget()
-		WordsTableItemDelegate = getWordsTableItemDelegate()
-		WordsTableModel = getWordsTableModel()
-		WordsTableView = getWordsTableView()
+		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._activeWidgets = set()
