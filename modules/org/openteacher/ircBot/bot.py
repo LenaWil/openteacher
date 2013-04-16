@@ -112,7 +112,7 @@ class OpenTeacherBot(irc.IRCClient):
 	factoids[".dev-documentation"] = factoids[".developer-documentation"]
 	factoids[".wiki"] = factoids[".developer-documentation"]
 	factoids[".complexity"] = factoids[".code-complexity"]
-	factoics[".cyclomatic-complexity"] = factoids[".code-complexity"]
+	factoids[".cyclomatic-complexity"] = factoids[".code-complexity"]
 	factoids[".mccabe"] = factoids[".code-complexity"]
 
 	@property
