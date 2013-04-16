@@ -30,6 +30,10 @@ class WordsStringCheckerModule(object):
 		}
 
 	def _checkSingleCompulsoryAnswerGiven(self, givenAnswer, word):
+		"""Called when the user only comma separates answers (there
+		   might be compulsory answers among them.)
+
+		"""
 		result = {"result": "right"}
 		difference = set(givenAnswer[0])
 		for compulsoryAnswer in word["answers"]:
@@ -43,6 +47,10 @@ class WordsStringCheckerModule(object):
 		return result
 
 	def _checkMultipleCompulsoryAnswersGiven(self, givenAnswer, word):
+		"""The normal case: checks if enough compulsory answers are
+		   given.
+
+		"""
 		result = {"result": "wrong"}
 		compulsoryAnswerCount = 0
 		for compulsoryGivenAnswer in givenAnswer:
@@ -56,6 +64,14 @@ class WordsStringCheckerModule(object):
 		return result
 
 	def check(self, givenAnswer, word):
+		"""Checks if the ``givenAnswer`` (the answer of the user) is
+		   correct given the correct ``word``. It uses two strategies to
+		   determine if an answer is correct:
+		   - one that works if the user doesn't use compulsory answers
+		   - one that works if the user does.
+
+		   See for examples the unit tests.
+		"""
 		if len(givenAnswer) == 1:
 			result = self._checkSingleCompulsoryAnswerGiven(givenAnswer, word)
 		else:

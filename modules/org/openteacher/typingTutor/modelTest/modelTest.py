@@ -20,6 +20,8 @@
 
 import unittest
 
+TEST_USERNAME = "_modeltest"
+
 class TestCase(unittest.TestCase):
 	@property
 	def models(self):
@@ -27,97 +29,119 @@ class TestCase(unittest.TestCase):
 
 	def setUp(self):
 		for m in self.models:
-			m.registerUser("_modeltest")
+			m.registerUser(TEST_USERNAME)
 
 	def tearDown(self):
 		for m in self.models:
-			m.deregisterUser("_modeltest")
+			m.deregisterUser(TEST_USERNAME)
 
 	def testRegisterUnregisterErrors(self):
 		for m in self.models:
 			with self.assertRaises(m.UsernameEmptyError):
 				m.registerUser("")
 			with self.assertRaises(m.UsernameTakenError):
-				m.registerUser("_modeltest", "COLEMAK_LAYOUT")
-			m.deregisterUser("_modeltest")
+				m.registerUser(TEST_USERNAME, "COLEMAK_LAYOUT")
+			m.deregisterUser(TEST_USERNAME)
 			with self.assertRaises(KeyError):
-				m.deregisterUser("_modeltest")
+				m.deregisterUser(TEST_USERNAME)
 			#for tearDown
-			m.registerUser("_modeltest")
+			m.registerUser(TEST_USERNAME)
 
 	def testUsernames(self):
 		for m in self.models:
-			self.assertIn("_modeltest", m.usernames)
+			self.assertIn(TEST_USERNAME, m.usernames)
+
+	def _constructArgsForSession(self):
+		argList = [
+			None,
+			(TEST_USERNAME, 20, 0),
+			(TEST_USERNAME, 10, 3),
+			(TEST_USERNAME, 30, 2),
+			None,
+			(TEST_USERNAME, 10, 0),
+		]
+		for i in range(50):
+			argList.append((TEST_USERNAME, 10, 0))
+		argList.append(None)
+		argList.append((TEST_USERNAME, 5, 3))
+		argList.append(None)
+		for i in range(10):
+			argList.append((TEST_USERNAME, 5, 0))
+		return argList
+
+	def _examineAmountOfMistakes(self, model, iteration):
+		#the first iteration, no test results are known yet.
+		if iteration == 0:
+			with self.assertRaises(IndexError):
+				model.amountOfMistakes(TEST_USERNAME)
+		else:
+			self.assertIsInstance(model.amountOfMistakes(TEST_USERNAME), int)
+
+	def _examineInstruction(self, model):
+		instruction = model.currentInstruction(TEST_USERNAME)
+		if self._showInfo:
+			print "INSTRUCTION:", instruction
+		self.assertIsInstance(instruction, basestring)
+		self.assertTrue(instruction)
+
+	def _examineExercise(self, model):
+		exercise = model.currentExercise(TEST_USERNAME)
+		if self._showInfo:
+			print "NEW EXERCISE:", exercise
+		self.assertIsInstance(exercise, basestring)
+		self.assertTrue(exercise)
+
+	def _examineLayout(self, model):
+		self.assertEqual(model.layout(TEST_USERNAME), model.QWERTY_LAYOUT)
+
+	def _examineLevel(self, model):
+		level = model.level(TEST_USERNAME)
+		if self._showInfo:
+			print "LEVEL:", level
+		self.assertIsInstance(level, int)
+		self.assertTrue(level >= 0)
+
+	def _examineMaxLevel(self, model):
+		maxLevel = model.maxLevel(TEST_USERNAME)
+		self.assertIsInstance(maxLevel, int)
+		self.assertTrue(maxLevel >= 0)
+
+	def _examineSpeed(self, model, iteration):
+		if iteration == 0:
+			with self.assertRaises(IndexError):
+				model.speed(TEST_USERNAME)
+		else:
+			speed = model.speed(TEST_USERNAME)
+			if self._showInfo:
+				print "SPEED PREVIOUS EXERCISE: %s wpm" % speed
+			self.assertIsInstance(speed, int)
+			self.assertTrue(speed >= 0)
+
+	def _examineTargetSpeed(self, model):
+		targetSpeed = model.targetSpeed(TEST_USERNAME)
+		self.assertIsInstance(targetSpeed, int)
+		self.assertTrue(targetSpeed >= 0)
 
 	def testSession(self):
 		"""This test has some lines commented out which can be very
 		   useful while debugging.
 
 		"""
-		argList = [
-			None,
-			("_modeltest", 20, 0),
-			("_modeltest", 10, 3),
-			("_modeltest", 30, 2),
-			None,
-			("_modeltest", 10, 0),
-		]
-		for i in range(50):
-			argList.append(("_modeltest", 10, 0))
-		argList.append(None)
-		argList.append(("_modeltest", 5, 3))
-		argList.append(None)
-		for i in range(10):
-			argList.append(("_modeltest", 5, 0))
+		argList = self._constructArgsForSession()
 
-		for m in self.models:
-			for i, args in enumerate(argList):
+		for model in self.models:
+			for iteration, args in enumerate(argList):
 				if args:
-					m.setResult(*args)
-				#the first iteration, no test results are known yet.
-				if i == 0:
-					with self.assertRaises(IndexError):
-						m.amountOfMistakes("_modeltest")
-				else:
-					self.assertIsInstance(m.amountOfMistakes("_modeltest"), int)
+					model.setResult(*args)
 
-				instruction = m.currentInstruction("_modeltest")
-				if self._showInfo:
-					print "INSTRUCTION:", instruction
-				self.assertIsInstance(instruction, basestring)
-				self.assertTrue(instruction)
-
-				exercise = m.currentExercise("_modeltest")
-				if self._showInfo:
-					print "NEW EXERCISE:", exercise
-				self.assertIsInstance(exercise, basestring)
-				self.assertTrue(exercise)
-
-				self.assertEqual(m.layout("_modeltest"), m.QWERTY_LAYOUT)
-
-				level = m.level("_modeltest")
-				if self._showInfo:
-					print "LEVEL:", level
-				self.assertIsInstance(level, int)
-				self.assertTrue(level >= 0)
-
-				maxLevel = m.maxLevel("_modeltest")
-				self.assertIsInstance(maxLevel, int)
-				self.assertTrue(maxLevel >= 0)
-
-				if i == 0:
-					with self.assertRaises(IndexError):
-						m.speed("_modeltest")
-				else:
-					speed = m.speed("_modeltest")
-					if self._showInfo:
-						print "SPEED PREVIOUS EXERCISE: %s wpm" % speed
-					self.assertIsInstance(speed, int)
-					self.assertTrue(speed >= 0)
-
-				targetSpeed = m.targetSpeed("_modeltest")
-				self.assertIsInstance(targetSpeed, int)
-				self.assertTrue(targetSpeed >= 0)
+				self._examineAmountOfMistakes(model, iteration)
+				self._examineInstruction(model)
+				self._examineExercise(model)
+				self._examineLayout(model)
+				self._examineLevel(model)
+				self._examineMaxLevel(model)
+				self._examineSpeed(model, iteration)
+				self._examineTargetSpeed(model)
 
 				if self._showInfo:
 					print ""

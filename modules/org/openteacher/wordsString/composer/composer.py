@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011, 2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -27,14 +27,15 @@ class WordsStringComposerModule(object):
 		self.priorities = {
 			"default": 10,
 		}
-
-	def enable(self):
 		self.active = True
 
-	def disable(self):
-		self.active = False
-
 	def compose(self, item):
+		"""Builds a user readable representation out of a OpenTeacher-
+		   internal representation of item questions or answers. (Which
+		   is passed in via the ``item`` argument.) See for examples the
+		   unit tests.
+
+		"""
 		if len(item) == 0:
 			return u""
 		elif len(item) == 1:

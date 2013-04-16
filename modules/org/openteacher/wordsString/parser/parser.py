@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -31,6 +31,10 @@ class WordsStringParserModule(object):
 		}
 
 	def parse(self, text):
+		"""Parses a string into a questions or answers list as used
+		   internally by OpenTeacher. See for examples the unit tests.
+
+		"""
 		obligatorySegments = re.split(r"(?<!\\)[0-9]+\.", text)
 		obligatorySegments = filter(lambda x: x.strip() != u"", obligatorySegments)
 		item = []

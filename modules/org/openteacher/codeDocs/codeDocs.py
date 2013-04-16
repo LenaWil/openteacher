@@ -150,7 +150,8 @@ class ModulesHandler(object):
 		})
 	priorities_html.exposed = True
 
-	def fixmes_html(self):
+	def _fixmePaths(self):
+		#get base directory
 		def upOne(p):
 			return os.path.normpath(os.path.join(p, ".."))
 
@@ -158,70 +159,64 @@ class ModulesHandler(object):
 		while not basePath.endswith("modules"):
 			basePath = upOne(basePath)
 
+		#get all paths
+		paths = (
+			os.path.join(root, file)
+			for root, dirs, files in sorted(os.walk(basePath))
+			for file in files
+		)
+		#and filter them
+		return (
+			p for p in paths
+			if not (
+				os.path.splitext(p)[1] in (".png", ".gif", ".bmp", ".ico", ".pyc", ".mo", ".psd", ".gpg", ".pem", ".sqlite3", ".rtf", ".po", ".pot")
+				or p.endswith("~")
+				or "jquery" in p
+				or "admin_files" in p
+				or "codeDocs" in p
+				or "ircBot" in p
+				or "words.txt" in p
+				or "dev_tools.rst" in p
+			)
+		)
+
+	def fixmes_html(self):
 		rePattern = re.compile("fixme|todo", re.IGNORECASE)
 		fixmes = []
-		for root, dirs, files in sorted(os.walk(basePath)):
-			for file in sorted(files):
-				fpath = os.path.join(root, file)
-				if os.path.splitext(fpath)[1] in (".png", ".gif", ".bmp", ".ico", ".pyc", ".mo", ".psd", ".gpg", ".pem", ".sqlite3", ".rtf", ".po", ".pot"):
-					#no fixme's etc. in there...
-					continue
-				if fpath.endswith("~"):
-					#not in here too
-					continue
-				if "jquery" in fpath:
-					#actually a lot of TODO's in there, but we don't care :)
-					continue
-				if "admin_files" in fpath:
-					#some django files. Again, we don't care.
-					continue
-				if "codeDocs" in fpath:
-					#this module mentions the words fixme and todo
-					#while there aren't any. The rule is: no fixme's
-					#here! :P
-					continue
-				if "ircBot" in fpath:
-					#same as codeDocs
-					continue
-				if "words.txt" in fpath:
-					#we don't care
-					continue
-				if "dev_tools.rst" in fpath:
-					#same
-					continue
-				with open(fpath, "r") as f:
-					lines = f.readlines()
+		for fpath in self._fixmePaths():
+			with open(fpath, "r") as f:
+				lines = f.readlines()
 
-				def toUnicode(data):
-					return unicode(data, encoding="UTF-8", errors="replace")
-				lines = map(toUnicode, lines)
-				for i, line in enumerate(lines):
-					match = rePattern.search(line)
-					if not match:
-						continue
-					if i - 2 > 0:
-						startNumber = i - 2
-					else:
-						startNumber = 0
-					try:
-						lines[i + 5]
-					except IndexError:
-						endNumber = len(lines)
-					else:
-						endNumber = i + 5
-					relevantLines = lines[startNumber:endNumber]
-					relevantCode = u"".join(relevantLines)
+			def toUnicode(data):
+				return unicode(data, encoding="UTF-8", errors="replace")
+			lines = map(toUnicode, lines)
+			for i, line in enumerate(lines):
+				match = rePattern.search(line)
+				if not match:
+					continue
+				if i - 2 > 0:
+					startNumber = i - 2
+				else:
+					startNumber = 0
+				try:
+					lines[i + 5]
+				except IndexError:
+					endNumber = len(lines)
+				else:
+					endNumber = i + 5
+				relevantLines = lines[startNumber:endNumber]
+				relevantCode = u"".join(relevantLines)
 
-					try:
-						lexer = pygments.lexers.get_lexer_for_filename(fpath)
-					except pygments.util.ClassNotFound:
-						lexer = pygments.lexers.TextLexer()
-					formatter = pygments.formatters.HtmlFormatter()
-					fixmes.append({
-						"path": self._pathToUrl(unicode(fpath, sys.getfilesystemencoding())),
-						"line_number": i + 1,
-						"relevant_code": pygments.highlight(relevantCode, lexer, formatter),
-					})
+				try:
+					lexer = pygments.lexers.get_lexer_for_filename(fpath)
+				except pygments.util.ClassNotFound:
+					lexer = pygments.lexers.TextLexer()
+				formatter = pygments.formatters.HtmlFormatter()
+				fixmes.append({
+					"path": self._pathToUrl(unicode(fpath, sys.getfilesystemencoding())),
+					"line_number": i + 1,
+					"relevant_code": pygments.highlight(relevantCode, lexer, formatter),
+				})
 
 		t = pyratemp.Template(filename=self._templates["fixmes"])
 		return t(**{
