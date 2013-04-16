@@ -19,7 +19,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-def getWebBrowserWidget():
+def installQtClasses():
+	global WebBrowserWidget
+
 	class WebBrowserWidget(QtGui.QWidget):
 		def __init__(self, resourcePath, startPage, *args, **kwargs):
 			super(WebBrowserWidget, self).__init__(*args, **kwargs)
@@ -181,8 +183,8 @@ class HiddenBrowserModule(object):
 			from PyQt4 import QtCore, QtGui, QtWebKit
 		except ImportError:
 			return
-		global WebBrowserWidget
-		WebBrowserWidget = getWebBrowserWidget()
+		installQtClasses()
+
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
 		try:

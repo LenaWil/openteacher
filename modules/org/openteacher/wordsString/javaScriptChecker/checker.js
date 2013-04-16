@@ -19,11 +19,11 @@
 
 var check = (function () {
 	"use strict";
-	var calculateDifference, arrayValuesEqual;
+	var calculateDifference, arrayValuesEqual,
+		checkSingleCompulsoryAnswerGiven,
+		checkMultipleCompulsoryAnswersGiven;
 
 	calculateDifference = function (a1, a2) {
-		var item;
-
 		return a1.filter(function (item) {
 			return a2.indexOf(item) === -1;
 		});
@@ -45,46 +45,61 @@ var check = (function () {
 		return a1.length === 0;
 	};
 
-	return function (givenAnswer, word) {
-		var result, compulsoryAnswerCount, difference, i, compulsoryAnswer, oldDifference, compulsoryGivenAnswer, j;
+	checkSingleCompulsoryAnswerGiven = function (givenAnswer, word) {
+		var result, difference, compulsoryAnswer, oldDifference, i;
+
+		result = {"result": "right"};
+		difference = givenAnswer[0];
+		for (i = 0; i < word.answers.length; i += 1) {
+			compulsoryAnswer = word.answers[i];
+
+			oldDifference = difference;
+			difference = calculateDifference(difference, compulsoryAnswer);
+			if (arrayValuesEqual(oldDifference, difference)) {
+				result = {"result": "wrong"};
+				break;
+			}
+		}
+		if (result.result === "right" && difference.length !== 0) {
+			result = {"result": "wrong"};
+		}
+		return result;
+	};
+
+	checkMultipleCompulsoryAnswersGiven = function (givenAnswer, word) {
+		var result, compulsoryAnswerCount, compulsoryGivenAnswer, difference, i, j, compulsoryAnswer;
 
 		result = {"result": "wrong"};
 		compulsoryAnswerCount = 0;
 
-		if (givenAnswer.length === 1) {
-			result = {"result": "right"};
-			difference = givenAnswer[0];
-			for (i = 0; i < word.answers.length; i += 1) {
-				compulsoryAnswer = word.answers[i];
+		for (i = 0; i < givenAnswer.length; i += 1) {
+			compulsoryGivenAnswer = givenAnswer[i];
 
-				oldDifference = difference;
-				difference = calculateDifference(difference, compulsoryAnswer);
-				if (arrayValuesEqual(oldDifference, difference)) {
-					result = {"result": "wrong"};
-					break;
+			for (j = 0; j < word.answers.length; j += 1) {
+				compulsoryAnswer = word.answers[j];
+
+				difference = calculateDifference(compulsoryGivenAnswer, compulsoryAnswer);
+				if (difference.length === 0) {
+					compulsoryAnswerCount += 1;
 				}
-			}
-			if (result.result === "right" && difference.length !== 0) {
-				result = {"result": "wrong"};
-			}
-		} else if (givenAnswer.length > 1) {
-			for (i = 0; i < givenAnswer.length; i += 1) {
-				compulsoryGivenAnswer = givenAnswer[i];
-
-				for (j = 0; j < word.answers.length; j += 1) {
-					compulsoryAnswer = word.answers[j];
-
-					difference = calculateDifference(compulsoryGivenAnswer, compulsoryAnswer);
-					if (difference.length === 0) {
-						compulsoryAnswerCount += 1;
-					}
-				}
-			}
-			if (compulsoryAnswerCount === word.answers.length) {
-				result = {"result": "right"};
 			}
 		}
+		if (compulsoryAnswerCount === word.answers.length) {
+			result = {"result": "right"};
+		}
+		return result;
+	};
 
+	return function (givenAnswer, word) {
+		var result;
+
+		if (givenAnswer.length === 1) {
+			result = checkSingleCompulsoryAnswerGiven(givenAnswer, word);
+		} else {
+			result = checkMultipleCompulsoryAnswersGiven(givenAnswer, word);
+		}
+
+		result.itemId = word.id;
 		return result;
 	};
 }());

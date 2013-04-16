@@ -19,6 +19,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import urllib2
+import traceback
 from etree import ElementTree
 
 import xml.dom.minidom
@@ -172,18 +173,22 @@ class WrtsConnection(object):
 		#return the wordList
 		return wordListParser.list
 
-	def _openUrl(self, url, method="GET", body=None, additionalHeaders=None, show404=False):
-		"""Open an url, and return the response as a xml.dom.minidom.Document. Can raise a LoginError/ConnectionError"""
+	def _buildRequest(self, url, method, body, additionalHeaders):
 		#If additionalHeaders not defined, they're set empty
 		if not additionalHeaders:
 			additionalHeaders = {}
-		#Create a request object
-		if method == "HEAD":
-			request = self.HeadRequest(url, headers=additionalHeaders)
-		elif method == "GET":
-			request = urllib2.Request(url, headers=additionalHeaders)
-		elif method == "POST":
-			request = urllib2.Request(url, body, additionalHeaders)
+		#Create a request object, lambda's so it's done lazily
+		return {
+			"HEAD": lambda: self.HeadRequest(url, headers=additionalHeaders),
+			"GET": lambda: urllib2.Request(url, headers=additionalHeaders),
+			"POST": lambda: urllib2.Request(url, body, additionalHeaders)
+		}[method]()
+
+	def _openUrl(self, url, method="GET", body=None, additionalHeaders=None, show404=False):
+		"""Open an url, and return the response as a xml.dom.minidom.Document. Can raise a LoginError/ConnectionError"""
+
+		request = self._buildRequest(url, method, body, additionalHeaders)
+
 		#Send it
 		try:
 			response = self._opener.open(request)
@@ -201,10 +206,7 @@ class WrtsConnection(object):
 				self.loggedIn = False
 
 				#Show for debugging:
-				try:
-					print e.code, e.reason
-				except AttributeError:
-					print e.code
+				traceback.print_exc()
 
 				#But because it doesn't make sense to break the program for a WRTS error, show a nice error:
 				raise ConnectionErrorError()
@@ -212,7 +214,7 @@ class WrtsConnection(object):
 			#Something wrong with the connection
 			self.loggedIn = False
 			#show for debugging
-			print e
+			traceback.print_exc()
 			#Show a nice error to the user.
 			raise ConnectionError()
 

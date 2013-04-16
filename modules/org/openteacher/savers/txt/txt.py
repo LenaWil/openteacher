@@ -101,37 +101,40 @@ class TxtSaverModule(object):
 			type="wordsStringComposer"
 		).compose
 
-	def save(self, type, lesson, path):		
+	def _buildMetadata(self, lesson):
 		text = u""
-
 		if "title" in lesson.list:
 			text += lesson.list["title"] + "\n\n"
 		if "questionLanguage" in lesson.list and "answerLanguage" in lesson.list:
 			text += lesson.list["questionLanguage"] + " - " + lesson.list["answerLanguage"] + "\n\n"
+		return text
 
+	def _maxLength(self, lesson):
 		def getQuestionLength(word):
-			if "questions" in word:
-				return len(self._compose(word["questions"]))
-			else:
-				return 0
+			return len(self._compose(word.get("questions", [])))
 
-		if len(lesson.list["items"]) != 0:
-			lengths = map(getQuestionLength, lesson.list["items"])
-			maxLen = max(lengths) + 1
-			if maxLen < self._maxLenSetting["value"]:
-				maxLen = 8
+		lengths = map(getQuestionLength, lesson.list["items"])
+		maxLen = max(lengths) + 1
+		if maxLen < self._maxLenSetting["value"]:
+			maxLen = 8
+		return maxLen
 
-			for word in lesson.list["items"]:
-				try:
-					questions = self._compose(word["questions"])
-				except KeyError:
-					questions = u""
-				text += u"".join([
-					questions,
-					(maxLen - len(questions)) * " ",
-					self._compose(word["answers"]) if "answers" in word else u"",
-					u"\n"
-				])
+	def _buildListLines(self, lesson):
+		if len(lesson.list["items"]) == 0:
+			return
+		maxLen = self._maxLength(lesson)
+		for word in lesson.list["items"]:
+			questions = self._compose(word.get("questions", []))
+
+			yield u"".join([
+				questions,
+				(maxLen - len(questions)) * " ",
+				self._compose(word.get("answers", [])),
+			])
+
+	def save(self, type, lesson, path):
+		text = self._buildMetadata(lesson)
+		text += "\n".join(self._buildListLines(lesson))
 
 		with open(path, "w") as f:
 			f.write(text.encode("UTF-8"))

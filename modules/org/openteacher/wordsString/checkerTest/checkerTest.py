@@ -36,6 +36,12 @@ class WordsStringCheckerTestCase(unittest.TestCase):
 			"answers": [[u"naar(binnen)", u"in"], [u"tot", u"jegens"]],
 		}
 
+		self.emptyWord = {
+			"id": 0,
+			"questions": [],
+			"answers": [],
+		}
+
 	def testSingleRightAnswer(self):
 		self._test([[u"in"]], self.word1, "wrong")
 
@@ -52,6 +58,9 @@ class WordsStringCheckerTestCase(unittest.TestCase):
 	def testEmptyAnswer(self):
 		self._test([], self.word1, "wrong")
 
+	def testEmptyAnswerWithEmptyWord(self):
+		self._test([], self.emptyWord, "right")
+
 	def testFullAnswer(self):
 		self._test([[u"in", u"op", u"bij"], [u"tijdens"]], self.word1, "right")
 
@@ -66,10 +75,28 @@ class WordsStringCheckerTestCase(unittest.TestCase):
 	def testFullNotationAndDontIncludeAnNonObligatoryWord(self):
 		self._test([[u"in", u"naar(binnen)"], [u"jegens"]], self.word2, "right")
 
+	def testForItemId(self):
+		THE_ID = 342
+		for mod in self._mm.mods("active", type="wordsStringChecker"):
+			try:
+				result = mod.check([("a",)], {
+					"questions": [],
+					"answers": [("a",)],
+					"id": THE_ID,
+				})
+				self.assertEqual(THE_ID, result["itemId"])
+			except Exception:
+				print mod
+				raise
+
 	def _test(self, givenAnswer, word, output):
 		for mod in self._mm.mods("active", type="wordsStringChecker"):
-			result = mod.check(givenAnswer, word)
-			self.assertEqual(result["result"], output)
+			try:
+				result = mod.check(givenAnswer, word)
+				self.assertEqual(result["result"], output)
+			except Exception:
+				print mod
+				raise
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

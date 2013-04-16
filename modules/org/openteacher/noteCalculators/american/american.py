@@ -19,6 +19,8 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+import bisect
+
 class AmericanNoteCalculatorModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(AmericanNoteCalculatorModule, self).__init__(*args, **kwargs)
@@ -39,32 +41,8 @@ class AmericanNoteCalculatorModule(object):
 		}
 
 	def _convert(self, percents):
-		if percents >= 97:
-			return "A+"
-		elif percents >= 93:
-			return "A"
-		elif percents >= 90:
-			return "A-"
-		elif percents >= 87:
-			return "B+"
-		elif percents >= 83:
-			return "B"
-		elif percents >= 80:
-			return "B-"
-		elif percents >= 77:
-			return "C+"
-		elif percents >= 73:
-			return "C"
-		elif percents >= 70:
-			return "C-"
-		elif percents >= 67:
-			return "D+"
-		elif percents >= 63:
-			return "D"
-		elif percents >= 60:
-			return "D-"
-		else:
-			return "F"
+		i = bisect.bisect([60, 63, 67, 70, 73, 77, 80, 83, 87, 90, 93, 97], percents)
+		return ["F", "D-", "D", "D+", "C-", "C", "C+", "B-", "B", "B+", "A-", "A", "A+"][i]
 
 	def calculateNote(self, test):
 		return self._convert(self._calculatePercents(test))

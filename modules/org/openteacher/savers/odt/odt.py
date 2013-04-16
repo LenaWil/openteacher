@@ -39,9 +39,9 @@ class OdtSaverModule(object):
 		self.filesWithTranslations = ("odt.py",)
 
 	def enable(self):
-		global QtCore, QtGui
+		global QtGui
 		try:
-			from PyQt4 import QtCore, QtGui
+			from PyQt4 import QtGui
 		except ImportError:
 			return
 		self._modules = set(self._mm.mods(type="modules")).pop()

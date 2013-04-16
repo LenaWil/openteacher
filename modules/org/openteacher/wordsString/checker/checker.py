@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #	Copyright 2011, Cas Widdershoven
 #
 #	This file is part of OpenTeacher.
@@ -29,35 +29,39 @@ class WordsStringCheckerModule(object):
 			"default": 10,
 		}
 
-	def check(self, givenAnswer, word):
+	def _checkSingleCompulsoryAnswerGiven(self, givenAnswer, word):
+		result = {"result": "right"}
+		difference = set(givenAnswer[0])
+		for compulsoryAnswer in word["answers"]:
+			oldDifference = difference.copy()
+			difference -= set(compulsoryAnswer)
+			if oldDifference == difference:
+				result = {"result": "wrong"}
+				break
+		if result["result"] == "right" and len(difference) != 0:
+			result = {"result": "wrong"}
+		return result
+
+	def _checkMultipleCompulsoryAnswersGiven(self, givenAnswer, word):
 		result = {"result": "wrong"}
 		compulsoryAnswerCount = 0
-
-		if len(givenAnswer) == 1:
-			result = {"result": "right"}
-			difference = set(givenAnswer[0])
+		for compulsoryGivenAnswer in givenAnswer:
 			for compulsoryAnswer in word["answers"]:
-				oldDifference = difference.copy()
-				difference -= set(compulsoryAnswer)
-				if oldDifference == difference:
-					result = {"result": "wrong"}
-					break
-			if result["result"] == "right" and len(difference) != 0:
-				result = {"result": "wrong"}
+				difference = set(compulsoryGivenAnswer) - set(compulsoryAnswer)
+				if len(difference) == 0:
+					compulsoryAnswerCount += 1
 
-		elif len(givenAnswer) > 1:
-			for compulsoryGivenAnswer in givenAnswer:
-				for compulsoryAnswer in word["answers"]:
-					difference = set(compulsoryGivenAnswer) - set(compulsoryAnswer)
-					if len(difference) == 0:
-						compulsoryAnswerCount += 1
+		if compulsoryAnswerCount == len(word["answers"]):
+			result = {"result": "right"}
+		return result
 
-			if compulsoryAnswerCount == len(word["answers"]):
-				result = {"result": "right"}
+	def check(self, givenAnswer, word):
+		if len(givenAnswer) == 1:
+			result = self._checkSingleCompulsoryAnswerGiven(givenAnswer, word)
+		else:
+			result = self._checkMultipleCompulsoryAnswersGiven(givenAnswer, word)
 
-		result.update({
-			"itemId": word["id"],
-		})
+		result["itemId"] = word["id"]
 
 		return result
 
