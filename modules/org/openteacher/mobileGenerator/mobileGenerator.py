@@ -109,7 +109,7 @@ class MobileGeneratorModule(object):
 		painter.end()
 		return image
 
-	def _run(self):
+	def _getSavePathAndMinify(self):
 		#get path to save to
 		try:
 			path = sys.argv[1]
@@ -123,7 +123,9 @@ class MobileGeneratorModule(object):
 			if confirm != "y":
 				return
 			shutil.rmtree(path)
+		return path, minify
 
+	def _copyCss(self, path, minify):
 		#copy css
 		shutil.copytree(self._mm.resourcePath("css"), os.path.join(path, "css"))
 		if minify:
@@ -141,6 +143,7 @@ class MobileGeneratorModule(object):
 					with open(csspath, "w") as f:
 						f.write(minifiedData)
 
+	def _generateTranslationFiles(self, path):
 		#generate translation json files from po files
 		translationIndex = {}
 
@@ -169,6 +172,7 @@ class MobileGeneratorModule(object):
 			data = json.dumps(translationIndex, separators=(",", ":"), encoding="UTF-8")
 			f.write("var translationIndex=%s;" % data)
 
+	def _buildLogicCode(self):
 		#generate logic javascript
 		logic = u""
 		for type in self._logicModTypes:
@@ -178,7 +182,10 @@ class MobileGeneratorModule(object):
 			logic += "\n\n\n\t" + "\n".join(map(lambda s: "\t" + s, mod.code.split("\n"))).strip()
 		logic = logic.strip()
 		template = pyratemp.Template(filename=self._mm.resourcePath("logic.js.templ"))
-		logicCode = template(code=logic)
+		return template(code=logic)
+
+	def _writeScripts(self, path, minify):
+		logicCode = self._buildLogicCode()
 
 		#copy scripts
 		scripts = [
@@ -224,13 +231,15 @@ class MobileGeneratorModule(object):
 			with open(os.path.join(path, "scr", "logic.js"), "w") as f:
 				f.write(logicCode)
 			scripts.insert(0, "logic.js")
+		return scripts
 
+	def _writeHtml(self, path, scriptNames):
 		#generate html
 		headerTemplate = pyratemp.Template(filename=self._mm.resourcePath("header.html.templ"))
 
 		template = pyratemp.Template(filename=self._mm.resourcePath("index.html.templ"))
 		result = template(**{
-			"scripts": scripts,
+			"scripts": scriptNames,
 			"enterTabHeader": headerTemplate(titleHeader="<h1 id='enter-list-header'></h1>", tab="enter"),
 			"teachTabHeader": headerTemplate(titleHeader="<h1 id='teach-me-header'></h1>", tab="teach"),
 		})
@@ -238,31 +247,50 @@ class MobileGeneratorModule(object):
 		with open(os.path.join(path, "index.html"), "w") as f:
 			f.write(result)
 
+	def _copyPhonegapConfig(self, path):
 		#copy config.xml (phonegap config)
 		shutil.copy(
 			self._mm.resourcePath("config.xml"),
 			os.path.join(path, "config.xml")
 		)
 
+	def _copyCopying(self, path):
 		#copy COPYING
 		shutil.copy(
 			self._mm.resourcePath("COPYING.txt"),
 			os.path.join(path, "COPYING.txt")
 		)
 
-		#graphics
-		iconPath = self._modules.default("active", type="metadata").metadata["iconPath"]
-
+	def _copyIcon(self, iconPath, path):
 		#copy icon.png
 		shutil.copy(
 			iconPath,
 			os.path.join(path, "icon.png")
 		)
 
+	def _writeSplash(self, iconPath, path):
 		#splash screen
 		self._buildSplash(320, 480, iconPath).save(
 			os.path.join(path, "splash.png")
 		)
+
+	def _run(self):
+		path, minify = self._getSavePathAndMinify()
+		if not path:
+			return
+
+		self._copyCss(path, minify)
+		self._generateTranslationFiles(path)
+		scriptNames = self._writeScripts(path, minify)
+		self._writeHtml(path, scriptNames)
+
+		self._copyPhonegapConfig(path)
+		self._copyCopying(path)
+
+		#graphics
+		iconPath = self._modules.default("active", type="metadata").metadata["iconPath"]
+		self._copyIcon(iconPath, path)
+		self._writeSplash(iconPath, path)
 
 		print "Writing OpenTeacher mobile to '%s' is now done." % path
 

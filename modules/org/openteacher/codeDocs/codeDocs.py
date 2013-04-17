@@ -232,7 +232,6 @@ class ModulesHandler(object):
 		return isinstance(obj, types.MethodType)
 
 	def _modsForRequirement(self, selectors):
-		requirements = []
 		for selector in selectors:
 			selectorResults = set()
 			requiredMods = set(selector)
@@ -241,8 +240,7 @@ class ModulesHandler(object):
 					self._pathToUrl(os.path.dirname(requiredMod.__class__.__file__)),
 					requiredMod.__class__.__name__
 				))
-		requirements.append(selectorResults)
-		return requirements
+			yield selectorResults
 
 	def _renderRstPage(self, rstPath):
 		with open(rstPath) as f:
@@ -284,72 +282,30 @@ class ModulesHandler(object):
 
 	dev_docs.exposed = True
 
-	def modules(self, *args):
-		args = list(args)
-		args[-1] = args[-1][:-len(".html")]
+	def _propertyDocs(self, property):
+		#first try if the class attribute has a doc string. This
+		#catches e.g. @property-decorated function docstrings.
 		try:
-			mod = self._mods["modules/" + "/".join(args)]
-		except KeyError:
-			raise cherrypy.HTTPError(404)
-
-		attrs = dir(mod)
-		methods = filter(lambda x: self._isFunction(mod, x), attrs)
-		properties = set(attrs) - set(methods)
-
-		checkPublic = lambda x: not x.startswith("_")
-		methods = filter(checkPublic, methods)
-		properties = filter(checkPublic, properties)
-
-		#remove special properties
-		properties = set(properties) - set(["type", "uses", "requires", "priorities", "filesWithTranslations"])
-
-		propertyDocs = {}
-		for property in properties:
-			#first try if the class attribute has a doc string. This
-			#catches e.g. @property-decorated function docstrings.
-			try:
-				propertyDocs[property] = self._format(getattr(mod.__class__, property).__doc__)
-			except:
-				#all errors aren't important enough to fail for
-				pass
-			else:
-				#success!
-				continue
-			#then try to get the docstring of the object itself.
-			try:
-				propertyObj = getattr(mod, property)
-			except:
-				#errors aren't important enough to fail for.
-				continue
-			if propertyObj.__class__ != type and propertyObj.__class__ in BUILTIN_TYPES:
-				#docstring is uninteresting
-				continue
-			try:
-				propertyDocs[property] = self._format(propertyObj.__doc__)
-			except AttributeError:
-				#no docstring.
-				continue
-
-		#uses
+			return self._format(getattr(mod.__class__, property).__doc__)
+		except:
+			#all errors aren't important enough to fail for
+			pass
+		#then try to get the docstring of the object itself.
 		try:
-			uses = self._modsForRequirement(mod.uses)
+			propertyObj = getattr(mod, property)
+		except:
+			#errors aren't important enough to fail for.
+			return
+		if propertyObj.__class__ != type and propertyObj.__class__ in BUILTIN_TYPES:
+			#docstring is uninteresting
+			return
+		try:
+			propertyDocs[property] = self._format(propertyObj.__doc__)
 		except AttributeError:
-			uses = set()
+			#no docstring.
+			return
 
-		#requires
-		try:
-			requires = self._modsForRequirement(mod.requires)
-		except AttributeError:
-			requires = set()
-
-		methodDocs = {}
-		methodArgs = {}
-		for method in methods:
-			methodObj = getattr(mod, method)
-			methodDocs[method] = self._format(methodObj.__doc__)
-			methodArgs[method] = self._constructSignature(inspect.getargspec(methodObj))
-
-		fileData = []
+	def _fileDataForMod(self, mod):
 		for root, dirs, files in os.walk(os.path.dirname(mod.__class__.__file__)):
 			for f in sorted(files):
 				ext = os.path.splitext(f)[1]
@@ -367,7 +323,47 @@ class ModulesHandler(object):
 					path,
 					os.path.dirname(mod.__class__.__file__)
 				]))
-				fileData.append((path[commonLength:], source))
+				yield path[commonLength:], source
+
+	def modules(self, *args):
+		args = list(args)
+		args[-1] = args[-1][:-len(".html")]
+		try:
+			mod = self._mods["modules/" + "/".join(args)]
+		except KeyError:
+			raise cherrypy.HTTPError(404)
+
+		attrs = set(dir(mod))
+		methods = set(func for func in attrs if self._isFunction(mod, func))
+		properties = attrs - methods
+
+		isPublic = lambda x: not x.startswith("_")
+		methods = set(m for m in methods if isPublic(m))
+
+		methodDocs = {}
+		methodArgs = {}
+		for method in methods:
+			methodObj = getattr(mod, method)
+			methodDocs[method] = self._format(methodObj.__doc__)
+			methodArgs[method] = self._constructSignature(inspect.getargspec(methodObj))
+
+		properties = set(p for p in properties if isPublic(p))
+
+		#remove special properties
+		properties -= set(["type", "uses", "requires", "priorities", "filesWithTranslations"])
+		propertyDocs = dict(
+			(p, self._propertyDocs(p))
+			for p in properties
+			if self._propertyDocs(p) is not None
+		)
+
+		#uses
+		uses = self._modsForRequirement(getattr(mod, "uses", []))
+
+		#requires
+		requires = self._modsForRequirement(getattr(mod, "requires", []))
+
+		fileData = self._fileDataForMod(mod)
 
 		t = pyratemp.Template(filename=self._templates["module"])
 		return t(**{

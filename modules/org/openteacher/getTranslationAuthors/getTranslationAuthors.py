@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -41,7 +41,25 @@ class GetTranslationAuthorsModule(object):
 
 		self.active = True
 
+	def _translationFileLinks(self, lp):
+		series = lp.projects["openteacher"].getSeries(name="3.x")
+		for template in series.getTranslationTemplates():
+			if not template.active:
+				continue
+			for translationFile in template.translation_files:
+				yield translationFile.web_link + "/+details"
+			print "processing template"
+
+	def _personsForFile(self, link):
+		print "downloading %s:" % link
+		data = unicode(urllib2.urlopen(link).read(), encoding="UTF-8")
+		doc = lxml.html.document_fromstring(data)
+		language = doc.cssselect("span.sprite.language")[0].text_content()
+		for person in doc.cssselect(".portlet ul li a.sprite.person"):
+			yield person.get("href"), (language, person.text_content())
+
 	def _run(self):
+		global lxml
 		try:
 			from launchpadlib.launchpad import Launchpad
 			import lxml.html
@@ -52,26 +70,14 @@ class GetTranslationAuthorsModule(object):
 		if a != "y":
 			return
 
-		links = []
-
 		lp = Launchpad.login_anonymously("Get OpenTeacher translators", "production", "~/.launchpadlib/cache/")
-		series = lp.projects["openteacher"].getSeries(name="3.x")
-		for template in series.getTranslationTemplates():
-			if not template.active:
-				continue
-			for translationFile in template.translation_files:
-				links.append(translationFile.web_link + "/+details")
-			print "processing template"
+		links = self._translationFileLinks(lp)
 
-		persons = {}
-
-		for link in links:
-			print "downloading %s:" % link
-			data = unicode(urllib2.urlopen(link).read(), encoding="UTF-8")
-			doc = lxml.html.document_fromstring(data)
-			language = doc.cssselect("span.sprite.language")[0].text_content()
-			for person in doc.cssselect(".portlet ul li a.sprite.person"):
-				persons[person.get("href")] = language, person.text_content()
+		persons = dict(
+			(href, info)
+			for link in links
+			for href, info in self._personsForFile(link)
+		)
 
 		print "\nResults:\n"
 

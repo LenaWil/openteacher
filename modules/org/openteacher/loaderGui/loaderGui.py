@@ -25,7 +25,11 @@ class LoaderGuiModule(object):
 
 		self.type = "loaderGui"
 		self.requires = (
+			self._mm.mods(type="ui"),
 			self._mm.mods(type="loader"),
+		)
+		self.uses = (
+			self._mm.mods(type="translator"),
 		)
 		self.filesWithTranslations = ("loaderGui.py",)
 
@@ -36,13 +40,34 @@ class LoaderGuiModule(object):
 		except ImportError:
 			return
 		self._modules = next(iter(self._mm.mods(type="modules")))
+		self._uiModule = self._modules.default("active", type="ui")
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
 
 		self.active = True
+
+	def _retranslate(self):
+		global _, ngettext
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			_, ngettext = unicode, lambda a, b, n: a if n == 1 else b
+		else:
+			_, ngettext = translator.gettextFunctions(
+				self._mm.resourcePath("translations")
+			)
 
 	def disable(self):
 		self.active = False
 
 		del self._modules
+		del self._uiModule
 
 	def loadFromLesson(self, type, lessonData):
 		try:
