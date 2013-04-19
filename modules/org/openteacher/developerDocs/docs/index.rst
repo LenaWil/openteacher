@@ -23,6 +23,7 @@ Pages
 
 - `Getting started <getting_started.rst>`_
 - `Development tools <dev_tools.rst>`_
+- `Dependencies <dependencies.rst>`_
 - `Data format <data_format.rst>`_
 - `File templates <file_templates.rst>`_
 - `User agent <user_agent.rst>`_
