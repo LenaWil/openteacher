@@ -22,6 +22,14 @@ Dependencies for using OpenTeacher
 * espeak
 * tesseract-ocr | cuneiform
 
+also (test server):
+* python-django
+* django-rest-framework
+
+and if we ever implement updates:
+* gpg
+* python-gnupg?
+
 Dependencies for developing OpenTeacher
 =======================================
 
@@ -33,6 +41,7 @@ Dependencies for developing OpenTeacher
 * python-polib
 * python-pygraphviz
 * python-twisted
+* python-faulthandler
 * gettext
 * cython
 
@@ -54,11 +63,13 @@ Incompatible dependencies: PyPy
 * python-qt4-phonon
 * python-qt4-gl
 * python-pygraphviz
+* python-faulthandler (although similar tools might exist)
 
-unsure (but both probably work as they probably don't use C extensions):
+unsure (but they probably work as they probably don't use C extensions):
 
 * python-launchpadlib
 * python-polib
+* python-gnupg
 
 Incompatible dependencies: CPython 3.x
 --------------------------------------

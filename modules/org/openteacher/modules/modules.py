@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -98,71 +98,80 @@ class ModulesModule(object):
 		#build dependency tree by topological sorting
 		#http://en.wikipedia.org/wiki/Topological_sort ; second algorithm
 
-		filterCache = {}
-		def depFor(type, mod):
-			attribute = getattr(mod, type)
-			try:
-				return filterCache[attribute]
-			except KeyError:
-				filterCache[attribute] = frozenset(
-					(frozenset(dep) for dep in attribute
-				))
-				return filterCache[attribute]
+		self._filterCache = {}
+		self._sorted_tree = []
+		self._visited_mods = set()
+		self._allMods = set(self._mm.mods)
 
-		sorted_tree = []
-		visited_mods = set()
-
-		def visit(mod):
-			if mod not in visited_mods:
-				visited_mods.add(mod)
-				for dep_mod in self._mm.mods:
-					if hasattr(dep_mod, "requires"):
-						for requirement in depFor("requires", dep_mod):
-							if mod in requirement:
-								visit(dep_mod)
-					if hasattr(dep_mod, "uses"):
-						for used in depFor("uses", dep_mod):
-							if mod in used:
-								visit(dep_mod)
-				sorted_tree.append(mod)
-
-		mods_without_dependencies = set()
-		for mod in self._mm.mods:
-			if not (hasattr(mod, "requires") and mod.requires and hasattr(mod, "uses") and mod.uses):
-				mods_without_dependencies.add(mod)
+		mods_without_dependencies = set(
+			mod
+			for mod in self._allMods
+			if not (
+				getattr(mod, "requires", None) and
+				getattr(mod, "uses", None)
+			)
+		)
 
 		for mod in mods_without_dependencies:
-			visit(mod)
+			self._visit(mod)
 
+		self._enableModules()
+		self._disableModules()
+
+		del self._filterCache
+		del self._sorted_tree
+		del self._visited_mods
+		del self._allMods
+
+	def _visit(self, mod):
+		if mod not in self._visited_mods:
+			self._visited_mods.add(mod)
+			for dep_mod in self._allMods:
+				for requirement in self._depFor("requires", dep_mod):
+					if mod in requirement:
+						self._visit(dep_mod)
+				for used in self._depFor("uses", dep_mod):
+					if mod in used:
+						self._visit(dep_mod)
+			self._sorted_tree.append(mod)
+
+	def _depFor(self, type, mod):
+		attribute = getattr(mod, type, ())
+		try:
+			dep = self._filterCache[attribute]
+		except KeyError:
+			dep = self._filterCache[attribute] = set(
+				frozenset(dep) for dep in attribute
+			)
+		return dep
+
+	def _enableModules(self):
 		#enable modules
-		for mod in reversed(sorted_tree):
+		for mod in reversed(self._sorted_tree):
 			active = getattr(mod, "active", False) #False -> default
-			if self._hasPositivePriority(mod) and not active:
+			if not active and self._hasPositivePriority(mod):
 				depsactive = True
-				if hasattr(mod, "requires"):
-					for dep in mod.requires:
-						depsactive = len(filter(
-							lambda x: getattr(x, "active", False),
-							dep
-						)) != 0
-						if not depsactive:
-							break
+				for dep in getattr(mod, "requires", []):
+					depsactive = len([
+						x for x in dep if getattr(x, "active", False)
+					]) != 0
+					if not depsactive:
+						break
 				if hasattr(mod, "enable") and depsactive:
 					mod.enable()
 
+	def _disableModules(self):
 		#disable modules
-		for mod in sorted_tree:
+		for mod in self._sorted_tree:
 			active = getattr(mod, "active", False) #False -> default
-			if not self._hasPositivePriority(mod) and active:
+			if active and not self._hasPositivePriority(mod):
 				depsactive = True
-				if hasattr(mod, "requires"):
-					for dep in mod.requires:
-						depsactive = len(filter(
-							lambda x: getattr(x, "active", False),
-							dep
-						)) != 0
-						if not depsactive:
-							break
+				for dep in getattr(mod, "requires", []):
+					depsactive = len([
+						x for x in dep if getattr(x, "active", False)
+					]) != 0
+					if not depsactive:
+						break
 				if hasattr(mod, "disable") and depsactive:
 					mod.disable()
 

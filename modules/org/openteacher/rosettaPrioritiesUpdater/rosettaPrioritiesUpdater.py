@@ -51,6 +51,27 @@ class RosettaPrioritiesUpdaterModule(object):
 
 		return mapping[template]
 
+	def _adjustedPriority(self, mod, priority):
+		if mod in self._mm.mods(type="friendlyTranslationNames"):
+			#this just needs to be on the top of the list.
+			priority = 10000
+
+		priorityCorrectionsForKeyword = {
+			"lesson": 50,
+			"enterer": 40,
+			"teacher": 30,
+			"profiledescription": -40,
+			"loader": -30,
+			"saver": -30,
+			"notecalculator": -70,
+			"uicontroller": 50,
+			"mobilegenerator": 15,
+		}
+		for keyword, priorityCorrection in priorityCorrectionsForKeyword.iteritems():
+			if keyword in mod.__class__.__file__.lower():
+				priority += priorityCorrection
+		return priority
+
 	def _run(self):
 		answer = raw_input("This updates the priorities of the translations of OpenTeacher on Launchpad. If you're not in the ~openteachermaintainers team, continuing will probably crash or do nothing. Continue? (y/n) ")
 		if answer.lower() not in ("y", "yes", "yep"):
@@ -69,28 +90,7 @@ class RosettaPrioritiesUpdaterModule(object):
 				continue
 
 			priority = self._modPriority(mod)
-			if mod in self._mm.mods(type="friendlyTranslationNames"):
-				#this just needs to be on the top of the list.
-				priority = 10000
-			#some adjustments
-			if "lesson" in mod.__class__.__file__.lower():
-				priority += 50
-			if "enterer" in mod.__class__.__file__.lower():
-				priority += 40
-			if "teacher" in mod.__class__.__file__.lower():
-				priority += 30
-			if "profiledescription" in mod.__class__.__file__.lower():
-				priority -= 40
-			if "loader" in mod.__class__.__file__.lower():
-				priority -= 30
-			if "saver" in mod.__class__.__file__.lower():
-				priority -= 30
-			if "notecalculator" in mod.__class__.__file__.lower():
-				priority -= 70
-			if "uicontroller" in mod.__class__.__file__.lower():
-				priority += 50
-			if "mobilegenerator" in mod.__class__.__file__.lower():
-				priority += 15
+			priority = self._adjustedPriority(mod, priority)
 
 			priorities.add((priority, template))
 

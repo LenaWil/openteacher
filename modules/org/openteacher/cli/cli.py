@@ -344,6 +344,18 @@ class CommandLineInterfaceModule(object):
 		"""
 		if argList is None:
 			argList = sys.argv
+
+		#import urwid only here. That's because it's a relatively heavy
+		#dependency that's only required in a few special cases
+		global urwid, EnterEdit, Event
+		try:
+			import urwid
+		except ImportError:
+			urwid = None
+		else:
+			Event = self._modules.default("active", type="event").createEvent
+			EnterEdit = getEnterEdit(Event)
+
 		#setup parser: using + instead of - to distinguish from the
 		#execute module's argparse. (the one providing the -p arg).
 		parser = argparse.ArgumentParser(**{
@@ -425,12 +437,6 @@ class CommandLineInterfaceModule(object):
 		args.func(vars(args))
 
 	def enable(self):
-		global urwid
-		global EnterEdit
-		try:
-			import urwid
-		except ImportError:
-			urwid = None
 		self._modules = next(iter(self._mm.mods(type="modules")))
 		if self._modules.profile == "cli":
 			self._modules.default("active", type="execute").startRunning.handle(self.run)
@@ -439,10 +445,6 @@ class CommandLineInterfaceModule(object):
 		self._composeWordList = self._modules.default("active", type="wordListStringComposer").composeList
 		self._parseWordList = self._modules.default("active", type="wordListStringParser").parseList
 		self._compose = self._modules.default("active", type="wordsStringComposer").compose
-
-		if urwid:
-			Event = self._modules.default("active", type="event").createEvent
-			EnterEdit = getEnterEdit(Event)
 
 		self.active = True
 
