@@ -70,3 +70,24 @@ class ModuleFilterer(object):
 				result.add(module)
 		return iter(result)
 
+	#the elegant implementation. Maybe generator expressions will once
+	#be optimized enough to use it. (In CPython or Cython)
+	#
+	#~ def __iter__(self):
+		#~ return (
+			#~ module
+			#~ for module in self._modules
+			#~ if (
+				#~ #matches where
+				#~ all(
+					#~ getattr(module, attribute, not value) == value
+					#~ for attribute, value in self._where.iteritems()
+				#~ )
+				#~ and
+				#~ #matches where true
+				#~ all(
+					#~ getattr(module, attribute, False)
+					#~ for attribute in self._whereTrue
+				#~ )
+			#~ )
+		#~ )

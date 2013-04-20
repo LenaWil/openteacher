@@ -134,12 +134,8 @@ def installQtClasses():
 		def _getNames(self, list):
 			"""Gets list of names from the knownPlaces dict list"""
 
-			feedback = []
-			for item in list:
-				for name in item["names"]:
-					feedback.append(name)
-			return feedback
-		
+			return [name for item in list for name in item["names"]]
+
 		def updateKnownPlaces(self, knownPlaces):
 			"""Updates the list of names"""
 

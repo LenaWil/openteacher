@@ -295,10 +295,10 @@ class CommandLineInterfaceModule(object):
 
 	@property
 	def _lessonTypes(self):
-		lts = []
-		for mod in self._modules.sort("active", type="lessonType"):
-			lts.append(mod.name.encode(sys.stdin.encoding or "UTF-8"))
-		return lts
+		return [
+			mod.name.encode(sys.stdin.encoding or "UTF-8")
+			for mod in self._modules.sort("active", type="lessonType")
+		]
 
 	def _authors(self, args):
 		authors = self._modules.default("active", type="authors").registeredAuthors

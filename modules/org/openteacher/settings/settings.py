@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -147,12 +147,12 @@ class SettingsModule(object):
 		   interface like that.
 
 		"""
-		result = []
 		#only settings registered this session
-		for value in self._settings.values():
-			if getattr(value, "addedNow", False):
-				result.append(value)
-		return result
+		return [
+			setting
+			for setting in self._settings.values()
+			if getattr(setting, "addedNow", False)
+		]
 
 	def _executeCallback(self, callback):
 		obj = self._modules.default(*callback["args"], **callback["kwargs"])

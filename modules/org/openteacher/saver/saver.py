@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -48,35 +48,32 @@ class SaverModule(object):
 
 	@property
 	def usableExtensions(self):
-		extensions = []
-
 		dataType = self._lessonTracker.currentLesson.dataType
 
 		#Collect exts the loader modules support, if there is a gui
 		#module for the data type(s) they can provide
-		for module in self._modules.sort("active", type="save"):
-			if module.saves.get(dataType) is not None:
-				for ext in module.saves[dataType]:
-					extensions.append((ext, module.name))
-
-		return extensions
+		return [
+			(ext, module.name)
+			for module in self._modules.sort("active", type="save")
+			for ext in module.saves.get(dataType, [])
+		]
 
 	@property
 	def saveSupport(self):
-		return self._lessonTracker.currentLesson is not None and len(self.usableExtensions) != 0
+		return self._lessonTracker.currentLesson is not None and self.usableExtensions
 
 	def save(self, path):
 		path = path.encode(sys.getfilesystemencoding())
-		savers = []
 
 		dataType = self._lessonTracker.currentLesson.dataType
-		for module in self._modules.sort("active", type="save"):
-			if dataType in module.saves:
-				for ext in module.saves[dataType]:
-					if path.endswith(ext):
-						savers.append(Saver(module, dataType, self._lessonTracker.currentLesson, path))
+		savers = [
+			Saver(module, dataType, self._lessonTracker.currentLesson, path)
+			for module in self._modules.sort("active", type="save")
+			for ext in module.saves.get(dataType, [])
+			if path.endswith(ext)
+		]
 
-		if len(savers) == 0:
+		if not savers:
 			raise NotImplementedError()
 
 		saver = savers[0]

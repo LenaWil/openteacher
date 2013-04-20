@@ -94,13 +94,14 @@ class AbbyyLoaderModule(object):
 		#on.
 		counter = itertools.count()
 
-		for wordTree in root.findall("card"):
-			word = {
+		wordList["items"] = [
+			{
 				"id": next(counter),
 				"questions": wsp.parse(wordTree.findtext("word") or u""),
 				"answers": [[a.text or u"" for a in wordTree.findall("meanings/meaning/translations/word")]],
 			}
-			wordList["items"].append(word)
+			for wordTree in root.findall("card")
+		]
 
 		return {
 			"resources": {},

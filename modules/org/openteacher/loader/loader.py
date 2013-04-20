@@ -129,11 +129,12 @@ class LoaderModule(object):
 		   lesson.
 
 		"""
-		loaders = []
-		for loader in self._modules.sort("active", type="lesson"):
-			if loader.dataType == dataType:
-				loaders.append(loader)
-		if len(loaders) == 0:
+		loaders = [
+			loader
+			for loader in self._modules.sort("active", type="lesson")
+			if loader.dataType == dataType
+		]
+		if not loaders:
 			raise NotImplementedError()
 		loader = loaders[0]
 		lesson = loader.createLesson()

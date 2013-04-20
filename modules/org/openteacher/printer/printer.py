@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -44,14 +44,14 @@ class PrinterModule(object):
 		)
 
 	def print_(self, printer):
-		printers = []
-
 		dataType = self._lessonTracker.currentLesson.dataType
-		for module in self._modules.sort("active", type="print"):
-			if dataType in module.prints:
-				printers.append(Printer(module, dataType, self._lessonTracker.currentLesson, printer))
+		printers = [
+			Printer(module, dataType, self._lessonTracker.currentLesson, printer)
+			for module in self._modules.sort("active", type="print")
+			if dataType in module.prints
+		]
 
-		if len(printers) == 0:
+		if not printers:
 			raise NotImplementedError()
 
 		printerWrapper = printers[0]
@@ -66,10 +66,10 @@ class PrinterModule(object):
 			dataType = self._lessonTracker.currentLesson.dataType
 		except AttributeError:
 			return False
-		for module in self._mm.mods("active", type="print"):
-			if dataType in module.prints:
-				return True
-		return False
+		return any(
+			dataType in module.prints
+			for module in self._mm.mods("active", type="print")
+		)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

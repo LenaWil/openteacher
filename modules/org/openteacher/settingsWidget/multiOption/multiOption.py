@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -70,11 +70,11 @@ def installQtClasses():
 
 		@property
 		def value(self):
-			list = []
-			for option in self.options:
-				if option in self.active:
-					list.append(option[1])
-			return list
+			return [
+				option[1]
+				for option in self.options
+				if option in self.active
+			]
 
 	class SettingsWidget(QtGui.QListView):
 		def __init__(self, setting, *args, **kwargs):

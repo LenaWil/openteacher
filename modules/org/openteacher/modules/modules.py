@@ -59,7 +59,7 @@ class ModulesModule(object):
 		   based on their priority in the current profile.
 
 		"""
-		mods = set(self._mm.mods(*args, **kwargs))
+		mods = self._mm.mods(*args, **kwargs)
 		return sorted(mods, key=self._getPriority)
 
 	def default(self, *args, **kwargs):
@@ -150,29 +150,25 @@ class ModulesModule(object):
 		for mod in reversed(self._sorted_tree):
 			active = getattr(mod, "active", False) #False -> default
 			if not active and self._hasPositivePriority(mod):
-				depsactive = True
-				for dep in getattr(mod, "requires", []):
-					depsactive = len([
-						x for x in dep if getattr(x, "active", False)
-					]) != 0
-					if not depsactive:
-						break
+				depsactive = self._dependenciesActive(mod)
 				if hasattr(mod, "enable") and depsactive:
 					mod.enable()
+
+	def _dependenciesActive(self, mod):
+		return all(
+			any(
+				getattr(depMod, "active", False)
+				for depMod in selector
+			)
+			for selector in getattr(mod, "requires", [])
+		)
 
 	def _disableModules(self):
 		#disable modules
 		for mod in self._sorted_tree:
 			active = getattr(mod, "active", False) #False -> default
 			if active and not self._hasPositivePriority(mod):
-				depsactive = True
-				for dep in getattr(mod, "requires", []):
-					depsactive = len([
-						x for x in dep if getattr(x, "active", False)
-					]) != 0
-					if not depsactive:
-						break
-				if hasattr(mod, "disable") and depsactive:
+				if hasattr(mod, "disable"):
 					mod.disable()
 
 def init(moduleManager):

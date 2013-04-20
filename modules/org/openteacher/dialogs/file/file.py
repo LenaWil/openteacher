@@ -39,9 +39,7 @@ class FileDialogsModule(object):
 	def getSavePath(self, startdir, exts, default):
 		stringExts = []
 
-		filters = []
-		for ext, name in exts:
-			filters.append(name + " (*." + ext + ")")
+		filters = [name + " (*." + ext + ")" for ext, name in exts]
 
 		fileDialog = QtGui.QFileDialog()
 		fileDialog.setAcceptMode(QtGui.QFileDialog.AcceptSave)
@@ -68,9 +66,7 @@ class FileDialogsModule(object):
 			return
 
 	def getLoadPath(self, startdir, exts):
-		stringExts = []
-		for ext, name in exts:
-			stringExts.append("*." + ext)
+		stringExts = ("*." + ext for ext, name in exts)
 		filter = u"Lessons (%s)" % u" ".join(stringExts)
 
 		fileDialog = QtGui.QFileDialog()

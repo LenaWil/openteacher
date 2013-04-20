@@ -65,14 +65,15 @@ class FlashcardexchangeApi(object):
 		list["questionLanguage"] = pycountry.languages.get(alpha2=data["lang_front"]).name
 		list["answerLanguage"] = pycountry.languages.get(alpha2=data["lang_back"]).name
 
-		list["items"] = []
-		for card in data["cards"]:
-			list["items"].append({
+		list["items"] = [
+			{
 				"id": card["card_id"],
 				"created": created,
 				"questions": self._parse(card["front"]),
 				"answers": self._parse(card["back"]),
-			})
+			}
+			for card in data["cards"]
+		]
 
 		return {
 			"list": list,
@@ -286,10 +287,10 @@ class FlashcardexchangeApiModule(object):
 			print e
 			self._noConnection()
 			return
-		results = []
-		for result in data["results"]:
-			results.append((result["title"], result["set_id"]))
-		self._dialog.setResults(results)
+		self._dialog.setResults([
+			(result["title"], result["set_id"])
+			for result in data["results"]
+		])
 
 	def _noConnection(self):
 		QtGui.QMessageBox.warning(
