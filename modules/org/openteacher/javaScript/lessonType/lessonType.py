@@ -38,9 +38,9 @@ class JavascriptLessonTypeModule(object):
 
 	def enable(self):
 		modules = set(self._mm.mods(type="modules")).pop()
-		self.code = modules.default("active", type="javaScriptEvent").code
 		with open(self._mm.resourcePath("lessonType.js")) as f:
-			self.code += f.read()
+			self.code = f.read()
+		self.code += modules.default("active", type="javaScriptEvent").code
 
 		self._js = modules.default("active", type="javaScriptEvaluator").createEvaluator()
 		self._js.eval(self.code)

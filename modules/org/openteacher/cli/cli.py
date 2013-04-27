@@ -368,13 +368,26 @@ class CommandLineInterfaceModule(object):
 		parser.add_argument("+v", "++version", action="version", version=version)
 
 		subparsers = parser.add_subparsers()
+		self._buildSubparsers(subparsers)
 
+		args = parser.parse_args(argList[1:])
+		if not set(vars(args)) - set(["func"]):
+			parser.print_usage()
+			return
+		args.func(vars(args))
+
+	def _buildSubparsers(self, subparsers):
+		#shows authors
 		authors = subparsers.add_parser("authors", help="show OpenTeacher's authors", prefix_chars="+")
 		authors.add_argument("+c", "++category", help="only show authors in the specified category")
 		authors.set_defaults(func=self._authors)
 
+		loadingPossible = bool(set(self._mm.mods("active", type="loader")))
+		savingPossible = bool(set(self._mm.mods("active", type="save")))
+		wordListOcrPossible = bool(set(self._mm.mods("active", type="ocrWordListLoader")))
+
 		#if at least one saver and loader available:
-		if set(self._mm.mods("active", type="loader")) and set(self._mm.mods("active", type="save")):
+		if loadingPossible and savingPossible:
 			#convert
 			convert = subparsers.add_parser("convert", help="convert word, topo and media files", prefix_chars="+")
 			convert.add_argument("+f", "++output-format", help="output format", default="otwd", choices=list(self._saveExts()))
@@ -395,7 +408,7 @@ class CommandLineInterfaceModule(object):
 			reverseList.set_defaults(func=self._reverseList)
 
 		#if at least a loader is available.
-		if set(self._mm.mods("active", type="loader")):
+		if loadingPossible:
 			#view-word-list
 			viewWordList = subparsers.add_parser("view-word-list", help="show a word list", prefix_chars="+")
 			viewWordList.add_argument("input-files", nargs="+", help="input files")
@@ -403,7 +416,7 @@ class CommandLineInterfaceModule(object):
 			viewWordList.set_defaults(func=self._viewWordList)
 
 		#saver & ocrWordListLoader required
-		if set(self._mm.mods("active", type="save")) and set(self._mm.mods("active", type="ocrWordListLoader")):
+		if savingPossible and wordListOcrPossible:
 			#ocr-word-list
 			ocrWordList = subparsers.add_parser("ocr-word-list", help="load a word list from a scan or photo", prefix_chars="+")
 			ocrWordList.add_argument("input-file", help="input file")
@@ -411,7 +424,7 @@ class CommandLineInterfaceModule(object):
 			ocrWordList.set_defaults(func=self._ocrWordList)
 
 		#if at least a saver is available
-		if set(self._mm.mods("active", type="save")):
+		if savingPossible:
 			#new-word-list
 			newWordList = subparsers.add_parser("new-word-list", help="make a new word list", prefix_chars="+")
 			newWordList.add_argument("output-file", help="output file")
@@ -423,18 +436,12 @@ class CommandLineInterfaceModule(object):
 
 		#if curses framework used for practising and at least one loader
 		#is available.
-		if urwid and set(self._mm.mods("active", type="loader")):
+		if urwid and loadingPossible:
 			#practise-word-list
 			practiseWordList = subparsers.add_parser("practise-word-list", help="practise a word list", prefix_chars="+")
 			practiseWordList.add_argument("file", help="the file to practise")
 			practiseWordList.add_argument("+l", "++lesson-type", choices=self._lessonTypes, default=self._lessonTypes[0])
 			practiseWordList.set_defaults(func=self._practiseWordList)
-
-		args = parser.parse_args(argList[1:])
-		if not len(set(vars(args)) - set(["func"])):
-			parser.print_usage()
-			return
-		args.func(vars(args))
 
 	def enable(self):
 		self._modules = next(iter(self._mm.mods(type="modules")))

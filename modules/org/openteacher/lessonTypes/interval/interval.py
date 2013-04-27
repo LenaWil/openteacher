@@ -55,6 +55,25 @@ class IntervalLessonType(object):
 		ids = set([result["itemId"] for result in self._test["results"]])
 		return len(ids)
 
+	@property
+	def _minQuestions(self):
+		minQuestions = self._minQuestionsSetting["value"]
+		if minQuestions < 1:
+			minQuestions = 2
+		return minQuestions
+
+	@property
+	def _whenKnown(self):
+		whenKnown = self._whenKnownSetting["value"]
+		if whenKnown < 0 or whenKnown > 99:
+			whenKnown = 80
+		return whenKnown
+
+	@property
+	def _groupSize(self):
+		#get the values of some settings
+		return max(self._groupSizeSetting["value"], 2)
+
 	def setResult(self, result):
 		"""result is a Result-type object saying whether the question
 		   was answered right or wrong
@@ -65,23 +84,13 @@ class IntervalLessonType(object):
 		#and add this result, so it's weighed in the calculations below
 		self._test["results"].append(result)
 
-		#get the values of some settings
-		size = max(self._groupSizeSetting["value"], 2)
-
-		minQuestions = self._minQuestionsSetting["value"]
-		if minQuestions < 1:
-			minQuestions = 2
-
-		whenKnown = self._whenKnownSetting["value"]
-		if whenKnown < 0 or whenKnown > 99:
-			whenKnown = 80
-
 		#get the amount of right and wrong answers for the current item
 		#in this test.
 		right = 0
 		wrong = 0
+		currentItem = self.list["items"][self._currentIndex]
 		for loopResult in self._test["results"]:
-			if loopResult["itemId"] == self._currentIndex:
+			if loopResult["itemId"] == currentItem["id"]:
 				if loopResult["result"] == "right":
 					right += 1
 				elif loopResult["result"] == "wrong":
@@ -91,12 +100,12 @@ class IntervalLessonType(object):
 		#so it's asked later.
 		total = right + wrong
 		percentageRight = right / float(total) * 100.0
-		if total < minQuestions or percentageRight < whenKnown:
+		if total < self._minQuestions or percentageRight < self._whenKnown:
 			#pos may not be 0, because the current item shouldn't be
 			#asked again directly. Size is -1 because indexes start at
 			#0, and counting at 1.
 			try:
-				pos = random.randint(1, min(len(self._indexes), size -1))
+				pos = random.randint(1, min(len(self._indexes), self._groupSize -1))
 			except ValueError:
 				#len(self._indexes) is 0, but the item needs to be asked
 				#again. No option other than doing it immediately.

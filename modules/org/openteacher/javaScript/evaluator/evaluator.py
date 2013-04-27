@@ -20,12 +20,13 @@
 
 import datetime
 import exceptions
+import collections
+import itertools
 
-PYTHON_EXCEPTIONS = vars(exceptions)
-for name, exception in PYTHON_EXCEPTIONS.items():
-	if type(exception) != type(Exception):
-		#not a real exception
-		del PYTHON_EXCEPTIONS[name]
+PYTHON_EXCEPTIONS = dict(
+	(name, exc) for name, exc in vars(exceptions).iteritems()
+	if type(exc) == type(Exception)
+)
 
 PYTHON_ERROR_DEFINITION = """
 var JSEvaluatorPythonError = function(name, message) {
@@ -35,6 +36,35 @@ var JSEvaluatorPythonError = function(name, message) {
 }
 JSEvaluatorPythonError.prototype = new Error();
 """
+
+def installQtClasses():
+	global DictProxyClass
+
+	class DictProxyClass(QtScript.QScriptClass):
+		def __init__(self, dict, toJS, toPython, engine):
+			super(DictProxyClass, self).__init__(engine)
+
+			self._dict = dict
+			self._toJS = toJS
+			self._toPython = toPython
+
+		def _pyName(self, scriptName):
+			return unicode(scriptName.toString())
+
+		def queryProperty(self, object, name, flags):
+			return flags, -1
+
+		def property(self, object, name, id):
+			try:
+				return self._toJS(self._dict[self._pyName(name)])
+			except KeyError:
+				return self.engine().undefinedValue()
+
+		def setProperty(self, object, name, id, value):
+			self._dict[self._pyName(name)] = self._toPython(value)
+
+		def toPythonValue(self):
+			return self._dict
 
 class JSObject(object):
 	def __init__(self, qtScriptObj, toPython, toJS, *args, **kwargs):
@@ -103,8 +133,14 @@ class JSEvaluator(object):
 
 		self._engine = QtScript.QScriptEngine()
 		self._functionCache = {}
+		self._objectCache = {}
+		self._proxyReferences = set()
+		self._counter = itertools.count()
 
 		self.eval(PYTHON_ERROR_DEFINITION)
+
+	def _newId(self):
+		return next(self._counter)
 
 	def eval(self, js):
 		result = self._engine.evaluate(js)
@@ -125,8 +161,7 @@ class JSEvaluator(object):
 	def _checkForErrors(self):
 		if self._engine.hasUncaughtException():
 			exc = self._engine.uncaughtException()
-			#clear exception
-			self._engine.evaluate("")
+			self._engine.clearExceptions()
 			raise self._pythonExceptionFor(exc)
 
 	def __getitem__(self, key):
@@ -135,64 +170,43 @@ class JSEvaluator(object):
 	def __setitem__(self, key, value):
 		self._engine.globalObject().setProperty(key, self._toJSValue(value))
 
+	def __delitem__(self, key):
+		self._engine.globalObject().setProperty(key, self._engine.undefinedValue())
+
 	def _toJSValue(self, value):
+		#immutable values first
+		try:
+			return QtScript.QScriptValue(value)
+		except TypeError:
+			pass
 		#null (None)
 		if value is None:
 			return self._engine.nullValue()
-		#bool
-		if isinstance(value, bool):
-			return QtScript.QScriptValue(value)
-		#string
-		if isinstance(value, basestring):
-			return QtScript.QScriptValue(value)
 
+		#mutable values
 		#function
 		if callable(value):
-			if not value in self._functionCache:
-				def wrapper(context, engine):
-					args = []
-					for i in range(context.argumentCount()):
-						args.append(self._toPythonValue(context.argument(i)))
-					try:
-						#if the last arg is a dict, use keyword arguments.
-						#kinda makes up for the fact JS doesn't support
-						#them...
-						try:
-							result = value(*args[:-1], **dict(args[-1].iteritems()))
-						except (IndexError, TypeError, AttributeError):
-							result = value(*args)
-					except BaseException, exc:
-						#convert exceptions to JS exceptions
-						args = (exc.__class__.__name__, str(exc))
-						context.throwValue(self._toJSValue(self["JSEvaluatorPythonError"].new(*args)))
-						return
-					return QtScript.QScriptValue(self._toJSValue(result))
-				self._functionCache[value] = self._engine.newFunction(wrapper)
-			return self._functionCache[value]
-
-		#number
+			return self._wrapPythonFunction(value)
+		#date
 		try:
-			number = float(value)
+			datetime = QtCore.QDateTime(value)
 		except TypeError:
 			pass
 		else:
-			return QtScript.QScriptValue(number)
-
+			if datetime.isValid():
+				return self._engine.newDate(value)
 		#object (JSObject)
 		try:
-			value.toJSObject()
+			return value.toJSObject()
 		except AttributeError:
 			pass
-
-		#object (dict)
-		try:
-			obj = self._engine.newObject()
-			for k, v in value.iteritems():
-				obj.setProperty(unicode(k), self._toJSValue(v))
-			return obj
-		except AttributeError:
-			pass
-
+		#object (dict-like)
+		if isinstance(value, collections.Mapping):
+			proxy = DictProxyClass(value, self._toJSValue, self._toPythonValue, self._engine)
+			self._proxyReferences.add(proxy)
+			id = self._newId()
+			self._objectCache[id] = value
+			return self._engine.newObject(proxy, QtScript.QScriptValue(id))
 		#iterable
 		try:
 			items = [item for item in value]
@@ -203,16 +217,6 @@ class JSEvaluator(object):
 			for i, item in enumerate(items):
 				array.setProperty(i, self._toJSValue(item))
 			return array
-
-		#date
-		try:
-			datetime = QtCore.QDateTime(value)
-		except TypeError:
-			pass
-		else:
-			if datetime.isValid():
-				return self._engine.newDate(value)
-
 		#object (real python object)
 		try:
 			obj = self._engine.newObject()
@@ -224,11 +228,36 @@ class JSEvaluator(object):
 
 		raise NotImplementedError("Can't convert such a value to JavaScript")
 
+	def _wrapPythonFunction(self, value):
+		if not value in self._functionCache:
+			def wrapper(context, engine):
+				args = []
+				for i in range(context.argumentCount()):
+					args.append(self._toPythonValue(context.argument(i)))
+				try:
+					#if the last arg is a dict, use keyword arguments.
+					#kinda makes up for the fact JS doesn't support
+					#them...
+					try:
+						result = value(*args[:-1], **dict(args[-1].iteritems()))
+					except (IndexError, TypeError, AttributeError):
+						result = value(*args)
+				except BaseException, exc:
+					#convert exceptions to JS exceptions
+					args = (exc.__class__.__name__, str(exc))
+					exc = self["JSEvaluatorPythonError"].new(*args)
+					context.throwValue(self._toJSValue(exc))
+					return
+				return QtScript.QScriptValue(self._toJSValue(result))
+			self._functionCache[value] = self._engine.newFunction(wrapper)
+		return self._functionCache[value]
+
 	def _toPythonValue(self, value, scope=None):
 		if not scope:
 			scope = self._engine.globalObject()
 
 		getProperty = lambda key: self._toPythonValue(value.property(key))
+		#immutable
 		if not value.isValid():
 			return None
 		elif value.isArray():
@@ -236,13 +265,28 @@ class JSEvaluator(object):
 			return [getProperty(i) for i in range(length)]
 		elif value.isBool():
 			return value.toBool()
+		elif value.isNumber():
+			number = value.toNumber()
+			if round(number) == number:
+				return int(number)
+			else:
+				return number
+		elif value.isNull():
+			return None
+		elif value.isString():
+			return unicode(value.toString())
+		elif value.isUndefined():
+			return None
+		#mutable
+		elif value.scriptClass():
+			return self._objectCache[int(value.data().toInteger())]
 		elif value.isDate():
 			return value.toDateTime().toPyDateTime()
 		elif value.isFunction() or value.isError():
 			def _getJsArgs(args, kwargs):
 				if kwargs:
 					args = list(args) + [kwargs]
-				return map(self._toJSValue, args)
+				return [self._toJSValue(arg) for arg in args]
 			def wrapper(*args, **kwargs):
 				jsArgs = _getJsArgs(args, kwargs)
 				result = value.call(scope, jsArgs)
@@ -255,18 +299,6 @@ class JSEvaluator(object):
 				return self._toPythonValue(result)
 			wrapper.new = new
 			return wrapper
-		elif value.isNull():
-			return None
-		elif value.isNumber():
-			number = value.toNumber()
-			if round(number) == number:
-				return int(number)
-			else:
-				return number
-		elif value.isString():
-			return unicode(value.toString())
-		elif value.isUndefined():
-			return None
 		elif value.isObject():
 			return JSObject(value, self._toPythonValue, self._toJSValue)
 		else:# pragma : no cover
@@ -309,6 +341,7 @@ class JSEvaluatorModule(object):
 			from PyQt4 import QtCore, QtScript
 		except ImportError:# pragma: no cover
 			return
+		installQtClasses()
 		self.active = True
 
 	def disable(self):

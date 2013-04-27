@@ -34,6 +34,7 @@ class ModulesTest(unittest.TestCase):
 
 	def _enableIncludingDependencies(self, mod, minimalDependencies):
 		enabledMods = []
+		#the fast exit so the recursiveness isn't forever
 		if getattr(mod, "active", False):
 			return True, enabledMods
 

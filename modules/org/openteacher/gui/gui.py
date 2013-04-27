@@ -411,7 +411,7 @@ class GuiModule(object):
 
 		#Prevents segmentation fault
 		del self._app
-		QtCore.qApp = None
+		QtGui.qApp = None
 
 	def _onCloseRequested(self):
 		#if not running, there's nothing that can be closed, so don't

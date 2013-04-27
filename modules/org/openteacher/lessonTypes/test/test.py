@@ -47,7 +47,7 @@ class TestCase(unittest.TestCase):
 			set(self._mm.mods("active", type="javaScriptLessonType"))
 		)
 
-	def testEmptyIndexes(self):
+	def _testEmptyIndexes(self):
 		def newItem(item):
 			self.assertTrue(False, msg="newItem should not be called when an empty indexes list is passed.")# pragma: no cover
 		for mod in self._mods:
@@ -65,19 +65,13 @@ class TestCase(unittest.TestCase):
 			lessonType.newItem.handle(newItem)
 			lessonType.start()
 
-	def testLessonDoneCalled(self):
+	def _testLessonDoneCalled(self):
 		for mod in self._mods:
 			def newItem(item):
 				lessonType.setResult({"result": "right", "itemId": item["id"]})
 
 			def lessonDone():
-				if not mod in self._mm.mods("active", type="javaScriptLessonType"):
-					#The JS evaluator doesn't support pass-by-reference,
-					#so we can't see the list being updated. This is
-					#what makes the javaScript mod not suited for
-					#desktop use. Because of this, the following
-					#assertion is skipped for JS
-					self.assertTrue(usedList["tests"][-1]["finished"])
+				self.assertTrue(usedList["tests"][-1]["finished"])
 				data["called"] = True
 
 			data = {"called": False}
@@ -88,7 +82,7 @@ class TestCase(unittest.TestCase):
 			lessonType.start()
 			self.assertTrue(data["called"], msg="Lesson should call lessonDone() before stopping sending next items.")
 
-	def testGlobalNewItem(self):
+	def _testGlobalNewItem(self):
 		def func(item):
 			pass
 		for mod in self._mm.mods("active", type="lessonType"):
@@ -96,13 +90,13 @@ class TestCase(unittest.TestCase):
 			#doesn't need to have this event.
 			mod.newItem.handle(func)
 
-	def testSkip(self):
+	def _testSkip(self):
 		for mod in self._mods:
 			lessonType = mod.createLessonType(self._list, range(len(self._list)))
 			lessonType.start()
 			lessonType.skip()
 
-	def testAddPause(self):
+	def _testAddPause(self):
 		for mod in self._mods:
 			lessonType = mod.createLessonType(self._list, range(len(self._list)))
 			lessonType.start()
@@ -111,7 +105,7 @@ class TestCase(unittest.TestCase):
 				"end": datetime.datetime.now(),
 			})
 
-	def testProperties(self):
+	def _testProperties(self):
 		for mod in self._mods:
 			lessonType = mod.createLessonType(self._list, range(len(self._list)))
 			lessonType.start()

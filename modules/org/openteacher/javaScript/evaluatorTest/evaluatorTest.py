@@ -42,7 +42,7 @@ class TestCase(unittest.TestCase):
 
 	def testConvertingArray(self):
 		for js in self._getEvaluators():
-			self.assertEqual(js.eval("['a', 'b', 'c']"), ["a", "b", "c"])
+			self.assertEqual(list(js.eval("['a', 'b', 'c']")), ["a", "b", "c"])
 
 	def testUnexistingProperty(self):
 		for js in self._getEvaluators():
@@ -106,6 +106,24 @@ class TestCase(unittest.TestCase):
 		for js in self._getEvaluators():
 			js["hello"] = lambda: "Hello World!"
 			self.assertEqual(js["hello"](), "Hello World!")
+
+	def testChangingDictInJs(self):
+		for js in self._getEvaluators():
+			js.eval("""function test(arg) {
+				arg.x = "newValue";
+			}""")
+			myDict = {
+				"x": "oldValue",
+			}
+			js["test"](myDict)
+			self.assertEqual(myDict["x"], "newValue")
+
+	def testRemovingGlobalItem(self):
+		for js in self._getEvaluators():
+			js.eval("var a = 1");
+			self.assertEqual(js["a"], 1)
+			del js["a"]
+			self.assertIsNone(js["a"])
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

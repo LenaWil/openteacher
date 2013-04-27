@@ -170,10 +170,17 @@ class TypeDataStore(object):
 
 	def currentInstruction(self, username):
 		user = self._users[username]
+		generateInstruction = {
+			"start": self._startInstruction,
+			"done": self._doneInstruction
+		}.get(user["status"], self._normalInstruction)
+
+		return generateInstruction(username)
+
+	def _startInstruction(self, username):
 		layout = self.layout(username)
 
-		if user["status"] == "start":
-			return _("""Welcome, I'm your personal OpenTeacher typing tutor. We'll improve your typing skills by doing simple exercises. Between the exercises, I'll give instructions. Let's get started:
+		return _("""Welcome, I'm your personal OpenTeacher typing tutor. We'll improve your typing skills by doing simple exercises. Between the exercises, I'll give instructions. Let's get started:
 
 First place your fingers on the so-called home row: your fingers, from left to right, should always be on the keys '{a}', '{s}', '{d}', '{f}', '{space}', '{space}', '{j}', '{k}', '{l}' and '{;}' while not typing another character. When your fingers are in position, press {space} to start the first lesson. Work for accuracy at first, not speed.""").format(**{
 			"a": layout[2][1],
@@ -187,8 +194,11 @@ First place your fingers on the so-called home row: your fingers, from left to r
 			";": layout[2][10],
 		}).strip()
 
-		if user["status"] == "done":
-			return _("Congratulations, you finished this typing course! If you want to continue, you can, but this is the end of the instructions. You did a great job!")
+	def _doneInstruction(self, username):
+		return _("Congratulations, you finished this typing course! If you want to continue, you can, but this is the end of the instructions. You did a great job!")
+
+	def _normalInstruction(self, username):
+		user = self._users[username]
 
 		#sentences are added to the instruction depending on how the
 		#user did.

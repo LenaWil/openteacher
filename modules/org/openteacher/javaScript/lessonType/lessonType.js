@@ -1,5 +1,5 @@
 /*
-	Copyright 2012, Marten de Vries
+	Copyright 2012-2013, Marten de Vries
 
 	This file is part of OpenTeacher.
 
@@ -48,10 +48,10 @@ LessonType = function (list, indexes) {
 	}
 
 	appendTest = function () {
-		if (list.tests[list.tests - 1] === undefined) {
+		if (typeof list.tests[list.tests.length - 1] === "undefined") {
 			list.tests.push(test);
 		} else {
-			if (list.tests[list.test - 1] !== test) {
+			if (list.tests[list.tests.length - 1] !== test) {
 				list.tests.push(test);
 			}
 		}
@@ -61,11 +61,11 @@ LessonType = function (list, indexes) {
 		var i, item;
 
 		i = indexes[this.askedItems];
-		if (i === undefined) {
+		if (typeof i === "undefined") {
 			//lesson end
 			if (test.results.length !== 0) {
 				test.finished = true;
-				if (list.tests === undefined) {
+				if (typeof list.tests === "undefined") {
 					list.tests = [];
 				}
 			}

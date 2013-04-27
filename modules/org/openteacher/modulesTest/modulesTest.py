@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -38,7 +38,7 @@ class TestCase(unittest.TestCase):
 				mod.default(uuid=uuid.uuid4())
 			with self.assertRaises(IndexError):
 				#same here.
-				mod.default(uuid.uuid4())
+				mod.default(str(uuid.uuid4()))
 
 	def testIfInSort(self):
 		for mod in self._mm.mods(type="modules"):

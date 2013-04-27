@@ -38,12 +38,11 @@ class ModuleFilterer(object):
 		self._whereTrue = set()
 
 	def __call__(self, *args, **kwargs):
-		self._whereTrue = self._whereTrue.union(args)
+		self._whereTrue.update(args)
 		self._where.update(kwargs)
 		return self
 
 	def __iter__(self):
-		result = set()
 		for module in self._modules:
 			append = True
 			for attribute, value in self._where.iteritems():
@@ -56,19 +55,11 @@ class ModuleFilterer(object):
 			if not append:
 				continue
 			for attribute in self._whereTrue:
-				#hasattr() and getattr() require strings, but we don't
-				#want to force the user into that, so we convert it
-				#ourselves
-				attribute = str(attribute)
-				if not hasattr(module, attribute):
-					append = False
-					break
-				if not bool(getattr(module, attribute)):
+				if not getattr(module, attribute, False):
 					append = False
 					break
 			if append:
-				result.add(module)
-		return iter(result)
+				yield module
 
 	#the elegant implementation. Maybe generator expressions will once
 	#be optimized enough to use it. (In CPython or Cython)
@@ -78,16 +69,22 @@ class ModuleFilterer(object):
 			#~ module
 			#~ for module in self._modules
 			#~ if (
-				#~ #matches where
-				#~ all(
-					#~ getattr(module, attribute, not value) == value
-					#~ for attribute, value in self._where.iteritems()
-				#~ )
+				#~ self._matchesWhere(module)
 				#~ and
-				#~ #matches where true
-				#~ all(
-					#~ getattr(module, attribute, False)
-					#~ for attribute in self._whereTrue
-				#~ )
+				#~ self._matchesWhereTrue(module)
 			#~ )
+		#~ )
+#~ 
+	#~ def _matchesWhere(self, module):
+		#~ #matches where
+		#~ return all(
+			#~ hasattr(module, attribute) and getattr(module, attribute) == value
+			#~ for attribute, value in self._where.iteritems()
+		#~ )
+#~ 
+	#~ def _matchesWhereTrue(self, module):
+		#~ #matches where true
+		#~ return all(
+			#~ getattr(module, attribute, False)
+			#~ for attribute in self._whereTrue
 		#~ )
