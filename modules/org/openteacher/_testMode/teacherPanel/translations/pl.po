@@ -1,0 +1,127 @@
+# Polish translation for openteacher
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-01-31 17:16+0100\n"
+"PO-Revision-Date: 2013-04-27 00:23+0000\n"
+"Last-Translator: pp/bs <Unknown>\n"
+"Language-Team: Polish <pl@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-04-27 06:06+0000\n"
+"X-Generator: Launchpad (build 16580)\n"
+
+#: teacherPanel.py:66
+msgid "Tests"
+msgstr "Testy"
+
+#: teacherPanel.py:67
+msgid "Add lesson"
+msgstr "Dodaj lekcję"
+
+#: teacherPanel.py:112
+msgid "Select a student/group:"
+msgstr "Wybierz studenta/grupę:"
+
+#: teacherPanel.py:113
+msgid "Add person/group"
+msgstr "Dodaj osobę/grupę"
+
+#: teacherPanel.py:114
+msgid "Back"
+msgstr "Wstecz"
+
+#: teacherPanel.py:183
+msgid "(did not participate)"
+msgstr "(nie brał(-a) udziału)"
+
+#: teacherPanel.py:189
+msgid "(Handed in)"
+msgstr "(Oddane do sprawdzenia)"
+
+#: teacherPanel.py:231
+msgid "Questions:"
+msgstr "Pytania:"
+
+#: teacherPanel.py:232
+msgid "People in this test:"
+msgstr "Osoby na tym teście:"
+
+#: teacherPanel.py:233
+msgid "Add person"
+msgstr "Dodaj osobę"
+
+#: teacherPanel.py:319
+msgid "Test"
+msgstr ""
+
+#: teacherPanel.py:320
+msgid "(Re)check answers"
+msgstr "Sprawdź (ponownie) odpowiedzi"
+
+#: teacherPanel.py:321
+msgid "(Re)publish answers"
+msgstr "Przedstaw (ponownie) odpowiedzi"
+
+#: teacherPanel.py:333
+msgid "Student's answers have been checked!"
+msgstr "Odpowiedzi uczniów zostały sprawdzone!"
+
+#: teacherPanel.py:339
+msgid "Student's results have been (re)published!"
+msgstr "Wyniki uczniów zostały (ponownie) ogłoszone!"
+
+#: teacherPanel.py:533
+msgid "Person"
+msgstr "Osoba"
+
+#: teacherPanel.py:535
+msgid ""
+"Answers of this student have not been checked yet. Click the 'Check answers' "
+"button in the second column."
+msgstr ""
+"Odpowiedzi tego ucznia nie zostały jeszcze sprawdzone. Kliknij przycisk "
+"'Sprawdź odpowiedzi' w drugiej kolumnie."
+
+#: teacherPanel.py:537
+msgid "Answers right:"
+msgstr "Odpowiedzi poprawne:"
+
+#: teacherPanel.py:539
+msgid "Answers wrong:"
+msgstr "Odpowiedzi błędne:"
+
+#: teacherPanel.py:542
+msgid "OpenTeacher mark:"
+msgstr "Ocena wystawiona przez program OpenTeacher:"
+
+#: teacherPanel.py:544
+msgid "Final mark:"
+msgstr "Ocena końcowa:"
+
+#: teacherPanel.py:546
+msgid "Question"
+msgstr "Pytanie"
+
+#: teacherPanel.py:547
+msgid "Given answer"
+msgstr "Podana odpowiedź"
+
+#. TRANSLATORS: The name of a button clicked if an answer is correct.
+#: teacherPanel.py:550
+msgid "Correct"
+msgstr "Poprawnie"
+
+#: teacherPanel.py:713
+msgid "Teacher panel"
+msgstr "Panel nauczyciela"
+
+#: teacherPanel.py:715
+msgid "Teacher Panel"
+msgstr "Panel Nauczyciela"
