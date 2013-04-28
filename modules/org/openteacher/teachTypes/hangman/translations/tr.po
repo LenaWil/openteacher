@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-04-05 10:56+0200\n"
-"PO-Revision-Date: 2013-04-27 15:28+0000\n"
+"PO-Revision-Date: 2013-04-27 16:18+0000\n"
 "Last-Translator: kodadiirem <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,11 +17,26 @@ msgstr ""
 "X-Launchpad-Export-Date: 2013-04-28 04:46+0000\n"
 "X-Generator: Launchpad (build 16580)\n"
 
-#: topo.py:78
-msgid "Place name"
-msgstr "İsmi yerleştir"
+#: hangman.py:103
+msgid "Check!"
+msgstr "Kontrol et!"
 
-#. TRANSLATORS: A label of a table column that indicates of the answer of the user was correct.
-#: topo.py:80
-msgid "Correct"
-msgstr "Doğru"
+#: hangman.py:117
+msgid "You have already tried this character / word"
+msgstr "Bu kelimeyi / karakteri denediniz"
+
+#: hangman.py:134
+msgid "Mistakes:  "
+msgstr "Yanlışlar:  "
+
+#: hangman.py:158
+msgid "hanged man"
+msgstr "adam asıldı"
+
+#: hangman.py:182
+msgid "You lose, the answer was: "
+msgstr "Kaybettiniz, cevap: "
+
+#: hangman.py:280
+msgid "Play hangman"
+msgstr "Adam asmaca oyna"

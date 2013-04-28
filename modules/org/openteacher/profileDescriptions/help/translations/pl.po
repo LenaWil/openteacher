@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-04-05 10:56+0200\n"
-"PO-Revision-Date: 2013-04-27 00:34+0000\n"
+"PO-Revision-Date: 2013-04-28 03:15+0000\n"
 "Last-Translator: pp/bs <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,10 +17,6 @@ msgstr ""
 "X-Launchpad-Export-Date: 2013-04-28 04:46+0000\n"
 "X-Generator: Launchpad (build 16580)\n"
 
-#: words.py:56
-msgid "Pronounce words"
-msgstr "Wymawiaj słowa"
-
-#: words.py:57
-msgid "Pronounciation"
-msgstr "Wymowa"
+#: help.py:43
+msgid "Shows an overview of all documented available profiles"
+msgstr "Pokazuje przegląd wszystkich udokumentowanych dostępnych profilów"

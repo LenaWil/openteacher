@@ -1,4 +1,4 @@
-# Polish translation for openteacher
+# Turkish translation for openteacher
 # Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the openteacher package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-04-05 10:56+0200\n"
-"PO-Revision-Date: 2013-04-27 00:15+0000\n"
-"Last-Translator: pp/bs <Unknown>\n"
-"Language-Team: Polish <pl@li.org>\n"
+"PO-Revision-Date: 2013-04-27 15:46+0000\n"
+"Last-Translator: kodadiirem <Unknown>\n"
+"Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,51 +19,51 @@ msgstr ""
 
 #: topo.py:67
 msgid "From hard disk..."
-msgstr "Z dysku twardego..."
+msgstr "Hard diskten..."
 
 #: topo.py:81
 msgid "Warning"
-msgstr "Ostrzeżenie"
+msgstr "Uyarı"
 
 #: topo.py:83
 msgid ""
 "Are you sure you want to use another map? This will remove all your places!"
 msgstr ""
-"Czy na pewno chcesz użyć innej mapy? Spowoduje to usunięcie wszystkich "
-"miejsc!"
+"Başka bir harita kullanmak istediğinizden emin misiniz? Bu işlem tüm "
+"yerlerinizi ortadan kaldıracak!"
 
 #: topo.py:238
 msgid "Map:"
-msgstr "Mapa:"
+msgstr "Harita:"
 
 #: topo.py:239
 msgid "Add a place by doubleclicking it on the map"
-msgstr "Dodaj miejsce, klikając je dwukrotnie na mapie"
+msgstr "Harita üzerinde çift tıklayarak bir yer ekle"
 
 #: topo.py:240
 msgid "Places in your test"
-msgstr "Miejsca, które obejmuje twój test"
+msgstr "Testinizdeki yerler"
 
 #: topo.py:241
 msgid "Remove selected place"
-msgstr "Usuń wybrane miejsce"
+msgstr "Seçilmiş yeri kaldır"
 
 #: topo.py:242
 msgid "Add a place by name:"
-msgstr "Dodaj miejsce, podając jego nazwę:"
+msgstr "İsim ile bir yer ekle:"
 
 #: topo.py:243
 msgid "Add"
-msgstr "Dodaj"
+msgstr "Ekle"
 
 #: topo.py:282
 msgid "Place not found"
-msgstr "Nie znaleziono miejsca"
+msgstr "Yer bulunamadı"
 
 #: topo.py:283
 msgid ""
 "Sorry, this place is not in the list of known places. Please add it manually "
 "by doubleclicking on the right location in the map."
 msgstr ""
-"Niestety, tego miejsca nie ma na liście znanych miejsc. Dodaj je ręcznie, "
-"klikając dwukrotnie odpowiednie miejsce na mapie."
+"Üzgünüz, bu yer bilinen yerler listesinde yok.  Lütfen haritanın sağ "
+"bölgesine çift tıklayarak ekleyiniz."

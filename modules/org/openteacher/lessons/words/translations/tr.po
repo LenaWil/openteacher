@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-04-05 10:56+0200\n"
-"PO-Revision-Date: 2013-04-27 15:28+0000\n"
+"POT-Creation-Date: 2013-04-05 10:55+0200\n"
+"PO-Revision-Date: 2013-04-27 15:37+0000\n"
 "Last-Translator: kodadiirem <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,11 +17,23 @@ msgstr ""
 "X-Launchpad-Export-Date: 2013-04-28 04:46+0000\n"
 "X-Generator: Launchpad (build 16580)\n"
 
-#: topo.py:78
-msgid "Place name"
-msgstr "İsmi yerleştir"
+#: words.py:83
+msgid "Unnamed"
+msgstr "İsimsiz"
 
-#. TRANSLATORS: A label of a table column that indicates of the answer of the user was correct.
-#: topo.py:80
-msgid "Correct"
-msgstr "Doğru"
+#: words.py:84
+#, python-format
+msgid "Word lesson: %s"
+msgstr "Kelime dersi: %s"
+
+#: words.py:131
+msgid "Empty question or answer"
+msgstr "Boş soru veya cevap"
+
+#: words.py:132
+msgid "Please enter at least one question and one answer for every word."
+msgstr "Lütfen her kelime için en az bir soru ve bir de cevap giriniz."
+
+#: words.py:222
+msgid "Create words lesson"
+msgstr "Kelimeler dersi oluştur"

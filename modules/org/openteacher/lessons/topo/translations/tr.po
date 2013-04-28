@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-04-05 10:56+0200\n"
-"PO-Revision-Date: 2013-04-27 15:28+0000\n"
+"PO-Revision-Date: 2013-04-27 15:35+0000\n"
 "Last-Translator: kodadiirem <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,11 +17,18 @@ msgstr ""
 "X-Launchpad-Export-Date: 2013-04-28 04:46+0000\n"
 "X-Generator: Launchpad (build 16580)\n"
 
-#: topo.py:78
-msgid "Place name"
-msgstr "İsmi yerleştir"
+#: topo.py:127
+msgid "Create topography lesson"
+msgstr "Topografi dersi oluştur"
 
-#. TRANSLATORS: A label of a table column that indicates of the answer of the user was correct.
-#: topo.py:80
-msgid "Correct"
-msgstr "Doğru"
+#. TRANSLATORS: used as a label in case a filename of a topo
+#. TRANSLATORS: lesson isn't available. (E.g. because it's
+#. TRANSLATORS: downloaded from some kind of web service.)
+#: topo.py:219
+msgid "Import source"
+msgstr "Kaynağı içe aktar"
+
+#: topo.py:225 topo.py:289 topo.py:291
+#, python-format
+msgid "Topo lesson: %s"
+msgstr "Topo dersi: %s"

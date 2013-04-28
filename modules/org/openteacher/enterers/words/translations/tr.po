@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-04-05 10:56+0200\n"
-"PO-Revision-Date: 2013-04-27 15:28+0000\n"
+"PO-Revision-Date: 2013-04-27 15:51+0000\n"
 "Last-Translator: kodadiirem <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,11 +17,30 @@ msgstr ""
 "X-Launchpad-Export-Date: 2013-04-28 04:46+0000\n"
 "X-Generator: Launchpad (build 16580)\n"
 
-#: topo.py:78
-msgid "Place name"
-msgstr "İsmi yerleştir"
+#: words.py:238
+msgid "Questions"
+msgstr "Sorular"
 
-#. TRANSLATORS: A label of a table column that indicates of the answer of the user was correct.
-#: topo.py:80
-msgid "Correct"
-msgstr "Doğru"
+#: words.py:238
+msgid "Answers"
+msgstr "Cevaplar"
+
+#: words.py:238
+msgid "Comment"
+msgstr "Yorum"
+
+#: words.py:485
+msgid "Title:"
+msgstr "Başlık:"
+
+#: words.py:486
+msgid "Question language:"
+msgstr "Soru dili:"
+
+#: words.py:487
+msgid "Answer language:"
+msgstr "Cevap dili:"
+
+#: words.py:488
+msgid "Remove selected row(s)"
+msgstr "Seçili sırayı/sıraları kaldır"

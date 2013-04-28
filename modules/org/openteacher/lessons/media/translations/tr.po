@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-04-05 10:56+0200\n"
-"PO-Revision-Date: 2013-04-27 15:28+0000\n"
+"PO-Revision-Date: 2013-04-27 15:34+0000\n"
 "Last-Translator: kodadiirem <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,11 +17,19 @@ msgstr ""
 "X-Launchpad-Export-Date: 2013-04-28 04:46+0000\n"
 "X-Generator: Launchpad (build 16580)\n"
 
-#: topo.py:78
-msgid "Place name"
-msgstr "İsmi yerleştir"
+#: media.py:162
+msgid "Create media lesson"
+msgstr "Ortam dersi oluştur"
 
-#. TRANSLATORS: A label of a table column that indicates of the answer of the user was correct.
-#: topo.py:80
-msgid "Correct"
-msgstr "Doğru"
+#: media.py:202 media.py:204 media.py:240
+#, python-format
+msgid "Media lesson: %s"
+msgstr "Ortam dersi: %s"
+
+#: media.py:285
+msgid "Empty question or answer"
+msgstr "Boş soru veya cevap"
+
+#: media.py:286
+msgid "Please enter at least one question and one answer for every item."
+msgstr "Lütfen her öğe için en az bir soru ve bir de cevap giriniz."

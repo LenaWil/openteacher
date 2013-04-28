@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-04-05 10:56+0200\n"
-"PO-Revision-Date: 2013-04-27 15:28+0000\n"
+"PO-Revision-Date: 2013-04-27 15:26+0000\n"
 "Last-Translator: kodadiirem <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,11 +17,22 @@ msgstr ""
 "X-Launchpad-Export-Date: 2013-04-28 04:46+0000\n"
 "X-Generator: Launchpad (build 16580)\n"
 
-#: topo.py:78
-msgid "Place name"
-msgstr "İsmi yerleştir"
+#: interval.py:218 interval.py:223
+msgid "Interval"
+msgstr "Aralık"
 
-#. TRANSLATORS: A label of a table column that indicates of the answer of the user was correct.
-#: topo.py:80
-msgid "Correct"
-msgstr "Doğru"
+#: interval.py:222
+msgid "Lesson type"
+msgstr "Ders türü"
+
+#: interval.py:225
+msgid "Maximum size of group"
+msgstr "En fazla grup büyüklüğü"
+
+#: interval.py:227
+msgid "Minimum amount of questions asked"
+msgstr "Sorulmuş soruların en az miktarı"
+
+#: interval.py:229
+msgid "Percent right before known"
+msgstr "Bilinmeden önce yüzdeyi doğrulamalısınız"

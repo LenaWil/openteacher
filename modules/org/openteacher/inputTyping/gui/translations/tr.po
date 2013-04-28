@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-04-05 10:56+0200\n"
-"PO-Revision-Date: 2013-04-27 15:28+0000\n"
+"PO-Revision-Date: 2013-04-27 15:48+0000\n"
 "Last-Translator: kodadiirem <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,11 +17,34 @@ msgstr ""
 "X-Launchpad-Export-Date: 2013-04-28 04:46+0000\n"
 "X-Generator: Launchpad (build 16580)\n"
 
-#: topo.py:78
-msgid "Place name"
-msgstr "İsmi yerleştir"
+#: gui.py:109
+msgid "Correct answer: <b>{answers}</b> [{diff}]"
+msgstr "Doğru cevap: <b>{ansvers}</b> [{diff}]"
 
-#. TRANSLATORS: A label of a table column that indicates of the answer of the user was correct.
-#: topo.py:80
-msgid "Correct"
-msgstr "Doğru"
+#: gui.py:111
+msgid "Correct answer: <b>{answers}</b>"
+msgstr "Doğru cevap: <b>{ansvers}</b>"
+
+#: gui.py:124
+msgid "Check!"
+msgstr "Kontrol et!"
+
+#: gui.py:125
+msgid "Correct anyway"
+msgstr "Her şekilde doğru"
+
+#: gui.py:126
+msgid "Skip"
+msgstr "Atla"
+
+#: gui.py:249
+msgid "Fade duration when wrong (milliseconds)"
+msgstr "Yanlış olduğundaki geçiş süresi (milisaniye)"
+
+#: gui.py:250
+msgid "Lesson"
+msgstr "Ders"
+
+#: gui.py:251
+msgid "Words lesson"
+msgstr "Kelimeler dersi"

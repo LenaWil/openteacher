@@ -1,0 +1,105 @@
+# Turkish translation for openteacher
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-04-05 10:56+0200\n"
+"PO-Revision-Date: 2013-04-27 16:39+0000\n"
+"Last-Translator: kodadiirem <Unknown>\n"
+"Language-Team: Turkish <tr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-04-28 04:46+0000\n"
+"X-Generator: Launchpad (build 16580)\n"
+
+#: gui.py:85
+msgid "Introduction"
+msgstr "Giriş"
+
+#: gui.py:86
+msgid ""
+"This wizard will guide you through the process of creating a word list from "
+"a scan or picture of a physical word list. Click 'Next' to start."
+msgstr ""
+"Bu sihirbaz size bir resminden ya da taranmış halinden kelime listesini "
+"nasıl oluşturacağınıza rehberlik edecek. Başlamak için 'İleri'yi tıklayın."
+
+#: gui.py:118
+msgid "Choose an image"
+msgstr "Bir resim seçin"
+
+#: gui.py:120
+msgid ""
+"Please choose the location of the scan or picture of the physical word list "
+"on your system below."
+msgstr ""
+"Lütfen aşağıdan kelime listenizin taranmış ya da resim halinin "
+"sisteminizdeki konumunu seçiniz."
+
+#: gui.py:121
+msgid "Click here to choose a location"
+msgstr "Konum seçmek için buraya tıklayınız."
+
+#: gui.py:122
+msgid "Location:"
+msgstr "Konum:"
+
+#: gui.py:127
+msgid "Images ({extensions})"
+msgstr "Resimler ({extensions})"
+
+#: gui.py:165
+msgid "Make image ready"
+msgstr "Resimi hazır hale getir"
+
+#: gui.py:166
+msgid ""
+"Please make sure the image is rotated completely upright with the rotation "
+"slider under this text:"
+msgstr ""
+"Bu metinin altındaki yönlendirme çubuğu ile resmin yönlendirmesinin yukarıya "
+"doğru olduğundan emin olunuz."
+
+#: gui.py:167
+msgid ""
+"When the image is completely upright, make a selection on the image with the "
+"mouse with in the left top the first question to include and in the right "
+"bottom the last answer to include. Click 'Next' when done."
+msgstr ""
+
+#: gui.py:208
+msgid "No selection was made"
+msgstr ""
+
+#: gui.py:208
+msgid "No selection was made. Please try again."
+msgstr ""
+
+#: gui.py:219 gui.py:220
+msgid "Recognizing word list..."
+msgstr ""
+
+#: gui.py:232
+msgid ""
+"Down here, you can see a preview of the result. There will probably be some "
+"wrongly recognized words in there, but the structure of the word list should "
+"be recognizable. If not, click 'Back' and try again. Otherwise, click "
+"'Finish'."
+msgstr ""
+
+#: gui.py:233
+msgid "Result preview"
+msgstr ""
+
+#: gui.py:342
+msgid "Create words lesson from a scan or picture"
+msgstr ""
+
+#: gui.py:345
+msgid "Words lesson from picture"
+msgstr ""
