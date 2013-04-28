@@ -168,11 +168,9 @@ class UpdatesDialogModule(object):
 			#The user doesn't want to be bothered with updates
 			return
 		self._updatesMod = self._modules.default("active", type="updates")
-		try:
+		with contextlib.ignored(IOError):
+			#IOError: error downloading updates, silently fail.
 			self._updates = self._updatesMod.updates
-		except IOError:
-			#error downloading updates, silently fail.
-			return
 
 		if not self._updates:
 			return
@@ -211,16 +209,12 @@ class UpdatesDialogModule(object):
 		del self._thread
 
 		#May not be set in one case
-		try:
+		with contextlib.ignored(AttributeError):
 			del self._ud
 			del self._tab
-		except AttributeError:
-			pass
 		#May not be set in another case
-		try:
+		with contextlib.ignored(AttributeError):
 			del self._updatesMod
-		except AttributeError:
-			pass
 		#Always set
 		del self._dataStore
 

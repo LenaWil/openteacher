@@ -19,6 +19,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import copy
+import contextlib
 
 class WordsMergerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -30,14 +31,10 @@ class WordsMergerModule(object):
 
 	def merge(self, baseLesson, otherLesson):
 		merge = copy.deepcopy(baseLesson)
-		try:
+		with contextlib.ignored(KeyError):
 			merge["list"]["items"].extend(otherLesson["list"]["items"])
-		except KeyError:
-			pass
-		try:
+		with contextlib.ignored(KeyError):
 			merge["list"]["tests"].extend(otherLesson["list"]["tests"])
-		except KeyError:
-			pass
 
 		return merge
 

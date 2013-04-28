@@ -21,6 +21,7 @@
 import sys
 import os
 import tempfile
+import contextlib
 
 def installQtClasses():
 	global OcrWizard
@@ -323,10 +324,8 @@ class OcrGuiModule(object):
 #		tab.close()
 		if self._wizard.result():
 			lesson = self._wizard.getLesson()
-			try:
+			with contextlib.ignored(NotImplementedError):
 				self._loadFromLesson("words", lesson)
-			except NotImplementedError:
-				pass
 
 	def _retranslate(self):
 		global _, ngettext

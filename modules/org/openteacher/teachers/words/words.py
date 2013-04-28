@@ -22,6 +22,7 @@
 
 import datetime
 import weakref
+import contextlib
 
 def installQtClasses():
 	global TeachLessonWidget, TeachSettingsWidget, TeachWidget
@@ -100,10 +101,8 @@ def installQtClasses():
 			leftWidget.setLayout(leftLayout)
 			
 			rightLayout = QtGui.QVBoxLayout()
-			try:
+			with contextlib.ignored(AttributeError):
 				rightLayout.addWidget(self.keyboardWidget)
-			except AttributeError:
-				pass
 			rightLayout.addWidget(self.changeSettingsButton)
 
 			rightWidget = QtGui.QWidget()
@@ -196,10 +195,8 @@ def installQtClasses():
 
 			itemModifiers = []
 			for path in self._settings["itemModifiers"]["value"]:
-				try:
+				with contextlib.ignored(IndexError):
 					itemModifiers.append(self._modForPath(path).modifyItem)
-				except IndexError:
-					pass
 
 			#FIXME > 3.0: maybe the item modifiers should also be applied
 			#in the results dialog?
@@ -267,11 +264,9 @@ def installQtClasses():
 			self._showSettings()
 
 			if showResults:
-				try:
+				with contextlib.ignored(IndexError):
 					module = self._modules.default("active", type="resultsDialog")
 					module.showResults(self.lesson.list, "words", self.lesson.list["tests"][-1])
-				except IndexError:
-					pass
 
 			self.inLesson = False
 			

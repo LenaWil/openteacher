@@ -19,6 +19,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import weakref
+import contextlib
 
 def installQtClasses():
 	global ButtonsGroupBox, StartWidget, LargeStartWidgetButton
@@ -61,10 +62,8 @@ def installQtClasses():
 			w = self.width()
 			if self.icon():
 				w -= 32
-			try:
+			with contextlib.ignored(KeyError):
 				return self._cache[w]
-			except KeyError:
-				pass
 			i = 0
 			while True:
 				try:
@@ -214,10 +213,8 @@ def installQtClasses():
 		def retranslate(self):
 			self.createLessonGroupBox.setTitle(_("Create lesson:"))
 			self.loadLessonGroupBox.setTitle(_("Load lesson:"))
-			try:
+			with contextlib.ignored(AttributeError):
 				self.recentlyOpenedGroupBox.setTitle(_("Recently opened:"))
-			except AttributeError:
-				pass
 
 		def addButton(self, button):
 			if button.category == "create":

@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #   Copyright 2011, Cas Widdershoven
 #
 #	This file is part of OpenTeacher.
@@ -20,6 +20,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt4 import QtCore, QtGui
+import contextlib
 
 class LoginDialog(QtGui.QDialog):
 	def __init__(self, store, *args, **kwargs):
@@ -77,10 +78,8 @@ class LoginDialog(QtGui.QDialog):
 		self.flayout.itemAt(1, QtGui.QFormLayout.LabelRole).widget().setText(
 			_("Password:")
 		)
-		try:
+		with contextlib.ignored(AttributeError):
 			self.saveCheckbox.setText(_("Remember email address and password"))
-		except AttributeError:
-			pass
 
 class ReadOnlyStringListModel(QtGui.QStringListModel):
 	def flags(self, index):

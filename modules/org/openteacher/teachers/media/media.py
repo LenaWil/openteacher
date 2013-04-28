@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Milan Boers
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -21,6 +21,7 @@
 
 import datetime
 import weakref
+import contextlib
 
 def installQtClasses():
 	global TeachLessonTypeChooser, TeachWidget
@@ -38,11 +39,9 @@ def installQtClasses():
 		def retranslate(self):
 			#disconnect the signal, so we can change some stuff without
 			#other classes notice
-			try:
+			with contextlib.ignored(TypeError):
+				#TypeError: not yet connected (first pass)
 				super(TeachLessonTypeChooser, self).currentIndexChanged.disconnect(self.currentIndexChanged.emit)
-			except TypeError:
-				#not yet connected (first pass)
-				pass
 
 			#save status
 			i = self.currentIndex()
@@ -226,11 +225,9 @@ class TeachMediaLesson(object):
 		# Set the start of the thinking time to now
 		self.startThinkingTime = datetime.datetime.now()
 		# Delete the end of the thinking time
-		try:
+		with contextlib.ignored(AttributeError):
 			del self.endThinkingTime
-		except AttributeError:
-			pass
-	
+
 	def endLesson(self, showResults=True):
 		"""Ends the lesson"""
 
@@ -246,12 +243,10 @@ class TeachMediaLesson(object):
 			pass
 		else:
 			if showResults:
-				try:
+				with contextlib.ignored(IndexError):
 					# Go to results widget
 					module = base._modules.default("active", type="resultsDialog")
 					module.showResults(self.itemList, "media", self.itemList["tests"][-1])
-				except IndexError:
-					pass
 		
 		self.teachWidget.lessonDone.emit()
 	

@@ -20,6 +20,8 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+import contextlib
+
 class SmartLessonType(object):
 	def __init__(self, createEvent, list, indexes, modifyItem=None, *args, **kwargs):
 		super(SmartLessonType, self).__init__(*args, **kwargs)
@@ -57,16 +59,12 @@ class SmartLessonType(object):
 
 		self._test["results"].append(result)
 		if result["result"] == "wrong":
-			try:
+			with contextlib.ignored(IndexError):
 				if self._indexes[-1] != self._currentIndex:
 					self._indexes.append(self._currentIndex)
-			except IndexError:
-				pass
-			try:
+			with contextlib.ignored(IndexError):
 				if self._currentIndex not in (self._indexes[1], self._indexes[2]):
 					self._indexes.insert(2, self._currentIndex)
-			except IndexError:
-				pass
 
 		self._sendNext()
 
@@ -80,18 +78,14 @@ class SmartLessonType(object):
 	def correctLastAnswer(self, result):
 		self._test["results"][-1] = result
 
-		try:
+		with contextlib.ignored(IndexError):
 			if self._indexes[-1] == self._previousIndex:
 				del self._indexes[-1]
-		except IndexError:
-			pass
 
-		try:
+		with contextlib.ignored(IndexError):
 			#2 became 1 because of the new word
 			if self._indexes[1] == self._previousIndex:
 				del self._indexes[1]
-		except IndexError:
-			pass
 	
 	def _appendTest(self):
 		try:
@@ -105,10 +99,8 @@ class SmartLessonType(object):
 				self.list["tests"].append(self._test)
 
 	def _sendNext(self):
-		try:
+		with contextlib.ignored(AttributeError):
 			self._previousIndex = self._currentIndex
-		except AttributeError:
-			pass
 		try:
 			self._currentIndex = self._indexes.pop(0)
 		except IndexError:

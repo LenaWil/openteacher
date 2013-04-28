@@ -21,6 +21,7 @@
 import unittest
 import glob
 import os
+import contextlib
 
 class TestCase(unittest.TestCase):
 	def setUp(self):
@@ -86,11 +87,9 @@ class TestCase(unittest.TestCase):
 			for type, ext in mod.loads.iteritems():
 				self.assertTrue(type)
 				self.assertTrue(ext)
-			try:
-				self.assertTrue(mod.mimetype)
-			except AttributeError:
+			with contextlib.ignored(AttributeError):
 				#optional. But not empty
-				pass
+				self.assertTrue(mod.mimetype)
 
 	def testHasItems(self):
 		results = self._loadFiles()

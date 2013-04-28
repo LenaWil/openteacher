@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -17,6 +17,8 @@
 #
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
+
+import contextlib
 
 def getEnterPlainTextDialog():
 	class EnterPlainTextDialog(QtGui.QDialog):
@@ -188,10 +190,8 @@ class PlainTextWordsEntererModule(object):
 			lesson = eptd.lesson
 			if lesson:
 				lesson["changed"] = True
-				try:
+				with contextlib.ignored(NotImplementedError):
 					self._modules.default("active", type="loaderGui").loadFromLesson("words", lesson)
-				except NotImplementedError:
-					pass
 
 		self._activeDialogs.remove(eptd)
 		tab.close()

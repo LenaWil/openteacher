@@ -22,6 +22,7 @@
 import os
 import sys
 import traceback
+import contextlib
 
 class UiControllerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -136,10 +137,8 @@ class UiControllerModule(object):
 		self._connectEvents()
 		self._updateMenuItems()
 
-		try:
+		with contextlib.ignored(IndexError):
 			self.open_(sys.argv[1])
-		except IndexError:
-			pass
 
 		self._uiModule.run(self._onCloseRequested)
 		self._disconnectEvents()

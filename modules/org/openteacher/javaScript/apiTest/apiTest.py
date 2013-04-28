@@ -75,7 +75,7 @@ class TestCase(unittest.TestCase):
 			func = CheckableCall()
 			js["Api"].getLists(func)
 			self.assertFalse(func.called)
-			js["callNow"]({"result": [{}]})
+			js.eval("callNow({result: [{}]})")
 			self.assertTrue(func.called)
 			self.assertEqual(func.args, ([{}],))
 

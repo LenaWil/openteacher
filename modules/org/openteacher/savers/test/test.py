@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -24,6 +24,7 @@ import copy
 import os
 import datetime
 import shutil
+import contextlib
 
 class Lesson(object):
 	def __init__(self, list=None, resources=None):
@@ -52,11 +53,9 @@ class TestCase(unittest.TestCase):
 				self.assertTrue(os.path.getsize(path) > 0)
 
 				os.remove(path)
-				try:
+				with contextlib.ignored(OSError):
 					#html saver
 					shutil.rmtree(path + ".resources")
-				except OSError:
-					pass
 
 			try:
 				self.assertEqual(lesson.list, lessonCopy.list)

@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -20,6 +20,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import copy
+import contextlib
 
 class OpenTeacherSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -97,10 +98,8 @@ class OpenTeacherSaverModule(object):
 			for test in wordList.get("tests", []):
 				for result in test["results"]:
 					if result["itemId"] == word["id"]:
-						try:
+						with contextlib.ignored(KeyError):
 							word["results"][result["result"]] += 1
-						except KeyError:
-							pass
 			#known, foreign and second
 			word["known"] = self._compose(word["questions"])
 			if len(word["answers"]) == 1 and len(word["answers"][0]) > 1:

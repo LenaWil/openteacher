@@ -48,12 +48,13 @@ LessonType = function (list, indexes) {
 	}
 
 	appendTest = function () {
+		if (typeof list.tests === "undefined") {
+			list.tests = [];
+		}
 		if (typeof list.tests[list.tests.length - 1] === "undefined") {
 			list.tests.push(test);
-		} else {
-			if (list.tests[list.tests.length - 1] !== test) {
-				list.tests.push(test);
-			}
+		} else if (list.tests[list.tests.length - 1] !== test) {
+			list.tests.push(test);
 		}
 	};
 

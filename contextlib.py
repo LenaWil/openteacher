@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,19 +18,22 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-#abstracts the json importing process. Hackish so this file can be
-#named json.py, but it works! :D
+#adds some functionality of Python 3 to Python 2.
 
-import sys as sys
+import sys
 
 path = sys.path.pop(0)
 #keep a reference so this module isn't garbage collected
-this = sys.modules["json"]
-del sys.modules["json"]
+this = sys.modules["contextlib"]
+del sys.modules["contextlib"]
 
-try:
-	sys.modules["json"] = __import__("simplejson")
-except ImportError:
-	sys.modules["json"] = __import__("json")
+contextlib = sys.modules["contextlib"] = __import__("contextlib")
+@contextlib.contextmanager
+def ignored(*errors):
+    try:
+        yield
+    except errors:
+        pass
+sys.modules["contextlib"].ignored = ignored
 
 sys.path.insert(0, path)

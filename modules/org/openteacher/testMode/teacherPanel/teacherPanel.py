@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Milan Boers
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -23,7 +23,8 @@ import os
 import uuid
 import urllib2
 import copy
-import json
+import superjson
+import contextlib
 
 def installQtClasses():
 	global AnswerChecker, PersonAdderWidget, PropertyLabel, StudentsInTestWidget, TakenTestWidget, TeacherPanel, TestActionWidget, TestInfoWidget, TestWidget, TestsWidget
@@ -352,7 +353,7 @@ def installQtClasses():
 				# Add results to list
 				rightAnswers["results"] = results
 				
-				self.update(testId, {"list": json.dumps(rightAnswers), "note": self.calculateNote(results), "answer_id": studentId}, False)
+				self.update(testId, {"list": superjson.dumps(rightAnswers), "note": self.calculateNote(results), "answer_id": studentId}, False)
 			
 			self.answersChanged.emit()
 		
@@ -384,7 +385,7 @@ def installQtClasses():
 					result["result"] = "right"
 					break
 			
-			self.update(testid, {"list": json.dumps(list), "note": self.calculateNote(list["results"]), "answer_id": studentid})
+			self.update(testid, {"list": superjson.dumps(list), "note": self.calculateNote(list["results"]), "answer_id": studentid})
 		
 		def publishAnswers(self, testid):
 			for studentResult in self.results[testid].values():
@@ -589,20 +590,16 @@ def installQtClasses():
 			testWidget.takenTestSelected.connect(self.addTakenTestlayoutumn)
 			testWidget.message.connect(self.message.emit)
 			
-			try:
+			with contextlib.ignored(AttributeError):
 				self.widget(1).setParent(None)
-			except AttributeError:
-				pass
 			self.insertWidget(1, testWidget)
 		
 		def addTakenTestlayoutumn(self, studentInTest):
 			takenTestWidget = TakenTestWidget(self.connection, studentInTest, self.compose, self.answerChecker)
 			takenTestWidget.message.connect(self.message.emit)
 			
-			try:
+			with contextlib.ignored(AttributeError):
 				self.widget(2).setParent(None)
-			except AttributeError:
-				pass
 			self.insertWidget(2, takenTestWidget)
 
 		def retranslate(self):

@@ -21,6 +21,7 @@
 
 import datetime
 import weakref
+import contextlib
 
 def total_seconds(td):
 	"""FIXME once: fix for Python 2.6 compatibility, that will
@@ -118,19 +119,15 @@ def installQtClasses():
 			horSplitter.addWidget(factsWidget)
 
 			#Main splitter
-			try:
+			with contextlib.ignored(IndexError, KeyError):
 				progressWidget = self._modules.default(
 					"active",
 					type="progressViewer"
 				).createProgressViewer(self.test)
-			except (IndexError, KeyError):
-				pass
 
 			self.addWidget(horSplitter)
-			try:
+			with contextlib.ignored(NameError):
 				self.addWidget(progressWidget)
-			except NameError:
-				pass
 
 		def retranslate(self):
 			self.setWindowTitle(_("Results"))

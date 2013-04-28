@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Milan Boers
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,6 +18,8 @@
 #
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
+
+import contextlib
 
 def installQtClasses():
 	global EnterMap, EnterMapScene, Map, TeachPictureMap, TeachPictureScene, TeachPlaceOnMap
@@ -126,11 +128,9 @@ def installQtClasses():
 		def update(self):
 			# Remove previous items
 			for item in self.placesList:
-				try:
+				with contextlib.ignored(RuntimeError):
+					#RuntimeError: Object already removed
 					self.scene.removeItem(item)
-				except RuntimeError:
-					# Object already removed
-					pass
 			
 			# Remove all previous items
 			self.placesList = []
@@ -233,11 +233,9 @@ def installQtClasses():
 			self.placesGroup = self.scene.createItemGroup(placesList)
 		
 		def hidePlaceRects(self):
-			try:
+			with contextlib.ignored(AttributeError):
 				for item in self.placesList:
 					self.removeItem(item)
-			except AttributeError:
-				pass
 		
 		def setInteractive(self, val):
 			if val:

@@ -22,6 +22,10 @@ import datetime
 import exceptions
 import collections
 import itertools
+import traceback
+import sys
+import json
+import contextlib
 
 PYTHON_EXCEPTIONS = dict(
 	(name, exc) for name, exc in vars(exceptions).iteritems()
@@ -38,13 +42,13 @@ JSEvaluatorPythonError.prototype = new Error();
 """
 
 def installQtClasses():
-	global DictProxyClass
+	global ObjectProxyClass, DictProxyClass, SequenceProxyClass
 
-	class DictProxyClass(QtScript.QScriptClass):
-		def __init__(self, dict, toJS, toPython, engine):
-			super(DictProxyClass, self).__init__(engine)
+	class BaseProxyClass(QtScript.QScriptClass):
+		def __init__(self, obj, toJS, toPython, *args):
+			super(BaseProxyClass, self).__init__(*args)
 
-			self._dict = dict
+			self._obj = obj
 			self._toJS = toJS
 			self._toPython = toPython
 
@@ -54,65 +58,154 @@ def installQtClasses():
 		def queryProperty(self, object, name, flags):
 			return flags, -1
 
+		def toPythonValue(self):
+			return self._obj
+
+	class ObjectProxyClass(BaseProxyClass):
+		def _toString(self, *args, **kwargs):
+			return "<%s %s>" % (self.__class__.__name__, dir(self._obj))
+
 		def property(self, object, name, id):
+			name = self._pyName(name)
+			if name == "toString":
+				return self._toJS(self._toString)
 			try:
-				return self._toJS(self._dict[self._pyName(name)])
+				return self._toJS(getattr(self._obj, name))
+			except AttributeError:
+				return self.engine().undefinedValue()
+
+		def setProperty(self, object, name, id, value):
+			name = self._pyName(name)
+			setattr(self._obj, name, self._toPython(value))
+
+	class DictProxyClass(BaseProxyClass):
+		def _toString(self, *args, **kwargs):
+			return "<%s %s>" % (self.__class__.__name__, dict(self._obj))
+
+		def property(self, object, name, id):
+			name = self._pyName(name)
+			if name == "toString":
+				return self._toJS(self._toString)
+			try:
+				return self._toJS(self._obj[name])
 			except KeyError:
 				return self.engine().undefinedValue()
 
 		def setProperty(self, object, name, id, value):
-			self._dict[self._pyName(name)] = self._toPython(value)
+			self._obj[self._pyName(name)] = self._toPython(value)
 
-		def toPythonValue(self):
-			return self._dict
+	class SequenceProxyClass(BaseProxyClass):
+		def property(self, object, name, id):
+			name = self._pyName(name)
+			if name == "length":
+				return self._toJS(len(self._obj))
+			with contextlib.ignored(KeyError):
+				return self._toJS({
+					"join": self._join,
+					"indexOf": self._indexOf,
+					"filter": self._filter,
+					"toString": self._toString,
+					"slice": self._slice,
+					"splice": self._splice,
+					"push": self._push,
+				}[name])
+			try:
+				return self._toJS(self._obj[int(name)])
+			except (IndexError, ValueError):
+				return self.engine().undefinedValue()
 
-class JSObject(object):
+		def _join(self, sep):
+			return sep.join(self._obj)
+
+		def _filter(self, func):
+			return [item for item in self._obj if func(item)]
+
+		def _toString(self, *args, **kwargs):
+			return "<%s %s>" % (
+				self.__class__.__name__,
+				json.dumps(list(self._obj)),
+			)
+
+		def _indexOf(self, data):
+			try:
+				return self._obj.index(data)
+			except ValueError:
+				return -1
+
+		def _slice(self):
+			"""Non-complete implementation?"""
+			return [item for item in self._obj]
+
+		def _splice(self, index, amount):
+			"""Not-complete implementation?"""
+			while amount:
+				amount -= 1
+				del self._obj[index]
+
+		def _push(self, item):
+			"""Non-complete implementation?"""
+			self._obj.append(item)
+
+		def setProperty(self, object, name, id, value):
+			self._obj[int(self._pyName(name))] = self._toPython(value)
+
+class JSObject(collections.MutableMapping):
 	def __init__(self, qtScriptObj, toPython, toJS, *args, **kwargs):
 		super(JSObject, self).__init__(*args, **kwargs)
 
-		self._obj = qtScriptObj
-		self._toPython = toPython
-		self._toJs = toJS
+		self.__dict__["_obj"] = qtScriptObj
+		self.__dict__["_toPython"] = toPython
+		self.__dict__["_toJs"] = toJS
+
+	def _getPropertyOrError(self, key):
+		prop = self._obj.property(key)
+		if not prop.isValid() or prop.isUndefined():
+			raise KeyError("No such key: %s" % key)
+		return prop
+
+	def __getitem__(self, key):
+		return self._toPython(self._getPropertyOrError(key), self._obj)
+
+	def __setitem__(self, key, value):
+		self._obj.setProperty(key, self._toJs(value))
+
+	def __delitem__(self, key):
+		#raises KeyError for us if necessary
+		self._getPropertyOrError(key)
+		self._obj.setProperty(key, QtScript.QScriptValue())
 
 	def __getattr__(self, attr):
 		try:
-			return super(JSObject, self).__getattr__(attr)
-		except AttributeError:
-			result = self._toPython(self._obj.property(attr), self._obj)
-			if result is None:
-				raise AttributeError("No such attribute: %s" % attr)
-			return result
+			return self[attr]
+		except KeyError, e:
+			raise AttributeError(e)
 
 	def __setattr__(self, attr, value):
-		if attr.startswith("_"):
-			super(JSObject, self).__setattr__(attr, value)
-		else:
-			self._obj.setProperty(attr, self._toJs(value))
+		self[attr] = value
 
 	def __delattr__(self, attr):
 		try:
-			super(JSObject, self).__delattr__(attr)
-		except AttributeError:
-			self._obj.setProperty(attr, QtScript.QScriptValue())
+			del self[attr]
+		except KeyError, e:
+			raise AttributeError(e)
 
-	def iteritems(self):
+	def __iter__(self):
 		iterator = QtScript.QScriptValueIterator(self._obj)
 		while iterator.hasNext():
 			iterator.next()
-			yield unicode(iterator.name()), self._toPython(iterator.value(), self._obj)
+			yield unicode(iterator.name())
+
+	def __len__(self):
+		return sum(1 for _ in self)
 
 	def toJSObject(self):
 		return self._obj
 
-	def __eq__(self, other):
-		return sorted(self.iteritems()) == sorted(other.iteritems())
-
 	def __repr__(self):
-		return repr(dict(self.iteritems()))
+		return "<%s %s>" % (self.__class__.__name__, dict(self))
 
-	__getitem__ = __getattr__
-	__setitem__ = __setattr__
-	__delitem__ = __delattr__
+	def __eq__(self, other):
+		return dict(self) == dict(other)
 
 class JSError(Exception):
 	def __init__(self, name, message, lineNumber, *args, **kwargs):
@@ -124,6 +217,48 @@ class JSError(Exception):
 
 	def __str__(self):
 		return "%s: %s (line %s)" % (self.name, self.message, self.lineNumber)
+
+class JSArray(collections.MutableSequence):
+	def __init__(self, toJSValue, toPythonValue, value, *args, **kwargs):
+		super(JSArray, self).__init__(*args, **kwargs)
+
+		self._toJSValue = toJSValue
+		self._toPythonValue = toPythonValue
+
+		self._value = value
+
+	def _checkBounds(self, key):
+		if not 0 <= key < len(self):
+			raise IndexError("Index out of bounds (%s)" % key)
+
+	def __getitem__(self, key):
+		self._checkBounds(key)
+		return self._toPythonValue(self._value.property(key))
+
+	def __delitem__(self, key):
+		self._checkBounds(key)
+		sef._value.setProperty(key, QtScript.QScriptValue())
+
+	def __setitem__(self, key, value):
+		self._value.setProperty(key, self._toJSValue(value))
+
+	def __len__(self):
+		return self._value.property("length").toInteger()
+
+	def __eq__(self, other):
+		return list(self) == list(other)
+
+	def __repr__(self):
+		return "<%s %s>" % (self.__class__.__name__, list(self))
+
+	def insert(self, index, value):
+		self._value.property("splice").call(self._value, [
+			self._toJSValue(a)
+			for a in [index, 0, value]
+		])
+
+	def toJSObject(self):
+		return self._value
 
 class JSEvaluator(object):
 	JSError = JSError
@@ -173,13 +308,20 @@ class JSEvaluator(object):
 	def __delitem__(self, key):
 		self._engine.globalObject().setProperty(key, self._engine.undefinedValue())
 
+	def _newProxy(self, ProxyClass, value):
+		proxy = ProxyClass(value, self._toJSValue, self._toPythonValue, self._engine)
+		self._proxyReferences.add(proxy)
+		id = self._newId()
+		self._objectCache[id] = value
+		return self._engine.newObject(proxy, QtScript.QScriptValue(id))
+
 	def _toJSValue(self, value):
 		#immutable values first
 		try:
 			return QtScript.QScriptValue(value)
 		except TypeError:
 			pass
-		#null (None)
+		#including null (None)
 		if value is None:
 			return self._engine.nullValue()
 
@@ -197,36 +339,22 @@ class JSEvaluator(object):
 				return self._engine.newDate(value)
 		#object (JSObject)
 		try:
-			return value.toJSObject()
+			jsObj = value.toJSObject()
 		except AttributeError:
-			pass
-		#object (dict-like)
-		if isinstance(value, collections.Mapping):
-			proxy = DictProxyClass(value, self._toJSValue, self._toPythonValue, self._engine)
-			self._proxyReferences.add(proxy)
-			id = self._newId()
-			self._objectCache[id] = value
-			return self._engine.newObject(proxy, QtScript.QScriptValue(id))
-		#iterable
-		try:
-			items = [item for item in value]
-		except TypeError:
 			pass
 		else:
-			array = self._engine.newArray(len(items))
-			for i, item in enumerate(items):
-				array.setProperty(i, self._toJSValue(item))
-			return array
-		#object (real python object)
-		try:
-			obj = self._engine.newObject()
-			for k in dir(value):
-				obj.setProperty(unicode(k), self._toJSValue(getattr(value, k)))
-			return obj
-		except AttributeError:
-			pass
-
-		raise NotImplementedError("Can't convert such a value to JavaScript")
+			#reuse the current script value only when it was constructed
+			#by the current engine. Otherwise Qt could throw an error.
+			if jsObj.engine() == self._engine:
+				return jsObj
+		#object (dict-like)
+		if isinstance(value, collections.Mapping):
+			return self._newProxy(DictProxyClass, value)
+		#sequence (list-like)
+		if isinstance(value, collections.Sequence):
+			return self._newProxy(SequenceProxyClass, value)
+		#object (object-like)
+		return self._newProxy(ObjectProxyClass, value)
 
 	def _wrapPythonFunction(self, value):
 		if not value in self._functionCache:
@@ -243,6 +371,10 @@ class JSEvaluator(object):
 					except (IndexError, TypeError, AttributeError):
 						result = value(*args)
 				except BaseException, exc:
+					print >> sys.stderr, ""
+					print >> sys.stderr, "Catched exception in Python code. Passing to JavaScript (this might just be fine):"
+					traceback.print_exc()
+					print >> sys.stderr, "---"
 					#convert exceptions to JS exceptions
 					args = (exc.__class__.__name__, str(exc))
 					exc = self["JSEvaluatorPythonError"].new(*args)
@@ -260,9 +392,6 @@ class JSEvaluator(object):
 		#immutable
 		if not value.isValid():
 			return None
-		elif value.isArray():
-			length = getProperty("length")
-			return [getProperty(i) for i in range(length)]
 		elif value.isBool():
 			return value.toBool()
 		elif value.isNumber():
@@ -280,6 +409,9 @@ class JSEvaluator(object):
 		#mutable
 		elif value.scriptClass():
 			return self._objectCache[int(value.data().toInteger())]
+		elif value.isArray():
+			a = JSArray(self._toJSValue, self._toPythonValue, value)
+			return a
 		elif value.isDate():
 			return value.toDateTime().toPyDateTime()
 		elif value.isFunction() or value.isError():

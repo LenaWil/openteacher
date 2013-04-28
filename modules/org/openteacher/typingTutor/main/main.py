@@ -20,6 +20,7 @@
 
 import weakref
 import datetime
+import contextlib
 
 def installQtClasses():
 	global ExerciseWidget, InstructionsWidget, LoginWidget, MasterWidget, ReadOnlyStringModel
@@ -275,11 +276,9 @@ def installQtClasses():
 			self._speedLabelLabel.setText(_("Speed (words per minute)"))
 			self._mistakesLabelLabel.setText(_("Amount of mistakes"))
 			self._button.setText(_("Start exercise"))
-			try:
+			with contextlib.ignored(AttributeError):
 				#requires self.username, which might not be set yet.
 				self.updateInstruction()
-			except AttributeError:
-				pass
 
 	class MasterWidget(QtGui.QStackedWidget):
 		def __init__(self, model, createKeyboardWidget, *args, **kwargs):

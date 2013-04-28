@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2009-2012, Marten de Vries
+#	Copyright 2009-2013, Marten de Vries
 #	Copyright 2008-2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -20,6 +20,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import weakref
+import contextlib
 
 def installQtClasses():
 	global DetailsWidget, NotesWidget, TestViewerWidget, TestsModel, TestsViewer, TestsViewerWidget
@@ -213,10 +214,8 @@ def installQtClasses():
 			self.testsModel.dataType = dataType
 			self.notesWidget.updateList(list)
 			self.detailsWidget.updateList(list, dataType)
-			try:
+			with contextlib.ignored(AttributeError):
 				self.percentNotesViewer.hide()
-			except AttributeError:
-				pass
 			try:
 				self.percentNotesViewer = self._createPercentNotesViewer(list["tests"])
 			except (TypeError, KeyError):

@@ -47,7 +47,7 @@ class TestCase(unittest.TestCase):
 			set(self._mm.mods("active", type="javaScriptLessonType"))
 		)
 
-	def _testEmptyIndexes(self):
+	def testEmptyIndexes(self):
 		def newItem(item):
 			self.assertTrue(False, msg="newItem should not be called when an empty indexes list is passed.")# pragma: no cover
 		for mod in self._mods:
@@ -65,7 +65,7 @@ class TestCase(unittest.TestCase):
 			lessonType.newItem.handle(newItem)
 			lessonType.start()
 
-	def _testLessonDoneCalled(self):
+	def testLessonDoneCalled(self):
 		for mod in self._mods:
 			def newItem(item):
 				lessonType.setResult({"result": "right", "itemId": item["id"]})
@@ -82,7 +82,7 @@ class TestCase(unittest.TestCase):
 			lessonType.start()
 			self.assertTrue(data["called"], msg="Lesson should call lessonDone() before stopping sending next items.")
 
-	def _testGlobalNewItem(self):
+	def testGlobalNewItem(self):
 		def func(item):
 			pass
 		for mod in self._mm.mods("active", type="lessonType"):
@@ -90,13 +90,13 @@ class TestCase(unittest.TestCase):
 			#doesn't need to have this event.
 			mod.newItem.handle(func)
 
-	def _testSkip(self):
+	def testSkip(self):
 		for mod in self._mods:
 			lessonType = mod.createLessonType(self._list, range(len(self._list)))
 			lessonType.start()
 			lessonType.skip()
 
-	def _testAddPause(self):
+	def testAddPause(self):
 		for mod in self._mods:
 			lessonType = mod.createLessonType(self._list, range(len(self._list)))
 			lessonType.start()
@@ -105,7 +105,7 @@ class TestCase(unittest.TestCase):
 				"end": datetime.datetime.now(),
 			})
 
-	def _testProperties(self):
+	def testProperties(self):
 		for mod in self._mods:
 			lessonType = mod.createLessonType(self._list, range(len(self._list)))
 			lessonType.start()

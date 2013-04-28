@@ -22,6 +22,7 @@
 
 import random
 import weakref
+import contextlib
 
 def installQtClasses():
 	global ShuffleAnswerTeachWidget
@@ -40,10 +41,8 @@ def installQtClasses():
 			self.setLayout(vbox)
 
 		def retranslate(self):
-			try:
+			with contextlib.ignored(AttributeError):
 				self.setHint()
-			except AttributeError:
-				pass
 
 		#	Two solutions for the OpenTeacher 2.2 bug at 24-10-11:
 		#	(the commented version isn't ported to 3.x)

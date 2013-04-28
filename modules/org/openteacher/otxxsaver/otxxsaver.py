@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -19,7 +19,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import json
+import superjson
 import zipfile
 import contextlib
 
@@ -39,7 +39,7 @@ class OtxxSaverModule(object):
 		#FIXME after 2.6 support dropped: zipfile is a context manager
 		#itself at Python > 3.2 and Python > 2.7.
 		with contextlib.closing(zipfile.ZipFile(path, "w", zipCompression)) as otxxzip:
-			otxxzip.writestr("list.json", json.dumps(
+			otxxzip.writestr("list.json", superjson.dumps(
 				list, #the list to save
 				separators=(',',':'), #compact encoding
 				default=self._serialize #serialize datetime

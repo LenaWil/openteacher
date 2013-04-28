@@ -22,6 +22,7 @@
 
 import datetime
 import weakref
+import contextlib
 
 class EmptyLesson(object):
 	def __init__(self, *args, **kwargs):
@@ -89,15 +90,13 @@ def installQtClasses():
 
 			check = lambda item: True
 			split = lambda words: []
-			try:
+			with contextlib.ignored(AttributeError):
 				if index.column() == 0:
 					check = self.checkQuestion
 					split = self.splitQuestion
 				elif index.column() == 1:
 					check = self.checkAnswer
 					split = self.splitAnswer
-			except AttributeError:
-				pass
 			SpellingHighlighter(check, split, document)
 
 			#get elided text
@@ -159,13 +158,11 @@ def installQtClasses():
 			)
 
 		def setModel(self, *args, **kwargs):
-			try:
+			with contextlib.ignored(AttributeError):
+				#AttributeError: first time.
 				self.model().modelReset.disconnect(self._modelReset)
 				self.model().questionLanguageChanged.disconnect(self._questionLanguageChanged)
 				self.model().answerLanguageChanged.disconnect(self._answerLanguageChanged)
-			except AttributeError:
-				#first time.
-				pass
 
 			result = super(WordsTableView, self).setModel(*args, **kwargs)
 
@@ -394,18 +391,9 @@ def installQtClasses():
 
 		def updateLesson(self, lesson):
 			self._wordsTableModel.updateLesson(lesson)
-			try:
-				self._titleTextBox.setText(lesson.list["title"])
-			except KeyError:
-				pass
-			try:
-				self._questionLanguageTextBox.setText(lesson.list["questionLanguage"])
-			except KeyError:
-				pass
-			try:
-				self._answerLanguageTextBox.setText(lesson.list["answerLanguage"])
-			except KeyError:
-				pass
+			self._titleTextBox.setText(lesson.list.get("title", u""))
+			self._questionLanguageTextBox.setText(lesson.list.get("questionLanguage", u""))
+			self._answerLanguageTextBox.setText(lesson.list.get("answerLanguage", u""))
 
 		def removeSelectedRows(self):
 			while True:
@@ -462,10 +450,8 @@ def installQtClasses():
 			shortcut.activated.connect(self._removeSelectedRowsButton.animateClick)
 
 			rightLayout = QtGui.QVBoxLayout()
-			try:
+			with contextlib.ignored(AttributeError):
 				rightLayout.addWidget(self._keyboardWidget)
-			except AttributeError:
-				pass
 			rightLayout.addWidget(self._removeSelectedRowsButton)
 
 			rightLayoutWidget = QtGui.QWidget()
@@ -489,10 +475,8 @@ def installQtClasses():
 			self._removeSelectedRowsButton.clicked.connect(
 				self.removeSelectedRows
 			)
-			try:
+			with contextlib.ignored(AttributeError):
 				self._keyboardWidget.letterChosen.handle(self.addLetter)
-			except AttributeError:
-				pass
 
 			self._titleTextBox.textEdited.connect(
 				self._wordsTableModel.updateTitle
@@ -580,7 +564,7 @@ class WordsEntererModule(object):
 		try:
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
-			pass
+			return
 		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()

@@ -20,6 +20,7 @@
 
 import argparse
 import sys
+import contextlib
 
 class ExecuteModule(object):
 	"""When OpenTeacher is run, this module sets a profile, controls
@@ -132,11 +133,11 @@ class ExecuteModule(object):
 		})
 
 	def _settingChanged(self):
-		try:
+		with contextlib.ignored(IndexError):
+			#IndexError: no guarantees can be made for these modules...
 			dialogShower = self._modules.default("active", type="dialogShower")
 			settingsDialog = self._modules.default("active", type="settingsDialog")
-		except IndexError:
-			pass #no guarantees can be made for these modules...
+
 		dialogShower.showMessage.send(settingsDialog.tab, "Restart OpenTeacher for this setting to take effect.")
 
 def init(moduleManager):

@@ -21,6 +21,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import weakref
+import contextlib
 
 DATA_TYPE = "words"
 
@@ -92,10 +93,8 @@ class Lesson(object):
 		self._updateResultsWidget()
 
 	def _updateResultsWidget(self):
-		try:
+		with contextlib.ignored(AttributeError):
 			self._resultsWidget.updateList(self.list, DATA_TYPE)
-		except AttributeError:
-			pass
 
 	def stop(self):
 		#close current lesson (if one). Just reuse all the logic.

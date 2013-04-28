@@ -21,6 +21,7 @@
 
 import datetime
 import weakref
+import contextlib
 
 class Order(object):
 	Normal, Inversed = xrange(2)
@@ -39,11 +40,9 @@ def installQtClasses():
 			self.retranslate()
 
 		def retranslate(self):
-			try:
+			with contextlib.ignored(TypeError):
+				#TypeError: not yet connected (first pass)
 				self.currentIndexChanged.disconnect(self.changeLessonType)
-			except TypeError:
-				#not yet connected (first pass)
-				pass
 
 			#save status
 			i = self.currentIndex()
@@ -83,11 +82,9 @@ def installQtClasses():
 			self.retranslate()
 
 		def retranslate(self):
-			try:
+			with contextlib.ignored(TypeError):
+				#TypeError: not yet connected (first pass)
 				self.currentIndexChanged.disconnect(self.changeLessonOrder)
-			except TypeError:
-				#not yet connected (first pass)
-				pass
 
 			i = self.currentIndex()
 			self.clear()
@@ -330,10 +327,8 @@ class TeachTopoLesson(object):
 		# Set the start of the thinking time to now
 		self.startThinkingTime = datetime.datetime.now()
 		# Delete the end of the thinking time
-		try:
+		with contextlib.ignored(AttributeError):
 			del self.endThinkingTime
-		except AttributeError:
-			pass
 	
 	def endLesson(self, showResults=True):
 		"""Ends the lesson"""
@@ -347,12 +342,10 @@ class TeachTopoLesson(object):
 			pass
 		else:
 			if showResults:
-				try:
+				with contextlib.ignored(IndexError):
 					# Go to results widget
 					module = base._modules.default("active", type="resultsDialog")
 					module.showResults(self.itemList, "topo", self.itemList["tests"][-1])
-				except IndexError:
-					pass
 		
 		self.teachWidget.lessonDone.emit()
 

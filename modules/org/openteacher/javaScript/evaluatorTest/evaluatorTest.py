@@ -52,15 +52,12 @@ class TestCase(unittest.TestCase):
 		for js in self._getEvaluators():
 			self.assertEqual(js["JSON"]["stringify"](True), "true")
 
-	def testConvertingIterableToJs(self):
+	def testConvertingTupleToJs(self):
+		"""A non-list sequence"""
 		for js in self._getEvaluators():
-			#a set is iterateble, but isn't implemented by default in
-			#JS, so should be converted to a list. There are two
-			#possible outputs, since sets don't have a specified
-			#ordering.
-			self.assertIn(
-				js["JSON"]["stringify"](set([1, 2])),
-				["[2,1]", "[1,2]"],
+			self.assertEqual(
+				js.eval("(function (a) {return a[0];})")((1, 2)),
+				1
 			)
 
 	def testConvertingDateToJs(self):
@@ -124,6 +121,34 @@ class TestCase(unittest.TestCase):
 			self.assertEqual(js["a"], 1)
 			del js["a"]
 			self.assertIsNone(js["a"])
+
+	def testArgsKwargsToJs(self):
+		for js in self._getEvaluators():
+			args = [1, 2]
+			kwargs= {"test": 1, "b": 2}
+			func = js.eval("(function(one, two, kwargs) {return [one, two, kwargs]})")
+			result = func(*args, **kwargs)
+			self.assertEqual(result, args + [kwargs])
+
+	def testArgsKwargsToPython(self):
+		for js in self._getEvaluators():
+			result = {}
+			def func(*args, **kwargs):
+				result["args"] = args
+				result["kwargs"] = kwargs
+			js["func"] = func
+			js.eval("func(1, 2, {test: 1, b: 2})")
+			self.assertEqual(result["args"], (1, 2))
+			self.assertEqual(result["kwargs"], {"test": 1, "b": 2})
+
+	def testArraySequence(self):
+		for js in self._getEvaluators():
+			sequence = js.eval("[3, 2, 1]")
+			self.assertEqual(len(sequence), 3)
+			self.assertEqual(sequence[0], 3)
+			sequence.insert(0, 4)
+			self.assertEqual(sequence[0], 4)
+			self.assertEqual(sequence.index(3), 1)
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

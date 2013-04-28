@@ -21,7 +21,7 @@
 
 import os
 import uuid
-import json
+import superjson
 
 class TestModeUploaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -110,7 +110,7 @@ class TestModeUploaderModule(object):
 			list = loadModule.load(result)["list"]
 
 			# Save it to a json string
-			listJson = json.dumps(
+			listJson = superjson.dumps(
 				list, #the list to save
 				separators=(',',':'), #compact encoding
 				default=self._serialize

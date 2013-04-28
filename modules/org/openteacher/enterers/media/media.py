@@ -21,6 +21,7 @@
 
 import os
 import weakref
+import contextlib
 
 class DummyLesson(object):
 	pass
@@ -180,11 +181,9 @@ def installQtClasses():
 
 			extensions = []
 			for module in base._modules.sort("active", type="mediaType"):
-				try:
+				with contextlib.ignored(AttributeError):
+					#AttributeError: no extensions
 					extensions.extend(module.extensions)
-				except AttributeError:
-					# No extensions
-					pass
 			
 			extensionsStr = "("
 			for extension in extensions:
@@ -205,11 +204,9 @@ def installQtClasses():
 
 			sitenames = []
 			for module in base._modules.sort("active", type="mediaType"):
-				try:
+				with contextlib.ignored(AttributeError):
+					#AttributeError: No name
 					sitenames.extend(module.remoteNames)
-				except AttributeError:
-					# No name
-					pass
 			
 			sitenamesStr = ""
 			for sitename in sitenames:

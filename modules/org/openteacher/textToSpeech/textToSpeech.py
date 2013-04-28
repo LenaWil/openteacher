@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #    Copyright 2011, Milan Boers
-#    Copyright 2011-2012, Marten de Vries
+#    Copyright 2011-2013, Marten de Vries
 #
 #    This file is part of OpenTeacher.
 #
@@ -24,6 +24,7 @@ import subprocess
 import threading
 import shlex
 import platform
+import contextlib
 
 class DependencyError(Exception):
 	pass
@@ -69,15 +70,11 @@ class TextToSpeech(object):
 			voices = process.communicate()[0].split("\n")
 			for voice in voices:
 				voiceProps = shlex.split(voice)
-				try:
+				with contextlib.ignored(IndexError, ValueError):
+					#IndexError: voiceProps[0] does not even exist
+					#ValueError: voiceProps[0] is not an int, so this is not a language
 					int(voiceProps[0])
 					feedback.append((voiceProps[3] + " (" + voiceProps[1] + ")", voiceProps[3]))
-				except IndexError:
-					# voiceProps[0] does not even exist
-					pass
-				except ValueError:
-					# voiceProps[0] is not an int, so this is not a language
-					pass
 		return feedback
 	
 	def speak(self, text, rate, voiceid, thread=True):
@@ -144,11 +141,9 @@ class TextToSpeechModule(object):
 		try:
 			self.tts = TextToSpeech(pyttsx, self._mm)
 		except DependencyError as e:
-			try:
+			with contextlib.ignored(IndexError):
 				m = self._modules.default("active", type="dialogShower")
 				m.showBigError.send(unicode(e))
-			except IndexError:
-				pass
 		else:
 			settings = self._modules.default(type="settings")
 			
@@ -183,7 +178,8 @@ class TextToSpeechModule(object):
 				self._mm.resourcePath("translations")
 			)
 
-		try:
+		with contextlib.ignored(AttributeError):
+			#AttributeError on first time retranslate
 			self._ttsVoice["name"] = _("Voice name (language)")
 			self._ttsSpeed["name"] = _("Speed")
 
@@ -193,9 +189,6 @@ class TextToSpeechModule(object):
 			}
 			self._ttsVoice.update(categories)
 			self._ttsSpeed.update(categories)
-		except AttributeError:
-			#first time retranslate
-			pass
 
 	def disable(self):
 		del self._modules

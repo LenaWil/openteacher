@@ -19,6 +19,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
+import contextlib
 
 class Controller(object):
 	def __init__(self, Event, parse, compose, check, *args, **kwargs):
@@ -38,10 +39,8 @@ class Controller(object):
 
 	@lessonType.setter
 	def lessonType(self, v):
-		try:
+		with contextlib.ignored(AttributeError):
 			self._lessonType.newItem.unhandle(self._onNewWord)
-		except AttributeError:
-			pass
 		if self._showingCorrection:
 			self.correctionShowingDone()
 
@@ -99,6 +98,7 @@ class Controller(object):
 		try:
 			self.lessonType
 		except AttributeError:
+			#just so it's clear what this function's doing.
 			raise
 
 	def _assertLessonActive(self):

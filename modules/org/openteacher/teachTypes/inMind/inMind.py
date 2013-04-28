@@ -22,6 +22,7 @@
 
 import datetime
 import weakref
+import contextlib
 
 def installQtClasses():
 	global ThinkWidget, AnswerWidget, InMindTeachWidget
@@ -91,10 +92,8 @@ def installQtClasses():
 			self.answerWidget.retranslate()
 			
 			curWid = self.currentWidget()
-			try:
+			with contextlib.ignored(AttributeError):
 				self.newItem(self._currentWord)
-			except AttributeError:
-				pass
 			self.setCurrentWidget(curWid)
 
 		def updateLessonType(self, lessonType):

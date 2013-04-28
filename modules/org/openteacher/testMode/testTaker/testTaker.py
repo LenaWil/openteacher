@@ -21,7 +21,7 @@
 
 import uuid
 import urllib2
-import json
+import superjson
 
 def getTestChooser():
 	class TestChooser(QtGui.QWidget):
@@ -177,7 +177,7 @@ class TestModeTestTakerModule(object):
 		answeredList = self.teachWidget.getAnsweredList()
 		dialogShower = self._modules.default("active", type="dialogShower")
 		
-		r = self.connection.post(answersUrl, {"list" : json.dumps(answeredList)})
+		r = self.connection.post(answersUrl, {"list" : superjson.dumps(answeredList)})
 		
 		# Check if there was an error.
 		if type(r) == urllib2.HTTPError:

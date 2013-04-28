@@ -97,11 +97,9 @@ class OpenTeachingMediaLoaderModule(object):
 
 		# Replace filenames with their real (temporary) files
 		for item in lesson["list"]["items"]:
-			try:
+			with contextlib.ignored(KeyError):
+				#Remote-data items give a KeyError
 				item["filename"] = lesson["resources"][item["filename"]]
-			except KeyError:
-				#Remote-data items
-				pass
 
 		return lesson
 

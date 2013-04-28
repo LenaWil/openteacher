@@ -20,6 +20,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
+import contextlib
 
 def installQtClasses():
 	global HangmanTeachWidget
@@ -278,10 +279,8 @@ class TypingTeachTypeModule(object):
 				self._mm.resourcePath("translations")
 			)
 		self.name = _("Play hangman")
-		try:
+		with contextlib.ignored(AttributeError):
 			self.widget._retranslate()
-		except AttributeError:
-			pass
 		
 	def addRemoveGraphicsWidget(self, widget):
 		if widget == self.widget:
