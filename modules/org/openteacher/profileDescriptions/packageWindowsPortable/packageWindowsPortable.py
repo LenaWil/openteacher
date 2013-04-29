@@ -34,7 +34,7 @@ class ProfileDescriptionModule(object):
 			return #remain inactive, this is a windows-only mod.
 		self.desc = {
 			"name": "package-windows-portable",
-			"niceName": _("Packages this installation into a zip file which, when extracted, is usable as portable app in Windows."),
+			"niceName": "Packages this installation into a zip file which, when extracted, is usable as portable app in Windows.",
 			"advanced": True,
 		}
 

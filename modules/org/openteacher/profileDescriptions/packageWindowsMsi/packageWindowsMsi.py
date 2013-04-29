@@ -34,7 +34,7 @@ class ProfileDescriptionModule(object):
 			return #remain inactive, this is a windows-only mod.
 		self.desc = {
 			"name": "package-windows-msi",
-			"niceName": _("Packages this installation into a Microsoft Installer (.msi) file."),
+			"niceName": "Packages this installation into a Microsoft Installer (.msi) file.",
 			"advanced": True,
 		}
 
