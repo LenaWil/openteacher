@@ -58,9 +58,6 @@ def installQtClasses():
 		def queryProperty(self, object, name, flags):
 			return flags, -1
 
-		def toPythonValue(self):
-			return self._obj
-
 	class ObjectProxyClass(BaseProxyClass):
 		def _toString(self, *args, **kwargs):
 			return "<%s %s>" % (self.__class__.__name__, dir(self._obj))
@@ -137,7 +134,7 @@ def installQtClasses():
 			return [item for item in self._obj]
 
 		def _splice(self, index, amount):
-			"""Not-complete implementation?"""
+			"""Non-complete implementation?"""
 			while amount:
 				amount -= 1
 				del self._obj[index]
@@ -237,7 +234,10 @@ class JSArray(collections.MutableSequence):
 
 	def __delitem__(self, key):
 		self._checkBounds(key)
-		sef._value.setProperty(key, QtScript.QScriptValue())
+		self._value.property("splice").call(self._value, [
+			self._toJSValue(a)
+			for a in [key, 1]
+		])
 
 	def __setitem__(self, key, value):
 		self._value.setProperty(key, self._toJSValue(value))
@@ -317,10 +317,8 @@ class JSEvaluator(object):
 
 	def _toJSValue(self, value):
 		#immutable values first
-		try:
+		with contextlib.ignored(TypeError):
 			return QtScript.QScriptValue(value)
-		except TypeError:
-			pass
 		#including null (None)
 		if value is None:
 			return self._engine.nullValue()
@@ -335,8 +333,7 @@ class JSEvaluator(object):
 		except TypeError:
 			pass
 		else:
-			if datetime.isValid():
-				return self._engine.newDate(value)
+			return self._engine.newDate(value)
 		#object (JSObject)
 		try:
 			jsObj = value.toJSObject()
@@ -385,59 +382,70 @@ class JSEvaluator(object):
 		return self._functionCache[value]
 
 	def _toPythonValue(self, value, scope=None):
-		if not scope:
-			scope = self._engine.globalObject()
+		with contextlib.ignored(ValueError):
+			return self._convertImmutableJSValue(value)
+		return self._convertMutableJSValue(value, scope)
 
-		getProperty = lambda key: self._toPythonValue(value.property(key))
-		#immutable
-		if not value.isValid():
+	def _convertImmutableJSValue(self, value):
+		#immutable values are converted straight into their Python
+		#equivalents.
+		if not value.isValid() or value.isNull() or value.isUndefined():
 			return None
 		elif value.isBool():
 			return value.toBool()
 		elif value.isNumber():
-			number = value.toNumber()
-			if round(number) == number:
-				return int(number)
-			else:
-				return number
-		elif value.isNull():
-			return None
+			return self._toPythonNumber(value)
 		elif value.isString():
 			return unicode(value.toString())
-		elif value.isUndefined():
-			return None
-		#mutable
-		elif value.scriptClass():
+		else:
+			raise ValueError("Unknown value type")
+
+	def _convertMutableJSValue(self, value, scope):
+		#mutable values are wrapped as much as possible. Exception:
+		#the Date case, where an equivalent (but new) Python object is
+		#made.
+		if value.scriptClass():
 			return self._objectCache[int(value.data().toInteger())]
 		elif value.isArray():
-			a = JSArray(self._toJSValue, self._toPythonValue, value)
-			return a
+			return JSArray(self._toJSValue, self._toPythonValue, value)
 		elif value.isDate():
 			return value.toDateTime().toPyDateTime()
 		elif value.isFunction() or value.isError():
-			def _getJsArgs(args, kwargs):
-				if kwargs:
-					args = list(args) + [kwargs]
-				return [self._toJSValue(arg) for arg in args]
-			def wrapper(*args, **kwargs):
-				jsArgs = _getJsArgs(args, kwargs)
-				result = value.call(scope, jsArgs)
-				self._checkForErrors()
-				return self._toPythonValue(result)
-			def new(*args, **kwargs):
-				jsArgs = _getJsArgs(args, kwargs)
-				result = value.construct(jsArgs)
-				self._checkForErrors()
-				return self._toPythonValue(result)
-			wrapper.new = new
-			return wrapper
+			return self._wrapJSFunction(value, scope)
 		elif value.isObject():
 			return JSObject(value, self._toPythonValue, self._toJSValue)
-		else:# pragma : no cover
-			#can't imagine a situation in which this would happen, but
-			#if it ever does, an exception is better than going on
-			#silently.
-			raise NotImplementedError("Can't convert such a value to Python")
+		else:
+			raise ValueError("Unknown value type.")
+
+	def _getJsArgs(self, args, kwargs):
+		if kwargs:
+			args = list(args) + [kwargs]
+		return [self._toJSValue(arg) for arg in args]
+
+	def _toPythonNumber(self, value):
+		number = value.toNumber()
+		if round(number) == number:
+			return int(number)
+		else:
+			return number
+
+	def _wrapJSFunction(self, value, scope):
+		if not scope:
+			scope = self._engine.globalObject()
+
+		def wrapper(*args, **kwargs):
+			jsArgs = self._getJsArgs(args, kwargs)
+			result = value.call(scope, jsArgs)
+			self._checkForErrors()
+			return self._toPythonValue(result)
+		def new(*args, **kwargs):
+			jsArgs = self._getJsArgs(args, kwargs)
+			result = value.construct(jsArgs)
+			self._checkForErrors()
+			return self._toPythonValue(result)
+		wrapper.new = new
+		return wrapper
+
 
 class JSEvaluatorModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

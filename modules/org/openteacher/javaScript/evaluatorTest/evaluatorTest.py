@@ -150,6 +150,79 @@ class TestCase(unittest.TestCase):
 			self.assertEqual(sequence[0], 4)
 			self.assertEqual(sequence.index(3), 1)
 
+	def testArrayToString(self):
+		for js in self._getEvaluators():
+			self.assertTrue(js.eval("(function (seq) {return seq.toString()})")([1, 2, 3]))
+
+	def testSettingArrayIndex(self):
+		for js in self._getEvaluators():
+			seq = [1, 2, 3]
+			js.eval("(function (seq) {seq[0] = 4})")(seq)
+			self.assertEqual(seq, [4, 2, 3])
+
+	def testDictToString(self):
+		for js in self._getEvaluators():
+			self.assertTrue(js.eval("(function (mapping) {return mapping.toString()})")({"a": 1}))
+
+	def testObjectToString(self):
+		for js in self._getEvaluators():
+			self.assertTrue(js.eval("(function (obj) {return obj.toString()})")(object()))
+
+	def testSetObjectAttribute(self):
+		class MyObject(object):
+			pass
+		for js in self._getEvaluators():
+			obj = MyObject()
+			js.eval("(function (obj) {obj.x = 1})")(obj)
+			self.assertEqual(obj.x, 1)
+
+	def testUndefinedObjectAttribute(self):
+		for js in self._getEvaluators():
+			self.assertIsNone(js.eval("(function (obj) {return obj.x})")(object()))
+
+	def testUndefinedPyObjectKey(self):
+		for js in self._getEvaluators():
+			with self.assertRaises(KeyError):
+				js.eval("({a: 1})")["b"]
+
+
+	def testUndefinedPyObjectAttribute(self):
+		for js in self._getEvaluators():
+			with self.assertRaises(AttributeError):
+				js.eval("({a: 1})").b
+
+	def testRemovingUndefinedPyObjectAttribute(self):
+		for js in self._getEvaluators():
+			with self.assertRaises(AttributeError):
+				del js.eval("({a: 1})").b
+
+	def testRemovingPyObjectAttribute(self):
+		for js in self._getEvaluators():
+			obj = js.eval("({a: 1})")
+			del obj.a
+			with self.assertRaises(AttributeError):
+				obj.a
+
+	def testPyObjectRepr(self):
+		for js in self._getEvaluators():
+			self.assertTrue(repr(js.eval("({a: 1})")))
+
+	def testRemovingPyArrayIndex(self):
+		for js in self._getEvaluators():
+			array = js.eval("[1, 2, 3]")
+			del array[0]
+			self.assertEqual(array, [2, 3])
+
+	def testSettingPyArrayIndex(self):
+		for js in self._getEvaluators():
+			array = js.eval("[1, 2, 3]")
+			array[0] = 4
+			self.assertEqual(array, [4, 2, 3])
+
+	def testPyArrayRepr(self):
+		for js in self._getEvaluators():
+			self.assertTrue(repr(js.eval("[1, 2, 3]")))
+
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestModule, self).__init__(*args, **kwargs)

@@ -135,18 +135,6 @@ class TestCase(unittest.TestCase):
 
 	def _testSettingOtherLessonTypeWhileShowingACorrection(self):
 		for controller in self._getControllers():
-			if controller.__class__.__name__ == "JSObject":
-				#FIXME: This breaks because the objects that are
-				#registered inside an event aren't equal. I've tried
-				#to just catch that KeyError (we know Event works, it's
-				#tested in other places), but that meant it needed to
-				#throw Python errors in JS, which fails with this
-				#error message somehow:
-				#TypeError: invalid argument to sipBadCatcherResult()
-				#
-				#Hopefully that is fixable somehow in the future. For
-				#now, skip the test with that module.
-				continue
 			self._makeUnusedControllerShowACorrection(controller)
 
 			uiWatcher = UiEnablerWatcher(controller)
