@@ -1,0 +1,54 @@
+# Turkish translation for openteacher
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-04-05 10:56+0200\n"
+"PO-Revision-Date: 2013-04-29 15:32+0000\n"
+"Last-Translator: kodadiirem <Unknown>\n"
+"Language-Team: Turkish <tr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-04-30 05:47+0000\n"
+"X-Generator: Launchpad (build 16580)\n"
+
+#: studyStackApi.py:137
+msgid "Select category"
+msgstr "Kategori seç"
+
+#: studyStackApi.py:138
+msgid "Please select a category"
+msgstr "Lütfen bir kategori seşin"
+
+#: studyStackApi.py:143
+msgid "Select list"
+msgstr "Liste seç"
+
+#: studyStackApi.py:144
+msgid "Please select a list"
+msgstr "Lütfen bir liste seçin"
+
+#: studyStackApi.py:220
+msgid "Import from studystack.com"
+msgstr "studystack.com'dan içe aktar"
+
+#: studyStackApi.py:265
+msgid "No Study Stack connection"
+msgstr "Study Stack bağlantısı yok"
+
+#: studyStackApi.py:266
+msgid ""
+"Study Stack didn't accept the connection. Are you sure that your internet "
+"connection works and http://www.studystack.com/ is online?"
+msgstr ""
+"Study Stack bağlantıyı onaylamadı. İnternet bağlantınızın çalıştığından ve "
+"http://www.studystack.com/ sitesinin çevirim içi olduğundan emin misiniz?"
+
+#: studyStackApi.py:271
+msgid "The word list was imported from Study Stack successfully."
+msgstr "Kelime listesi Study Stack'tan başarılı bir şekilde içe aktarıldı."
