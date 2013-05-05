@@ -433,6 +433,7 @@ class JSEvaluator(object):
 		if not scope:
 			scope = self._engine.globalObject()
 
+		name = str(value.property("name").toString())
 		def wrapper(*args, **kwargs):
 			jsArgs = self._getJsArgs(args, kwargs)
 			result = value.call(scope, jsArgs)
@@ -444,8 +445,10 @@ class JSEvaluator(object):
 			self._checkForErrors()
 			return self._toPythonValue(result)
 		wrapper.new = new
+		if name:
+			wrapper.__name__ = "js_" + name
+			wrapper.new.__name__ = "js_new_" + name
 		return wrapper
-
 
 class JSEvaluatorModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

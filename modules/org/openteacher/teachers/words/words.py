@@ -198,8 +198,6 @@ def installQtClasses():
 				with contextlib.ignored(IndexError):
 					itemModifiers.append(self._modForPath(path).modifyItem)
 
-			#FIXME > 3.0: maybe the item modifiers should also be applied
-			#in the results dialog?
 			def modifyItem(item):
 				#function that applies all item modifiers on an item and
 				#returns the result at the end of the chain. Before that is

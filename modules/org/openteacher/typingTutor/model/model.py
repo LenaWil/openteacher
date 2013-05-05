@@ -207,33 +207,46 @@ First place your fingers on the so-called home row: your fingers, from left to r
 		if len(user["results"]) == 1:
 			instr += _("Congratulations, you finished your first exercise!") + "\n\n"
 
-		if user["status"] == "mistakes":
-			amountOfMistakes = user["results"][-1]["amountOfMistakes"]
-			instr += random.choice([
-				ngettext(
-					"You made %s mistake, please keep trying until you can do it flawless.",
-					"You made %s mistakes, please keep trying until you can do it flawless.",
-					amountOfMistakes
-				),
-				ngettext(
-					"Too bad, you made %s mistake. Keep practising to get better!",
-					"Too bad, you made %s mistakes. Keep practising to get better!",
-					amountOfMistakes
-				)
-			]) % amountOfMistakes + "\n\n"
+		generateStatusInstruction = {
+			"mistakes": self._mistakeInstruction,
+			"slow": self._slowInstruction,
+			"next": self._nextInstruction,
+		}[user["status"]]
+		instr += generateStatusInstruction(user)
 
-		if user["status"] == "slow":
-			instr += _("You made zero mistakes. Now try to improve your typing speed a bit.") + "\n\n"
+		return instr.strip()
 
+	def _mistakeInstruction(self, user):
+		instr = u""
+
+		amountOfMistakes = user["results"][-1]["amountOfMistakes"]
+		instr += random.choice([
+			ngettext(
+				"You made %s mistake, please keep trying until you can do it flawless.",
+				"You made %s mistakes, please keep trying until you can do it flawless.",
+				amountOfMistakes
+			),
+			ngettext(
+				"Too bad, you made %s mistake. Keep practising to get better!",
+				"Too bad, you made %s mistakes. Keep practising to get better!",
+				amountOfMistakes
+			)
+		]) % amountOfMistakes + "\n\n"
+
+		if user["exerciseType"] == "letters" and self._wordsPerMinute(user["results"][-1]) >= 40:
+			instr = instr.rstrip() + " " + _("To archieve that, you might try slowing down a bit.") + "\n\n"
+		return instr
+
+	def _slowInstruction(self, user):
+		return _("You made zero mistakes. Now try to improve your typing speed a bit.") + "\n\n"
+
+	def _nextInstruction(self, user):
+		instr = u""
 		if user["exerciseType"] == "letters":
-			if user["status"] == "mistakes" and self._wordsPerMinute(user["results"][-1]) >= 40:
-				instr = instr.rstrip() + " " + _("To archieve that, you might try slowing down a bit.") + "\n\n"
-
-			if user["status"] == "next":
-				instr += random.choice([
-					_("You made zero mistakes and are typing fast enough, so you can continue practising some new letter combinations. Keep up the good work!"),
-					_("You did it flawlessly and fast! Continue practising some new letters combinations to get even better!"),
-				]) + "\n\n"
+			instr += random.choice([
+				_("You made zero mistakes and are typing fast enough, so you can continue practising some new letter combinations. Keep up the good work!"),
+				_("You did it flawlessly and fast! Continue practising some new letters combinations to get even better!"),
+			]) + "\n\n"
 			#the first time the fingers go from the home row
 			if user["level"] == 9:
 				instr += _("You're now going to learn letters that aren't on the home row. To see which fingers you need to use, see the keyboard image on your screen. When you're not using a finger to type a letter, put it back on the home row directly.") + "\n\n"
@@ -241,13 +254,13 @@ First place your fingers on the so-called home row: your fingers, from left to r
 			if user["level"] % 9 == 6:
 				instr += _("The keys you're going to practise now are typed by the left and right index finger and further away from those fingers than the other keys we practised on the current row. Make sure you return your finger to its position on the home row when you're typing another letter.") + "\n\n"
 
-		if user["exerciseType"] == "words" and user["status"] == "next":
+		if user["exerciseType"] == "words":
 			instr += random.choice([
 				_("You made zero mistakes and are typing fast enough, so you can continue practising with some new words. Keep up the good work!"),
 				_("You did it flawlessly and fast! Continue practising with new words to get even better!")
 			]) + "\n\n"
 
-		return instr.strip()
+		return instr
 
 	def layout(self, username):
 		return getattr(self, self._users[username]["layout"])

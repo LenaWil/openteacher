@@ -27,50 +27,63 @@ import faulthandler; faulthandler.enable()
 import moduleManager
 import unittest
 import openteacher
+import logging
 
 class ModulesTest(unittest.TestCase):
 	def setUp(self):
 		self._mm = moduleManager.ModuleManager(openteacher.MODULES_PATH)
 
-	def _enableIncludingDependencies(self, mod, minimalDependencies):
-		enabledMods = []
+	def _enableIncludingDependenciesIfNotActive(self, mod, minimalDependencies):
 		#the fast exit so the recursiveness isn't forever
 		if getattr(mod, "active", False):
-			return True, enabledMods
+			return True, []
+		return self._enableIncludingDependencies(mod, minimalDependencies)
 
-		for selector in getattr(mod, "requires", []):
-			success = False
-			for requirement in selector:
-				subSuccess, otherMods = self._enableIncludingDependencies(requirement, minimalDependencies)
-				enabledMods.extend(otherMods)
-				if subSuccess:
-					success = True
-					if minimalDependencies:
-						#dependencies met for this selector, stop trying
-						break
-			if not success:
-				#dependencies couldn't be satisfied
-				return False, enabledMods
-
-		if not minimalDependencies:
-			for selector in getattr(mod, "uses", []):
-				for requirement in selector:
-					success, otherMods = self._enableIncludingDependencies(requirement, minimalDependencies)
-					enabledMods.extend(otherMods)
+	def _enableIncludingDependencies(self, mod, minimalDependencies):
+		success, enabledMods = self._enableDependencies(mod, minimalDependencies)
+		if not success:
+			return False, enabledMods
 
 		#enable
 		if hasattr(mod, "enable"):
-#			print "enabling ", mod.__class__.__file__
+			logging.debug("enabling " + mod.__class__.__file__)
 			mod.enable()
 		enabled = getattr(mod, "active", False)
 		if enabled:
 			enabledMods.append(mod)
 		return enabled, enabledMods
 
+	def _enableDependencies(self, mod, minimalDependencies):
+		enabledMods = []
+
+		for selector in getattr(mod, "requires", []):
+			success, enabledMods = self._enableDependencySelector(selector, minimalDependencies, enabledMods)
+			if not success:
+				#fast exit
+				return False, enabledMods
+
+		if not minimalDependencies:
+			for selector in getattr(mod, "uses", []):
+				success, enabledMods = self._enableDependencySelector(selector, minimalDependencies, enabledMods)
+		return True, enabledMods
+
+	def _enableDependencySelector(self, selector, minimalDependencies, enabledMods):
+		success = False
+		for requirement in selector:
+			subSuccess, otherMods = self._enableIncludingDependenciesIfNotActive(requirement, minimalDependencies)
+			enabledMods.extend(otherMods)
+			if subSuccess:
+				success = True
+				if minimalDependencies:
+					#dependencies met for this selector, stop trying
+					break
+		#dependencies couldn't be satisfied
+		return success, enabledMods
+
 	def _disableDependencyTree(self, mods):
 		for mod in reversed(mods):
 			if hasattr(mod, "disable"):
-#				print "disabling", mod.__class__.__file__
+				logging.debug("disabling " + mod.__class__.__file__)
 				mod.disable()
 
 	def _fakeExecuteModule(self):
@@ -92,24 +105,19 @@ class ModulesTest(unittest.TestCase):
 		next(iter(self._mm.mods(type="modules"))).profile = "default"
 
 	def _doTest(self, minimalDependencies):
-		try:
-			self._fakeExecuteModule()
+		self._fakeExecuteModule()
 
-			for mod in self._mm.mods:
-				startVars = set(vars(mod).keys()) - set(["active"])
-				success, enabledMods = self._enableIncludingDependencies(mod, minimalDependencies)
-				self._disableDependencyTree(enabledMods)
-				endVars = set(vars(mod).keys()) - set(["active"])
-				try:
-					self.assertEqual(startVars, endVars)
-				except AssertionError: # pragma: no cover
-					print mod
-					raise
-#				print ""
-		except Exception, e:# pragma: no cover
-#			import traceback
-#			traceback.print_exc()
-			raise
+		for mod in self._mm.mods:
+			startVars = set(vars(mod).keys()) - set(["active"])
+			success, enabledMods = self._enableIncludingDependenciesIfNotActive(mod, minimalDependencies)
+			self._disableDependencyTree(enabledMods)
+			endVars = set(vars(mod).keys()) - set(["active"])
+			try:
+				self.assertEqual(startVars, endVars)
+			except AssertionError: # pragma: no cover
+				print mod
+				raise
+			logging.debug("")
 
 	def testMinimalDependencies(self):
 		self._doTest(True)
@@ -120,6 +128,7 @@ class ModulesTest(unittest.TestCase):
 if __name__ == "__main__":
 	#since this mod doesn't respect the 'uses' behaviour completely,
 	#fix a possible conflict between gui and qtApp.
+	logging.basicConfig(level=logging.WARNING)
 	from PyQt4 import QtGui
 	app = QtGui.QApplication([])
 

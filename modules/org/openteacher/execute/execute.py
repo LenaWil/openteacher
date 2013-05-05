@@ -21,6 +21,7 @@
 import argparse
 import sys
 import contextlib
+import logging
 
 class ExecuteModule(object):
 	"""When OpenTeacher is run, this module sets a profile, controls
@@ -89,19 +90,30 @@ class ExecuteModule(object):
 			"type": unicode,
 			"help": "Start OpenTeacher with the PROFILE profile. Don't know which profiles are included? I'll give away one: 'help' ;).",
 		})
+		parser.add_argument("-d", "--debug", **{
+			"action": "store_true",
+			"help": "Enable debugging messages. Useful for developers and bug reporters only."
+		})
 		args, otherArgs = parser.parse_known_args(sys.argv)
 		#remove the args we parsed from sys.argv
 		del sys.argv[0:]
 		sys.argv.extend(otherArgs)
 
-		self._modules = self._getMod(type="modules")
-		self._modules.profile = args.profile
+		#setup logging
+		level = logging.DEBUG if args.debug else logging.WARNING
+		logging.basicConfig(level=level)
 
+		#setup the modules module
+		self._modules = self._getMod(type="modules")
+
+		#build events used by other mods
 		event = self._modules.default(type="event")
 
 		self.startRunning = event.createEvent()
 		self.aboutToExit = event.createEvent()
 
+		#enable all other mods
+		self._modules.profile = args.profile
 		self._modules.updateToProfile()
 
 		#setup translation

@@ -19,6 +19,9 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
+import logging
+
+logger = logging.getLogger(__name__)
 
 TEST_USERNAME = "_modeltest"
 
@@ -79,15 +82,13 @@ class TestCase(unittest.TestCase):
 
 	def _examineInstruction(self, model):
 		instruction = model.currentInstruction(TEST_USERNAME)
-		if self._showInfo:
-			print "INSTRUCTION:", instruction
+		logger.debug("INSTRUCTION: " + instruction)
 		self.assertIsInstance(instruction, basestring)
 		self.assertTrue(instruction)
 
 	def _examineExercise(self, model):
 		exercise = model.currentExercise(TEST_USERNAME)
-		if self._showInfo:
-			print "NEW EXERCISE:", exercise
+		logger.debug("NEW EXERCISE: " + exercise)
 		self.assertIsInstance(exercise, basestring)
 		self.assertTrue(exercise)
 
@@ -96,8 +97,7 @@ class TestCase(unittest.TestCase):
 
 	def _examineLevel(self, model):
 		level = model.level(TEST_USERNAME)
-		if self._showInfo:
-			print "LEVEL:", level
+		logger.debug("LEVEL: %s", level)
 		self.assertIsInstance(level, int)
 		self.assertTrue(level >= 0)
 
@@ -112,8 +112,7 @@ class TestCase(unittest.TestCase):
 				model.speed(TEST_USERNAME)
 		else:
 			speed = model.speed(TEST_USERNAME)
-			if self._showInfo:
-				print "SPEED PREVIOUS EXERCISE: %s wpm" % speed
+			logger.debug("SPEED PREVIOUS EXERCISE: %s wpm", speed)
 			self.assertIsInstance(speed, int)
 			self.assertTrue(speed >= 0)
 
@@ -143,8 +142,7 @@ class TestCase(unittest.TestCase):
 				self._examineSpeed(model, iteration)
 				self._examineTargetSpeed(model)
 
-				if self._showInfo:
-					print ""
+				logger.debug("")
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -158,8 +156,6 @@ class TestModule(object):
 
 	def enable(self):
 		self.TestCase = TestCase
-		#you can temporily activate this to get debugging info.
-		self.TestCase._showInfo = False
 		self.TestCase._mm = self._mm
 		self.active = True
 

@@ -122,6 +122,7 @@ OpenTeacher is available for Linux, Windows and Mac OS X."""
 
 		del self._modules
 		del self.metadata
+		del self.__doc__
 
 def init(moduleManager):
 	return MetadataModule(moduleManager)

@@ -412,10 +412,11 @@ def installQtClasses():
 		"""Widget that shows the currently selected person in a test (third column)"""
 
 		message = QtCore.pyqtSignal(str)
-		def __init__(self, connection, studentInTest, compose, answerChecker, *args, **kwargs):
+		def __init__(self, connection, studentInTest, compose, answerChecker, appName, *args, **kwargs):
 			super(TakenTestWidget, self).__init__(*args, **kwargs)
 			
 			self.answerChecker = answerChecker
+			self.appName = appName
 			
 			self.studentInTest = studentInTest
 			self.student = connection.get(studentInTest["student"])
@@ -525,8 +526,7 @@ def installQtClasses():
 			if hasattr(self, "answersWrongLabelLabel"):
 				self.answersWrongLabelLabel.setText(_("Answers wrong:"))
 			if hasattr(self, "markLabelLabel"):
-				#FIXME > 3.0: use metadata["name"]
-				self.markLabelLabel.setText(_("OpenTeacher mark:"))
+				self.markLabelLabel.setText(_("{appName} mark:").format(appName=self.appName))
 			if hasattr(self, "finalMarkLabelLabel"):
 				self.finalMarkLabelLabel.setText(_("Final mark:"))
 			if hasattr(self, "table"):
@@ -569,13 +569,14 @@ def installQtClasses():
 
 	class TeacherPanel(QtGui.QSplitter):
 		message = QtCore.pyqtSignal(str)
-		def __init__(self, connection, studentsView, testSelecter, uploaderModule, answerChecker, compose, *args, **kwargs):
+		def __init__(self, connection, studentsView, testSelecter, uploaderModule, answerChecker, compose, appName, *args, **kwargs):
 			super(TeacherPanel, self).__init__(*args, **kwargs)
 			
 			self.connection = connection
 			self.testSelecter = testSelecter
 			self.compose = compose
 			self.answerChecker = answerChecker
+			self.appName = appName
 			
 			# Add tests layoutumn
 			self.testsWidget = TestsWidget(connection, uploaderModule, testSelecter)
@@ -595,7 +596,7 @@ def installQtClasses():
 			self.insertWidget(1, testWidget)
 		
 		def addTakenTestlayoutumn(self, studentInTest):
-			takenTestWidget = TakenTestWidget(self.connection, studentInTest, self.compose, self.answerChecker)
+			takenTestWidget = TakenTestWidget(self.connection, studentInTest, self.compose, self.answerChecker, self.appName)
 			takenTestWidget.message.connect(self.message.emit)
 			
 			with contextlib.ignored(AttributeError):
@@ -628,6 +629,7 @@ class TestModeTeacherPanelModule(object):
 			self._mm.mods(type="translator"),
 		)
 		self.requires = (
+			self._mm.mods(type="metadata"),
 			self._mm.mods(type="event"),
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="testMenu"),
@@ -712,10 +714,11 @@ class TestModeTeacherPanelModule(object):
 			testSelecter = self._modules.default("active", type="testModeTestSelecter").getTestSelecter()
 			testChecker = self._modules.default("active", type="wordsStringChecker").check
 			compose = self._modules.default("active", type="wordsStringComposer").compose
+			appName = self._modules.default("active", type="metadata").metadata["name"]
 			# Create an answer checker
 			answerChecker = AnswerChecker(self.connection, testChecker)
 			
-			self.teacherPanel = TeacherPanel(self.connection, studentsView, testSelecter, upload, answerChecker, compose)
+			self.teacherPanel = TeacherPanel(self.connection, studentsView, testSelecter, upload, answerChecker, compose, appName)
 			
 			self.tab = uiModule.addCustomTab(self.teacherPanel)
 			self.tab.closeRequested.handle(self.tab.close)

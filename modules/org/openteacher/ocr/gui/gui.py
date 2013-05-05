@@ -313,15 +313,14 @@ class OcrGuiModule(object):
 	def _startWizard(self):
 		self._wizard = OcrWizard(self._loadWordList, self._composeList)
 
-#FIXME: find a way to use this without segfaulting...
-#		tab = self._uiModule.addCustomTab(self._wizard)
-#		tab.closeRequested.handle(self._wizard.reject)
-#		self._wizard.tab = tab
+		tab = self._uiModule.addCustomTab(self._wizard)
+		tab.closeRequested.handle(self._wizard.reject)
+		self._wizard.tab = tab
 
 		self._retranslate()
 		self._wizard.exec_()
 
-#		tab.close()
+		tab.close()
 		if self._wizard.result():
 			lesson = self._wizard.getLesson()
 			with contextlib.ignored(NotImplementedError):
@@ -342,8 +341,7 @@ class OcrGuiModule(object):
 		if hasattr(self, "_wizard"):
 			self._wizard.retranslate()
 			self._wizard.setWindowTitle(_("Words lesson from picture"))
-#FIXME: see above
-#			self._wizard.tab.title = self._wizard.windowTitle()
+			self._wizard.tab.title = self._wizard.windowTitle()
 
 	def disable(self):
 		self.active = False

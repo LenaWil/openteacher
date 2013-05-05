@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -20,6 +20,8 @@
 
 import code
 import sys
+import os
+import contextlib
 import __builtin__
 
 BANNER_TEMPL = """Welcome to the {appname} {appversion} interactive Python shell!
@@ -61,6 +63,20 @@ class ShellModule(object):
 			return result
 		__builtin__.__import__ = myImport
 
+		try:
+			import readline
+		except ImportError:
+			pass
+		else:
+			import rlcompleter
+			readline.parse_and_bind("tab: complete")
+
+			histfile = os.path.join(os.path.expanduser("~"), ".pyhist")
+			try:
+				readline.read_history_file(histfile)
+			except IOError:
+				pass
+
 		banner = BANNER_TEMPL.format(**{
 			"appname": self._metadata["name"],
 			"appversion": self._metadata["version"],
@@ -77,6 +93,8 @@ class ShellModule(object):
 		except SystemExit:
 			#exit the OpenTeacher way.
 			print "Have a nice day!"
+		with contextlib.ignored(NameError):
+			readline.write_history_file(histfile)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

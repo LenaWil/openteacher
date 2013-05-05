@@ -133,8 +133,12 @@ class OcrWordListLoaderModule(object):
 				#than two columns back. Not likely, but possible.
 				continue
 			questionColumn, answerColumn = row
-			questions = " ".join([question["text"] for question in questionColumn])
-			answers = " ".join([answer["text"] for answer in answerColumn])
+			questions = u" ".join([question["text"] for question in questionColumn])
+			answers = u" ".join([answer["text"] for answer in answerColumn])
+
+			#remove tabs, newlines, etc. in questions & answers.
+			questions = u" ".join(q for q in questions.split() if q)
+			answers = u" ".join(a for a in answers.split() if a)
 
 			lesson["list"]["items"].append({
 				"id": id,

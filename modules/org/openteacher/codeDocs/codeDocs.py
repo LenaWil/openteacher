@@ -459,9 +459,10 @@ class CodeDocumentationModule(object):
 		root = ModulesHandler(self._mm, templates, buildModuleGraph, devDocsBaseDir, hue)
 
 		cherrypy.tree.mount(root)
-		cherrypy.config.update({"server.socket_host": "0.0.0.0"})
-		if not (len(sys.argv) > 1 and sys.argv[1] == "debug"):
-			cherrypy.config.update({"environment": "production"})
+		cherrypy.config.update({
+			"server.socket_host": "0.0.0.0",
+			"environment": "production",
+		})
 		cherrypy.engine.start()
 		print "Serving at http://localhost:8080/"
 		print "Type 'quit' and press enter to stop the server"
