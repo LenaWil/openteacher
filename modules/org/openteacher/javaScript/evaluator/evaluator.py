@@ -22,10 +22,11 @@ import datetime
 import exceptions
 import collections
 import itertools
-import traceback
-import sys
 import json
 import contextlib
+import logging
+
+logger = logging.getLogger(__name__)
 
 PYTHON_EXCEPTIONS = dict(
 	(name, exc) for name, exc in vars(exceptions).iteritems()
@@ -368,15 +369,12 @@ class JSEvaluator(object):
 					except (IndexError, TypeError, AttributeError):
 						result = value(*args)
 				except BaseException, exc:
-					print >> sys.stderr, ""
-					print >> sys.stderr, "Catched exception in Python code. Passing to JavaScript (this might just be fine):"
-					traceback.print_exc()
-					print >> sys.stderr, "---"
+					logger.debug("Catched exception in Python code. Passing to JavaScript (this might just be fine):")
 					#convert exceptions to JS exceptions
 					args = (exc.__class__.__name__, str(exc))
 					exc = self["JSEvaluatorPythonError"].new(*args)
 					context.throwValue(self._toJSValue(exc))
-					return
+					return self._engine.undefinedValue()
 				return QtScript.QScriptValue(self._toJSValue(result))
 			self._functionCache[value] = self._engine.newFunction(wrapper)
 		return self._functionCache[value]

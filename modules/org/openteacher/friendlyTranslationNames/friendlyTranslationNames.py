@@ -44,9 +44,9 @@ class FriendlyTranslationNamesModule(object):
 		"""
 		translator = self._modules.default("active", type="translator")
 		files = os.listdir(self._mm.resourcePath("translations"))
-		files = filter(lambda x: x.endswith(".po"), files)
-		codes = map(lambda x: x.split(".")[0], files)
-		codes += "C" #English
+		files = (f for f in files if f.endswith(".po"))
+		codes = [f.split(".")[0] for f in files]
+		codes.append("C") #English
 		#if no nice name is known, just return the language code.
 		languages = KeyAsDefaultDict()
 		for code in codes:

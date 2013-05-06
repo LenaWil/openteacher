@@ -223,6 +223,22 @@ class TestCase(unittest.TestCase):
 		for js in self._getEvaluators():
 			self.assertTrue(repr(js.eval("[1, 2, 3]")))
 
+	def testRaisingExceptionInPythonCodeCalledByJS(self):
+		def exc():
+			raise ValueError("Hi!")
+		for js in self._getEvaluators():
+			js["exc"] = exc
+			js.eval("""
+				var a;
+				try {
+					exc();
+				} catch(e) {
+					a = e;
+				}"""
+			)
+			self.assertEqual(js["a"].name, "ValueError")
+			self.assertEqual(js["a"].message, "Hi!")
+
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestModule, self).__init__(*args, **kwargs)
