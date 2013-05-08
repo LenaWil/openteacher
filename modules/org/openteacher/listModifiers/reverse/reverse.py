@@ -21,6 +21,8 @@
 import __builtin__
 
 class ReverseModule(object):
+	"""Reverses all indexes of items in a test."""
+
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(ReverseModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager

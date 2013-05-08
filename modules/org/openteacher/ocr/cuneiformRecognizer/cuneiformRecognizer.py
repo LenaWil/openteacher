@@ -23,6 +23,10 @@ import tempfile
 import subprocess
 
 class CuneiformOCRModule(object):
+	"""Recognizes text in an image with the Cuneiform OCR program.
+	   Outputs to HOCR.
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(CuneiformOCRModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager

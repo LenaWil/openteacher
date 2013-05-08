@@ -19,11 +19,15 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 class JSInputTypingLogicModule(object):
+	"""This module offers an object that can be used to control the part
+	   of a GUI where the user types his/her answer in in a test.
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(JSInputTypingLogicModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "jsInputTypingLogic"
+		self.type = "inputTypingLogic"
 		self.javaScriptImplementation = True
 		self.requires = (
 			self._mm.mods("javaScriptImplementation", type="javaScriptEvent"),

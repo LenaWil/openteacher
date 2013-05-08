@@ -34,10 +34,12 @@ PYTHON_EXCEPTIONS = dict(
 )
 
 PYTHON_ERROR_DEFINITION = """
-var JSEvaluatorPythonError = function(name, message) {
+var JSEvaluatorPythonError = function(name, message, id) {
 	this.name = name;
 	this.message = message;
 	this.lineNumber = -1;
+
+	this.id = id;
 }
 JSEvaluatorPythonError.prototype = new Error();
 """
@@ -200,7 +202,7 @@ class JSObject(collections.MutableMapping):
 		return self._obj
 
 	def __repr__(self):
-		return "<%s %s>" % (self.__class__.__name__, dict(self))
+		return repr(dict(self))
 
 	def __eq__(self, other):
 		return dict(self) == dict(other)
@@ -250,7 +252,7 @@ class JSArray(collections.MutableSequence):
 		return list(self) == list(other)
 
 	def __repr__(self):
-		return "<%s %s>" % (self.__class__.__name__, list(self))
+		return repr(list(self))
 
 	def insert(self, index, value):
 		self._value.property("splice").call(self._value, [
@@ -270,6 +272,7 @@ class JSEvaluator(object):
 		self._engine = QtScript.QScriptEngine()
 		self._functionCache = {}
 		self._objectCache = {}
+		self._exceptionCache = {}
 		self._proxyReferences = set()
 		self._counter = itertools.count()
 
@@ -287,6 +290,10 @@ class JSEvaluator(object):
 		name = unicode(jsExc.property("name").toString())
 		message = unicode(jsExc.property("message").toString())
 		lineNumber = int(jsExc.property("lineNumber").toString())
+		excId = int(jsExc.property("id").toInteger())
+
+		with contextlib.ignored(KeyError):
+			return self._exceptionCache[excId]
 
 		try:
 			msg = message + " (line %s)" % lineNumber
@@ -370,8 +377,13 @@ class JSEvaluator(object):
 						result = value(*args)
 				except BaseException, exc:
 					logger.debug("Catched exception in Python code. Passing to JavaScript (this might just be fine):")
+
+					#store exception so it can be gotten back later
+					excId = id(exc)
+					self._exceptionCache[excId] = exc
+
 					#convert exceptions to JS exceptions
-					args = (exc.__class__.__name__, str(exc))
+					args = (exc.__class__.__name__, str(exc), excId)
 					exc = self["JSEvaluatorPythonError"].new(*args)
 					context.throwValue(self._toJSValue(exc))
 					return self._engine.undefinedValue()

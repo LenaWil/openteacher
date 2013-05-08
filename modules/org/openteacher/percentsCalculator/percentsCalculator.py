@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, Marten de Vries
+#	Copyright 2011, 2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -29,10 +29,17 @@ class PercentsCalculatorModule(object):
 		self.active = True
 
 	def calculateAveragePercents(self, tests):
-		percentSum = sum((self.calculatePercents(test) for test in tests))
+		"""Calculates the average score of all ``tests`` in percents"""
+
+		percents = (self.calculatePercents(test) for test in tests)
+		percentSum = sum(percents)
 		return int(round(percentSum / float(len(tests))))
 
 	def calculatePercents(self, test):
+		"""Calculates the score of the user in the passed-in ``test``
+		   in percents.
+
+		"""
 		results = map(lambda x: 1 if x["result"] == "right" else 0, test["results"])
 		total = len(results)
 		amountRight = sum(results)

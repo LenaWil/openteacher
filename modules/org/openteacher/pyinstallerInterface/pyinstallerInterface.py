@@ -26,6 +26,12 @@ import os
 import shutil
 
 class PyinstallerInterfaceModule(object):
+	"""This module freezes the current installation of OpenTeacher with
+	   PyInstaller into an executable. For more on PyInstaller, see:
+
+	   http://www.pyinstaller.org/
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(PyinstallerInterfaceModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager

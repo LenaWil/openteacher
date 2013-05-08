@@ -21,6 +21,11 @@
 import contextlib
 
 class WordsNeverAnsweredCorrectlyModule(object):
+	"""A list modifier that filters out all items that were already
+	   answered correctly during a test once. This means it *does*
+	   include words which have never been asked yet, too.
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(WordsNeverAnsweredCorrectlyModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
@@ -37,7 +42,7 @@ class WordsNeverAnsweredCorrectlyModule(object):
 
 	def modifyList(self, indexes, list):
 		self._list = list
-		newIndexes = filter(self._isNeverAnsweredCorrectly, indexes)
+		newIndexes = [i for i in indexes if self._isNeverAnsweredCorrectly(i)]
 		del self._list
 		return newIndexes
 

@@ -35,6 +35,14 @@ Builds the module map that's also shown in the code documentation. In
 most cases using the code documentation is easier, but maybe this comes
 in handy sometime...
 
+python utils/codeComplexity.py
+------------------------------
+Calculates the McCabe code complexity for (almost) every function in the
+OpenTeacher source tree. If it's higher than a certain threshold
+(configurable inside the script), then it shows the function name. Handy
+heuristic to see which code could use some refactoring. Or just to
+monitor how the code complexity evolves over time.
+
 Tools that help with testing
 ============================
 
@@ -54,13 +62,18 @@ python openteacher.py -p test-suite
 -----------------------------------
 Runs the test suite.
 
-python moduleTests.py
----------------------
+python utils/moduleTests.py
+---------------------------
 Tries to enable() and disable() all modules with different amounts of
 modules in uses enabled. Checks if modules reset their state on
 disable(). This segfaults sometimes, but it shouldn't give any other
 errors. (And if anyone manages to remove the segfault, that would be
 very welcome!)
+
+python utils/segfaultTest.py
+----------------------------
+Runs the moduleTests script described above over and over again until it
+segfaults. Handy if we ever want to get rid of that segfault.
 
 Tools that handle packaging
 ===========================

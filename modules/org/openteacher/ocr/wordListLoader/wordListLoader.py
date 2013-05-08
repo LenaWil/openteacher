@@ -21,7 +21,14 @@
 import HTMLParser
 
 class HocrParser(HTMLParser.HTMLParser):
+	"""A primitive HOCR parser. We can't use an xml parser like
+	   ElementTree, because HOCR isn't necessary valid xml. It's the
+	   case for Tesseract's output, but not for Cuneiform's. Anyway,
+	   this works.
+
+	"""
 	def __init__(self, *args, **kwargs):
+		#no super, old style class :(
 		HTMLParser.HTMLParser.__init__(self, *args, **kwargs)
 
 		self.rects = []
@@ -57,6 +64,8 @@ class HocrParser(HTMLParser.HTMLParser):
 			self.rects[-1]["text"] += data
 
 class OcrWordListLoaderModule(object):
+	"""Loads a word list from an image (e.g. a scan or picture)."""
+
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(OcrWordListLoaderModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
@@ -148,6 +157,11 @@ class OcrWordListLoaderModule(object):
 		return lesson
 
 	def loadWordList(self, imagePath):
+		"""Performs OCR on the image located at ``imagePath``. The
+		   result is converted into an OpenTeacher word list lesson
+		   mapping.
+
+		"""
 		#ocr image
 		hocr = self._imageToHocr(imagePath)
 		rects = self._hocrToRects(hocr)

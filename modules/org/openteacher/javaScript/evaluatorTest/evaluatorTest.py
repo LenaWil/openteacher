@@ -239,6 +239,20 @@ class TestCase(unittest.TestCase):
 			self.assertEqual(js["a"].name, "ValueError")
 			self.assertEqual(js["a"].message, "Hi!")
 
+	def testRaiseCustomExceptionInPythonCodeCalledByJS(self):
+		class CustomException(Exception):
+			pass
+		def exc():
+			raise CustomException("Hi!")
+
+		for js in self._getEvaluators():
+			js["exc"] = exc
+			with self.assertRaises(CustomException):
+				js.eval("""
+					var a;
+					exc();"""
+				)
+
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestModule, self).__init__(*args, **kwargs)

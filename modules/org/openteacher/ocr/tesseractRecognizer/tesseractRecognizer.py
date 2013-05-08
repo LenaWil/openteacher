@@ -23,6 +23,10 @@ import tempfile
 import subprocess
 
 class TesseractOCRModule(object):
+	"""Recognizes text in an image with the Tesseract OCR program.
+	   Outputs to HOCR.
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TesseractOCRModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager

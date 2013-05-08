@@ -260,6 +260,13 @@ def installQtClasses():
 				page.retranslate()
 
 class OcrGuiModule(object):
+	"""Provides a wizard that assists the user in loading a word list
+	   from a picture or scan of a real-world word list. (E.g. out of a
+	   book). The actual logic is in the ocrWordListLoader module,
+	   although some work around that (making the image ready) is done
+	   by this module.
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(OcrGuiModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager

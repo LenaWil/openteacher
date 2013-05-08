@@ -26,6 +26,12 @@ import urllib2
 import urllib
 
 class MobileGeneratorModule(object):
+	"""Generates the HTML of OpenTeacher Mobile as a command line
+	   profile. Includes an option to compress the JavaScript and CSS
+	   via web services. (So in that case, a network connection is
+	   required.)
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(MobileGeneratorModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager

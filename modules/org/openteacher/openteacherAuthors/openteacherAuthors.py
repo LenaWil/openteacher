@@ -91,6 +91,8 @@ class OpenTeacherAuthorsModule(object):
 		r.add(a.registerAuthor(_("Bug hunter"), u"Michael Tel"))
 
 		#Translators
+		#This section can be auto-generated with the following command:
+		#python openteacher.py -p get-translation-authors
 		r.add(a.registerAuthor(_("Translator (%s)") % "Afrikaans", u"computergeoffrey"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Arabic", u"Aminos Amigos"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Arabic", u"El Achèche ANIS"))

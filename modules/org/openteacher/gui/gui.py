@@ -179,6 +179,9 @@ class GuiModule(object):
 			self._mm.mods(type="translator"),
 			self._mm.mods(type="settings"),
 		)
+		self.priorities = {
+			"gtk": -1,
+		}
 		self.filesWithTranslations = ("gui.py", "ui.py")
 
 	def enable(self):

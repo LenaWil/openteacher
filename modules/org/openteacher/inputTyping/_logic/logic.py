@@ -179,6 +179,10 @@ class Controller(object):
 		self.disableCorrectAnyway.send()
 
 class InputTypingLogicModule(object):
+	"""This module offers an object that can be used to control the part
+	   of a GUI where the user types his/her answer in in a test.
+
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(InputTypingLogicModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
