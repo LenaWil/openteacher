@@ -294,17 +294,18 @@ class OpenTeacherBot(irc.IRCClient):
 		target = channel if channel in self.factory.channels else user.split("!")[0]
 
 		builders = [
-			self._buildBugResponse,
-			self._buildBranchResponse,
-			self._buildPyModResponse,
-			self._buildGoogleResponse,
 			self._buildAnswerResponse,
-			self._buildPythonResponse,
-			self._buildPythonResetResponse,
-			self._buildPepResponse,
-			self._buildQuitResponse,
 			self._buildBlueprintResponse,
+			self._buildBranchResponse,
+			self._buildBugResponse,
 			self._buildFactoidResponse,
+			self._buildGoogleResponse,
+			self._buildPepResponse,
+			self._buildPyModResponse,
+			self._buildPythonResetResponse,
+			self._buildPythonResponse,
+			self._buildQtResponse,
+			self._buildQuitResponse,
 		]
 
 		for buildResponse in builders:

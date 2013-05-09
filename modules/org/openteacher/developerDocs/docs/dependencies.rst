@@ -23,10 +23,20 @@ Dependencies for using OpenTeacher
 * tesseract-ocr | cuneiform
 
 also (test server):
+
 * python-django
 * django-rest-framework
 
+also (command line interface)
+
+* python-urwid
+
+also (gtk ui)
+
+* python-gi (gobject-introspection)
+
 and if we ever implement updates:
+
 * gpg
 * python-gnupg?
 
@@ -50,6 +60,10 @@ Dependencies for developing OpenTeacher
 * python-all-dev
 * build-essential
 
+(when building windows/mac packages only:)
+
+* PyInstaller
+
 Alternative runtimes
 ====================
 
@@ -62,14 +76,18 @@ Incompatible dependencies: PyPy
 * python-qt4
 * python-qt4-phonon
 * python-qt4-gl
+* python-enchant
 * python-pygraphviz
 * python-faulthandler (although similar tools might exist)
+* python-gi
+* PyInstaller
 
 unsure (but they probably work as they probably don't use C extensions):
 
 * python-launchpadlib
 * python-polib
 * python-gnupg
+* urwid
 
 Incompatible dependencies: CPython 3.x
 --------------------------------------
@@ -78,3 +96,4 @@ Incompatible dependencies: CPython 3.x
 * python-flask (but: 'https://github.com/mitsuhiko/flask/issues/587')
 * python-launchpadlib (https://bugs.launchpad.net/launchpadlib/+bug/1060734)
 * python-twisted (but: http://twistedmatrix.com/trac/milestone/Python-3.x & http://twistedmatrix.com/trac/wiki/Plan/Python3)
+* PyInstaller (but: http://www.pyinstaller.org/ticket/85)
