@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-04-05 10:56+0200\n"
-"PO-Revision-Date: 2013-05-10 00:28+0000\n"
+"POT-Creation-Date: 2013-04-05 10:55+0200\n"
+"PO-Revision-Date: 2013-05-11 00:54+0000\n"
 "Last-Translator: pp/bs <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,10 +17,6 @@ msgstr ""
 "X-Launchpad-Export-Date: 2013-05-11 05:44+0000\n"
 "X-Generator: Launchpad (build 16598)\n"
 
-#. TRANSLATORS: This is one of the file formats OpenTeacher
-#. TRANSLATORS: can read. It's named after the program that uses
-#. TRANSLATORS: it. See http://mnemosyne-proj.org/ for more info
-#. TRANSLATORS: on it.
-#: mnemosyne.py:65
-msgid "Mnemosyne"
-msgstr "Mnemosyne"
+#: smart.py:166
+msgid "Smart"
+msgstr "Inteligentna"
