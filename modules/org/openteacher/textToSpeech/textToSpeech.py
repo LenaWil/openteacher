@@ -25,6 +25,7 @@ import threading
 import shlex
 import platform
 import contextlib
+import distutils.spawn
 
 class DependencyError(Exception):
 	pass
@@ -51,11 +52,8 @@ class TextToSpeech(object):
 		if os.name == 'nt' or os.name == 'mac':
 			self.engine = pyttsx.init(_mm)
 		elif os.name == 'posix':
-			self.nullDevice = open(os.devnull, "w")
 			#check if espeak was installed
-			try:
-				subprocess.call(["espeak","--help"], stdout=self.nullDevice, stderr=self.nullDevice)
-			except OSError:
+			if not distutils.spawn.find_executable("espeak"):
 				raise DependencyError("Can't initiate text-to-speech. Espeak was not installed.")
 
 	def getVoices(self):

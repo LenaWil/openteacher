@@ -23,7 +23,9 @@
 import copy
 import weakref
 
-def getTeachWidget():
+def installQtClasses():
+	global TeachWidget
+
 	class TeachWidget(QtGui.QWidget):
 		lessonDone = QtCore.pyqtSignal()
 		listChanged = QtCore.pyqtSignal([object])
@@ -85,7 +87,6 @@ def getTeachWidget():
 				i += 1
 			
 			return answeredList
-	return TeachWidget
 
 class TestModeTeacherModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -118,8 +119,8 @@ class TestModeTeacherModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		global TeachWidget
-		TeachWidget = getTeachWidget()
+		installQtClasses()
+
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._activeWidgets = set()
 

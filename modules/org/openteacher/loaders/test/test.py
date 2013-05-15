@@ -53,7 +53,7 @@ class TestCase(unittest.TestCase):
 		return loadMods
 
 	def _loadFiles(self, results=[]):
-		if not self.advanced:
+		if self.mode not in ("all", "load"):
 			#don't run the tests.
 			return []
 		if not results:

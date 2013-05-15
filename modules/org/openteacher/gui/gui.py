@@ -412,10 +412,6 @@ class GuiModule(object):
 		self._widget.show()
 		self._app.exec_()
 
-		#Prevents segmentation fault
-		del self._app
-		QtGui.qApp = None
-
 	def _onCloseRequested(self):
 		#if not running, there's nothing that can be closed, so don't
 		#check if the method exists. (The callback is assigned in

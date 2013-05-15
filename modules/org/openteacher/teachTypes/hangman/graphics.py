@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Cas Widdershoven
+#	Copyright 2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -27,7 +28,6 @@ class HangmanGraphics(QtGui.QWidget):
 		self.mistakes = 0
 
 	def paintEvent(self, e):
-
 		self.qp = QtGui.QPainter()
 
 		self.qp.begin(self)        
@@ -35,18 +35,18 @@ class HangmanGraphics(QtGui.QWidget):
 		self.qp.end()
         
 	def initDraw(self):
-
 		pen = QtGui.QPen(QtCore.Qt.black, 2, QtCore.Qt.SolidLine)
 
 		self.qp.setPen(pen)
-		if self.mistakes >= 0:
-			self.qp.drawLine(20, 190, 280, 190)
-			self.qp.drawLine(60, 190, 60, 20)
-			self.qp.drawLine(20, 190, 60, 150)
-			self.qp.drawLine(100, 190, 60, 150)
-			self.qp.drawLine(60, 20, 190, 20)
-			self.qp.drawLine(60, 60, 100, 20)
-			self.qp.drawLine(190, 20, 190, 40)
+
+		self.qp.drawLine(20, 190, 280, 190)
+		self.qp.drawLine(60, 190, 60, 20)
+		self.qp.drawLine(20, 190, 60, 150)
+		self.qp.drawLine(100, 190, 60, 150)
+		self.qp.drawLine(60, 20, 190, 20)
+		self.qp.drawLine(60, 60, 100, 20)
+		self.qp.drawLine(190, 20, 190, 40)
+
 		if self.mistakes >= 1:
 			self.qp.drawEllipse(178, 40, 24, 24)	
 		if self.mistakes >= 2:

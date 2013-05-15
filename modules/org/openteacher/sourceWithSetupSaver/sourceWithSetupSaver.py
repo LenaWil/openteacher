@@ -145,23 +145,14 @@ class SourceWithSetupSaverModule(object):
 
 	def _buildFileIcons(self, imagePaths, qImage):
 		#generate file icons
-		def findSubIcon(type):
-			try:
-				return QtGui.QImage(self._modules.default("active", type="dataTypeIcons").findIcon(type))
-			except (KeyError, IndexError):
-				return QtGui.QImage()
 
 		for mimeType, imagePath in imagePaths.iteritems():
 			copy = qImage.scaled(128, 128, QtCore.Qt.KeepAspectRatio)
-			if mimeType == "application/x-openteachingwords":
-				otherImage = findSubIcon("words")
-			elif mimeType == "application/x-openteachingtopography":
-				otherImage = findSubIcon("topo")
-			elif mimeType == "application/x-openteachingmedia":
-				otherImage = findSubIcon("media")
-			else:
-				#nothing to project over the base icon
-				otherImage = QtGui.QImage()
+			otherImage = self._findSubIcon({
+				"application/x-openteachingwords": "words",
+				"application/x-openteachingtopography": "topo",
+				"application/x-openteachingmedia": "media",
+			}.get(mimeType))
 			if not otherImage.isNull():
 				otherImage = otherImage.scaled(64, 64, QtCore.Qt.KeepAspectRatio)
 
@@ -170,6 +161,12 @@ class SourceWithSetupSaverModule(object):
 			p.end()
 
 			copy.save(os.path.join(self._sourcePath, imagePath))
+
+	def _findSubIcon(self, type):
+		try:
+			return QtGui.QImage(self._modules.default("active", type="dataTypeIcons").findIcon(type))
+		except (KeyError, IndexError):
+			return QtGui.QImage()
 
 	def _buildLinuxFilesCopying(self, linuxDir):
 		#make a COPYING file in place for the generated files

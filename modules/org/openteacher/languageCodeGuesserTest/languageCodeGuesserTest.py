@@ -22,7 +22,7 @@ import unittest
 
 class TestCase(unittest.TestCase):
 	def _test(self, langName, code):
-		if self.advanced:
+		if self.mode not in ("all", "language-code-guesser"):
 			for mod in self._mm.mods("active", type="languageCodeGuesser"):
 				self.assertEqual(mod.guessLanguageCode(langName), code)
 

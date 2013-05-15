@@ -24,7 +24,7 @@ import os
 
 class TestCase(unittest.TestCase):
 	def testModuleGraphBuilder(self):
-		if not self.advanced: # pragma: no cover
+		if self.mode not in ("all", "module-graph-builder"): # pragma: no cover
 			return
 		for mod in self._mm.mods("active", type="moduleGraphBuilder"):
 			path = tempfile.mkstemp(".svg")[1]

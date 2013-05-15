@@ -187,9 +187,10 @@ class ModulesHandler(object):
 			with open(fpath, "r") as f:
 				lines = f.readlines()
 
-			def toUnicode(data):
-				return unicode(data, encoding="UTF-8", errors="replace")
-			lines = map(toUnicode, lines)
+			lines = (
+				unicode(line, encoding="UTF-8", errors="replace")
+				for line in lines
+			)
 			for i, line in enumerate(lines):
 				match = rePattern.search(line)
 				if not match:

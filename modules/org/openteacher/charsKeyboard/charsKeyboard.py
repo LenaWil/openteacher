@@ -105,9 +105,6 @@ def getKeyboadsWidget():
 				self.addTab(tab, module.name)
 				#connect the event that handles letter selection
 				tab.letterChosen.connect(self.letterChosen.send)
-				#make sure the widget updates on character changes
-				if hasattr(module, "updated"):
-					module.updated.handle(self.update)
 	return KeyboardsWidget
 
 class CharsKeyboardModule(object):
@@ -146,6 +143,12 @@ class CharsKeyboardModule(object):
 			pass
 		else:
 			translator.languageChangeDone.handle(self._update)
+
+		#to make sure the widgets are updated when their data sources
+		#are updated.
+		for dataMod in self._mm.mods("active", type="chars"):
+			if hasattr(dataMod, "updated"):
+				dataMod.updated.handle(self._update)
 
 		self.active = True
 

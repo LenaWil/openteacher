@@ -23,7 +23,7 @@ import unittest
 class TestCase(unittest.TestCase):
 	@property
 	def _mods(self):
-		if not self.advanced:
+		if self.mode not in ("all", "spell-check",):
 			#Quite io heavy. Both detecting the language and doing the
 			#spell checking.
 			return set()

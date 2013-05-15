@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2012, Cas Widdershoven
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -22,7 +22,9 @@
 
 import weakref
 
-def getRepeatScreenWidget():
+def installQtClasses():
+	global RepeatAnswerTeachWidget
+
 	class RepeatScreenWidget(QtGui.QWidget):
 		def __init__(self, repeatAnswerTeachWidget, compose, getFadeDuration, *args, **kwargs):
 			super(RepeatScreenWidget, self).__init__(*args, **kwargs)
@@ -51,9 +53,7 @@ def getRepeatScreenWidget():
 			palette.setColor(QtGui.QPalette.WindowText, color)
 
 			self.answerLabel.setPalette(palette)
-	return RepeatScreenWidget
 
-def getStartScreenWidget():
 	class StartScreenWidget(QtGui.QWidget):
 		def __init__(self, *args, **kwargs):
 			super(StartScreenWidget, self).__init__(*args, **kwargs)
@@ -71,9 +71,7 @@ def getStartScreenWidget():
 		def retranslate(self):
 			self.label.setText(_("Click the button to start"))
 			self.startButton.setText(_("Start!"))
-	return StartScreenWidget
 
-def getRepeatAnswerTeachWidget():
 	class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
 		def __init__(self, modules, compose, getFadeDuration, tabChanged, letterChosen, *args, **kwargs):
 			super(RepeatAnswerTeachWidget, self).__init__(*args, **kwargs)
@@ -114,7 +112,6 @@ def getRepeatAnswerTeachWidget():
 			self.repeatScreen.word = word
 			if self.isVisible():
 				self.startRepeat()
-	return RepeatAnswerTeachWidget
 
 class RepeatAnswerTeachTypeModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -142,10 +139,7 @@ class RepeatAnswerTeachTypeModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		global RepeatAnswerTeachWidget, RepeatScreenWidget, StartScreenWidget
-		RepeatAnswerTeachWidget = getRepeatAnswerTeachWidget()
-		RepeatScreenWidget = getRepeatScreenWidget()
-		StartScreenWidget = getStartScreenWidget()
+		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 

@@ -77,6 +77,9 @@ Test module
 			self._mm = moduleManager
 
 			self.type = "test"
+			self.requires = (
+				self._mm.mods(type="%modType%"),
+			)
 
 		def enable(self):
 			self.TestCase = TestCase

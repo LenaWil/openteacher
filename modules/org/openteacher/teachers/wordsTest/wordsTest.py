@@ -18,46 +18,37 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import tempfile
-import subprocess
-import distutils.spawn
+import unittest
 
-class CuneiformOCRModule(object):
-	"""Recognizes text in an image with the Cuneiform OCR program.
-	   Outputs to HOCR.
+class TestCase(unittest.TestCase):
+	@property
+	def _mods(self):
+		if self.mode not in ("all", "words-teacher"):
+			return []
+		return self._mm.mods("active", type="wordsTeacher")
 
-	"""
+	def testCreateWordsTeacher(self):
+		for mod in self._mods:
+			mod.createWordsTeacher()
+
+class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(CuneiformOCRModule, self).__init__(*args, **kwargs)
+		super(TestModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "ocrRecognizer"
-		self.priorities = {
-			"default": 666,
-		}
-
-	def _callCuneiform(self, *args):
-		with open(os.devnull, "w") as f:
-			return subprocess.call(["cuneiform"] + list(args), stdout=f, stderr=subprocess.STDOUT)
-
-	def toHocr(self, imagePath):
-		hocrPath = tempfile.mkstemp(".html")[1]
-		self._callCuneiform("-f", "hocr", "-o", hocrPath, imagePath)
-		with open(hocrPath) as f:
-			hocr = unicode(f.read(), encoding="UTF-8")
-
-		os.remove(hocrPath)
-		return hocr
+		self.type = "test"
+		self.requires = (
+			self._mm.mods(type="wordsTeacher"),
+		)
 
 	def enable(self):
-		if not distutils.spawn.find_executable("cuneiform"):# pragma: no cover
-			#remain inactive
-			return
+		self.TestCase = TestCase
+		self.TestCase._mm = self._mm
 		self.active = True
 
 	def disable(self):
 		self.active = False
+		del self.TestCase
 
 def init(moduleManager):
-	return CuneiformOCRModule(moduleManager)
+	return TestModule(moduleManager)

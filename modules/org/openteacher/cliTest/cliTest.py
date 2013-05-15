@@ -25,6 +25,8 @@ import tempfile
 import os
 import shutil
 
+MODES = ("all", "cli")
+
 class TestCase(unittest.TestCase):
 	"""Some pretty basic tests for the cli module. For now, this only
 	   tests the default cases. Not much, but better than nothing.
@@ -72,7 +74,7 @@ class TestCase(unittest.TestCase):
 
 	def testMerge(self):
 		"""merge outFile.otwd fileOne.otwd fileOne.otwd"""
-		if not self.advanced:
+		if self.mode not in MODES:
 			#write io, too heavy
 			return
 		inputFile = self._mm.resourcePath("testfile.otwd")
@@ -84,7 +86,7 @@ class TestCase(unittest.TestCase):
 
 	def testOcrWordList(self):
 		"""ocr-word-list inputFile.png outputFile"""
-		if not self.advanced:
+		if self.mode not in MODES:
 			#write io, too heavy
 			return
 
@@ -102,7 +104,7 @@ class TestCase(unittest.TestCase):
 		   outputFile inputFile
 
 		"""
-		if not self.advanced:
+		if self.mode not in MODES:
 			#write io, too heavy
 			return
 
@@ -133,7 +135,7 @@ class TestCase(unittest.TestCase):
 	def testReverseList(self):
 		"""reverse-list input-file output-file"""
 
-		if not self.advanced:
+		if self.mode not in MODES:
 			#write io, too heavy
 			return
 
@@ -153,7 +155,7 @@ class TestCase(unittest.TestCase):
 
 		#not literally because we may not assume the module's dir is
 		#writable.
-		if not self.advanced:
+		if self.mode not in MODES:
 			#write io, too heavy
 			return
 

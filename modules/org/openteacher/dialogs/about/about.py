@@ -23,7 +23,9 @@
 import random
 import weakref
 
-def getAboutTextLabel():
+def installQtClasses():
+	global AboutDialog
+
 	class AboutTextLabel(QtGui.QLabel):
 		def __init__(self, metadata, templatePath, *args, **kwargs):
 			super(AboutTextLabel, self).__init__(*args, **kwargs)
@@ -41,18 +43,14 @@ def getAboutTextLabel():
 				"websiteText": _("Project website"),
 			})
 			self.setText(t(**data))
-	return AboutTextLabel
 
-def getAboutImageLabel():
 	class AboutImageLabel(QtGui.QLabel):
 		def __init__(self, metadata, *args, **kwargs):
 			super(AboutImageLabel, self).__init__(*args, **kwargs)
 
 			self.setPixmap(QtGui.QPixmap(metadata["comicPath"]))
 			self.setAlignment(QtCore.Qt.AlignCenter)
-	return AboutImageLabel
 
-def getAboutWidget():
 	class AboutWidget(QtGui.QWidget):
 		"""The about page (shows some metadata)."""
 
@@ -72,9 +70,7 @@ def getAboutWidget():
 
 		def retranslate(self):
 			self.textLabel.retranslate()
-	return AboutWidget
 
-def getShortLicenseWidget():
 	class ShortLicenseWidget(QtGui.QWidget):
 		def __init__(self, metadata, *args, **kwargs):
 			super(ShortLicenseWidget, self).__init__(*args, **kwargs)
@@ -95,18 +91,14 @@ def getShortLicenseWidget():
 
 		def retranslate(self):
 			self.fullLicenseButton.setText(_("Full license text"))
-	return ShortLicenseWidget
 
-def getLongLicenseWidget():
 	class LongLicenseWidget(QtGui.QTextEdit):
 		def __init__(self, metadata, *args, **kwargs):
 			super(LongLicenseWidget, self).__init__(*args, **kwargs)
 
 			self.setReadOnly(True)
 			self.setText(metadata["license"])
-	return LongLicenseWidget
 
-def getLicenseWidget():
 	class LicenseWidget(QtGui.QStackedWidget):
 		"""The license page. Can show both the short copyright notice,
 		   and the full license.
@@ -128,9 +120,7 @@ def getLicenseWidget():
 
 		def showFullLicense(self):
 			self.setCurrentIndex(1) #longLicenseWidget
-	return LicenseWidget
 
-def getPersonWidget():
 	class PersonWidget(QtGui.QWidget):
 		def __init__(self, *args, **kwargs):
 			super(PersonWidget, self).__init__(*args, **kwargs)
@@ -177,9 +167,7 @@ def getPersonWidget():
 
 			self.taskLabel.setPalette(palette)
 			self.nameLabel.setPalette(palette)
-	return PersonWidget
 
-def getAuthorsWidget():
 	class AuthorsWidget(QtGui.QWidget):
 		"""The authors widget. Displays all authors of OpenTeacher with
 		   a fade animation.
@@ -230,9 +218,7 @@ def getAuthorsWidget():
 				self.authors = self.backupAuthors[:]
 				random.shuffle(self.authors)
 				self.nextAuthor()
-	return AuthorsWidget
 
-def getAboutDialog():
 	class AboutDialog(QtGui.QTabWidget):
 		"""The about dialog, consists of an about page, a license page
 		   and an authors page.
@@ -267,7 +253,6 @@ def getAboutDialog():
 		def startAnimation(self):
 			if self.currentWidget() == self.authorsWidget and not self.authorsWidget.animationActive:
 				self.authorsWidget.startAnimation()
-	return AboutDialog
 
 class AboutDialogModule(object):
 	"""Provides the about dialog."""
@@ -331,17 +316,7 @@ class AboutDialogModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return #remain inactive
-
-		global AboutDialog, AboutImageLabel, AboutTextLabel, AuthorsWidget, AboutWidget, LicenseWidget, PersonWidget, LongLicenseWidget, ShortLicenseWidget
-		AboutDialog = getAboutDialog()
-		AboutImageLabel = getAboutImageLabel()
-		AboutTextLabel = getAboutTextLabel()
-		AboutWidget = getAboutWidget()
-		AuthorsWidget = getAuthorsWidget()
-		LicenseWidget = getLicenseWidget()
-		LongLicenseWidget = getLongLicenseWidget()
-		PersonWidget = getPersonWidget()
-		ShortLicenseWidget = getShortLicenseWidget()
+		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._activeDialogs = set()

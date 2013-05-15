@@ -33,6 +33,8 @@ def pythonPaths():
 				continue
 			if "pyratemp" in file:
 				continue
+			if "admin_files" in root:
+				continue
 			yield os.path.join(root, file)
 
 def complexityInfo(output):
@@ -45,7 +47,7 @@ def complexityInfo(output):
 
 def complexityForPaths():
 	for path in pythonPaths():
-		output = subprocess.check_output(["python", "-m", "mccabe", "--min=10", path]).strip()
+		output = subprocess.check_output(["python", "-m", "mccabe", "--min=9", path]).strip()
 		info = list(complexityInfo(output))
 		if info:
 			yield path, info

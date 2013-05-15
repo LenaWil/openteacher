@@ -377,6 +377,7 @@ class JSEvaluator(object):
 						result = value(*args)
 				except BaseException, exc:
 					logger.debug("Catched exception in Python code. Passing to JavaScript (this might just be fine):")
+					logger.debug(exc, exc_info=True)
 
 					#store exception so it can be gotten back later
 					excId = id(exc)

@@ -63,8 +63,7 @@ class TestCase(unittest.TestCase):
 		      the actual events are send.)
 
 		"""
-		if not self.advanced: # pragma: no cover
-			#this takes a long time, only when not in 'fast' mode.
+		if self.mode not in ("all", "translation"): # pragma: no cover
 			return
 		for mod in self._mm.mods("active", type="translator"):
 			mod.sendLanguageChanged()

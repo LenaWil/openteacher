@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2008-2011, Milan Boers
-#	Copyright 2009-2012, Marten de Vries
+#	Copyright 2009-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -136,15 +136,9 @@ class WordsTestTypeModule(object):
 
 		item = self._itemForResult(result)
 		if column == self.QUESTION:
-			try:
-				return compose(item["questions"])
-			except KeyError:
-				return compose([])
+			return compose(item.get("questions"), [])
 		elif column == self.ANSWER:
-			try:
-				return compose(item["answers"])
-			except KeyError:
-				return compose([])
+			return compose(item.get("answers", []))
 		elif column == self.GIVEN_ANSWER:
 			try:
 				return result["givenAnswer"]

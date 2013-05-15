@@ -46,6 +46,45 @@ class ShellModule(object):
 		)
 
 	def _run(self):
+		#tab completion & history file
+		try:
+			import readline
+		except ImportError:
+			pass
+		else:
+			import rlcompleter
+			readline.parse_and_bind("tab: complete")
+
+			histfile = os.path.join(os.path.expanduser("~"), ".pyhist")
+			try:
+				readline.read_history_file(histfile)
+			except IOError:
+				pass
+
+		#setup banner & local variables
+		banner = BANNER_TEMPL.format(**{
+			"appname": self._metadata["name"],
+			"appversion": self._metadata["version"],
+		})
+		self._patch()
+		args = {
+			"banner": banner,
+			"local": {
+				"mm": self._mm,
+				"modules": self._modules,
+			}
+		}
+		try:
+			code.interact(**args)
+		except SystemExit:
+			#exit the OpenTeacher way.
+			print "Have a nice day!"
+
+		#save tab completion history file
+		with contextlib.ignored(NameError):
+			readline.write_history_file(histfile)
+
+	def _patch(self):
 		def f(s):
 			d = {}
 			for c in (65, 97):
@@ -62,39 +101,6 @@ class ShellModule(object):
 				print f("Clguba zbqhyrf ner pbby, BcraGrnpure zbqhyrf ner orggre!")
 			return result
 		__builtin__.__import__ = myImport
-
-		try:
-			import readline
-		except ImportError:
-			pass
-		else:
-			import rlcompleter
-			readline.parse_and_bind("tab: complete")
-
-			histfile = os.path.join(os.path.expanduser("~"), ".pyhist")
-			try:
-				readline.read_history_file(histfile)
-			except IOError:
-				pass
-
-		banner = BANNER_TEMPL.format(**{
-			"appname": self._metadata["name"],
-			"appversion": self._metadata["version"],
-		})
-		args = {
-			"banner": banner,
-			"local": {
-				"mm": self._mm,
-				"modules": self._modules,
-			}
-		}
-		try:
-			code.interact(**args)
-		except SystemExit:
-			#exit the OpenTeacher way.
-			print "Have a nice day!"
-		with contextlib.ignored(NameError):
-			readline.write_history_file(histfile)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()

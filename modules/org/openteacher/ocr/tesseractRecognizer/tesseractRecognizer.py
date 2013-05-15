@@ -21,6 +21,7 @@
 import os
 import tempfile
 import subprocess
+import distutils.spawn
 
 class TesseractOCRModule(object):
 	"""Recognizes text in an image with the Tesseract OCR program.
@@ -50,9 +51,7 @@ class TesseractOCRModule(object):
 			return subprocess.call(["tesseract"] + list(args), stdout=f, stderr=subprocess.STDOUT)
 
 	def enable(self):
-		try:
-			self._callTesseract("-v")
-		except OSError:# pragma: no cover
+		if not distutils.spawn.find_executable("tesseract"):# pragma: no cover
 			#remain inactive
 			return
 

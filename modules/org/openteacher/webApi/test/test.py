@@ -24,10 +24,12 @@ import os
 import json
 import sys
 
+MODES = ("all", "web-api")
+
 class TestCase(unittest.TestCase):
 	@classmethod
 	def setUpClass(cls):
-		if not cls.advanced:
+		if cls.mode not in MODES:
 			return
 		#monkey patch the bcrypt module, gave the test suite a 9 second
 		#speedup when this comment was written. Worth it.
@@ -56,13 +58,13 @@ class TestCase(unittest.TestCase):
 
 	@classmethod
 	def tearDownClass(cls):
-		if not cls.advanced:
+		if not cls.mode in MODES:
 			return
 		for mod in cls._mm.mods("active", type="webApiServer"):
 			os.remove(mod.app.config["DATABASE"])
 
 	def testIndex(self):
-		if not self.advanced:
+		if not self.mode in MODES:
 			return
 		for client in self.clients:
 			data = client.get("/").data
@@ -74,7 +76,7 @@ class TestCase(unittest.TestCase):
 		return {"Authorization": "Basic " + (username + ":" + password).encode("base64").strip()}
 
 	def testShares(self):
-		if not self.advanced:
+		if self.mode not in MODES:
 			return
 		k = {"headers": self._auth("test", "test")}
 		for client in self.clients:
@@ -127,7 +129,7 @@ class TestCase(unittest.TestCase):
 			self.assertEqual(r.status_code, 200)
 
 	def testLists(self):
-		if not self.advanced:
+		if self.mode not in MODES:
 			return
 		k = {"headers": self._auth("test", "test")}
 		k2 = {"headers": self._auth("secondtest", "test")}
@@ -180,7 +182,7 @@ class TestCase(unittest.TestCase):
 			self.assertEquals(resp11.status_code, 200)
 
 	def testUsers(self):
-		if not self.advanced:
+		if self.mode not in MODES:
 			return
 		for client in self.clients:
 			resp = client.post("/users/", data={

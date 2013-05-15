@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -54,18 +54,15 @@ class TestRunnerModule(object):
 
 	def _run(self):
 		try:
-			advanced = {
-				"extensive": True,
-				"fast": False
-			}[sys.argv[1]]
+			mode = sys.argv[1]
 		except (IndexError, KeyError):
-			print >> sys.stderr, "This command needs one command line argument: 'extensive' or 'fast'. When passing the second, only a subset of tests is run (the ones taking relatively long are left out). Otherwise, all tests are run."
+			print >> sys.stderr, "This command needs one command line argument, 'mode', which determines which tests are run. Not sure what to use? Use 'all'."
 			return
 
 		testSuite = unittest.TestSuite()
 		for module in self._mm.mods("active", type="test"):
-			#set the advanced flag
-			module.TestCase.advanced = advanced
+			#set the test mode
+			module.TestCase.mode = mode
 			newTests = unittest.TestLoader().loadTestsFromTestCase(module.TestCase)
 			testSuite.addTests(newTests)
 		result = unittest.TextTestRunner().run(testSuite)

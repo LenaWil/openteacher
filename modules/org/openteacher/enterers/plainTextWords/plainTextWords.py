@@ -20,7 +20,9 @@
 
 import contextlib
 
-def getEnterPlainTextDialog():
+def installQtClasses():
+	global EnterPlainTextDialog
+
 	class EnterPlainTextDialog(QtGui.QDialog):
 		def __init__(self, parseList, charsKeyboard, *args, **kwargs):
 			super(EnterPlainTextDialog, self).__init__(*args, **kwargs)
@@ -80,8 +82,6 @@ def getEnterPlainTextDialog():
 					_("Please make sure every line contains an '='-sign or tab between the questions and answers.")
 				)
 
-	return EnterPlainTextDialog
-
 class PlainTextWordsEntererModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(PlainTextWordsEntererModule, self).__init__(*args, **kwargs)
@@ -107,6 +107,7 @@ class PlainTextWordsEntererModule(object):
 			"teacher": x,
 			"words-only": x,
 			"code-documentation": x,
+			"test-suite": x,
 			"default": -1,
 		}
 		self.filesWithTranslations = ("plainTextWords.py",)
@@ -122,13 +123,13 @@ class PlainTextWordsEntererModule(object):
 			return
 
 	def enable(self):
-		global QtGui, EnterPlainTextDialog
+		global QtGui
 		try:
 			from PyQt4 import QtGui
 		except ImportError:
 			#stay disabled
 			return
-		EnterPlainTextDialog = getEnterPlainTextDialog()
+		installQtClasses()
 
 		self._references = set()
 		self._activeDialogs = set()
@@ -186,12 +187,14 @@ class PlainTextWordsEntererModule(object):
 		self._retranslate()
 
 		eptd.exec_()
-		if eptd.result():
-			lesson = eptd.lesson
-			if lesson:
-				lesson["changed"] = True
-				with contextlib.ignored(NotImplementedError):
-					self._modules.default("active", type="loaderGui").loadFromLesson("words", lesson)
+		if not eptd.result():
+			return
+		lesson = eptd.lesson
+		if not lesson:
+			return
+		lesson["changed"] = True
+		with contextlib.ignored(NotImplementedError):
+			self._modules.default("active", type="loaderGui").loadFromLesson("words", lesson)
 
 		self._activeDialogs.remove(eptd)
 		tab.close()

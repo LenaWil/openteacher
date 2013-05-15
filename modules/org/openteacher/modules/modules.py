@@ -19,6 +19,10 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import itertools
+import logging
+
+logger = logging.getLogger(__name__)
 
 class ModulesModule(object):
 	"""This module has two purposes:
@@ -38,6 +42,7 @@ class ModulesModule(object):
 		self.requires = (
 			self._mm.mods(type="event"),
 		)
+		self._mtimeCache = {}
 
 	def _getPriority(self, mod):
 		try:
@@ -46,13 +51,23 @@ class ModulesModule(object):
 			try:
 				return mod.priorities["default"]
 			except (AttributeError, KeyError):
-				#return a negative priority to the sort algorithm so the
-				#module gets on top of the list. The negative integer
-				#needs to be a number, that makes sure the last
-				#installed module is on the top of the list. This just
-				#uses seconds since installation.
-				path = mod.__class__.__file__
-				return - int(os.path.getmtime(path))
+				return self._getFallbackPriority(mod)
+
+	def _getFallbackPriority(self, mod):
+		try:
+			return self._mtimeCache[mod]
+		except KeyError:
+			#return a negative priority to the sort algorithm so the
+			#module gets on top of the list. The negative integer
+			#needs to be a number, that makes sure the last
+			#installed module is on the top of the list. This just
+			#uses seconds since installation.
+			path = mod.__class__.__file__
+			priority = - int(os.path.getmtime(path))
+			#store so mtime is not requested repeatedly for the same
+			#file.
+			self._mtimeCache[mod] = priority
+			return priority
 
 	def sort(self, *args, **kwargs):
 		"""Sorts the modules returned by self._mm.mods(*args, **kwargs)
@@ -103,7 +118,16 @@ class ModulesModule(object):
 		self._visited_mods = set()
 		self._allMods = set(self._mm.mods)
 
-		mods_without_dependencies = set(
+		self._potentialRequirements = set(
+			(potentialRequirement, dep_mod)
+			for dep_mod in self._allMods
+			for potentialRequirement in itertools.chain(
+				self._depFor(dep_mod, "requires"),
+				self._depFor(dep_mod, "uses")
+			)
+		)
+
+		mods_without_dependencies = (
 			mod
 			for mod in self._allMods
 			if not (
@@ -111,9 +135,10 @@ class ModulesModule(object):
 				getattr(mod, "uses", None)
 			)
 		)
-
 		for mod in mods_without_dependencies:
 			self._visit(mod)
+
+		logger.debug(self._sorted_tree)
 
 		self._enableModules()
 		self._disableModules()
@@ -124,18 +149,20 @@ class ModulesModule(object):
 		del self._allMods
 
 	def _visit(self, mod):
-		if mod not in self._visited_mods:
-			self._visited_mods.add(mod)
-			for dep_mod in self._allMods:
-				for requirement in self._depFor("requires", dep_mod):
-					if mod in requirement:
-						self._visit(dep_mod)
-				for used in self._depFor("uses", dep_mod):
-					if mod in used:
-						self._visit(dep_mod)
-			self._sorted_tree.append(mod)
+		if mod in self._visited_mods:
+			return
+		self._visited_mods.add(mod)
 
-	def _depFor(self, type, mod):
+		depMods = (
+			depMod
+			for requirement, depMod in self._potentialRequirements
+			if mod in requirement
+		)
+		for depMod in depMods:
+			self._visit(depMod)
+		self._sorted_tree.append(mod)
+
+	def _depFor(self, mod, type):
 		attribute = getattr(mod, type, ())
 		try:
 			dep = self._filterCache[attribute]
@@ -149,10 +176,15 @@ class ModulesModule(object):
 		#enable modules
 		for mod in reversed(self._sorted_tree):
 			active = getattr(mod, "active", False) #False -> default
-			if not active and self._hasPositivePriority(mod):
-				depsactive = self._dependenciesActive(mod)
-				if hasattr(mod, "enable") and depsactive:
-					mod.enable()
+			shouldTryEnabling = not active and hasattr(mod, "enable") and self._hasPositivePriority(mod)
+			if not shouldTryEnabling:
+				continue
+			depsactive = self._dependenciesActive(mod)
+			if depsactive:
+				logger.debug("Enabling %s" % mod)
+				mod.enable()
+			else:
+				logger.debug("Dependenc(y/ies) inactive for %s" % mod)
 
 	def _dependenciesActive(self, mod):
 		return all(
@@ -167,9 +199,10 @@ class ModulesModule(object):
 		#disable modules
 		for mod in self._sorted_tree:
 			active = getattr(mod, "active", False) #False -> default
-			if active and not self._hasPositivePriority(mod):
-				if hasattr(mod, "disable"):
-					mod.disable()
+			shouldBeDisabled = active and hasattr(mod, "disable") and not self._hasPositivePriority(mod)
+			if shouldBeDisabled:
+				logger.debug("Disabling %s" % mod)
+				mod.disable()
 
 def init(moduleManager):
 	return ModulesModule(moduleManager)

@@ -33,7 +33,7 @@ class TestCase(unittest.TestCase):
 					yield path
 		
 	def testJsFiles(self):
-		if not self.advanced:
+		if self.mode not in ("all", "jshint"):
 			return
 		p = subprocess.Popen(["jshint"] + list(self._jsFiles()), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 		errors = p.communicate()[0].strip()

@@ -32,12 +32,12 @@ class ModuleGraphBuilderModule(object):
 			self._mm.mods(type="metadata"),
 		)
 
-	def buildModuleGraph(self, path):
-		def addEdges(mod, graph, demands, color):
-			for demand in demands:
-				for demandedMod in demand:
-					graph.add_edge(mod.type, demandedMod.type, dir="forward", color=color)
+	def _addEdges(self, mod, graph, demands, color):
+		for demand in demands:
+			for demandedMod in demand:
+				graph.add_edge(mod.type, demandedMod.type, dir="forward", color=color)
 
+	def buildModuleGraph(self, path):
 		graph = pygraphviz.AGraph(**{
 			"label": "%s module map" % self._metadata["name"],
 			"labelloc": "t", #top
@@ -55,9 +55,9 @@ class ModuleGraphBuilderModule(object):
 				continue
 			graph.add_node(mod.type)
 			if hasattr(mod, "requires"):
-				addEdges(mod, graph, mod.requires, "#555555")
+				self._addEdges(mod, graph, mod.requires, "#555555")
 			if hasattr(mod, "uses"):
-				addEdges(mod, graph, mod.uses, "#dddddd")
+				self._addEdges(mod, graph, mod.uses, "#dddddd")
 
 		graph.draw(path, prog="dot")
 

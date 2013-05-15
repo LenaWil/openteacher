@@ -28,6 +28,7 @@ class VocatrainApi(object):
 	      'http://woordjesleren.nl/'. Don't change it while looking up
 	      a list, since the id's that are passed to the lookup methods
 	      aren't the same anymore after this chagnes.
+
 	"""
 	def __init__(self, parseList, *args, **kwargs):
 		super(VocatrainApi, self).__init__(*args, **kwargs)

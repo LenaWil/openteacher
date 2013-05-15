@@ -33,7 +33,7 @@ class Lesson(object):
 
 class TestCase(unittest.TestCase):
 	def _testSavingType(self, type, lesson):
-		if not self.advanced:
+		if self.mode not in ("all", "save"):
 			#leave this test out
 			return
 		for saver in self._mm.mods("active", type="save"):

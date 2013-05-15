@@ -347,10 +347,7 @@ class UiControllerModule(object):
 		self._uiModule.openIntoAction.enabled = openIntoSupport
 
 		#save
-		if self._saver:
-			saveSupport = self._saver.saveSupport
-		else:
-			saveSupport = False
+		saveSupport = self._saver.saveSupport if self._saver else False
 		saveSupport = saveSupport and self._fileDialogs is not None
 		self._uiModule.saveAsAction.enabled = saveSupport
 
