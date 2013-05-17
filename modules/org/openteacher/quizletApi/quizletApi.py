@@ -22,17 +22,21 @@ import urllib2
 import urllib
 import json
 import datetime
+import logging
+
+logger = logging.getLogger("quizlet")
 
 class QuizletApi(object):
 	"""See for documentation of the API this communicates with:
 	   https://quizlet.com/api/2.0/docs/ (requires login)
 
 	"""
-	def __init__(self, appId, parse, *args, **kwargs):
+	def __init__(self, appId, parse, getLanguageName, *args, **kwargs):
 		super(QuizletApi, self).__init__(*args, **kwargs)
 
 		self._appId = appId
 		self._parse = parse
+		self._getLanguageName = getLanguageName
 
 		self._baseUrl = "https://api.quizlet.com/2.0"
 
@@ -46,8 +50,8 @@ class QuizletApi(object):
 		try:
 			fd = self._open("/search/sets", q=searchTerm)
 		except urllib2.HTTPError, e:
-			print e
-			print e.read()
+			logger.debug(e)
+			logger.debug(e.read())
 			return {"sets": []}
 		return json.load(fd)
 
@@ -59,8 +63,8 @@ class QuizletApi(object):
 
 		list = {}
 		list["title"] = data["title"]
-		list["questionLanguage"] = pycountry.languages.get(alpha2=data["lang_terms"]).name
-		list["answerLanguage"] = pycountry.languages.get(alpha2=data["lang_definitions"]).name
+		list["questionLanguage"] = self._getLanguageName(data["lang_terms"])
+		list["answerLanguage"] = self._getLanguageName(data["lang_definitions"])
 
 		list["items"] = []
 		for card in data["terms"]:
@@ -177,6 +181,7 @@ class QuizletApiModule(object):
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="buttonRegister"),
 			self._mm.mods(type="wordsStringParser"),
+			self._mm.mods(type="languageCodeGuesser"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -189,27 +194,11 @@ class QuizletApiModule(object):
 		}
 
 	def enable(self):
-		global QtCore, QtGui, pycountry
+		global QtCore, QtGui
 		try:
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		try:
-			import pycountry
-		except ImportError:
-			#fallback. Not nice, but it works.
-			class Obj(object):
-				pass
-
-			class Lang(object):
-				def __init__(self, name, *args, **kwargs):
-					super(Lang, self).__init__(*args, **kwargs)
-					self.name = name
-
-			pycountry = Obj()
-			pycountry.languages = Obj()
-			pycountry.languages.get = lambda alpha2: Lang(alpha2)
-
 		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
@@ -232,12 +221,16 @@ class QuizletApiModule(object):
 		self.active = True
 
 	@property
+	def _getLanguageName(self):
+		return self._modules.default("active", type="languageCodeGuesser").getLanguageName
+
+	@property
 	def _api(self):
 		#Just kidding...
 		p, x, k, a, s = str, eval, 26, "base64", "hex"
 		y = (p(0x1b84) + ("6%s253" % k) + x("\"6e6d5\"") + "07152").decode(s)
 
-		return QuizletApi(y, self._parse)
+		return QuizletApi(y, self._parse, self._getLanguageName)
 
 	def _retranslate(self):
 		global _
@@ -268,7 +261,7 @@ class QuizletApiModule(object):
 		try:
 			data = self._api.searchSets(self._dialog.searchTerm)
 		except urllib2.URLError, e:
-			print e
+			logger.debug(e, exc_info=True)
 			self._noConnection()
 			return
 		results = []
@@ -308,7 +301,7 @@ class QuizletApiModule(object):
 					return
 		except urllib2.URLError, e:
 			#for debugging purposes
-			print e
+			logger.debug(e, exc_info=True)
 			self._noConnection()
 			return
 

@@ -22,6 +22,9 @@
 import sys
 import os
 import platform
+import logging
+
+qtLogger = logging.getLogger("qt")
 
 class Action(object):
 	"""A high-level interface to a menu and/or a toolbar item."""
@@ -184,12 +187,27 @@ class GuiModule(object):
 		}
 		self.filesWithTranslations = ("gui.py", "ui.py")
 
+	def _msgHandler(self, type, message):
+		#this seems the best mapping from Qt to Python logging levels
+		if type == QtCore.QtDebugMsg:
+			qtLogger.debug(message)
+		elif type == QtCore.QtWarningMsg:
+			qtLogger.warning(message)
+		elif type == QtCore.QtCriticalMsg:
+			qtLogger.error(message)
+		elif type == QtCore.QtFatalMsg:
+			qtLogger.critical("FATAL: %s", message)
+		elif type == QtCore.QtSystemMsg:
+			qtLogger.error("SYSTEM: %s", message)
+
 	def enable(self):
 		global QtCore, QtGui
 		try:
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
+
+		QtCore.qInstallMsgHandler(self._msgHandler)
 		if hasattr(QtGui.QApplication, "x11EventFilter") and os.getenv("DISPLAY") is None:
 			#if on a system that could potentially support X11, but
 			#doesn't have it installed/running, leave this mod disabled.

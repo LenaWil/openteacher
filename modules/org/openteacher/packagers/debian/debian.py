@@ -74,7 +74,7 @@ class DebianPackagerModule(object):
 Package: {package}
 Section: misc
 XS-Python-Version: >= 2.6
-Depends: python-qt4, python-qt4-phonon, python-qt4-gl, espeak, python-chardet, python-pycountry, tesseract-ocr, python-enchant
+Depends: python-qt4, python-qt4-phonon, python-qt4-gl, espeak, python-chardet, tesseract-ocr, python-enchant
 			""".strip().format(
 				package=packageName
 			))

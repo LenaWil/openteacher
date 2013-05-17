@@ -315,6 +315,9 @@ class ModulesHandler(object):
 				if "jquery" in f.lower():
 					continue
 				path = os.path.join(root, f)
+				if os.path.getsize(path) > 1.0/4.0 * 1024 * 1024:
+					#> 0.25MB
+					continue
 
 				code = open(path).read()
 

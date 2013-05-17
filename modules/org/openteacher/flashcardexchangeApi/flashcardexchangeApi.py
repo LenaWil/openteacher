@@ -24,17 +24,21 @@ import urllib2
 import urllib
 import json
 import datetime
+import logging
+
+logger = logging.getLogger("flashcardexchange")
 
 class FlashcardexchangeApi(object):
 	"""See for documentation of the API this communicates with:
 	   www.flashcardexchange.com/docs/api
 
 	"""
-	def __init__(self, appId, parse, *args, **kwargs):
+	def __init__(self, appId, parse, getLanguageName, *args, **kwargs):
 		super(FlashcardexchangeApi, self).__init__(*args, **kwargs)
 
 		self._appId = appId
 		self._parse = parse
+		self._getLanguageName = getLanguageName
 
 		self._baseUrl = "https://api.flashcardexchange.com/v2"
 
@@ -47,8 +51,8 @@ class FlashcardexchangeApi(object):
 		try:
 			fd = self._open("/search/sets", qstr=searchTerm, page=page)
 		except urllib2.HTTPError, e:
-			print e
-			print e.read()
+			logger.debug(e)
+			logger.debug(e.read())
 			return {"results": []}
 		return json.load(fd)
 
@@ -62,8 +66,8 @@ class FlashcardexchangeApi(object):
 		list["title"] = data["title"]
 		#maybe we need some fields for description & subject in our
 		#file format...
-		list["questionLanguage"] = pycountry.languages.get(alpha2=data["lang_front"]).name
-		list["answerLanguage"] = pycountry.languages.get(alpha2=data["lang_back"]).name
+		list["questionLanguage"] = self._getLanguageName(data["lang_front"])
+		list["answerLanguage"] = self._getLanguageName(data["lang_back"])
 
 		list["items"] = [
 			{
@@ -182,6 +186,7 @@ class FlashcardexchangeApiModule(object):
 			self._mm.mods(type="buttonRegister"),
 			self._mm.mods(type="wordsStringParser"),
 			self._mm.mods(type="loaderGui"),
+			self._mm.mods(type="languageCodeGuesser"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -192,27 +197,16 @@ class FlashcardexchangeApiModule(object):
 			"default": 525,
 		}
 
+	@property
+	def _getLanguageName(self):
+		return self._modules.default("active", type="languageCodeGuesser").getLanguageName
+
 	def enable(self):
-		global QtCore, QtGui, pycountry
+		global QtCore, QtGui
 		try:
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		try:
-			import pycountry
-		except ImportError:
-			#fallback. Not nice, but it works.
-			class Obj(object):
-				pass
-
-			class Lang(object):
-				def __init__(self, name, *args, **kwargs):
-					super(Lang, self).__init__(*args, **kwargs)
-					self.name = name
-
-			pycountry = Obj()
-			pycountry.languages = Obj()
-			pycountry.languages.get = lambda alpha2: Lang(alpha2)
 
 		installQtClasses()
 
@@ -249,7 +243,7 @@ class FlashcardexchangeApiModule(object):
 
 	@property
 	def _api(self):
-		return FlashcardexchangeApi(self._appIdSetting["value"], self._parse)
+		return FlashcardexchangeApi(self._appIdSetting["value"], self._parse, self._getLanguageName)
 
 	def _retranslate(self):
 		global _
@@ -284,7 +278,7 @@ class FlashcardexchangeApiModule(object):
 		try:
 			data = self._api.searchSets(self._dialog.searchTerm)
 		except urllib2.URLError, e:
-			print e
+			logger.debug(e, exc_info=True)
 			self._noConnection()
 			return
 		self._dialog.setResults([
@@ -323,8 +317,7 @@ class FlashcardexchangeApiModule(object):
 				except NotImplementedError:
 					return
 		except urllib2.URLError, e:
-			#for debugging purposes
-			print e
+			logger.debug(e, exc_info=True)
 			self._noConnection()
 			return
 

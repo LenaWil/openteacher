@@ -16,8 +16,8 @@ Dependencies for using OpenTeacher
 * python-qt4
 * python-qt4-phonon
 * python-qt4-gl
-* python-pycountry
 * python-enchant
+* python-chardet
 * pyttsx (currently included)
 * espeak
 * tesseract-ocr | cuneiform
@@ -52,6 +52,7 @@ Dependencies for developing OpenTeacher
 * python-pygraphviz
 * python-twisted
 * python-faulthandler
+* python-babel
 * gettext
 * cython
 
@@ -96,4 +97,5 @@ Incompatible dependencies: CPython 3.x
 * python-flask (but: 'https://github.com/mitsuhiko/flask/issues/587')
 * python-launchpadlib (https://bugs.launchpad.net/launchpadlib/+bug/1060734)
 * python-twisted (but: http://twistedmatrix.com/trac/milestone/Python-3.x & http://twistedmatrix.com/trac/wiki/Plan/Python3)
+* python-babel (but: http://babel.edgewall.org/ticket/209)
 * PyInstaller (but: http://www.pyinstaller.org/ticket/85)

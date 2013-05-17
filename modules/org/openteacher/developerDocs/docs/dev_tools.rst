@@ -144,3 +144,12 @@ python openteacher.py -p update-translations
 Updates all .po and .pot files in the source tree. Also generates .mo
 files. This makes sure new translations are added, and that translations
 made in launchpad and exported from there are actually used.
+
+python openteacher.py -p generate-language-code-guesser-table
+-------------------------------------------------------------
+Generates the dict used by the languageCodeGuesser_ module based on data
+that's in the babel module. This isn't done at runtime, because it's too
+slow. You can just paste the output into the file 'tables.py' of the
+languageCodeGuesser_ module.
+
+.. _languageCodeGuesser: ../modules/org/openteacher/languageCodeGuesser.html

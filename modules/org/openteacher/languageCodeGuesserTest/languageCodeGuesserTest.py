@@ -21,10 +21,13 @@
 import unittest
 
 class TestCase(unittest.TestCase):
+	@property
+	def _mods(self):
+		return self._mm.mods("active", type="languageCodeGuesser")
+
 	def _test(self, langName, code):
-		if self.mode not in ("all", "language-code-guesser"):
-			for mod in self._mm.mods("active", type="languageCodeGuesser"):
-				self.assertEqual(mod.guessLanguageCode(langName), code)
+		for mod in self._mods:
+			self.assertEqual(mod.guessLanguageCode(langName), code)
 
 	def testNativeLanguage(self):
 		self._test("Deutsch", "de")
@@ -49,6 +52,11 @@ class TestCase(unittest.TestCase):
 
 	def testAlpha2Code(self):
 		self._test("es", "es")
+
+	def testGetLanguageName(self):
+		for mod in self._mods:
+			self.assertEqual(mod.getLanguageName("nl"), "Nederlands")
+			self.assertIsNone(mod.getLanguageName("kjdf"))
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
