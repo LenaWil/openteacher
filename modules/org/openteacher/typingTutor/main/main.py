@@ -385,6 +385,7 @@ class TypingTutorModule(object):
 			"student@home": x,
 			"student@school": x,
 			"teacher": x,
+			"test-suite": x,
 		}
 		self.filesWithTranslations = ("main.py",)
 

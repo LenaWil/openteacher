@@ -46,6 +46,7 @@ class WrtsApiModule(object):
 			"teacher": x,
 			"words-only": x,
 			"code-documentation": x,
+			"test-suite": x,
 			"default": -1,
 		}
 		self.filesWithTranslations = ("wrtsApi.py", "ui.py")

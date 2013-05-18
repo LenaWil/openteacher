@@ -164,6 +164,7 @@ class VocatrainApiModule(object):
 			"teacher": x,
 			"words-only": x,
 			"code-documentation": x,
+			"test-suite": x,
 			"default": -1,
 		}
 

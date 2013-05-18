@@ -53,6 +53,7 @@ class MediaLessonModule(object):
 			"student@school": x,
 			"teacher": x,
 			"code-documentation": x,
+			"test-suite": x,
 			"default": -1,
 		}
 
