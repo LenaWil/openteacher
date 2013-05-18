@@ -37,11 +37,6 @@ class LanguageCodeGuesserModule(object):
 		return tables.CODE_TO_NAME.get(languageCode)
 
 	def enable(self):
-		global babel
-		try:
-			import babel
-		except ImportError:
-			return
 		global tables
 		tables = self._mm.import_("tables")
 

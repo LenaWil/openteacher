@@ -188,17 +188,14 @@ class GuiModule(object):
 		self.filesWithTranslations = ("gui.py", "ui.py")
 
 	def _msgHandler(self, type, message):
-		#this seems the best mapping from Qt to Python logging levels
-		if type == QtCore.QtDebugMsg:
-			qtLogger.debug(message)
-		elif type == QtCore.QtWarningMsg:
-			qtLogger.warning(message)
-		elif type == QtCore.QtCriticalMsg:
-			qtLogger.error(message)
-		elif type == QtCore.QtFatalMsg:
-			qtLogger.critical("FATAL: %s", message)
-		elif type == QtCore.QtSystemMsg:
-			qtLogger.error("SYSTEM: %s", message)
+		typeName = {
+			QtCore.QtDebugMsg: "DEBUG",
+			QtCore.QtWarningMsg: "WARNING",
+			QtCore.QtCriticalMsg: "CRITICAL",
+			QtCore.QtFatalMsg: "FATAL",
+			QtCore.QtSystemMsg: "SYSTEM",
+		}[type]
+		qtLogger.debug("%s: %s" % (typeName, message))
 
 	def enable(self):
 		global QtCore, QtGui
