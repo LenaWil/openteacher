@@ -18,20 +18,26 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-sys.path.insert(0, ".")
-
-import pyximport; pyximport.install()
-import faulthandler; faulthandler.enable()
-
-import moduleManager
 import unittest
-import openteacher
 import logging
+import moduleManager
 
-class ModulesTest(unittest.TestCase):
+logger = logging.getLogger(__name__)
+
+MODES = ("all", "moduleManager")
+
+class TestCase(unittest.TestCase):
+	"""Tries to enable() and disable() all modules with different
+	   amounts of modules in uses enabled. Checks if modules reset their
+	   state on disable(). This segfaults sometimes, but it shouldn't
+	   give any other errors. (And if anyone manages to remove the
+	   segfault, that would be very welcome!)
+
+	"""
 	def setUp(self):
-		self._mm = moduleManager.ModuleManager(openteacher.MODULES_PATH)
+		if not self.mode in MODES:
+			return
+		self._mm = moduleManager.ModuleManager(self._masterModuleManager.modulesPath)
 
 	def _enableIncludingDependenciesIfNotActive(self, mod, minimalDependencies):
 		#the fast exit so the recursiveness isn't forever
@@ -46,7 +52,7 @@ class ModulesTest(unittest.TestCase):
 
 		#enable
 		if hasattr(mod, "enable"):
-			logging.debug("enabling " + mod.__class__.__file__)
+			logger.debug("enabling " + mod.__class__.__file__)
 			mod.enable()
 		enabled = getattr(mod, "active", False)
 		if enabled:
@@ -83,7 +89,7 @@ class ModulesTest(unittest.TestCase):
 	def _disableDependencyTree(self, mods):
 		for mod in reversed(mods):
 			if hasattr(mod, "disable"):
-				logging.debug("disabling " + mod.__class__.__file__)
+				logger.debug("disabling " + mod.__class__.__file__)
 				mod.disable()
 
 	def _fakeExecuteModule(self):
@@ -105,6 +111,8 @@ class ModulesTest(unittest.TestCase):
 		next(iter(self._mm.mods(type="modules"))).profile = "default"
 
 	def _doTest(self, minimalDependencies):
+		if not self.mode in MODES:
+			return
 		self._fakeExecuteModule()
 
 		for mod in self._mm.mods:
@@ -117,7 +125,7 @@ class ModulesTest(unittest.TestCase):
 			except AssertionError: # pragma: no cover
 				print mod
 				raise
-			logging.debug("")
+			logger.debug("")
 
 	def testMinimalDependencies(self):
 		self._doTest(True)
@@ -125,11 +133,21 @@ class ModulesTest(unittest.TestCase):
 	def testWithFullDependencies(self):
 		self._doTest(False)
 
-if __name__ == "__main__":
-	#since this mod doesn't respect the 'uses' behaviour completely,
-	#fix a possible conflict between gui and qtApp.
-	logging.basicConfig(level=logging.WARNING)
-	from PyQt4 import QtGui
-	app = QtGui.QApplication([])
+class TestModule(object):
+	def __init__(self, moduleManager, *args, **kwargs):
+		super(TestModule, self).__init__(*args, **kwargs)
+		self._mm = moduleManager
 
-	unittest.main()
+		self.type = "test"
+
+	def enable(self):
+		self.TestCase = TestCase
+		self.TestCase._masterModuleManager = self._mm
+		self.active = True
+
+	def disable(self):
+		self.active = False
+		del self.TestCase
+
+def init(moduleManager):
+	return TestModule(moduleManager)

@@ -378,12 +378,14 @@ class GuiModule(object):
 		del self.fileMenu
 		del self.newAction
 		del self.openAction
+		del self.openIntoAction
 		del self.saveAction
 		del self.saveAsAction
 		del self.printAction
 		del self.quitAction
 
 		del self.editMenu
+		del self.reverseAction
 		del self.settingsAction
 
 		del self.viewMenu
@@ -394,6 +396,8 @@ class GuiModule(object):
 		del self.aboutAction
 
 		del self.statusViewer
+
+		del self._addingTab
 
 	def _retranslate(self):
 		global _

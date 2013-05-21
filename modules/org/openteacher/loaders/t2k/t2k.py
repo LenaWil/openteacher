@@ -103,7 +103,7 @@ class Teach2000LoaderModule(object):
 
 	def load(self, path):
 		"""Loads a .t2k file into the OpenTeacher data structure.
-		   http://teach2000.memtrain.com/help/00513_advanced_file_format.htm
+		   http://www.teach2000.nl/help/00513_advanced_file_format.htm
 
 		"""
 		root = ElementTree.parse(open(path)).getroot()

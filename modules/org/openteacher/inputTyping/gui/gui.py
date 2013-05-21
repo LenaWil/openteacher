@@ -66,15 +66,15 @@ def installQtClasses():
 			letterChosen.handle(self.addLetter)
 
 		def _buildUi(self):
-			self.correctLabel = QtGui.QLabel()
+			self.correctLabel = QtGui.QLabel(self)
 
-			self.inputLineEdit = QtGui.QLineEdit()
+			self.inputLineEdit = QtGui.QLineEdit(self)
 			self.inputLineEdit.textEdited.connect(self._textEdited)
 
-			self.skipButton = QtGui.QPushButton()
-			self.checkButton = QtGui.QPushButton()
+			self.skipButton = QtGui.QPushButton(self)
+			self.checkButton = QtGui.QPushButton(self)
 			self.checkButton.setShortcut(QtCore.Qt.Key_Return)
-			self.correctButton = QtGui.QPushButton()
+			self.correctButton = QtGui.QPushButton(self)
 
 			mainLayout = QtGui.QGridLayout()
 			mainLayout.addWidget(self.correctLabel, 0, 0, 1, 3)

@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2013, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,8 +18,29 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import subprocess
+class ProfileDescriptionModule(object):
+	def __init__(self, moduleManager, *args, **kwargs):
+		super(ProfileDescriptionModule, self).__init__(*args, **kwargs)
+		self._mm = moduleManager
 
-while True:
-	if subprocess.call("python utils/moduleTests.py".split(" ")):
-		break
+		self.type = "profileDescription"
+
+	def enable(self):
+		if len(set(self._mm.mods(type="codeComplexity"))) == 0: # pragma: no cover
+			return #remain inactive
+
+		self.desc = {
+			"name": "code-complexity",
+			"niceName": "Calculates McCabe code complexity for most functions in the OT source code.",
+			"advanced": True,
+		}
+
+		self.active = True
+
+	def disable(self):
+		self.active = False
+
+		del self.desc
+
+def init(moduleManager):
+	return ProfileDescriptionModule(moduleManager)

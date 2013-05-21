@@ -115,6 +115,7 @@ class LanguageCodeGuesserTableGeneratorModule(object):
 		self.active = False
 
 		self._modules.default("active", type="execute").startRunning.unhandle(self._run)
+		del self._modules
 
 def init(moduleManager):
 	return LanguageCodeGuesserTableGeneratorModule(moduleManager)

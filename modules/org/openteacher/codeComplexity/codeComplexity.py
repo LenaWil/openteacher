@@ -18,48 +18,37 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import unittest
+import os
 
-class TestCase(unittest.TestCase):
-	def testSize(self):
-		if not self.mode in ("all", "gui"):
-			return
-		for mod in self._mm.mods("active", type="ui"):
-			mod.qtParent.show()
-			QtGui.QApplication.instance().processEvents()
-			mod.qtParent.hide()
-
-			xExpected = 640
-			xResult = mod.qtParent.width()
-			self.assertTrue(xResult <= xExpected, msg="Window width should be %spx at most, but was %spx." % (xExpected, xResult))
-
-			yExpected = 480
-			yResult = mod.qtParent.height()
-			self.assertTrue(yResult <= yExpected, msg="Window height should be %spx at most, but was %spx." % (yExpected, yResult))
-
-class TestModule(object):
+class CodeComplexityModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(TestModule, self).__init__(*args, **kwargs)
+		super(CodeComplexityModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "test"
+		self.type = "codeComplexity"
 		self.requires = (
-			self._mm.mods(type="ui"),
+			self._mm.mods(type="execute"),
 		)
+		self.priorities = {
+			"default": -1,
+			"code-complexity": 0,
+		}
 
 	def enable(self):
-		global QtGui
-		try:
-			from PyQt4 import QtGui
-		except ImportError:
-			return
-		self.TestCase = TestCase
-		self.TestCase._mm = self._mm
+		self._modules = next(iter(self._mm.mods(type="modules")))
+		self._modules.default("active", type="execute").startRunning.handle(self._run)
+
 		self.active = True
+
+	def _run(self):
+		basePath = os.path.normpath(os.path.join(self._mm.modulesPath, ".."))
+		self._mm.import_("impl").main(basePath)
 
 	def disable(self):
 		self.active = False
-		del self.TestCase
+
+		self._modules.default("active", type="execute").startRunning.unhandle(self._run)
+		del self._modules
 
 def init(moduleManager):
-	return TestModule(moduleManager)
+	return CodeComplexityModule(moduleManager)

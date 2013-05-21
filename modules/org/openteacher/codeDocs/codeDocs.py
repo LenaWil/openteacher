@@ -187,10 +187,10 @@ class ModulesHandler(object):
 			with open(fpath, "r") as f:
 				lines = f.readlines()
 
-			lines = (
+			lines = [
 				unicode(line, encoding="UTF-8", errors="replace")
 				for line in lines
-			)
+			]
 			for i, line in enumerate(lines):
 				match = rePattern.search(line)
 				if not match:
