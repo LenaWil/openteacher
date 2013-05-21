@@ -237,6 +237,11 @@ class Teach2000LoaderModule(object):
 			if comment:
 				word["comment"] = comment
 
+			#remarks_aa (commentAfterAnswering in OT)
+			commentAfterAnswering = item.findtext("remarks_aa")
+			if commentAfterAnswering:
+				word["commentAfterAnswering"] = commentAfterAnswering
+
 			wordList["items"].append(word)
 
 		#append the test to the list

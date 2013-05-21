@@ -219,7 +219,7 @@ def installQtClasses():
 	class WordsTableModel(QtCore.QAbstractTableModel):
 		questionLanguageChanged = QtCore.pyqtSignal()
 		answerLanguageChanged = QtCore.pyqtSignal()
-		QUESTIONS, ANSWERS, COMMENT = xrange(3)
+		QUESTIONS, ANSWERS, COMMENT, COMMENT_AFTER_ANSWERING = xrange(4)
 
 		def __init__(self, compose, parse, *args, **kwargs):
 			super(WordsTableModel, self).__init__(*args, **kwargs)
@@ -227,10 +227,10 @@ def installQtClasses():
 			self.updateLesson(EmptyLesson())
 			self._compose = compose
 			self._parse = parse
-			self._headers = ["", "", ""]
+			self._headers = ["", "", "", ""]
 
 		def retranslate(self):
-			self._headers = [_("Questions"), _("Answers"), _("Comment")]
+			self._headers = [_("Questions"), _("Answers"), _("Comment"), _("Comment after answering")]
 
 		def updateLesson(self, lesson):
 			self.beginResetModel()
@@ -248,7 +248,9 @@ def installQtClasses():
 			elif column == self.ANSWERS:
 				sortedItems = sorted(items, key=lambda word: word.get("answers", []))
 			elif column == self.COMMENT:
-				sortedItems = sorted(items, key=lambda word: word.get("comment", []))
+				sortedItems = sorted(items, key=lambda word: word.get("comment", u""))
+			elif column == self.COMMENT_AFTER_ANSWERING:
+				sortedItems = sorted(items, key=lambda word: word.get("commentAfterAnswering", u""))
 
 			if order == QtCore.Qt.DescendingOrder:
 				items.reverse()
@@ -286,7 +288,7 @@ def installQtClasses():
 				return 1
 
 		def columnCount(self, parent=None):
-			return 3
+			return 4
 
 		def data(self, index, role=QtCore.Qt.DisplayRole):
 			if not (index.isValid() and
@@ -305,6 +307,8 @@ def installQtClasses():
 					return self._compose(word.get("answers", []))
 				elif index.column() == self.COMMENT:
 					return word.get("comment", u"")
+				elif index.column() == self.COMMENT_AFTER_ANSWERING:
+					return word.get("commentAfterAnswering", u"")
 
 		def flags(self, index):
 			return (
@@ -355,8 +359,12 @@ def installQtClasses():
 						word["answers"] = self._parse(unicode(value.toString()))
 					elif index.column() == self.COMMENT:
 						word["comment"] = unicode(value.toString()).strip()
-						if len(word["comment"]) == 0:
+						if not len(word["comment"]):
 							del word["comment"]
+					elif index.column() == self.COMMENT_AFTER_ANSWERING:
+						word["commentAfterAnswering"] = unicode(value.toString()).strip()
+						if not len(word["commentAfterAnswering"]):
+							del word["commentAfterAnswering"]
 					break
 			self.lesson.changed = True
 			return True

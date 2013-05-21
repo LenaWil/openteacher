@@ -84,22 +84,27 @@ def installQtClasses():
 			self.commentLabel.setWordWrap(True)
 			if keyboardWidget is not None:
 				self.keyboardWidget = keyboardWidget
+			self.commentAfterAnsweringLabel = QtGui.QLabel()
+			self.commentAfterAnsweringLabel.setWordWrap(True)
+			self.nextButton = QtGui.QPushButton()
 			self.teachTabWidget = QtGui.QTabWidget()
 			self.progressBar = QtGui.QProgressBar()
 
 			self.sideWidget = QtGui.QSplitter(QtCore.Qt.Vertical)
-		
+
 			leftLayout = QtGui.QVBoxLayout()
 			leftLayout.addWidget(self.wordLabel)
 			leftLayout.addWidget(self.questionLabel)
 			leftLayout.addWidget(self.commentLabel)
 			leftLayout.addStretch()
 			leftLayout.addWidget(self.teachTabWidget)
+			leftLayout.addWidget(self.commentAfterAnsweringLabel)
+			leftLayout.addWidget(self.nextButton)
 			leftLayout.addWidget(self.progressBar)
 
 			leftWidget = QtGui.QWidget()
 			leftWidget.setLayout(leftLayout)
-			
+
 			rightLayout = QtGui.QVBoxLayout()
 			with contextlib.ignored(AttributeError):
 				rightLayout.addWidget(self.keyboardWidget)
@@ -120,6 +125,7 @@ def installQtClasses():
 		def retranslate(self):
 			self.changeSettingsButton.setText(_("Change lesson settings"))
 			self.wordLabel.setText(_("Word:"))
+			self.nextButton.setText(_("Next"))
 
 		def addSideWidget(self, widget):
 			self.sideWidget.insertWidget(0, widget)
@@ -220,6 +226,11 @@ def installQtClasses():
 
 			self.inLesson = True
 
+		def _showCommentAfterAnswering(self, show):
+			self._lessonWidget.commentAfterAnsweringLabel.setVisible(show)
+			self._lessonWidget.nextButton.setVisible(show)
+			self._lessonWidget.teachTabWidget.setVisible(not show)
+
 		def _activityChanged(self, activity):
 			if activity == "inactive":
 				self._pauseStart = datetime.datetime.now()
@@ -235,9 +246,39 @@ def installQtClasses():
 			self.listChanged.emit(self.lesson.list)
 			self.lesson.changed = True
 
+		def _nextClicked(self):
+			self._nextCallback()
+
+		def _showAfterAnsweringCommentIfNecessary(self, nextCallback):
+			"""Returns True if showing an answering comment, otherwise
+			   False.
+
+			"""
+			try:
+				commentAfterAnswering = self._currentItem["commentAfterAnswering"]
+			except (AttributeError, KeyError):
+				pass
+			else:
+				#next time don't show the after answering comment again.
+				del self._currentItem
+
+				self._nextCallback = nextCallback
+				self._showCommentAfterAnswering(True)
+				self._lessonWidget.commentAfterAnsweringLabel.setText(commentAfterAnswering)
+				return True
+
+			self._showCommentAfterAnswering(False)
+			self._lessonWidget.commentAfterAnsweringLabel.clear()
+			return False
+
 		def _newItem(self, item):
-			#update GUI to changes made since the last time _newItem was
-			#called.
+			if self._showAfterAnsweringCommentIfNecessary(lambda: self._newItem(item)):
+				return
+
+			self._currentItem = item
+
+			#update other parts of the GUI to changes made since the
+			#last time _newItem was called.
 			self._tellListAndLessonChange()
 
 			compose = self._modules.default("active", type="wordsStringComposer").compose
@@ -253,6 +294,9 @@ def installQtClasses():
 			self._lessonWidget.progressBar.setValue(self._lessonType.askedItems)
 
 		def stopLesson(self, showResults=True):
+			if self._showAfterAnsweringCommentIfNecessary(lambda: self.stopLesson(showResults)):
+				return
+
 			#first update the GUI since modifications have been made.
 			self._tellListAndLessonChange()
 
@@ -290,6 +334,9 @@ def installQtClasses():
 
 			#change lesson settings button
 			self._lessonWidget.changeSettingsButton.clicked.connect(self._showSettings)
+
+			#next button
+			self._lessonWidget.nextButton.clicked.connect(self._nextClicked)
 
 class WordsTeacherModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

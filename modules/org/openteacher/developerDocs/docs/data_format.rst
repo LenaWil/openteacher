@@ -62,6 +62,7 @@ words
 			[u"tijdens"],
 		],
 		"comment": u"+acc (2x)",
+		"commentAfterAnswering": u"You knew that one, right?",
 		"created": datetime.datetime.now(),
 	}
 

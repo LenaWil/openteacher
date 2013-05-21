@@ -99,6 +99,10 @@ class AbbyyLoaderModule(object):
 				"id": next(counter),
 				"questions": wsp.parse(wordTree.findtext("word") or u""),
 				"answers": [[a.text or u"" for a in wordTree.findall("meanings/meaning/translations/word")]],
+				"commentAfterAnswering": u", ".join(
+					e.text or u""
+					for e in wordTree.findall("meanings/meaning/examples/example")
+				)
 			}
 			for wordTree in root.findall("card")
 		]
