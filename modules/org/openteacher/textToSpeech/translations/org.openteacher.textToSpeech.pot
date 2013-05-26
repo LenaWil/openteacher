@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenTeacher 3.2\n"
+"Project-Id-Version: OpenTeacher 3.1\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-05-26 12:49+0200\n"
+"POT-Creation-Date: 2013-02-13 21:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,18 +17,18 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: textToSpeech.py:181
+#: textToSpeech.py:184
 msgid "Voice name (language)"
 msgstr ""
 
-#: textToSpeech.py:182
+#: textToSpeech.py:185
 msgid "Speed"
 msgstr ""
 
-#: textToSpeech.py:185
+#: textToSpeech.py:188
 msgid "Pronounciation"
 msgstr ""
 
-#: textToSpeech.py:186
+#: textToSpeech.py:189
 msgid "Voice"
 msgstr ""
