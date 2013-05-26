@@ -145,6 +145,7 @@ def installQtClasses():
 			''')
 			if not self.noPhonon:
 				self.videoPlayer.stop()
+			self.setCurrentWidget(self.webviewer)
 			# Set the active type
 			self.activeModule = None
 	return MediaDisplay

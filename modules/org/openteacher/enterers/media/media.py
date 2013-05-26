@@ -96,6 +96,14 @@ def installQtClasses():
 				"tests": list()
 			}
 			self.lesson = DummyLesson()
+			self.activeitem = {
+						"id": int(),
+						"remote": False,
+						"filename": unicode(),
+						"name": unicode(),
+						"question": unicode(),
+						"answer": unicode()
+					}
 			
 			self.enterItemList = EnterItemList(self)
 
@@ -225,6 +233,8 @@ def installQtClasses():
 			"""Updates all the widgets if the list has changed"""
 
 			self.enterItemList.update()
+			self.setActiveItem(self.activeitem)
+			self.list.changed = True
 		
 		def addItem(self,filename,remote=False,name=None,question=None,answer=None):
 			"""Add an item to the list"""
@@ -284,19 +294,17 @@ def installQtClasses():
 				self.enterAnswer.setEnabled(False)
 				self.enterItemList.setRightActiveItem()
 
-				self.list.changed = True
-
 		def setActiveItem(self,item):
 			"""Change the active item"""
-
-			self.activeitem = item
 			self.enterName.setEnabled(True)
 			self.enterName.setText(item["name"])
 			self.enterQuestion.setEnabled(True)
 			self.enterQuestion.setText(item["question"])
 			self.enterAnswer.setEnabled(True)
 			self.enterAnswer.setText(item["answer"])
-			self.mediaDisplay.showMedia(item["filename"], item["remote"], False)
+			if item["filename"] != self.activeitem["filename"]:
+				self.mediaDisplay.showMedia(item["filename"], item["remote"], False)
+			self.activeitem = item
 		
 		"""
 		Change the name of the active item
