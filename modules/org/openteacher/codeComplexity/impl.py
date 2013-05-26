@@ -27,13 +27,15 @@ ComplexityResult = collections.namedtuple("ComplexityResult", "position complexi
 def pythonPaths(basePath):
 	for root, dir, files in os.walk(basePath):
 		for file in files:
-			if not file.endswith(".py"):
-				continue
-			if "pyinstaller" in root:
-				continue
-			if "pyratemp" in file:
-				continue
-			if "admin_files" in root:
+			isNotAPythonFile = not file.endswith(".py")
+			shouldNotBeChecked = (
+				isNotAPythonFile or
+				"pyinstaller" in root or
+				"admin_files" in root or
+				"pyttsx" in root or
+				"pyratemp" in file
+			)
+			if shouldNotBeChecked:
 				continue
 			yield os.path.join(root, file)
 
