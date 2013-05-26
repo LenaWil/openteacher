@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-04-05 10:55+0200\n"
+"POT-Creation-Date: 2013-05-26 12:49+0200\n"
 "PO-Revision-Date: 2013-03-26 17:05+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-04-06 05:43+0000\n"
 "X-Generator: Launchpad (build 16550)\n"
-"Language: \n"
 
 #: repeatAnswer.py:72
 msgid "Click the button to start"
@@ -26,19 +26,19 @@ msgstr "Klik op de knop om te beginnen"
 msgid "Start!"
 msgstr "Start!"
 
-#: repeatAnswer.py:195
+#: repeatAnswer.py:189
 msgid "Repeat answer"
 msgstr "Herhaal antwoord"
 
-#: repeatAnswer.py:199
+#: repeatAnswer.py:193
 msgid "Repeat mode fade duration (milliseconds)"
 msgstr "Duur van het vervagen in de herhaalmodus (milliseconden)"
 
-#: repeatAnswer.py:200
+#: repeatAnswer.py:194
 msgid "Lesson"
 msgstr "Les"
 
-#: repeatAnswer.py:201
+#: repeatAnswer.py:195
 msgid "Words lesson"
 msgstr "Woordjesles"
 

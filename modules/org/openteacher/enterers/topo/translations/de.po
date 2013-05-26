@@ -7,59 +7,59 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-04-05 10:56+0200\n"
+"POT-Creation-Date: 2013-05-26 12:48+0200\n"
 "PO-Revision-Date: 2013-03-24 23:15+0000\n"
 "Last-Translator: Phillip Sz <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-04-06 05:45+0000\n"
 "X-Generator: Launchpad (build 16550)\n"
-"Language: de\n"
 
-#: topo.py:67
+#: topo.py:70
 msgid "From hard disk..."
 msgstr ""
 
-#: topo.py:81
+#: topo.py:84
 msgid "Warning"
 msgstr "Achtung"
 
-#: topo.py:83
+#: topo.py:86
 msgid ""
 "Are you sure you want to use another map? This will remove all your places!"
 msgstr ""
 
-#: topo.py:238
+#: topo.py:230
 msgid "Map:"
 msgstr "Karte:"
 
-#: topo.py:239
+#: topo.py:231
 msgid "Add a place by doubleclicking it on the map"
 msgstr ""
 
-#: topo.py:240
+#: topo.py:232
 msgid "Places in your test"
 msgstr ""
 
-#: topo.py:241
+#: topo.py:233
 msgid "Remove selected place"
 msgstr ""
 
-#: topo.py:242
+#: topo.py:234
 msgid "Add a place by name:"
 msgstr ""
 
-#: topo.py:243
+#: topo.py:235
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: topo.py:282
+#: topo.py:274
 msgid "Place not found"
 msgstr ""
 
-#: topo.py:283
+#: topo.py:275
 msgid ""
 "Sorry, this place is not in the list of known places. Please add it manually "
 "by doubleclicking on the right location in the map."

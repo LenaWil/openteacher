@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-04-05 10:56+0200\n"
+"POT-Creation-Date: 2013-05-26 12:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,22 +17,22 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: topoMaps.py:83
+#: topoMaps.py:85
 msgid "Name for this place"
 msgstr ""
 
-#: topoMaps.py:83
+#: topoMaps.py:85
 msgid "What's this place's name?"
 msgstr ""
 
-#: topoMaps.py:338
+#: topoMaps.py:336
 msgid "OpenGL rendering"
 msgstr ""
 
-#: topoMaps.py:339
+#: topoMaps.py:337
 msgid "Lesson"
 msgstr ""
 
-#: topoMaps.py:340
+#: topoMaps.py:338
 msgid "Topography"
 msgstr ""

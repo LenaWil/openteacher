@@ -7,120 +7,120 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-01-31 17:16+0100\n"
+"POT-Creation-Date: 2013-05-26 12:49+0200\n"
 "PO-Revision-Date: 2012-11-09 23:34+0000\n"
 "Last-Translator: ghas <Unknown>\n"
 "Language-Team: Galician <gl@li.org>\n"
+"Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-02-01 05:20+0000\n"
 "X-Generator: Launchpad (build 16455)\n"
-"Language: gl\n"
 
-#: teacherPanel.py:66
+#: teacherPanel.py:67
 msgid "Tests"
 msgstr "Probas"
 
-#: teacherPanel.py:67
+#: teacherPanel.py:68
 msgid "Add lesson"
 msgstr ""
 
-#: teacherPanel.py:112
+#: teacherPanel.py:111
 msgid "Select a student/group:"
 msgstr ""
 
-#: teacherPanel.py:113
+#: teacherPanel.py:112
 msgid "Add person/group"
 msgstr ""
 
-#: teacherPanel.py:114
+#: teacherPanel.py:113
 msgid "Back"
 msgstr "Atrás"
 
-#: teacherPanel.py:183
+#: teacherPanel.py:180
 msgid "(did not participate)"
 msgstr ""
 
-#: teacherPanel.py:189
+#: teacherPanel.py:186
 msgid "(Handed in)"
 msgstr ""
 
-#: teacherPanel.py:231
+#: teacherPanel.py:226
 msgid "Questions:"
 msgstr "Preguntas:"
 
-#: teacherPanel.py:232
+#: teacherPanel.py:227
 msgid "People in this test:"
 msgstr ""
 
-#: teacherPanel.py:233
+#: teacherPanel.py:228
 msgid "Add person"
 msgstr "Engadir persoa"
 
-#: teacherPanel.py:319
+#: teacherPanel.py:310
 msgid "Test"
 msgstr "Proba"
 
-#: teacherPanel.py:320
+#: teacherPanel.py:311
 msgid "(Re)check answers"
 msgstr ""
 
-#: teacherPanel.py:321
+#: teacherPanel.py:312
 msgid "(Re)publish answers"
 msgstr ""
 
-#: teacherPanel.py:333
+#: teacherPanel.py:324
 msgid "Student's answers have been checked!"
 msgstr ""
 
-#: teacherPanel.py:339
+#: teacherPanel.py:330
 msgid "Student's results have been (re)published!"
 msgstr ""
 
-#: teacherPanel.py:533
+#: teacherPanel.py:521
 msgid "Person"
 msgstr "Persoa"
 
-#: teacherPanel.py:535
+#: teacherPanel.py:523
 msgid ""
 "Answers of this student have not been checked yet. Click the 'Check answers' "
 "button in the second column."
 msgstr ""
 
-#: teacherPanel.py:537
+#: teacherPanel.py:525
 msgid "Answers right:"
 msgstr "Respostas atinadas:"
 
-#: teacherPanel.py:539
+#: teacherPanel.py:527
 msgid "Answers wrong:"
 msgstr "Respostas erradas:"
 
-#: teacherPanel.py:542
-msgid "OpenTeacher mark:"
+#: teacherPanel.py:529
+msgid "{appName} mark:"
 msgstr ""
 
-#: teacherPanel.py:544
+#: teacherPanel.py:531
 msgid "Final mark:"
 msgstr ""
 
-#: teacherPanel.py:546
+#: teacherPanel.py:533
 msgid "Question"
 msgstr "Pregunta"
 
-#: teacherPanel.py:547
+#: teacherPanel.py:534
 msgid "Given answer"
 msgstr ""
 
 #. TRANSLATORS: The name of a button clicked if an answer is correct.
-#: teacherPanel.py:550
+#: teacherPanel.py:537
 msgid "Correct"
 msgstr "Correcto"
 
-#: teacherPanel.py:713
+#: teacherPanel.py:684
 msgid "Teacher panel"
 msgstr ""
 
-#: teacherPanel.py:715
+#: teacherPanel.py:686
 msgid "Teacher Panel"
 msgstr ""

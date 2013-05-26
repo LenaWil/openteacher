@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-04-05 10:56+0200\n"
+"POT-Creation-Date: 2013-05-26 12:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,18 +17,18 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: textToSpeech.py:187
+#: textToSpeech.py:181
 msgid "Voice name (language)"
 msgstr ""
 
-#: textToSpeech.py:188
+#: textToSpeech.py:182
 msgid "Speed"
 msgstr ""
 
-#: textToSpeech.py:191
+#: textToSpeech.py:185
 msgid "Pronounciation"
 msgstr ""
 
-#: textToSpeech.py:192
+#: textToSpeech.py:186
 msgid "Voice"
 msgstr ""

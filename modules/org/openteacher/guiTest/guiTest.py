@@ -33,7 +33,7 @@ class TestCase(unittest.TestCase):
 			xResult = mod.qtParent.width()
 			self.assertTrue(xResult <= xExpected, msg="Window width should be %spx at most, but was %spx." % (xExpected, xResult))
 
-			yExpected = 480
+			yExpected = 520
 			yResult = mod.qtParent.height()
 			self.assertTrue(yResult <= yExpected, msg="Window height should be %spx at most, but was %spx." % (yExpected, yResult))
 

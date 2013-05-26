@@ -214,10 +214,9 @@ class FlashcardexchangeApiModule(object):
 		self._uiModule = self._modules.default("active", type="ui")
 		self._buttonRegister = self._modules.default("active", type="buttonRegister")
 
-		self._button = self._buttonRegister.registerButton("load")
+		self._button = self._buttonRegister.registerButton("load-from-internet")
 		self._button.clicked.handle(self.doImport)
 		self._button.changePriority.send(self.priorities["default"])
-		self._button.changeSize.send("small")
 
 		try:
 			self._appIdSetting = self._modules.default(type="settings").registerSetting(**{

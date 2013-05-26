@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-03-31 10:39+0200\n"
+"POT-Creation-Date: 2013-05-26 12:49+0200\n"
 "PO-Revision-Date: 2012-08-09 00:10+0000\n"
 "Last-Translator: Teemu Paavola <tteeemu@gmail.com>\n"
 "Language-Team: Finnish <fi@li.org>\n"
@@ -43,11 +43,11 @@ msgstr "Päivitykset"
 msgid "Remember if I want to install updates or not"
 msgstr "Muista, jos haluan asentaa päivityksiä tai en"
 
-#: updates.py:199
+#: updates.py:197
 msgid "Updating completed"
 msgstr "Päivitys valmis"
 
-#: updates.py:199
+#: updates.py:197
 msgid ""
 "All updates were succesfully installed. In order for the changes to take "
 "effect, please restart the application."

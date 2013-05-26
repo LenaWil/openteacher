@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-04-05 10:56+0200\n"
+"POT-Creation-Date: 2013-05-26 12:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,52 +17,52 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: media.py:172
+#: media.py:171
 msgid "Remove"
 msgstr ""
 
-#: media.py:173
+#: media.py:172
 msgid "Add local media"
 msgstr ""
 
-#: media.py:174
+#: media.py:173
 msgid "Add remote media"
 msgstr ""
 
-#: media.py:176
+#: media.py:175
 msgid "Name:"
 msgstr ""
 
-#: media.py:177
+#: media.py:176
 msgid "Question:"
 msgstr ""
 
-#: media.py:178
+#: media.py:177
 msgid "Answer:"
 msgstr ""
 
-#: media.py:198
+#: media.py:195
 msgid "Select file(s)"
 msgstr ""
 
-#: media.py:200
+#: media.py:197
 msgid "Media"
 msgstr ""
 
-#: media.py:223
+#: media.py:218
 msgid "File URL"
 msgstr ""
 
-#: media.py:224
+#: media.py:219
 msgid ""
 "Enter the URL of your website or media item.\n"
 "Supported video sites: "
 msgstr ""
 
-#: media.py:273
+#: media.py:268
 msgid "Unsupported file type"
 msgstr ""
 
-#: media.py:274
+#: media.py:269
 msgid "This type of file is not supported:\n"
 msgstr ""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-03-31 10:39+0200\n"
+"POT-Creation-Date: 2013-05-26 12:49+0200\n"
 "PO-Revision-Date: 2012-06-21 18:33+0000\n"
 "Last-Translator: Eduardo Alberto Calvo <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -45,11 +45,11 @@ msgstr "Actualizaciones"
 msgid "Remember if I want to install updates or not"
 msgstr "Recuerde que si desea instalar las actualizaciones o no"
 
-#: updates.py:199
+#: updates.py:197
 msgid "Updating completed"
 msgstr "Actualización finalizada"
 
-#: updates.py:199
+#: updates.py:197
 msgid ""
 "All updates were succesfully installed. In order for the changes to take "
 "effect, please restart the application."

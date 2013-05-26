@@ -7,39 +7,39 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-04-05 10:55+0200\n"
+"POT-Creation-Date: 2013-05-26 12:48+0200\n"
 "PO-Revision-Date: 2013-02-02 15:02+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-04-06 05:45+0000\n"
 "X-Generator: Launchpad (build 16550)\n"
-"Language: nl\n"
 
-#: main.py:101
+#: main.py:102
 msgid "That's a mistake :(."
 msgstr "Dat is een foutje :(."
 
-#: main.py:143
+#: main.py:144
 msgid "Please choose a user name and the keyboard layout you want to learn."
 msgstr ""
 "Kies alstublieft een gebruikersnaam en de toetsenbordindeling die u wilt "
 "leren."
 
-#: main.py:144
+#: main.py:145
 msgid "Username:"
 msgstr "Gebruikersnaam:"
 
-#: main.py:145
+#: main.py:146
 msgid "Keyboard layout:"
 msgstr "Toetsenbordindeling:"
 
 #. TRANSLATORS: Split the line as closest to the middle as
 #. TRANSLATORS: possible, not necessarily between 'Keyboard
 #. TRANSLATORS: layout' and 'preview'. Thanks :)
-#: main.py:149
+#: main.py:150
 msgid ""
 "Keyboard layout\n"
 "preview:"
@@ -47,44 +47,44 @@ msgstr ""
 "Toetsenbord-\n"
 "indelingsvoorbeeld"
 
-#: main.py:204
+#: main.py:205
 msgid "Welcome, please choose your account by clicking on it."
 msgstr "Welkom, kies alstublieft uw account door erop te klikken."
 
-#: main.py:205
+#: main.py:206
 msgid "I am a new user"
 msgstr "Ik ben een nieuwe gebruiker"
 
-#: main.py:274
+#: main.py:275
 msgid "Level"
 msgstr "Niveau"
 
-#: main.py:275
+#: main.py:276
 msgid "Speed (words per minute)"
 msgstr "Snelheid (woorden per minuut)"
 
-#: main.py:276
+#: main.py:277
 msgid "Amount of mistakes"
 msgstr "Hoeveelheid fouten"
 
-#: main.py:277
+#: main.py:278
 msgid "Start exercise"
 msgstr "Begin oefening"
 
-#: main.py:330
+#: main.py:329
 msgid "Username empty"
 msgstr "Gebruikersnaam leeg"
 
-#: main.py:331
+#: main.py:330
 msgid "The username should not be empty. Please try again."
 msgstr ""
 "De gebruikersnaam zou niet leeg moeten zijn. Probeer het alstublieft opnieuw."
 
-#: main.py:337
+#: main.py:336
 msgid "Username taken"
 msgstr "Gebruikersnaam bezet"
 
-#: main.py:338
+#: main.py:337
 msgid "That username is already taken. Please try again."
 msgstr "Die gebruikersnaam is al bezet. Probeer het alstublieft opnieuw."
 

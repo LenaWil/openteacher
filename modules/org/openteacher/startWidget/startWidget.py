@@ -89,8 +89,20 @@ def installQtClasses():
 			super(LargeStartWidgetButton, self).setText(result)
 			super(LargeStartWidgetButton, self).resizeEvent(*args, **kwargs)
 
-	class ButtonsGroupBox(QtGui.QGroupBox):
+	class SmallStartWidgetButton(QtGui.QToolButton):
 		def __init__(self, *args, **kwargs):
+			super(SmallStartWidgetButton, self).__init__(*args, **kwargs)
+
+			self.setAutoRaise(True)
+			self.setSizePolicy(
+				QtGui.QSizePolicy.MinimumExpanding,
+				QtGui.QSizePolicy.MinimumExpanding,
+			)
+			self.setIcon(QtGui.QCommandLinkButton().icon())
+			self.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+
+	class ButtonsGroupBox(QtGui.QGroupBox):
+		def __init__(self, customButtons=None, *args, **kwargs):
 			super(ButtonsGroupBox, self).__init__(*args, **kwargs)
 
 			self._buttons = {}
@@ -98,21 +110,27 @@ def installQtClasses():
 			self._smallLayout = QtGui.QVBoxLayout()
 			self._largeLayout = QtGui.QGridLayout()
 
+			if not customButtons:
+				customButtons = []
+			self._customButtons = customButtons
+
 			layout = QtGui.QVBoxLayout()
 			layout.addLayout(self._largeLayout)
 			layout.addLayout(self._smallLayout)
 			self.setLayout(layout)
 
+		@staticmethod
+		def _emptyLayout(layout):
+			while True:
+				item = layout.takeAt(0)
+				if not item:
+					break
+				if item.widget():
+					item.widget().setParent(None)
+
 		def _updateLayout(self):
-			def emptyLayout(layout):
-				while True:
-					item = layout.takeAt(0)
-					if not item:
-						break
-					if item.widget():
-						item.widget().setParent(None)
-			emptyLayout(self._largeLayout)
-			emptyLayout(self._smallLayout)
+			self._emptyLayout(self._largeLayout)
+			self._emptyLayout(self._smallLayout)
 
 			i = 0
 			j = 0
@@ -129,7 +147,7 @@ def installQtClasses():
 						i += 1
 				else:
 					#make button
-					qtButton = QtGui.QCommandLinkButton()
+					qtButton = SmallStartWidgetButton()
 					#insert into layout
 					self._smallLayout.addWidget(qtButton)
 
@@ -140,6 +158,9 @@ def installQtClasses():
 				qtButton.clicked.connect(
 					(lambda button: lambda: button.clicked.send())(button)
 				)
+
+			for button in self._customButtons:
+				self._smallLayout.addWidget(button)
 
 		def addButton(self, button):
 			self._buttons[button] = {
@@ -174,12 +195,58 @@ def installQtClasses():
 			self._buttons[button]["size"] = size
 			self._updateLayout()
 
+	class LoadFromInternetButton(SmallStartWidgetButton):
+		def __init__(self, *args, **kwargs):
+			super(LoadFromInternetButton, self).__init__(*args, **kwargs)
+
+			self.setPopupMode(QtGui.QToolButton.InstantPopup)
+
+			self._buttons = {}
+
+		def addButton(self, button):
+			self._buttons[button] = {
+				"text": "",
+				"priority": 0,
+			}
+			button.changeText.handle(lambda t: self._updateText(button, t))
+			button.changePriority.handle(lambda p: self._updatePriority(button, p))
+			self._updateMenu()
+
+		def removeButton(self, button):
+			del self._buttons[button]
+			self._updateMenu()
+
+		def _updateText(self, button, text):
+			self._buttons[button]["text"] = text
+			self._updateMenu()
+
+		def _updatePriority(self, button, priority):
+			self._buttons[button]["priority"] = priority
+			self._updateMenu()
+
+		def _updateMenu(self):
+			menu = QtGui.QMenu()
+			sortedButtons = sorted(
+				self._buttons.iteritems(),
+				key=lambda (button, desc): desc["priority"]
+			)
+			for button, desc in sortedButtons:
+				action = menu.addAction(desc["text"])
+				#first lambda to remove some qt argument. The second
+				#lambda so it works as expected in the for loop.
+				action.triggered.connect(
+					(lambda button: lambda: button.clicked.send())(button)
+				)
+			self.setMenu(menu)
+
 	class StartWidget(QtGui.QSplitter):
 		def __init__(self, recentlyOpenedViewer, *args, **kwargs):
 			super(StartWidget, self).__init__(*args, **kwargs)
 
+			self.loadFromInternetButton = LoadFromInternetButton()
+
 			self.createLessonGroupBox = ButtonsGroupBox()
-			self.loadLessonGroupBox = ButtonsGroupBox()
+			self.loadLessonGroupBox = ButtonsGroupBox([self.loadFromInternetButton])
 
 			openLayout = QtGui.QVBoxLayout()
 			openLayout.addWidget(self.createLessonGroupBox)
@@ -213,20 +280,26 @@ def installQtClasses():
 		def retranslate(self):
 			self.createLessonGroupBox.setTitle(_("Create lesson:"))
 			self.loadLessonGroupBox.setTitle(_("Load lesson:"))
+			self.loadFromInternetButton.setText(_("Load from the internet"))
 			with contextlib.ignored(AttributeError):
 				self.recentlyOpenedGroupBox.setTitle(_("Recently opened:"))
 
+		def _widgetForButton(self, button):
+			return {
+				"create": self.createLessonGroupBox,
+				"load": self.loadLessonGroupBox,
+				"load-from-internet": self.loadFromInternetButton,
+			}.get(button.category)
+
 		def addButton(self, button):
-			if button.category == "create":
-				self.createLessonGroupBox.addButton(button)
-			elif button.category == "load":
-				self.loadLessonGroupBox.addButton(button)
+			widget = self._widgetForButton(button)
+			if widget:
+				widget.addButton(button)
 
 		def removeButton(self, button):
-			if button.category == "create":
-				self.createLessonGroupBox.removeButton(button)
-			elif button.category == "load":
-				self.loadLessonGroupBox.removeButton(button)
+			widget = self._widgetForButton(button)
+			if widget:
+				widget.removeButton(button)
 
 class StartWidgetModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

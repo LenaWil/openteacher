@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-04-05 10:56+0200\n"
+"POT-Creation-Date: 2013-05-26 12:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,18 +17,18 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: mediaDisplay.py:232
+#: mediaDisplay.py:230
 msgid "Use HTML5 for video"
 msgstr ""
 
-#: mediaDisplay.py:233 mediaDisplay.py:238
+#: mediaDisplay.py:231 mediaDisplay.py:236
 msgid "Lesson"
 msgstr ""
 
-#: mediaDisplay.py:234 mediaDisplay.py:239
+#: mediaDisplay.py:232 mediaDisplay.py:237
 msgid "Media"
 msgstr ""
 
-#: mediaDisplay.py:237
+#: mediaDisplay.py:235
 msgid "Use HTML5 for audio"
 msgstr ""

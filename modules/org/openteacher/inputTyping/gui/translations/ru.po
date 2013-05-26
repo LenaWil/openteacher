@@ -7,45 +7,45 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-04-05 10:56+0200\n"
+"POT-Creation-Date: 2013-05-26 12:48+0200\n"
 "PO-Revision-Date: 2012-10-26 22:34+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-04-06 05:43+0000\n"
 "X-Generator: Launchpad (build 16550)\n"
-"Language: ru\n"
 
-#: gui.py:109
+#: gui.py:111
 msgid "Correct answer: <b>{answers}</b> [{diff}]"
 msgstr "Правильный ответ: <b>{answers}</b> [{diff}]"
 
-#: gui.py:111
+#: gui.py:113
 msgid "Correct answer: <b>{answers}</b>"
 msgstr "Правильный ответ: <b>{answers}</b>"
 
-#: gui.py:124
+#: gui.py:126
 msgid "Check!"
 msgstr "Проверить!"
 
-#: gui.py:125
+#: gui.py:127
 msgid "Correct anyway"
 msgstr "Всё равно верно"
 
-#: gui.py:126
+#: gui.py:128
 msgid "Skip"
 msgstr "Пропустить"
 
-#: gui.py:249
+#: gui.py:248
 msgid "Fade duration when wrong (milliseconds)"
 msgstr "Продолжительность исчезновения при ошибке (миллисекунд)"
 
-#: gui.py:250
+#: gui.py:249
 msgid "Lesson"
 msgstr "Урок"
 
-#: gui.py:251
+#: gui.py:250
 msgid "Words lesson"
 msgstr "Словарный урок"

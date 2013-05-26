@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-04-05 10:55+0200\n"
+"POT-Creation-Date: 2013-05-26 12:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,18 +25,18 @@ msgstr ""
 msgid "Start!"
 msgstr ""
 
-#: repeatAnswer.py:195
+#: repeatAnswer.py:189
 msgid "Repeat answer"
 msgstr ""
 
-#: repeatAnswer.py:199
+#: repeatAnswer.py:193
 msgid "Repeat mode fade duration (milliseconds)"
 msgstr ""
 
-#: repeatAnswer.py:200
+#: repeatAnswer.py:194
 msgid "Lesson"
 msgstr ""
 
-#: repeatAnswer.py:201
+#: repeatAnswer.py:195
 msgid "Words lesson"
 msgstr ""

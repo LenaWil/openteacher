@@ -6,11 +6,12 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-04-05 10:55+0200\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2013-05-26 12:49+0200\n"
 "PO-Revision-Date: 2013-04-29 10:14+0000\n"
 "Last-Translator: kodadiirem <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -25,18 +26,18 @@ msgstr "Başlamak için düğmeye tıklayınız"
 msgid "Start!"
 msgstr "Başla!"
 
-#: repeatAnswer.py:195
+#: repeatAnswer.py:189
 msgid "Repeat answer"
 msgstr "Cevabı tekrar et"
 
-#: repeatAnswer.py:199
+#: repeatAnswer.py:193
 msgid "Repeat mode fade duration (milliseconds)"
 msgstr "Tekrar durumu için kapanış süresi (milisaniye)"
 
-#: repeatAnswer.py:200
+#: repeatAnswer.py:194
 msgid "Lesson"
 msgstr "Ders"
 
-#: repeatAnswer.py:201
+#: repeatAnswer.py:195
 msgid "Words lesson"
 msgstr "Kelimeler dersi"

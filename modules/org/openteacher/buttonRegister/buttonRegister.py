@@ -22,7 +22,9 @@ class Button(object):
 	"""Represents a Button. UI modules should draw a button and handle
 	   the events so they're updated on changes. User modules use it
 	   as an abstract way of changing the buttons, by sending the change
-	   events with arguments.
+	   events with arguments. Note that the UI can't always respect all
+	   the values passed in via the events. That's up to the UI
+	   implementation.
 
 	   Properties:
 
@@ -34,13 +36,14 @@ class Button(object):
 	   - changeText(text) -> user to gui
 	   - changeIcon(icon_path) -> user to gui
 	   - changeSize(size) -> user to gui
-	     size is a string: either 'small' or 'large'
+	     size is a string: either 'small' or 'large'.
 	   - changePriority(priority) -> user to gui
 	     piority is a number; 0 is high, inifinity low.
 
 	"""
 	def __init__(self, category, createEvent, *args, **kwargs):
-		"""category must be either 'create' or 'load'.
+		"""category must be either 'create', 'load' or
+		   'load-from-internet'.
 
 		"""
 		super(Button, self).__init__(*args, **kwargs)
@@ -94,7 +97,7 @@ class ButtonRegisterModule(object):
 		   gui modules) it has been created. It returns the resulting
 		   object to the user. `category` can be everything in theory,
 		   if you want your button to be shown using a string with value
-		   'load' or 'create' is a good idea.
+		   'load', 'load-from-internet' or 'create' is a good idea.
 
 			Returns an object, the docstring of that objects is:
 

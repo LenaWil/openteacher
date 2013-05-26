@@ -7,42 +7,41 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-01-31 17:16+0100\n"
+"POT-Creation-Date: 2013-05-26 12:49+0200\n"
 "PO-Revision-Date: 2012-08-15 14:41+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-02-01 05:20+0000\n"
 "X-Generator: Launchpad (build 16455)\n"
-"Language: nl\n"
 
-#: connection.py:59
+#: connection.py:57
 msgid "Server IP or hostname:"
 msgstr "Server IP of hostname:"
 
-#: connection.py:60
+#: connection.py:58
 msgid "Connect"
 msgstr "Verbinden"
 
-#: connection.py:93
+#: connection.py:91
 msgid "Username:"
 msgstr "Gebruikersnaam:"
 
-#: connection.py:94
+#: connection.py:92
 msgid "Password:"
 msgstr "Wachtwoord:"
 
-#: connection.py:95 connection.py:143
+#: connection.py:93 connection.py:141
 msgid "Login"
 msgstr "Aanmelden"
 
-#: connection.py:161
+#: connection.py:159
 msgid "Could not connect to the server. Possibly wrong hostname."
-msgstr ""
-"Kon geen verbinding maken met de server. Mogelijk is de hostname fout."
+msgstr "Kon geen verbinding maken met de server. Mogelijk is de hostname fout."
 
-#: connection.py:232
+#: connection.py:230
 msgid "Could not login. Wrong username or password."
 msgstr "Kon niet aanmelden. Verkeerde gebruikersnaam of wachtwoord."

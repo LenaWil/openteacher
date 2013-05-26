@@ -7,18 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-04-05 10:56+0200\n"
+"POT-Creation-Date: 2013-05-26 12:49+0200\n"
 "PO-Revision-Date: 2013-04-05 13:37+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-04-06 05:45+0000\n"
 "X-Generator: Launchpad (build 16550)\n"
-"Language: nl\n"
 
-#: uiController.py:194
+#: uiController.py:193
 msgid ""
 "Couldn't open the file, because the file type is unknown or it can't be "
 "shown."
@@ -26,7 +26,7 @@ msgstr ""
 "Kon het bestand niet openen, omdat het bestandstype onbekend is of niet "
 "weergeven kan worden."
 
-#: uiController.py:196
+#: uiController.py:195
 msgid ""
 "Couldn't open the file, is it still there and do we have the right to open "
 "it?"
@@ -34,23 +34,23 @@ msgstr ""
 "Kon het bestand niet openen, is het nog steeds aanwezig en hebben we de "
 "rechten om het te openen?"
 
-#: uiController.py:198
+#: uiController.py:197
 msgid "Couldn't open the file, it seems to be corrupted."
 msgstr "Kon het bestand niet openen, het lijkt beschadigd te zijn."
 
-#: uiController.py:210
+#: uiController.py:209
 msgid "File opened succesfully."
 msgstr "Bestand succesvol geopend"
 
-#: uiController.py:222
+#: uiController.py:221
 msgid "Can't merge files of different file types."
 msgstr "Kan bestanden met verschillende types niet samenvoegen."
 
-#: uiController.py:238
+#: uiController.py:237
 msgid "Opened file into the current list succesfully."
 msgstr "Het bestand is met succes in de huidige lijst geopend."
 
-#: uiController.py:244
+#: uiController.py:243
 msgid ""
 "Couldn't save the file, is there enough free disk space and do we have the "
 "right to write to the specified location?"
@@ -58,6 +58,6 @@ msgstr ""
 "Kon het bestand niet opslaan, is er genoeg vrije ruimte en zijn we "
 "gemachtigd te schrijven op de aangewezen locatie?"
 
-#: uiController.py:246
+#: uiController.py:245
 msgid "File saved succesfully."
 msgstr "Bestand succesvol opgeslagen."

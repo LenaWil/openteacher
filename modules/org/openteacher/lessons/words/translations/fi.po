@@ -7,31 +7,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-04-05 10:55+0200\n"
+"POT-Creation-Date: 2013-05-26 12:49+0200\n"
 "PO-Revision-Date: 2012-08-08 23:36+0000\n"
 "Last-Translator: Teemu Paavola <tteeemu@gmail.com>\n"
 "Language-Team: Finnish <fi@li.org>\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-04-06 05:43+0000\n"
 "X-Generator: Launchpad (build 16550)\n"
-"Language: fi\n"
 
-#: words.py:83
+#: words.py:84
 msgid "Unnamed"
 msgstr "Nimeämätön"
 
-#: words.py:84
+#: words.py:85
 #, python-format
 msgid "Word lesson: %s"
 msgstr "Sanojen opettelu: %s"
 
-#: words.py:131
+#: words.py:130
 msgid "Empty question or answer"
 msgstr "Tyhjä kysymys tai vastaus"
 
-#: words.py:132
+#: words.py:131
 msgid "Please enter at least one question and one answer for every word."
 msgstr "Anna vähintään yksi kysymys tai vastaus jokaiselle sanalle"
 

@@ -182,17 +182,15 @@ class VocatrainApiModule(object):
 
 		self._activeDialogs = set()
 
-		self._enButton = self._buttonRegister.registerButton("load")
+		self._enButton = self._buttonRegister.registerButton("load-from-internet")
 		self._enButton.clicked.handle(self.importFromVocatrain)
 		self._enButton.changePriority.send(self.priorities["all"])
-		self._enButton.changeSize.send("small")
 
-		self._nlButton = self._buttonRegister.registerButton("load")
+		self._nlButton = self._buttonRegister.registerButton("load-from-internet")
 		self._nlButton.clicked.handle(self.importFromWoordjesleren)
 		#+1 so it gets less priority than the vocatrain (english)
 		#button.
 		self._nlButton.changePriority.send(self.priorities["all"] + 1)
-		self._nlButton.changeSize.send("small")
 
 		try:
 			translator = self._modules.default("active", type="translator")

@@ -151,7 +151,7 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 	def __init__(self, startWidget=None, requestClose=lambda: None, aeroSetting=False, *args, **kwargs):
 		super(OpenTeacherWidget, self).__init__(*args, **kwargs)
 
-		self.resize(640, 480)
+		self.resize(640, 520)
 
 		#used to ask for permission before closing the window.
 		self._requestClose = requestClose

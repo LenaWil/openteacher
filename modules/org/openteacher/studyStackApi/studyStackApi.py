@@ -187,10 +187,9 @@ class StudyStackApiModule(object):
 
 		self._activeDialogs = set()
 
-		self._button = self._buttonRegister.registerButton("load")
+		self._button = self._buttonRegister.registerButton("load-from-internet")
 		self._button.clicked.handle(self._import)
 		self._button.changePriority.send(self.priorities["all"])
-		self._button.changeSize.send("small")
 
 		try:
 			translator = self._modules.default("active", type="translator")

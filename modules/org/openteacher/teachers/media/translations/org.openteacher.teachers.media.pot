@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-04-05 10:55+0200\n"
+"POT-Creation-Date: 2013-05-26 12:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #. TRANSLATORS: lesson types are e.g. 'smart', 'all once' and 'interval'
-#: media.py:124
+#: media.py:123
 msgid "Lesson type:"
 msgstr ""
 
 #. TRANSLATORS: a button which the user presses to tell the computer it should check his/her answer.
-#: media.py:126
+#: media.py:125
 msgid "Check"
 msgstr ""

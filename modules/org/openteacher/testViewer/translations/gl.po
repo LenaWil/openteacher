@@ -6,11 +6,12 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-04-05 10:56+0200\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2013-05-26 12:49+0200\n"
 "PO-Revision-Date: 2013-04-22 21:18+0000\n"
 "Last-Translator: Xosé <Unknown>\n"
 "Language-Team: Galician <gl@li.org>\n"
+"Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18,35 +19,35 @@ msgstr ""
 "X-Launchpad-Export-Date: 2013-04-23 05:34+0000\n"
 "X-Generator: Launchpad (build 16580)\n"
 
-#: testViewer.py:136
+#: testViewer.py:133
 msgid "Results"
 msgstr "Resultados"
 
-#: testViewer.py:147
+#: testViewer.py:144
 msgid "Note:"
 msgstr "Nota:"
 
-#: testViewer.py:150
+#: testViewer.py:147
 msgid "yes"
 msgstr "si"
 
-#: testViewer.py:150
+#: testViewer.py:147
 msgid "no"
 msgstr "non"
 
-#: testViewer.py:154
+#: testViewer.py:151
 #, python-format
 msgid "Completed: %s"
 msgstr "Completado: %s"
 
-#: testViewer.py:160
+#: testViewer.py:157
 #, python-format
 msgid "Total thinking time: %s second"
 msgid_plural "Total thinking time: %s seconds"
 msgstr[0] "Tempo total pensando: % segundo"
 msgstr[1] "Tempo total pensando: % segundos"
 
-#: testViewer.py:168
+#: testViewer.py:165
 #, python-format
 msgid "Total thinking time: %s minutes"
 msgstr "Tempo total pensando: %s minutos"

@@ -6,25 +6,26 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-04-05 10:56+0200\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2013-05-26 12:49+0200\n"
 "PO-Revision-Date: 2013-04-27 15:27+0000\n"
 "Last-Translator: kodadiirem <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-04-28 04:46+0000\n"
 "X-Generator: Launchpad (build 16580)\n"
 
-#: progressViewer.py:65
+#: progressViewer.py:67
 msgid "Pause"
 msgstr "Duraklat"
 
-#: progressViewer.py:72
+#: progressViewer.py:74
 msgid "Thinking"
 msgstr "Düşünüyor"
 
-#: progressViewer.py:76
+#: progressViewer.py:78
 msgid "Answering"
 msgstr "Cevap veriyor"

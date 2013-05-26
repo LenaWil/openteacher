@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-04-05 10:55+0200\n"
+"POT-Creation-Date: 2013-05-26 12:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,31 +17,31 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: inMind.py:44
+#: inMind.py:47
 msgid ""
 "Think about the answer, and press the 'View answer' button when you're done."
 msgstr ""
 
-#: inMind.py:45
+#: inMind.py:48
 msgid "View answer"
 msgstr ""
 
-#: inMind.py:46
+#: inMind.py:49
 msgid "Skip"
 msgstr ""
 
-#: inMind.py:69
+#: inMind.py:70
 msgid "I was right"
 msgstr ""
 
-#: inMind.py:70
+#: inMind.py:71
 msgid "I was wrong"
 msgstr ""
 
-#: inMind.py:138
+#: inMind.py:135
 msgid "Translation: "
 msgstr ""
 
-#: inMind.py:206
+#: inMind.py:199
 msgid "Think answer"
 msgstr ""

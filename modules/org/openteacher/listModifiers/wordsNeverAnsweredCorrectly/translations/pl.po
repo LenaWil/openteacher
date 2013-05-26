@@ -6,18 +6,19 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-04-05 10:56+0200\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2013-05-26 12:48+0200\n"
 "PO-Revision-Date: 2013-04-26 00:25+0000\n"
 "Last-Translator: pp/bs <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-04-27 06:06+0000\n"
 "X-Generator: Launchpad (build 16580)\n"
 
-#: wordsNeverAnsweredCorrectly.py:81
+#: wordsNeverAnsweredCorrectly.py:86
 msgid "Only words you never answered correctly"
 msgstr ""
 "Tylko te słowa, na które nigdy nie została udzielona poprawna odpowiedź"

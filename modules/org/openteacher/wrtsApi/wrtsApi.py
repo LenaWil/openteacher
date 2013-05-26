@@ -70,10 +70,9 @@ class WrtsApiModule(object):
 		self._ui = self._mm.import_("ui")
 		self._api = self._mm.import_("api")
 
-		self._button = self._modules.default("active", type="buttonRegister").registerButton("load")
+		self._button = self._modules.default("active", type="buttonRegister").registerButton("load-from-internet")
 		self._button.clicked.handle(self.importFromWrts)
 		self._button.changePriority.send(self.priorities["all"])
-		self._button.changeSize.send("small")
 
 		self._action = self._uiModule.fileMenu.addAction(self.priorities["all"])
 		self._action.triggered.handle(self.exportToWrts)

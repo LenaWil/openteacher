@@ -6,41 +6,42 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-01-31 17:16+0100\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2013-05-26 12:49+0200\n"
 "PO-Revision-Date: 2013-05-11 01:05+0000\n"
 "Last-Translator: pp/bs <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-05-12 05:35+0000\n"
 "X-Generator: Launchpad (build 16598)\n"
 
-#: connection.py:59
+#: connection.py:57
 msgid "Server IP or hostname:"
 msgstr "Numer IP serwera lub nazwa hosta:"
 
-#: connection.py:60
+#: connection.py:58
 msgid "Connect"
 msgstr "Połącz"
 
-#: connection.py:93
+#: connection.py:91
 msgid "Username:"
 msgstr "Nazwa użytkownika:"
 
-#: connection.py:94
+#: connection.py:92
 msgid "Password:"
 msgstr "Hasło"
 
-#: connection.py:95 connection.py:143
+#: connection.py:93 connection.py:141
 msgid "Login"
 msgstr ""
 
-#: connection.py:161
+#: connection.py:159
 msgid "Could not connect to the server. Possibly wrong hostname."
 msgstr "Nie udało się połączyć z serwerem. Prawdopodobnie zła nazwa hosta."
 
-#: connection.py:232
+#: connection.py:230
 msgid "Could not login. Wrong username or password."
 msgstr "Logowanie nieudane. Prawdopodobnie zła nazwa użytkownika lub hasło."

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-04-05 10:56+0200\n"
+"POT-Creation-Date: 2013-05-26 12:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,42 +17,42 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: flashcardexchangeApi.py:161
+#: flashcardexchangeApi.py:166
 msgid ""
 "Enter a search term and press the search button to search flashcardexchange."
 "com for sets. Then select the set or sets you want to import and click OK."
 msgstr ""
 
-#: flashcardexchangeApi.py:162
+#: flashcardexchangeApi.py:167
 msgid "E.g.: spanish travel vocabulary"
 msgstr ""
 
-#: flashcardexchangeApi.py:163
+#: flashcardexchangeApi.py:168
 msgid "Search"
 msgstr ""
 
-#: flashcardexchangeApi.py:164
+#: flashcardexchangeApi.py:169
 msgid "Search flashcardexchange.com"
 msgstr ""
 
-#: flashcardexchangeApi.py:267
+#: flashcardexchangeApi.py:261
 msgid "Import from flashcardexchange.com"
 msgstr ""
 
-#: flashcardexchangeApi.py:270
+#: flashcardexchangeApi.py:264
 msgid "flashcardexchange.com API client id"
 msgstr ""
 
-#: flashcardexchangeApi.py:297
+#: flashcardexchangeApi.py:291
 msgid "No flashcardexchange.com connection"
 msgstr ""
 
-#: flashcardexchangeApi.py:298
+#: flashcardexchangeApi.py:292
 msgid ""
 "flashcardexchange.com didn't accept the connection. Are you sure that your "
 "internet connection works and flashcardexchange.com is online?"
 msgstr ""
 
-#: flashcardexchangeApi.py:331
+#: flashcardexchangeApi.py:324
 msgid "The word list was imported from flashcardexchange.com successfully."
 msgstr ""

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-04-05 10:56+0200\n"
+"POT-Creation-Date: 2013-05-26 12:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,27 +17,27 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: testsViewer.py:48
+#: testsViewer.py:51
 msgid "Date"
 msgstr ""
 
-#: testsViewer.py:49
+#: testsViewer.py:52
 msgid "Note"
 msgstr ""
 
-#: testsViewer.py:50
+#: testsViewer.py:53
 msgid "Completed"
 msgstr ""
 
-#: testsViewer.py:117
+#: testsViewer.py:118
 msgid "Highest note:"
 msgstr ""
 
-#: testsViewer.py:120
+#: testsViewer.py:121
 msgid "Average note:"
 msgstr ""
 
-#: testsViewer.py:123
+#: testsViewer.py:124
 msgid "Lowest note:"
 msgstr ""
 
@@ -45,11 +45,11 @@ msgstr ""
 #. stand a note, but not today.' If '-' isn't
 #. appropriate in you language for that, please replace.
 #. Otherwise, just copy the original.
-#: testsViewer.py:139 testsViewer.py:144 testsViewer.py:148 testsViewer.py:174
-#: testsViewer.py:180
+#: testsViewer.py:140 testsViewer.py:145 testsViewer.py:149 testsViewer.py:173
+#: testsViewer.py:179
 msgid "-"
 msgstr ""
 
-#: testsViewer.py:254
+#: testsViewer.py:247
 msgid "Back"
 msgstr ""
