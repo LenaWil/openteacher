@@ -1,0 +1,45 @@
+# Polish translation for openteacher
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-05-26 12:48+0200\n"
+"PO-Revision-Date: 2013-04-27 00:24+0000\n"
+"Last-Translator: pp/bs <Unknown>\n"
+"Language-Team: Polish <pl@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-05-27 05:32+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
+
+#: testTaker.py:49
+msgid "Select the test you want to take"
+msgstr "Wybierz test, który chcesz zdawać"
+
+#: testTaker.py:50 testTaker.py:119
+msgid "Take test"
+msgstr "Zdawaj test"
+
+#: testTaker.py:123
+msgid "Choose test"
+msgstr "Wybierz test"
+
+#: testTaker.py:125
+msgid "Taking test"
+msgstr "Zdawanie testu"
+
+#: testTaker.py:185
+msgid ""
+"An error occured. The server could not be reached. Check your network "
+"connection."
+msgstr ""
+"Wystąpił błąd. Brak połączenia z serwerem. Sprawdź połączenia sieciowe."
+
+#: testTaker.py:188
+msgid "Your answers have successfully been handed in!"
+msgstr "Twoje odpowiedzi zostały oddane do sprawdzenia!"

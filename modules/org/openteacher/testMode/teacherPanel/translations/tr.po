@@ -1,0 +1,127 @@
+# Turkish translation for openteacher
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-05-26 12:49+0200\n"
+"PO-Revision-Date: 2013-04-29 12:36+0000\n"
+"Last-Translator: kodadiirem <Unknown>\n"
+"Language-Team: Turkish <tr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-05-27 05:32+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
+
+#: teacherPanel.py:67
+msgid "Tests"
+msgstr "Testler"
+
+#: teacherPanel.py:68
+msgid "Add lesson"
+msgstr "Ders ekle"
+
+#: teacherPanel.py:111
+msgid "Select a student/group:"
+msgstr "Öğrenci/grup seç:"
+
+#: teacherPanel.py:112
+msgid "Add person/group"
+msgstr "Kişi/grup ekle"
+
+#: teacherPanel.py:113
+msgid "Back"
+msgstr "Geri"
+
+#: teacherPanel.py:180
+msgid "(did not participate)"
+msgstr "(bulunmadı)"
+
+#: teacherPanel.py:186
+msgid "(Handed in)"
+msgstr "(Bulundu)"
+
+#: teacherPanel.py:226
+msgid "Questions:"
+msgstr "Sorular:"
+
+#: teacherPanel.py:227
+msgid "People in this test:"
+msgstr "Bu testteki kişiler:"
+
+#: teacherPanel.py:228
+msgid "Add person"
+msgstr "Kişi ekle"
+
+#: teacherPanel.py:310
+msgid "Test"
+msgstr "Test"
+
+#: teacherPanel.py:311
+msgid "(Re)check answers"
+msgstr "Cevapları kontrol et (yeniden)"
+
+#: teacherPanel.py:312
+msgid "(Re)publish answers"
+msgstr "Cevapları yayınla (yeniden)"
+
+#: teacherPanel.py:324
+msgid "Student's answers have been checked!"
+msgstr "Öğrencilerin cevapları kontrol edildi!"
+
+#: teacherPanel.py:330
+msgid "Student's results have been (re)published!"
+msgstr "Öğrencilerin sonuçları kontrol edildi (yeniden)!"
+
+#: teacherPanel.py:521
+msgid "Person"
+msgstr "Kişi"
+
+#: teacherPanel.py:523
+msgid ""
+"Answers of this student have not been checked yet. Click the 'Check answers' "
+"button in the second column."
+msgstr ""
+"Henüz bu öğrencinin cevapları kontrol edilmedi. İkinci sütundaki 'Cevapları "
+"kontrol et' düğmesine tıklayın."
+
+#: teacherPanel.py:525
+msgid "Answers right:"
+msgstr "Doğru cevaplar:"
+
+#: teacherPanel.py:527
+msgid "Answers wrong:"
+msgstr "Yanlış cevaplar:"
+
+#: teacherPanel.py:529
+msgid "{appName} mark:"
+msgstr ""
+
+#: teacherPanel.py:531
+msgid "Final mark:"
+msgstr "Final mark:"
+
+#: teacherPanel.py:533
+msgid "Question"
+msgstr "Soru"
+
+#: teacherPanel.py:534
+msgid "Given answer"
+msgstr "Verilen cevap"
+
+#. TRANSLATORS: The name of a button clicked if an answer is correct.
+#: teacherPanel.py:537
+msgid "Correct"
+msgstr "Doğru"
+
+#: teacherPanel.py:684
+msgid "Teacher panel"
+msgstr "Öğretmen paneli"
+
+#: teacherPanel.py:686
+msgid "Teacher Panel"
+msgstr "Öğretmen paneli"
