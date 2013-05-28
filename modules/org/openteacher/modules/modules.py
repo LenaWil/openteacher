@@ -138,7 +138,7 @@ class ModulesModule(object):
 		for mod in mods_without_dependencies:
 			self._visit(mod)
 
-		logger.debug(self._sorted_tree)
+		logger.debug("sorted module tree: %s" % self._sorted_tree)
 
 		self._enableModules()
 		self._disableModules()

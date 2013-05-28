@@ -303,8 +303,9 @@ class WebsiteGeneratorModule(object):
 		# Generate inAppDocumentation pages.
 		for lang in list(self._userDocMod.availableTranslations) + ["en"]:
 			destination = os.path.join(self._path, "inAppDocs", lang + ".html")
+			html = self._getWrappedUserDocumentation(lang)
 			with open(destination, "w") as f:
-				f.write(self._getWrappedUserDocumentation(lang))
+				f.write(html.encode("UTF-8"))
 
 	def _generatePages(self, lang):
 		"""Generates all pages in a certain language in a subdirectory
@@ -335,8 +336,9 @@ class WebsiteGeneratorModule(object):
 		self._tempPaths.append(path)
 
 		filePath = os.path.join(path, "using-openteacher-3.html")
+		html = self._userDocMod.getHtml("../images/docs/3", lang)
 		with open(filePath, "w") as f:
-			f.write(self._userDocMod.getHtml("../images/docs/3", lang))
+			f.write(html.encode("UTF-8"))
 		return filePath
 
 	def _getWrappedUserDocumentation(self, lang):
