@@ -51,9 +51,11 @@ class MobileGeneratorModule(object):
 			"wordListStringParser",
 			"wordListStringComposer",
 
+			#inputTypingLogic
+			"inputTypingLogic",
+
 			#else
 			"javaScriptLessonType",
-			"jsInputTypingLogic",
 		]
 		for type in self._logicModTypes:
 			self.requires.append(self._mm.mods("javaScriptImplementation", type=type))
