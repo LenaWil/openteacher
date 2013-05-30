@@ -1,14 +1,14 @@
 # Chinese (Traditional) translation for openteacher
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the openteacher package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-05-26 12:48+0200\n"
-"PO-Revision-Date: 2013-05-29 16:02+0000\n"
+"PO-Revision-Date: 2013-05-29 07:31+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,9 +16,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-05-30 06:05+0000\n"
 "X-Generator: Launchpad (build 16652)\n"
-"Language: \n"
 
-#. TRANSLATORS: This is the name of a file format OT can read.
-#: abbyy.py:54
-msgid "ABBYY Lingvo Tutor"
-msgstr "ABBYY Lingvo Tutor"
+#: scr/gui.js:39
+msgid "Menu"
+msgstr "選單"
+
+#: scr/gui.js:42
+msgid "Enter list"
+msgstr "輸入列表"
+
+#: scr/gui.js:43
+msgid "Teach me!"
+msgstr "教我！"

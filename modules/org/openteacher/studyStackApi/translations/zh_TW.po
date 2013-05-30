@@ -1,0 +1,52 @@
+# Chinese (Traditional) translation for openteacher
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-05-26 12:49+0200\n"
+"PO-Revision-Date: 2013-05-29 15:04+0000\n"
+"Last-Translator: Louie Chen <louie23@gmail.com>\n"
+"Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-05-30 06:05+0000\n"
+"X-Generator: Launchpad (build 16652)\n"
+
+#: studyStackApi.py:137
+msgid "Select category"
+msgstr "選擇分類"
+
+#: studyStackApi.py:138
+msgid "Please select a category"
+msgstr "請選擇分類"
+
+#: studyStackApi.py:143
+msgid "Select list"
+msgstr "選擇列表"
+
+#: studyStackApi.py:144
+msgid "Please select a list"
+msgstr "請選擇列表"
+
+#: studyStackApi.py:220
+msgid "Import from studystack.com"
+msgstr "從 studystack.com 匯入"
+
+#: studyStackApi.py:265
+msgid "No Study Stack connection"
+msgstr "沒有連線到 Study Stack"
+
+#: studyStackApi.py:266
+msgid ""
+"Study Stack didn't accept the connection. Are you sure that your internet "
+"connection works and http://www.studystack.com/ is online?"
+msgstr "Study Stack 並沒有接受連線。您確定您的網路連線正常並且 http://www.studystack.com 在線上嗎？"
+
+#: studyStackApi.py:271
+msgid "The word list was imported from Study Stack successfully."
+msgstr "從 Study Stack 匯入單字列表成功。"

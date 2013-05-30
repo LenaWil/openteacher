@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-05-26 12:48+0200\n"
-"PO-Revision-Date: 2012-09-10 17:50+0000\n"
-"Last-Translator: Maximilian Mühlbauer <Unknown>\n"
+"PO-Revision-Date: 2013-05-29 12:07+0000\n"
+"Last-Translator: Simon Schütte <simonschuette@arcor.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-05-27 05:31+0000\n"
-"X-Generator: Launchpad (build 16640)\n"
+"X-Launchpad-Export-Date: 2013-05-30 06:05+0000\n"
+"X-Generator: Launchpad (build 16652)\n"
 "Language: de\n"
 
 #: words.py:61
@@ -36,7 +36,7 @@ msgstr "Wort:"
 
 #: words.py:128
 msgid "Next"
-msgstr ""
+msgstr "Weiter"
 
 #: words.py:466
 msgid "Lesson type"

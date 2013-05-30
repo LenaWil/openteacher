@@ -1,14 +1,14 @@
 # Chinese (Traditional) translation for openteacher
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the openteacher package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-05-26 12:49+0200\n"
-"PO-Revision-Date: 2013-05-29 07:24+0000\n"
+"PO-Revision-Date: 2013-05-29 16:04+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,20 +16,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-05-30 06:05+0000\n"
 "X-Generator: Launchpad (build 16652)\n"
-"Language: \n"
 
-#: startWidget.py:281
-msgid "Create lesson:"
-msgstr "建立課程："
-
-#: startWidget.py:282
-msgid "Load lesson:"
-msgstr "載入課程："
-
-#: startWidget.py:283
-msgid "Load from the internet"
-msgstr "從 internet 載入"
-
-#: startWidget.py:285
-msgid "Recently opened:"
-msgstr "最近開啟檔案："
+#. TRANSLATORS: This is one of the file formats OpenTeacher
+#. TRANSLATORS: can read. It's named after the program that uses
+#. TRANSLATORS: it. See for more info about that program:
+#. TRANSLATORS: http://granule.sourceforge.net/
+#: granule.py:58
+msgid "Granule"
+msgstr "Granule"
