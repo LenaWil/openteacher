@@ -13,7 +13,39 @@ accomplish things that are often needed.
 
 OpenTeacher's logic is written in Python and JavaScript. For the main
 UI, PyQt4 is used. This tutorial assumes you're familiar with those
-three techniques.
+three techniques. Keep in mind though that for a lot of stuff you only
+need to know Python.
+
+Setting up the development environment
+======================================
+
+To start development, you first need to download the latest development
+version of the source code. We host our code on the
+`Launchpad <https://launchpad.net/>`_ platform, and are using the version
+control system native to it: `Bazaar <http://bazaar.canonical.com/>`_.
+
+The latest development version of the source code can be downloaded via
+bzr by executing the following command::
+
+	bzr branch lp:openteacher
+
+This will take some time, because it doesn't only download the current
+version of the source code, but also all of the history of it. Next
+updates will be quicker. You can do those by executing the following
+command while inside the newly created `openteacher` directory::
+
+	bzr pull
+
+When you have the source code, you can start OpenTeacher by running the
+following command inside the `openteacher` directory:
+
+..
+	python openteacher.py
+
+This command does require several dependencies, which are listed at the
+`dependencies page <dependencies.rst>`_. The most important ones are
+probably already installed if you've ever installed a release of
+OpenTeacher.
 
 .. figure:: modules.jpg
    :width: 300px
