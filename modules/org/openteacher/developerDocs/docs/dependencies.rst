@@ -19,8 +19,9 @@ Dependencies for using OpenTeacher
 * python-enchant
 * python-chardet
 * pyttsx (currently included)
+* pyratemp (currently included)
 * espeak
-* tesseract-ocr | cuneiform
+* tesseract-ocr or cuneiform
 
 also (test server):
 
