@@ -30,28 +30,32 @@ setup(
 	author_email = "@!email!@",
 	url = "@!website!@",
 	license = "GPLv3+",
-	packages = ["@!package!@"],
-	package_data = {"@!package!@": [
+	packages = [
+		<!--(for package in packages)-->
+		"@!package!@",
+		<!--(end)-->
+	],
+	package_data = {"@!packageName!@": [
 		<!--(for path in package_data)-->
 		"@!path!@",
 		<!--(end)-->
 	]},
 	data_files = [
 		("share/applications", [
-			"linux/@!package!@.desktop"
+			"linux/@!packageName!@.desktop"
 		]),
 		("share/menu", [
-			"linux/@!package!@"
+			"linux/@!packageName!@"
 		]),
 		("share/pixmaps", [
-			"linux/@!package!@.xpm"
+			"linux/@!packageName!@.xpm"
 		]),
 		("share/icons/hicolor/128x128/mimetypes", $!image_paths!$),
 		("share/icons/hicolor/128x128/apps", [
-			"linux/@!package!@.png"
+			"linux/@!packageName!@.png"
 		]),
 		("share/mime/packages", [
-			"linux/@!package!@.xml"
+			"linux/@!packageName!@.xml"
 		])
 	],
 	<!--(if extensions)-->
@@ -61,7 +65,7 @@ setup(
 		<!--(end)-->
 	],
 	<!--(end)-->
-	scripts = ["bin/@!package!@"],
+	scripts = ["bin/@!packageName!@"],
 	#a list of classifiers can be found at http://pypi.python.org/pypi?:action=list_classifiers
 	classifiers = [
 		"Development Status :: 5 - Production/Stable", 

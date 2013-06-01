@@ -174,10 +174,25 @@ class SourceWithSetupSaverModule(object):
 			if f.endswith(".c"):
 				yield os.path.splitext(f)[0], f
 
-	def _buildSetupPy(self, packageData, imagePaths, exts):
+	def _findPackages(self):
+		yield self._packageName
+
+		for root, dirs, files in os.walk(self._packagePath):
+			if root == self._packagePath:
+				continue
+			relativeName = os.path.relpath(root, self._packagePath)
+			if "__init__.py" in files:
+				yield self._packageName + "." + relativeName.replace(os.sep, ".")
+
+	def _buildSetupPy(self, imagePaths):
+		packageData = self._findPackageData()
+		exts = self._findCExtensions()
+		packages = self._findPackages()
+
 		data = self._metadata.copy()
 		data.update({
-			"package": self._packageName,
+			"packageName": self._packageName,
+			"packages": packages,
 			"package_data": packageData,
 			"image_paths": repr(imagePaths.values()),
 			"extensions": exts,
@@ -214,9 +229,7 @@ class SourceWithSetupSaverModule(object):
 		imagePaths = self._findImagePaths(mimetypes)
 		self._buildFileIcons(imagePaths, qIcon)
 
-		packageData = self._findPackageData()
-		exts = self._findCExtensions()
-		self._buildSetupPy(packageData, imagePaths, exts)
+		self._buildSetupPy(imagePaths)
 
 	def saveSourceWithCExtensions(self):
 		self._sourcePath = self._sourceSaver.saveSourceWithCExtensions()
