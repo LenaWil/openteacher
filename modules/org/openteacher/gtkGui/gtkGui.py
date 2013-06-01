@@ -18,7 +18,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-
 def installGtkClasses():
 	global EnterWindow, TeachWindow
 
@@ -162,8 +161,6 @@ class GtkGui(object):
 		self._enterWin.hide()
 
 		lessonData = self._modules.default("active", type="wordListStringParser").parseList(data)
-		#FIXME: start an actual lesson
-
 		self._teachWin.startLesson(lessonData)
 
 	def _backToEntering(self):

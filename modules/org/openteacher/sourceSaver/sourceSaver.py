@@ -59,19 +59,22 @@ class SourceSaverModule(object):
 		#copy python/cython files from the original base dir to
 		#/tmp/uuid-here
 		for f in os.listdir(originalBase):
-			valid = (
-				os.path.isfile(os.path.join(originalBase, f)) and
+			originalPath = os.path.join(originalBase, f)
+			copyPath = os.path.join(copyBase, f)
+
+			isPyMod = (
+				os.path.isfile(originalPath) and
 				(
 					f.endswith(".py") or
 					f.endswith(".pyx")
 				)
 			)
-			if not valid:
-				continue
-			shutil.copy(
-				os.path.join(originalBase, f),
-				os.path.join(copyBase, f)
-			)
+			isPyPackage = os.path.isfile(os.path.join(originalPath, "__init__.py"))
+
+			if isPyMod:
+				shutil.copy(originalPath, copyPath)
+			elif isPyPackage:
+				shutil.copytree(originalPath, copyPath)
 
 		#copy all modules available in self._mm.mods
 		for mod in self._mm.mods:
