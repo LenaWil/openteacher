@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-05-26 12:49+0200\n"
+"POT-Creation-Date: 2013-06-01 21:00+0200\n"
 "PO-Revision-Date: 2012-11-09 23:24+0000\n"
 "Last-Translator: ghas <Unknown>\n"
 "Language-Team: Galician <gl@li.org>\n"
+"Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-05-27 05:31+0000\n"
 "X-Generator: Launchpad (build 16640)\n"
-"Language: gl\n"
 
 #: repeatAnswer.py:72
 msgid "Click the button to start"
@@ -26,18 +26,18 @@ msgstr "Preme o botón pra comezar"
 msgid "Start!"
 msgstr "Comezar!"
 
-#: repeatAnswer.py:189
+#: repeatAnswer.py:186
 msgid "Repeat answer"
 msgstr "Repetir resposta"
 
-#: repeatAnswer.py:193
+#: repeatAnswer.py:190
 msgid "Repeat mode fade duration (milliseconds)"
 msgstr ""
 
-#: repeatAnswer.py:194
+#: repeatAnswer.py:191
 msgid "Lesson"
 msgstr "Lección"
 
-#: repeatAnswer.py:195
+#: repeatAnswer.py:192
 msgid "Words lesson"
 msgstr ""

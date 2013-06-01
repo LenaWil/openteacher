@@ -21,6 +21,7 @@
 import subprocess
 import os
 import collections
+import re
 
 ComplexityResult = collections.namedtuple("ComplexityResult", "position complexity")
 
@@ -44,7 +45,7 @@ def complexityInfo(output):
 		if not line:
 			continue
 		result = ComplexityResult._make(eval(line))
-		if not "installQtClasses" in result.position:
+		if not re.search(r"install.*Classes", result.position):
 			yield result
 
 def complexityForPaths(basePath):

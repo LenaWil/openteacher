@@ -7,54 +7,54 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-05-26 12:49+0200\n"
+"POT-Creation-Date: 2013-06-01 21:00+0200\n"
 "PO-Revision-Date: 2012-10-26 22:46+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-05-27 05:32+0000\n"
 "X-Generator: Launchpad (build 16640)\n"
-"Language: ru\n"
 
-#: media.py:171
+#: media.py:179
 msgid "Remove"
 msgstr "Убрать"
 
-#: media.py:172
+#: media.py:180
 msgid "Add local media"
 msgstr "Добавить локальный файл"
 
-#: media.py:173
+#: media.py:181
 msgid "Add remote media"
 msgstr "Добавить файл с сайта"
 
-#: media.py:175
+#: media.py:183
 msgid "Name:"
 msgstr "Название:"
 
-#: media.py:176
+#: media.py:184
 msgid "Question:"
 msgstr "Вопрос:"
 
-#: media.py:177
+#: media.py:185
 msgid "Answer:"
 msgstr "Ответ:"
 
-#: media.py:195
+#: media.py:203
 msgid "Select file(s)"
 msgstr "Выберите файл(ы)"
 
-#: media.py:197
+#: media.py:205
 msgid "Media"
 msgstr "Мультимедиа"
 
-#: media.py:218
+#: media.py:226
 msgid "File URL"
 msgstr "Ссылка на файл"
 
-#: media.py:219
+#: media.py:227
 msgid ""
 "Enter the URL of your website or media item.\n"
 "Supported video sites: "
@@ -62,10 +62,10 @@ msgstr ""
 "Введите URL вашего сайта или медиа-элемента.\n"
 "Поддерживаемые видео-сайты: "
 
-#: media.py:268
+#: media.py:278
 msgid "Unsupported file type"
 msgstr "Неподдерживаемый тип файла"
 
-#: media.py:269
+#: media.py:279
 msgid "This type of file is not supported:\n"
 msgstr "Этот тип файлов не поддерживается:\n"

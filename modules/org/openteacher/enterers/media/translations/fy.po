@@ -7,54 +7,54 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-05-26 12:49+0200\n"
+"POT-Creation-Date: 2013-06-01 21:00+0200\n"
 "PO-Revision-Date: 2012-10-03 15:35+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Frisian <fy@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-05-27 05:32+0000\n"
 "X-Generator: Launchpad (build 16640)\n"
-"Language: \n"
 
-#: media.py:171
+#: media.py:179
 msgid "Remove"
 msgstr "Fuortsmite"
 
-#: media.py:172
+#: media.py:180
 msgid "Add local media"
 msgstr "Foegje lokale media ta."
 
-#: media.py:173
+#: media.py:181
 msgid "Add remote media"
 msgstr "Foegje ôfstansmedia ta"
 
-#: media.py:175
+#: media.py:183
 msgid "Name:"
 msgstr "Namme:"
 
-#: media.py:176
+#: media.py:184
 msgid "Question:"
 msgstr "Fraag:"
 
-#: media.py:177
+#: media.py:185
 msgid "Answer:"
 msgstr "Antwurd:"
 
-#: media.py:195
+#: media.py:203
 msgid "Select file(s)"
 msgstr "Selektearje bestân(nen)"
 
-#: media.py:197
+#: media.py:205
 msgid "Media"
 msgstr "Media"
 
-#: media.py:218
+#: media.py:226
 msgid "File URL"
 msgstr "Bestâns-URL"
 
-#: media.py:219
+#: media.py:227
 msgid ""
 "Enter the URL of your website or media item.\n"
 "Supported video sites: "
@@ -62,10 +62,10 @@ msgstr ""
 "Folje de URL fan jo website of media-item yn.\n"
 "Ûnderstipe video-sites: "
 
-#: media.py:268
+#: media.py:278
 msgid "Unsupported file type"
 msgstr "Unûnderstipe bestânstype"
 
-#: media.py:269
+#: media.py:279
 msgid "This type of file is not supported:\n"
 msgstr "Dit bestânstype is unûnderstipe:\n"
