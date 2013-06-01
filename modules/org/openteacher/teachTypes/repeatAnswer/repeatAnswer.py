@@ -73,10 +73,8 @@ def installQtClasses():
 			self.startButton.setText(_("Start!"))
 
 	class RepeatAnswerTeachWidget(QtGui.QStackedWidget):
-		def __init__(self, modules, compose, getFadeDuration, tabChanged, letterChosen, *args, **kwargs):
+		def __init__(self, inputWidget, compose, getFadeDuration, tabChanged, *args, **kwargs):
 			super(RepeatAnswerTeachWidget, self).__init__(*args, **kwargs)
-
-			self._modules = modules
 
 			#make start screen
 			self.startScreen = StartScreenWidget(self)
@@ -88,8 +86,7 @@ def installQtClasses():
 			self.addWidget(self.repeatScreen)
 
 			#make input screen
-			typingInput = self._modules.default("active", type="typingInput")
-			self.inputWidget = typingInput.createWidget(letterChosen)
+			self.inputWidget = inputWidget
 			self.addWidget(self.inputWidget)
 
 			tabChanged.connect(lambda: self.setCurrentWidget(self.startScreen))
@@ -211,15 +208,20 @@ class RepeatAnswerTeachTypeModule(object):
 		del self._fadeDurationSetting
 
 	def createWidget(self, tabChanged, letterChosen, addSideWidget, removeSideWidget):
+		typingInput = self._modules.default("active", type="typingInput")
+		inputWidget = typingInput.createWidget(letterChosen)
+
 		ratw = RepeatAnswerTeachWidget(
-			self._modules,
+			inputWidget,
 			self._modules.default("active", type="wordsStringComposer").compose,
-			lambda: self._fadeDurationSetting["value"],
+			self._getFadeDuration,
 			tabChanged,
-			letterChosen
 		)
 		self._activeWidgets.add(weakref.ref(ratw))
 		return ratw
+
+	def _getFadeDuration(self):
+		return self._fadeDurationSetting["value"]
 
 def init(moduleManager):
 	return RepeatAnswerTeachTypeModule(moduleManager)

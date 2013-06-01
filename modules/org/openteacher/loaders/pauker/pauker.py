@@ -97,8 +97,6 @@ class PaukerLoaderModule(object):
 			with open(path) as f:
 				root = ElementTree.parse(f).getroot()
 		else:
-			#FIXME sometime: the contextlib isn't necessary anymore in
-			#Python > 2.6 and > 3.1.
 			with contextlib.closing(gzip.open(path)) as f:
 				root = ElementTree.parse(f).getroot()
 

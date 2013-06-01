@@ -110,10 +110,21 @@ class TestCase(unittest.TestCase):
 		#Set a profile. The execute module does that normally.
 		next(iter(self._mm.mods(type="modules"))).profile = "default"
 
+	def _removeGtkModule(self):
+		"""Removes the GTK module from the module manager, because that
+		   one can't be enabled at the same time with Qt. Normally the
+		   profiles take care of that, but this tests circumvents the
+		   profiles.
+
+		"""
+		theMod = next(iter(self._mm.mods(type="gtkGui")))
+		self._mm._modules.remove(theMod)
+
 	def _doTest(self, minimalDependencies):
 		if not self.mode in MODES:
 			return
 		self._fakeExecuteModule()
+		self._removeGtkModule()
 
 		for mod in self._mm.mods:
 			startVars = set(vars(mod).keys()) - set(["active"])

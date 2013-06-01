@@ -36,8 +36,6 @@ class OtxxSaverModule(object):
 	def save(self, lesson, path, resourceFilenames={}, zipCompression=zipfile.ZIP_DEFLATED):
 		list = {"file-format-version": self._version}
 		list.update(lesson.list)
-		#FIXME after 2.6 support dropped: zipfile is a context manager
-		#itself at Python > 3.2 and Python > 2.7.
 		with contextlib.closing(zipfile.ZipFile(path, "w", zipCompression)) as otxxzip:
 			otxxzip.writestr("list.json", superjson.dumps(
 				list, #the list to save

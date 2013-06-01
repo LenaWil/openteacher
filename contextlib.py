@@ -21,6 +21,7 @@
 #adds some functionality of Python 3 to Python 2.
 
 import sys
+import warnings
 
 path = sys.path.pop(0)
 #keep a reference so this module isn't garbage collected
@@ -34,6 +35,12 @@ def ignored(*errors):
         yield
     except errors:
         pass
-sys.modules["contextlib"].ignored = ignored
 
+realClosing = contextlib.closing
+def closing(thing):
+	warnings.warn("Almost all uses of contextlib.closing can be removed after Python 2.6 support is dropped.")
+	return realClosing(thing)
+
+sys.modules["contextlib"].ignored = ignored
+sys.modules["contextlib"].closing = closing
 sys.path.insert(0, path)

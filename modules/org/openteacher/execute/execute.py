@@ -20,7 +20,6 @@
 
 import argparse
 import sys
-import contextlib
 import logging
 
 class ExecuteModule(object):
@@ -100,8 +99,9 @@ class ExecuteModule(object):
 		sys.argv.extend(otherArgs)
 
 		#setup logging
-		level = logging.DEBUG if args.debug else logging.WARNING
+		level = logging.DEBUG if args.debug else logging.ERROR
 		logging.basicConfig(level=level)
+		logging.captureWarnings(True)
 
 		#setup the modules module
 		self._modules = self._getMod(type="modules")
@@ -145,12 +145,14 @@ class ExecuteModule(object):
 		})
 
 	def _settingChanged(self):
-		with contextlib.ignored(IndexError):
-			#IndexError: no guarantees can be made for these modules...
+		try:
 			dialogShower = self._modules.default("active", type="dialogShower")
 			settingsDialog = self._modules.default("active", type="settingsDialog")
 
-		dialogShower.showMessage.send(settingsDialog.tab, "Restart OpenTeacher for this setting to take effect.")
+			dialogShower.showMessage.send(settingsDialog.tab, "Restart OpenTeacher for this setting to take effect.")
+		except IndexError:
+			#no guarantees can be made for these modules...
+			pass
 
 def init(moduleManager):
 	return ExecuteModule(moduleManager)

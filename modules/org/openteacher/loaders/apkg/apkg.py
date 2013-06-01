@@ -102,7 +102,6 @@ class AnkiApkgLoaderModule(object):
 
 	def load(self, path):
 		items = []
-		#FIXME once (contextlib.closing -> just zipfile)
 		try:
 			anki2Path = tempfile.mkstemp(".anki2")[1]
 			with contextlib.closing(zipfile.ZipFile(path)) as apkgZip:

@@ -86,7 +86,6 @@ class OpenTeachingMediaLoaderModule(object):
 
 	def load(self, path):
 		resourceFilenames = {}
-		#FIXME sometime: remove the contextlib wrapper when > Python 2.6
 		with contextlib.closing(zipfile.ZipFile(path, "r")) as zipFile:
 			names = zipFile.namelist()
 		names.remove("list.json")

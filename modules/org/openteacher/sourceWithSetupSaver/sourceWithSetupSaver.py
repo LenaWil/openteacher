@@ -24,11 +24,6 @@ import datetime
 import subprocess
 import glob
 
-def check_output(command):
-	#FIXME sometime: replace with subprocess.check_output
-	process = subprocess.Popen(command, stdout=subprocess.PIPE)
-	return process.communicate()[0]
-
 class SourceWithSetupSaverModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(SourceWithSetupSaverModule, self).__init__(*args, **kwargs)
