@@ -111,7 +111,7 @@ class TestCase(unittest.TestCase):
 		):
 			yield mod.createController()
 
-	def _testCallingMethodsWithoutLessonType(self):
+	def testCallingMethodsWithoutLessonType(self):
 		for controller in self._getControllersWithoutLessonType():
 			with self.assertRaises(AttributeError):
 				controller.checkTriggered("shouldn't matter")
@@ -122,7 +122,7 @@ class TestCase(unittest.TestCase):
 			with self.assertRaises(AttributeError):
 				controller.userIsTyping()
 
-	def _testCallingMethodsWithoutStartingLesson(self):
+	def testCallingMethodsWithoutStartingLesson(self):
 		for controller in self._getControllers():
 			with self.assertRaises(ValueError):
 				controller.checkTriggered("whatever")
@@ -133,7 +133,7 @@ class TestCase(unittest.TestCase):
 			with self.assertRaises(ValueError):
 				controller.userIsTyping()
 
-	def _testSettingOtherLessonTypeWhileShowingACorrection(self):
+	def testSettingOtherLessonTypeWhileShowingACorrection(self):
 		for controller in self._getControllers():
 			self._makeUnusedControllerShowACorrection(controller)
 
@@ -164,7 +164,7 @@ class TestCase(unittest.TestCase):
 		self.assertFalse(onHideCorrection.called)
 		uiWatcher.assertUiHasBeenDisabled()
 
-	def _testMethodsWhileShowingCorrection(self):
+	def testMethodsWhileShowingCorrection(self):
 		for controller in self._getControllers():
 			self._makeUnusedControllerShowACorrection(controller)
 
@@ -175,7 +175,7 @@ class TestCase(unittest.TestCase):
 			with self.assertRaises(ValueError):
 				controller.userIsTyping()
 
-	def _testCorrectAnywayWhileShowingCorrection(self):
+	def testCorrectAnywayWhileShowingCorrection(self):
 		for controller in self._getControllers():
 			self._makeUnusedControllerShowACorrection(controller)
 
@@ -188,7 +188,7 @@ class TestCase(unittest.TestCase):
 			self.assertTrue(onHideCorrection.called)
 			uiWatcher.assertUiHasBeenEnabled()
 
-	def _testSkip(self):
+	def testSkip(self):
 		for controller in self._getControllers():
 			onNewItem = CheckCall()
 			controller.lessonType.newItem.handle(onNewItem)
@@ -205,7 +205,7 @@ class TestCase(unittest.TestCase):
 			controller.checkTriggered(u"one")
 			controller.checkTriggered(u"two")
 
-	def _testCallingCorrectionShowingDoneWhileNoCorrectionIsShown(self):
+	def testCallingCorrectionShowingDoneWhileNoCorrectionIsShown(self):
 		for controller in self._getControllers():
 			controller.lessonType.start()
 			with self.assertRaises(ValueError):
