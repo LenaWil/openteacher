@@ -14,10 +14,11 @@ build() {
   #fix the shebang
   sed -i 's,^#<!--(raw)-->!<!--(end)-->/usr/bin/env python,#<!--(raw)-->!<!--(end)-->/usr/bin/env python2,' bin/$pkgname
 
-  #copy the man page
-  mkdir -p $pkgdir/usr/share/man/man1
-  #TODO: also install localized man pages. Needs some globbing I guess...
-  cp linux/$pkgname.1 $pkgdir/usr/share/man/man1
+  #copy the man pages
+  <!--(for source, dest in manpages)-->
+  mkdir -p $pkgdir@!dest!@
+  cp @!source!@ $pkgdir@!dest!@/$pkgname.1
+  <!--(end)-->
 
   #install into pkgdir
   python2 setup.py install --root=$pkgdir/ || return 1

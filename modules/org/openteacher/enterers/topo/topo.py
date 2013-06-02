@@ -91,11 +91,10 @@ def installQtClasses():
 						return
 				if self.currentMap == {}:
 					_fileDialogsMod = base._modules.default("active", type="fileDialogs")
-					#FIXME > 3.1: Make sure that the dialog doesn't call
-					#these types 'lessons'. (So make it more flexible.)
 					path = _fileDialogsMod.getLoadPath(
 						QtCore.QDir.homePath(),
-						[("gif", ""), ("jpg", ""), ("jpeg", ""), ("png", ""), ("bmp", ""), ("svg", "")]
+						[("gif", ""), ("jpg", ""), ("jpeg", ""), ("png", ""), ("bmp", ""), ("svg", "")],
+						fileType=_("Images"),
 					)
 					if path:
 						name = os.path.splitext(os.path.basename(path))[0]
@@ -340,7 +339,7 @@ class TopoEntererModule(object):
 	def _retranslate(self):
 		global _
 		global ngettext
-		
+
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:

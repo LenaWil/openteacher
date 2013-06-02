@@ -19,14 +19,8 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
+import dateutil
 import weakref
-
-def total_seconds(td):
-	"""FIXME once: fix for Python 2.6 compatibility, that will
-	   become obsolete once in favour of timedelta.total_seconds()
-
-	"""
-	return int(round((td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / float(10**6)))
 
 def installQtClasses():
 	global Graph, ProgressViewer
@@ -49,7 +43,7 @@ def installQtClasses():
 
 			self.start = self._test["results"][0]["active"]["start"]
 			self.end = self._test["results"][-1]["active"]["end"]
-			self._totalSeconds = total_seconds(self.end - self.start)
+			self._totalSeconds = dateutil.total_seconds(self.end - self.start)
 
 		@property
 		def _amountOfUniqueItems(self):
@@ -84,8 +78,8 @@ def installQtClasses():
 			return super(Graph, self).event(event, *args, **kwargs)
 
 		def _paintItem(self, p, item):
-			x = total_seconds(item["start"] - self.start) * self._secondsPerPixel
-			width = total_seconds(item["end"] - item["start"]) * self._secondsPerPixel
+			x = dateutil.total_seconds(item["start"] - self.start) * self._secondsPerPixel
+			width = dateutil.total_seconds(item["end"] - item["start"]) * self._secondsPerPixel
 
 			p.drawRect(x, 0, width, self._h)
 

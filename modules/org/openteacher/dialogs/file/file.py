@@ -62,12 +62,12 @@ class FileDialogsModule(object):
  			if os.path.splitext(filename)[1] not in extensions:
 				filename += ext
 			return unicode(filename)
-		else:
-			return
 
-	def getLoadPath(self, startdir, exts):
+	def getLoadPath(self, startdir, exts, fileType=None):
+		if not fileType:
+			fileType = _("Lessons")
 		stringExts = ("*." + ext for ext, name in exts)
-		filter = u"Lessons (%s)" % u" ".join(stringExts)
+		filter = u"%s (%s)" % (fileType, u" ".join(stringExts))
 
 		fileDialog = QtGui.QFileDialog()
 		fileDialog.setFileMode(QtGui.QFileDialog.ExistingFile)
@@ -82,8 +82,6 @@ class FileDialogsModule(object):
 		fileDialog.accepted.connect(tab.close)
 		if fileDialog.exec_():
 			return unicode(fileDialog.selectedFiles()[0])
-		else:
-			return
 
 	def enable(self):
 		global QtGui
@@ -95,6 +93,17 @@ class FileDialogsModule(object):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._ui = self._modules.default("active", type="ui")
 
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self.active = True
+
+	def _retranslate(self):
 		global _
 		global ngettext
 		try:
@@ -105,8 +114,6 @@ class FileDialogsModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-
-		self.active = True
 
 	def disable(self):
 		self.active = False

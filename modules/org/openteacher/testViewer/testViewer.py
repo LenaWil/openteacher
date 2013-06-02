@@ -20,15 +20,9 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
+import dateutil
 import weakref
 import contextlib
-
-def total_seconds(td):
-	"""FIXME once: fix for Python 2.6 compatibility, that will
-	   become obsolete once in favour of timedelta.total_seconds()
-
-	"""
-	return int(round((td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / float(10**6)))
 
 def installQtClasses():
 	global TestModel, TestViewer
@@ -171,7 +165,7 @@ def installQtClasses():
 			for result in self.test["results"]:
 				if "active" in result:
 					totalThinkingTime += result["active"]["end"] - result["active"]["start"]
-			return total_seconds(totalThinkingTime)
+			return dateutil.total_seconds(totalThinkingTime)
 
 class TestViewerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

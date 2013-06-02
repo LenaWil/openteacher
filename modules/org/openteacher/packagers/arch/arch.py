@@ -54,6 +54,14 @@ class ArchPackagerModule(object):
 
 		self.active = True
 
+	def _manPagesSourceAndDestination(self, sourcePath):
+		basePath = os.path.join(sourcePath, "linux")
+		for file in glob.glob(os.path.join(basePath, "*.1")):
+			filename = os.path.basename(file)
+			nameWithoutExtension = os.path.splitext(filename)[0]
+			langCode = os.path.splitext(nameWithoutExtension)[1].strip(".")
+			yield filename, os.path.normpath("/usr/share/man/%s/man1" % langCode)
+
 	def _run(self):
 		try:
 			package_release = sys.argv[1]
@@ -67,6 +75,7 @@ class ArchPackagerModule(object):
 			templ = pyratemp.Template(filename=self._mm.resourcePath("PKGBUILD.templ"))
 			data = {
 				"package_release": package_release,
+				"manpages": self._manPagesSourceAndDestination(sourcePath),
 			}
 			data.update(self._metadata)
 			f.write(templ(**data))
