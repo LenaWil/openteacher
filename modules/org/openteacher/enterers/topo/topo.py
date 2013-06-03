@@ -174,6 +174,7 @@ def installQtClasses():
 			
 			#left side - bottom
 			self.explanationLabel = QtGui.QLabel()
+			self.explanationLabel.setWordWrap(True)
 
 			#left side
 			leftSide.addLayout(chooseMap)
@@ -185,6 +186,7 @@ def installQtClasses():
 			
 			#right side - top
 			self.placesLabel = QtGui.QLabel()
+			self.placesLabel.setWordWrap(True)
 
 			self.removePlaceButton = QtGui.QPushButton()
 			self.removePlaceButton.clicked.connect(self.removePlace)
@@ -200,6 +202,7 @@ def installQtClasses():
 			addPlace = QtGui.QHBoxLayout()
 
 			self.addPlaceName = QtGui.QLabel()
+			self.addPlaceName.setWordWrap(True)
 			self.addPlaceButton = QtGui.QPushButton()
 
 			self.addPlaceButton.clicked.connect(lambda: self.addPlaceByName(self.addPlaceEdit.text()))
