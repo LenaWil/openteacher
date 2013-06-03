@@ -21,21 +21,11 @@
 import unittest
 
 class TestCase(unittest.TestCase):
-	def testSize(self):
-		if not self.mode in ("all", "gui"):
+	def testShowingAboutDialog(self):
+		if self.mode not in ("all", "about",):
 			return
-		for mod in self._mm.mods("active", type="ui"):
-			mod.qtParent.show()
-			QtGui.QApplication.instance().processEvents()
-			mod.qtParent.hide()
-
-			xExpected = 660
-			xResult = mod.qtParent.width()
-			self.assertTrue(xResult <= xExpected, msg="Window width should be %spx at most, but was %spx." % (xExpected, xResult))
-
-			yExpected = 520
-			yResult = mod.qtParent.height()
-			self.assertTrue(yResult <= yExpected, msg="Window height should be %spx at most, but was %spx." % (yExpected, yResult))
+		for mod in self._mm.mods("active", type="about"):
+			mod.show()
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -44,15 +34,10 @@ class TestModule(object):
 
 		self.type = "test"
 		self.requires = (
-			self._mm.mods(type="ui"),
+			self._mm.mods(type="about"),
 		)
 
 	def enable(self):
-		global QtGui
-		try:
-			from PyQt4 import QtGui
-		except ImportError:
-			return
 		self.TestCase = TestCase
 		self.TestCase._mm = self._mm
 		self.active = True

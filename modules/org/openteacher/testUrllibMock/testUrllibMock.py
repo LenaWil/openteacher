@@ -51,8 +51,6 @@ class TestUrllibMockModule(object):
 			result = "[]"
 		elif url.startswith("http://vocatrain.com/api/select_categories.php") or url.startswith("http://woordjesleren.nl/api/select_categories.php"):
 			result = '<?xml version="1.0" encoding="UTF-8"?><woordjesleren version="1"><categories></categories></woordjesleren>'
-		else:
-			result = ""
 		logger.debug("response: %s" % result)
 
 		return StringIO.StringIO(result)
