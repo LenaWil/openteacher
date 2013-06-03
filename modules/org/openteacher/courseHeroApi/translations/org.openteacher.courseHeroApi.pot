@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-06-01 21:00+0200\n"
+"POT-Creation-Date: 2013-06-03 15:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,38 +17,38 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: courseHeroApi.py:162
+#: courseHeroApi.py:163
 msgid ""
 "Enter a search term and press the search button to search coursehero.com for "
 "sets. Then select the set or sets you want to import and click OK."
 msgstr ""
 
-#: courseHeroApi.py:163
+#: courseHeroApi.py:164
 msgid "E.g.: french holiday vocabulary"
 msgstr ""
 
-#: courseHeroApi.py:164
+#: courseHeroApi.py:165
 msgid "Search"
 msgstr ""
 
-#: courseHeroApi.py:165
+#: courseHeroApi.py:166
 msgid "Search coursehero.com"
 msgstr ""
 
-#: courseHeroApi.py:243
+#: courseHeroApi.py:244
 msgid "Import from coursehero.com"
 msgstr ""
 
-#: courseHeroApi.py:269
+#: courseHeroApi.py:270
 msgid "No coursehero.com connection"
 msgstr ""
 
-#: courseHeroApi.py:270
+#: courseHeroApi.py:271
 msgid ""
 "coursehero.com didn't accept the connection. Are you sure that your internet "
 "connection works and coursehero.com is online?"
 msgstr ""
 
-#: courseHeroApi.py:302
+#: courseHeroApi.py:313
 msgid "The word list was imported from coursehero.com successfully."
 msgstr ""

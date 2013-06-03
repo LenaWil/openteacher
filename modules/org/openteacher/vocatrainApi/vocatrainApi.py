@@ -20,7 +20,11 @@
 
 import urllib2
 import urllib
+import contextlib
 from etree import ElementTree
+import logging
+
+logger = logging.getLogger(__name__)
 
 class VocatrainApi(object):
 	"""Public properties:
@@ -237,53 +241,67 @@ class VocatrainApiModule(object):
 		self._activeDialogs.add(dialog)
 
 		self._retranslate()
-		dialog.exec_()
+		dialog.finished.connect(lambda: self._activeDialogs.remove(dialog))
 
-		self._activeDialogs.remove(dialog)
 		return dialog
 
 	def importFromVocatrain(self):
-		self._import(VocatrainApi(self._parseList))
+		self._selectCategory(VocatrainApi(self._parseList))
 
 	def importFromWoordjesleren(self):
 		api = VocatrainApi(self._parseList)
 		api.service = "http://woordjesleren.nl/"
 
-		self._import(api)
+		self._selectCategory(api)
 
-	def _import(self, api):
-		#[5:-1] to strip http:// and the final /
-		serviceName = api.service[7:-1]
-		try:
+	def _selectCategory(self, api):
+		with self._handlingWebErrors(api):
 			d = self._showDialog(CategorySelectDialog(api.getCategories()))
-			if not d.result():
-				return
-			categoryId = d.chosenItems[0]
+			d.accepted.connect(lambda: self._selectBook(api, d))
+
+	def _selectBook(self, api, dialog):
+		categoryId = dialog.chosenItems[0]
+		with self._handlingWebErrors(api):
 			d = self._showDialog(BookSelectDialog(api.getBook(categoryId)))
-			if not d.result():
-				return
-			bookId = d.chosenItems[0]
+			d.accepted.connect(lambda: self._selectList(api, d))
+
+	def _selectList(self, api, dialog):
+		bookId = dialog.chosenItems[0]
+		with self._handlingWebErrors(api):
 			d = self._showDialog(ListSelectDialog(api.getLists(bookId)))
-			if not d.result():
-				return
-			for listId in d.chosenItems:
+			d.accepted.connect(lambda: self._loadSelectedList(api, d))
+
+	def _loadSelectedList(self, api, dialog):
+		with self._handlingWebErrors(api):
+			for listId in dialog.chosenItems:
 				list = api.getList(listId)
 				try:
 					self._loadList(list)
 				except NotImplementedError:
 					return
+
+			#everything went well
+			self._uiModule.statusViewer.show(_("The word list was imported from %s successfully.") % self._serviceNameForApi(api))
+
+	def _serviceNameForApi(self, api):
+		#[5:-1] to strip http:// and the final /
+		serviceName = api.service[7:-1]
+
+		return serviceName
+
+	@contextlib.contextmanager
+	def _handlingWebErrors(self, api):
+		serviceName = self._serviceNameForApi(api)
+		try:
+			yield
 		except urllib2.URLError, e:
 			#for debugging purposes
-			print e
+			logger.debug(e, exc_info=True)
 			QtGui.QMessageBox.warning(
 				self._uiModule.qtParent,
 				_("No %s connection") % serviceName,
 				_("{serviceName} didn't accept the connection. Are you sure that your internet connection works and {serviceName} is online?").format(serviceName=serviceName)
 			)
-			return
-
-		#everything went well
-		self._uiModule.statusViewer.show(_("The word list was imported from %s successfully.") % serviceName)
 
 	def _loadList(self, lesson):
 		self._modules.default("active", type="loaderGui").loadFromLesson("words", lesson)

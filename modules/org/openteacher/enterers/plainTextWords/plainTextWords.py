@@ -65,10 +65,8 @@ def installQtClasses():
 			self._label.setText(_("Please enter the plain text in the text edit. Separate words with a new line and questions from answers with an equals sign ('=') or a tab."))
 			self.setWindowTitle(_("Plain text words enterer"))
 
-		def exec_(self, *args, **kwargs):
-			self._textEdit.setFocus()
-
-			super(EnterPlainTextDialog, self).exec_(*args, **kwargs)
+		def focus(self):
+			self._textEdit.setFocus(True)
 
 		@property
 		def lesson(self):
@@ -186,18 +184,17 @@ class PlainTextWordsEntererModule(object):
 
 		self._retranslate()
 
-		eptd.exec_()
-		if not eptd.result():
-			return
-		lesson = eptd.lesson
+		eptd.focus()
+		eptd.accepted.connect(lambda: self._loadLesson(eptd.lesson))
+		eptd.finished.connect(tab.close)
+		eptd.finished.connect(lambda: self._activeDialogs.remove(eptd))
+
+	def _loadLesson(self, lesson):
 		if not lesson:
 			return
 		lesson["changed"] = True
 		with contextlib.ignored(NotImplementedError):
 			self._modules.default("active", type="loaderGui").loadFromLesson("words", lesson)
-
-		self._activeDialogs.remove(eptd)
-		tab.close()
 
 	def disable(self):
 		self.active = False

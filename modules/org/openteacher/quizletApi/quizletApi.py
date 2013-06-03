@@ -281,17 +281,19 @@ class QuizletApiModule(object):
 
 			tab = self._uiModule.addCustomTab(self._dialog)
 			tab.closeRequested.handle(tab.close)
-			self._dialog.rejected.connect(tab.close)
-			self._dialog.accepted.connect(tab.close)
+			self._dialog.finished.connect(tab.close)
 			self._dialog.searchRequested.connect(self._handleSearch)
 			self._dialog.tab = tab
 
 			self._retranslate()
-			self._dialog.exec_()
+			self._dialog.accepted.connect(self._downloadSelectedList)
+		except urllib2.URLError, e:
+			#for debugging purposes
+			logger.debug(e, exc_info=True)
+			self._noConnection()
 
-			if not self._dialog.result():
-				return
-
+	def _downloadSelectedList(self):
+		try:
 			for setId in self._dialog.chosenResults:
 				list = self._api.downloadSet(setId)
 				try:

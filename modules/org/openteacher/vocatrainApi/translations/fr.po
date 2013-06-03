@@ -7,63 +7,63 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-06-01 21:00+0200\n"
+"POT-Creation-Date: 2013-06-03 15:53+0200\n"
 "PO-Revision-Date: 2013-01-12 11:22+0000\n"
 "Last-Translator: Hélion du Mas des Bourboux <helion331990@gmail.com>\n"
 "Language-Team: French <fr@li.org>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-06-02 05:37+0000\n"
 "X-Generator: Launchpad (build 16660)\n"
-"Language: fr\n"
 
-#: vocatrainApi.py:126
+#: vocatrainApi.py:130
 msgid "Select category"
 msgstr "Sélectionnez une catégorie"
 
-#: vocatrainApi.py:127
+#: vocatrainApi.py:131
 msgid "Please select a category"
 msgstr "Veuillez sélectionner une catégorie"
 
-#: vocatrainApi.py:132
+#: vocatrainApi.py:136
 msgid "Select book"
 msgstr "Choisissez un livre"
 
-#: vocatrainApi.py:133
+#: vocatrainApi.py:137
 msgid "Please select a book"
 msgstr "Veuillez choisir un livre"
 
-#: vocatrainApi.py:138
+#: vocatrainApi.py:142
 msgid "Select list"
 msgstr "Choisissez une liste"
 
-#: vocatrainApi.py:139
+#: vocatrainApi.py:143
 msgid "Please select a list"
 msgstr "Veuillez choisir une liste"
 
-#: vocatrainApi.py:219
+#: vocatrainApi.py:223
 msgid "Import from vocatrain.com"
 msgstr "Importer depuis vocatrain.com"
 
-#: vocatrainApi.py:220
+#: vocatrainApi.py:224
 msgid "Import from woordjesleren.nl"
 msgstr "Importer depuis woordjesleren.nl"
 
-#: vocatrainApi.py:280
+#: vocatrainApi.py:284
+#, python-format
+msgid "The word list was imported from %s successfully."
+msgstr "La liste de mots a été importée depuis %s avec succès."
+
+#: vocatrainApi.py:302
 #, python-format
 msgid "No %s connection"
 msgstr "Pas de %s connection"
 
-#: vocatrainApi.py:281
+#: vocatrainApi.py:303
 msgid ""
 "{serviceName} didn't accept the connection. Are you sure that your internet "
 "connection works and {serviceName} is online?"
 msgstr ""
 "{serviceName} n'a pas accepté la connexion. Êtes-vous sûr que votre "
 "connexion internet fonctionne et que {serviceName} est en ligne ?"
-
-#: vocatrainApi.py:286
-#, python-format
-msgid "The word list was imported from %s successfully."
-msgstr "La liste de mots a été importée depuis %s avec succès."

@@ -44,6 +44,7 @@ class CourseHeroApi(object):
 	def _open(self, url, **kwargs):
 		kwargs["api_key"] = API_KEY
 		fullUrl = self._baseUrl + url + "?" + urllib.urlencode(kwargs)
+		logger.info("Opening URL: %s" % fullUrl)
 		return urllib2.urlopen(fullUrl)
 
 	def searchSets(self, searchTerm):
@@ -282,11 +283,21 @@ class CourseHeroApiModule(object):
 			self._dialog.tab = tab
 
 			self._retranslate()
-			self._dialog.exec_()
+			self._dialog.accepted.connect(self._downloadSelectedList)
 
-			if not self._dialog.result():
-				return
+			for setId in self._dialog.chosenResults:
+				list = self._api.downloadSet(setId)
+				try:
+					self._loadList(list)
+				except NotImplementedError:
+					return
+		except urllib2.URLError, e:
+			logger.debug(e, exc_info=True)
+			self._noConnection()
+			return
 
+	def _downloadSelectedList(self):
+		try:
 			for setId in self._dialog.chosenResults:
 				list = self._api.downloadSet(setId)
 				try:

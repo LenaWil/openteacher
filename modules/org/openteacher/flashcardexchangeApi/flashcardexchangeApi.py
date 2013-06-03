@@ -304,11 +304,13 @@ class FlashcardexchangeApiModule(object):
 			self._dialog.tab = tab
 
 			self._retranslate()
-			self._dialog.exec_()
+			self._dialog.accepted.connect(self._loadSelectedList)
+		except urllib2.URLError, e:
+			logger.debug(e, exc_info=True)
+			self._noConnection()
 
-			if not self._dialog.result():
-				return
-
+	def _loadSelectedList(self):
+		try:
 			for setId in self._dialog.chosenResults:
 				list = self._api.downloadSet(setId)
 				try:

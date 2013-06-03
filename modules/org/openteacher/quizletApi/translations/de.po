@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-06-01 21:00+0200\n"
+"POT-Creation-Date: 2013-06-03 15:53+0200\n"
 "PO-Revision-Date: 2013-04-07 16:38+0000\n"
 "Last-Translator: Phillip Sz <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-06-02 05:38+0000\n"
 "X-Generator: Launchpad (build 16660)\n"
-"Language: de\n"
 
 #: quizletApi.py:162
 msgid ""
@@ -50,6 +50,6 @@ msgid ""
 "connection works and quizlet.com is online?"
 msgstr ""
 
-#: quizletApi.py:308
+#: quizletApi.py:310
 msgid "The word list was imported from Quizlet successfully."
 msgstr ""

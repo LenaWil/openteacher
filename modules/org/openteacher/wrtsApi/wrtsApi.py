@@ -19,6 +19,12 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+import contextlib
+import logging
+import functools
+
+logger = logging.getLogger(__name__)
+
 class WrtsApiModule(object):
 	def __init__(self, moduleManager):
 		super(WrtsApiModule, self).__init__()
@@ -188,109 +194,113 @@ class WrtsApiModule(object):
 			_("WRDS didn't accept the connection. Are you sure that your internet connection works and WRDS is online?")
 		)
 
-	def _loginToWrts(self, forceLogin=False):
-		"""Returns True if login succeeded, and False if it didn't."""
+	def _loginToWrts(self, success, forceLogin=False):
+		"""Calls the `success` callback when logging in succeded,
+		   otherwise it calls nothing.
+
+		"""
 		email = self._emailSetting["value"]
 		password = self._passwordSetting["value"]
 
-		valid = email and password #not blank
+		blankCredentials = not (email and password)
 
-		if forceLogin or not valid:
-			ld = self._ui.LoginDialog(self._storeEnabled, self._uiModule.qtParent)
-			self._activeDialogs.add(ld)
+		if forceLogin or blankCredentials:
+			ld = self._showDialog(self._ui.LoginDialog(
+				self._storeEnabled,
+				self._uiModule.qtParent
+			), previousTabOnClose=True)
 
-			tab = self._uiModule.addCustomTab(ld)
-			tab.closeRequested.handle(tab.close)
-			ld.tab = tab
-			ld.rejected.connect(tab.close)
-			ld.accepted.connect(tab.close)
+			ld.accepted.connect(lambda: self._checkLoginFromDialog(ld, success))
+		else:
+			self._checkLogin(email, password, success, retry=True)
 
-			self._retranslate()
+	def _checkLoginFromDialog(self, dialog, success):
+		if dialog.saveCheck:
+			self._emailSetting["value"] = dialog.email
+			self._passwordSetting["value"] = dialog.password
 
-			ld.exec_()
-			self._activeDialogs.remove(ld)
-			if not ld.result():
-				return
+		email, password = dialog.email, dialog.password
 
-			if ld.saveCheck:
-				self._emailSetting["value"] = ld.email
-				self._passwordSetting["value"] = ld.password
+		self._checkLogin(email, password, success, retry=False)
 
-			email, password = ld.email, ld.password
-
+	def _checkLogin(self, email, password, success, retry):
 		try:
 			self._wrtsConnection.logIn(email, password)
 		except self._api.LoginError:
-			if forceLogin or not valid:
-				#if tried
-				self._invalidLogin()
+			if retry:
+				self._loginToWrts(success, forceLogin=True)
 			else:
-				#just the setting, let the user try
-				return self._loginToWrts(forceLogin=True)
-			return False
+				self._invalidLogin()
 		except self._api.ConnectionError:
 			self._noConnection()
-			return False
 		else:
-			return True
+			success()
 
+	def _requires_login(f):
+		@functools.wraps(f)
+		def wrapper(self, *args, **kwargs):
+			self._loginToWrts(success=lambda: f(self, *args, **kwargs))
+		return wrapper
+
+	@contextlib.contextmanager
+	def _handlingWebErrors(self):
+		try:
+			yield
+		except self._api.LoginError, e:
+			logger.debug(e, exc_info=True)
+			self._invalidLogin()
+		except self._api.ConnectionError, e:
+			logger.debug(e, exc_info=True)
+			self._noConnection()
+
+	@_requires_login
 	def exportToWrts(self):
 		lesson = self._lessonTracker.currentLesson
 
-		if not self._loginToWrts():
-			return
+		with self._handlingWebErrors():
+			try:
+				self._wrtsConnection.exportWordList(
+					lesson.list,
+					self._modules.default("active", type="wordsStringComposer").compose
+				)
+			except self._api.NotEnoughMetadataError:
+				QtGui.QMessageBox.warning(
+					self._uiModule.qtParent,
+					_("No word list metadata given."),
+					_("Please fill in the wordlist title, question language and answer language first. Then try again.")
+				)
+				return
 
-		try:
-			self._wrtsConnection.exportWordList(
-				lesson.list,
-				self._modules.default("active", type="wordsStringComposer").compose
-			)
-		except self._api.NotEnoughMetadataError:
-			QtGui.QMessageBox.warning(
-				self._uiModule.qtParent,
-				_("No word list metadata given."),
-				_("Please fill in the wordlist title, question language and answer language first. Then try again.")
-			)
-			return
-		except self._api.LoginError:
-			self._invalidLogin()
-			return
-		except self._api.ConnectionError:
-			self._noConnection()
-			return
+			self._uiModule.statusViewer.show(_("Word list succesfully exported to WRDS."))
 
-		self._uiModule.statusViewer.show(_("Word list succesfully exported to WRDS."))
-
+	@_requires_login
 	def importFromWrts(self):
-		if not self._loginToWrts():
-			return
-
-		ldc = self._ui.UserListChoiceDialog(
+		ldc = self._showDialog(self._ui.UserListChoiceDialog(
 			self._wrtsConnection.listsParser.lists,
 			self._uiModule.qtParent
-		)
-		self._activeDialogs.add(ldc)
+		))
 
-		tab = self._uiModule.addCustomTab(ldc)
-		tab.closeRequested.handle(tab.close)
-		ldc.rejected.connect(tab.close)
-		ldc.tab = tab
 		ldc.getFromShareClicked.connect(ldc.reject)
 		ldc.getFromShareClicked.connect(self._importFromWrtsShare)
-		#essentially rejected, because we're not importing a user list
-		ldc.accepted.connect(tab.close)
+
+		ldc.accepted.connect(lambda: self._doActualImport(
+			self._wrtsConnection.listsParser,
+			ldc.selectedRowIndices
+		))
+
+	def _showDialog(self, d, *args, **kwargs):
+		self._activeDialogs.add(d)
+
+		tab = self._uiModule.addCustomTab(d, *args, **kwargs)
+		tab.closeRequested.handle(tab.close)
+		d.finished.connect(tab.close)
+		d.tab = tab
 
 		self._retranslate()
 
-		ldc.exec_()
-		self._activeDialogs.remove(ldc)
-		if not ldc.result():
-			return
+		d.finished.connect(lambda: self._activeDialogs.remove(d))
 
-		self._doActualImport(
-			self._wrtsConnection.listsParser,
-			ldc.selectedRowIndices
-		)
+		return d
 
 	def _importFromWrtsShare(self, url):
 		#from QString
@@ -308,26 +318,13 @@ class WrtsApiModule(object):
 			)
 			return
 
-		lcd = self._ui.ListChoiceDialog(
+		lcd = self._showDialog(self._ui.ListChoiceDialog(
 			parser.lists,
 			self._uiModule.qtParent
+		))
+		lcd.accepted.connect(
+			lambda: self._doActualImport(parser, lcd.selectedRowIndices)
 		)
-		self._activeDialogs.add(lcd)
-
-		tab = self._uiModule.addCustomTab(lcd)
-		tab.closeRequested.handle(tab.close)
-		lcd.rejected.connect(tab.close)
-		lcd.accepted.connect(tab.close)
-		lcd.tab = tab
-
-		self._retranslate()
-
-		lcd.exec_()
-		self._activeDialogs.remove(lcd)
-		if not lcd.result():
-			return
-
-		self._doActualImport(parser, lcd.selectedRowIndices)
 
 	def _doActualImport(self, parser, selectedRowIndices):
 		if len(selectedRowIndices) == 0:
@@ -338,27 +335,23 @@ class WrtsApiModule(object):
 				_("No list was selected. Please try again.")
 			)
 			return
-		for index in selectedRowIndices:
-			listUrl = parser.getWordListUrl(index)
-			try:
-				list = self._wrtsConnection.importWordList(listUrl)
-			except self._api.LoginError:
-				self._invalidLogin()
-				return
-			except self._api.ConnectionError:
-				self._noConnection()
-				return
 
-			loaderGui = self._modules.default("active", type="loaderGui")
-			try:
-				loaderGui.loadFromLesson("words", {
-					"list": list,
-					"resources": {},
-				})
-			except NotImplementedError:
-				return
-		#if everything went well
-		self._uiModule.statusViewer.show(_("The word list was imported from WRDS successfully."))
+		with self._handlingWebErrors():
+			for index in selectedRowIndices:
+				listUrl = parser.getWordListUrl(index)
+				list = self._wrtsConnection.importWordList(listUrl)
+
+				loaderGui = self._modules.default("active", type="loaderGui")
+				try:
+					loaderGui.loadFromLesson("words", {
+						"list": list,
+						"resources": {},
+					})
+				except NotImplementedError:
+					return
+
+			#if everything went well
+			self._uiModule.statusViewer.show(_("The word list was imported from WRDS successfully."))
 
 def init(moduleManager):
 	return WrtsApiModule(moduleManager)

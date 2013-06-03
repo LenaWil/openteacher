@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-06-01 21:00+0200\n"
+"POT-Creation-Date: 2013-06-03 15:53+0200\n"
 "PO-Revision-Date: 2013-05-20 08:36+0000\n"
 "Last-Translator: Dasha <dashasokol@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-06-02 05:38+0000\n"
 "X-Generator: Launchpad (build 16660)\n"
-"Language: ru\n"
 
 #: gui.py:86
 msgid "Introduction"
@@ -91,10 +91,10 @@ msgstr ""
 msgid "Result preview"
 msgstr "Предпросмотр результатов"
 
-#: gui.py:347
+#: gui.py:348
 msgid "Create words lesson from a scan or picture"
 msgstr "Создать письменный урок из сканированного документа или изображения"
 
-#: gui.py:350
+#: gui.py:351
 msgid "Words lesson from picture"
 msgstr "Словарный урок из изображения"

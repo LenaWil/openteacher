@@ -325,9 +325,10 @@ class OcrGuiModule(object):
 		self._wizard.tab = tab
 
 		self._retranslate()
-		self._wizard.exec_()
+		self._wizard.finished.connect(tab.close)
+		self._wizard.accepted.connect(self._loadResultiveLesson)
 
-		tab.close()
+	def _loadResultiveLesson(self):
 		if self._wizard.result():
 			lesson = self._wizard.getLesson()
 			with contextlib.ignored(NotImplementedError):

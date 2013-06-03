@@ -7,47 +7,49 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-06-01 21:00+0200\n"
+"POT-Creation-Date: 2013-06-03 15:53+0200\n"
 "PO-Revision-Date: 2013-05-29 15:04+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-06-02 05:38+0000\n"
 "X-Generator: Launchpad (build 16660)\n"
-"Language: \n"
 
-#: studyStackApi.py:137
+#: studyStackApi.py:141
 msgid "Select category"
 msgstr "選擇分類"
 
-#: studyStackApi.py:138
+#: studyStackApi.py:142
 msgid "Please select a category"
 msgstr "請選擇分類"
 
-#: studyStackApi.py:143
+#: studyStackApi.py:147
 msgid "Select list"
 msgstr "選擇列表"
 
-#: studyStackApi.py:144
+#: studyStackApi.py:148
 msgid "Please select a list"
 msgstr "請選擇列表"
 
-#: studyStackApi.py:220
+#: studyStackApi.py:224
 msgid "Import from studystack.com"
 msgstr "從 studystack.com 匯入"
 
-#: studyStackApi.py:265
+#: studyStackApi.py:269
+msgid "The word list was imported from Study Stack successfully."
+msgstr "從 Study Stack 匯入單字列表成功。"
+
+#: studyStackApi.py:280
 msgid "No Study Stack connection"
 msgstr "沒有連線到 Study Stack"
 
-#: studyStackApi.py:266
+#: studyStackApi.py:281
 msgid ""
 "Study Stack didn't accept the connection. Are you sure that your internet "
 "connection works and http://www.studystack.com/ is online?"
-msgstr "Study Stack 並沒有接受連線。您確定您的網路連線正常並且 http://www.studystack.com 在線上嗎？"
-
-#: studyStackApi.py:271
-msgid "The word list was imported from Study Stack successfully."
-msgstr "從 Study Stack 匯入單字列表成功。"
+msgstr ""
+"Study Stack 並沒有接受連線。您確定您的網路連線正常並且 http://www.studystack."
+"com 在線上嗎？"

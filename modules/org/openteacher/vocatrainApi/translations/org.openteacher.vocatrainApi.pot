@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-06-01 21:00+0200\n"
+"POT-Creation-Date: 2013-06-03 15:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,50 +17,50 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: vocatrainApi.py:126
+#: vocatrainApi.py:130
 msgid "Select category"
 msgstr ""
 
-#: vocatrainApi.py:127
+#: vocatrainApi.py:131
 msgid "Please select a category"
 msgstr ""
 
-#: vocatrainApi.py:132
+#: vocatrainApi.py:136
 msgid "Select book"
 msgstr ""
 
-#: vocatrainApi.py:133
+#: vocatrainApi.py:137
 msgid "Please select a book"
 msgstr ""
 
-#: vocatrainApi.py:138
+#: vocatrainApi.py:142
 msgid "Select list"
 msgstr ""
 
-#: vocatrainApi.py:139
+#: vocatrainApi.py:143
 msgid "Please select a list"
 msgstr ""
 
-#: vocatrainApi.py:219
+#: vocatrainApi.py:223
 msgid "Import from vocatrain.com"
 msgstr ""
 
-#: vocatrainApi.py:220
+#: vocatrainApi.py:224
 msgid "Import from woordjesleren.nl"
 msgstr ""
 
-#: vocatrainApi.py:280
+#: vocatrainApi.py:284
+#, python-format
+msgid "The word list was imported from %s successfully."
+msgstr ""
+
+#: vocatrainApi.py:302
 #, python-format
 msgid "No %s connection"
 msgstr ""
 
-#: vocatrainApi.py:281
+#: vocatrainApi.py:303
 msgid ""
 "{serviceName} didn't accept the connection. Are you sure that your internet "
 "connection works and {serviceName} is online?"
-msgstr ""
-
-#: vocatrainApi.py:286
-#, python-format
-msgid "The word list was imported from %s successfully."
 msgstr ""

@@ -22,6 +22,10 @@ import urllib2
 import urllib
 import json
 import re
+import logging
+import contextlib
+
+logger = logging.getLogger(__name__)
 
 class StudyStackApi(object):
 	def __init__(self, parse, *args, **kwargs):
@@ -188,7 +192,7 @@ class StudyStackApiModule(object):
 		self._activeDialogs = set()
 
 		self._button = self._buttonRegister.registerButton("load-from-internet")
-		self._button.clicked.handle(self._import)
+		self._button.clicked.handle(self._selectCategory)
 		self._button.changePriority.send(self.priorities["all"])
 
 		try:
@@ -237,38 +241,45 @@ class StudyStackApiModule(object):
 		self._activeDialogs.add(dialog)
 
 		self._retranslate()
-		dialog.exec_()
+		dialog.finished.connect(lambda: self._activeDialogs.remove(dialog))
 
-		self._activeDialogs.remove(dialog)
 		return dialog
 
-	def _import(self):
-		try:
+	def _selectCategory(self):
+		with self._handlingWebErrors():
 			d = self._showDialog(CategorySelectDialog(self._api.getCategories()))
-			if not d.result():
-				return
-			categoryId = d.chosenItems[0]
+			d.accepted.connect(lambda: self._selectList(d))
+
+	def _selectList(self, dialog):
+		categoryId = dialog.chosenItems[0]
+		with self._handlingWebErrors():
 			d = self._showDialog(ListSelectDialog(self._api.getLists(categoryId)))
-			if not d.result():
-				return
-			for listId in d.chosenItems:
+			d.accepted.connect(lambda: self._loadSelectedLists(d))
+
+	def _loadSelectedLists(self, dialog):
+		with self._handlingWebErrors():
+			for listId in dialog.chosenItems:
 				list = self._api.getList(listId)
 				try:
 					self._loadList(list)
 				except NotImplementedError:
 					return
+
+			#everything went well
+			self._uiModule.statusViewer.show(_("The word list was imported from Study Stack successfully."))
+
+	@contextlib.contextmanager
+	def _handlingWebErrors(self):
+		try:
+			yield
 		except urllib2.URLError, e:
 			#for debugging purposes
-			print e
+			logger.debug(e, exc_info=True)
 			QtGui.QMessageBox.warning(
 				self._uiModule.qtParent,
 				_("No Study Stack connection"),
 				_("Study Stack didn't accept the connection. Are you sure that your internet connection works and http://www.studystack.com/ is online?")
 			)
-			return
-
-		#everything went well
-		self._uiModule.statusViewer.show(_("The word list was imported from Study Stack successfully."))
 
 	def _loadList(self, list):
 		self._modules.default("active", type="loaderGui").loadFromLesson("words", list)

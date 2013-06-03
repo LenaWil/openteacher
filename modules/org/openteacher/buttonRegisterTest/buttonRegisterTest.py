@@ -20,6 +20,8 @@
 
 import unittest
 
+MODES = ("all", "buttonRegister",)
+
 class TestCase(unittest.TestCase):
 	"""Tests for the buttonRegister module"""
 
@@ -63,6 +65,12 @@ class TestCase(unittest.TestCase):
 			checkEvent(b.changeIcon)
 			checkEvent(b.changeSize)
 
+	def testClickingRegisteredButtons(self):
+		if self.mode not in MODES:
+			return
+		for button in self._buttons:
+			button.clicked.send()
+
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestModule, self).__init__(*args, **kwargs)
@@ -73,14 +81,30 @@ class TestModule(object):
 			self._mm.mods(type="buttonRegister"),
 		)
 
+	def _addButton(self, button):
+		self.TestCase._buttons.add(button)
+
+	def _removeButton(self, button):
+		self.TestCase._buttons.remove(button)
+
 	def enable(self):
 		self.TestCase = TestCase
 		self.TestCase._mm = self._mm
+		self.TestCase._buttons = set()
+
+		for mod in self._mm.mods(type="buttonRegister"):
+			mod.addButton.handle(self._addButton)
+			mod.removeButton.handle(self._removeButton)
+
 		self.active = True
 
 	def disable(self):
 		self.active = False
+
 		del self.TestCase
+		for mod in self._mm.mods(type="buttonRegister"):
+			mod.addButton.unhandle(self._addButton)
+			mod.removeButton.unhandle(self._removeButton)
 
 def init(moduleManager):
 	return TestModule(moduleManager)

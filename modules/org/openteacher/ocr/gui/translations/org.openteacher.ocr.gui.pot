@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-06-01 21:00+0200\n"
+"POT-Creation-Date: 2013-06-03 15:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -90,10 +90,10 @@ msgstr ""
 msgid "Result preview"
 msgstr ""
 
-#: gui.py:347
+#: gui.py:348
 msgid "Create words lesson from a scan or picture"
 msgstr ""
 
-#: gui.py:350
+#: gui.py:351
 msgid "Words lesson from picture"
 msgstr ""
