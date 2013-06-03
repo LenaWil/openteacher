@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-06-01 21:00+0200\n"
-"PO-Revision-Date: 2013-05-22 20:20+0000\n"
-"Last-Translator: Rubens Bueno <rubensvsbueno@gmail.com>\n"
+"PO-Revision-Date: 2013-06-02 23:01+0000\n"
+"Last-Translator: Marcelo Thomaz <marcelotfilho@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-02 05:38+0000\n"
+"X-Launchpad-Export-Date: 2013-06-03 06:10+0000\n"
 "X-Generator: Launchpad (build 16660)\n"
 "Language: pt_BR\n"
 
 #: gui.py:86
 msgid "Introduction"
-msgstr ""
+msgstr "Introdução"
 
 #: gui.py:87
 msgid ""
@@ -37,18 +37,20 @@ msgid ""
 "Please choose the location of the scan or picture of the physical word list "
 "on your system below."
 msgstr ""
+"Por favor, escolha o local do exame ou a imagem da lista de palavras física "
+"no sistema abaixo."
 
 #: gui.py:122
 msgid "Click here to choose a location"
-msgstr ""
+msgstr "Clique aqui para escolher um local"
 
 #: gui.py:123
 msgid "Location:"
-msgstr ""
+msgstr "Localização:"
 
 #: gui.py:128
 msgid "Images ({extensions})"
-msgstr ""
+msgstr "Imagens ({extensions})"
 
 #: gui.py:166
 msgid "Make image ready"
@@ -73,11 +75,11 @@ msgstr ""
 
 #: gui.py:209
 msgid "No selection was made. Please try again."
-msgstr ""
+msgstr "Nenhuma seleção foi feita. Por favor, tente novamente."
 
 #: gui.py:220 gui.py:221
 msgid "Recognizing word list..."
-msgstr ""
+msgstr "Reconhecendo lista de palavras..."
 
 #: gui.py:233
 msgid ""
@@ -89,7 +91,7 @@ msgstr ""
 
 #: gui.py:234
 msgid "Result preview"
-msgstr ""
+msgstr "Visualização do resultado"
 
 #: gui.py:347
 msgid "Create words lesson from a scan or picture"
