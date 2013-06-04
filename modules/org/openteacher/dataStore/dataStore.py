@@ -41,9 +41,10 @@ class JSONShelve(dict):
 			with open(self.filepath, "r") as fp:
 				try:
 					d = json.load(fp)
-				except (json.decoder.JSONDecodeError, ValueError), e:
-					#Both json.decoder.JSONDecodeError and ValueError,
-					#see: https://github.com/Yelp/mrjob/issues/544
+				except ValueError, e:
+					#Catches both json.decoder.JSONDecodeError and
+					#ValueError, see:
+					#https://github.com/Yelp/mrjob/issues/544
 					#
 					#file corrupted. Print for debugging purposes, but
 					#letting the whole program crash for a corrupt
