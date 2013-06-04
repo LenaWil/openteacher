@@ -33,6 +33,18 @@ class JavascriptParserModule(object):
 		}
 
 	def parse(self, *args, **kwargs):
+		"""Parses a string like:
+
+			   1. in, op, bij 2. tijdens
+
+		   into the following representation (used by OpenTeacher
+		   internally):
+
+			   [[u"in", u"op", u"bij"], [u"tijdens"]]
+
+		   See the tests for this module for more examples.
+
+		"""
 		return self._js["parse"](*args, **kwargs)
 
 	def enable(self):

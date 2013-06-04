@@ -33,6 +33,11 @@ class JavascriptCheckerModule(object):
 		}
 
 	def check(self, *args, **kwargs):
+		"""Checks if a `givenAnswer` is similar enough to the `answer`
+		   to be seen as correct. For examples of what's correct and
+		   what's not, please see the tests for this module.
+
+		"""
 		return self._js["check"](*args, **kwargs)
 
 	def enable(self):

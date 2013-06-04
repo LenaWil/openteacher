@@ -462,11 +462,11 @@ class CodeDocumentationModule(object):
 		hue = metadata["mainColorHue"]
 		root = ModulesHandler(self._mm, templates, buildModuleGraph, devDocsBaseDir, hue)
 
-		cherrypy.tree.mount(root)
 		cherrypy.config.update({
 			"server.socket_host": "0.0.0.0",
 			"environment": "production",
 		})
+		app = cherrypy.tree.mount(root)
 		cherrypy.engine.start()
 		print "Serving at http://localhost:8080/"
 		print "Type 'quit' and press enter to stop the server"

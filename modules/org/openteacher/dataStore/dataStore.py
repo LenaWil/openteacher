@@ -22,6 +22,9 @@
 import json
 import os
 import atexit
+import logging
+
+logger = logging.getLogger(__name__)
 
 class JSONShelve(dict):
 	"""A dict-like object of which the keys and values are persistent.
@@ -38,15 +41,17 @@ class JSONShelve(dict):
 			with open(self.filepath, "r") as fp:
 				try:
 					d = json.load(fp)
-				except json.decoder.JSONDecodeError, e:
+				except (json.decoder.JSONDecodeError, ValueError), e:
+					#Both json.decoder.JSONDecodeError and ValueError,
+					#see: https://github.com/Yelp/mrjob/issues/544
+					#
 					#file corrupted. Print for debugging purposes, but
 					#letting the whole program crash for a corrupt
 					#settings file isn't done.
-					print e
+					logger.debug(e, exc_info=True)
 					return
 			# Copy dict to self
-			for key, value in d.iteritems():
-				self[key] = value
+			self.update(d)
 
 	def write(self):
 		with open(self.filepath, "w") as fp:

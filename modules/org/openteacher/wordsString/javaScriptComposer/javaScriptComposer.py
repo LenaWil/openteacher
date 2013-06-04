@@ -33,6 +33,18 @@ class JavascriptComposerModule(object):
 		}
 
 	def compose(self, *args, **kwargs):
+		"""Takes an internal representation of a word as used by
+		   OpenTeacher, e.g.:
+			   [[u"in", u"op", u"bij"], [u"tijdens"]]
+
+		   ands converts it into a human-readable equivalent, in this
+		   case:
+		   
+			   1. in, op, bij 2. tijdens
+
+		   See the tests for this module for more examples.
+
+		"""
 		return self._js["compose"](*args, **kwargs)
 
 	def enable(self):

@@ -30,6 +30,16 @@ class WordsHtmlGeneratorModule(object):
 		)
 
 	def generate(self, lesson, margin="0", coloredRows=True):
+		"""Generates a html document which provides an overview of all
+		   the questions and answers in `lesson`. It includes an inline
+		   stylesheet.
+
+		   - `margin` specifies the margin for the page (should be valid
+		     css, e.g. 1em or 1px)
+		   - `coloredRows` specifies if the odd rows should have a
+		     different background colors than the even ones.
+
+		"""
 		class EvalPseudoSandbox(pyratemp.EvalPseudoSandbox):
 			def __init__(self2, *args, **kwargs):
 				pyratemp.EvalPseudoSandbox.__init__(self2, *args, **kwargs)
