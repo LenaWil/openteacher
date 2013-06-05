@@ -162,99 +162,99 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 		self.setCentralWidget(self.tabWidget)
 
 		#File menu
-		self.fileMenu = self.menuBar().addMenu("")
+		self.fileMenu = QtGui.QMenu(self)
+		self.menuBar().addMenu(self.fileMenu)
 
-		self.newAction = self.fileMenu.addAction(
-			QtGui.QIcon.fromTheme("document-new",
-				QtGui.QIcon(ICON_PATH + "new.png"),
-			),
-			""
+		newIcon = QtGui.QIcon.fromTheme("document-new",
+			QtGui.QIcon(ICON_PATH + "new.png"),
 		)
+		self.newAction = QtGui.QAction(newIcon, "", self)
 		self.newAction.setShortcut(QtGui.QKeySequence.New)
+		self.fileMenu.addAction(self.newAction)
 
-		self.openAction = self.fileMenu.addAction(
-			QtGui.QIcon.fromTheme("document-open",
-				QtGui.QIcon(ICON_PATH + "open.png")
-			),
-			""
+		openIcon = QtGui.QIcon.fromTheme("document-open",
+			QtGui.QIcon(ICON_PATH + "open.png")
 		)
+		self.openAction = QtGui.QAction(openIcon, "", self)
 		self.openAction.setShortcut(QtGui.QKeySequence.Open)
+		self.fileMenu.addAction(self.openAction)
 
-		self.openIntoAction = self.fileMenu.addAction("")
+		self.openIntoAction = QtGui.QAction(self)
+		self.fileMenu.addAction(self.openIntoAction)
 
 		self.fileMenu.addSeparator()
 
-		self.saveAction = self.fileMenu.addAction(
-			QtGui.QIcon.fromTheme("document-save",
-				QtGui.QIcon(ICON_PATH + "save.png")
-			),
-			""
+		saveIcon = QtGui.QIcon.fromTheme("document-save",
+			QtGui.QIcon(ICON_PATH + "save.png")
 		)
+		self.saveAction = QtGui.QAction(saveIcon, "", self)
 		self.saveAction.setShortcut(QtGui.QKeySequence.Save)
+		self.fileMenu.addAction(self.saveAction)
 
-		self.saveAsAction = self.fileMenu.addAction(
-			QtGui.QIcon.fromTheme("document-save-as",
-				QtGui.QIcon(ICON_PATH + "save_as.png"),
-			),
-			""
+		saveAsIcon = QtGui.QIcon.fromTheme("document-save-as",
+			QtGui.QIcon(ICON_PATH + "save_as.png"),
 		)
+		self.saveAsAction = QtGui.QAction(saveAsIcon, "", self)
 		self.saveAsAction.setShortcut(QtGui.QKeySequence.SaveAs)
+		self.fileMenu.addAction(self.saveAsAction)
 
 		self.fileMenu.addSeparator()
 
-		self.printAction = self.fileMenu.addAction(
-			QtGui.QIcon.fromTheme("document-print",
-				QtGui.QIcon(ICON_PATH + "print.png")
-			),
-			""
+		printIcon = QtGui.QIcon.fromTheme("document-print",
+			QtGui.QIcon(ICON_PATH + "print.png")
 		)
+		self.printAction = QtGui.QAction(printIcon, "", self)
 		self.printAction.setShortcut(QtGui.QKeySequence.Print)
+		self.fileMenu.addAction(self.printAction)
 
 		self.fileMenu.addSeparator()
 
-		self.quitAction = self.fileMenu.addAction(
-			QtGui.QIcon.fromTheme("application-exit",
-				QtGui.QIcon(ICON_PATH + "quit.png")
-			),
-			""
+		quitIcon = QtGui.QIcon.fromTheme("application-exit",
+			QtGui.QIcon(ICON_PATH + "quit.png")
 		)
+		self.quitAction = QtGui.QAction(quitIcon,	"", self)
 		self.quitAction.setShortcut(QtGui.QKeySequence.Quit)
+		self.fileMenu.addAction(self.quitAction)
 
 		#Edit
-		self.editMenu = self.menuBar().addMenu("")
-		self.reverseAction = self.editMenu.addAction("")
-		self.settingsAction = self.editMenu.addAction(
-			QtGui.QIcon.fromTheme("preferences-system",
-				QtGui.QIcon(ICON_PATH + "settings.png")
-			),
-			""
+		self.editMenu = QtGui.QMenu(self)
+		self.menuBar().addMenu(self.editMenu)
+
+		self.reverseAction = QtGui.QAction(self)
+		self.editMenu.addAction(self.reverseAction)
+
+		settingsIcon = QtGui.QIcon.fromTheme("preferences-system",
+			QtGui.QIcon(ICON_PATH + "settings.png")
 		)
+		self.settingsAction = QtGui.QAction(settingsIcon,	"", self)
+		self.editMenu.addAction(self.settingsAction)
 
 		#View
-		self.viewMenu = self.menuBar().addMenu("")
-		self.fullscreenAction = self.viewMenu.addAction(
-			QtGui.QIcon.fromTheme("view-fullscreen",
-				QtGui.QIcon(ICON_PATH + "fullscreen.png")
-			),
-			""
+		self.viewMenu = QtGui.QMenu(self)
+		self.menuBar().addMenu(self.viewMenu)
+
+		fullscreenIcon = QtGui.QIcon.fromTheme("view-fullscreen",
+			QtGui.QIcon(ICON_PATH + "fullscreen.png")
 		)
+		self.fullscreenAction = QtGui.QAction(fullscreenIcon, "", self)
 		self.fullscreenAction.setCheckable(True)
+		self.viewMenu.addAction(self.fullscreenAction)
 
 		#Help
-		self.helpMenu = self.menuBar().addMenu("")
+		self.helpMenu = QtGui.QMenu(self)
+		self.menuBar().addMenu(self.helpMenu)
 
-		self.docsAction = self.helpMenu.addAction(
-			QtGui.QIcon.fromTheme("help",
-				QtGui.QIcon(ICON_PATH + "help.png")
-			),
-			""
+		docsIcon = QtGui.QIcon.fromTheme("help",
+			QtGui.QIcon(ICON_PATH + "help.png")
 		)
-		self.aboutAction = self.helpMenu.addAction(
-			QtGui.QIcon.fromTheme("help-about",
-				QtGui.QIcon(ICON_PATH + "about.png")
-			),
-			""
+		self.docsAction = QtGui.QAction(docsIcon, "", self)
+		self.helpMenu.addAction(self.docsAction)
+
+		aboutIcon = QtGui.QIcon.fromTheme("help-about",
+			QtGui.QIcon(ICON_PATH + "about.png")
 		)
+		self.aboutAction = QtGui.QAction(aboutIcon, "", self)
+		self.helpMenu.addAction(self.aboutAction)
 
 		#Toolbar
 		self.toolBar = self.addToolBar("")
