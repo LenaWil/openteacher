@@ -28,25 +28,19 @@ def installQtClasses():
 	global TestModel, TestViewer
 
 	class TestModel(QtCore.QAbstractTableModel):
-		def __init__(self, moduleManager, list, dataType, test, *args, **kwargs):
+		def __init__(self, list, test, testTable, *args, **kwargs):
 			super(TestModel, self).__init__(*args, **kwargs)
-
-			self._mm = moduleManager
 
 			self._list = list
 			self._test = test
 
-			for module in self._mm.mods("active", type="testType"):
-				if dataType == module.dataType:
-					self.testTable = module
-					self.testTable.updateList(self._list, self._test)
-					break
+			self._testTable = testTable
 
 		def headerData(self, section, orientation, role):
 			if role != QtCore.Qt.DisplayRole:
 				return
 			if orientation == QtCore.Qt.Horizontal:
-				return self.testTable.header[section]
+				return self._testTable.header[section]
 			else:
 				return section + 1
 
@@ -54,33 +48,33 @@ def installQtClasses():
 			if not index.isValid():
 				return
 			
-			if type(self.testTable.data(index.row(), index.column())) == type(True):
+			if isinstance(self._testTable.data(index.row(), index.column()), bool):
 				# Boolean
 				if role == QtCore.Qt.CheckStateRole:
-					return self.testTable.data(index.row(), index.column())
+					return self._testTable.data(index.row(), index.column())
 			else:
 				# Non-Boolean
 				if role == QtCore.Qt.DisplayRole:
-					return self.testTable.data(index.row(), index.column())
+					return self._testTable.data(index.row(), index.column())
 
 		def rowCount(self, parent):
 			return len(self._test["results"])
 
 		def columnCount(self, parent):
-			return len(self.testTable.header)
+			return len(self._testTable.header)
 
 	class TestViewer(QtGui.QSplitter):
-		def __init__(self, moduleManager, list, dataType, test, *args, **kwargs):
+		def __init__(self, list, test, testTable, calculateNote, progressWidget, *args, **kwargs):
 			super(TestViewer, self).__init__(QtCore.Qt.Vertical, *args, **kwargs)
-			
-			self.test = test
 
-			self._mm = moduleManager
-			self._modules = set(self._mm.mods(type="modules")).pop()
+			self._test = test
+			self._testTable = testTable
+
+			self._calculateNote = calculateNote
 
 			#Vertical splitter
 			tableView = QtGui.QTableView()
-			testModel = TestModel(self._mm, list, dataType, self.test)
+			testModel = TestModel(list, test, testTable)
 			tableView.setModel(testModel)
 
 			self.totalThinkingTimeLabel = QtGui.QLabel()
@@ -93,15 +87,14 @@ def installQtClasses():
 			self.completedLabel = QtGui.QLabel()
 			self.noteLabel = QtGui.QLabel()
 			factsLayout.addWidget(self.noteLabel, 0, QtCore.Qt.AlignTop)
-			for module in self._mm.mods("active", type="testType"):
-				if module.dataType == dataType and hasattr(module, "funFacts"):
-					for fact in module.funFacts:
-						if fact[1] == None:
-							label = QtGui.QLabel("%s<br />-" % fact[0])
-						else:
-							label = QtGui.QLabel("%s<br /><span style=\"font-size: 14px\">%s</span>" % (fact[0], fact[1]))
-						factsLayout.addWidget(label, 0, QtCore.Qt.AlignTop)
-					break
+			with contextlib.ignored(AttributeError):
+				for fact in self._testTable.funFacts:
+					if fact[1] is None:
+						label = QtGui.QLabel("%s<br />-" % fact[0])
+					else:
+						label = QtGui.QLabel("%s<br /><span style=\"font-size: 14px\">%s</span>" % (fact[0], fact[1]))
+					factsLayout.addWidget(label, 0, QtCore.Qt.AlignTop)
+
 			factsLayout.addWidget(self.completedLabel)
 			factsLayout.addStretch()
 			
@@ -113,32 +106,21 @@ def installQtClasses():
 			horSplitter.addWidget(factsWidget)
 
 			#Main splitter
-			with contextlib.ignored(IndexError, KeyError):
-				progressWidget = self._modules.default(
-					"active",
-					type="progressViewer"
-				).createProgressViewer(self.test)
-
 			self.addWidget(horSplitter)
-			with contextlib.ignored(NameError):
+			if progressWidget:
 				self.addWidget(progressWidget)
 
 		def retranslate(self):
 			self.setWindowTitle(_("Results"))
 
-			try:
-				calculateNote = self._modules.default(
-					"active",
-					type="noteCalculatorChooser"
-				).noteCalculator.calculateNote
-			except IndexError:
-				self.noteLabel.setText("")
-			else:
+			if self._calculateNote:
 				html = "<br /><span style=\"font-size: 40px\">%s</span>"
-				self.noteLabel.setText(_("Note:") + html % calculateNote(self.test))
+				self.noteLabel.setText(_("Note:") + html % self._calculateNote(self._test))
+			else:
+				self.noteLabel.setText("")
 
 			try:
-				completedText = _("yes") if self.test["finished"] else _("no")
+				completedText = _("yes") if self._test["finished"] else _("no")
 			except KeyError:
 				self.completedLabel.setText("")
 			else:
@@ -162,7 +144,7 @@ def installQtClasses():
 		@property
 		def _totalThinkingTime(self):
 			totalThinkingTime = datetime.timedelta()
-			for result in self.test["results"]:
+			for result in self._test["results"]:
 				if "active" in result:
 					totalThinkingTime += result["active"]["end"] - result["active"]["start"]
 			return dateutil.total_seconds(totalThinkingTime)
@@ -184,8 +166,36 @@ class TestViewerModule(object):
 		)
 		self.filesWithTranslations = ("testViewer.py",)
 
-	def createTestViewer(self, *args, **kwargs):
-		tv = TestViewer(self._mm, *args, **kwargs)
+	def createTestViewer(self, list, dataType, test):
+		"""This creates a widget that gives an overview of the passed in
+		   `test`. Test should be inside `list["tests"]` and `list`
+		   should be passed in. `dataType` should be the data type of
+		   `list`.
+
+		"""
+		testTable = self._modules.default("active", type="testType", dataType=dataType)
+		testTable.updateList(list, test)
+
+		try:
+			calculateNote = self._modules.default(
+				"active",
+				type="noteCalculatorChooser"
+			).noteCalculator.calculateNote
+		except IndexError:
+			calculateNote = None
+
+		try:
+			progressWidget = self._modules.default(
+				"active",
+				type="progressViewer"
+			).createProgressViewer(test)
+		except (IndexError, KeyError):
+			#IndexError: self._modules.default if the mod isn't there.
+			#KeyError: a progress widget needs time info which might
+			#not be there.
+			progressWidget = None
+
+		tv = TestViewer(list, test, testTable, calculateNote, progressWidget)
 		self._testViewers.add(weakref.ref(tv))
 		self._retranslate()
 

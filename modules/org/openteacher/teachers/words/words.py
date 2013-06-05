@@ -23,6 +23,7 @@
 import datetime
 import weakref
 import contextlib
+import collections
 
 def installQtClasses():
 	global TeachLessonWidget, TeachSettingsWidget, TeachWidget
@@ -138,36 +139,37 @@ def installQtClasses():
 		lessonDone = QtCore.pyqtSignal()
 		listChanged = QtCore.pyqtSignal([object])
 
-		def __init__(self, moduleManager, modules, settings, widgets, keyboardWidget, applicationActivityChanged, *args, **kwargs):
+		def __init__(self, compose, showResults, lessonTypeCreators, listModifiers, itemModifiers, settings, widgets, keyboardWidget, applicationActivityChanged, *args, **kwargs):
 			super(TeachWidget, self).__init__(*args, **kwargs)
 
-			#FIXME > 3.0: get rid of the module manager in this widget, move
-			#that logic to the module class and pass to the constructor
-			#instead.
-			self._mm = moduleManager
-			self._modules = modules
+			self._compose = compose
+			self._showResults = showResults
+			self._lessonTypeCreators = lessonTypeCreators
+			self._listModifiers = listModifiers
+			self._itemModifiers = itemModifiers
+
 			self._settings = settings
 			self._applicationActivityChanged = applicationActivityChanged
-			self._keyboardWidget = keyboardWidget
 
 			self._buildUi(keyboardWidget, widgets)
 			self._connectSignals()
-
-			try:
-				letterChosen = self._keyboardWidget.letterChosen
-			except AttributeError:
-				#replacement that does nothing
-				letterChosen = self._modules.default(type="event").createEvent()
-
-			#setup teachTypes
-			self._teachTypeWidgets = []
-			for module in self._modules.sort("active", type="teachType"): 
-				if module.dataType in ("all", "words"):
-					widget = module.createWidget(self.tabChanged, letterChosen, self._lessonWidget.addSideWidget, self._lessonWidget.removeSideWidget)
-					self._teachTypeWidgets.append(widget)
-					self._lessonWidget.teachTabWidget.addTab(widget, module.name)
 			
 			self.inLesson = False
+
+		def addSideWidget(self, widget):
+			self._lessonWidget.addSideWidget(widget)
+
+		def removeSideWidget(self, widget):
+			self._lessonWidget.removeSideWidget(widget)
+
+		def setTeachTypeWidgets(self, teachTypeWidgets):
+			"""Should only be called one. Hope it can be refactored out
+			   sometime. Should be called before startLesson() too.
+
+			"""
+			self._teachTypeWidgets = teachTypeWidgets
+			for wid, name in self._teachTypeWidgets:
+				self._lessonWidget.teachTabWidget.addTab(wid, name)
 
 		def updateLesson(self, lesson):
 			self.lesson = lesson
@@ -175,34 +177,28 @@ def installQtClasses():
 		def _showSettings(self):
 			self.setCurrentWidget(self._settingsWidget)
 
-		def _modForPath(self, path):
-			for mod in self._mm.mods:
-				if mod.__class__.__file__ == path:
-					return mod
-			raise IndexError()
-
 		def _startLesson(self):
 			self.setCurrentWidget(self._lessonWidget)
 			self._applicationActivityChanged.handle(self._activityChanged)
 
 			path = self._settings["lessonType"]["value"]
 			try:
-				lessonTypeModule = self._modForPath(path)
-			except IndexError:
-				lessonTypeModule = self._modules.default("active", type="lessonType")
+				createLessonType = self._lessonTypeCreators[path]
+			except KeyError:
+				createLessonType = next(iter(lessonTypeCreators))
 
 			indexes = range(len(self.lesson.list["items"]))
 			for path in self._settings["listModifiers"]["value"]:
 				try:
-					listModifier = self._modForPath(path)
-				except IndexError:
+					modifyList = self._listModifiers[path]
+				except KeyError:
 					continue
-				indexes = listModifier.modifyList(indexes, self.lesson.list)
+				indexes = modifyList(indexes, self.lesson.list)
 
-			itemModifiers = []
+			selectedItemModifiers = []
 			for path in self._settings["itemModifiers"]["value"]:
-				with contextlib.ignored(IndexError):
-					itemModifiers.append(self._modForPath(path).modifyItem)
+				with contextlib.ignored(KeyError):
+					selectedItemModifiers.append(self._itemModifiers[path])
 
 			def modifyItem(item):
 				#function that applies all item modifiers on an item and
@@ -210,16 +206,16 @@ def installQtClasses():
 				#done, it makes a copy of the item since the item modifiers
 				#may modify the item in place.
 				result = item.copy()
-				for modify in itemModifiers:
+				for modify in selectedItemModifiers:
 					result = modify(result)
 				return result
 
-			self._lessonType = lessonTypeModule.createLessonType(self.lesson.list, indexes, modifyItem)
+			self._lessonType = createLessonType(self.lesson.list, indexes, modifyItem)
 
 			self._lessonType.newItem.handle(self._newItem)
 			self._lessonType.lessonDone.handle(self.stopLesson)
 
-			for widget in self._teachTypeWidgets:
+			for widget, name in self._teachTypeWidgets:
 				widget.updateLessonType(self._lessonType)
 
 			self._lessonType.start()
@@ -281,8 +277,7 @@ def installQtClasses():
 			#last time _newItem was called.
 			self._tellListAndLessonChange()
 
-			compose = self._modules.default("active", type="wordsStringComposer").compose
-			self._lessonWidget.questionLabel.setText(compose(item["questions"]))
+			self._lessonWidget.questionLabel.setText(self._compose(item["questions"]))
 			try:
 				self._lessonWidget.commentLabel.setText(item["comment"])
 			except KeyError:
@@ -305,10 +300,8 @@ def installQtClasses():
 
 			self._showSettings()
 
-			if showResults:
-				with contextlib.ignored(IndexError):
-					module = self._modules.default("active", type="resultsDialog")
-					module.showResults(self.lesson.list, "words", self.lesson.list["tests"][-1])
+			if showResults and self._showResults is not None:
+				self._showResults(self.lesson.list, "words", self.lesson.list["tests"][-1])
 
 			self.inLesson = False
 			
@@ -364,10 +357,59 @@ class WordsTeacherModule(object):
 		)
 		self.filesWithTranslations = ("words.py",)
 
+	_compose = property(lambda self: self._modules.default("active", type="wordsStringComposer").compose)
+
+	@property
+	def _showResults(self):
+		with contextlib.ignored(IndexError):
+			return self._modules.default("active", type="resultsDialog").showResults
+		#explicit is better than implicit.
+		return None
+
 	def createWordsTeacher(self):
-		tw = TeachWidget(self._mm, self._modules, self._settings, self._widgets, self._charsKeyboard, self._applicationActivityChanged)
+		lessonTypeCreators = collections.OrderedDict(
+			(mod.__class__.__file__, mod.createLessonType)
+			for mod in self._modules.sort("active", type="lessonType")
+		)
+		listModifiers = dict(
+			(mod.__class__.__file__, mod.modifyList)
+			for mod in self._modules.sort("active", type="listModifier")
+		)
+		itemModifiers = dict(
+			(mod.__class__.__file__, mod.modifyItem)
+			for mod in self._modules.sort("active", type="itemModifier")
+		)
+
+		keyboardWidget = self._charsKeyboard
+		try:
+			letterChosen = keyboardWidget.letterChosen
+		except AttributeError:
+			#replacement that does nothing
+			letterChosen = self._modules.default(type="event").createEvent()
+
+		tw = TeachWidget(
+			self._compose,
+			self._showResults,
+			lessonTypeCreators,
+			listModifiers,
+			itemModifiers,
+			self._settings,
+			self._widgets,
+			keyboardWidget,
+			self._applicationActivityChanged
+		)
 		self._activeWidgets.add(weakref.ref(tw))
 		self._retranslate()
+
+		teachTypeWidgets = [
+			(
+				module.createWidget(tw.tabChanged, letterChosen, tw.addSideWidget, tw.removeSideWidget),
+				module.name
+			)
+			for module in self._modules.sort("active", type="teachType")
+			if module.dataType in ("all", "words")
+		]
+		tw.setTeachTypeWidgets(teachTypeWidgets)
 
 		return tw
 

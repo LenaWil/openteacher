@@ -134,6 +134,8 @@ def installQtClasses():
 
 	class ProgressViewer(QtGui.QWidget):
 		def __init__(self, test, *args, **kwargs):
+			"""Raises KeyError if 'test' doesn't contain time info."""
+
 			super(ProgressViewer, self).__init__(*args, **kwargs)
 
 			self.graph = Graph(test)
