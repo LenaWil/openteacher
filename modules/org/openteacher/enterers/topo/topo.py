@@ -52,15 +52,12 @@ def installQtClasses():
 			self.mapWidget = mapWidget
 			self.enterWidget = parent
 
-			# Ask if user wants to remove added places when changing map
-			self.ask = True
-
 			# Fill the MapChooser with the maps
 			self._fillBox()
 			# Change the map
 			self._otherMap()
 
-			self.currentIndexChanged.connect(self._otherMap)
+			self.activated.connect(self._otherMap)
 
 			self.retranslate()
 
@@ -77,48 +74,52 @@ def installQtClasses():
 			self.addItem("", unicode({}))
 			
 		def _otherMap(self):
-			if self.ask:
-				if len(self.enterWidget.list["items"]) > 0:
-					warningD = QtGui.QMessageBox()
-					warningD.setIcon(QtGui.QMessageBox.Warning)
-					warningD.setWindowTitle(_("Warning"))
-					warningD.setStandardButtons(QtGui.QMessageBox.Cancel | QtGui.QMessageBox.Ok)
-					warningD.setText(_("Are you sure you want to use another map? This will remove all your places!"))
-					feedback = warningD.exec_()
-					if feedback != QtGui.QMessageBox.Ok:
-						self.ask = False
-						self.setCurrentIndex(self.prevIndex)
-						return
-				if self.currentMap == {}:
-					_fileDialogsMod = base._modules.default("active", type="fileDialogs")
-					path = _fileDialogsMod.getLoadPath(
-						QtCore.QDir.homePath(),
-						[("gif", ""), ("jpg", ""), ("jpeg", ""), ("png", ""), ("bmp", ""), ("svg", "")],
-						fileType=_("Images"),
-					)
-					if path:
-						name = os.path.splitext(os.path.basename(path))[0]
+			#custom map
+			if self.currentMap == {}:
+				_fileDialogsMod = base._modules.default("active", type="fileDialogs")
+				path = _fileDialogsMod.getLoadPath(
+					QtCore.QDir.homePath(),
+					[("gif", ""), ("jpg", ""), ("jpeg", ""), ("png", ""), ("bmp", ""), ("svg", "")],
+					fileType=_("Images"),
+				)
+				if path:
+					name = os.path.splitext(os.path.basename(path))[0]
 
-						self.setCurrentIndex(0)
-						self.insertItem(0, name, unicode({'mapPath': path, 'knownPlaces': ''}))
-						self.setCurrentIndex(0)
-				elif len(self.enterWidget.list["items"]) > 0 and self.ask:
-					# Clear the entered items
-					self.enterWidget.list = {
-						"items": list(),
-						"tests": list()
-					}
-					# Update the list
-					self.enterWidget.currentPlaces.update()
-					self.mapWidget.setMap(self.currentMap["mapPath"])
-					self.enterWidget.addPlaceEdit.updateKnownPlaces(self.currentMap["knownPlaces"])
-					self.prevIndex = self.currentIndex()
+					self.insertItem(0, name, unicode({'mapPath': path, 'knownPlaces': ''}))
+					self.prevIndex += 1
+					self.setCurrentIndex(0)
+					#start the process over again.
+					self._otherMap()
 				else:
-					self.mapWidget.setMap(self.currentMap["mapPath"])
-					self.enterWidget.addPlaceEdit.updateKnownPlaces(self.currentMap["knownPlaces"])
-					self.prevIndex = self.currentIndex()
+					self.setCurrentIndex(self.prevIndex)
+			#non-empty current map
+			elif len(self.enterWidget.list["items"]) > 0:
+				#Show warning
+				warningD = QtGui.QMessageBox()
+				warningD.setIcon(QtGui.QMessageBox.Warning)
+				warningD.setWindowTitle(_("Warning"))
+				warningD.setStandardButtons(QtGui.QMessageBox.Cancel | QtGui.QMessageBox.Ok)
+				warningD.setText(_("Are you sure you want to use another map? This will remove all your places!"))
+				feedback = warningD.exec_()
+				if feedback != QtGui.QMessageBox.Ok:
+					self.setCurrentIndex(self.prevIndex)
+					return
+
+				# Clear the entered items
+				self.enterWidget.list = {
+					"items": list(),
+					"tests": list()
+				}
+				# Update the list
+				self.enterWidget.currentPlaces.update()
+				self.mapWidget.setMap(self.currentMap["mapPath"])
+				self.enterWidget.addPlaceEdit.updateKnownPlaces(self.currentMap["knownPlaces"])
+				self.prevIndex = self.currentIndex()
+			#empty current map
 			else:
-				self.ask = True
+				self.mapWidget.setMap(self.currentMap["mapPath"])
+				self.enterWidget.addPlaceEdit.updateKnownPlaces(self.currentMap["knownPlaces"])
+				self.prevIndex = self.currentIndex()
 
 		@property
 		def currentMap(self):

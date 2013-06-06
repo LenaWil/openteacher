@@ -212,18 +212,18 @@ class Lesson(object):
 
 	@path.setter
 	def path(self, path):
-		"""Should only be set one time per lesson object.""" #FIXME: change that?
-
 		#TRANSLATORS: used as a label in case a filename of a topo
 		#TRANSLATORS: lesson isn't available. (E.g. because it's
 		#TRANSLATORS: downloaded from some kind of web service.)
 		fileName = path or _("Import source")
 
-		self.enterWidget.mapChooser.insertItem(0, fileName, unicode({'mapPath': self._resources["mapPath"], 'knownPlaces': ''}))
+		self.enterWidget.mapChooser.insertItem(0, fileName, unicode({'mapPath': self.resources["mapPath"], 'knownPlaces': ''}))
 		self.enterWidget.mapChooser.setCurrentIndex(0)
 
 		# Update title
 		self.fileTab.title = _("Topo lesson: %s") % os.path.basename(path)
+
+		self._path = path
 
 	@list.setter
 	def list(self, list):

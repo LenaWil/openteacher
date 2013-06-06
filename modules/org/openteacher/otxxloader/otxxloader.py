@@ -68,12 +68,16 @@ class OtxxLoaderModule(object):
 				path2 = tf.name
 				
 				self._tempPaths.add(path2)
-				resourceFile = zipFile.open(filename)
-				
-				shutil.copyfileobj(resourceFile, tf)
-				tf.close()
-				
-				resources[resourceKey] = path2
+				with contextlib.ignored(KeyError):
+					#KeyError: the file might not be in the zip. That's
+					#not important enough to break on. It happens when
+					#importing .ottp files created with OT < 3.2 e.g.
+					resourceFile = zipFile.open(filename)
+					
+					shutil.copyfileobj(resourceFile, tf)
+					tf.close()
+					
+					resources[resourceKey] = path2
 
 		return {
 			"resources": resources,

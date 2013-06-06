@@ -34,6 +34,7 @@ def pythonPaths(basePath):
 				"pyinstaller" in root or
 				"admin_files" in root or
 				"pyttsx" in root or
+				"collections.py" in file or
 				"pyratemp" in file
 			)
 			if shouldNotBeChecked:

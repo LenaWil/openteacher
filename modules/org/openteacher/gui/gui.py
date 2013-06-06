@@ -23,6 +23,7 @@ import sys
 import os
 import platform
 import logging
+import warnings
 
 qtLogger = logging.getLogger("qt")
 
@@ -115,8 +116,7 @@ class FileTab(object):
 	def __init__(self, moduleManager, tabWidget, wrapperWidget, widget, lastWidget, *args, **kwargs):
 		super(FileTab, self).__init__(*args, **kwargs)
 
-		self._mm = moduleManager
-		self._modules = set(self._mm.mods(type="modules")).pop()
+		self._modules = next(iter(moduleManager.mods(type="modules")))
 
 		self._tabWidget = tabWidget
 		self._wrapperWidget = wrapperWidget
@@ -198,6 +198,8 @@ class GuiModule(object):
 		qtLogger.debug("%s: %s" % (typeName, message))
 
 	def enable(self):
+		warnings.warn("On Ubuntu, when going out of fullscreen mode, the native menu bar isn't restored due to a Unity bug. Remove that check when it's fixed from gui.py.")
+
 		global QtCore, QtGui
 		try:
 			from PyQt4 import QtCore, QtGui
@@ -458,9 +460,6 @@ class GuiModule(object):
 			if platform.linux_distribution()[0] != "Ubuntu":
 				#on Unity, we don't re-enable the native menu bar,
 				#because a re-enabled native menu bar doesn't work ok.
-				#
-				#FIXME maybe: if this is ever fixed, remove the platform
-				#check again.
 				self._widget.menuBar().setNativeMenuBar(True)
 			self._widget.showNormal()
 
@@ -494,8 +493,6 @@ class GuiModule(object):
 		   shown again when the created tab is closed.
    
 		"""
-		#FIXME: move this into FileTab class. Or maybe even further down
-		#this module so the shared code with the StartWidget goes away?
 		#We wrap the layout in a QVBoxLayout widget, so messages can be
 		#added on top of the tab.
 		wrapperWidget = QtGui.QWidget()
@@ -521,8 +518,7 @@ class GuiModule(object):
 			fileTab = self._fileTabs[wrapperWidget] = LessonFileTab(*args)
 		else:
 			fileTab = self._fileTabs[wrapperWidget] = FileTab(*args)
-		#HERE: This doesn't fix anything, this event just needs to be
-		#replaced with something on a higher level :S.
+
 		self._onTabChanged()
 		return fileTab
 

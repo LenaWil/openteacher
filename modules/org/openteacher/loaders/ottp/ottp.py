@@ -82,7 +82,7 @@ class OpenTeachingTopoLoaderModule(object):
 			return "topo"
 
 	def load(self, path):
-		return self._otxxLoader.load(path, {"mapPath": "map.image"})
+		return self._otxxLoader.load(path, {"mapPath": "map.image", "mapScreenshot": "mapScreenshot.png",})
 
 def init(moduleManager):
 	return OpenTeachingTopoLoaderModule(moduleManager)

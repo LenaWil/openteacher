@@ -75,7 +75,7 @@ class FileDialogsModule(object):
 		fileDialog.setFilter(filter)
 		fileDialog.setDirectory(startdir)
 
-		tab = self._ui.addCustomTab(fileDialog)
+		tab = self._ui.addCustomTab(fileDialog, previousTabOnClose=True)
 		tab.title = fileDialog.windowTitle()
 		tab.closeRequested.handle(tab.close)
 		fileDialog.rejected.connect(tab.close)
