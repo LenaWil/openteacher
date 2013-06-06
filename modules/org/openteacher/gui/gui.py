@@ -113,13 +113,12 @@ class StatusViewer(object):
 		self._statusBar.showMessage(message)
 
 class FileTab(object):
-	def __init__(self, moduleManager, tabWidget, wrapperWidget, widget, lastWidget, *args, **kwargs):
+	def __init__(self, moduleManager, tabWidget, widget, lastWidget, *args, **kwargs):
 		super(FileTab, self).__init__(*args, **kwargs)
 
 		self._modules = next(iter(moduleManager.mods(type="modules")))
 
 		self._tabWidget = tabWidget
-		self._wrapperWidget = wrapperWidget
 		self._widget = widget
 		self._lastWidget = lastWidget
 
@@ -136,10 +135,10 @@ class FileTab(object):
 
 	@property
 	def _index(self):
-		return self._tabWidget.indexOf(self._wrapperWidget)
+		return self._tabWidget.indexOf(self._widget.wrapperWidget)
 
 	def close(self):
-		i = self._tabWidget.indexOf(self._wrapperWidget)
+		i = self._tabWidget.indexOf(self._widget.wrapperWidget)
 		self._tabWidget.removeTab(i)
 		if self._lastWidget:
 			self._tabWidget.setCurrentWidget(self._lastWidget)
@@ -493,15 +492,6 @@ class GuiModule(object):
 		   shown again when the created tab is closed.
    
 		"""
-		#We wrap the layout in a QVBoxLayout widget, so messages can be
-		#added on top of the tab.
-		wrapperWidget = QtGui.QWidget()
-		wrapperLayout = QtGui.QVBoxLayout()
-		#no borders
-		wrapperLayout.setContentsMargins(0, 0, 0, 0)
-
-		wrapperLayout.insertWidget(0, widget)
-		wrapperWidget.setLayout(wrapperLayout)
 
 		if previousTabOnClose:
 			lastWidget = self._widget.tabWidget.currentWidget()
@@ -509,15 +499,16 @@ class GuiModule(object):
 			lastWidget = None
 
 		self._addingTab = True
-		self._widget.tabWidget.addTab(wrapperWidget, "")
+		self._widget.tabWidget.addTab(widget, "")
 		self._addingTab = False
 
-		args = (self._mm, self._widget.tabWidget, wrapperWidget, widget, lastWidget)
+		args = (self._mm, self._widget.tabWidget, widget, lastWidget)
 
 		if widget.__class__ == self._ui.LessonTabWidget:
-			fileTab = self._fileTabs[wrapperWidget] = LessonFileTab(*args)
+			fileTab = LessonFileTab(*args)
 		else:
-			fileTab = self._fileTabs[wrapperWidget] = FileTab(*args)
+			fileTab = FileTab(*args)
+		self._fileTabs[widget.wrapperWidget] = fileTab
 
 		self._onTabChanged()
 		return fileTab

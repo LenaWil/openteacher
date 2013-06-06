@@ -74,11 +74,6 @@ class PngSaverModule(object):
 		del self.saves
 
 	def save(self, type, lesson, path):
-		#FIXME: mapScreenshot is only set when the source of the
-		#resources-thingy is the topo enterWidget. Breaks e.g. OT's
-		#command line interface. Probably best to just save the
-		#mapScreenshot in the .otmd file too, even though it takes extra
-		#space?
 		shutil.copy(lesson.resources["mapScreenshot"], path)
 
 		lesson.path = None

@@ -54,6 +54,12 @@ class Lesson(object):
 
 		self.retranslate()
 
+	def addTeachSideWidget(self, widget):
+		self._teachWidget.addSideWidget(widget)
+
+	def removeTeachSideWidget(self, widget):
+		self._teachWidget.removeSideWidget(widget)
+
 	@property
 	def list(self):
 		return self._list

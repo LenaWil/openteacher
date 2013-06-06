@@ -86,7 +86,7 @@ def installQtClasses():
 		def retranslate(self):
 			self.hideSelfButton.setText(_("Hide the browser!"))
 			self.hideOthersButton.setText(_("Hide the others; make space for the browser"))
-			
+
 		def loadUrl(self, *args):
 			with contextlib.ignored(KeyError): self.webview.setHtml(eval("7b2261626f75743a6d6f7a696c6c61223a20223c626f6479207374796c653d276261636b67726f756e642d636f6c6f723a6d61726f6f6e3b636f6c6f723a77686974653b666f6e742d66616d696c793a73657269663b666f6e742d7374796c653a6974616c69633b273e3c68313e4966206f6e6c7920517420776f756c64206a75737420737570706f7274204765636b6f2e2e2e3c2f68313e3c2f626f64793e222c2261626f75743a6368726f6d65223a20226d65682e222c2261626f75743a6f70657261223a20224f706572613f2057686174277320746861743f20536f6d657468696e6720656469626c65204920686f70653f222c2261626f75743a756e697665727365223a20223432222c2261626f75743a6965223a20223c626f6479207374796c653d276261636b67726f756e642d636f6c6f723a6c696d653b636f6c6f723a70696e6b3b666f6e742d66616d696c793a637572736976653b273e3c68313e25733c2f68313e3c2f626f64793e222025202822426c656768212022202a20313030292c2261626f75743a6f70656e74656163686572223a20223c7363726970743e73657454696d656f75742866756e6374696f6e202829207b77696e646f772e6c6f636174696f6e3d272573273b7d2c2033303030293c2f7363726970743e3c68313e596179213c2f68313e2220252073656c662e5f7374617274506167652c7d".decode("hex"))[unicode(self.urlbar.text())]); return
 
@@ -107,13 +107,11 @@ def installQtClasses():
 			#show other side widgets
 			sizes = self.parentWidget().sizes()
 			sizes[self.parentWidget().indexOf(self)] = 0
-			if sum(sizes):
-				self.parentWidget().setSizes(sizes)
-			else:
+			if not sum(sizes):
 				for i in range(len(sizes)):
 					sizes[i] = 1
 				sizes[self.parentWidget().indexOf(self)] = 0
-				self.parentWidget().setSizes(sizes)
+			self.parentWidget().setSizes(sizes)
 
 			#show other widgets
 			sizes = self.parentWidget().parentWidget().sizes()
@@ -168,12 +166,19 @@ class HiddenBrowserModule(object):
 
 	def _lessonAdded(self, lesson):
 		self._lessons.add(lesson)
+		self._addSideWidgetToLessonIfNecessary(lesson)
+
+	def _addSideWidgetToLessonIfNecessary(self, lesson):
 		if self._enabled["value"]:
 			with contextlib.ignored(AttributeError):
-				#AttributeError: not every lesson teachWidget has an addSideWidget
-				#
-				#FIXME (3.1?): don't access private properties (teachWidget & lessonWidget)
-				lesson._teachWidget._lessonWidget.addSideWidget(self.browser)
+				#AttributeError: in case the lesson doesn't support sideWidgets
+				lesson.addTeachSideWidget(self.browser)
+
+	def _removeSideWidgetFromLessonIfNecessary(self, lesson):
+		if not self._enabled["value"]:
+			with contextlib.ignored(AttributeError):
+				#AttributeError: in case the lesson doesn't support sideWidgets
+				lesson.removeTeachSideWidget(self.browser)
 
 	def enable(self):
 		global QtCore, QtGui, QtWebKit
@@ -250,18 +255,10 @@ class HiddenBrowserModule(object):
 			self.browser.retranslate()
 	
 	def updateActive(self, *args, **kwargs):
-		if self._enabled["value"]:
-			#Add the web browser to every lesson
-			for lesson in self._lessons:
-				with contextlib.ignored(AttributeError):
-					#AttributeError: in case the lesson doesn't support sideWidgets
-					lesson._teachWidget._lessonWidget.addSideWidget(self.browser)
-		else:
-			#Remove the web browser from every lesson
-			for lesson in self._lessons:
-				with contextlib.ignored(AttributeError):
-					#AttributeError: in case the lesson doesn't support sideWidgets
-					lesson._teachWidget._lessonWidget.removeSideWidget(self.browser)
+		#Add the web browser to every lesson
+		for lesson in self._lessons:
+			self._addSideWidgetToLessonIfNecessary(lesson)
+			self._removeSideWidgetFromLessonIfNecessary(lesson)
 	
 	def disable(self):
 		self.active = False

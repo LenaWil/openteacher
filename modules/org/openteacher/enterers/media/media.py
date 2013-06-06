@@ -36,22 +36,22 @@ def installQtClasses():
 		"""
 		def __init__(self,items,*args,**kwargs):
 			super(EnterItemListModel, self).__init__(*args, **kwargs)
-			
+
 			self.listData = []
-			
+
 			for item in items["items"]:
 				self.listData.append(item["name"])
-		
+
 		def update(self,items):
 			self.beginInsertRows(QtCore.QModelIndex(), self.rowCount(), self.rowCount())
-			
+
 			self.listData = []
-			
+
 			for item in items["items"]:
 				self.listData.append(item["name"])
-			
+
 			self.endInsertRows()
-		
+
 		def rowCount(self,parent=QtCore.QModelIndex()):
 			return len(self.listData)
 
@@ -60,7 +60,7 @@ def installQtClasses():
 				return QtCore.QVariant(self.listData[index.row()])
 			else:
 				return QtCore.QVariant()
-		
+
 		def textAtIndex(self,index):
 			return self.listData[index]
 
@@ -69,19 +69,19 @@ def installQtClasses():
 
 		def __init__(self,enterWidget,*args,**kwargs):
 			super(EnterItemList, self).__init__(*args, **kwargs)
-			
+
 			self.enterWidget = enterWidget
-			
+
 			self.lm = EnterItemListModel(enterWidget.list,self)
 			self.setModel(self.lm)
 			self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
-		
+
 		def update(self):
 			self.lm.update(self.enterWidget.list)
-		
+
 		def selectionChanged(self,current,previous):
 			self.setRightActiveItem()
-		
+
 		def setRightActiveItem(self):
 			if len(self.enterWidget.list["items"]) > 0:
 				self.enterWidget.setActiveItem(self.enterWidget.list["items"][self.currentIndex().row()])
@@ -97,14 +97,21 @@ def installQtClasses():
 			}
 			self.lesson = DummyLesson()
 			self.activeitem = {
-						"id": int(),
-						"remote": False,
-						"filename": unicode(),
-						"name": unicode(),
-						"question": unicode(),
-						"answer": unicode()
-					}
-			
+				"id": int(),
+				"remote": False,
+				"filename": unicode(),
+				"name": unicode(),
+				"question": unicode(),
+				"answer": unicode()
+			}
+
+			self.titlel = QtGui.QLabel()
+			self.titleTextBox = QtGui.QLineEdit()
+			self.titleTextBox.textChanged.connect(self.changeTitle)
+			leftTop = QtGui.QHBoxLayout()
+			leftTop.addWidget(self.titlel)
+			leftTop.addWidget(self.titleTextBox)
+
 			self.enterItemList = EnterItemList(self)
 
 			self.removeButton = QtGui.QPushButton()
@@ -113,13 +120,14 @@ def installQtClasses():
 			self.addLocalButton.clicked.connect(self.addLocalItems)
 			self.addRemoteButton = QtGui.QPushButton()
 			self.addRemoteButton.clicked.connect(self.addRemoteItems)
-			
+
 			leftBottom = QtGui.QHBoxLayout()
 			leftBottom.addWidget(self.removeButton)
 			leftBottom.addWidget(self.addLocalButton)
 			leftBottom.addWidget(self.addRemoteButton)
 
 			left = QtGui.QVBoxLayout()
+			left. addLayout(leftTop)
 			left.addWidget(self.enterItemList)
 			left.addLayout(leftBottom)
 			leftW = QtGui.QWidget()
@@ -144,7 +152,7 @@ def installQtClasses():
 			self.enterAnswer = QtGui.QLineEdit()
 			self.enterAnswer.textChanged.connect(self.changeAnswer)
 			self.enterAnswer.setEnabled(False)
-			
+
 			desceditL = QtGui.QVBoxLayout()
 			desceditL.addWidget(self.namel)
 			desceditL.addWidget(self.enterName)
@@ -152,30 +160,32 @@ def installQtClasses():
 			desceditL.addWidget(self.enterQuestion)
 			desceditL.addWidget(self.answerl)
 			desceditL.addWidget(self.enterAnswer)
-			
+
 			desceditW = QtGui.QWidget()
 			desceditW.setLayout(desceditL)
-			
+
 			rightSplitter = QtGui.QSplitter(2)
 			rightSplitter.addWidget(self.mediaDisplay)
 			rightSplitter.addWidget(desceditW)
-			
+
 			right = QtGui.QVBoxLayout()
 			right.addWidget(rightSplitter)
 			rightW = QtGui.QWidget()
 			rightW.setLayout(right)
-			
+
 			splitter = QtGui.QSplitter(self)
 			splitter.addWidget(leftW)
 			splitter.addWidget(rightW)
-			
+
 			layout = QtGui.QHBoxLayout()
 			layout.addWidget(splitter)
-			
+
 			self.setLayout(layout)
 			self.retranslate()
 
 		def retranslate(self):
+			self.titlel.setText(_("Title:"))
+
 			self.removeButton.setText(_("Remove"))
 			self.addLocalButton.setText(_("Add local media"))
 			self.addRemoteButton.setText(_("Add remote media"))
@@ -192,12 +202,12 @@ def installQtClasses():
 				with contextlib.ignored(AttributeError):
 					#AttributeError: no extensions
 					extensions.extend(module.extensions)
-			
+
 			extensionsStr = "("
 			for extension in extensions:
 				extensionsStr += "*" + extension + " "
 			extensionsStr += ")"
-			
+
 			filenames = QtGui.QFileDialog.getOpenFileNames(
 				self,
 				_(_("Select file(s)")),
@@ -206,7 +216,7 @@ def installQtClasses():
 			)
 			for filename in filenames:
 				self.addItem(str(filename), False)
-		
+
 		def addRemoteItems(self):
 			"""Add items from the internet to the list"""
 
@@ -215,12 +225,12 @@ def installQtClasses():
 				with contextlib.ignored(AttributeError):
 					#AttributeError: No name
 					sitenames.extend(module.remoteNames)
-			
+
 			sitenamesStr = ""
 			for sitename in sitenames:
 				sitenamesStr += sitename + ", "
 			sitenamesStr = sitenamesStr[:-2]
-			
+
 			url, dialog = QtGui.QInputDialog.getText(
 				self,
 				_("File URL"),
@@ -228,14 +238,14 @@ def installQtClasses():
 			)
 			if dialog:
 				self.addItem(str(url), True)
-		
+
 		def updateWidgets(self):
 			"""Updates all the widgets if the list has changed"""
 
 			self.enterItemList.update()
+			self.titleTextBox.setText(self.list.get("title", u""))
 			self.setActiveItem(self.activeitem)
-			self.list.changed = True
-		
+
 		def addItem(self,filename,remote=False,name=None,question=None,answer=None):
 			"""Add an item to the list"""
 
@@ -255,7 +265,7 @@ def installQtClasses():
 						item["id"] = self.list["items"][-1]["id"] +1
 					except IndexError:
 						item["id"] = 0
-					
+
 					if name != None:
 						item["name"] = name
 					else:
@@ -267,7 +277,7 @@ def installQtClasses():
 						item["question"] = question
 					if answer != None:
 						item["answer"] = answer
-					
+
 					self.list["items"].append(item)
 					self.lesson.changed = True
 					self.updateWidgets()
@@ -296,6 +306,7 @@ def installQtClasses():
 
 		def setActiveItem(self,item):
 			"""Change the active item"""
+
 			self.enterName.setEnabled(True)
 			self.enterName.setText(item["name"])
 			self.enterQuestion.setEnabled(True)
@@ -305,25 +316,33 @@ def installQtClasses():
 			if item["filename"] != self.activeitem["filename"]:
 				self.mediaDisplay.showMedia(item["filename"], item["remote"], False)
 			self.activeitem = item
-		
-		"""
-		Change the name of the active item
-		"""
+
+		def changeTitle(self, text):
+			"""Change the title of the media list"""
+
+			text = unicode(text)
+			if self.list.get("title", u"") != text:
+				self.list["title"] = text
+				self.lesson.changed = True
+
 		def changeName(self):
+			"""Change the name of the active item"""
+
 			if self.activeitem["name"] != unicode(self.enterName.text()):
 				self.activeitem["name"] = unicode(self.enterName.text())
 				self.updateWidgets()
-				self.lesson.changed = True	
-		
+				self.lesson.changed = True
+
 		def changeQuestion(self):
 			"""Change the question of the active item"""
 
 			if self.activeitem["question"] != unicode(self.enterQuestion.text()):
 				self.activeitem["question"] = unicode(self.enterQuestion.text())
 				self.lesson.changed = True
-		
+
 		def changeAnswer(self):
 			"""Change the description of the active item"""
+
 			if self.activeitem["answer"] != unicode(self.enterAnswer.text()):
 				self.activeitem["answer"] = unicode(self.enterAnswer.text())
 				self.lesson.changed = True
@@ -331,17 +350,17 @@ def installQtClasses():
 class MediaEntererModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(MediaEntererModule, self).__init__(*args, **kwargs)
-		
+
 		global base
 		base = self
-		
+
 		self._mm = moduleManager
-		
+
 		self.type = "mediaEnterer"
 		self.priorities = {
 			"default": 510,
 		}
-		
+
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
@@ -350,7 +369,7 @@ class MediaEntererModule(object):
 			self._mm.mods(type="ui"),
 		)
 		self.filesWithTranslations = ("media.py",)
-	
+
 	def enable(self):
 		global QtCore, QtGui
 		try:
@@ -391,13 +410,13 @@ class MediaEntererModule(object):
 			widget = ref()
 			if widget is not None:
 				widget.retranslate()
-	
+
 	def disable(self):
 		self.active = False
 
 		del self._modules
 		del self._widgets
-	
+
 	def createMediaEnterer(self):
 		ew = EnterWidget()
 		self._widgets.add(weakref.ref(ew))

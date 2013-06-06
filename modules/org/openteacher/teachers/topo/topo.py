@@ -402,6 +402,7 @@ class TopoTeacherModule(object):
 			pass
 		else:
 			translator.languageChanged.handle(self._retranslate)
+			translator.languageChangeDone.handle(self._retranslateWhenFirstRetranslateIsOver)
 		self._retranslate()
 
 		self.active = True
@@ -419,14 +420,11 @@ class TopoTeacherModule(object):
 				self._mm.resourcePath("translations")
 			)
 
+	def _retranslateWhenFirstRetranslateIsOver(self):
 		for ref in self._widgets:
 			widget = ref()
 			if widget is not None:
-				#FIXME (>3.0): use the languageChangeDone event instead?
-				#(and only for the stuff that depends on other modules?)
-				#update next event loop iteration, because it depends on
-				#some other modules.
-				QtCore.QTimer.singleShot(0, widget.retranslate)
+				widget.retranslate()
 
 	def disable(self):
 		self.active = False

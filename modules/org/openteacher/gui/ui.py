@@ -101,20 +101,8 @@ class FilesTabWidget(QtGui.QTabWidget):
 	def __init__(self, startWidget, *args, **kwargs):
 		super(FilesTabWidget, self).__init__(*args, **kwargs)
 
-		#FIXME > 3.0: make sure the following isn't duplicate anymore.
-		##START DUPLICATE CODE gui.py
-		# We wrap the layout in a QVBoxLayout widget, so messages can be added on top of the tab.
-		wrapperWidget = QtGui.QWidget()
-		wrapperLayout = QtGui.QVBoxLayout()
-		#no borders
-		wrapperLayout.setContentsMargins(0, 0, 0, 0)
-
-		wrapperLayout.insertWidget(0, startWidget)
-		wrapperWidget.setLayout(wrapperLayout)
-		##END DUPLICATE CODE gui.py
-
-		self.startWidget = wrapperWidget
-		self.startWidget._wrapperWidget = wrapperWidget
+		self.startWidget = startWidget
+		self._wrapWidget(startWidget)
 
 		#super because our method does add a close button, which we
 		#don't want.
@@ -128,16 +116,35 @@ class FilesTabWidget(QtGui.QTabWidget):
 
 		self.setDocumentMode(True)
 
+		#stored, otherwise they're removed too fast.
+		self._closeButtons = set()
+
+	def _wrapWidget(self, w):
+		# We wrap the layout in a QVBoxLayout widget, so messages can be added on top of the tab.
+		wrapperWidget = QtGui.QWidget()
+		wrapperLayout = QtGui.QVBoxLayout()
+		#no borders
+		wrapperLayout.setContentsMargins(0, 0, 0, 0)
+
+		wrapperLayout.addWidget(w)
+		wrapperWidget.setLayout(wrapperLayout)
+		w.wrapperWidget = wrapperWidget
+
+		return wrapperWidget
+
 	def addTab(self, w, *args, **kwargs):
 		w.setAutoFillBackground(True)
 		return self.insertTab(self.count() -1, w, *args, **kwargs) #-1 because of +-tab
 
-	def insertTab(self, *args, **kwargs):
+	def insertTab(self, i, w, *args, **kwargs):
+		wrappedWidget = self._wrapWidget(w)
+
 		#create tab
-		i = super(FilesTabWidget, self).insertTab(*args, **kwargs)
-		
+		i = super(FilesTabWidget, self).insertTab(i, wrappedWidget, *args, **kwargs)
+
 		#add close button
 		closeButton = CloseButton()
+		self._closeButtons.add(closeButton)
 		self.tabBar().setTabButton(i, QtGui.QTabBar.RightSide, closeButton)
 
 		#set new tab to current

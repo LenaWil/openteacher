@@ -108,28 +108,28 @@ class DialogShower(object):
 		self.showBigDialog(dialog)
 	
 	def showBigDialog(self, dialog):
-		tab = self.uiModule.addCustomTab(dialog)
+		tab = self.uiModule.addCustomTab(dialog, previousTabOnClose=True)
 		tab.closeRequested.handle(tab.close)
 	
 	def showDialog(self, tab, dialog):
-		tabLayout = tab._wrapperWidget.layout()
-				
+		tabLayout = tab.wrapperWidget.layout()
+
 		# First, remove all other errors if any are there
 		for i in xrange(tabLayout.count() - 1):
 			it = tabLayout.itemAt(i)
 			w = tabLayout.itemAt(i).widget()
-			if type(w) == Dialog:
+			if isinstance(w, Dialog):
 				# Old error is still there, remove it.
 				tabLayout.removeItem(it)
 				w.setParent(None)
-		
+
 		# What happens when you click the button on the dialog
 		def removeWidget():
 			tabLayout.removeWidget(dialog)
 			dialog.setParent(None)
-		
-		dialog.buttonClicked.connect(lambda: removeWidget())
-		
+
+		dialog.buttonClicked.connect(removeWidget)
+
 		tabLayout.insertWidget(0, dialog)
 
 class DialogShowerModule(object):

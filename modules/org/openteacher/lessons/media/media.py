@@ -23,8 +23,6 @@
 import os
 import weakref
 
-#FIXME (>3.1): give media lessons a title
-
 #FIXME? Make the whole module make use of a .resources attribute like
 #topo. It would make media savers and loaders a lot easier to write (see
 #mediaHtml.py and the loader and saver otmd.py). Downside: breaks
@@ -42,7 +40,6 @@ class MediaLessonModule(object):
 		super(MediaLessonModule, self).__init__(*args, **kwargs)
 		
 		self._mm = mm
-		self.counter = 1
 
 		self.type = "lesson"
 		x = 667
@@ -135,14 +132,13 @@ class MediaLessonModule(object):
 			self.resultsWidget
 		)
 
-		lesson = Lesson(self._modules, self.fileTab, self.enterWidget, self.teachWidget, self.resultsWidget, self.counter)
+		lesson = Lesson(self._modules, self.fileTab, self.enterWidget, self.teachWidget, self.resultsWidget)
 		self._lessons.add(weakref.ref(lesson))
 		self.lessonCreated.send(lesson)
 
 		#so it can set the changed property
 		self.enterWidget.lesson = lesson
 
-		self.counter += 1
 		self.lessonCreationFinished.send()
 		return lesson
 	
@@ -169,7 +165,7 @@ class MediaLessonModule(object):
 class Lesson(object):
 	"""Lesson object (that means: this teachwidget+enterwidget)"""
 
-	def __init__(self, modules, fileTab, enterWidget, teachWidget, resultsWidget, counter, *args, **kwargs):
+	def __init__(self, modules, fileTab, enterWidget, teachWidget, resultsWidget, *args, **kwargs):
 		super(Lesson, self).__init__(*args, **kwargs)
 		
 		self._modules = modules
@@ -178,7 +174,6 @@ class Lesson(object):
 		self.teachWidget = teachWidget
 		self.resultsWidget = resultsWidget
 		self.fileTab = fileTab
-		self.counter = counter
 
 		#default
 		self._changed = False
@@ -198,11 +193,13 @@ class Lesson(object):
 
 		self.retranslate()
 
-	def retranslate(self):
-		try:
-			self.fileTab.title = _("Media lesson: %s") % os.path.basename(self.path)
-		except AttributeError:
-			self.fileTab.title = _("Media lesson: %s") % self.counter
+	def _updateTitle(self):
+		title = self.list.get("title", u"")
+		if not title:
+			title = _("Unnamed")
+		self.fileTab.title = _("Media lesson: %s") % title
+
+	retranslate = _updateTitle
 
 	@property
 	def changed(self):
@@ -211,6 +208,7 @@ class Lesson(object):
 	@changed.setter
 	def changed(self, value):
 		self._changed = value
+		self._updateTitle()
 		self.changedEvent.send()
 
 	@changed.deleter

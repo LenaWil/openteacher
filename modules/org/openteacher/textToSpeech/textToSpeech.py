@@ -75,7 +75,6 @@ class TextToSpeechModule(object):
 		self.type = "textToSpeech"
 		self.uses = (
 			self._mm.mods(type="translator"),
-			self._mm.mods(type="dialogShower"),
 		)
 		self.requires = (
 			self._mm.mods(type="event"),
