@@ -34,6 +34,7 @@ class TestModeUploaderModule(object):
 			"all": x,
 			"teacher": x,
 			"code-documentation": x,
+			"test-suite": x,
 			"default": -1,
 		}
 		self.uses = (

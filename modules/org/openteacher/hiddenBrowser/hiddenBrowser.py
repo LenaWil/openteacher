@@ -161,6 +161,7 @@ class HiddenBrowserModule(object):
 			"all": x,
 			"student@home": x,
 			"code-documentation": x,
+			"test-suite": x,
 			"default": -1,
 		}
 
