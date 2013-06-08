@@ -76,6 +76,7 @@ class OpenTeacherBot(irc.IRCClient):
 		".developer-documentation": "http://vps.marten-de-vries.nl/openteacher-code-documentation/dev_docs/",
 		".code-complexity": "http://vps.marten-de-vries.nl/openteacher-code-complexity.txt",
 		".dependencies": "http://vps.marten-de-vries.nl/openteacher-code-documentation/dev_docs/dependencies.rst",
+		".bitesize": "https://bugs.launchpad.net/openteacher/+bugs?field.tag=bitesize"
 	}
 	factoids[".launchpad"] = factoids[".lp"]
 	factoids[".download"] = factoids[".downloads"]
@@ -116,6 +117,8 @@ class OpenTeacherBot(irc.IRCClient):
 	factoids[".cyclomatic-complexity"] = factoids[".code-complexity"]
 	factoids[".mccabe"] = factoids[".code-complexity"]
 	factoids[".requirements"] = factoids[".dependencies"]
+	factoids[".simplebugs"] = factoids[".bitesize"]
+	factoids[".bitesizebugs"] = factoids[".bitesize"]
 
 	@property
 	def nickname(self):

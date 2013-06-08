@@ -148,7 +148,6 @@ def installQtClasses():
 			self.setCurrentWidget(self.webviewer)
 			# Set the active type
 			self.activeModule = None
-	return MediaDisplay
 
 class MediaDisplayModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

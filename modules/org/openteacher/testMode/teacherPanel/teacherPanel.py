@@ -622,6 +622,7 @@ class TestModeTeacherPanelModule(object):
 			"all": x,
 			"teacher": x,
 			"code-documentation": x,
+			"test-suite": x,
 			"default": -1,
 		}
 

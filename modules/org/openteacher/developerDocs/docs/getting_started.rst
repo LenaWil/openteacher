@@ -16,6 +16,11 @@ UI, PyQt4 is used. This tutorial assumes you're familiar with those
 three techniques. Keep in mind though that for a lot of stuff you only
 need to know Python.
 
+First, of course, you need something to work on. For inspiration, you
+could take a look at our `bitesize bugs page`_.
+
+.. _`bitesize bugs page`: https://bugs.launchpad.net/openteacher/+bugs?field.tag=bitesize
+
 Setting up the development environment
 ======================================
 

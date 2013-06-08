@@ -134,7 +134,7 @@ def installQtClasses():
 						self.showEndOfGame(True)
 				else:
 					self.wrongCharacters.append(str(guess))
-					self.triedLabel.setText(_('Mistakes:  ' + '  |  '.join(self.wrongCharacters)))
+					self.triedLabel.setText(_('Mistakes:  ') + '  |  '.join(self.wrongCharacters))
 					self.hgraph.mistakes = self.word.mistakes
 					self.hgraph.update()
 					if self.word.mistakes >= 6:
@@ -182,7 +182,7 @@ def installQtClasses():
 			if win:
 				self.timerFinished()
 			else:
-				self.triedLabel.setText(_("You lose, the answer was: " + self.word._word))
+				self.triedLabel.setText(_("You lose, the answer was: ") + self.word._word)
 				timeLine = QtCore.QTimeLine(2000, self)
 				timeLine.setFrameRange(0, 255) #256 color steps
 				timeLine.frameChanged.connect(self.fade)
@@ -230,6 +230,7 @@ class TypingTeachTypeModule(object):
 			"selfstudy": x,
 			"student@home": x,
 			"code-documentation": x,
+			"test-suite": x,
 			"default": -1,
 		}
 
