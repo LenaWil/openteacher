@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011-2013, Marten de Vries
-#	Copyright 2009 Nokia Corporation and/or its subsidiary(-ies)
 #
 #	This file is part of OpenTeacher.
 #
@@ -24,53 +23,10 @@ from PyQt4 import QtCore, QtGui
 #INFO: ICON_PATH is set by gui.py . Set it yourself when re-using this
 #code in another context.
 
-class CloseButton(QtGui.QAbstractButton):
-	def __init__(self, *args, **kwargs):
-		super(CloseButton, self).__init__(*args, **kwargs)
-		
-		self.setFocusPolicy(QtCore.Qt.NoFocus)
-		self.setCursor(QtCore.Qt.ArrowCursor)
-		self.setToolTip(_("Close Tab"))
-		self.resize(self.sizeHint())
-
-	def sizeHint(self):
-		self.ensurePolished()
-		width = self.style().pixelMetric(QtGui.QStyle.PM_TabCloseIndicatorWidth, None, self)
-		height = self.style().pixelMetric(QtGui.QStyle.PM_TabCloseIndicatorHeight, None, self)
-		return QtCore.QSize(width, height)
-
-	def enterEvent(self, *args, **kwargs):
-		if self.isEnabled():
-			self.update()
-		super(CloseButton, self).enterEvent(*args, **kwargs)
-
-	def leaveEvent(self, *args, **kwargs):
-		if self.isEnabled():
-			self.update()
-		super(CloseButton, self).leaveEvent(*args, **kwargs)
-
-	def paintEvent(self, event):
-		p = QtGui.QPainter(self)
-		opt = QtGui.QStyleOption()
-		opt.initFrom(self)
-		opt.state = opt.state | QtGui.QStyle.State_AutoRaise
-		if self.isEnabled() and self.underMouse() and not self.isChecked() and not self.isDown():
-			opt.state = opt.state | QtGui.QStyle.State_Raised
-		if self.isChecked():
-			opt.state = opt.state | QtGui.QStyle.State_On
-		if self.isDown():
-			opt.state = opt.state | QtGui.QStyle.State_Sunken
-
-		tb = self.parent()
-
-		if tb.__class__ == QtGui.QTabBar:
-			index = tb.currentIndex()
-			position = self.style().styleHint(QtGui.QStyle.SH_TabBar_CloseButtonPosition, None, tb)
-
-			if tb.tabButton(index, position) == self:
-				opt.state = opt.state | QtGui.QStyle.State_Selected
-
-		self.style().drawPrimitive(QtGui.QStyle.PE_IndicatorTabClose, opt, p, self)
+TAB_WIDTH_MARGIN = 15
+WINDOW_WIDTH = 640
+WINDOW_HEIGHT = 520
+AERO_BACKGROUND_ALPHA = 230
 
 class LessonTabWidget(QtGui.QTabWidget):
 	def __init__(self, enterWidget, teachWidget, resultsWidget, *args, **kwargs):
@@ -97,27 +53,36 @@ class LessonTabWidget(QtGui.QTabWidget):
 		self.setTabText(self.indexOf(self.teachWidget), _("Teach me!"))
 		self.setTabText(self.indexOf(self.resultsWidget), _("Show results"))
 
+class FilesTabBar(QtGui.QTabBar):
+	def tabSizeHint(self, index):
+		normalSize = super(FilesTabBar, self).tabSizeHint(index)
+		if index == self.count() -1:
+			return QtCore.QSize(
+				self.iconSize().width() + TAB_WIDTH_MARGIN,
+				normalSize.height()
+			)
+		return normalSize
+
 class FilesTabWidget(QtGui.QTabWidget):
 	def __init__(self, startWidget, *args, **kwargs):
 		super(FilesTabWidget, self).__init__(*args, **kwargs)
 
 		self.startWidget = startWidget
-		self._wrapWidget(startWidget)
 
-		#super because our method does add a close button, which we
-		#don't want.
-		super(FilesTabWidget, self).addTab(
+		self._tabBar = FilesTabBar(self)
+		self.setTabBar(self._tabBar)
+		self.setTabsClosable(True)
+		self.setDocumentMode(True)
+
+		i = self.addTab(
 			self.startWidget,
 			QtGui.QIcon.fromTheme("add",
 				QtGui.QIcon(ICON_PATH + "add.png"),
 			),
 			""
 		)
-
-		self.setDocumentMode(True)
-
-		#stored, otherwise they're removed too fast.
-		self._closeButtons = set()
+		#remove the close button from the add tab
+		self._tabBar.setTabButton(i, QtGui.QTabBar.RightSide, None)
 
 	def _wrapWidget(self, w):
 		# We wrap the layout in a QVBoxLayout widget, so messages can be added on top of the tab.
@@ -142,11 +107,6 @@ class FilesTabWidget(QtGui.QTabWidget):
 		#create tab
 		i = super(FilesTabWidget, self).insertTab(i, wrappedWidget, *args, **kwargs)
 
-		#add close button
-		closeButton = CloseButton()
-		self._closeButtons.add(closeButton)
-		self.tabBar().setTabButton(i, QtGui.QTabBar.RightSide, closeButton)
-
 		#set new tab to current
 		self.setCurrentIndex(i)
 
@@ -158,7 +118,7 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 	def __init__(self, startWidget=None, requestClose=lambda: None, aeroSetting=False, *args, **kwargs):
 		super(OpenTeacherWidget, self).__init__(*args, **kwargs)
 
-		self.resize(640, 520)
+		self.resize(WINDOW_WIDTH, WINDOW_HEIGHT)
 
 		#used to ask for permission before closing the window.
 		self._requestClose = requestClose
@@ -282,7 +242,7 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 			self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
 			pal = self.palette()
 			bg = pal.window().color()
-			bg.setAlpha(230)
+			bg.setAlpha(AERO_BACKGROUND_ALPHA)
 			pal.setColor(QtGui.QPalette.Window, bg)
 			self.setPalette(pal)
 			from ctypes import windll, c_int, byref

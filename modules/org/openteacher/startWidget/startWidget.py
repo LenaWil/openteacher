@@ -24,70 +24,37 @@ import contextlib
 def installQtClasses():
 	global ButtonsGroupBox, StartWidget, LargeStartWidgetButton
 
-	class LargeStartWidgetButton(QtGui.QPushButton):
+	class LargeStartWidgetButton(QtGui.QToolButton):
 		def __init__(self, *args, **kwargs):
 			super(LargeStartWidgetButton, self).__init__(*args, **kwargs)
-			#our setText is reimplemented, the QPushButton constructor
-			#doesn't call setText by default.
-			self.setText(self.text())
 
+			#the label that handles the word wrapping
+			self._label = QtGui.QLabel(self)
+			self._label.setWordWrap(True)
+			self._label.setIndent(32)
+			self._label.setMargin(10)
+			self._label.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+
+			#setup the button sizes etc. correctly
+			self.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+			self.setIconSize(QtCore.QSize(32, 32))
 			self.setSizePolicy(
 				QtGui.QSizePolicy.MinimumExpanding,
-				QtGui.QSizePolicy.MinimumExpanding
+				QtGui.QSizePolicy.Fixed
 			)
-			self.setIconSize(QtCore.QSize(32, 32))
+			self.setMinimumSize(70, 70)
 			#width: unlimited (Qt default). Height: fixed
-			self.setMaximumSize(16777215, 100)
-
-		def setText(self, text):
-			self._text = text
-			self._cache = {}
-
-		def sizeHint(self):
-			fm = self.fontMetrics()
-			width = max(map(fm.width, self._text.split(" "))) + 20 #+20 to keep margin
-			height = fm.height() * len(self._splitLines().split("\n")) +10 #+10 to keep margin
-
-			if self.icon():
-				width += 32
-				height += 32
-
-			return QtCore.QSize(width, height)
-
-		def _splitLines(self):
-			fm = self.fontMetrics()
-			result = u""
-			curLine = u""
-			words = unicode(self._text).split(u" ")
-			w = self.width()
-			if self.icon():
-				w -= 32
-			with contextlib.ignored(KeyError):
-				return self._cache[w]
-			i = 0
-			while True:
-				try:
-					word = words[i]
-				except IndexError:
-					break
-				if not curLine and fm.width(" " + word) >= w:
-					result += u"\n" + word
-					i += 1
-				elif fm.width(curLine + " " + word) >= w:
-					result += u"\n" + curLine
-					curLine = u""
-				else:
-					curLine += u" " + word
-					i += 1
-			result += "\n" + curLine
-			result = result.strip()
-			self._cache[w] = result
-			return result
+			self.setMaximumSize(16777215, 70)
 
 		def resizeEvent(self, *args, **kwargs):
-			result = self._splitLines()
-			super(LargeStartWidgetButton, self).setText(result)
-			super(LargeStartWidgetButton, self).resizeEvent(*args, **kwargs)
+			#resize the label when the button resizes
+			result = super(LargeStartWidgetButton, self).resizeEvent(*args, **kwargs)
+			self._label.resize(self.size())
+			return result
+
+		def setText(self, text):
+			#set the text on the label instead of the button
+			self._label.setText(text)
 
 	class SmallStartWidgetButton(QtGui.QToolButton):
 		def __init__(self, *args, **kwargs):

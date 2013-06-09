@@ -21,8 +21,10 @@
 
 import os
 import sys
-import traceback
 import contextlib
+import logging
+
+logger = logging.getLogger(__name__)
 
 class UiControllerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -169,8 +171,7 @@ class UiControllerModule(object):
 		self._store["org.openteacher.uiController.lastPath"] = path
 
 	def _showErrorAndPrintException(self, msg):
-		print >> sys.stderr, "Catched exception:"
-		traceback.print_exc()
+		logger.debug(u"Catched exception, showing nice error ('%s'):" % msg, exc_info=True)
 		self._showError(msg)
 
 	def _showError(self, msg):
