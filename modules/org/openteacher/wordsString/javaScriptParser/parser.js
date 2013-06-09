@@ -21,7 +21,7 @@ var parse = (function () {
 	"use strict";
 	var obligatoryRe, wordRe, reverseAndTrim, isEmpty;
 
-	obligatoryRe = new RegExp("\\.[0-9]+(?!\\\\)");
+	obligatoryRe = new RegExp(" \\.[0-9]+(?!\\\\)");
 	wordRe = new RegExp("[,;](?!\\\\)");
 
 	reverseAndTrim = function (i) {
@@ -39,6 +39,7 @@ var parse = (function () {
 
 		//so we don't need negative lookback assertions :).
 		text = text.split("").reverse().join("");
+		print(text);
 
 		obligatoryElements = text.split(obligatoryRe);
 		//reverse order, reversing the text itself happens later on.

@@ -34,7 +34,13 @@ class WordsStringComposerTestCase(unittest.TestCase):
 			[[u"one"]],
 			u"one"
 		)
-	
+
+	def testNumber(self):
+		self._test(
+			[[u"100"]],
+			u"100",
+		)
+
 	def testMultipleWords(self):
 		self._test(
 			[[u"one", u"two"]],

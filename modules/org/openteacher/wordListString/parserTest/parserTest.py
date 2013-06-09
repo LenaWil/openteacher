@@ -62,6 +62,16 @@ class TestCase(unittest.TestCase):
 			}]
 		)
 
+	def testNumber(self):
+		self._test(
+			u"100 = hundred",
+			[{
+				"id": 0,
+				"questions": [[u"100"]],
+				"answers": [[u"hundred"]],
+			}]
+		)
+
 	def testTabSeparated(self):
 		self._test(
 			u"a\tb",

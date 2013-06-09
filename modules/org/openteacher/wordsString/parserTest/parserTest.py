@@ -68,10 +68,22 @@ class WordsStringParserTestCase(unittest.TestCase):
 			[[u"être"]]
 		)
 
-	def testNumbersOnly(self):
+	def testNumbersWithSpacesOnly(self):
 		self._test(
-			u"1.2.3.4.",
+			u"1. 2. 3. 4. ",
 			[],
+		)
+
+	def testHundredWithSpace(self):
+		self._test(
+			u"100 ",
+			[[u"100"]],
+		)
+
+	def testNumber(self):
+		self._test(
+			u"1.000.000",
+			[[u"1.000.000"]],
 		)
 
 	def testCommasOnly(self):
