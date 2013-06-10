@@ -185,7 +185,7 @@ def installQtClasses():
 			try:
 				createLessonType = self._lessonTypeCreators[path]
 			except KeyError:
-				createLessonType = next(iter(lessonTypeCreators))
+				createLessonType = next(iter(self._lessonTypeCreators.values()))
 
 			indexes = range(len(self.lesson.list["items"]))
 			for path in self._settings["listModifiers"]["value"]:
