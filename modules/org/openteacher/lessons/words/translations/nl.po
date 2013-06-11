@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-06-03 15:53+0200\n"
-"PO-Revision-Date: 2013-03-26 18:50+0000\n"
-"Last-Translator: Michael Tel <m.tel@xs4all.nl>\n"
+"PO-Revision-Date: 2013-06-09 09:58+0000\n"
+"Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-04 05:42+0000\n"
-"X-Generator: Launchpad (build 16660)\n"
+"X-Launchpad-Export-Date: 2013-06-11 06:04+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 "Language: \n"
 
 #: words.py:84
@@ -37,7 +37,7 @@ msgstr "Vul  bij ieder woord ten minste één vraag en één woord in."
 
 #: words.py:222
 msgid "Create words lesson"
-msgstr "Maak woordjesles aan"
+msgstr "Maak een woordjesles aan"
 
 #~ msgid "Title:"
 #~ msgstr "Titel:"
