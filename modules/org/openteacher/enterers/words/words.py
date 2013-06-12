@@ -547,6 +547,8 @@ class WordsEntererModule(object):
 			return self._modules.default("active", type="spellChecker").createChecker
 		except IndexError:
 			class Fallback(object):
+				def __init__(self, *args, **kwargs):
+					pass
 				def check(self, item):
 					#'everything is a well spelled word'
 					return True
