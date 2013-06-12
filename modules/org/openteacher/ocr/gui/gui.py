@@ -249,6 +249,8 @@ def installQtClasses():
 			for page in self._pages:
 				self.addPage(page)
 
+			self.setWizardStyle(QtGui.QWizard.ClassicStyle)
+
 		def getExcision(self):
 			return self._imageEditPage.getExcision()
 
