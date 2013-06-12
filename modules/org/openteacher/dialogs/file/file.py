@@ -36,7 +36,7 @@ class FileDialogsModule(object):
 			self._mm.mods(type="ui"),
 		)
 
-	def getSavePath(self, startdir, exts, default):
+	def getSavePath(self, onSuccess, startdir, exts, default, onError=None):
 		stringExts = []
 
 		filters = [name + " (*." + ext + ")" for ext, name in exts]
@@ -51,19 +51,20 @@ class FileDialogsModule(object):
 		tab = self._ui.addCustomTab(fileDialog, previousTabOnClose=True)
 		tab.title = fileDialog.windowTitle()
 		tab.closeRequested.handle(tab.close)
-		fileDialog.rejected.connect(tab.close)
-		fileDialog.accepted.connect(tab.close)
-		result = fileDialog.exec_()
+		fileDialog.finished.connect(tab.close)
 
-		if result:
+		def onFileDialogAccepted():
 			ext = fileDialog.selectedNameFilter().split("(*")[1].split(")")[0]
 			filename = unicode(fileDialog.selectedFiles()[0])
 			extensions = ["." + e[0] for e in exts]
- 			if os.path.splitext(filename)[1] not in extensions:
+			if os.path.splitext(filename)[1] not in extensions:
 				filename += ext
-			return unicode(filename)
+			onSuccess(filename)
+		fileDialog.accepted.connect(onFileDialogAccepted)
+		if onError:
+			fileDialog.rejected.connect(onError)
 
-	def getLoadPath(self, startdir, exts, fileType=None):
+	def getLoadPath(self, onSuccess, startdir, exts, fileType=None, onError=None):
 		if not fileType:
 			fileType = _("Lessons")
 		stringExts = ("*." + ext for ext, name in exts)
@@ -78,10 +79,14 @@ class FileDialogsModule(object):
 		tab = self._ui.addCustomTab(fileDialog, previousTabOnClose=True)
 		tab.title = fileDialog.windowTitle()
 		tab.closeRequested.handle(tab.close)
-		fileDialog.rejected.connect(tab.close)
-		fileDialog.accepted.connect(tab.close)
-		if fileDialog.exec_():
-			return unicode(fileDialog.selectedFiles()[0])
+		fileDialog.finished.connect(tab.close)
+
+		def onFileDialogAccepted():
+			onSuccess(unicode(fileDialog.selectedFiles()[0]))
+		fileDialog.accepted.connect(onFileDialogAccepted)
+
+		if onError:
+			fileDialog.rejected.connect(onError)
 
 	def enable(self):
 		global QtGui

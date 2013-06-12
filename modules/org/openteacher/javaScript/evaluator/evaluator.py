@@ -25,6 +25,7 @@ import itertools
 import json
 import contextlib
 import logging
+import copy
 
 logger = logging.getLogger(__name__)
 
@@ -149,6 +150,19 @@ def installQtClasses():
 		def setProperty(self, object, name, id, value):
 			self._obj[int(self._pyName(name))] = self._toPython(value)
 
+class JSObjectCopy(dict):
+	def __getattr__(self, attr):
+		try:
+			return super(JSObjectCopy, self).__getattr__(attr)
+		except AttributeError:
+			return self[attr]
+
+	def __setattr__(self, attr, value):
+		self[attr] = value
+
+	def __delattr__(self, attr):
+		del self[attr]
+
 class JSObject(collections.MutableMapping):
 	def __init__(self, qtScriptObj, toPython, toJS, *args, **kwargs):
 		super(JSObject, self).__init__(*args, **kwargs)
@@ -207,6 +221,15 @@ class JSObject(collections.MutableMapping):
 	def __eq__(self, other):
 		return dict(self) == dict(other)
 
+	def __copy__(self):
+		return JSObjectCopy(self)
+
+	def __deepcopy__(self, memo):
+		return JSObjectCopy(
+			(copy.deepcopy(key, memo), copy.deepcopy(value, memo))
+			for key, value in self.iteritems()
+		)
+
 class JSError(Exception):
 	def __init__(self, name, message, lineNumber, *args, **kwargs):
 		super(JSError, self).__init__(*args, **kwargs)
@@ -262,6 +285,12 @@ class JSArray(collections.MutableSequence):
 
 	def toJSObject(self):
 		return self._value
+
+	def __copy__(self):
+		return list(self)
+
+	def __deepcopy__(self, memo):
+		return [copy.deepcopy(item, memo) for item in self]
 
 class JSEvaluator(object):
 	JSError = JSError

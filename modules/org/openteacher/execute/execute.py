@@ -22,6 +22,8 @@ import argparse
 import sys
 import logging
 
+DEFAULT_PROFILE = "all"
+
 class ExecuteModule(object):
 	"""When OpenTeacher is run, this module sets a profile, controls
 	   enabling of all modules in the current profile, sends an event
@@ -54,6 +56,14 @@ class ExecuteModule(object):
 			raise ValueError("There has to be exactly one module installed with signature %s." % ((args, kwargs),))
 		return mods.pop()
 
+	@property
+	def _profileIfUnspecified(self):
+		value = self._profileSetting["value"]
+		#convert deprecated profiles to their aliases that exist today.
+		return {
+			"wordsonly": "words-only"
+		}.get(value, value)
+
 	def execute(self):
 		#enable printing a stacktrace in the case of a segfault if
 		#supported.
@@ -68,13 +78,13 @@ class ExecuteModule(object):
 			dataStore = self._getMod(type="dataStore")
 			settings = self._getMod(type="settings")
 		except ValueError:
-			self._profileSetting = {"value": "all"}
+			self._profileSetting = {"value": DEFAULT_PROFILE}
 		else:
 			settings.initialize()
 			self._profileSetting = settings.registerSetting(**{
 				"internal_name": "org.openteacher.execute.startup_profile",
 				"type": "profile",
-				"defaultValue": "all",
+				"defaultValue": DEFAULT_PROFILE,
 				"callback": {
 					"args": (),
 					"kwargs": {"type": "execute"},
@@ -85,7 +95,7 @@ class ExecuteModule(object):
 		parser = argparse.ArgumentParser()
 		parser.add_argument("-p", "--profile", **{
 			"nargs": "?",
-			"default": self._profileSetting["value"],
+			"default": self._profileIfUnspecified,
 			"type": unicode,
 			"help": "Start OpenTeacher with the PROFILE profile. Don't know which profiles are included? I'll give away one: 'help' ;).",
 		})

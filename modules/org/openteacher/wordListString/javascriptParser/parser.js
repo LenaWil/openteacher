@@ -74,7 +74,7 @@ var parseList = (function() {
 		};
 	};
 
-	var parseList = function (string) {
+	var parseList = function (string, parseLenient) {
 		var list, now, counter, lines, i, word;
 
 		list = {
@@ -86,7 +86,15 @@ var parseList = (function() {
 
 		lines = string.split("\n");
 		for (i = 0; i < lines.length; i += 1) {
-			word = parseLine(lines[i], counter, now);
+			try {
+				word = parseLine(lines[i], counter, now);
+			} catch (e) {
+				if (parseLenient) {
+					continue;
+				} else {
+					throw e;
+				}
+			}
 			if (word) {
 				list.items.push(word);
 				counter += 1;

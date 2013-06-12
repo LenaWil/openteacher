@@ -76,13 +76,7 @@ def installQtClasses():
 		def _otherMap(self):
 			#custom map
 			if self.currentMap == {}:
-				_fileDialogsMod = base._modules.default("active", type="fileDialogs")
-				path = _fileDialogsMod.getLoadPath(
-					QtCore.QDir.homePath(),
-					[("gif", ""), ("jpg", ""), ("jpeg", ""), ("png", ""), ("bmp", ""), ("svg", "")],
-					fileType=_("Images"),
-				)
-				if path:
+				def onSuccess(path):
 					name = os.path.splitext(os.path.basename(path))[0]
 
 					self.insertItem(0, name, unicode({'mapPath': path, 'knownPlaces': ''}))
@@ -90,8 +84,16 @@ def installQtClasses():
 					self.setCurrentIndex(0)
 					#start the process over again.
 					self._otherMap()
-				else:
+				def onError():
 					self.setCurrentIndex(self.prevIndex)
+				_fileDialogsMod = base._modules.default("active", type="fileDialogs")
+				path = _fileDialogsMod.getLoadPath(
+					onSuccess,
+					QtCore.QDir.homePath(),
+					[("gif", ""), ("jpg", ""), ("jpeg", ""), ("png", ""), ("bmp", ""), ("svg", "")],
+					fileType=_("Images"),
+					onError=onError,
+				)
 			#non-empty current map
 			elif len(self.enterWidget.list["items"]) > 0:
 				#Show warning

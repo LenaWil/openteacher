@@ -182,11 +182,13 @@ class UiControllerModule(object):
 			#fallback
 			print msg
 
-	def _getFilePath(self):
+	def _getFilePath(self, onSuccess, onError=None):
 		usableExtensions = self._loader.usableExtensions
-		return self._fileDialogs.getLoadPath(
+		self._fileDialogs.getLoadPath(
+			onSuccess,
 			self._lastPath,
-			usableExtensions
+			usableExtensions,
+			onError=onError
 		)
 
 	def _handleLoadException(self, exc):
@@ -198,22 +200,26 @@ class UiControllerModule(object):
 			self._showErrorAndPrintException(_("Couldn't open the file, it seems to be corrupted."))
 
 	def open_(self, path=None):
-		if not path:
-			path = self._getFilePath()
-		if path:
+		def onSuccess(chosenPath):
 			try:
-				self._loader.load(path)
+				self._loader.load(chosenPath)
 			except Exception, e:
 				self._handleLoadException(e)
 			else:
-				self._lastPath = path
+				self._lastPath = chosenPath
 				self._uiModule.statusViewer.show(_("File opened succesfully."))
+		if path:
+			onSuccess(path)
+		else:
+			self._getFilePath(onSuccess)
 
 	def openInto(self):
-		tab = self._lessonTracker.currentLesson.fileTab
-		path = self._getFilePath()
-		self._uiModule.currentFileTab = tab
-		if path:
+		def onFinished(tab):
+			self._uiModule.currentFileTab = tab
+
+		def onSuccess(tab, path):
+			onFinished(tab)
+
 			currentLesson = self._lessonTracker.currentLesson
 			dataType = currentLesson.dataType
 			try:
@@ -224,6 +230,12 @@ class UiControllerModule(object):
 				self._handleLoadException(e)
 			else:
 				self._mergeIntoCurrentLesson(currentLesson, type, lessonData)
+
+		lessonTab = self._lessonTracker.currentLesson.fileTab
+		self._getFilePath(
+			lambda path: onSuccess(lessonTab, path),
+			onError=lambda: onFinished(lessonTab)
+		)
 
 	def _mergeIntoCurrentLesson(self, currentLesson, type, otherLessonData):
 		merge = self._modules.default("active", type="merger", dataType=type).merge

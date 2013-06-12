@@ -33,9 +33,9 @@ class WordListStringParserModule(object):
 			"default": 20,
 		}
 
-	def parseList(self, *args, **kwargs):
+	def parseList(self, listString, parseLenient=False):
 		try:
-			return self._js["parseList"](*args, **kwargs)
+			return self._js["parseList"](listString, parseLenient)
 		except self._js.JSError, e:
 			if e.name == "SeparatorError":
 				raise ValueError(e.message)

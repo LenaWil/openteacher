@@ -28,9 +28,9 @@ class TestCase(unittest.TestCase):
 			del item["created"]
 		return lessonData
 
-	def _test(self, input, expectedOutput):
+	def _test(self, input, expectedOutput, parseLenient=False):
 		for mod in self._mm.mods("active", type="wordListStringParser"):
-			lessonData = mod.parseList(input)
+			lessonData = mod.parseList(input, parseLenient)
 			lessonData = self._checkCreatedAndRemoveFromLessonData(lessonData)
 			self.assertEqual(lessonData["list"]["items"], expectedOutput)
 
@@ -88,6 +88,13 @@ class TestCase(unittest.TestCase):
 				u"ab",
 				None
 			)
+
+	def testNoSeparatorAndLenientParsing(self):
+		self._test(
+			"ab",
+			[],
+			parseLenient=True
+		)
 
 	def testMultipleSeparators(self):
 		self._test(

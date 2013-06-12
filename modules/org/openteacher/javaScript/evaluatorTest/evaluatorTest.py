@@ -20,6 +20,7 @@
 
 import unittest
 import datetime
+import copy
 
 class TestCase(unittest.TestCase):
 	def _getEvaluators(self):
@@ -167,6 +168,62 @@ class TestCase(unittest.TestCase):
 	def testObjectToString(self):
 		for js in self._getEvaluators():
 			self.assertTrue(js.eval("(function (obj) {return obj.toString()})")(object()))
+
+	def testShallowCopyingObject(self):
+		for js in self._getEvaluators():
+			something = js.eval("({a: {key: 1}})")
+			something2 = copy.copy(something)
+			something2.a.key = 2
+			something2.b = 3
+
+			self.assertEqual(something.a.key, 2)
+			with self.assertRaises(AttributeError):
+				something.b
+
+			self.assertEqual(something2.a.key, 2)
+			self.assertEqual(something2.b, 3)
+
+	def testDeepCopyingObject(self):
+		for js in self._getEvaluators():
+			something = js.eval("({a: {key: 1}})")
+			something2 = copy.deepcopy(something)
+			something2.a.key = 2
+			something2.b = 3
+
+			self.assertEqual(something.a.key, 1)
+			with self.assertRaises(AttributeError):
+				something.b
+
+			self.assertEqual(something2.a.key, 2)
+			self.assertEqual(something2.b, 3)
+
+	def testShallowCopyingArray(self):
+		for js in self._getEvaluators():
+			something = js.eval("[{key: 1}]")
+			something2 = copy.copy(something)
+			something2[0].key = 2
+			something2.append(3)
+
+			self.assertEqual(something[0].key, 2)
+			with self.assertRaises(IndexError):
+				something[1]
+
+			self.assertEqual(something2[0].key, 2)
+			self.assertEqual(something2[1], 3)
+
+	def testDeepCopyingArray(self):
+		for js in self._getEvaluators():
+			something = js.eval("[{key: 1}]")
+			something2 = copy.deepcopy(something)
+			something2[0].key = 2
+			something2.append(3)
+
+			self.assertEqual(something[0].key, 1)
+			with self.assertRaises(IndexError):
+				something[1]
+
+			self.assertEqual(something2[0].key, 2)
+			self.assertEqual(something2[1], 3)
 
 	def testSetObjectAttribute(self):
 		class MyObject(object):

@@ -66,7 +66,7 @@ class VocatrainApi(object):
 		root = ElementTree.parse(fd).getroot()
 
 		list = root.findtext("list")
-		return self._parseList(list)
+		return self._parseList(list, parseLenient=True)
 
 def installQtClasses():
 	global AbstractSelectDialog, BookSelectDialog, CategorySelectDialog, ListSelectDialog, Model

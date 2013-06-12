@@ -32,8 +32,8 @@ class ModulesModule(object):
 	      module should be used by any module.)
 
 	   Lowest (positive) priority: 1000
-	"""
 
+	"""
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(ModulesModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
