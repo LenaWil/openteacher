@@ -44,7 +44,8 @@ class TestCase(unittest.TestCase):
 
 			#save lesson
 			for ext in saver.saves[type]:
-				path = tempfile.mkstemp(".%s" % ext)[1]
+				fd, path = tempfile.mkstemp(".%s" % ext)
+				os.close(fd)
 				saver.save(type, lesson, path)
 
 				#file should exist after saving.

@@ -185,7 +185,8 @@ class Teach2000LoaderModule(object):
 			placesList["tests"] = [test]
 
 		mapElement = root.find("message_data/mapquizfile")
-		mapPath = tempfile.mkstemp("." + mapElement.get("ext"))[1]
+		fd, mapPath = tempfile.mkstemp("." + mapElement.get("ext"))
+		os.close(fd)
 		self._tempPaths.add(mapPath)
 		with open(mapPath, "wb") as f:
 			f.write(mapElement.text.decode("base64"))

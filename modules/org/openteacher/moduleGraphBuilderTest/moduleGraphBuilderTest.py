@@ -27,7 +27,8 @@ class TestCase(unittest.TestCase):
 		if self.mode not in ("all", "module-graph-builder"): # pragma: no cover
 			return
 		for mod in self._mm.mods("active", type="moduleGraphBuilder"):
-			path = tempfile.mkstemp(".svg")[1]
+			fd, path = tempfile.mkstemp(".svg")
+			os.close(fd)
 			mod.buildModuleGraph(path)
 			#the file must be created, and not empty. Should be enough
 			#for now.

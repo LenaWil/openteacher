@@ -38,7 +38,8 @@ class TesseractOCRModule(object):
 		}
 
 	def toHocr(self, path):
-		hocrPath = tempfile.mkstemp(".html")[1]
+		fd, hocrPath = tempfile.mkstemp(".html")
+		os.close(fd)
 		self._callTesseract(path, os.path.splitext(hocrPath)[0], "hocr")
 		with open(hocrPath) as f:
 			hocr = unicode(f.read(), encoding="UTF-8")

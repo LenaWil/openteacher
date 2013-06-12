@@ -54,9 +54,9 @@ class FileDialogsModule(object):
 		fileDialog.finished.connect(tab.close)
 
 		def onFileDialogAccepted():
-			ext = fileDialog.selectedNameFilter().split("(*")[1].split(")")[0]
+			ext = unicode(fileDialog.selectedNameFilter().split("(*")[1].split(")")[0])
 			filename = unicode(fileDialog.selectedFiles()[0])
-			extensions = ["." + e[0] for e in exts]
+			extensions = [u"." + e[0] for e in exts]
 			if os.path.splitext(filename)[1] not in extensions:
 				filename += ext
 			onSuccess(filename)

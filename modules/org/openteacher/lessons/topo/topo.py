@@ -236,7 +236,8 @@ class Lesson(object):
 
 	@property
 	def resources(self):
-		screenshotPath = tempfile.mkstemp()[1]
+		fd, screenshotPath = tempfile.mkstemp()
+		os.close(fd)
 		self._tempFiles.add(screenshotPath)
 
 		screenshot = self.enterWidget.enterMap.getScreenshot()

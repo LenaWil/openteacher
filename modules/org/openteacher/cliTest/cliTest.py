@@ -78,7 +78,8 @@ class TestCase(unittest.TestCase):
 			#write io, too heavy
 			return
 		inputFile = self._mm.resourcePath("testfile.otwd")
-		outputFile = tempfile.mkstemp(".otwd")[1]
+		fd, outputFile = tempfile.mkstemp(".otwd")
+		os.close(fd)
 		#file shouldn't exist
 		os.remove(outputFile)
 		for result in self._test("merge %s %s %s" % (outputFile, inputFile, inputFile)):
@@ -92,8 +93,9 @@ class TestCase(unittest.TestCase):
 
 		inputFile = self._mm.resourcePath("ocr.png")
 
-		outputFile = tempfile.mkstemp(".otwd")[1]
+		fd, outputFile = tempfile.mkstemp(".otwd")
 		#file shouldn't exist yet.
+		os.close(fd)
 		os.remove(outputFile)
 		for result in self._test("ocr-word-list %s %s" % (inputFile, outputFile)):
 			#removing should succeed...
@@ -108,12 +110,14 @@ class TestCase(unittest.TestCase):
 			#write io, too heavy
 			return
 
-		inputFile = tempfile.mkstemp()[1]
+		fd, inputFile = tempfile.mkstemp()
+		os.close(fd)
 		with open(inputFile, "w") as f:
 			f.write("een = one\ntwee = two\n drie = three")
 
 		try:
-			outputFile = tempfile.mkstemp(".otwd")[1]
+			fd, outputFile = tempfile.mkstemp(".otwd")
+			os.close(fd)
 			#file shouldn't exist yet.
 			os.remove(outputFile)
 			for result in self._test("new-word-list +t a +q b +a c %s %s" % (outputFile, inputFile)):
@@ -139,8 +143,9 @@ class TestCase(unittest.TestCase):
 			#write io, too heavy
 			return
 
-		outputFile = tempfile.mkstemp(".ot")[1]
+		fd, outputFile = tempfile.mkstemp(".ot")
 		#file shouldn't be there, it's created by the command itself
+		os.close(fd)
 		os.remove(outputFile)
 
 		files = (
@@ -159,7 +164,8 @@ class TestCase(unittest.TestCase):
 			#write io, too heavy
 			return
 
-		inFile = tempfile.mkstemp(".otwd")[1]
+		fd, inFile = tempfile.mkstemp(".otwd")
+		os.close(fd)
 		shutil.copy(self._mm.resourcePath("testfile.otwd"), inFile)
 
 		try:

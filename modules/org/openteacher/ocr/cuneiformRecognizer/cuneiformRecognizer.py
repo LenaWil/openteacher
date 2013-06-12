@@ -42,7 +42,8 @@ class CuneiformOCRModule(object):
 			return subprocess.call(["cuneiform"] + list(args), stdout=f, stderr=subprocess.STDOUT)
 
 	def toHocr(self, imagePath):
-		hocrPath = tempfile.mkstemp(".html")[1]
+		fd, hocrPath = tempfile.mkstemp(".html")
+		os.close(fd)
 		self._callCuneiform("-f", "hocr", "-o", hocrPath, imagePath)
 		with open(hocrPath) as f:
 			hocr = unicode(f.read(), encoding="UTF-8")

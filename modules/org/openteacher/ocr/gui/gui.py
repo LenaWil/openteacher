@@ -178,7 +178,8 @@ def installQtClasses():
 			self._img = img
 
 		def run(self):
-			imgPath = tempfile.mkstemp(".png")[1]
+			fd, imgPath = tempfile.mkstemp(".png")
+			os.close(fd)
 			self._img.save(imgPath)
 
 			self.lesson = self._loadWordList(imgPath)
@@ -221,7 +222,8 @@ def installQtClasses():
 			self._dialog.setLabelText(_("Recognizing word list..."))
 			self._dialog.setCancelButton(None)
 			self._dialog.setRange(0, 0)
-			self._dialog.exec_()
+			self._dialog.setModal(True)
+			self._dialog.show()
 
 		def _showPreview(self):
 			self._dialog.hide()
@@ -331,10 +333,9 @@ class OcrGuiModule(object):
 		self._wizard.accepted.connect(self._loadResultiveLesson)
 
 	def _loadResultiveLesson(self):
-		if self._wizard.result():
-			lesson = self._wizard.getLesson()
-			with contextlib.ignored(NotImplementedError):
-				self._loadFromLesson("words", lesson)
+		lesson = self._wizard.getLesson()
+		with contextlib.ignored(NotImplementedError):
+			self._loadFromLesson("words", lesson)
 
 	def _retranslate(self):
 		global _, ngettext

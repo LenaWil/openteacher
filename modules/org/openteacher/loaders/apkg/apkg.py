@@ -103,12 +103,13 @@ class AnkiApkgLoaderModule(object):
 	def load(self, path):
 		items = []
 		try:
-			anki2Path = tempfile.mkstemp(".anki2")[1]
+			fd, anki2Path = tempfile.mkstemp(".anki2")
 			with contextlib.closing(zipfile.ZipFile(path)) as apkgZip:
 				with open(anki2Path, "w") as anki2File:
 					shutil.copyfileobj(apkgZip.open("collection.anki2"), anki2File)
 			return self._loadAnki2(anki2Path)
 		finally:
+			os.close(fd)
 			os.remove(anki2Path)
 
 def init(moduleManager):

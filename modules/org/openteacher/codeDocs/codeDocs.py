@@ -82,7 +82,8 @@ class ModulesHandler(object):
 	def module_graph_svg(self):
 		cherrypy.response.headers["Content-Type"] = "image/svg+xml"
 		try:
-			path = tempfile.mkstemp(".svg")[1]
+			fd, path = tempfile.mkstemp(".svg")
+			os.close(fd)
 			self._buildModuleGraph(path)
 			with open(path) as f:
 				return f.read()

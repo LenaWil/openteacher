@@ -270,16 +270,18 @@ class UiControllerModule(object):
 			self.saveAs()
 
 	def saveAs(self):
-		path = self._fileDialogs.getSavePath(
+		def onSuccess(path):
+			self._lastPath = path
+			self._doSave(path)
+
+		self._fileDialogs.getSavePath(
+			onSuccess,
 			self._lastPath,
 			#sort on names (not extensions)
 			sorted(self._saver.usableExtensions, key=lambda ext: ext[1]),
 			#default (== top most) extension
 			self._saver.usableExtensions[0]
 		)
-		if path:
-			self._lastPath = path
-			self._doSave(path)
 
 	def print_(self):
 		#Setup printer

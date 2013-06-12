@@ -39,7 +39,8 @@ class TestCase(unittest.TestCase):
 		for mod in cls._mm.mods("active", type="webApiServer"):
 			mod.app.config["TESTING"] = True
 			mod.app.config["KEYCHECK"] = False
-			mod.app.config["DATABASE"] = tempfile.mkstemp()[1]
+			fd, mod.app.config["DATABASE"] = tempfile.mkstemp()
+			os.close(fd)
 			#make room for the database
 			os.remove(mod.app.config["DATABASE"])
 
