@@ -23,7 +23,6 @@ from PyQt4 import QtCore, QtGui
 #INFO: ICON_PATH is set by gui.py . Set it yourself when re-using this
 #code in another context.
 
-TAB_WIDTH_MARGIN = 15
 WINDOW_WIDTH = 640
 WINDOW_HEIGHT = 520
 AERO_BACKGROUND_ALPHA = 230
@@ -57,8 +56,15 @@ class FilesTabBar(QtGui.QTabBar):
 	def tabSizeHint(self, index):
 		normalSize = super(FilesTabBar, self).tabSizeHint(index)
 		if index == self.count() -1:
+			#manually calculate horizontal size like the super class
+			#does, but omit space for the text since there isn't any.
+			opt = QtGui.QStyleOptionTabV3()
+			self.initStyleOption(opt, index)
+			hframe = self.style().pixelMetric(QtGui.QStyle.PM_TabBarTabHSpace, opt, self)
+			iconWidth = self.iconSize().width()
+			horizontalPadding = 2
 			return QtCore.QSize(
-				self.iconSize().width() + TAB_WIDTH_MARGIN,
+				hframe + iconWidth + horizontalPadding,
 				normalSize.height()
 			)
 		return normalSize
