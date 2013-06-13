@@ -23,6 +23,8 @@ import glob
 import os
 import contextlib
 
+MODES = ("all", "load")
+
 class TestCase(unittest.TestCase):
 	def setUp(self):
 		self._files = glob.glob(self._mm.resourcePath("testFiles") + "/*")
@@ -53,7 +55,8 @@ class TestCase(unittest.TestCase):
 		return loadMods
 
 	def _loadFiles(self, results=[]):
-		if self.mode not in ("all", "load"):
+		if self.mode not in MODES:
+			self.skipTest("Not running in one of these modes: " + ", ".join(MODES))
 			#don't run the tests.
 			return []
 		if not results:

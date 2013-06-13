@@ -24,9 +24,7 @@ class TestCase(unittest.TestCase):
 	@property
 	def _mods(self):
 		if self.mode not in ("all", "spell-check",):
-			#Quite io heavy. Both detecting the language and doing the
-			#spell checking.
-			return set()
+			self.skipTest("Quite io heavy. Both detecting the language and doing the spell checking.")
 		return set(self._mm.mods("active", type="spellChecker"))
 
 	def _englishCheckers(self):

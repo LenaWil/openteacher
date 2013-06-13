@@ -75,8 +75,7 @@ class TestCase(unittest.TestCase):
 	def testMerge(self):
 		"""merge outFile.otwd fileOne.otwd fileOne.otwd"""
 		if self.mode not in MODES:
-			#write io, too heavy
-			return
+			self.skipTest("Write IO is too heavy for this test mode")
 		inputFile = self._mm.resourcePath("testfile.otwd")
 		fd, outputFile = tempfile.mkstemp(".otwd")
 		os.close(fd)
@@ -88,8 +87,7 @@ class TestCase(unittest.TestCase):
 	def testOcrWordList(self):
 		"""ocr-word-list inputFile.png outputFile"""
 		if self.mode not in MODES:
-			#write io, too heavy
-			return
+			self.skipTest("Write IO is too heavy for this test mode")
 
 		inputFile = self._mm.resourcePath("ocr.png")
 
@@ -107,8 +105,7 @@ class TestCase(unittest.TestCase):
 
 		"""
 		if self.mode not in MODES:
-			#write io, too heavy
-			return
+			self.skipTest("Write IO is too heavy for this test mode")
 
 		fd, inputFile = tempfile.mkstemp()
 		os.close(fd)
@@ -140,8 +137,7 @@ class TestCase(unittest.TestCase):
 		"""reverse-list input-file output-file"""
 
 		if self.mode not in MODES:
-			#write io, too heavy
-			return
+			self.skipTest("Write IO is too heavy for this test mode")
 
 		fd, outputFile = tempfile.mkstemp(".ot")
 		#file shouldn't be there, it's created by the command itself
@@ -157,12 +153,11 @@ class TestCase(unittest.TestCase):
 
 	def testConvertList(self):
 		"""convert +f html testfile.otwd"""
-
 		#not literally because we may not assume the module's dir is
 		#writable.
+
 		if self.mode not in MODES:
-			#write io, too heavy
-			return
+			self.skipTest("Write IO is too heavy for this test mode")
 
 		fd, inFile = tempfile.mkstemp(".otwd")
 		os.close(fd)

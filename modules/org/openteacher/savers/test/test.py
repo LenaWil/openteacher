@@ -26,6 +26,8 @@ import datetime
 import shutil
 import contextlib
 
+MODES = ("all", "save")
+
 class Lesson(object):
 	def __init__(self, list=None, resources=None):
 		self.list = list or {}
@@ -33,9 +35,8 @@ class Lesson(object):
 
 class TestCase(unittest.TestCase):
 	def _testSavingType(self, type, lesson):
-		if self.mode not in ("all", "save"):
-			#leave this test out
-			return
+		if self.mode not in MODES:
+			self.skipTest("This tests isn't run in this mode.")
 		for saver in self._mm.mods("active", type="save"):
 			if not type in saver.saves:
 				continue

@@ -23,7 +23,7 @@ import unittest
 class TestCase(unittest.TestCase):
 	def testShowingAboutDialog(self):
 		if self.mode not in ("all", "about",):
-			return
+			self.skipTest("Too heavy for this test mode")
 		for mod in self._mm.mods("active", type="about"):
 			mod.show()
 

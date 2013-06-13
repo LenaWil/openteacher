@@ -23,7 +23,7 @@ import unittest
 class TestCase(unittest.TestCase):
 	def testSize(self):
 		if not self.mode in ("all", "gui"):
-			return
+			self.skipTest("Too heavy for this test mode.")
 		for mod in self._mm.mods("active", type="ui"):
 			mod.qtParent.show()
 			QtGui.QApplication.instance().processEvents()

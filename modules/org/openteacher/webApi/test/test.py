@@ -29,8 +29,8 @@ MODES = ("all", "web-api")
 class TestCase(unittest.TestCase):
 	@classmethod
 	def setUpClass(cls):
-		if cls.mode not in MODES:
-			return
+		if not cls.mode in MODES:
+			raise unittest.SkipTest("The current test isn't run because of the current mode.")
 		#monkey patch the bcrypt module, gave the test suite a 9 second
 		#speedup when this comment was written. Worth it.
 		sys.modules["bcrypt"].hashpw = lambda password, salt_or_hash: password
@@ -59,14 +59,10 @@ class TestCase(unittest.TestCase):
 
 	@classmethod
 	def tearDownClass(cls):
-		if not cls.mode in MODES:
-			return
 		for mod in cls._mm.mods("active", type="webApiServer"):
 			os.remove(mod.app.config["DATABASE"])
 
 	def testIndex(self):
-		if not self.mode in MODES:
-			return
 		for client in self.clients:
 			data = client.get("/").data
 			self.assertIn("welcome", data)
@@ -77,8 +73,6 @@ class TestCase(unittest.TestCase):
 		return {"Authorization": "Basic " + (username + ":" + password).encode("base64").strip()}
 
 	def testShares(self):
-		if self.mode not in MODES:
-			return
 		k = {"headers": self._auth("test", "test")}
 		for client in self.clients:
 			r = client.post("/lists/", data={
@@ -130,8 +124,6 @@ class TestCase(unittest.TestCase):
 			self.assertEqual(r.status_code, 200)
 
 	def testLists(self):
-		if self.mode not in MODES:
-			return
 		k = {"headers": self._auth("test", "test")}
 		k2 = {"headers": self._auth("secondtest", "test")}
 		for client in self.clients:
@@ -183,8 +175,6 @@ class TestCase(unittest.TestCase):
 			self.assertEquals(resp11.status_code, 200)
 
 	def testUsers(self):
-		if self.mode not in MODES:
-			return
 		for client in self.clients:
 			resp = client.post("/users/", data={
 				#not actually tested, but we need to include one.

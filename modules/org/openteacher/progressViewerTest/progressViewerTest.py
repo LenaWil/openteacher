@@ -25,7 +25,7 @@ class TestCase(unittest.TestCase):
 	@property
 	def _mods(self):
 		if self.mode not in ("all", "progress-viewer"):
-			return []
+			self.skipTest("Too heavy for this test mode.")
 		return self._mm.mods("active", type="progressViewer")
 
 	def testCreateProgressViewerWithEmptyTest(self):

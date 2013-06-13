@@ -186,9 +186,9 @@ class WindowsMsiPackagerModule(object):
 			if not hasattr(mod, "mimetype"):
 				continue
 			for ext in mod.loads.keys():
-                                if ext in alreadyDone:
-                                        continue
-                                alreadyDone.add(ext)
+				if ext in alreadyDone:
+					continue
+				alreadyDone.add(ext)
 				fileAssociations += """\n
 				<!-- .{ext}-->
  				<ProgId Id="{name}.{ext}" Description="{desc}" Icon="{lower_name}.exe">

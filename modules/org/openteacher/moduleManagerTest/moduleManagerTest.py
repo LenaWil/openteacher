@@ -36,7 +36,7 @@ class TestCase(unittest.TestCase):
 	"""
 	def setUp(self):
 		if not self.mode in MODES:
-			return
+			self.skipTest("Too heavy for this test mode.")
 		self._mm = moduleManager.ModuleManager(self._masterModuleManager.modulesPath)
 
 	def _enableIncludingDependenciesIfNotActive(self, mod, minimalDependencies):
@@ -121,8 +121,6 @@ class TestCase(unittest.TestCase):
 		self._mm._modules.remove(theMod)
 
 	def _doTest(self, minimalDependencies):
-		if not self.mode in MODES:
-			return
 		self._fakeExecuteModule()
 		self._removeGtkModule()
 

@@ -25,7 +25,7 @@ import os
 class TestCase(unittest.TestCase):
 	def testModuleGraphBuilder(self):
 		if self.mode not in ("all", "module-graph-builder"): # pragma: no cover
-			return
+			self.skipTest("Too heavy for this test mode.")
 		for mod in self._mm.mods("active", type="moduleGraphBuilder"):
 			fd, path = tempfile.mkstemp(".svg")
 			os.close(fd)

@@ -24,7 +24,7 @@ class TestCase(unittest.TestCase):
 	@property
 	def _mods(self):
 		if self.mode not in ("all", "media-enterer"):
-			return []
+			self.skipTest("Too heavy for this test mode.")
 		return self._mm.mods("active", type="mediaEnterer")
 
 	def testCreateMediaEnterer(self):

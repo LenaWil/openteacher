@@ -21,6 +21,7 @@
 import unittest
 import subprocess
 import os
+import distutils.spawn
 
 class TestCase(unittest.TestCase):
 	def _jsFiles(self):
@@ -34,7 +35,9 @@ class TestCase(unittest.TestCase):
 		
 	def testJsFiles(self):
 		if self.mode not in ("all", "jshint"):
-			return
+			self.skipTest("Too heavy for this test mode.")
+		if not distutils.spawn.find_executable("jshint"):
+			self.skipTest("JSHint not installed")
 		p = subprocess.Popen(["jshint"] + list(self._jsFiles()), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 		errors = p.communicate()[0].strip()
 		self.assertFalse(errors, "\n" + errors)

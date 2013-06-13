@@ -23,6 +23,8 @@ import unittest
 class TestCase(unittest.TestCase):
 	@property
 	def _mods(self):
+		if self.mode not in ("settingsWidget", "all"):
+			self.skipTest("Too heavy for this mode.")
 		return self._mm.mods(type="settingsWidget")
 
 	def _settingsWidgetMod(self, widgetType):

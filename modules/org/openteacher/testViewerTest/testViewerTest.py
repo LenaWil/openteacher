@@ -28,7 +28,7 @@ class TestCase(unittest.TestCase):
 
 		"""
 		if self.mode not in ("all", "testViewer",):
-			return
+			self.skipTest("Too heavy for this test mode.")
 		#an example list with one test inside.
 		list = {
 			"title": u"My títle",

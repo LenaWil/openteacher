@@ -23,7 +23,7 @@ import unittest
 class TestCase(unittest.TestCase):
 	def testShowingDocumentation(self):
 		if self.mode not in ("all", "documentation",):
-			return
+			self.skipTest("Too heavy for this test mode")
 		for mod in self._mm.mods("active", type="documentation"):
 			mod.show()
 

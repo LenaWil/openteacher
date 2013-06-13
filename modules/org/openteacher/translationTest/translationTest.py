@@ -64,7 +64,7 @@ class TestCase(unittest.TestCase):
 
 		"""
 		if self.mode not in ("all", "translation"): # pragma: no cover
-			return
+			self.skipTest("Too heavy for this test mode.")
 		for mod in self._mm.mods("active", type="translator"):
 			mod.sendLanguageChanged()
 
