@@ -126,10 +126,11 @@ class FileTab(object):
 			type="event"
 		).createEvent()
 
-		closeButton = self._tabWidget.tabBar().tabButton(
-			self._index,
-			QtGui.QTabBar.RightSide
-		)
+		tabBar = self._tabWidget.tabBar()
+		closeButton = tabBar.tabButton(self._index, QtGui.QTabBar.RightSide)
+		if not closeButton:
+			#the mac os x case
+			closeButton = tabBar.tabButton(self._index, QtGui.QTabBar.LeftSide)
 		closeButton.clicked.connect(lambda: self.closeRequested.send())
 		closeButton.setShortcut(QtGui.QKeySequence.Close)
 
@@ -138,8 +139,7 @@ class FileTab(object):
 		return self._tabWidget.indexOf(self._widget.wrapperWidget)
 
 	def close(self):
-		i = self._tabWidget.indexOf(self._widget.wrapperWidget)
-		self._tabWidget.removeTab(i)
+		self._tabWidget.removeTab(self._index)
 		if self._lastWidget:
 			self._tabWidget.setCurrentWidget(self._lastWidget)
 

@@ -87,8 +87,10 @@ class FilesTabWidget(QtGui.QTabWidget):
 			),
 			""
 		)
-		#remove the close button from the add tab
+		#remove the close button from the add tab (can both be at the
+		#right and left side)
 		self._tabBar.setTabButton(i, QtGui.QTabBar.RightSide, None)
+		self._tabBar.setTabButton(i, QtGui.QTabBar.LeftSide, None)
 
 	def _wrapWidget(self, w):
 		# We wrap the layout in a QVBoxLayout widget, so messages can be added on top of the tab.
