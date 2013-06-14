@@ -18,12 +18,13 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import subprocess
 import platform
 import tempfile
 import atexit
 import os
 import shutil
+import runpy
+import sys
 
 class PyinstallerInterfaceModule(object):
 	"""This module freezes the current installation of OpenTeacher with
@@ -89,6 +90,8 @@ if not sys.frozen:
 	import bisect
 	import HTMLParser
 	import traceback
+	import collections
+	import logging
 	#windows only, so wrapped.
 	try:
 		import win32com
@@ -102,21 +105,25 @@ sys.argv = [a for a in sys.argv if not a.startswith("-psn")]
 sys.path.insert(0, os.path.join(os.path.dirname(sys.executable), 'source'))
 sys.exit(__import__('openteacher').ModuleApplication().run())
 			""")
+		#save so they can be restored later
 		cwd = os.getcwd()
 		os.chdir(path)
-		if platform.system() == "Windows":
-			pythonExecutable = "C:\Python{0}{1}\python.exe".format(*platform.python_version_tuple())
-		else:
-			pythonExecutable = "python"
-		subprocess.check_call([
-			pythonExecutable,
-			os.path.join(cwd, "pyinstaller-dev", "pyinstaller.py"),
+		argv = sys.argv
+		#run pyinstaller
+		pyinstallerPath = os.path.join(cwd, "pyinstaller-dev")
+		sys.path.insert(0, pyinstallerPath)
+		sys.argv = [
+			"this is replaced by the runpy module anyway",
 			"--windowed",
-			"--name", self._metadata["name"].lower(),
+			"--name", str(self._metadata["name"].lower()),
 			"--icon", "icon.ico",
-			"starter.py"
-		])
+			"starter.py",
+		]
+		runpy.run_path(os.path.join(pyinstallerPath, "pyinstaller.py"), run_name="__main__")
+		#restore environment
+		del sys.path[0]
 		os.chdir(cwd)
+		sys.argv = argv
 
 		if platform.system() == "Darwin":
 			resultPath = os.path.join(path, "dist", self._metadata["name"].lower() + ".app")
