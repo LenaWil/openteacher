@@ -20,15 +20,9 @@
 
 #adds some functionality of Python 3 to Python 2.
 
-import sys
 import warnings
+import contextlib
 
-path = sys.path.pop(0)
-#keep a reference so this module isn't garbage collected
-this = sys.modules["contextlib"]
-del sys.modules["contextlib"]
-
-contextlib = sys.modules["contextlib"] = __import__("contextlib")
 @contextlib.contextmanager
 def ignored(*errors):
     try:
@@ -41,6 +35,5 @@ def closing(thing):
 	warnings.warn("Almost all uses of contextlib.closing can be removed after Python 2.6 support is dropped.")
 	return realClosing(thing)
 
-sys.modules["contextlib"].ignored = ignored
-sys.modules["contextlib"].closing = closing
-sys.path.insert(0, path)
+contextlib.ignored = ignored
+contextlib.closing = closing

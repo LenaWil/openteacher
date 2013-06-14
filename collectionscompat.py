@@ -55,7 +55,7 @@ class OrderedDict(dict):#pragma: no cover
         because their insertion order is arbitrary.
 
         '''
-        warnings.warn("When Python 2.6 support is dropped, remove the OrderedDict class from collections.py.")
+        warnings.warn("When Python 2.6 support is dropped, remove OrderedDict from collectionscompat.py.")
         if len(args) > 1:
             raise TypeError('expected at most 1 arguments, got %d' % len(args))
         try:
@@ -313,7 +313,7 @@ class Counter(dict):#pragma: no cover
 		>>> c = Counter(a=4, b=2)                   # a new counter from keyword args
 
 		'''        
-		warnings.warn("When Python 2.6 support is dropped, remove the Counter class from collections.py.")
+		warnings.warn("When Python 2.6 support is dropped, remove the Counter class from collectionscompat.py.")
 		self.update(iterable, **kwds)
 
 	#addition by Louis RIVIERE:
@@ -489,14 +489,7 @@ class Counter(dict):#pragma: no cover
 #    print doctest.testmod()
 ## end of http://code.activestate.com/recipes/576611/ }}}
 
-import sys
+import collections
 
-path = sys.path.pop(0)
-#keep a reference so this module isn't garbage collected
-this = sys.modules["collections"]
-del sys.modules["collections"]
-
-collections = sys.modules["collections"] = __import__("collections")
-
-sys.modules["collections"].Counter = Counter
-sys.path.insert(0, path)
+collections.Counter = Counter
+collections.OrderedDict = OrderedDict

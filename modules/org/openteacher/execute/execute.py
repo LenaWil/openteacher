@@ -73,6 +73,7 @@ class ExecuteModule(object):
 			pass
 		else:
 			faulthandler.enable()
+
 		#load the settings module's dependencies (currently one)
 		try:
 			dataStore = self._getMod(type="dataStore")
@@ -113,6 +114,10 @@ class ExecuteModule(object):
 		logging.basicConfig(level=level)
 		logging.captureWarnings(True)
 
+		#monkey patch python (mostly adding functionality from newer
+		#releases. Needs logging, so not set up earlier.
+		self._monkeyPatchPython()
+
 		#setup the modules module
 		self._modules = self._getMod(type="modules")
 
@@ -137,6 +142,10 @@ class ExecuteModule(object):
 
 		self.startRunning.send()
 		self.aboutToExit.send()
+
+	def _monkeyPatchPython(self):
+		import collectionscompat
+		import contextlibcompat
 
 	def _retranslate(self):
 		try:

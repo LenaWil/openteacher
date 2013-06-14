@@ -19,11 +19,23 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 
 MODULES_PATH = os.path.join(os.path.dirname(__file__), "modules")
 
 class ModuleApplication(object):
 	def run(self):
+		#simplify json importing
+		try:
+			sys.modules["json"] = __import__("simplejson")
+		except ImportError:
+			sys.modules["json"] = __import__("json")
+		#simplify unittest importing
+		if sys.version < "2.7":
+			sys.modules["unittest"] = __import__("unittest2")
+		else:
+			sys.modules["unittest"] = __import__("unittest")
+
 		import moduleManager
 
 		mm = moduleManager.ModuleManager(MODULES_PATH)
@@ -38,7 +50,6 @@ class ModuleApplication(object):
 		return 0
 
 if __name__ == "__main__":
-	import sys
 	try:
 		import pyximport
 	except ImportError:
