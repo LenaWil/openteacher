@@ -52,10 +52,11 @@ class PyinstallerInterfaceModule(object):
 	def build(self):
 		path = tempfile.mkdtemp()
 		self._tempPaths.add(path)
-		shutil.copy(
-			self._mm.resourcePath("icon.ico"),
-			os.path.join(path, "icon.ico")
-		)
+		for iconName in ["icon.ico", "icon.icns"]:
+			shutil.copy(
+				self._mm.resourcePath(iconName),
+				os.path.join(path, iconName)
+			)
 		with open(os.path.join(path, "starter.py"), "w") as f:
 			f.write("""
 import sys
@@ -106,6 +107,12 @@ sys.argv = [a for a in sys.argv if not a.startswith("-psn")]
 sys.path.insert(0, os.path.join(os.path.dirname(sys.executable), 'source'))
 sys.exit(__import__('openteacher').ModuleApplication().run())
 			""")
+
+		if platform.system() == "Darwin":
+			icon = "icon.icns"
+		else:
+			icon = "icon.ico"
+
 		#save so they can be restored later
 		cwd = os.getcwd()
 		os.chdir(path)
@@ -117,7 +124,7 @@ sys.exit(__import__('openteacher').ModuleApplication().run())
 			"this is replaced by the runpy module anyway",
 			"--windowed",
 			"--name", str(self._metadata["name"].lower()),
-			"--icon", "icon.ico",
+			"--icon", icon,
 			"starter.py",
 		]
 		runpy.run_path(os.path.join(pyinstallerPath, "pyinstaller.py"), run_name="__main__")
