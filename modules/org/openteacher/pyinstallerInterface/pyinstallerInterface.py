@@ -134,7 +134,7 @@ sys.exit(__import__('openteacher').ModuleApplication().run())
 		sys.argv = argv
 
 		if platform.system() == "Darwin":
-			resultPath = os.path.join(path, "dist", self._metadata["name"].lower() + ".app")
+			resultPath = os.path.join(path, "dist", self._metadata["name"] + ".app")
 		else:
 			resultPath = os.path.join(path, "dist", self._metadata["name"].lower())
 

@@ -21,6 +21,7 @@
 import sys
 import shutil
 import platform
+import subprocess
 
 class MacPackagerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -39,15 +40,15 @@ class MacPackagerModule(object):
 
 	def _run(self):
 		try:
-			appLoc = sys.argv[1]
+			dmgPath = sys.argv[1]
 		except IndexError:
-			sys.stderr.write("Please specify the resultive file name as last command line parameter. (e.g. openteacher.app)\n")
+			sys.stderr.write("Please specify the resultive file name as last command line parameter. (e.g. openteacher.dmg)\n")
 			return
 		#build to .app
-		resultDir = self._pyinstaller.build()
+		appDir = self._pyinstaller.build()
 
-		#copy folder
-		shutil.copytree(resultDir, appLoc)
+		#make dmg
+		subprocess.call(["hdiutil", "create", dmgPath, "-srcfolder", appDir])
 
 	def enable(self):
 		if platform.system() != "Darwin":
