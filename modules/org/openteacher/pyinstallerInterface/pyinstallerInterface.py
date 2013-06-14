@@ -92,6 +92,7 @@ if not sys.frozen:
 	import traceback
 	import collections
 	import logging
+	import runpy
 	#windows only, so wrapped.
 	try:
 		import win32com
