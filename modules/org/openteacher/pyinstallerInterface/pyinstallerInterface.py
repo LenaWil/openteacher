@@ -94,6 +94,7 @@ if not sys.frozen:
 	import collections
 	import logging
 	import runpy
+	import enchant
 	#windows only, so wrapped.
 	try:
 		import win32com
