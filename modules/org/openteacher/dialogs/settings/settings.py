@@ -21,6 +21,7 @@
 
 import weakref
 import copy
+import platform
 
 def installQtClasses():
 	global CategoryTab, SettingsDialog
@@ -80,7 +81,10 @@ def installQtClasses():
 
 			#Setup widget
 			self.setTabPosition(QtGui.QTabWidget.South)
-			self.setDocumentMode(True)
+			if platform.system() != "Darwin":
+				#Document mode, south tabs & a corner button gives
+				#misdrawings in Mac OS X.
+				self.setDocumentMode(True)
 
 			self.advancedButton = QtGui.QPushButton()
 			self.advancedButton.clicked.connect(self.advanced)
