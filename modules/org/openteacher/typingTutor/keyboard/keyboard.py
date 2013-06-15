@@ -27,7 +27,7 @@ def installQtClasses():
 	class KeyboardWidget(QtGui.QWidget):
 		"""An onscreen keyboard view. Make sure you call
 		   setKeyboardLayout() before showing the widget (otherwise
-		   drawing will fail.)
+		   you'll see nothing.)
 
 		"""
 		#15 per row
@@ -53,6 +53,7 @@ def installQtClasses():
 			)
 			self._h = random.random()
 			self._cache = {}
+			self._layout = None
 
 		def _colorForFinger(self, finger):
 			if finger == (5, 6):
@@ -69,6 +70,9 @@ def installQtClasses():
 			return QtGui.QColor.fromHsvF(self._h, 0.3, 0.9)
 
 		def paintEvent(self, event):
+			if not self._layout:
+				#not ready for drawing.
+				return
 			#make the keyboard as large as possible, but don't let it
 			#be partly drawn outside the visible widget area.
 			widthCellSize = int(math.floor(self.width() / 15.0)) -1

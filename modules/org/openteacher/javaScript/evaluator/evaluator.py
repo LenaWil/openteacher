@@ -155,7 +155,10 @@ class JSObjectCopy(dict):
 		try:
 			return super(JSObjectCopy, self).__getattr__(attr)
 		except AttributeError:
-			return self[attr]
+			try:
+				return self[attr]
+			except KeyError, e:
+				raise AttributeError(e)
 
 	def __setattr__(self, attr, value):
 		self[attr] = value
@@ -223,6 +226,8 @@ class JSObject(collections.MutableMapping):
 
 	def __copy__(self):
 		return JSObjectCopy(self)
+
+	copy = __copy__
 
 	def __deepcopy__(self, memo):
 		return JSObjectCopy(
