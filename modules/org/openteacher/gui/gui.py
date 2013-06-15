@@ -473,7 +473,7 @@ class GuiModule(object):
 		   application start.
 
 		"""
-		self._widget.tabWidget.setCurrentWidget(self._widget.tabWidget.startWidget)
+		self._widget.tabWidget.setCurrentWidget(self._widget.tabWidget.startWidget.wrapperWidget)
 
 	def addFileTab(self, enterWidget=None, teachWidget=None, resultsWidget=None, previousTabOnClose=False):
 		"""The same as ``addCustomTab``, except that it takes three
@@ -558,7 +558,7 @@ class GuiModule(object):
 		   property is accessed.
 
 		"""
-		return self._widget.tabWidget.startWidget == self._widget.tabWidget.currentWidget()
+		return self._widget.tabWidget.startWidget.wrapperWidget == self._widget.tabWidget.currentWidget()
 
 def init(moduleManager):
 	return GuiModule(moduleManager)
