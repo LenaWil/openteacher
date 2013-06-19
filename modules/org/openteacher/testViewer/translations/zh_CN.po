@@ -1,0 +1,51 @@
+# Chinese (Simplified) translation for openteacher
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-03 15:53+0200\n"
+"PO-Revision-Date: 2013-06-19 01:01+0000\n"
+"Last-Translator: adam liu <xhiyua@gmail.com>\n"
+"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Launchpad-Export-Date: 2013-06-19 05:39+0000\n"
+"X-Generator: Launchpad (build 16673)\n"
+
+#: testViewer.py:127
+msgid "Results"
+msgstr "成绩"
+
+#: testViewer.py:138
+msgid "Note:"
+msgstr "说明:"
+
+#: testViewer.py:141
+msgid "yes"
+msgstr "是"
+
+#: testViewer.py:141
+msgid "no"
+msgstr "否"
+
+#: testViewer.py:145
+#, python-format
+msgid "Completed: %s"
+msgstr "完成量: %s"
+
+#: testViewer.py:151
+#, python-format
+msgid "Total thinking time: %s second"
+msgid_plural "Total thinking time: %s seconds"
+msgstr[0] "总共思考时间: %s 秒"
+
+#: testViewer.py:159
+#, python-format
+msgid "Total thinking time: %s minutes"
+msgstr "总共思考时间: %s 分钟"

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-06-03 15:53+0200\n"
-"PO-Revision-Date: 2012-05-23 14:27+0000\n"
-"Last-Translator: Wang Dianjin <Unknown>\n"
+"PO-Revision-Date: 2013-06-19 02:27+0000\n"
+"Last-Translator: adam liu <xhiyua@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-04 05:42+0000\n"
-"X-Generator: Launchpad (build 16660)\n"
+"X-Launchpad-Export-Date: 2013-06-19 05:39+0000\n"
+"X-Generator: Launchpad (build 16673)\n"
 "Language: \n"
 
 #: topo.py:128
@@ -27,12 +27,12 @@ msgstr "创建地理课程"
 #. TRANSLATORS: downloaded from some kind of web service.)
 #: topo.py:220
 msgid "Import source"
-msgstr ""
+msgstr "导入源"
 
 #: topo.py:226 topo.py:290 topo.py:292
 #, python-format
 msgid "Topo lesson: %s"
-msgstr ""
+msgstr "Topo课程: %s"
 
 #~ msgid "What's this place's name?"
 #~ msgstr "地点名称是什么？"

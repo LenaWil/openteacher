@@ -1,14 +1,14 @@
 # Chinese (Simplified) translation for openteacher
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the openteacher package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-03 15:54+0200\n"
-"PO-Revision-Date: 2013-06-19 01:16+0000\n"
+"PO-Revision-Date: 2013-06-19 01:05+0000\n"
 "Last-Translator: adam liu <xhiyua@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,20 +16,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-06-19 05:39+0000\n"
 "X-Generator: Launchpad (build 16673)\n"
-"Language: \n"
 
-#: startWidget.py:281
-msgid "Create lesson:"
-msgstr "创建课程："
+#: execute.py:142 execute.py:144
+msgid "Profile"
+msgstr "个人配置"
 
-#: startWidget.py:282
-msgid "Load lesson:"
-msgstr "加载课程："
-
-#: startWidget.py:283
-msgid "Load from the internet"
-msgstr "从因特网加载"
-
-#: startWidget.py:285
-msgid "Recently opened:"
-msgstr "最近打开的："
+#: execute.py:143
+msgid "General"
+msgstr "常规"
