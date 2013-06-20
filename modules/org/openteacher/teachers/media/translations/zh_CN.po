@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-03 15:54+0200\n"
-"PO-Revision-Date: 2013-06-19 01:05+0000\n"
+"PO-Revision-Date: 2013-06-20 02:18+0000\n"
 "Last-Translator: adam liu <xhiyua@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,10 +17,12 @@ msgstr ""
 "X-Launchpad-Export-Date: 2013-06-20 05:42+0000\n"
 "X-Generator: Launchpad (build 16673)\n"
 
-#: execute.py:142 execute.py:144
-msgid "Profile"
-msgstr "个人配置"
+#. TRANSLATORS: lesson types are e.g. 'smart', 'all once' and 'interval'
+#: media.py:123
+msgid "Lesson type:"
+msgstr "课程形式:"
 
-#: execute.py:143
-msgid "General"
-msgstr "常规"
+#. TRANSLATORS: a button which the user presses to tell the computer it should check his/her answer.
+#: media.py:125
+msgid "Check"
+msgstr "核对"

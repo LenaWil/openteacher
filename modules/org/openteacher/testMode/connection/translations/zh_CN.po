@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-03 15:53+0200\n"
-"PO-Revision-Date: 2013-06-19 01:06+0000\n"
+"PO-Revision-Date: 2013-06-20 05:37+0000\n"
 "Last-Translator: adam liu <xhiyua@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,22 +17,30 @@ msgstr ""
 "X-Launchpad-Export-Date: 2013-06-20 05:42+0000\n"
 "X-Generator: Launchpad (build 16673)\n"
 
-#: topoMaps.py:85
-msgid "Name for this place"
-msgstr "给这个地方命名"
+#: connection.py:57
+msgid "Server IP or hostname:"
+msgstr "服务器IP或主机名:"
 
-#: topoMaps.py:85
-msgid "What's this place's name?"
-msgstr "这个地方的名字叫什么?"
+#: connection.py:58
+msgid "Connect"
+msgstr "连接"
 
-#: topoMaps.py:336
-msgid "OpenGL rendering"
-msgstr "OpenGL渲染中"
+#: connection.py:91
+msgid "Username:"
+msgstr "用户名："
 
-#: topoMaps.py:337
-msgid "Lesson"
-msgstr "课程"
+#: connection.py:92
+msgid "Password:"
+msgstr "密码："
 
-#: topoMaps.py:338
-msgid "Topography"
-msgstr "地形学"
+#: connection.py:93 connection.py:141
+msgid "Login"
+msgstr "登录"
+
+#: connection.py:159
+msgid "Could not connect to the server. Possibly wrong hostname."
+msgstr "无法连接此服务器.可能主机名有误"
+
+#: connection.py:230
+msgid "Could not login. Wrong username or password."
+msgstr "无法登录.错误的用户名或密码"
