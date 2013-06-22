@@ -19,6 +19,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+import platform
+import contextlib
+
 def installQtClasses():
 	global MediaControlDisplay, MediaDisplay
 
@@ -56,10 +59,12 @@ def installQtClasses():
 				
 				self.seekSlider = Phonon.SeekSlider(self.mediaDisplay.videoPlayer.mediaObject())
 				buttonsLayout.addWidget(self.seekSlider)
-				
-				self.volumeSlider = Phonon.VolumeSlider(self.mediaDisplay.videoPlayer.audioOutput())
-				self.volumeSlider.setMaximumWidth(100)
-				buttonsLayout.addWidget(self.volumeSlider)
+
+				if platform.system() != "Linux":
+					#the volume slider sometimes doesn't work on it -> hide it.
+					self.volumeSlider = Phonon.VolumeSlider(self.mediaDisplay.videoPlayer.audioOutput())
+					self.volumeSlider.setMaximumWidth(100)
+					buttonsLayout.addWidget(self.volumeSlider)
 			
 			# Add the stacked widget
 			layout.addWidget(self.mediaDisplay)
@@ -114,7 +119,8 @@ def installQtClasses():
 		
 		def _setControlsEnabled(self, enabled):
 			self.pauseButton.setEnabled(enabled)
-			self.volumeSlider.setEnabled(enabled)
+			with contextlib.ignored(AttributeError):
+				self.volumeSlider.setEnabled(enabled)
 			self.seekSlider.setEnabled(enabled)
 
 	class MediaDisplay(QtGui.QStackedWidget):

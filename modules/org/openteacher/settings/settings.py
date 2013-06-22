@@ -20,11 +20,11 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 class SettingDict(dict):
-	def __init__(self, executeCallback, addedNow,*args, **kwargs):
-		super(SettingDict, self).__init__(*args, **kwargs)
-		
+	def __init__(self, value, executeCallback, addedNow, *args, **kwargs):
+		super(SettingDict, self).__init__(value, *args, **kwargs)
+
 		self._executeCallback = executeCallback
-		self.addedNow = addedNow
+		self._addedNow = addedNow
 
 	def __setitem__(self, name, value):
 		super(SettingDict, self).__setitem__(name, value)
@@ -58,7 +58,7 @@ class SettingsModule(object):
 		#replace the dicts by SettingDicts
 		for key, value in self._settings.iteritems():
 			#False because it was added in a previous session
-			self._settings[key] = SettingDict(self._executeCallback, False, value)
+			self._settings[key] = SettingDict(value, self._executeCallback, addedNow=False)
 
 		self.active = True
 
@@ -129,7 +129,7 @@ class SettingsModule(object):
 			#use the default value
 			setting["value"] = setting.pop("defaultValue")
 		#wrap it, True because it's added now
-		wrappedSetting = SettingDict(self._executeCallback, True, setting)
+		wrappedSetting = SettingDict(setting, self._executeCallback, addedNow=True)
 		#store
 		self._settings[internal_name] = wrappedSetting
 
@@ -151,7 +151,7 @@ class SettingsModule(object):
 		return [
 			setting
 			for setting in self._settings.values()
-			if getattr(setting, "addedNow", False)
+			if getattr(setting, "_addedNow", False)
 		]
 
 	def _executeCallback(self, callback):

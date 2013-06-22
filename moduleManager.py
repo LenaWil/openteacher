@@ -65,8 +65,7 @@ class ModuleManager(object):
 			self._references.add(module)
 			return module
 		finally:
-			if fp:
-				fp.close()
+			fp.close()
 
 	def import_(self, moduleName):
 		return self.importFrom(self._callerOfCallerPath(), moduleName)

@@ -26,7 +26,7 @@ def installQtClasses():
 	global HangmanTeachWidget
 
 	class HangmanTeachWidget(QtGui.QWidget):
-		def __init__(self, wordModule, graphicsWidget, letterChosen, *args, **kwargs):
+		def __init__(self, wordModule, graphicsWidget, letterChosen, fadeDurationSetting, *args, **kwargs):
 			super(HangmanTeachWidget, self).__init__(*args, **kwargs)
 			self.wordModule = wordModule
 			
@@ -38,9 +38,10 @@ def installQtClasses():
 			self.hgraph = graphicsWidget
 			
 			letterChosen.handle(self.addLetter)
+			self.fadeDurationSetting = fadeDurationSetting
 			
 			self.wordLabel = QtGui.QLabel()
-			
+			self.alreadyTriedLabel = QtGui.QLabel()
 			self.triedLabel = QtGui.QLabel()
 			
 			hbox = QtGui.QHBoxLayout()
@@ -56,6 +57,8 @@ def installQtClasses():
 			
 			vbox = QtGui.QVBoxLayout()
 			vbox.addWidget(self.wordLabel)
+			vbox.addWidget(self.alreadyTriedLabel)
+			self.alreadyTriedLabel.hide()
 			vbox.addWidget(self.triedLabel)
 			vbox.addLayout(hbox)
 			
@@ -104,6 +107,7 @@ def installQtClasses():
 			
 		def _retranslate(self):
 			self.checkButton.setText(_("Check!"))
+			self.alreadyTriedLabel.setText(_('You have already tried this character / word'))
 			
 		def _textEdited(self, text):
 			try:
@@ -117,8 +121,9 @@ def installQtClasses():
 		def checkGuess(self):
 			guess = self.inputLineEdit.text()
 			if guess in self.guesses:
-				self.inputLineEdit.setText(_('You have already tried this character / word'))
+				self.alreadyTriedLabel.show()
 				return
+			self.alreadyTriedLabel.hide()
 			wordLabelList = list(self.wordLabel.text())
 			if len(guess) == 1:
 				self.guesses.append(guess)
@@ -183,7 +188,7 @@ def installQtClasses():
 				self.timerFinished()
 			else:
 				self.triedLabel.setText(_("You lose, the answer was: ") + self.word._word)
-				timeLine = QtCore.QTimeLine(2000, self)
+				timeLine = QtCore.QTimeLine(self.fadeDurationSetting["value"], self)
 				timeLine.setFrameRange(0, 255) #256 color steps
 				timeLine.frameChanged.connect(self.fade)
 				timeLine.finished.connect(self.timerFinished)
@@ -220,6 +225,9 @@ class TypingTeachTypeModule(object):
 
 		self.uses = (
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="settings"),
+			#for the fade duration setting.
+			self._mm.mods(type="typingInput"),
 		)
 
 		self.filesWithTranslations = ("hangman.py",)
@@ -253,6 +261,15 @@ class TypingTeachTypeModule(object):
 			pass
 		else:
 			translator.languageChanged.handle(self._retranslate)
+		try:
+			self._fadeDurationSetting = self._modules.default(
+				"active",
+				type="settings"
+			).setting("org.openteacher.inputTyping.fadeDuration")
+		except (IndexError, KeyError):
+			self._fadeDurationSetting = {
+				"value": 4000
+			}
 		self._retranslate()
 
 		self.dataType = "words"
@@ -264,6 +281,7 @@ class TypingTeachTypeModule(object):
 		del self.dataType
 		del self.name
 		del self._modules
+		del self._fadeDurationSetting
 		del self.word
 		del self.graphics
 
@@ -282,7 +300,7 @@ class TypingTeachTypeModule(object):
 		self.name = _("Play hangman")
 		with contextlib.ignored(AttributeError):
 			self.widget._retranslate()
-		
+
 	def addRemoveGraphicsWidget(self, widget):
 		if widget == self.widget:
 			self.addSideWidget(self.graphicWidget)
@@ -291,12 +309,12 @@ class TypingTeachTypeModule(object):
 
 	def createWidget(self, tabChanged, letterChosen, addSideWidget, removeSideWidget):
 		self.graphicWidget = self.graphics.HangmanGraphics()
-		
+
 		self.addSideWidget = addSideWidget
 		self.removeSideWidget = removeSideWidget
 		tabChanged.connect(self.addRemoveGraphicsWidget)
-		
-		self.widget = HangmanTeachWidget(self.word, self.graphicWidget, letterChosen)
+
+		self.widget = HangmanTeachWidget(self.word, self.graphicWidget, letterChosen, self._fadeDurationSetting)
 		return self.widget
 
 def init(moduleManager):

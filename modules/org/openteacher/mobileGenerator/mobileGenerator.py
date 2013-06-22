@@ -283,8 +283,9 @@ class MobileGeneratorModule(object):
 		)
 
 	def _run(self):
-		path, minify = self._getSavePathAndMinify()
-		if not path:
+		try:
+			path, minify = self._getSavePathAndMinify()
+		except TypeError:
 			return
 
 		self._copyCss(path, minify)

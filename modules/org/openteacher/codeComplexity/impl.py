@@ -34,7 +34,7 @@ def pythonPaths(basePath):
 				"pyinstaller" in root or
 				"admin_files" in root or
 				"pyttsx" in root or
-				"collections.py" in file or
+				"collectionscompat.py" in file or
 				"pyratemp" in file
 			)
 			if shouldNotBeChecked:
@@ -65,6 +65,3 @@ def main(basePath):
 		for result in reversed(sorted(results, key=lambda r: r.complexity)):
 			print "Complexity:", result.complexity, "Position:", result.position
 		print ""
-
-if __name__ == "__main__":
-	main()
