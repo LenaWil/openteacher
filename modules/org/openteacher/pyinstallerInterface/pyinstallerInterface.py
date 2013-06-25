@@ -139,14 +139,29 @@ sys.exit(__import__('openteacher').ModuleApplication().run())
 		else:
 			resultPath = os.path.join(path, "dist", self._metadata["name"].lower())
 
+		#save source
 		sourcePath = self._saveSource()
 
+		#copy the source in
 		if platform.system() == "Darwin":
 			shutil.copytree(sourcePath, os.path.join(resultPath, "Contents/MacOS/source"))
 		else:
 			shutil.copytree(sourcePath, os.path.join(resultPath, "source"))
 
+		self._copyInTesseractPortableExecutables(resultPath)
+
 		return resultPath
+
+	def _copyInTesseractPortableExecutables(self, resultPath):
+		if platform.system() != "Windows":
+			return
+		#copy in the portable tesseract executables.
+		tesseractDir = os.path.join(os.getcwd(), "tesseract-portable")
+		for fileOrDir in os.listdir(tesseractDir):
+			source = os.path.join(tesseractDir, fileOrDir)
+			result = os.path.join(resultPath, fileOrDir)
+			copy = shutil.copy if os.path.isfile(source) else shutil.copytree
+			copy(source, result)
 
 	def _cleanup(self):
 		for path in self._tempPaths:

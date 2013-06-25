@@ -37,14 +37,14 @@ wxs = """
 		<Directory Id="ProgramFilesFolder" Name="PFiles">
 		<Directory Id="INSTALLDIR" Name="{name}">
 			<Component Id="MainFiles" Guid="{uuid1}">
-								<File Id="{lower_name}.exe" KeyPath="yes" Name="{lower_name}.exe" Source="{lower_name}.exe" DiskId="1">
-										<Shortcut Id="StartmenuShortcut" Directory="ProgramMenuDir" Name="{name}" WorkingDirectory="INSTALLDIR" Icon="{lower_name}.exe" Advertise="yes" />
-										<Shortcut Id="DesktopShortcut" Directory="DesktopFolder" Name="{name}" WorkingDirectory="INSTALLDIR" Icon="{lower_name}.exe" Advertise="yes" />
-								</File>
+				<File Id="{lower_name}.exe" KeyPath="yes" Name="{lower_name}.exe" Source="{lower_name}.exe" DiskId="1">
+					<Shortcut Id="StartmenuShortcut" Directory="ProgramMenuDir" Name="{name}" WorkingDirectory="INSTALLDIR" Icon="{lower_name}.exe" Advertise="yes" />
+					<Shortcut Id="DesktopShortcut" Directory="DesktopFolder" Name="{name}" WorkingDirectory="INSTALLDIR" Icon="{lower_name}.exe" Advertise="yes" />
+				</File>
 
-								<!-- File associations -->
-								{file_associations}
-								<CreateFolder/>
+				<!-- File associations -->
+				{file_associations}
+				<CreateFolder/>
 			</Component>
 			{files}
 		</Directory>
@@ -104,7 +104,7 @@ class WindowsMsiPackagerModule(object):
 		self.requires = (
 			self._mm.mods(type="pyinstallerInterface"),
 			self._mm.mods(type="execute"),
-						self._mm.mods(type="metadata"),
+			self._mm.mods(type="metadata"),
 		)
 		self.uses = (
 			self._mm.mods(type="load"),
@@ -119,7 +119,7 @@ class WindowsMsiPackagerModule(object):
 
 	def _toId(self, path):
 		if path not in self._ids:
-				self._ids[path] = "generated_%s" % next(self._idCounter)
+			self._ids[path] = "generated_%s" % next(self._idCounter)
 		return self._ids[path]
 
 	def _gatherFiles(self, root):
@@ -192,9 +192,9 @@ class WindowsMsiPackagerModule(object):
 				fileAssociations += """\n
 				<!-- .{ext}-->
  				<ProgId Id="{name}.{ext}" Description="{desc}" Icon="{lower_name}.exe">
-						<Extension Id="{ext}" ContentType="{mimetype}">
-							<Verb Id="open" Command="open" TargetFile="{lower_name}.exe" Argument="&quot;%1&quot;" />
-						</Extension>
+					<Extension Id="{ext}" ContentType="{mimetype}">
+						<Verb Id="open" Command="open" TargetFile="{lower_name}.exe" Argument="&quot;%1&quot;" />
+					</Extension>
 				</ProgId>""".format(
 					name=self._metadata["name"],
 					lower_name=self._metadata["name"].lower(),
