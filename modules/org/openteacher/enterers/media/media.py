@@ -34,35 +34,21 @@ def installQtClasses():
 		   because without model Qt produces a bug)
 
 		"""
-		def __init__(self,items,*args,**kwargs):
+		def __init__(self,list,*args,**kwargs):
 			super(EnterItemListModel, self).__init__(*args, **kwargs)
+			self.update(list)
 
-			self.listData = []
+		def update(self,list):
+			self.beginResetModel()
+			self.listData = [item["name"] for item in list["items"]]
+			self.endResetModel()
 
-			for item in items["items"]:
-				self.listData.append(item["name"])
-
-		def update(self,items):
-			self.beginInsertRows(QtCore.QModelIndex(), self.rowCount(), self.rowCount())
-
-			self.listData = []
-
-			for item in items["items"]:
-				self.listData.append(item["name"])
-
-			self.endInsertRows()
-
-		def rowCount(self,parent=QtCore.QModelIndex()):
+		def rowCount(self,parent):
 			return len(self.listData)
 
 		def data(self,index,role):
 			if index.isValid() and role == QtCore.Qt.DisplayRole:
-				return QtCore.QVariant(self.listData[index.row()])
-			else:
-				return QtCore.QVariant()
-
-		def textAtIndex(self,index):
-			return self.listData[index]
+				return self.listData[index.row()]
 
 	class EnterItemList(QtGui.QListView):
 		"""The list widget with media items"""
@@ -133,24 +119,24 @@ def installQtClasses():
 			leftW = QtGui.QWidget()
 			leftW.setLayout(left)
 
-			self.mediaDisplay = base._modules.default("active", type="mediaDisplay").createDisplay(False)
+			self.mediaDisplay = base._modules.default("active", type="mediaDisplay").createDisplay(autoplay=False)
 
 			self.namel = QtGui.QLabel()
 
 			self.enterName = QtGui.QLineEdit()
-			self.enterName.textChanged.connect(self.changeName)
+			self.enterName.textEdited.connect(self.changeName)
 			self.enterName.setEnabled(False)
 
 			self.questionl = QtGui.QLabel()
 
 			self.enterQuestion = QtGui.QLineEdit()
-			self.enterQuestion.textChanged.connect(self.changeQuestion)
+			self.enterQuestion.textEdited.connect(self.changeQuestion)
 			self.enterQuestion.setEnabled(False)
 
 			self.answerl = QtGui.QLabel()
 
 			self.enterAnswer = QtGui.QLineEdit()
-			self.enterAnswer.textChanged.connect(self.changeAnswer)
+			self.enterAnswer.textEdited.connect(self.changeAnswer)
 			self.enterAnswer.setEnabled(False)
 
 			desceditL = QtGui.QVBoxLayout()
@@ -215,7 +201,7 @@ def installQtClasses():
 				_("Media") + " " + extensionsStr
 			)
 			for filename in filenames:
-				self.addItem(str(filename), False)
+				self.addItem(unicode(filename), remote=False)
 
 		def addRemoteItems(self):
 			"""Add items from the internet to the list"""
@@ -237,7 +223,7 @@ def installQtClasses():
 				_("Enter the URL of your website or media item.\nSupported video sites: ") + sitenamesStr + "."
 			)
 			if dialog:
-				self.addItem(str(url), True)
+				self.addItem(str(url), remote=True)
 
 		def updateWidgets(self):
 			"""Updates all the widgets if the list has changed"""
@@ -266,16 +252,16 @@ def installQtClasses():
 					except IndexError:
 						item["id"] = 0
 
-					if name != None:
+					if name:
 						item["name"] = name
 					else:
 						if remote == False:
 							item["name"] = os.path.basename(filename)
 						else:
 							item["name"] = filename
-					if question != None:
+					if question:
 						item["question"] = question
-					if answer != None:
+					if answer:
 						item["answer"] = answer
 
 					self.list["items"].append(item)

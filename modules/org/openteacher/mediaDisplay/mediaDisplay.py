@@ -92,25 +92,27 @@ def installQtClasses():
 		def setControls(self):
 			# Only if there are controls
 			if not self.noPhonon:
-				if self.activeModule == None or not self.activeModule.phononControls:
-					self._setControlsEnabled(False)
-				else:
-					self._setControlsEnabled(True)
-		
+				needsControls = bool(self.activeModule and self.activeModule.phononControls)
+				self._setControlsEnabled(enabled=needsControls)
+
 		def playPause(self, event):
 			if not self.noPhonon:
 				if self.mediaDisplay.videoPlayer.isPaused():
 					self.mediaDisplay.videoPlayer.play()
 				else:
 					self.mediaDisplay.videoPlayer.pause()
-		
+
 		def stop(self):
 			if not self.noPhonon:
 				self.mediaDisplay.videoPlayer.stop()
 		
 		def clear(self):
 			self.mediaDisplay.clear()
-		
+			# Set the active type
+			self.activeModule = None
+
+			self.setControls()
+
 		def _playPauseButtonUpdate(self, newstate, oldstate):
 			if self.mediaDisplay.videoPlayer.isPaused():
 				self.pauseButton.setIcon(QtGui.QIcon.fromTheme("media-playback-play",QtGui.QIcon(base._mm.resourcePath("icons/player_play.png"))))
@@ -152,8 +154,6 @@ def installQtClasses():
 			if not self.noPhonon:
 				self.videoPlayer.stop()
 			self.setCurrentWidget(self.webviewer)
-			# Set the active type
-			self.activeModule = None
 
 class MediaDisplayModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
