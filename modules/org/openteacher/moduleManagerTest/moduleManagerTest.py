@@ -18,6 +18,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import unittest
 import logging
 import moduleManager
@@ -104,7 +105,7 @@ class TestCase(unittest.TestCase):
 			type = "execute"
 			active = True
 			startRunning = next(iter(self._mm.mods(type="event"))).createEvent()
-			__file__ = "modules/org/openteacher/execute/execute.py"
+			__file__ = os.path.join(self._mm.modulesPath, "org/openteacher/execute/execute.py")
 		self._mm._modules.remove(next(iter(self._mm.mods(type="execute"))))
 		self._mm._modules.add(ExecuteMod())
 		#Set a profile. The execute module does that normally.
