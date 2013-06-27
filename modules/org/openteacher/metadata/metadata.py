@@ -50,13 +50,15 @@ class MetadataModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
+		#TRANSLATORS: This is OpenTeacher's version number.
+		version = _("3.2")
+
 		self.metadata = {
 			#TRANSLATORS: OpenTeacher is a name, so please only
 			#translate or transliterate it if you've got a good reason
 			#to do so.
 			"name": _("OpenTeacher"),
-			#TRANSLATORS: This is OpenTeacher's version number.
-			"version": _("3.2"),
+			"version": version,
 			"authors": _("OpenTeacher authors"),
 			#TRANSLATORS: This are the copyrightable years for
 			#TRANSLATORS: OpenTeacher.
@@ -84,19 +86,20 @@ class MetadataModule(object):
 of subjects. You just enter the questions and the answers, or download them from
 the internet, and OpenTeacher tests you.
 
-OpenTeacher 3.1 has the following features:
+OpenTeacher {version} has the following features:
  - Viewing both recent and past results of tests with graphs
  - Smart question asking and interval training
  - Reverse rehearsal (the answer is asked, and you need to give the question)
- - Read and write Teach2000, WRDS and OpenTeacher 2.x files and read ABBYY
-   Lingvo Tutor files
- - Save and open your online WRDS vocabulary lists
- - Print your word lists or topography maps
+ - Read support for more than 29 file formats; write support for over 14 file formats
+ - Learn typing with our Typing Tutor which adapts itself to your skills
+ - Print your word lists, media items and topography maps
  - (Partly) available in Arabic, Brazilian Portuguese, Simplified Chinese,
-   Traditional Chinese, Czech, Dutch, Finnish, French, Frisian, German, Greek,
-   Japanese and Spanish
+   Traditional Chinese, Czech, Dutch, Finnish, French, Frisian, Galician,
+   German, Greek, Hungarian, Italian, Japanese, Polish, Russian, Sinhalese,
+   Spanish and Turkish
+ - and more...
 
-OpenTeacher is available for Linux, Windows and Mac OS X."""
+OpenTeacher is available for Linux, Windows and Mac OS X.""".format(version=version)
 		}
 		self.metadata["userAgent"] = "%s/%s (+%s)" % (
 			self.metadata["name"],
