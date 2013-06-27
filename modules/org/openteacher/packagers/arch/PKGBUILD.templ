@@ -17,7 +17,7 @@ build() {
   #copy the man pages
   <!--(for source, dest in manpages)-->
   mkdir -p $pkgdir@!dest!@
-  cp @!source!@ $pkgdir@!dest!@/$pkgname.1
+  cp linux/@!source!@ $pkgdir@!dest!@/$pkgname.1
   <!--(end)-->
 
   #install into pkgdir

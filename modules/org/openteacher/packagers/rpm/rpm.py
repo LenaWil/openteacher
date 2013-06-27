@@ -85,7 +85,7 @@ class RpmPackagerModule(object):
 			requirements = "PyQt4, espeak, rpm-build, python-cherrypy, gettext, python-chardet, python-docutils, python-enchant, tesseract"
 		elif self._platform == "openSUSE":
 			#TODO: add tesseract or cuneiform and python-enchant here if they ever gets added to the OpenSUSE repo's.
-			requirements = "python-qt4, espeak, python-cherrypy, gettext-tools, python-chardet, python-docutils"
+			requirements = "python-qt4, espeak, rpmbuild, python-cherrypy, gettext-tools, python-chardet, python-docutils"
 
 		oldCwd = os.getcwd()
 		os.chdir(sourcePath)
