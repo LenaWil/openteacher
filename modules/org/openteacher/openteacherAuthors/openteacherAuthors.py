@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -96,17 +96,20 @@ class OpenTeacherAuthorsModule(object):
 		r.add(a.registerAuthor(_("Translator (%s)") % "Afrikaans", u"computergeoffrey"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Arabic", u"Aminos Amigos"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Arabic", u"El Achèche ANIS"))
-		r.add(a.registerAuthor(_("Translator (%s)") % "Arabic", u"Slim Khan"))
+		r.add(a.registerAuthor(_("Translator (%s)") % "Arabic", u"Slim KSOURI"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Brazilian Portuguese", u"Adriano Steffler"))
+		r.add(a.registerAuthor(_("Translator (%s)") % "Brazilian Portuguese", u"Marcelo Thomaz"))
+		r.add(a.registerAuthor(_("Translator (%s)") % "Brazilian Portuguese", u"Rubens Bueno"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Chinese (Simplified)", u"Ricardo Conde"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Chinese (Simplified)", u"Wang Dianjin"))
+		r.add(a.registerAuthor(_("Translator (%s)") % "Chinese (Simplified)", u"adam liu"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Chinese (Traditional)", u"Louie Chen"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Czech", u"Jakub Šnapka"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Czech", u"Jan Havran"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Czech", u"Jan Žárský"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Czech", u"Pavol_Ondercin"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Dutch", u"Cas Widdershoven"))
-		r.add(a.registerAuthor(_("Translator (%s)") % "Dutch", u"Marten de Vries"))
+		r.add(a.registerAuthor(_("Translator (%s)") % "Dutch", u"Michael Tel"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Dutch", u"Willem Sonke"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "English (Australia)", u"Joel Pickett"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "English (United Kingdom)", u"Andi Chandler"))
@@ -118,7 +121,6 @@ class OpenTeacherAuthorsModule(object):
 		r.add(a.registerAuthor(_("Translator (%s)") % "French", u"Glyca"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "French", u"Hélion du Mas des Bourboux"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "French", u"Kcchouette"))
-		r.add(a.registerAuthor(_("Translator (%s)") % "French", u"Mazen"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "French", u"Messer Kevin"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "French", u"Pierre Slamich"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "French", u"SOMDA Sâaviel Constant"))
@@ -129,7 +131,9 @@ class OpenTeacherAuthorsModule(object):
 		r.add(a.registerAuthor(_("Translator (%s)") % "French", u"c3d"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "French", u"pou"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "French", u"ymadec"))
+		r.add(a.registerAuthor(_("Translator (%s)") % "Frisian", u"Marten de Vries"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Galician", u"Miguel Anxo Bouzada"))
+		r.add(a.registerAuthor(_("Translator (%s)") % "Galician", u"Xosé"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Galician", u"ghas"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "German", u"Alexander Haack"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "German", u"Daniel Winzen"))
@@ -140,6 +144,7 @@ class OpenTeacherAuthorsModule(object):
 		r.add(a.registerAuthor(_("Translator (%s)") % "German", u"Maximilian Mühlbauer"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "German", u"Phillip Sz"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "German", u"Raffael Menke"))
+		r.add(a.registerAuthor(_("Translator (%s)") % "German", u"Simon Schütte"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "German", u"Tim O."))
 		r.add(a.registerAuthor(_("Translator (%s)") % "German", u"dagmalina"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "German", u"dubst3pp4"))
@@ -153,6 +158,11 @@ class OpenTeacherAuthorsModule(object):
 		r.add(a.registerAuthor(_("Translator (%s)") % "Italian", u"Leonardo Corato"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Italian", u"Pierdomenico"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Japanese", u"LeeAnna Kobayashi"))
+		r.add(a.registerAuthor(_("Translator (%s)") % "Polish", u"Michał Kudela"))
+		r.add(a.registerAuthor(_("Translator (%s)") % "Polish", u"pp/bs"))
+		r.add(a.registerAuthor(_("Translator (%s)") % "Russian", u"AleXanDeR_G"))
+		r.add(a.registerAuthor(_("Translator (%s)") % "Russian", u"Dasha"))
+		r.add(a.registerAuthor(_("Translator (%s)") % "Russian", u"Egor Bushmelyov"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Russian", u"Nkolay Parukhin"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Russian", u"facepalm"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Sinhalese", u"Mohamed Rizmi"))
@@ -163,7 +173,6 @@ class OpenTeacherAuthorsModule(object):
 		r.add(a.registerAuthor(_("Translator (%s)") % "Spanish", u"Adolfo Jayme Barrientos"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Spanish", u"Aiguanachein"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Spanish", u"Alfredo Hernández"))
-		r.add(a.registerAuthor(_("Translator (%s)") % "Spanish", u"David Gonzalo"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Spanish", u"Eduardo Alberto Calvo"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Spanish", u"Hector A. Mantellini"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Spanish", u"Javier Blanco"))
@@ -171,11 +180,13 @@ class OpenTeacherAuthorsModule(object):
 		r.add(a.registerAuthor(_("Translator (%s)") % "Spanish", u"Miguel A. Alvarado V."))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Spanish", u"Rose"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Spanish", u"Shaun Mallette"))
+		r.add(a.registerAuthor(_("Translator (%s)") % "Spanish", u"Ubuntu"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Spanish", u"Victor Rodriguez Cavaliere"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Spanish", u"Yury Jajitzky"))
-		r.add(a.registerAuthor(_("Translator (%s)") % "Spanish", u"eInvrom"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Spanish", u"emerling"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Spanish", u"gustavoreyes"))
+		r.add(a.registerAuthor(_("Translator (%s)") % "Turkish", u"kodadiirem"))
+		r.add(a.registerAuthor(_("Translator (%s)") % "Turkish", u"oldumulenone"))
 		r.add(a.registerAuthor(_("Translator (%s)") % "Turkish", u"zeugma"))
 
 		self.active = True
