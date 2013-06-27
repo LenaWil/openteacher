@@ -1,0 +1,128 @@
+# Brazilian Portuguese translation for openteacher
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"POT-Creation-Date: 2013-06-03 15:54+0200\n"
+"PO-Revision-Date: 2013-06-26 18:44+0000\n"
+"Last-Translator: Adriano Steffler <Unknown>\n"
+"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-06-27 05:56+0000\n"
+"X-Generator: Launchpad (build 16681)\n"
+"Language: pt_BR\n"
+
+#: teacherPanel.py:67
+msgid "Tests"
+msgstr "Testes"
+
+#: teacherPanel.py:68
+msgid "Add lesson"
+msgstr "Adicinar lição"
+
+#: teacherPanel.py:111
+msgid "Select a student/group:"
+msgstr "Selecione um estudante/grupo:"
+
+#: teacherPanel.py:112
+msgid "Add person/group"
+msgstr "Adicione uma pessoa/grupo"
+
+#: teacherPanel.py:113
+msgid "Back"
+msgstr "Anterior"
+
+#: teacherPanel.py:180
+msgid "(did not participate)"
+msgstr "(não participou)"
+
+#: teacherPanel.py:186
+msgid "(Handed in)"
+msgstr "(Entregue em)"
+
+#: teacherPanel.py:226
+msgid "Questions:"
+msgstr "Perguntas:"
+
+#: teacherPanel.py:227
+msgid "People in this test:"
+msgstr "Pessoas neste teste:"
+
+#: teacherPanel.py:228
+msgid "Add person"
+msgstr "Adicionar uma pessoa"
+
+#: teacherPanel.py:310
+msgid "Test"
+msgstr "Teste"
+
+#: teacherPanel.py:311
+msgid "(Re)check answers"
+msgstr "Verificar as respostas (novamente)"
+
+#: teacherPanel.py:312
+msgid "(Re)publish answers"
+msgstr "Publicar as respostas (novamente0"
+
+#: teacherPanel.py:324
+msgid "Student's answers have been checked!"
+msgstr "As respostas dos estudantes foram verificadas!"
+
+#: teacherPanel.py:330
+msgid "Student's results have been (re)published!"
+msgstr "Os resultados dos estudantes foram publicados (novamente)!"
+
+#: teacherPanel.py:521
+msgid "Person"
+msgstr "Pessoa"
+
+#: teacherPanel.py:523
+msgid ""
+"Answers of this student have not been checked yet. Click the 'Check answers' "
+"button in the second column."
+msgstr ""
+"As respostas deste estudante ainda não foram verificadas. Clique no botão "
+"\"Verificar respostas\" na segunda coluna."
+
+#: teacherPanel.py:525
+msgid "Answers right:"
+msgstr "Respostas certas:"
+
+#: teacherPanel.py:527
+msgid "Answers wrong:"
+msgstr "Respostas erradas:"
+
+#: teacherPanel.py:529
+msgid "{appName} mark:"
+msgstr "{appName} marca:"
+
+#: teacherPanel.py:531
+msgid "Final mark:"
+msgstr "Marca final:"
+
+#: teacherPanel.py:533
+msgid "Question"
+msgstr "Pergunta"
+
+#: teacherPanel.py:534
+msgid "Given answer"
+msgstr "Resposta dada"
+
+#. TRANSLATORS: The name of a button clicked if an answer is correct.
+#: teacherPanel.py:537
+msgid "Correct"
+msgstr "Correto"
+
+#: teacherPanel.py:684
+msgid "Teacher panel"
+msgstr "Painel do professor"
+
+#: teacherPanel.py:686
+msgid "Teacher Panel"
+msgstr "Painel do professor"
