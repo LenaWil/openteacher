@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-06-03 15:53+0200\n"
+"POT-Creation-Date: 2013-06-27 15:37+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,19 +66,19 @@ msgid ""
 "bottom the last answer to include. Click 'Next' when done."
 msgstr ""
 
-#: gui.py:209
+#: gui.py:210
 msgid "No selection was made"
 msgstr ""
 
-#: gui.py:209
+#: gui.py:210
 msgid "No selection was made. Please try again."
 msgstr ""
 
-#: gui.py:220 gui.py:221
+#: gui.py:221 gui.py:222
 msgid "Recognizing word list..."
 msgstr ""
 
-#: gui.py:233
+#: gui.py:235
 msgid ""
 "Down here, you can see a preview of the result. There will probably be some "
 "wrongly recognized words in there, but the structure of the word list should "
@@ -86,14 +86,14 @@ msgid ""
 "'Finish'."
 msgstr ""
 
-#: gui.py:234
+#: gui.py:236
 msgid "Result preview"
 msgstr ""
 
-#: gui.py:348
+#: gui.py:351
 msgid "Create words lesson from a scan or picture"
 msgstr ""
 
-#: gui.py:351
+#: gui.py:354
 msgid "Words lesson from picture"
 msgstr ""

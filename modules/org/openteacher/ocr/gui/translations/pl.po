@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-06-03 15:53+0200\n"
+"POT-Creation-Date: 2013-06-27 15:37+0200\n"
 "PO-Revision-Date: 2013-04-26 00:43+0000\n"
 "Last-Translator: pp/bs <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-06-04 05:44+0000\n"
 "X-Generator: Launchpad (build 16660)\n"
-"Language: pl\n"
 
 #: gui.py:86
 msgid "Introduction"
@@ -76,19 +76,19 @@ msgstr ""
 "uwzględnienia, a w prawym dolnym rogu ostatnie pytanie do uwzględnienia. Po "
 "zaznaczeniu odpowiedniego fragmentu obrazu kliknij 'Dalej'."
 
-#: gui.py:209
+#: gui.py:210
 msgid "No selection was made"
 msgstr "Niczego nie zaznaczono"
 
-#: gui.py:209
+#: gui.py:210
 msgid "No selection was made. Please try again."
 msgstr "Niczego nie zaznaczono. Spróbuj ponownie."
 
-#: gui.py:220 gui.py:221
+#: gui.py:221 gui.py:222
 msgid "Recognizing word list..."
 msgstr "Rozpoznawanie listy słów..."
 
-#: gui.py:233
+#: gui.py:235
 msgid ""
 "Down here, you can see a preview of the result. There will probably be some "
 "wrongly recognized words in there, but the structure of the word list should "
@@ -100,14 +100,14 @@ msgstr ""
 "zachowana. Jeśli tak nie jest, kliknij 'Wstecz' i spróbuj ponownie. W "
 "przeciwnym razie kliknij 'Zakończ'."
 
-#: gui.py:234
+#: gui.py:236
 msgid "Result preview"
 msgstr "Podgląd wyników"
 
-#: gui.py:348
+#: gui.py:351
 msgid "Create words lesson from a scan or picture"
 msgstr "Utwórz lekcję słów z obrazu (np. zeskanowanej kartki)"
 
-#: gui.py:351
+#: gui.py:354
 msgid "Words lesson from picture"
 msgstr "Lekcja słów z obrazu"

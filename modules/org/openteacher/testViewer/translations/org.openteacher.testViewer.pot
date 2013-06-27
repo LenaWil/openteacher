@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-06-03 15:53+0200\n"
+"POT-Creation-Date: 2013-06-27 15:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,35 +18,35 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: testViewer.py:127
+#: testViewer.py:114
 msgid "Results"
 msgstr ""
 
-#: testViewer.py:138
+#: testViewer.py:118
 msgid "Note:"
 msgstr ""
 
-#: testViewer.py:141
+#: testViewer.py:123
 msgid "yes"
 msgstr ""
 
-#: testViewer.py:141
+#: testViewer.py:123
 msgid "no"
 msgstr ""
 
-#: testViewer.py:145
+#: testViewer.py:127
 #, python-format
 msgid "Completed: %s"
 msgstr ""
 
-#: testViewer.py:151
+#: testViewer.py:133
 #, python-format
 msgid "Total thinking time: %s second"
 msgid_plural "Total thinking time: %s seconds"
 msgstr[0] ""
 msgstr[1] ""
 
-#: testViewer.py:159
+#: testViewer.py:141
 #, python-format
 msgid "Total thinking time: %s minutes"
 msgstr ""
