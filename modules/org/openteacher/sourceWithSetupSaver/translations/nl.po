@@ -11,12 +11,12 @@ msgstr ""
 "PO-Revision-Date: 2013-03-26 18:04+0000\n"
 "Last-Translator: Michael Tel <m.tel@xs4all.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-04 05:44+0000\n"
-"X-Generator: Launchpad (build 16660)\n"
+"X-Launchpad-Export-Date: 2013-06-28 05:54+0000\n"
+"X-Generator: Launchpad (build 16681)\n"
+"Language: \n"
 
 #: manpage.templ:29
 msgid "SYNOPSIS"
@@ -38,7 +38,8 @@ msgstr ""
 
 #: manpage.templ:39
 msgid "Lessons can be loaded from both files and the internet."
-msgstr "Lessen kunnen geladen worden vanuit zowel bestanden als het internet."
+msgstr ""
+"Lessen kunnen geladen worden vanuit zowel bestanden als het internet."
 
 #: manpage.templ:40
 msgid ""
