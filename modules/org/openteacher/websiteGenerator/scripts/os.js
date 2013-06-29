@@ -9,7 +9,7 @@ if(ua.indexOf('fedora') !== -1 || ua.indexOf('redhat') !== -1) {
 	osStr = 'Ubuntu (.deb)';
 } else if(ua.indexOf('mac') !== -1) {
 	os = 'osx';
-	osStr = 'Mac OS X 10.7 (Experimental)';
+	osStr = 'Mac OS X (>10.7)';
 } else {
 	os = 'windows';
 	osStr = 'Windows';

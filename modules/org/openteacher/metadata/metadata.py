@@ -82,7 +82,7 @@ class MetadataModule(object):
 			#Not translated because this is for the packaging only,
 			#packages are normally translated in other ways.
 			"short_description": "Your personal tutor",
-			"description": """OpenTeacher is an opensource application that helps you learning a variety
+			"description": """OpenTeacher is an opensource application that helps you learn a variety
 of subjects. You just enter the questions and the answers, or download them from
 the internet, and OpenTeacher tests you.
 
