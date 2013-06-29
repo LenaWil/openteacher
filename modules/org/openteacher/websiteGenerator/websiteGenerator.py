@@ -21,6 +21,7 @@
 
 import sys
 import os
+import posixpath
 import shutil
 import tempfile
 import atexit
@@ -393,7 +394,7 @@ class WebsiteGeneratorModule(object):
 				pyratemp.EvalPseudoSandbox.__init__(self2, *args, **kwargs)
 				self2.register("tr", self._tr)
 				currentDir = os.path.dirname(thisPage)
-				self2.register("url", lambda name: os.path.relpath(name, currentDir))
+				self2.register("url", lambda name: posixpath.relpath(name, currentDir))
 
 		t = pyratemp.Template(filename=templatePath, eval_class=EvalPseudoSandbox)
 		return t(**kwargs)
