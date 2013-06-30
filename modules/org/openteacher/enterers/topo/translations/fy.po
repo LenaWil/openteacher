@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-06-27 15:38+0200\n"
-"PO-Revision-Date: 2012-10-03 15:12+0000\n"
-"Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
+"PO-Revision-Date: 2013-06-29 20:20+0000\n"
+"Last-Translator: Dooitze de Jong <Unknown>\n"
 "Language-Team: Frisian <fy@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-28 05:54+0000\n"
-"X-Generator: Launchpad (build 16681)\n"
+"X-Launchpad-Export-Date: 2013-06-30 06:04+0000\n"
+"X-Generator: Launchpad (build 16692)\n"
 "Language: \n"
 
 #: topo.py:67
@@ -24,7 +24,7 @@ msgstr "Fan de fêste skiif..."
 
 #: topo.py:94
 msgid "Images"
-msgstr ""
+msgstr "Ôfbyldingen"
 
 #: topo.py:102
 msgid "Warning"
