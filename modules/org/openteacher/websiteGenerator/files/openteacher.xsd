@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file is part of the OpenTeacher project -->
+<!-- (C) 2010 Marten de Vries, released under BSD License -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<!-- Result type -->
+	<xsd:simpleType name="resultType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[0-9]+/[0-9]+"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<!-- Word type -->
+	<xsd:complexType name="wordType">
+		<xsd:sequence>
+			<xsd:element name="known" type="xsd:string"/>
+			<xsd:element name="foreign" type="xsd:string"/>
+			<xsd:element name="results" type="resultType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- Root element -->
+	<xsd:element name="root">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="title" type="xsd:string"/>
+				<xsd:element name="question_language" type="xsd:string"/>
+				<xsd:element name="answer_language" type="xsd:string"/>
+				<xsd:element name="word" type="wordType" minOccurs="1" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

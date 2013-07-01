@@ -25,8 +25,164 @@ import posixpath
 import shutil
 import tempfile
 import atexit
+import json
 
-DOWNLOAD_LINK = "http://sourceforge.net/projects/openteacher/files/openteacher/3.1/openteacher-3.1-windows-setup.msi/download"
+DOWNLOAD_LINKS = {
+	"windows": "http://sourceforge.net/projects/openteacher/files/openteacher/3.2/openteacher-3.2-windows-setup.msi/download",
+	"windows-portable": "http://sourceforge.net/projects/openteacher/files/openteacher/3.2/openteacher-3.2-windows-portable.zip/download",
+	"osx": "http://sourceforge.net/projects/openteacher/files/openteacher/3.2/openteacher_3.2_mac.dmg/download",
+	"ubuntu": "http://sourceforge.net/projects/openteacher/files/openteacher/3.2/openteacher_3.2.deb/download",
+	"fedora": "http://sourceforge.net/projects/openteacher/files/openteacher/3.2/openteacher_3.2_fedora.rpm/download",
+	"opensuse": "http://sourceforge.net/projects/openteacher/files/openteacher/3.2/openteacher_3.2_opensuse.rpm/download",
+	"arch": "http://sourceforge.net/projects/openteacher/files/openteacher/3.2/openteacher_3.2_archlinux.pkg.tar.xz/download",
+	"linux": "http://sourceforge.net/projects/openteacher/files/openteacher/3.2/openteacher_3.2_linux.tar.gz/download",
+	"source": "http://sourceforge.net/projects/openteacher/files/openteacher/3.2/openteacher-3.2-source.zip/download",
+}
+
+#image generators
+class ButtonImagesGenerator(object):
+	def __init__(self, hue, *args, **kwargs):
+		super(ButtonImagesGenerator, self).__init__(*args, **kwargs)
+
+		self._hue = hue
+
+	def generateButtons(self, logoAndOutputNames):
+		for logoPath, outputBasename in logoAndOutputNames:
+			self._generateHoveredAndNormalButtons(logoPath, outputBasename)
+
+	def _generateHoveredAndNormalButtons(self, logoPath, basename):
+		gradientTopColor = QtGui.QColor.fromHsv(self._hue, 46, 246)
+		gradientBottomColor = QtGui.QColor.fromHsv(self._hue, 58, 229)
+		self._generateDownloadButton(gradientTopColor, gradientBottomColor, logoPath, basename + ".png")
+
+		hoveredGradientTopColor = QtGui.QColor.fromHsv(self._hue, 47, 251)
+		hoveredGradientBottomColor = QtGui.QColor.fromHsv(self._hue, 57, 236)
+		self._generateDownloadButton(gradientTopColor, gradientBottomColor, logoPath, basename + "-h.png")
+
+	def _generateDownloadButton(self, gradientTopColor, gradientBottomColor, logoPath, path):
+		width = 382
+		height = 66
+		radius = 9
+		xMargin = 9
+		yMargin = 10
+		logoHeight = 44
+
+		borderColor = QtGui.QColor.fromHsv(-1, 0, 146)
+
+		gradient = QtGui.QLinearGradient(0, 0, 0, height)
+		gradient.setColorAt(0, gradientTopColor)
+		gradient.setColorAt(1, gradientBottomColor)
+
+		logo = QtGui.QImage(logoPath).scaledToHeight(logoHeight, QtCore.Qt.SmoothTransformation)
+
+		img = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32_Premultiplied)
+		img.fill(QtCore.Qt.transparent)
+		painter = QtGui.QPainter(img)
+
+		painter.setPen(borderColor)
+		painter.setBrush(gradient)
+		painter.drawRoundedRect(0, 0, width -1, height -1, radius, radius)
+		painter.drawImage(xMargin, yMargin, logo)
+
+		painter.end()
+		img.save(path)
+
+class LightImage(object):
+	def __init__(self, hue, *args, **kwargs):
+		super(LightImage, self).__init__(*args, **kwargs)
+
+		self._hue = hue
+
+	def save(self, path):
+		"""Generates a half circle filled with a gradient to be used to
+		   show which menu item the mouse is at/which page is active.
+
+		"""
+		width = 26
+		height = 13
+		color = QtGui.QColor.fromHsv(self._hue, 59, 240, 255)
+
+		img = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32_Premultiplied)
+		img.fill(QtCore.Qt.transparent)
+		painter = QtGui.QPainter(img)
+
+		gradient = QtGui.QRadialGradient(width / 2, 0, height / 4 * 3)
+		gradient.setColorAt(0, color)
+		gradient.setColorAt(0.4, color)
+		gradient.setColorAt(1, QtCore.Qt.transparent)
+
+		painter.setPen(QtCore.Qt.NoPen)
+		painter.setBrush(gradient)
+
+		painter.drawRect(0, 0, width, height)
+
+		painter.end()
+		img.save(path)
+
+class BackgroundImagesGenerator(object):
+	def __init__(self, hue, generateBodyBackgroundImage, *args, **kwargs):
+		super(BackgroundImagesGenerator, self).__init__(*args, **kwargs)
+
+		self._hue = hue
+		self._generateBodyBackgroundImage = generateBodyBackgroundImage
+
+	def generateBackground(self, path):
+		"""Generates the background file: a small bug high file with
+		   nothing but a gradient inside.
+
+		"""
+		width = 1
+		height = 1000
+		startColor = QtGui.QColor.fromHsv(self._hue, 43, 250)
+		endColor = QtGui.QColor.fromHsv(self._hue, 21, 227)
+
+		img = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32_Premultiplied)
+		img.fill(QtCore.Qt.transparent)
+
+		gradient = QtGui.QLinearGradient(0, 0, 0, height)
+		gradient.setColorAt(0, startColor)
+		gradient.setColorAt(1, endColor)
+
+		painter = QtGui.QPainter(img)
+		painter.setBrush(gradient)
+		painter.setPen(QtCore.Qt.NoPen)
+		painter.drawRect(0, 0, width, height)
+		painter.end()
+		img.save(path)
+
+	def generateBodyBackground(self, path):
+		img = self._generateBodyBackgroundImage()
+
+		#and save it.
+		img.save(path)
+
+#style sheet
+class StyleSheet(object):
+	def __init__(self, hue, lineColor, template, *args, **kwargs):
+		super(StyleSheet, self).__init__(*args, **kwargs)
+
+		self._hue = hue
+		self._lineColor = lineColor
+		self._template = template
+
+	def save(self, path):
+		"""Generates the style sheet of OpenTeacher using ``self._hue``
+		   (which comes from metadata) for the colors.
+
+		"""
+		t = pyratemp.Template(filename=self._template)
+		with open(path, "w") as f:
+			f.write(t(**{
+				"aLinkColor": QtGui.QColor.fromHsv(self._hue, 63, 101).name(),
+				"aHoverColor": QtGui.QColor.fromHsv(self._hue, 66, 159).name(),
+				"bodyBackgroundColor": QtGui.QColor.fromHsv(self._hue, 30, 228).name(),
+				"bodyTextColor": QtGui.QColor.fromHsv(self._hue, 64, 64).name(),
+				"hrColor": self._lineColor,
+				"downloadTableBorderColor": self._lineColor,
+				"downloadRowBackgroundColor": QtGui.QColor.fromHsv(self._hue, 27, 234).name(),
+				"downloadRowBorderColor": self._lineColor,
+				"codeBlockBackgroundColor": QtGui.QColor.fromHsv(self._hue, 21, 240).name(),
+			}).encode("UTF-8"))
 
 class WebsiteGeneratorModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -126,6 +282,7 @@ class WebsiteGeneratorModule(object):
 		copyTree("images")
 		copyTree("scripts")
 		copyTree("inAppDocs")
+		copyTree("files")
 		copy("index.php")
 		copy("documentation.html")
 
@@ -142,135 +299,21 @@ class WebsiteGeneratorModule(object):
 		fromPath = lambda part: self._mm.resourcePath(os.path.join("images/oslogos/", part))
 
 		#stylesheet
-		self._generateStyle(toPath("style.css"))
+		style = StyleSheet(self._hue, self._lineColor, template=self._mm.resourcePath("style.css"))
+		style.save(toPath("style.css"))
 		#images
-		self._generateBackground(toPath("images/bg.png"))
-		self._generateBodyBackground(toPath("images/body.png"))
-		self._generateLight(toPath("images/light.png"))
+		bgGenerator = BackgroundImagesGenerator(self._hue, self._modules.default("active", type="backgroundImageGenerator").generate)
+		bgGenerator.generateBackground(toPath("images/bg.png"))
+		bgGenerator.generateBodyBackground(toPath("images/body.png"))
+		LightImage(self._hue).save(toPath("images/light.png"))
 		#button backgrounds (which include logos)
-		self._generateButtons([
+		ButtonImagesGenerator(self._hue).generateButtons([
 			(fromPath("fedoralogo.png"), toPath("images/downloadbuttons/fedora-button")),
 			(fromPath("tuxlogo.png"), toPath("images/downloadbuttons/linux-button")),
 			(fromPath("osxlogo.png"), toPath("images/downloadbuttons/osx-button")),
 			(fromPath("ubulogo.png"), toPath("images/downloadbuttons/ubuntu-button")),
 			(fromPath("winlogo.png"), toPath("images/downloadbuttons/windows-button")),
 		])
-
-	def _generateStyle(self, path):
-		"""Generates the style sheet of OpenTeacher using ``self._hue``
-		   (which comes from metadata) for the colors.
-
-		"""
-		t = pyratemp.Template(filename=self._mm.resourcePath("style.css"))
-		with open(path, "w") as f:
-			f.write(t(**{
-				"aLinkColor": QtGui.QColor.fromHsv(self._hue, 63, 101).name(),
-				"aHoverColor": QtGui.QColor.fromHsv(self._hue, 66, 159).name(),
-				"bodyBackgroundColor": QtGui.QColor.fromHsv(self._hue, 30, 228).name(),
-				"bodyTextColor": QtGui.QColor.fromHsv(self._hue, 64, 64).name(),
-				"hrColor": self._lineColor,
-				"downloadTableBorderColor": self._lineColor,
-				"downloadRowBackgroundColor": QtGui.QColor.fromHsv(self._hue, 27, 234).name(),
-				"downloadRowBorderColor": self._lineColor,
-				"codeBlockBackgroundColor": QtGui.QColor.fromHsv(self._hue, 21, 240).name(),
-			}).encode("UTF-8"))
-
-	def _generateBackground(self, path):
-		"""Generates the background file: a small bug high file with
-		   nothing but a gradient inside.
-
-		"""
-		width = 1
-		height = 1000
-		startColor = QtGui.QColor.fromHsv(self._hue, 43, 250)
-		endColor = QtGui.QColor.fromHsv(self._hue, 21, 227)
-
-		img = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32_Premultiplied)
-		img.fill(QtCore.Qt.transparent)
-
-		gradient = QtGui.QLinearGradient(0, 0, 0, height)
-		gradient.setColorAt(0, startColor)
-		gradient.setColorAt(1, endColor)
-
-		painter = QtGui.QPainter(img)
-		painter.setBrush(gradient)
-		painter.setPen(QtCore.Qt.NoPen)
-		painter.drawRect(0, 0, width, height)
-		painter.end()
-		img.save(path)
-
-	def _generateBodyBackground(self, path):
-		img = self._modules.default("active", type="backgroundImageGenerator").generate()
-
-		#and save it.
-		img.save(path)
-
-	def _generateLight(self, path):
-		"""Generates a half circle filled with a gradient to be used to
-		   show which menu item the mouse is at/which page is active.
-
-		"""
-		width = 26
-		height = 13
-		color = QtGui.QColor.fromHsv(self._hue, 59, 240, 255)
-
-		img = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32_Premultiplied)
-		img.fill(QtCore.Qt.transparent)
-		painter = QtGui.QPainter(img)
-
-		gradient = QtGui.QRadialGradient(width / 2, 0, height / 4 * 3)
-		gradient.setColorAt(0, color)
-		gradient.setColorAt(0.4, color)
-		gradient.setColorAt(1, QtCore.Qt.transparent)
-
-		painter.setPen(QtCore.Qt.NoPen)
-		painter.setBrush(gradient)
-
-		painter.drawRect(0, 0, width, height)
-
-		painter.end()
-		img.save(path)
-
-	def _generateButtons(self, logoAndOutputNames):
-		for logoPath, outputBasename in logoAndOutputNames:
-			self._generateHoveredAndNormalButtons(logoPath, outputBasename)
-
-	def _generateHoveredAndNormalButtons(self, logoPath, basename):
-		gradientTopColor = QtGui.QColor.fromHsv(self._hue, 46, 246)
-		gradientBottomColor = QtGui.QColor.fromHsv(self._hue, 58, 229)
-		self._generateDownloadButton(gradientTopColor, gradientBottomColor, logoPath, basename + ".png")
-
-		hoveredGradientTopColor = QtGui.QColor.fromHsv(self._hue, 47, 251)
-		hoveredGradientBottomColor = QtGui.QColor.fromHsv(self._hue, 57, 236)
-		self._generateDownloadButton(gradientTopColor, gradientBottomColor, logoPath, basename + "-h.png")
-
-	def _generateDownloadButton(self, gradientTopColor, gradientBottomColor, logoPath, path):
-		width = 382
-		height = 66
-		radius = 9
-		xMargin = 9
-		yMargin = 10
-		logoHeight = 44
-
-		borderColor = QtGui.QColor.fromHsv(-1, 0, 146)
-
-		gradient = QtGui.QLinearGradient(0, 0, 0, height)
-		gradient.setColorAt(0, gradientTopColor)
-		gradient.setColorAt(1, gradientBottomColor)
-
-		logo = QtGui.QImage(logoPath).scaledToHeight(logoHeight, QtCore.Qt.SmoothTransformation)
-
-		img = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32_Premultiplied)
-		img.fill(QtCore.Qt.transparent)
-		painter = QtGui.QPainter(img)
-
-		painter.setPen(borderColor)
-		painter.setBrush(gradient)
-		painter.drawRoundedRect(0, 0, width -1, height -1, radius, radius)
-		painter.drawImage(xMargin, yMargin, logo)
-
-		painter.end()
-		img.save(path)
 
 	def _generateHtml(self):
 		"""Generates all html files: first for US English and then for
@@ -366,7 +409,7 @@ class WebsiteGeneratorModule(object):
 		"""Gets the content of the page, and writes it into a page."""
 
 		filename = os.path.join(self._templatesDir, pageName)
-		content = self._evaluateTemplate(filename, pageName, downloadLink=DOWNLOAD_LINK)
+		content = self._evaluateTemplate(filename, pageName, downloadLinks=DOWNLOAD_LINKS)
 
 		self._writePage(pageName, content)
 
@@ -386,7 +429,7 @@ class WebsiteGeneratorModule(object):
 		filename = os.path.join(self._templatesDir, "base.html")
 		templatePath = pageName
 		pageName = os.path.splitext(pageName)[0]
-		return self._evaluateTemplate(filename, pageName, pageName=pageName, content=content)
+		return self._evaluateTemplate(filename, pageName, pageName=pageName, content=content, downloadLinksJson=json.dumps(DOWNLOAD_LINKS))
 
 	def _evaluateTemplate(self, templatePath, thisPage, **kwargs):
 		class EvalPseudoSandbox(pyratemp.EvalPseudoSandbox):

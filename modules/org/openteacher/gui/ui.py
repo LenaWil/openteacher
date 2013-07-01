@@ -243,7 +243,7 @@ class OpenTeacherWidget(QtGui.QMainWindow):
 		self.toolBar.addSeparator()
 		self.toolBar.addAction(self.quitAction)
 
-		self.toolBar.setToolButtonStyle(QtCore.Qt.ToolButtonFollowStyle)
+		self.toolBar.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 
 		# Aero glass
 		if aeroSetting:

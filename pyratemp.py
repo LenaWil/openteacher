@@ -1,27 +1,37 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Small, simple and powerful template-engine for python.
+Small, simple and powerful template-engine for Python.
 
-A template-engine for python, which is very simple, easy to use, small,
+A template-engine for Python, which is very simple, easy to use, small,
 fast, powerful, modular, extensible, well documented and pythonic.
 
 See documentation for a list of features, template-syntax etc.
 
-:Version:   0.2.0
+:Version:   0.3.1
+:Requires:  Python >=2.6 / 3.x
 
 :Usage:
     see class ``Template`` and examples below.
 
 :Example:
 
+    Note that the examples are in Python 2; they also work in
+    Python 3 if you replace u"..." by "...", unicode() by str()
+    and partly "..." by b"...".
+
     quickstart::
         >>> t = Template("hello @!name!@")
-        >>> print t(name="marvin")
+        >>> print(t(name="marvin"))
         hello marvin
 
+    quickstart with a template-file::
+        # >>> t = Template(filename="mytemplate.tmpl")
+        # >>> print(t(name="marvin"))
+        # hello marvin
+
     generic usage::
-        >>> t = Template("output is in Unicode äöü€")
+        >>> t = Template(u"output is in Unicode \\xe4\\xf6\\xfc\\u20ac")
         >>> t                                           #doctest: +ELLIPSIS
         <...Template instance at 0x...>
         >>> t()
@@ -36,17 +46,17 @@ See documentation for a list of features, template-syntax etc.
         >>> t(name="worlds")
         u'hello worlds'
 
-        # >>> t(note="data must be Unicode or ASCII", name=u"ä")
+        # >>> t(note="data must be Unicode or ASCII", name=u"\\xe4")
         # u'hello \\xe4'
 
     escaping::
         >>> t = Template("hello escaped: @!name!@, unescaped: $!name!$")
         >>> t(name='''<>&'"''')
         u'hello escaped: &lt;&gt;&amp;&#39;&quot;, unescaped: <>&\\'"'
-    
+
     result-encoding::
         # encode the unicode-object to your encoding with encode()
-        >>> t = Template("hello äöü€")
+        >>> t = Template(u"hello \\xe4\\xf6\\xfc\\u20ac")
         >>> result = t()
         >>> result
         u'hello \\xe4\\xf6\\xfc\\u20ac'
@@ -59,7 +69,7 @@ See documentation for a list of features, template-syntax etc.
         >>> result.encode("ascii", 'xmlcharrefreplace')
         'hello &#228;&#246;&#252;&#8364;'
 
-    python-expressions::
+    Python-expressions::
         >>> Template('formatted: @! "%8.5f" % value !@')(value=3.141592653)
         u'formatted:  3.14159'
         >>> Template("hello --@!name.upper().center(20)!@--")(name="world")
@@ -132,7 +142,7 @@ See documentation for a list of features, template-syntax etc.
         >>> t(optional_list=[1,2,3])
         u'123'
 
-        
+
         # but make sure to put the expression in quotation marks, otherwise:
         >>> Template('@!default(optional,"fallback")!@')()
         Traceback (most recent call last):
@@ -143,7 +153,7 @@ See documentation for a list of features, template-syntax etc.
         >>> t = Template('$!setvar("i", "i+1")!$@!i!@')
         >>> t(i=6)
         u'7'
-        
+
         >>> t = Template('''<!--(if isinstance(s, (list,tuple)))-->$!setvar("s", '"\\\\\\\\n".join(s)')!$<!--(end)-->@!s!@''')
         >>> t(isinstance=isinstance, s="123")
         u'123'
@@ -153,11 +163,14 @@ See documentation for a list of features, template-syntax etc.
 :Author:    Roland Koebler (rk at simple-is-better dot org)
 :Copyright: Roland Koebler
 :License:   MIT/X11-like, see __license__
-"""
 
-__version__ = "0.2.0"
+:RCS:       $Id: pyratemp.py,v 1.21 2013/06/17 18:19:03 rk Exp $
+"""
+from __future__ import unicode_literals
+
+__version__ = "0.3.1"
 __author__   = "Roland Koebler <rk at simple-is-better dot org>"
-__license__  = """Copyright (c) Roland Koebler, 2007-2010
+__license__  = """Copyright (c) Roland Koebler, 2007-2013
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -179,8 +192,14 @@ IN THE SOFTWARE."""
 
 #=========================================
 
-import __builtin__, os
-import re
+import os, re, sys, types
+if sys.version_info[0] >= 3:
+    import builtins
+    unicode = str
+    long = int
+else:
+    import __builtin__ as builtins
+    from codecs import open
 
 #=========================================
 # some useful functions
@@ -206,7 +225,7 @@ def scol(string, i):
 
 def sindex(string, row, col):
     """Get index of the character at `row`/`col` in `string`.
-   
+
     :Parameters:
         - `row`: row number, starting at 1.
         - `col`: column number, starting at 1.
@@ -224,13 +243,13 @@ def dictkeyclean(d):
     """Convert all keys of the dict `d` to strings.
     """
     new_d = {}
-    for k, v in d.iteritems():
+    for k, v in d.items():
         new_d[str(k)] = v
     return new_d
 
 #----------------------
 
-def dummy(*args, **kwargs):
+def dummy(*_, **__):
     """Dummy function, doing nothing.
     """
     pass
@@ -240,62 +259,70 @@ def dummy_raise(exception, value):
 
     :Returns: dummy function, raising ``exception(value)``
     """
-    def mydummy(*args, **kwargs):
+    def mydummy(*_, **__):
         raise exception(value)
     return mydummy
 
 #=========================================
 # escaping
 
-(NONE, HTML, LATEX) = range(0, 3)
-ESCAPE_SUPPORTED = {"NONE":None, "HTML":HTML, "LATEX":LATEX} #for error-/parameter-checking
+(NONE, HTML, LATEX, MAIL_HEADER) = range(0, 4)
+ESCAPE_SUPPORTED = {"NONE":None, "HTML":HTML, "LATEX":LATEX, "MAIL_HEADER":MAIL_HEADER}
 
 def escape(s, format=HTML):
     """Replace special characters by their escape sequence.
 
     :Parameters:
-        - `s`:      string or unicode-string to escape
+        - `s`: unicode-string to escape
         - `format`:
 
           - `NONE`:  nothing is replaced
           - `HTML`:  replace &<>'" by &...;
-          - `LATEX`: replace \#$%&_{} (TODO! - this is very incomplete!)
+          - `LATEX`: replace \#$%&_{}~^
+          - `MAIL_HEADER`: escape non-ASCII mail-header-contents
     :Returns:
         the escaped string in unicode
     :Exceptions:
         - `ValueError`: if `format` is invalid.
 
-    :TODO:  complete LaTeX-escaping, optimize speed
+    :Uses:
+        MAIL_HEADER uses module email
     """
     #Note: If you have to make sure that every character gets replaced
     #      only once (and if you cannot achieve this with the following code),
-    #      use something like u"".join([replacedict.get(c,c) for c in s])
+    #      use something like "".join([replacedict.get(c,c) for c in s])
     #      which is about 2-3 times slower (but maybe needs less memory).
     #Note: This is one of the most time-consuming parts of the template.
-    #      So maybe speed this up.
-
     if format is None or format == NONE:
         pass
     elif format == HTML:
-        s = s.replace(u"&", u"&amp;") # must be done first!
-        s = s.replace(u"<", u"&lt;")
-        s = s.replace(u">", u"&gt;")
-        s = s.replace(u'"', u"&quot;")
-        s = s.replace(u"'", u"&#39;")
+        s = s.replace("&", "&amp;") # must be done first!
+        s = s.replace("<", "&lt;")
+        s = s.replace(">", "&gt;")
+        s = s.replace('"', "&quot;")
+        s = s.replace("'", "&#39;")
     elif format == LATEX:
-        #TODO: which are the "reserved" characters for LaTeX?
-        #      are there more than these?
-        s = s.replace("\\", u"\\backslash{}")   #must be done first!
-        s = s.replace("#",  u"\\#")
-        s = s.replace("$",  u"\\$")
-        s = s.replace("%",  u"\\%")
-        s = s.replace("&",  u"\\&")
-        s = s.replace("_",  u"\\_")
-        s = s.replace("{",  u"\\{")
-        s = s.replace("}",  u"\\}")
+        s = s.replace("\\", "\\x")    #must be done first!
+        s = s.replace("#",  "\\#")
+        s = s.replace("$",  "\\$")
+        s = s.replace("%",  "\\%")
+        s = s.replace("&",  "\\&")
+        s = s.replace("_",  "\\_")
+        s = s.replace("{",  "\\{")
+        s = s.replace("}",  "\\}")
+        s = s.replace("\\x","\\textbackslash{}")
+        s = s.replace("~",  "\\textasciitilde{}")
+        s = s.replace("^",  "\\textasciicircum{}")
+    elif format == MAIL_HEADER:
+        import email.header
+        try:
+            s.encode("ascii")
+            return s
+        except UnicodeEncodeError:
+            return email.header.make_header([(s, "utf-8")]).encode()
     else:
-        raise ValueError('Invalid format (only None, HTML and LATEX are supported).')
-    return unicode(s)
+        raise ValueError('Invalid format (only None, HTML, LATEX and MAIL_HEADER are supported).')
+    return s
 
 #=========================================
 
@@ -346,18 +373,18 @@ class LoaderString:
     def __init__(self, encoding='utf-8'):
         self.encoding = encoding
 
-    def load(self, string):
+    def load(self, s):
         """Return template-string as unicode.
         """
-        if isinstance(string, unicode):
-            u = string
+        if isinstance(s, unicode):
+            u = s
         else:
-            u = unicode(string, self.encoding)
+            u = s.decode(self.encoding)
         return u
 
 class LoaderFile:
     """Load template from a file.
-    
+
     When loading a template from a file, it's possible to including other
     templates (by using 'include' in the template). But for simplicity
     and security, all included templates have to be in the same directory!
@@ -393,11 +420,9 @@ class LoaderFile:
             raise ValueError("No path allowed in filename. (%s)" %(filename))
         filename = os.path.join(self.path, filename)
 
-        f = open(filename, 'rb')
-        string = f.read()
+        f = open(filename, 'r', encoding=self.encoding)
+        u = f.read()
         f.close()
-
-        u = unicode(string, self.encoding)
 
         return u
 
@@ -406,7 +431,7 @@ class LoaderFile:
 
 class Parser(object):
     """Parse a template into a parse-tree.
-    
+
     Includes a syntax-check, an optional expression-check and verbose
     error-messages.
 
@@ -504,12 +529,12 @@ class Parser(object):
         else:
             try:    # test if testexpr() works
                 testexpr("i==1")
-            except Exception,err:
-                raise ValueError("Invalid 'testexpr' (%s)." %(err))
+            except Exception as err:
+                raise ValueError("Invalid 'testexpr'. (%s)" %(err))
             self._testexprfunc = testexpr
 
         if escape not in ESCAPE_SUPPORTED.values():
-            raise ValueError("Unsupported 'escape' (%s)." %(escape))
+            raise ValueError("Unsupported 'escape'. (%s)" %(escape))
         self.escape = escape
         self._includestack = []
 
@@ -536,12 +561,12 @@ class Parser(object):
         """Test a template-expression to detect errors."""
         try:
             self._testexprfunc(expr)
-        except SyntaxError,err:
+        except SyntaxError as err:
             raise TemplateSyntaxError(err, self._errpos(fpos))
 
     def _parse_sub(self, parsetree, text, fpos=0):
         """Parse substitutions, and append them to the parse-tree.
-        
+
         Additionally, remove comments.
         """
         curr = 0
@@ -552,7 +577,7 @@ class Parser(object):
 
             if match.group("sub") is not None:
                 if not match.group("end"):
-                    raise TemplateSyntaxError("Missing closing tag '%s' for '%s'." 
+                    raise TemplateSyntaxError("Missing closing tag '%s' for '%s'."
                             % (self._sub_end, match.group()), self._errpos(fpos+start))
                 if len(match.group("sub")) > 0:
                     self._testexpr(match.group("sub"), fpos+start)
@@ -573,7 +598,7 @@ class Parser(object):
 
     def _parse(self, template, fpos=0):
         """Recursive part of `parse()`.
-        
+
         :Parameters:
             - template
             - fpos: position of ``template`` in the complete template (for error-messages)
@@ -671,7 +696,7 @@ class Parser(object):
                     parsetree.append(("elif", param, self._parse(content, pos_c)))
                 elif 'else'  == keyword:
                     if block_type not in ('if', 'for'):
-                        raise TemplateSyntaxError("'else' may only appear after 'if' of 'for' at '%s'." %(match.group()), self._errpos(pos__))
+                        raise TemplateSyntaxError("'else' may only appear after 'if' or 'for' at '%s'." %(match.group()), self._errpos(pos__))
                     if param:
                         raise TemplateSyntaxError("'else' may not have parameters at '%s'." %(match.group()), self._errpos(pos__))
                     parsetree.append(("else", self._parse(content, pos_c)))
@@ -707,7 +732,7 @@ class Parser(object):
                     block_type = 'include'
                     try:
                         u = self._load(content.strip())
-                    except Exception,err:
+                    except Exception as err:
                         raise TemplateIncludeError(err, self._errpos(pos__))
                     self._includestack.append((content.strip(), u))  # current filename/template for error-msg.
                     p = self._parse(u)
@@ -731,7 +756,7 @@ class Parser(object):
             raise TemplateSyntaxError("Missing end-tag.", self._errpos(pos__))
 
         if len(template) > curr:            # process template-part after last block
-            self._parse_sub(parsetree, template[curr:], fpos)
+            self._parse_sub(parsetree, template[curr:], fpos+curr)
 
         return parsetree
 
@@ -750,9 +775,9 @@ class EvalPseudoSandbox:
     The pseudo-sandbox restricts the available functions/objects, so the
     code can only access:
 
-    - some of the builtin python-functions, which are considered "safe"
+    - some of the builtin Python-functions, which are considered "safe"
       (see safe_builtins)
-    - some additional functions (exists(), default(), setvar())
+    - some additional functions (exists(), default(), setvar(), escape())
     - the passed objects incl. their methods.
 
     Additionally, names beginning with "_" are forbidden.
@@ -773,66 +798,89 @@ class EvalPseudoSandbox:
     """
 
     safe_builtins = {
-        "True"      : __builtin__.True,
-        "False"     : __builtin__.False,
-        "None"      : __builtin__.None,
+        "True"      : True,
+        "False"     : False,
+        "None"      : None,
 
-        "abs"       : __builtin__.abs,
-        "chr"       : __builtin__.chr,
-        "cmp"       : __builtin__.cmp,
-        "divmod"    : __builtin__.divmod,
-        "hash"      : __builtin__.hash,
-        "hex"       : __builtin__.hex,
-        "len"       : __builtin__.len,
-        "max"       : __builtin__.max,
-        "min"       : __builtin__.min,
-        "oct"       : __builtin__.oct,
-        "ord"       : __builtin__.ord,
-        "pow"       : __builtin__.pow,
-        "range"     : __builtin__.range,
-        "round"     : __builtin__.round,
-        "sorted"    : __builtin__.sorted,
-        "sum"       : __builtin__.sum,
-        "unichr"    : __builtin__.unichr,
-        "zip"       : __builtin__.zip,
+        "abs"       : builtins.abs,
+        "chr"       : builtins.chr,
+        "divmod"    : builtins.divmod,
+        "hash"      : builtins.hash,
+        "hex"       : builtins.hex,
+        "isinstance": builtins.isinstance,
+        "len"       : builtins.len,
+        "max"       : builtins.max,
+        "min"       : builtins.min,
+        "oct"       : builtins.oct,
+        "ord"       : builtins.ord,
+        "pow"       : builtins.pow,
+        "range"     : builtins.range,
+        "round"     : builtins.round,
+        "sorted"    : builtins.sorted,
+        "sum"       : builtins.sum,
+        "unichr"    : builtins.chr,
+        "zip"       : builtins.zip,
 
-        "bool"      : __builtin__.bool,
-        "complex"   : __builtin__.complex,
-        "dict"      : __builtin__.dict,
-        "enumerate" : __builtin__.enumerate,
-        "float"     : __builtin__.float,
-        "int"       : __builtin__.int,
-        "list"      : __builtin__.list,
-        "long"      : __builtin__.long,
-        "reversed"  : __builtin__.reversed,
-        "str"       : __builtin__.str,
-        "tuple"     : __builtin__.tuple,
-        "unicode"   : __builtin__.unicode,
-        "xrange"    : __builtin__.xrange,
+        "bool"      : builtins.bool,
+        "bytes"     : builtins.bytes,
+        "complex"   : builtins.complex,
+        "dict"      : builtins.dict,
+        "enumerate" : builtins.enumerate,
+        "float"     : builtins.float,
+        "int"       : builtins.int,
+        "list"      : builtins.list,
+        "long"      : long,
+        "reversed"  : builtins.reversed,
+        "set"       : builtins.set,
+        "str"       : builtins.str,
+        "tuple"     : builtins.tuple,
+        "unicode"   : unicode,
+
+        "dir"       : builtins.dir,
     }
+    if sys.version_info[0] < 3:
+        safe_builtins["unichr"] = builtins.unichr
 
     def __init__(self):
         self._compile_cache = {}
-        self.locals_ptr = None
-        self.eval_allowed_globals = self.safe_builtins.copy()
+        self.vars_ptr = None
+        self.eval_allowed_builtins = self.safe_builtins.copy()
         self.register("__import__", self.f_import)
         self.register("exists",  self.f_exists)
         self.register("default", self.f_default)
         self.register("setvar",  self.f_setvar)
+        self.register("escape",  self.f_escape)
 
     def register(self, name, obj):
-        """Add an object to the "allowed eval-globals".
+        """Add an object to the "allowed eval-builtins".
 
         Mainly useful to add user-defined functions to the pseudo-sandbox.
         """
-        self.eval_allowed_globals[name] = obj
+        self.eval_allowed_builtins[name] = obj
+
+    def _check_code_names(self, code, expr):
+        """Check if the code tries to access names beginning with "_".
+
+        Used to prevent sandbox-breakouts via new-style-classes, like
+        ``"".__class__.__base__.__subclasses__()``.
+
+        :Raises:
+            NameError if expression contains forbidden names.
+        """
+        for name in code.co_names:
+            if name[0] == '_' and name != '_[1]':  # _[1] is necessary for [x for x in y]
+                raise NameError("Name '%s' is not allowed in '%s'." % (name, expr))
+        # recursively check sub-codes (e.g. lambdas)
+        for const in code.co_consts:
+            if isinstance(const, types.CodeType):
+                self._check_code_names(const, expr)
 
     def compile(self, expr):
-        """Compile a python-eval-expression.
+        """Compile a Python-eval-expression.
 
         - Use a compile-cache.
         - Raise a `NameError` if `expr` contains a name beginning with ``_``.
-        
+
         :Returns: the compiled `expr`
         :Exceptions:
             - `SyntaxError`: for compile-errors
@@ -840,25 +888,31 @@ class EvalPseudoSandbox:
         """
         if expr not in self._compile_cache:
             c = compile(expr, "", "eval")
-            for i in c.co_names:    #prevent breakout via new-style-classes
-                if i[0] == '_':
-                    raise NameError("Name '%s' is not allowed." %(i))
+            self._check_code_names(c, expr)
             self._compile_cache[expr] = c
         return self._compile_cache[expr]
 
-    def eval(self, expr, locals):
-        """Eval a python-eval-expression.
-        
-        Sets ``self.locals_ptr`` to ``locales`` and compiles the code
+    def eval(self, expr, variables):
+        """Eval a Python-eval-expression.
+
+        Sets ``self.vars_ptr`` to ``variables`` and compiles the code
         before evaluating.
         """
-        sav = self.locals_ptr
-        self.locals_ptr = locals
-        x = eval(self.compile(expr), {"__builtins__":self.eval_allowed_globals}, locals)
-        self.locals_ptr = sav
+        sav = self.vars_ptr
+        self.vars_ptr = variables
+
+        try:
+            x = eval(self.compile(expr), {"__builtins__": self.eval_allowed_builtins}, variables)
+        except NameError:
+            # workaround for lambdas like ``sorted(..., key=lambda x: my_f(x))``
+            vars2 = {"__builtins__": self.eval_allowed_builtins}
+            vars2.update(variables)
+            x = eval(self.compile(expr), vars2)
+
+        self.vars_ptr = sav
         return x
 
-    def f_import(self, name, *args, **kwargs):
+    def f_import(self, name, *_, **__):
         """``import``/``__import__()`` for the sandboxed code.
 
         Since "import" is insecure, the PseudoSandbox does not allow to
@@ -871,34 +925,36 @@ class EvalPseudoSandbox:
             - This probably only works for rather simple imports.
             - For security, it may be better to avoid such (complex) modules
               which import other modules. (e.g. use time.localtime and
-              time.strftime instead of datetime.datetime.strftime)
+              time.strftime instead of datetime.datetime.strftime,
+              or write a small wrapper.)
 
         :Example:
-            
+
             >>> from datetime import datetime
             >>> import pyratemp
             >>> t = pyratemp.Template('@!mytime.strftime("%H:%M:%S")!@')
-            >>> print t(mytime=datetime.now())
-            Traceback (most recent call last):
-              ...
-            ImportError: import not allowed in pseudo-sandbox; try to import 'time' yourself and pass it to the sandbox/template
+
+            # >>> print(t(mytime=datetime.now()))
+            # Traceback (most recent call last):
+            #   ...
+            # ImportError: import not allowed in pseudo-sandbox; try to import 'time' yourself and pass it to the sandbox/template
+
             >>> import time
-            >>> print t(mytime=datetime.strptime("13:40:54", "%H:%M:%S"), time=time)
+            >>> print(t(mytime=datetime.strptime("13:40:54", "%H:%M:%S"), time=time))
             13:40:54
 
-            # >>> print t(mytime=datetime.now(), time=time)
+            # >>> print(t(mytime=datetime.now(), time=time))
             # 13:40:54
         """
-        import types
-        if self.locals_ptr is not None  and  name in self.locals_ptr  and  isinstance(self.locals_ptr[name], types.ModuleType):
-            return self.locals_ptr[name]
+        if self.vars_ptr is not None  and  name in self.vars_ptr  and  isinstance(self.vars_ptr[name], types.ModuleType):
+            return self.vars_ptr[name]
         else:
-            raise ImportError("import not allowed in pseudo-sandbox; try to import '%s' yourself and pass it to the sandbox/template" % name)
+            raise ImportError("import not allowed in pseudo-sandbox; try to import '%s' yourself (and maybe pass it to the sandbox/template)" % name)
 
     def f_exists(self, varname):
         """``exists()`` for the sandboxed code.
-        
-        Test if the variable `varname` exists in the current locals-namespace.
+
+        Test if the variable `varname` exists in the current namespace.
 
         This only works for single variable names. If you want to test
         complicated expressions, use i.e. `default`.
@@ -907,11 +963,11 @@ class EvalPseudoSandbox:
         :Note:      the variable-name has to be quoted! (like in eval)
         :Example:   see module-docstring
         """
-        return (varname in self.locals_ptr)
+        return (varname in self.vars_ptr)
 
     def f_default(self, expr, default=None):
         """``default()`` for the sandboxed code.
-        
+
         Try to evaluate an expression and return the result or a
         fallback-/default-value; the `default`-value is used
         if `expr` does not exist/is invalid/results in None.
@@ -919,8 +975,8 @@ class EvalPseudoSandbox:
         This is very useful for optional data.
 
         :Parameter:
-            - expr: eval-expression
-            - default: fallback-falue if eval(expr) fails or is None.
+            - expr: "eval-expression"
+            - default: fallback-value if eval(expr) fails or is None.
         :Returns:
             the eval-result or the "fallback"-value.
 
@@ -928,12 +984,12 @@ class EvalPseudoSandbox:
         :Example:   see module-docstring
         """
         try:
-            r = self.eval(expr, self.locals_ptr)
+            r = self.eval(expr, self.vars_ptr)
             if r is None:
                 return default
             return r
         #TODO: which exceptions should be catched here?
-        except (NameError, IndexError, KeyError):
+        except (NameError, LookupError, TypeError):
             return default
 
     def f_setvar(self, name, expr):
@@ -943,15 +999,22 @@ class EvalPseudoSandbox:
 
         :Example:   see module-docstring
         """
-        self.locals_ptr[name] = self.eval(expr, self.locals_ptr)
+        self.vars_ptr[name] = self.eval(expr, self.vars_ptr)
         return ""
+
+    def f_escape(self, s, format="HTML"):
+        """``escape()`` for the sandboxed code.
+        """
+        if isinstance(format, (str, unicode)):
+            format = ESCAPE_SUPPORTED[format.upper()]
+        return escape(unicode(s), format)
 
 #-----------------------------------------
 # basic template / subtemplate
 
 class TemplateBase:
     """Basic template-class.
-    
+
     Used both for the template itself and for 'macro's ("subtemplates") in
     the template.
     """
@@ -981,7 +1044,7 @@ class TemplateBase:
     def __call__(self, **override):
         """Fill out/render the template.
 
-        :Parameters: 
+        :Parameters:
             - `override`: objects to add to the data-namespace, overriding
               the "default"-data.
         :Returns:    the filled template (in unicode)
@@ -990,7 +1053,7 @@ class TemplateBase:
         """
         self.current_data = self.data.copy()
         self.current_data.update(override)
-        u = u"".join(self._render(self.parsetree, self.current_data))
+        u = "".join(self._render(self.parsetree, self.current_data))
         self.current_data = self.data       # restore current_data
         return _dontescape(u)               # (see class _dontescape)
 
@@ -998,7 +1061,7 @@ class TemplateBase:
         """Alias for __call__()."""
         return self.__call__()
     def __str__(self):
-        """Only here for completeness. Use __unicode__ instead!"""
+        """Alias for __call__()."""
         return self.__call__()
 
 #-----------------------------------------
@@ -1019,7 +1082,7 @@ class _dontescape(unicode):
 
 class Renderer(object):
     """Render a template-parse-tree.
-    
+
     :Uses: `TemplateBase` for macros
     """
 
@@ -1041,7 +1104,7 @@ class Renderer(object):
         try:
             return self.evalfunc(expr, data)
         #TODO: any other errors to catch here?
-        except (TypeError,NameError,IndexError,KeyError,AttributeError, SyntaxError), err:
+        except (TypeError, NameError, LookupError, AttributeError, SyntaxError) as err:
             raise TemplateRenderError("Cannot eval expression '%s'. (%s: %s)" %(expr, err.__class__.__name__, err))
 
     def render(self, parsetree, data):
@@ -1107,7 +1170,7 @@ class Renderer(object):
         return output
 
 #-----------------------------------------
-# template user-interface (putting all together)
+# template user-interface (putting it all together)
 
 class Template(TemplateBase):
     """Template-User-Interface.
@@ -1146,7 +1209,7 @@ class Template(TemplateBase):
         """
         if [string, filename, parsetree].count(None) != 2:
             raise ValueError('Exactly 1 of string,filename,parsetree is necessary.')
-  
+
         tmpl = None
         # load template
         if filename is not None:
@@ -1173,16 +1236,3 @@ class Template(TemplateBase):
 
 
 #=========================================
-#doctest
-
-def _doctest():
-    """doctest this module."""
-    import doctest
-    doctest.testmod()
-
-#----------------------
-if __name__ == '__main__':
-    _doctest()
-
-#=========================================
-

@@ -9,6 +9,7 @@ function loadPage(pageName)
 		$("#content").load(pageName + '.html' + ' #content', function() {
 			$("#content").slideDown(200);
 			currentPage = pageName;
+			$(document).trigger("pageChange");
 		});
 	});
 }
