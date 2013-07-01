@@ -6,7 +6,7 @@ $(document).ready(function() {
 		$('#osStr').html(osStr);
 		$('#downloadButton').css('background-image', 'url(../images/downloadbuttons/' + os + '-button.png');
 		$("#downloadButton").attr('href', downloadLinks[os]);
-	}
+	};
 	// Loading is 'changing' the page too.
 	onPageChange();
 	$(document).on('pageChange', onPageChange);

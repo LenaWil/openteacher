@@ -68,6 +68,19 @@ time but runs every single test.)
 Tools that handle packaging
 ===========================
 
+python openteacher.py -p package-all
+------------------------------------
+Starts a virtual machine for each other command in this section, updates
+its version of the OpenTeacher source code from the bzr branch, and then
+runs the respective command inside it. The resultive package is send
+over ssh to the host system and put inside the directory specified as
+argument to this command. To get this command to work, extensive work on
+getting the environment in which it executes is needed (otherwise it'll
+crash). Also, it takes quite some time to execute (45 minutes on a
+laptop with an Intel i3 CPU). But, it will generate all the packages you
+need without any manual interference. Used to generate the packages on:
+http://web.openteacher.org/regular-builds/ .
+
 python openteacher.py -p package-arch
 -------------------------------------
 Packages the currently running OT instance into an Arch Linux package.

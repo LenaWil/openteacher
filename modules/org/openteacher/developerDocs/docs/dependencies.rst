@@ -66,6 +66,14 @@ Dependencies for developing OpenTeacher
 
 * PyInstaller
 
+(when running the package-all command, getting these requirements
+satisfied takes time.)
+
+* ssh
+* virtualbox
+* the right network setup
+* properly installed VM's.
+
 Alternative runtimes
 ====================
 
