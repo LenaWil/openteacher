@@ -356,7 +356,7 @@ class TypingTutorModelModule(object):
 		self._mm = moduleManager
 
 		self.type = "typingTutorModel"
-		self.filesWithTranslations = ("model.py",)
+		self.filesWithTranslations = ("typingTutorModel.py",)
 
 		self.requires = (
 			self._mm.mods(type="dataStore"),
@@ -364,7 +364,7 @@ class TypingTutorModelModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ("model.py",)
+		self.filesWithTranslations = ("typingTutorModel.py",)
 
 	@property
 	def _words(self):

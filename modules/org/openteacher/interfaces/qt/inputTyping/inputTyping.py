@@ -186,7 +186,7 @@ class InputTypingModule(object):
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="inputTypingLogic"),
 		)
-		self.filesWithTranslations = ("gui.py",)
+		self.filesWithTranslations = ("inputTyping.py",)
 
 	def enable(self):
 		global QtCore, QtGui

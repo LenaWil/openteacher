@@ -79,7 +79,7 @@ class TextToSpeechModule(object):
 		self.requires = (
 			self._mm.mods(type="event"),
 		)
-		self.filesWithTranslations = ("textToSpeech.py",)
+		self.filesWithTranslations = ("impl.py",)
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
