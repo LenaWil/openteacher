@@ -26,12 +26,12 @@ class ProfileDescriptionModule(object):
 		self.type = "profileDescription"
 
 	def enable(self):
-		if len(set(self._mm.mods(type="rosettaPrioritiesUpdater"))) == 0: # pragma: no cover
+		if len(set(self._mm.mods(type="rosettaUpdater"))) == 0: # pragma: no cover
 			return #remain inactive
 
 		self.desc = {
-			"name": "update-rosetta-priorities",
-			"niceName": "Updates the translation priorities of OpenTeacher on Launchpad.",
+			"name": "update-rosetta",
+			"niceName": "Updates the translation priorities and paths of OpenTeacher on Launchpad.",
 			"advanced": True,
 		}
 

@@ -135,12 +135,13 @@ code.
 
 .. _openteacherAuthors: ../modules/org/openteacher/openteacherAuthors.html
 
-python openteacher.py -p update-rosetta-priorities
+python openteacher.py -p update-rosetta
 --------------------------------------------------
 Updates the translation priorities of OpenTeacher on Launchpad. Handy
 since we have a separate translation template (.pot file) for every
 module. Priorities are based on the amount of modules that depend on the
-module the priority is determined for, and some manual corrections.
+module the priority is determined for, and some manual corrections. Also
+updates the path of .pot files if they changed.
 
 python openteacher.py -p update-translations
 --------------------------------------------

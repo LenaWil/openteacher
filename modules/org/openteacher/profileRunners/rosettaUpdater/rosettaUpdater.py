@@ -26,11 +26,11 @@ class RosettaPrioritiesUpdaterModule(object):
 		super(RosettaPrioritiesUpdaterModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "rosettaPrioritiesUpdater"
+		self.type = "rosettaUpdater"
 
 		self.priorities = {
 			"default": -1,
-			"update-rosetta-priorities": 0,
+			"update-rosetta": 0,
 		}
 		self.requires = (
 			self._mm.mods(type="execute"),
@@ -73,12 +73,13 @@ class RosettaPrioritiesUpdaterModule(object):
 		return priority
 
 	def _run(self):
-		answer = raw_input("This updates the priorities of the translations of OpenTeacher on Launchpad. If you're not in the ~openteachermaintainers team, continuing will probably crash or do nothing. Continue? (y/n) ")
+		answer = raw_input("This updates the priorities and template paths of the translations of OpenTeacher on Launchpad. If you're not in the ~openteachermaintainers team, continuing will probably crash or do nothing. Continue? (y/n) ")
 		if answer.lower() not in ("y", "yes", "yep"):
 			return
 		lp = launchpadlib.launchpad.Launchpad.login_with("OpenTeacher Rosetta priorities updater", "production")
 
 		priorities = set()
+		paths = set()
 
 		for template in lp.projects["openteacher"].translation_focus.getTranslationTemplates():
 			if not template.active:
@@ -89,16 +90,27 @@ class RosettaPrioritiesUpdaterModule(object):
 				print "Couldn't find a module for: %s" % template.name
 				continue
 
+			#gather priorities
 			priority = self._modPriority(mod)
 			priority = self._adjustedPriority(mod, priority)
 
 			priorities.add((priority, template))
 
+			#gather template paths
+			potPathGlob = os.path.join(os.path.dirname(mod.__class__.__file__), "translations/*.pot")
+			relPotPathGlob = os.path.relpath(potPathGlob, os.path.join(self._mm.modulesPath, ".."))
+			templatePath = glob.glob(relPotPathGlob)[0]
+			paths.add((templatePath, template))
+
 		for priority, template in sorted(priorities):
-			print "Setting %s to %s" % (template.name, priority)
+			print "Setting %s priority to %s" % (template.name, priority)
 			template.priority = priority
 			template.lp_save()
-		exit()
+
+		for path, template in sorted(paths):
+			print "Setting %s path to %s" % (template.name, path)
+			template.path = path
+			template.lp_save()
 
 	def _modPriority(self, mod, cache={}):
 		#caching to speed things up a bit. It's needed.
