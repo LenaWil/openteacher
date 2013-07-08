@@ -1,0 +1,59 @@
+# Russian translation for openteacher
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-27 15:37+0200\n"
+"PO-Revision-Date: 2013-07-07 20:46+0000\n"
+"Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
+"Language-Team: Russian <ru@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-07-08 05:36+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
+
+#: courseHeroApi.py:163
+msgid ""
+"Enter a search term and press the search button to search coursehero.com for "
+"sets. Then select the set or sets you want to import and click OK."
+msgstr ""
+"Введите поисковый запрос и нажмите на кнопку Поиск, для поиска подборок на "
+"coursehero.com. Затем выберите одну или несколько подборок, которые вы "
+"хотите импортировать и нажмите OK."
+
+#: courseHeroApi.py:164
+msgid "E.g.: french holiday vocabulary"
+msgstr "Например, french holiday vocabulary"
+
+#: courseHeroApi.py:165
+msgid "Search"
+msgstr "Поиск"
+
+#: courseHeroApi.py:166
+msgid "Search coursehero.com"
+msgstr "Поиск на coursehero.com"
+
+#: courseHeroApi.py:244
+msgid "Import from coursehero.com"
+msgstr "Импорт с coursehero.com"
+
+#: courseHeroApi.py:270
+msgid "No coursehero.com connection"
+msgstr "Отсутствует подключение к coursehero.com"
+
+#: courseHeroApi.py:271
+msgid ""
+"coursehero.com didn't accept the connection. Are you sure that your internet "
+"connection works and coursehero.com is online?"
+msgstr ""
+"Не удалось подключиться к coursehero.com. Проверьте ваше подключение к "
+"интернету и работу coursehero.com."
+
+#: courseHeroApi.py:313
+msgid "The word list was imported from coursehero.com successfully."
+msgstr "Список слов успешно импортирован с coursehero.com."
