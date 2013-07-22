@@ -1,126 +1,127 @@
-# Chinese (Traditional) translation for openteacher
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# English (United Kingdom) translation for openteacher
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the openteacher package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-03 15:54+0200\n"
-"PO-Revision-Date: 2013-07-21 09:52+0000\n"
-"Last-Translator: Louie Chen <louie23@gmail.com>\n"
-"Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
+"PO-Revision-Date: 2013-07-20 16:55+0000\n"
+"Last-Translator: Andi Chandler <Unknown>\n"
+"Language-Team: English (United Kingdom) <en_GB@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-07-22 05:49+0000\n"
 "X-Generator: Launchpad (build 16696)\n"
-"Language: \n"
 
 #: teacherPanel.py:67
 msgid "Tests"
-msgstr "測試"
+msgstr "Tests"
 
 #: teacherPanel.py:68
 msgid "Add lesson"
-msgstr "新增課程"
+msgstr "Add lesson"
 
 #: teacherPanel.py:111
 msgid "Select a student/group:"
-msgstr "選擇一位學生/群組"
+msgstr "Select a student/group:"
 
 #: teacherPanel.py:112
 msgid "Add person/group"
-msgstr "新增人員/群組"
+msgstr "Add person/group"
 
 #: teacherPanel.py:113
 msgid "Back"
-msgstr "返回"
+msgstr "Back"
 
 #: teacherPanel.py:180
 msgid "(did not participate)"
-msgstr "(沒有參加)"
+msgstr "(did not participate)"
 
 #: teacherPanel.py:186
 msgid "(Handed in)"
-msgstr "(已交出)"
+msgstr "(Handed in)"
 
 #: teacherPanel.py:226
 msgid "Questions:"
-msgstr "問題："
+msgstr "Questions:"
 
 #: teacherPanel.py:227
 msgid "People in this test:"
-msgstr "測驗中的人員："
+msgstr "People in this test:"
 
 #: teacherPanel.py:228
 msgid "Add person"
-msgstr "新增人員"
+msgstr "Add person"
 
 #: teacherPanel.py:310
 msgid "Test"
-msgstr "測驗"
+msgstr "Test"
 
 #: teacherPanel.py:311
 msgid "(Re)check answers"
-msgstr "(重新)檢查答案"
+msgstr "(Re)check answers"
 
 #: teacherPanel.py:312
 msgid "(Re)publish answers"
-msgstr "(重新)公布答案"
+msgstr "(Re)publish answers"
 
 #: teacherPanel.py:324
 msgid "Student's answers have been checked!"
-msgstr "學生的答案已檢查完成！"
+msgstr "Student's answers have been checked!"
 
 #: teacherPanel.py:330
 msgid "Student's results have been (re)published!"
-msgstr "學生的結果已(重新)公布！"
+msgstr "Student's results have been (re)published!"
 
 #: teacherPanel.py:521
 msgid "Person"
-msgstr "人員"
+msgstr "Person"
 
 #: teacherPanel.py:523
 msgid ""
 "Answers of this student have not been checked yet. Click the 'Check answers' "
 "button in the second column."
-msgstr "這位學生的答案尚未檢查完成。點擊第二列的“檢查答案“按鈕"
+msgstr ""
+"Answers of this student have not been checked yet. Click the 'Check answers' "
+"button in the second column."
 
 #: teacherPanel.py:525
 msgid "Answers right:"
-msgstr "答案正確："
+msgstr "Answers right:"
 
 #: teacherPanel.py:527
 msgid "Answers wrong:"
-msgstr "答案錯誤："
+msgstr "Answers wrong:"
 
 #: teacherPanel.py:529
 msgid "{appName} mark:"
-msgstr ""
+msgstr "{appName} mark:"
 
 #: teacherPanel.py:531
 msgid "Final mark:"
-msgstr "最後分數："
+msgstr "Final mark:"
 
 #: teacherPanel.py:533
 msgid "Question"
-msgstr "問題"
+msgstr "Question"
 
 #: teacherPanel.py:534
 msgid "Given answer"
-msgstr "給予答案"
+msgstr "Given answer"
 
 #. TRANSLATORS: The name of a button clicked if an answer is correct.
 #: teacherPanel.py:537
 msgid "Correct"
-msgstr "正確"
+msgstr "Correct"
 
 #: teacherPanel.py:684
 msgid "Teacher panel"
-msgstr "教師面板"
+msgstr "Teacher panel"
 
 #: teacherPanel.py:686
 msgid "Teacher Panel"
-msgstr "教師面板"
+msgstr "Teacher Panel"

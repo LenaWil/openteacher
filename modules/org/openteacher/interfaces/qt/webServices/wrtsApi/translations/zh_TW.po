@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-06-27 15:38+0200\n"
-"PO-Revision-Date: 2012-09-11 09:22+0000\n"
+"PO-Revision-Date: 2013-07-20 14:42+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-28 05:53+0000\n"
-"X-Generator: Launchpad (build 16681)\n"
+"X-Launchpad-Export-Date: 2013-07-22 05:49+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 "Language: \n"
 
 #: wrtsApi.py:165
@@ -78,12 +78,12 @@ msgstr "單字列表成功匯出到 WRDS"
 
 #: wrtsApi.py:316
 msgid "Can't find the share"
-msgstr ""
+msgstr "無法找到這分享"
 
 #: wrtsApi.py:317
 #, python-format
 msgid "Can't find the share you requested. ('%s') Are you sure it exists?"
-msgstr ""
+msgstr "無法找到您要求的分享。('%s') 你確定它存在嗎？"
 
 #: wrtsApi.py:334
 msgid "No list selected"
@@ -119,15 +119,15 @@ msgstr "WRDS - 請選擇列表："
 
 #: ui.py:142
 msgid "WRDS Share:"
-msgstr ""
+msgstr "WRDS 分享："
 
 #. TRANSLATORS: please only translate the 'share-name' part here,
 #. TRANSLATORS: unless you have a good reason to do something
 #. TRANSLATORS: else, of course ;).
 #: ui.py:146
 msgid "share-name.wrts.nl"
-msgstr ""
+msgstr "分享-名稱.wrts.nl"
 
 #: ui.py:147
 msgid "Get from share"
-msgstr ""
+msgstr "從分享取得"
