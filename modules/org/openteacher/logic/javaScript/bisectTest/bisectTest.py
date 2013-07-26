@@ -19,34 +19,32 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-import subprocess
-import os
-import distutils.spawn
+import bisect
 
 class TestCase(unittest.TestCase):
-	def _jsFiles(self):
-		for root, dirs, files in os.walk(self._mm.modulesPath):
-			for file in files:
-				path = os.path.join(root, file)
-				jsFile = path.endswith(".js") 
-				exclude = (
-					"jquery" in path or
-					"jsdiff" in path or
-					"admin_files" in path or
-					"pouchdb" in path or
-					"templ" in path #templates contain stuff that isn't valid JS.
-				)
-				if jsFile and not exclude:
-					yield path
-		
-	def testJsFiles(self):
-		if self.mode not in ("all", "jshint"):
-			self.skipTest("Too heavy for this test mode.")
-		if not distutils.spawn.find_executable("jshint"):
-			self.skipTest("JSHint not installed")
-		p = subprocess.Popen(["jshint"] + list(self._jsFiles()), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-		errors = p.communicate()[0].strip()
-		self.assertFalse(errors, "\n" + errors)
+	@property
+	def _mods(self):
+		#test the native python bisect module too, to double check this
+		#tests are right.
+		return [bisect] + list(self._mm.mods("active", type="bisect"))
+
+	def testLarger(self):
+		for m in self._mods:
+			self.assertEqual(m.bisect([1, 2, 3], 4), 3)
+			self.assertEqual(m.bisect([1, 2, 3], 2000), 3)
+
+	def testMiddle(self):
+		for m in self._mods:
+			self.assertEqual(m.bisect([1, 2, 3], 2), 2)
+
+	def testSmaller(self):
+		for m in self._mods:
+			self.assertEqual(m.bisect([1, 2, 3], 0), 0)
+			self.assertEqual(m.bisect([1, 2, 3], -100), 0)
+
+	def testFloat(self):
+		for m in self._mods:
+			self.assertEqual(m.bisect([1, 2, 3], 1.4), 1)
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -54,6 +52,9 @@ class TestModule(object):
 		self._mm = moduleManager
 
 		self.type = "test"
+		self.requires = (
+			self._mm.mods(type="bisect"),
+		)
 
 	def enable(self):
 		self.TestCase = TestCase

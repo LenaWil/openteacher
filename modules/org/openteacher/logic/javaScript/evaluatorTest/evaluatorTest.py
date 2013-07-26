@@ -21,11 +21,28 @@
 import unittest
 import datetime
 import copy
+import sys
+import StringIO
 
 class TestCase(unittest.TestCase):
 	def _getEvaluators(self):
 		for mod in self._mm.mods("active", type="javaScriptEvaluator"):
 			yield mod.createEvaluator()
+
+	def testNonObjectException(self):
+		for js in self._getEvaluators():
+			with self.assertRaises(js.JSError) as cm:
+				js.eval('throw("string exception!")')
+			self.assertIn("Non-object based exception", str(cm.exception))
+			self.assertIn("string exception!", str(cm.exception))
+
+	def testConsoleLog(self):
+		for js in self._getEvaluators():
+			sys.stdout = tempstdout = StringIO.StringIO()
+			js.eval("console.log('test')")
+			sys.stdout = sys.__stdout__
+
+			self.assertEqual(tempstdout.getvalue(), '"test"\n')
 
 	def testConvertingNumber(self):
 		for js in self._getEvaluators():

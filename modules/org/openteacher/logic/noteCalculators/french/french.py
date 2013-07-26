@@ -27,32 +27,33 @@ class FrenchNoteCalculatorModule(object):
 		self.type = "noteCalculator"
 		self.filesWithTranslations = ("french.py",)
 
+		self.requires = (
+			self._mm.mods(type="javaScriptEvaluator"),
+			self._mm.mods("javaScriptImplementation", type="map"),
+			self._mm.mods("javaScriptImplementation", type="sum"),
+		)
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
+
+		self.javaScriptImplementation = True
 		self.priorities = {
 			"default": 935,
 		}
 
-	def _calculate(self, test):
-		results = map(lambda x: 1 if x["result"] == "right" else 0, test["results"])
-		total = len(results)
-		amountRight = sum(results)
-
-		return int(round(float(amountRight) / float(total) * 20))
-
-	def calculateNote(self, test):
-		return str(self._calculate(test))
-
-	def calculateAverageNote(self, tests):
-		note = 0
-		for test in tests:
-			note += self._calculate(test)
-		note /= float(len(tests))
-		return str(int(note))
+	calculateNote = property(lambda self: self._js["calculateNote"])
+	calculateAverageNote = property(lambda self: self._js["calculateAverageNote"])
 
 	def enable(self):
-		self._modules = set(self._mm.mods(type="modules")).pop()
+		self._modules = next(iter(self._mm.mods(type="modules")))
+
+		self.code = self._modules.default("active", "javaScriptImplementation", type="map").code
+		self.code += self._modules.default("active", "javaScriptImplementation", type="sum").code
+		with open(self._mm.resourcePath("french.js")) as f:
+			self.code += f.read()
+
+		self._js = self._modules.default("active", type="javaScriptEvaluator").createEvaluator()
+		self._js.eval(self.code)
 
 		#Connect to the languageChanged event so retranslating is done.
 		try:
@@ -62,7 +63,6 @@ class FrenchNoteCalculatorModule(object):
 		else:
 			translator.languageChanged.handle(self._retranslate)
 		self._retranslate()
-
 		self.active = True
 
 	def _retranslate(self):
@@ -79,8 +79,11 @@ class FrenchNoteCalculatorModule(object):
 
 	def disable(self):
 		self.active = False
-		del self.name
+
 		del self._modules
+		del self.name
+		del self._js
+		del self.code
 
 def init(moduleManager):
 	return FrenchNoteCalculatorModule(moduleManager)

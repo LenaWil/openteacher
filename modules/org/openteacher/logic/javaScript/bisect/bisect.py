@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011, 2013, Marten de Vries
+#	Copyright 2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -18,47 +18,34 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class PercentsCalculatorModule(object):
+class JSBisectModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(PercentsCalculatorModule, self).__init__(*args, **kwargs)
+		super(JSBisectModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "percentsCalculator"
+		self.type = "bisect"
+		self.javaScriptImplementation = True
 		self.requires = (
 			self._mm.mods(type="javaScriptEvaluator"),
-			self._mm.mods("javaScriptImplementation", type="map"),
-			self._mm.mods("javaScriptImplementation", type="sum"),
 		)
-		self.javaScriptImplementation = True
+
+	bisect = property(lambda self: self._js["bisect"])
 
 	def enable(self):
+		with open(self._mm.resourcePath("bisect.js")) as f:
+			self.code = f.read()
+
 		modules = next(iter(self._mm.mods(type="modules")))
 		self._js = modules.default("active", type="javaScriptEvaluator").createEvaluator()
-		self.code = modules.default("active", "javaScriptImplementation", type="map").code
-		self.code += modules.default("active", "javaScriptImplementation", type="sum").code
-		with open(self._mm.resourcePath("percentsCalculator.js")) as f:
-			self.code += f.read()
 		self._js.eval(self.code)
 
 		self.active = True
 
-	def calculateAveragePercents(self, tests):
-		"""Calculates the average score of all ``tests`` in percents"""
-
-		return self._js["calculateAveragePercents"](tests)
-
-	def calculatePercents(self, test):
-		"""Calculates the score of the user in the passed-in ``test``
-		   in percents.
-
-		"""
-		return self._js["calculatePercents"](test)
-
 	def disable(self):
 		self.active = False
 
-		del self._js
 		del self.code
+		del self._js
 
 def init(moduleManager):
-	return PercentsCalculatorModule(moduleManager)
+	return JSBisectModule(moduleManager)

@@ -297,6 +297,14 @@ class JSArray(collections.MutableSequence):
 	def __deepcopy__(self, memo):
 		return [copy.deepcopy(item, memo) for item in self]
 
+class JSConsole(object):
+	def __init__(self, evaluator):
+		self._evaluator = evaluator
+
+	def log(self, *args):
+		for arg in args:
+			print self._evaluator["JSON"].stringify(arg)
+
 class JSEvaluator(object):
 	JSError = JSError
 
@@ -311,6 +319,7 @@ class JSEvaluator(object):
 		self._counter = itertools.count()
 
 		self.eval(PYTHON_ERROR_DEFINITION)
+		self["console"] = JSConsole(self)
 
 	def _newId(self):
 		return next(self._counter)
@@ -322,8 +331,15 @@ class JSEvaluator(object):
 
 	def _pythonExceptionFor(self, jsExc):
 		name = unicode(jsExc.property("name").toString())
+		if not name:
+			name = "Non-object based exception"
 		message = unicode(jsExc.property("message").toString())
-		lineNumber = int(jsExc.property("lineNumber").toString())
+		if not message:
+			message = jsExc.toString()
+		try:
+			lineNumber = int(jsExc.property("lineNumber").toString())
+		except ValueError:
+			lineNumber = -1
 		excId = int(jsExc.property("id").toInteger())
 
 		with contextlib.ignored(KeyError):

@@ -5,3 +5,4 @@ modules/nl
 mobile-test
 database.sqlite3
 pyinstaller-*
+ot-web-config.json

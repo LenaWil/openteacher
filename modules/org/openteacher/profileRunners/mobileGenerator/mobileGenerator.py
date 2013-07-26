@@ -38,34 +38,26 @@ class MobileGeneratorModule(object):
 
 		self.type = "mobileGenerator"
 
-		self.requires = [
+		self.requires = (
 			self._mm.mods(type="execute"),
 			self._mm.mods(type="friendlyTranslationNames"),
 			self._mm.mods(type="metadata"),
-		]
-		self._logicModTypes = [
-			#wordsString
-			"wordsStringComposer",
-
-			#wordListString
-			"wordListStringParser",
-			"wordListStringComposer",
-
-			#inputTypingLogic
-			"inputTypingLogic",
-
-			#else
-			"javaScriptLessonType",
-		]
-		for type in self._logicModTypes:
-			self.requires.append(self._mm.mods("javaScriptImplementation", type=type))
-		self.requires = tuple(self.requires)
+			self._mm.mods(type="webLogicGenerator"),
+		)
 
 		self.priorities = {
 			"default": -1,
 			"generate-mobile": 0,
 		}
-		self.filesWithTranslations = ("scr/gui.js",)
+		self.filesWithTranslations = (
+			"scr/copyrightInfoDialog.js",
+			"scr/enterTab.js",
+			"scr/gui.js",
+			"scr/menuDialog.js",
+			"scr/optionsDialog.js",
+			"scr/practisingModeChoiceDialog.js",
+			"scr/teachTab.js",
+		)
 
 	def enable(self):
 		global QtCore, QtGui
@@ -80,6 +72,8 @@ class MobileGeneratorModule(object):
 			return #remain disabled
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._modules.default(type="execute").startRunning.handle(self._run)
+
+		self._metadata = self._modules.default("active", type="metadata").metadata
 
 		self.active = True
 
@@ -112,18 +106,17 @@ class MobileGeneratorModule(object):
 			0,
 			image.height() / 3.0 * 2.0, image.width(),
 			image.height() / 3.0
-		), QtCore.Qt.AlignHCenter, "OpenTeacher")
+		), QtCore.Qt.AlignHCenter, self._metadata["name"])
 
 		painter.end()
 		return image
 
-	def _getSavePathAndMinify(self):
+	def _getSavePath(self):
 		#get path to save to
 		try:
 			path = sys.argv[1]
-			minify = True if sys.argv[2] == "true" else False
 		except IndexError:
-			print >> sys.stderr, "Please specify a path to save the mobile site to and 'true' if you want to minify as last command line arguments. (e.g. -p generate-mobile mobile-debug false)"
+			print >> sys.stderr, "Please specify a path to save the mobile site to as last command line argument. (e.g. -p generate-mobile mobile-debug)"
 			return
 		#ask if overwrite
 		if os.path.isdir(path):
@@ -131,25 +124,11 @@ class MobileGeneratorModule(object):
 			if confirm != "y":
 				return
 			shutil.rmtree(path)
-		return path, minify
+		return path
 
-	def _copyCss(self, path, minify):
+	def _copyCss(self, path):
 		#copy css
 		shutil.copytree(self._mm.resourcePath("css"), os.path.join(path, "css"))
-		if minify:
-			#minify
-			for root, dirs, files in os.walk(os.path.join(path, "css")):
-				for file in files:
-					csspath = os.path.join(root, file)
-					if not csspath.endswith(".css"):
-						continue
-					with open(csspath, "r") as g:
-						data = g.read()
-					minifiedData = urllib2.urlopen("http://reducisaurus.appspot.com/css", urllib.urlencode({
-						"file": data,
-					})).read()
-					with open(csspath, "w") as f:
-						f.write(minifiedData)
 
 	def _generateTranslationFiles(self, path):
 		#generate translation json files from po files
@@ -180,20 +159,12 @@ class MobileGeneratorModule(object):
 			data = json.dumps(translationIndex, separators=(",", ":"), encoding="UTF-8")
 			f.write("var translationIndex=%s;" % data)
 
-	def _buildLogicCode(self):
-		#generate logic javascript
-		logic = u""
-		for type in self._logicModTypes:
-			mod = self._modules.default("active", "javaScriptImplementation", type=type)
-			#add to logic code var with an additional tab before every
-			#line
-			logic += "\n\n\n\t" + "\n".join(map(lambda s: "\t" + s, mod.code.split("\n"))).strip()
-		logic = logic.strip()
-		template = pyratemp.Template(filename=self._mm.resourcePath("logic.js.templ"))
-		return template(code=logic)
+	def _writeScripts(self, path):
+		os.mkdir(os.path.join(path, "scr"))
 
-	def _writeScripts(self, path, minify):
-		logicCode = self._buildLogicCode()
+		logicGenerator = self._modules.default("active", type="webLogicGenerator")
+		logicPath = os.path.join(path, "scr", "logic.js")
+		logicGenerator.writeLogicCode(logicPath)
 
 		#copy scripts
 		scripts = [
@@ -214,31 +185,13 @@ class MobileGeneratorModule(object):
 			"gui.js",
 		]
 
-		os.mkdir(os.path.join(path, "scr"))
-		if minify:
-			#combine scripts
-			data = logicCode
-			for script in scripts:
-				data += unicode(open(os.path.join(self._mm.resourcePath("scr"), script)).read(), encoding="UTF-8")
-			#minify
-			minifiedData = urllib2.urlopen("http://closure-compiler.appspot.com/compile", urllib.urlencode({
-				"compilation_level": "SIMPLE_OPTIMIZATIONS",
-				"output_info": "compiled_code",
-				"js_code": data.encode("UTF-8"),
-			})).read()
-			with open(os.path.join(path, "scr/js.js"), "w") as f:
-				f.write(minifiedData)
-			scripts = ["js.js"]
-		else:
-			#copy scripts
-			for script in scripts:
-				shutil.copy(
-					os.path.join(self._mm.resourcePath("scr"), script),
-					os.path.join(path, "scr", script)
-				)
-			with open(os.path.join(path, "scr", "logic.js"), "w") as f:
-				f.write(logicCode)
-			scripts.insert(0, "logic.js")
+		#copy scripts
+		for script in scripts:
+			shutil.copy(
+				os.path.join(self._mm.resourcePath("scr"), script),
+				os.path.join(path, "scr", script)
+			)
+		scripts.insert(0, "logic.js")
 		return scripts
 
 	def _writeHtml(self, path, scriptNames):
@@ -283,29 +236,29 @@ class MobileGeneratorModule(object):
 		)
 
 	def _run(self):
-		try:
-			path, minify = self._getSavePathAndMinify()
-		except TypeError:
+		path = self._getSavePath()
+		if not path:
 			return
 
-		self._copyCss(path, minify)
+		self._copyCss(path)
 		self._generateTranslationFiles(path)
-		scriptNames = self._writeScripts(path, minify)
+		scriptNames = self._writeScripts(path)
 		self._writeHtml(path, scriptNames)
 
 		self._copyPhonegapConfig(path)
 		self._copyCopying(path)
 
 		#graphics
-		iconPath = self._modules.default("active", type="metadata").metadata["iconPath"]
+		iconPath = self._metadata["iconPath"]
 		self._copyIcon(iconPath, path)
 		self._writeSplash(iconPath, path)
 
-		print "Writing OpenTeacher mobile to '%s' is now done." % path
+		print "Writing %s mobile to '%s' is now done." % (self._metadata["name"], path)
 
 	def disable(self):
 		self.active = False
 
+		del self._metadata
 		self._modules.default(type="execute").startRunning.unhandle(self._run)
 		del self._modules
 

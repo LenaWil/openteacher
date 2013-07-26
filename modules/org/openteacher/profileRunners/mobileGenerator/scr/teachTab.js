@@ -26,9 +26,9 @@ teachTab = (function () {
 	"use strict";
 
 	var lessonDone, newItem, sliderToProgressBar, lessonType,
-		currentItem, calculateNote,	noteMessage, backToEnterTab,
-		onViewAnswer, onRight, onWrong, focusAtNewItem,
-		showCorrection, hideCorrection, controller;
+		currentItem, noteMessage, backToEnterTab, onViewAnswer, onRight,
+		onWrong, focusAtNewItem, showCorrection, hideCorrection,
+		controller;
 
 	showCorrection = function (correction) {
 		var correctionLabel, answerBox, diff, diffText, i;
@@ -55,9 +55,7 @@ teachTab = (function () {
 			correctionLabel.html(diffText);
 		}
 		answerBox.hide();
-		correctionLabel.show().fadeOut(4000, function () {
-			controller.correctionShowingDone();
-		});
+		correctionLabel.show().fadeOut(4000, controller.correctionShowingDone);
 	};
 
 	hideCorrection = function () {
@@ -65,25 +63,11 @@ teachTab = (function () {
 		$("#answer-box").show();
 	};
 
-	calculateNote = function (test) {
-		var good, total, i, result;
-
-		good = 0;
-		total = test.results.length;
-		for (i = 0; i < test.results.length; i += 1) {
-			result = test.results[i];
-			if (result.result === "right") {
-				good += 1;
-			}
-		}
-		return Math.round(good / total * 100).toString() + "%";
-	};
-
 	lessonDone = function () {
 		var test, note;
 
 		test = lessonType.list.tests[lessonType.list.tests.length - 1];
-		note = calculateNote(test);
+		note = logic.calculateNote(test);
 
 		//free lesson objects
 		lessonType = undefined;
@@ -226,7 +210,7 @@ teachTab = (function () {
 			});
 			$("#correct-anyway-button").click(controller.correctAnywayTriggered);
 			$(".skip-button").click(controller.skipTriggered);
-			$("#answer-box").change(controller.userIsTyping);
+			$("#answer-box").keyup(controller.userIsTyping);
 
 			$("#view-answer-button").click(onViewAnswer);
 			$("#i-was-right-button").click(onRight);

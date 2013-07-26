@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Cas Widdershoven
-#	Copyright 2009-2012, Marten de Vries
+#	Copyright 2009-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -19,8 +19,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import bisect
-
 class ECTSNoteCalculatorModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(ECTSNoteCalculatorModule, self).__init__(*args, **kwargs)
@@ -28,36 +26,40 @@ class ECTSNoteCalculatorModule(object):
 
 		self.type = "noteCalculator"
 		self.requires = (
-			self._mm.mods(type="percentsCalculator"),
+			self._mm.mods("javaScriptImplementation", type="percentsCalculator"),
+			self._mm.mods("javaScriptImplementation", type="bisect"),
+			self._mm.mods(type="javaScriptEvaluator"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
 		self.filesWithTranslations = ("ects.py",)
+		self.javaScriptImplementation = True
 
 		self.priorities = {
 			"default": 935,
 		}
 
-	def _convert(self, percents):
-		i = bisect.bisect([30, 40, 50, 55, 60, 70], percents)
-		return ["F", "FX", "E", "D", "C", "B", "A"][i]
-
-	def calculateNote(self, test):
-		return self._convert(self._percents(test))
-
-	def calculateAverageNote(self, tests):
-		return self._convert(self._averagePercents(tests))
+	calculateNote = property(lambda self: self._js["calculateNote"])
+	calculateAverageNote = property(lambda self: self._js["calculateAverageNote"])
 
 	def enable(self):
-		self._modules = set(self._mm.mods(type="modules")).pop()
-
-		pc = self._modules.default(
+		self._modules = next(iter(self._mm.mods(type="modules")))
+		self.code = self._modules.default(
 			"active",
+			"javaScriptImplementation",
 			type="percentsCalculator"
-		)
-		self._percents = pc.calculatePercents
-		self._averagePercents = pc.calculateAveragePercents
+		).code
+		self.code += self._modules.default(
+			"active",
+			"javaScriptImplementation",
+			type="bisect"
+		).code
+		with open(self._mm.resourcePath("ects.js")) as f:
+			self.code += f.read()
+
+		self._js = self._modules.default("active", type="javaScriptEvaluator").createEvaluator()
+		self._js.eval(self.code)
 
 		#Connect to the languageChanged event so retranslating is done.
 		try:
@@ -84,11 +86,10 @@ class ECTSNoteCalculatorModule(object):
 
 	def disable(self):
 		self.active = False
-
 		del self.name
 		del self._modules
-		del self._percents
-		del self._averagePercents
+		del self._js
+		del self.code
 
 def init(moduleManager):
 	return ECTSNoteCalculatorModule(moduleManager)

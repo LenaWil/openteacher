@@ -27,36 +27,31 @@ class DutchNoteCalculatorModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
+		self.requires = (
+			self._mm.mods(type="javaScriptEvaluator"),
+			self._mm.mods("javaScriptImplementation", type="map"),
+			self._mm.mods("javaScriptImplementation", type="sum"),
+		)
 		self.filesWithTranslations = ("dutch.py",)
+		self.javaScriptImplementation = True
 
 		self.priorities = {
 			"default": 935,
 		}
 
-	def _formatNote(self, note):
-		if note == 10:
-			#makes sure '10,0' isn't returned, since that's not a valid
-			#dutch note. (It would mean that 10.8 would be possible,
-			#which isn't.)
-			return u"10"
-		return (u"%0.1f" % note).replace(".", ",")
-
-	def _calculateFloat(self, test):
-		results = map(lambda x: 1 if x["result"] == "right" else 0, test["results"])
-		total = len(results)
-		amountRight = sum(results)
-
-		return float(amountRight) / float(total) * 9 + 1
-
-	def calculateNote(self, test):
-		return self._formatNote(self._calculateFloat(test))
-
-	def calculateAverageNote(self, tests):
-		noteSum = sum((self._calculateFloat(test) for test in tests))
-		return self._formatNote(noteSum / len(tests))
+	calculateNote = property(lambda self: self._js["calculateNote"])
+	calculateAverageNote = property(lambda self: self._js["calculateAverageNote"])
 
 	def enable(self):
-		self._modules = set(self._mm.mods(type="modules")).pop()
+		self._modules = next(iter(self._mm.mods(type="modules")))
+
+		self.code = self._modules.default("active", "javaScriptImplementation", type="map").code
+		self.code += self._modules.default("active", "javaScriptImplementation", type="sum").code
+		with open(self._mm.resourcePath("dutch.js")) as f:
+			self.code += f.read()
+
+		self._js = self._modules.default("active", type="javaScriptEvaluator").createEvaluator()
+		self._js.eval(self.code)
 
 		#Connect to the languageChanged event so retranslating is done.
 		try:
@@ -85,6 +80,8 @@ class DutchNoteCalculatorModule(object):
 
 		del self._modules
 		del self.name
+		del self._js
+		del self.code
 
 def init(moduleManager):
 	return DutchNoteCalculatorModule(moduleManager)

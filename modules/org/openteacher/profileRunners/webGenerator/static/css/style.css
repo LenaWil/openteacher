@@ -1,0 +1,98 @@
+/* global */
+body {
+	font-family: sans-serif;
+	max-width: 960px;
+	padding: 1em;
+	margin: 0 auto;
+}
+body, a, button, input {
+	color: #333;
+}
+a {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+	color: #666;
+}
+table {
+	border-collapse: collapse;
+}
+td, th {
+	text-align: left;
+	vertical-align: middle;
+	padding: 0.25em;
+}
+input {
+	padding: 0.25em;
+	margin: 0;
+}
+button, input[type='button'], input[type='submit'] {
+	margin: 0.5em 0;
+	padding: 0.25em;
+}
+/* utilities */
+.smaller {
+	font-size: smaller;
+}
+.lighter {
+	color: #555;
+}
+.odd {
+	background-color: #eee;
+}
+
+/* shared, but not global */
+#list, #lists, #list-metadata, #tests, #list input, #list-metadata input {
+	width: 100%;
+}
+#login-page, #lists-page, #list-page, #register-iframe, #learn-page {
+	display: none;
+}
+
+/* lists page */
+.links {
+	float: right;
+}
+
+/* list page */
+.question-cell {
+	padding-right: 0.5em;
+}
+.answer-cell {
+	padding-left: 0.5em;
+}
+
+/* login page */
+#register-iframe {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 5%;
+	border: 0;
+	width: 90%;
+	height: 100%;
+}
+#login-button {
+	width: 100%;
+}
+
+/* learn page */
+#question-label {
+	font-size: xx-large;
+}
+
+#learn-page {
+	width: 400px;
+	margin: 0 auto;
+}
+
+#learn-answer-input {
+	width: 389px;
+}
+#check-button {
+	width: 400px;
+}
+#skip-button, #correct-anyway-button {
+	width: 197.5px;
+}

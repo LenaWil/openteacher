@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Cas Widdershoven
-#	Copyright 2009-2012, Marten de Vries
+#	Copyright 2009-2013, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -19,8 +19,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-import bisect
-
 class AmericanNoteCalculatorModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(AmericanNoteCalculatorModule, self).__init__(*args, **kwargs)
@@ -29,35 +27,40 @@ class AmericanNoteCalculatorModule(object):
 		self.type = "noteCalculator"
 
 		self.requires = (
-			self._mm.mods(type="percentsCalculator"),
+			self._mm.mods("javaScriptImplementation", type="percentsCalculator"),
+			self._mm.mods("javaScriptImplementation", type="bisect"),
+			self._mm.mods(type="javaScriptEvaluator")
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
 		self.filesWithTranslations = ("american.py",)
+		self.javaScriptImplementation = True
 
 		self.priorities = {
 			"default": 935,
 		}
 
-	def _convert(self, percents):
-		i = bisect.bisect([60, 63, 67, 70, 73, 77, 80, 83, 87, 90, 93, 97], percents)
-		return ["F", "D-", "D", "D+", "C-", "C", "C+", "B-", "B", "B+", "A-", "A", "A+"][i]
-
-	def calculateNote(self, test):
-		return self._convert(self._calculatePercents(test))
-
-	def calculateAverageNote(self, tests):
-		return self._convert(self._calculateAveragePercents(tests))
+	calculateNote = property(lambda self: self._js["calculateNote"])
+	calculateAverageNote = property(lambda self: self._js["calculateAverageNote"])
 
 	def enable(self):
-		self._modules = set(self._mm.mods(type="modules")).pop()
-		pc = self._modules.default(
+		self._modules = next(iter(self._mm.mods(type="modules")))
+		self.code = self._modules.default(
 			"active",
+			"javaScriptImplementation",
 			type="percentsCalculator"
-		)
-		self._calculatePercents = pc.calculatePercents
-		self._calculateAveragePercents = pc.calculateAveragePercents
+		).code
+		self.code += self._modules.default(
+			"active",
+			"javaScriptImplementation",
+			type="bisect"
+		).code
+		with open(self._mm.resourcePath("american.js")) as f:
+			self.code += f.read()
+
+		self._js = self._modules.default("active", type="javaScriptEvaluator").createEvaluator()
+		self._js.eval(self.code)
 
 		#Connect to the languageChanged event so retranslating is done.
 		try:
@@ -86,8 +89,8 @@ class AmericanNoteCalculatorModule(object):
 		self.active = False
 		del self.name
 		del self._modules
-		del self._calculatePercents
-		del self._calculateAveragePercents
+		del self._js
+		del self.code
 
 def init(moduleManager):
 	return AmericanNoteCalculatorModule(moduleManager)

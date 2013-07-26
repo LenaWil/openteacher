@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<!--TODO: translations!-->
+<html>
+	<head>
+		<meta charset='UTF-8' />
+		<title>OpenTeacher Web</title>
+		<!-- libraries -->
+		<script type='text/javascript' src='scr/pouchdb.js'></script>
+		<script type='text/javascript' src='scr/jquery.js'></script>
+		<script type='text/javascript' src='scr/template.js'></script>
+		<!-- generated code -->
+		<script type='text/javascript' src='scr/logic.js'></script>
+		<script type='text/javascript' src='scr/config.js'></script>
+		<!-- web-specific code -->
+		<script type='text/javascript' src='scr/learn-list.js'></script>
+		<script type='text/javascript' src='scr/lists-overview.js'></script>
+		<script type='text/javascript' src='scr/login.js'></script>
+		<script type='text/javascript' src='scr/main.js'></script>
+		<script type='text/javascript' src='scr/view-list.js'></script>
+		<script type='text/x-template' id='lists-template'>
+			<tr class='@!classes!@' data-id='@!doc._id!@' data-rev='@!doc._rev!@'>
+				<td>
+					<input type='checkbox' />
+				</td>
+				<td>
+					<a href='#view-list'>@!doc.title!@</a>
+					<span class='links lighter'>
+						<a href='#view-list'>View</a> |
+						<a href='#learn-list'>Teach me!</a>
+					</span>
+					<br />
+					<span class='smaller lighter'>
+						Last edited:
+						@!new Date(doc.lastEdited)!@
+					</span>
+				</td>
+			</tr>
+		</script>
+		<script type='text/x-template' id='list-template'>
+			<tr data-id='@!item.id!@'>
+				<td class='question-cell'>
+					<input class='question-input' value='@!compose(item.questions || [])!@' />
+				</td>
+				<td class='answer-cell'>
+					<input class='answer-input' value='@!compose(item.answers || [])!@' />
+				</td>
+			</tr>
+		</script>
+		<script type='text/x-template' id='tests-template'>
+			<tr class='@!classes!@'>
+				<td>
+					@!
+						try {
+							var result = new Date(test.results[0].active.start);
+						} catch (e) {
+							var result = "-";
+						}
+						result;
+					!@
+				</td>
+				<td>@!calculateNote(test)!@</td>
+				<td>
+					<input type='checkbox' class='finished-checkbox' @!test.finished?"checked='checked'": ""!@ />
+				</td>
+			</tr>
+		</script>
+		<link rel='stylesheet' type='text/css' href='css/style.css' />
+	</head>
+	<body>
+		<h1>OpenTeacher Web</h1>
+		<div id='login-page'>
+			<h2>Log in</h2>
+			<p id='register-status'></p>
+			<p>
+				<a href='#' id='register-link'>New? <u>Click here</u> to sign up.</a>
+			</p>
+			<form id='login-form' action='#'>
+				<table>
+					<tbody>
+						<tr>
+							<td>Username:</td>
+							<td>
+								<input id='username' value='test' type='text' />
+							</td>
+						</tr>
+						<tr>
+							<td>Password:</td>
+							<td>
+								<input id='password' value='hsdfjkh3$4' type='password' />
+							</td>
+						</tr>
+						<tr>
+							<td colspan='2'>
+								<input id='login-button' type='submit' value='Log in!' />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+			<h2>Or view a shared list</h2>
+			Still todo...
+		</div>
+		<div id='lists-page'>
+			<h2>Lists overview</h2>
+			<table id='lists'>
+				<tbody>
+				</tbody>
+			</table>
+			<button id='remove-selected'>Remove selected lists</button>
+			<button id='new-list'>Create new list</button>
+		</div>
+		<div id='list-page'>
+			<h2>List</h2>
+			<table id='list-metadata'>
+				<tbody>
+					<tr>
+						<td>Title:</td>
+						<td>
+							<input id='title' />
+						</td>
+					</tr>
+					<tr>
+						<td>Shares:</td>
+						<td><input id='shares' /></td>
+					</tr>
+					<tr>
+						<td id='shares-info' colspan='2' class='smaller lighter'></td>
+					</tr>
+				</tbody>
+			</table>
+			<br />
+			<table id='list'>
+				<thead>
+					<tr>
+						<th>Questions</th>
+						<th>Answers</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+			<div id='tests-part'>
+				<h2>Test results</h2>
+				<table id='tests'>
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Note</th>
+							<th>Completed</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<button id='back-from-list-page'>Back to the lists page</button>
+			<button id='save-list'>Save</button>
+		</div>
+		<div id='learn-page'>
+			<p>
+				Question:<br />
+				<span id='question-label'></span><br />
+				<span id='correction-label'></span>
+			</p>
+			<form action='#' id='learn-form'>
+				<input id='learn-answer-input' /><br />
+				<input type='submit' id='check-button' value='Check!' /><br />
+				<input type='button' id='skip-button' value='Skip' />
+				<input type='button' id='correct-anyway-button' value='Correct anyway' />
+			</form>
+			<br />
+			<button id='back-from-learn-page'>Back to the lists page</button>
+		</div>
+		<iframe id='register-iframe' />
+	</body>
+</html>
