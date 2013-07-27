@@ -6,12 +6,9 @@ import functools
 import collections
 import json
 import os
+import contextlib
 
-try:
-	import otCouch
-except ImportError:
-	#might be imported by the server module for us, too.
-	pass
+#import otCouch is handled by the module.
 
 app = flask.Flask(__name__)
 
@@ -107,5 +104,6 @@ def services_deregister():
 		return resp
 	return flask.jsonify({"result": "ok"})
 
-with open(os.path.join(os.path.dirname(__file__), "ot-web-config.json")) as f:
-	app.config.update(json.load(f))
+with contextlib.ignored(IOError):
+	with open(os.path.join(os.path.dirname(__file__), "ot-web-config.json")) as f:
+		app.config.update(json.load(f))

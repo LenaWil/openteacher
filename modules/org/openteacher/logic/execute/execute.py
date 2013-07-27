@@ -69,10 +69,9 @@ class ExecuteModule(object):
 		#supported.
 		try:
 			import faulthandler
-		except ImportError:
-			pass
-		else:
 			faulthandler.enable()
+		except (ImportError, AttributeError):
+			pass
 
 		#load the settings module's dependencies (currently one)
 		try:

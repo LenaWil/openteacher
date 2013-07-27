@@ -24,7 +24,7 @@ import sys
 MODULES_PATH = os.path.join(os.path.dirname(__file__), "modules")
 
 class ModuleApplication(object):
-	def run(self):
+	def __init__(self):
 		#simplify json importing
 		try:
 			sys.modules["json"] = __import__("simplejson")
@@ -38,10 +38,11 @@ class ModuleApplication(object):
 
 		import moduleManager
 
-		mm = moduleManager.ModuleManager(MODULES_PATH)
+		self.mm = moduleManager.ModuleManager(MODULES_PATH)
 
+	def run(self):
 		#check if there's only one execute module
-		mods = set(mm.mods(type="execute"))
+		mods = set(self.mm.mods(type="execute"))
 		if len(mods) != 1:
 			raise ValueError("There has to be exactly one execute module installed.")
 		#start that module

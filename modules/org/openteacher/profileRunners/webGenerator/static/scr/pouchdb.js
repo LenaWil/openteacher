@@ -1,4 +1,4 @@
-// PouchDB.nightly - 2013-07-14T00:00:43
+// pouchdb.nightly - 2013-07-27T05:01:20
 
 (function() {
  // BEGIN Math.uuid.js
@@ -506,30 +506,32 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 var ajax = function ajax(options, callback) {
+
   if (typeof options === "function") {
     callback = options;
     options = {};
   }
+
   var call = function(fun) {
     var args = Array.prototype.slice.call(arguments, 1);
     if (typeof fun === typeof Function) {
       fun.apply(this, args);
     }
-  }; 
+  };
+
   var defaultOptions = {
     method : "GET",
     headers: {},
     json: true,
     processData: true,
-    timeout: 10000,
+    timeout: 10000
   };
+
   options = extend(true, defaultOptions, options);
-  if (options.auth) {
-      var token = btoa(options.auth.username + ':' + options.auth.password);
-      options.headers.Authorization = 'Basic ' + token;
-  }
+
   var onSuccess = function(obj, resp, cb){
-    if (!options.binary && !options.json && options.processData && typeof obj !== 'string') {
+    if (!options.binary && !options.json && options.processData &&
+        typeof obj !== 'string') {
       obj = JSON.stringify(obj);
     } else if (!options.binary && options.json && typeof obj === 'string') {
       try {
@@ -542,42 +544,68 @@ var ajax = function ajax(options, callback) {
     }
     call(cb, null, obj, resp);
   };
+
   var onError = function(err, cb){
     var errParsed;
     var errObj = {status: err.status};
-    try{
-      errParsed = JSON.parse(err.responseText); //would prefer not to have a try/catch clause
+    try {
+      errParsed = JSON.parse(err.responseText);
+      //would prefer not to have a try/catch clause
       errObj = extend(true, {}, errObj, errParsed);
-    } catch(e){}
+    } catch(e) {}
     call(cb, errObj);
   };
+
   if (typeof window !== 'undefined' && window.XMLHttpRequest) {
-    var timer,timedout  = false;
+    var timer, timedout = false;
     var xhr = new XMLHttpRequest();
-    xhr.withCredentials = true;
+
     xhr.open(options.method, options.url);
+    xhr.withCredentials = true;
+
     if (options.json) {
       options.headers.Accept = 'application/json';
-      options.headers['Content-Type'] = options.headers['Content-Type'] || 'application/json';
+      options.headers['Content-Type'] = options.headers['Content-Type'] ||
+        'application/json';
       if (options.body && options.processData && typeof options.body !== "string") {
         options.body = JSON.stringify(options.body);
       }
     }
+
     if (options.binary) {
       xhr.responseType = 'arraybuffer';
     }
-    for (var key in options.headers){
-      xhr.setRequestHeader(key, options.headers[key]);
+
+    function createCookie(name,value,days) {
+      if (days) {
+	var date = new Date();
+	date.setTime(date.getTime()+(days*24*60*60*1000));
+	var expires = "; expires="+date.toGMTString();
+      } else {
+        var expires = "";
+      }
+      document.cookie = name+"="+value+expires+"; path=/";
     }
+
+    for (var key in options.headers) {
+      if (key === 'Cookie') {
+        var cookie = options.headers[key].split('=');
+        createCookie(cookie[0], cookie[1], 10);
+      } else {
+        xhr.setRequestHeader(key, options.headers[key]);
+      }
+    }
+
     if (!("body" in options)) {
       options.body = null;
     }
 
     var abortReq = function() {
-        timedout=true;
-        xhr.abort();
-        call(onError, xhr, callback);
+      timedout=true;
+      xhr.abort();
+      call(onError, xhr, callback);
     };
+
     xhr.onreadystatechange = function() {
       if (xhr.readyState !== 4 || timedout) {
         return;
@@ -586,7 +614,9 @@ var ajax = function ajax(options, callback) {
       if (xhr.status >= 200 && xhr.status < 300) {
         var data;
         if (options.binary) {
-          data = new Blob([xhr.response || ''], {type: xhr.getResponseHeader('Content-Type')});
+          data = new Blob([xhr.response || ''], {
+            type: xhr.getResponseHeader('Content-Type')
+          });
         } else {
           data = xhr.responseText;
         }
@@ -595,25 +625,32 @@ var ajax = function ajax(options, callback) {
          call(onError, xhr, callback);
       }
     };
+
     if (options.timeout > 0) {
       timer = setTimeout(abortReq, options.timeout);
     }
     xhr.send(options.body);
     return {abort:abortReq};
+
   } else {
+
     if (options.json) {
       if (!options.binary) {
         options.headers.Accept = 'application/json';
       }
-      options.headers['Content-Type'] = options.headers['Content-Type'] || 'application/json';
+      options.headers['Content-Type'] = options.headers['Content-Type'] ||
+        'application/json';
     }
+
     if (options.binary) {
       options.encoding = null;
       options.json = false;
     }
+
     if (!options.processData) {
       options.json = false;
     }
+
     return request(options, function(err, response, body) {
       if (err) {
         err.status = response ? response.statusCode : 400;
@@ -625,7 +662,8 @@ var ajax = function ajax(options, callback) {
 
       // CouchDB doesn't always return the right content-type for JSON data, so
       // we check for ^{ and }$ (ignoring leading/trailing whitespace)
-      if (!options.binary && (options.json || !options.processData) && typeof data !== 'object' &&
+      if (!options.binary && (options.json || !options.processData) &&
+          typeof data !== 'object' &&
           (/json/.test(content_type) ||
            (/^[\s]*\{/.test(data) && /\}[\s]*$/.test(data)))) {
         data = JSON.parse(data);
@@ -1509,17 +1547,23 @@ var genReplicationId = function(src, target, opts) {
 };
 
 // A checkpoint lets us restart replications from when they were last cancelled
-var fetchCheckpoint = function(target, id, callback) {
-  target.get(id, function(err, doc) {
+var fetchCheckpoint = function(src, target, id, callback) {
+  target.get(id, function(err, targetDoc) {
     if (err && err.status === 404) {
       callback(null, 0);
     } else {
-      callback(null, doc.last_seq);
+      src.get(id, function(err, sourceDoc) {
+        if (err && err.status === 404 || targetDoc.last_seq !== sourceDoc.last_seq) {
+          callback(null, 0);
+        } else {
+          callback(null, sourceDoc.last_seq);
+        }
+      });
     }
   });
 };
 
-var writeCheckpoint = function(target, id, checkpoint, callback) {
+var writeCheckpoint = function(src, target, id, checkpoint, callback) {
   var check = {
     _id: id,
     last_seq: checkpoint
@@ -1529,7 +1573,14 @@ var writeCheckpoint = function(target, id, checkpoint, callback) {
       check._rev = doc._rev;
     }
     target.put(check, function(err, doc) {
-      callback();
+      src.get(check._id, function(err, doc) {
+        if (doc && doc._rev) {
+          check._rev = doc._rev;
+        }
+        src.put(check, function(err, doc) {
+          callback();
+        });
+      });
     });
   });
 };
@@ -1631,14 +1682,14 @@ function replicate(src, target, opts, promise) {
 
   function isCompleted() {
     if (completed && pending === 0) {
-      result.end_time = Date.now();
-      writeCheckpoint(target, repId, last_seq, function(err, res) {
+      result.end_time = new Date();
+      writeCheckpoint(src, target, repId, last_seq, function(err, res) {
         call(opts.complete, err, result);
       });
     }
   }
 
-  fetchCheckpoint(target, repId, function(err, checkpoint) {
+  fetchCheckpoint(src, target, repId, function(err, checkpoint) {
 
     if (err) {
       return call(opts.complete, err);
@@ -1693,7 +1744,9 @@ Pouch.replicate = function(src, target, opts, callback) {
   if (opts === undefined) {
     opts = {};
   }
-  opts.complete = callback;
+  if (!opts.complete) {
+    opts.complete = callback;
+  }
   var replicateRet = new Promise();
   toPouch(src, function(err, src) {
     if (err) {
@@ -1717,8 +1770,8 @@ Pouch.replicate = function(src, target, opts, callback) {
 // Pretty dumb name for a function, just wraps callback calls so we dont
 // to if (callback) callback() everywhere
 var call = function(fun) {
-  var args = Array.prototype.slice.call(arguments, 1);
   if (typeof fun === typeof Function) {
+    var args = Array.prototype.slice.call(arguments, 1);
     fun.apply(this, args);
   }
 };
@@ -2207,6 +2260,10 @@ var PouchAdapter = function(opts, callback) {
   };
 
   api.putAttachment = function (docId, attachmentId, rev, blob, type, callback) {
+    if (!api.taskqueue.ready()) {
+      api.taskqueue.addTask('putAttachment', arguments);
+      return;
+    }
     if (typeof type === 'function') {
       callback = type;
       type = blob;
@@ -2511,6 +2568,10 @@ var PouchAdapter = function(opts, callback) {
   };
 
   api.getAttachment = function(docId, attachmentId, opts, callback) {
+    if (!api.taskqueue.ready()) {
+      api.taskqueue.addTask('getAttachment', arguments);
+      return;
+    }
     if (opts instanceof Function) {
       callback = opts;
       opts = {};
@@ -2830,8 +2891,15 @@ var HttpPouch = function(opts, callback) {
 
   // Parse the URI given by opts.name into an easy-to-use object
   var host = getHost(opts.name);
+
+  host.headers = opts.headers || {};
   if (opts.auth) {
-    host.auth = opts.auth;
+    var token = btoa(opts.auth.username + ':' + opts.auth.password);
+    host.headers.Authorization = 'Basic ' + token;
+  }
+
+  if (opts.headers) {
+    host.headers = opts.headers;
   }
 
   // Generate the database URL based on the host
@@ -2857,7 +2925,7 @@ var HttpPouch = function(opts, callback) {
       };
       var params = '?count=' + opts.count;
       ajax({
-        auth: host.auth,
+        headers: host.headers,
         method: 'GET',
         url: genUrl(host, '_uuids') + params
       }, cb);
@@ -2866,11 +2934,11 @@ var HttpPouch = function(opts, callback) {
 
   // Create a new CouchDB database based on the given opts
   var createDB = function(){
-    ajax({auth: host.auth, method: 'PUT', url: db_url}, function(err, ret) {
+    ajax({headers: host.headers, method: 'PUT', url: db_url}, function(err, ret) {
       // If we get an "Unauthorized" error
       if (err && err.status === 401) {
         // Test if the database already exists
-        ajax({auth: host.auth, method: 'HEAD', url: db_url}, function (err, ret) {
+        ajax({headers: host.headers, method: 'HEAD', url: db_url}, function (err, ret) {
           // If there is still an error
           if (err) {
             // Give the error to the callback to deal with
@@ -2892,7 +2960,7 @@ var HttpPouch = function(opts, callback) {
     });
   };
   if (!opts.skipSetup) {
-    ajax({auth: host.auth, method: 'GET', url: db_url}, function(err, ret) {
+    ajax({headers: host.headers, method: 'GET', url: db_url}, function(err, ret) {
       //check if the db exists
       if (err) {
         if (err.status === 404) {
@@ -2922,7 +2990,7 @@ var HttpPouch = function(opts, callback) {
       api.taskqueue.addTask('request', arguments);
       return;
     }
-    options.auth = host.auth;
+    options.headers = host.headers;
     options.url = genDBUrl(host, options.url);
     ajax(options, callback);
   };
@@ -2939,7 +3007,7 @@ var HttpPouch = function(opts, callback) {
       opts = {};
     }
     ajax({
-      auth: host.auth,
+      headers: host.headers,
       url: genDBUrl(host, '_compact'),
       method: 'POST'
     }, function() {
@@ -2968,7 +3036,7 @@ var HttpPouch = function(opts, callback) {
       return;
     }
     ajax({
-      auth: host.auth,
+      headers: host.headers,
       method:'GET',
       url: genDBUrl(host, '')
     }, callback);
@@ -3054,7 +3122,7 @@ var HttpPouch = function(opts, callback) {
 
     // Set the options for the ajax call
     var options = {
-      auth: host.auth,
+      headers: host.headers,
       method: 'GET',
       url: genDBUrl(host, id + params)
     };
@@ -3099,7 +3167,7 @@ var HttpPouch = function(opts, callback) {
 
     // Delete the document
     ajax({
-      auth: host.auth,
+      headers: host.headers,
       method:'DELETE',
       url: genDBUrl(host, encodeDocId(doc._id)) + '?rev=' + doc._rev
     }, callback);
@@ -3128,7 +3196,7 @@ var HttpPouch = function(opts, callback) {
       return;
     }
     ajax({
-      auth: host.auth,
+      headers: host.headers,
       method: 'DELETE',
       url: genDBUrl(host, encodeDocId(docId) + '/' + attachmentId) + '?rev=' + rev
     }, callback);
@@ -3158,15 +3226,18 @@ var HttpPouch = function(opts, callback) {
     if (rev) {
       url += '?rev=' + rev;
     }
-    // Add the attachment
-    ajax({
-      auth: host.auth,
+
+    var opts = {
+      headers: host.headers,
       method:'PUT',
       url: url,
-      headers: {'Content-Type': type},
       processData: false,
-      body: blob
-    }, callback);
+      body: blob,
+      timeout: 60000
+    };
+    opts.headers['Content-Type'] = type;
+    // Add the attachment
+    ajax(opts, callback);
   };
 
   // Add the document given by doc (in JSON string format) to the database
@@ -3183,7 +3254,7 @@ var HttpPouch = function(opts, callback) {
     }
     if (typeof doc !== 'object') {
       return call(callback, Pouch.Errors.NOT_AN_OBJECT);
-    } 
+    }
     if (!('_id' in doc)) {
       return call(callback, Pouch.Errors.MISSING_ID);
     }
@@ -3206,7 +3277,7 @@ var HttpPouch = function(opts, callback) {
 
     // Add the document
     ajax({
-      auth: host.auth,
+      headers: host.headers,
       method: 'PUT',
       url: genDBUrl(host, encodeDocId(doc._id)) + params,
       body: doc
@@ -3228,7 +3299,7 @@ var HttpPouch = function(opts, callback) {
     }
     if (typeof doc !== 'object') {
       return call(callback, Pouch.Errors.NOT_AN_OBJECT);
-    } 
+    }
     if (! ("_id" in doc)) {
       if (uuids.list.length > 0) {
         doc._id = uuids.list.pop();
@@ -3274,7 +3345,7 @@ var HttpPouch = function(opts, callback) {
 
     // Update/create the documents
     ajax({
-      auth: host.auth,
+      headers: host.headers,
       method:'POST',
       url: genDBUrl(host, '_bulk_docs'),
       body: req
@@ -3354,7 +3425,7 @@ var HttpPouch = function(opts, callback) {
 
     // Get the document listing
     ajax({
-      auth: host.auth,
+      headers: host.headers,
       method: method,
       url: genDBUrl(host, '_all_docs' + params),
       body: body
@@ -3430,7 +3501,6 @@ var HttpPouch = function(opts, callback) {
     // Get all the changes starting wtih the one immediately after the
     // sequence number given by since.
     var fetch = function(since, callback) {
-
       params.since = since;
       params.limit = (!limit || leftToFetch > CHANGES_LIMIT) ?
         CHANGES_LIMIT : leftToFetch;
@@ -3441,7 +3511,7 @@ var HttpPouch = function(opts, callback) {
 
       // Set the options for the ajax call
       var xhrOpts = {
-        auth: host.auth, method:'GET',
+        headers: host.headers, method:'GET',
         url: genDBUrl(host, '_changes' + paramStr),
         // _changes can take a long time to generate, especially when filtered
         timeout: null
@@ -3522,6 +3592,9 @@ var HttpPouch = function(opts, callback) {
       fetch(opts.since || 0, fetched);
     } else {
       api.info(function(err, res) {
+        if (err) {
+          return call(opts.complete, err);
+        }
         remoteLastSeq = res.update_seq;
         fetch(opts.since || 0, fetched);
       });
@@ -3555,7 +3628,7 @@ var HttpPouch = function(opts, callback) {
 
     // Get the missing document/revision IDs
     ajax({
-      auth: host.auth,
+      headers: host.headers,
       method:'POST',
       url: genDBUrl(host, '_revs_diff'),
       body: req
@@ -3578,7 +3651,7 @@ var HttpPouch = function(opts, callback) {
 // Delete the HttpPouch specified by the given name.
 HttpPouch.destroy = function(name, callback) {
   var host = getHost(name);
-  ajax({auth: host.auth, method: 'DELETE', url: genDBUrl(host, '')}, callback);
+  ajax({headers: host.headers, method: 'DELETE', url: genDBUrl(host, '')}, callback);
 };
 
 // HttpPouch is a valid adapter.
@@ -3597,30 +3670,10 @@ if (typeof module !== 'undefined' && module.exports) {
 Pouch.adapter('http', HttpPouch);
 Pouch.adapter('https', HttpPouch);
 
-/*globals call: false, extend: false, parseDoc: false, Crypto: false */
+/*globals call: false, extend: false, parseDoc: false, Crypto: false, window */
 /*globals isLocalId: false, isDeleted: false, Changes: false, filterChange: false, processChanges: false */
 
 'use strict';
-
-// While most of the IDB behaviors match between implementations a
-// lot of the names still differ. This section tries to normalize the
-// different objects & methods.
-var indexedDB = window.indexedDB ||
-  window.mozIndexedDB ||
-  window.webkitIndexedDB;
-
-// still needed for R/W transactions in Android Chrome. follow MDN example:
-// https://developer.mozilla.org/en-US/docs/IndexedDB/IDBDatabase#transaction
-// note though that Chrome Canary fails on undefined READ_WRITE constants
-// on the native IDBTransaction object
-var IDBTransaction = (window.IDBTransaction && window.IDBTransaction.READ_WRITE) ?
-  window.IDBTransaction :
-  (window.webkitIDBTransaction && window.webkitIDBTransaction.READ_WRITE) ?
-    window.webkitIDBTransaction :
-    { READ_WRITE: 'readwrite' };
-
-var IDBKeyRange = window.IDBKeyRange ||
-  window.webkitIDBKeyRange;
 
 var idbError = function(callback) {
   return function(event) {
@@ -3654,16 +3707,11 @@ var IdbPouch = function(opts, callback) {
 
 
   var name = opts.name;
-  var req = indexedDB.open(name, POUCH_VERSION);
+  var req = window.indexedDB.open(name, POUCH_VERSION);
 
   if (Pouch.openReqList) {
     Pouch.openReqList[name] = req;
   }
-
-  var meta = {
-    id: 'meta-store',
-    updateSeq: 0
-  };
 
   var blobSupport = null;
 
@@ -3712,7 +3760,7 @@ var IdbPouch = function(opts, callback) {
     idb = e.target.result;
 
     var txn = idb.transaction([META_STORE, DETECT_BLOB_SUPPORT_STORE],
-                              IDBTransaction.READ_WRITE);
+                              'readwrite');
 
     idb.onversionchange = function() {
       idb.close();
@@ -3732,23 +3780,16 @@ var IdbPouch = function(opts, callback) {
       return;
     }
 
-    var req = txn.objectStore(META_STORE).get('meta-store');
+    var req = txn.objectStore(META_STORE).get(META_STORE);
 
     req.onsuccess = function(e) {
-      var reqDBId,
-          result;
-
-      if (e.target.result) {
-        meta = e.target.result;
-      }
-
+      var meta = e.target.result || {id: META_STORE};
       if (name + '_id' in meta) {
         instanceId = meta[name + '_id'];
       } else {
         instanceId = Pouch.uuid();
-
         meta[name + '_id'] = instanceId;
-        reqDBId = txn.objectStore(META_STORE).put(meta);
+        txn.objectStore(META_STORE).put(meta);
       }
 
       // detect blob support
@@ -3793,9 +3834,17 @@ var IdbPouch = function(opts, callback) {
     }
 
     var results = [];
+    var docsWritten = 0;
+
+    function writeMetaData(e) {
+      var meta = e.target.result;
+      meta.updateSeq = (meta.updateSeq || 0) + docsWritten;
+      txn.objectStore(META_STORE).put(meta);
+    }
 
     function processDocs() {
       if (!docInfos.length) {
+        txn.objectStore(META_STORE).get(META_STORE).onsuccess = writeMetaData;
         return;
       }
       var currentDoc = docInfos.shift();
@@ -3846,8 +3895,10 @@ var IdbPouch = function(opts, callback) {
         var data;
         try {
           data = atob(att.data);
-        } catch(e) {
-          return call(callback, Pouch.error(Pouch.Errors.BAD_ARG, "Attachments need to be base64 encoded"));
+        } catch (e) {
+          var err = Pouch.error(Pouch.Errors.BAD_ARG,
+                                "Attachments need to be base64 encoded");
+          return call(callback, err);
         }
         att.digest = 'md5-' + Crypto.MD5(data);
         if (blobSupport) {
@@ -3909,8 +3960,7 @@ var IdbPouch = function(opts, callback) {
       docInfo.data._id = docInfo.metadata.id;
       docInfo.data._rev = docInfo.metadata.rev;
 
-      meta.updateSeq++;
-      var req = txn.objectStore(META_STORE).put(meta);
+      docsWritten++;
 
       if (isDeleted(docInfo.metadata, docInfo.metadata.rev)) {
         docInfo.data._deleted = true;
@@ -4020,7 +4070,7 @@ var IdbPouch = function(opts, callback) {
     var txn;
     preprocessAttachments(function() {
       txn = idb.transaction([DOC_STORE, BY_SEQ_STORE, ATTACH_STORE, META_STORE],
-                            IDBTransaction.READ_WRITE);
+                            'readwrite');
       txn.onerror = idbError(callback);
       txn.ontimeout = idbError(callback);
       txn.oncomplete = complete;
@@ -4128,9 +4178,9 @@ var IdbPouch = function(opts, callback) {
     var descending = 'descending' in opts ? opts.descending : false;
     descending = descending ? 'prev' : null;
 
-    var keyRange = start && end ? IDBKeyRange.bound(start, end)
-      : start ? IDBKeyRange.lowerBound(start)
-      : end ? IDBKeyRange.upperBound(end) : null;
+    var keyRange = start && end ? window.IDBKeyRange.bound(start, end)
+      : start ? window.IDBKeyRange.lowerBound(start)
+      : end ? window.IDBKeyRange.upperBound(end) : null;
 
     var transaction = idb.transaction([DOC_STORE, BY_SEQ_STORE], 'readonly');
     transaction.oncomplete = function() {
@@ -4219,32 +4269,36 @@ var IdbPouch = function(opts, callback) {
     };
   };
 
-  // Looping through all the documents in the database is a terrible idea
-  // easiest to implement though, should probably keep a counter
   api._info = function idb_info(callback) {
     var count = 0;
-    var result;
-    var txn = idb.transaction([DOC_STORE], 'readonly');
+    var update_seq = 0;
+    var txn = idb.transaction([DOC_STORE, META_STORE], 'readonly');
+
+    function fetchUpdateSeq(e) {
+      update_seq = e.target.result && e.target.result.updateSeq || 0;
+    }
+
+    function countDocs(e) {
+      var cursor = e.target.result;
+      if (!cursor) {
+        txn.objectStore(META_STORE).get(META_STORE).onsuccess = fetchUpdateSeq;
+        return;
+      }
+      if (cursor.value.deleted !== true) {
+        count++;
+      }
+      cursor['continue']();
+    }
 
     txn.oncomplete = function() {
-      callback(null, result);
+      callback(null, {
+        db_name: name,
+        doc_count: count,
+        update_seq: update_seq
+      });
     };
 
-    txn.objectStore(DOC_STORE).openCursor().onsuccess = function(e) {
-        var cursor = e.target.result;
-        if (!cursor) {
-          result = {
-            db_name: name,
-            doc_count: count,
-            update_seq: meta.updateSeq
-          };
-          return;
-        }
-        if (cursor.value.deleted !== true) {
-          count++;
-        }
-        cursor['continue']();
-      };
+    txn.objectStore(DOC_STORE).openCursor().onsuccess = countDocs;
   };
 
   api._changes = function idb_changes(opts) {
@@ -4285,10 +4339,10 @@ var IdbPouch = function(opts, callback) {
 
       if (descending) {
         req = txn.objectStore(BY_SEQ_STORE)
-            .openCursor(IDBKeyRange.lowerBound(opts.since, true), descending);
+            .openCursor(window.IDBKeyRange.lowerBound(opts.since, true), descending);
       } else {
         req = txn.objectStore(BY_SEQ_STORE)
-            .openCursor(IDBKeyRange.lowerBound(opts.since, true));
+            .openCursor(window.IDBKeyRange.lowerBound(opts.since, true));
       }
 
       req.onsuccess = onsuccess;
@@ -4420,7 +4474,7 @@ var IdbPouch = function(opts, callback) {
   // which are listed in revs and sets this document
   // revision to to rev_tree
   api._doCompaction = function(docId, rev_tree, revs, callback) {
-    var txn = idb.transaction([DOC_STORE, BY_SEQ_STORE], IDBTransaction.READ_WRITE);
+    var txn = idb.transaction([DOC_STORE, BY_SEQ_STORE], 'readwrite');
 
     var index = txn.objectStore(DOC_STORE);
     index.get(docId).onsuccess = function(event) {
@@ -4454,7 +4508,7 @@ var IdbPouch = function(opts, callback) {
 };
 
 IdbPouch.valid = function idb_valid() {
-  return !!indexedDB;
+  return !!window.indexedDB;
 };
 
 IdbPouch.destroy = function idb_destroy(name, callback) {
@@ -4467,7 +4521,7 @@ IdbPouch.destroy = function idb_destroy(name, callback) {
   if (Pouch.openReqList[name] && Pouch.openReqList[name].result) {
     Pouch.openReqList[name].result.close();
   }
-  var req = indexedDB.deleteDatabase(name);
+  var req = window.indexedDB.deleteDatabase(name);
 
   req.onsuccess = function() {
     //Remove open request from the list.
@@ -4520,7 +4574,6 @@ var unknownError = function(callback) {
 var webSqlPouch = function(opts, callback) {
 
   var api = {};
-  var update_seq = 0;
   var instanceId = null;
   var name = opts.name;
 
@@ -4553,12 +4606,11 @@ var webSqlPouch = function(opts, callback) {
       tx.executeSql(updateseq, [], function(tx, result) {
         if (!result.rows.length) {
           var initSeq = 'INSERT INTO ' + META_STORE + ' (update_seq) VALUES (?)';
-          var newId = Pouch.uuid();
           tx.executeSql(initSeq, [0]);
           return;
         }
-        update_seq = result.rows.item(0).update_seq;
       });
+
       var dbid = 'SELECT dbid FROM ' + META_STORE + ' WHERE dbid IS NOT NULL';
       tx.executeSql(dbid, [], function(tx, result) {
         if (!result.rows.length) {
@@ -4591,10 +4643,15 @@ var webSqlPouch = function(opts, callback) {
     db.transaction(function(tx) {
       var sql = 'SELECT COUNT(id) AS count FROM ' + DOC_STORE;
       tx.executeSql(sql, [], function(tx, result) {
-        callback(null, {
-          db_name: name,
-          doc_count: result.rows.item(0).count,
-          update_seq: update_seq
+        var doc_count = result.rows.item(0).count;
+        var updateseq = 'SELECT update_seq FROM ' + META_STORE;
+        tx.executeSql(updateseq, [], function(tx, result) {
+          var update_seq = result.rows.item(0).update_seq;
+          callback(null, {
+            db_name: name,
+            doc_count: doc_count,
+            update_seq: update_seq
+          });
         });
       });
     });
@@ -4604,6 +4661,7 @@ var webSqlPouch = function(opts, callback) {
 
     var newEdits = opts.new_edits;
     var userDocs = req.docs;
+    var docsWritten = 0;
 
     // Parse the docs, give them a sequence number for the result
     var docInfos = userDocs.map(function(doc, i) {
@@ -4649,14 +4707,20 @@ var webSqlPouch = function(opts, callback) {
           return;
         }
 
-        update_seq++;
+        docsWritten++;
+
+        webSqlPouch.Changes.notify(name);
+        webSqlPouch.Changes.notifyLocalWindows(name);
+      });
+
+      var updateseq = 'SELECT update_seq FROM ' + META_STORE;
+      tx.executeSql(updateseq, [], function(tx, result) {
+        var update_seq = result.rows.item(0).update_seq + docsWritten;
         var sql = 'UPDATE ' + META_STORE + ' SET update_seq=?';
         tx.executeSql(sql, [update_seq], function() {
-          webSqlPouch.Changes.notify(name);
-          webSqlPouch.Changes.notifyLocalWindows(name);
+          call(callback, null, aresults);
         });
       });
-      call(callback, null, aresults);
     }
 
     function preprocessAttachment(att, finish) {
@@ -4666,8 +4730,10 @@ var webSqlPouch = function(opts, callback) {
       if (typeof att.data === 'string') {
         try {
           att.data = atob(att.data);
-        } catch(e) {
-          return call(callback, Pouch.error(Pouch.Errors.BAD_ARG, "Attachments need to be base64 encoded"));
+        } catch (e) {
+          var err = Pouch.error(Pouch.Errors.BAD_ARG,
+                                "Attachments need to be base64 encoded");
+          return call(callback, err);
         }
         att.digest = 'md5-' + Crypto.MD5(att.data);
         return finish();
