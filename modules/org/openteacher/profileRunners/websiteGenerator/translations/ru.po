@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-06-27 15:38+0200\n"
-"PO-Revision-Date: 2013-05-22 16:14+0000\n"
-"Last-Translator: Dasha <dashasokol@gmail.com>\n"
+"PO-Revision-Date: 2013-07-29 19:28+0000\n"
+"Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-28 05:54+0000\n"
-"X-Generator: Launchpad (build 16681)\n"
+"X-Launchpad-Export-Date: 2013-07-30 04:47+0000\n"
+"X-Generator: Launchpad (build 16700)\n"
 "Language: ru\n"
 
 #: templates/about.html:6
@@ -378,7 +378,7 @@ msgstr ""
 
 #: templates/base.html:50
 msgid "Home"
-msgstr ""
+msgstr "Главная"
 
 #: templates/base.html:51
 msgid "About"
@@ -394,7 +394,7 @@ msgstr "Вернуться в документацию"
 
 #: templates/docpage.html:9
 msgid "Link to this page"
-msgstr ""
+msgstr "Ссылка на эту страницу"
 
 #: docsTemplates/translator-notes.html:5
 msgid "Translator notes"
@@ -410,7 +410,7 @@ msgstr ""
 
 #: docsTemplates/translator-notes.html:9
 msgid "List of all keyboard shortcuts in OpenTeacher:"
-msgstr ""
+msgstr "Список всех горячих клавиш в OpenTeacher:"
 
 #: docsTemplates/translator-notes.html:15
 msgid "deprecated, should be changed to &quot;Return&quot;"
@@ -433,6 +433,8 @@ msgid ""
 "The screenshots are all taken in Ubuntu, but this should all work exactly "
 "the same in Windows and Mac OS X."
 msgstr ""
+"Все скриншоты сделаны в Ubuntu, но все должно так же выглядеть и работать в  "
+"Windows и Mac OS X."
 
 #: docsTemplates/using-openteacher-2.html:11
 msgid "Start OpenTeacher"
@@ -444,6 +446,10 @@ msgid ""
 "language, which, in our case, is English, and the foreign language (the "
 "language you want to learn), which, in our case, is French."
 msgstr ""
+"Введите заголовок списка для слов которые вы собираетесь добавить. Вводить "
+"следует на известном вам языке,в данном случае это английский или русский, и "
+"иностранном языке (языке, который вы хотите изучить), в нашем случае это "
+"французский."
 
 #: docsTemplates/using-openteacher-2.html:16
 msgid ""
@@ -471,6 +477,9 @@ msgid ""
 "you. If you did not enter the right translation, OpenTeacher will show you "
 "the correct answer, and the difference from your answer."
 msgstr ""
+"Если Вы ввели правильный перевод,  то вам будет задан следующий вопрос. Если "
+"вы ввели неправильный перевод, OpenTeacher покажет вам правильный ответ, и "
+"отличие от вашего ответа."
 
 #: docsTemplates/using-openteacher-2.html:30
 msgid ""
@@ -483,6 +492,8 @@ msgid ""
 "This simple guide explains how to install OpenTeacher for ArchLinux. I will "
 "be using ArchLinux 2010.05."
 msgstr ""
+"Это руководство объясняет как установить OpenTeacher для ArchLinux. "
+"Использовалась ArchLinux 2010.05."
 
 #: docsTemplates/install-arch.html:8
 msgid ""
@@ -525,17 +536,19 @@ msgstr ""
 
 #: docsTemplates/the-openteacher-format.html:5
 msgid "The Openteacher 2 file format"
-msgstr ""
+msgstr "Формат файлов Openteacher 2"
 
 #: docsTemplates/the-openteacher-format.html:6
 msgid "The Openteacher 2 file format is an XML 1.0 file with UTF-8 encoding."
-msgstr ""
+msgstr "Формат файлов Openteacher 2 - это XML 1.0 файл в кодировке UTF-8."
 
 #: docsTemplates/the-openteacher-format.html:7
 msgid ""
 "An XML-scheme of the file format can be downloaded <a "
 "href=\"files/openteacher.xsd\">here</a>."
 msgstr ""
+"XML-схема формата файла может быть получена <a "
+"href=\"files/openteacher.xsd\">здесь</a>."
 
 #: docsTemplates/the-openteacher-format.html:8
 msgid ""
@@ -550,23 +563,23 @@ msgstr ""
 
 #: docsTemplates/the-openteacher-format.html:25
 msgid "The title of the word list"
-msgstr ""
+msgstr "Заголовок списка слов"
 
 #: docsTemplates/the-openteacher-format.html:26
 msgid "The name of the question language"
-msgstr ""
+msgstr "Название языка вопросов"
 
 #: docsTemplates/the-openteacher-format.html:27
 msgid "The name of the answer language"
-msgstr ""
+msgstr "Название языка ответов"
 
 #: docsTemplates/the-openteacher-format.html:29
 msgid "This word in the question language"
-msgstr ""
+msgstr "Это слово на языке вопросов"
 
 #: docsTemplates/the-openteacher-format.html:30
 msgid "This word in the answer language"
-msgstr ""
+msgstr "Это слово на языке ответов"
 
 #: docsTemplates/the-openteacher-format.html:31
 msgid "The results of this word in the format of 0/0"
@@ -574,11 +587,11 @@ msgstr ""
 
 #: docsTemplates/the-openteacher-format.html:37
 msgid "Example a word list saved in the OpenTeacher 2 format"
-msgstr ""
+msgstr "Пример списка слов сохранённого в формате OpenTeacher 2"
 
 #: docsTemplates/faq.html:6
 msgid "OpenTeacher won't run on Windows!"
-msgstr ""
+msgstr "OpenTeacher не работает под Windows!"
 
 #: docsTemplates/faq.html:7
 msgid ""
