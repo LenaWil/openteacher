@@ -23,7 +23,7 @@ class JSBisectModule(object):
 		super(JSBisectModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "bisect"
+		self.type = "bisectfunc"
 		self.javaScriptImplementation = True
 		self.requires = (
 			self._mm.mods(type="javaScriptEvaluator"),

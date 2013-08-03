@@ -166,7 +166,7 @@ class ModulesHandler(object):
 			for root, dirs, files in sorted(os.walk(basePath))
 			for file in files
 		)
-		#and filter them
+		#and filter them, return the results
 		return (
 			p for p in paths
 			if not (
@@ -178,6 +178,7 @@ class ModulesHandler(object):
 				or "ircBot" in p
 				or "words.txt" in p
 				or "dev_tools.rst" in p
+				or "pouchdb.js" in p
 			)
 		)
 

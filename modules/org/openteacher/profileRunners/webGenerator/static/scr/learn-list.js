@@ -1,9 +1,17 @@
-var learnList = (function () {
+var learnPage = (function () {
 	var lessonType, currentList;
+
+	function retranslate() {
+		$("#question-label-label").text(_("Question:"));
+		$("#check-button").val(_("Check!"));
+		$("#skip-button").val(_("Skip"));
+		$("#correct-anyway-button").val(_("Correct anyway"));
+		$("#back-from-learn-page").text(_("Back to the lists page"));
+	}
 
 	var controller = new logic.InputTypingController();
 
-	function onLearnList(id) {
+	function onLearnList (id) {
 		listsDb.get(id, function (err, list) {
 			currentList = list;
 			indexes = [];
@@ -30,7 +38,7 @@ var learnList = (function () {
 	function lessonDone(callback) {
 		if (typeof callback === "undefined") {
 			callback = function () {
-				viewList(currentList._id);
+				viewPage.viewList(currentList._id);
 			};
 		}
 		if (typeof currentList.tests === "undefined") {
@@ -114,5 +122,8 @@ var learnList = (function () {
 		$("#learn-answer-input").keyup(controller.userIsTyping);
 	});
 
-	return onLearnList;
+	return {
+		learnList: onLearnList,
+		retranslate: retranslate
+	};
 }());

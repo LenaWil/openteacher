@@ -36,6 +36,8 @@ PYTHON_EXCEPTIONS = dict(
 
 PYTHON_ERROR_DEFINITION = """
 var JSEvaluatorPythonError = function(name, message, id) {
+	"use strict";
+
 	this.name = name;
 	this.message = message;
 	this.lineNumber = -1;

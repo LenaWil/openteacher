@@ -1,13 +1,39 @@
-var viewList = (function () {
+var viewPage = (function () {
+	function retranslate() {
+		$("#list-part .subheader").text(_("List"));
+		$("#title-label").text(_("Title:"));
+		$("#shares-label").text(_("Shares:"));
+		$("#shares-info-label").text(_("Currently existing shares:"));
+		$("#list-questions-header").text(_("Questions"));
+		$("#list-answers-header").text(_("Answers"));
+		$(".remove-item").attr("title", _("Remove this item"));
+
+		$("#tests-part .subheader").text(_("Test results"));
+		$("#tests-date-header").text(_("Date"));
+		$("#tests-note-header").text(_("Note"));
+		$("#tests-completed-header").text(_("Completed"));
+
+		$("#back-from-list-page").text(_("Back to the lists page"));
+		$("#save-list").text(_("Save"));
+		$("#teach-list").text(_("Teach me!"));
+		$("#save-success").text(_("Saved the list succesfully."));
+		$("#save-failure").text(_("Couldn't save the list, because it has been edited elsewhere in the meantime. You can either discard your changes, or save again (overwriting the changes made elsewhere)."));
+
+		//TRANSLATORS: used to indicate that a table
+		//TRANSLATORS: value is unknown.
+		$(".unknown").text(_("-"));
+	}
+
 	function onViewList(id) {
 		listsDb.get(id, function (err, resp) {
 			$("#title").val(resp.title);
 			$("#shares").val(resp.shares.join(", "));
-			$("#list-page").data("id", id);
-			$("#list-page").data("rev", resp._rev);
+			$("#view-page").data("id", id);
+			$("#view-page").data("rev", resp._rev);
 			$("#list tbody").empty();
-			for (var i = 0; i < resp.items.length; i += 1) {
-				addRow(resp.items[i]);
+			var items = resp.items || [];
+			for (var i = 0; i < items.length; i += 1) {
+				addRow(items[i]);
 			}
 			newRow();
 
@@ -21,6 +47,7 @@ var viewList = (function () {
 	}
 
 	function addRow(item) {
+		$(".last-remove-item").removeClass("last-remove-item");
 		var row = renderTemplate("#list-template", {
 			item: item,
 			compose: logic.compose
@@ -50,15 +77,57 @@ var viewList = (function () {
 					classes: tbody.children().length % 2 ? "even" : "odd"
 				}));
 			}
+			//the tests part contains stuff that needs to be translated.
+			retranslate();
 			$("#tests-part").show();
 		}
-		show("#list-page", function () {
+		show("#view-page", function () {
 			$("#list tbody tr:last .question-input").focus();
 		});
 	}
 
-	function onSaveList() {
-		var page = $("#list-page");
+	$(function () {
+		$("#back-from-list-page").click(onBackFromListPage);
+		$("#save-list").click(onSaveList);
+		$("#teach-list").click(onTeachList);
+
+		$("#list tbody").on("keyup", "#list input:last", onLastListInputKeyUp);
+
+		$("#list tbody").on("click", ".remove-item", onRemoveItem);
+		$("#list tbody").on("keyup", ".remove-item", onRemoveItemKeyUp);
+
+		$("#tests").on("change", ".finished-checkbox", onFinishedCheckboxChange);
+		$("#tests").on("focus", ".finished-checkbox", onFinishedCheckboxFocus);
+
+		sharedListsChanged.handle(onSharedListsChange);
+	});
+
+	function onBackFromListPage() {
+		ifNextPageAllowed(function () {
+			show("#lists-page");
+		});
+	}
+
+	function ifNextPageAllowed(callback) {
+		var page = $("#view-page");
+		var id = page.data("id");
+		var rev = page.data("rev");
+		listsDb.get(id, {rev: rev}, function (err, resp) {
+			toList(function (list) {
+				//JSON.stringify isn't meant for this, but it seems to
+				//work.
+				if (
+					JSON.stringify(list) === JSON.stringify(resp) ||
+					window.confirm(_("There are unsaved changes. Are you sure you want to leave this page?"))
+				) {
+					callback();
+				}
+			});
+		});
+	}
+
+	function toList(callback) {
+		var page = $("#view-page");
 		var id = page.data("id");
 		var rev = page.data("rev");
 
@@ -96,39 +165,108 @@ var viewList = (function () {
 				item.answers = logic.parse($(".answer-input", tr).val());
 				doc.items.push(item);
 			});
-			listsDb.put(doc, function (err, resp) {
-				//set the new rev to the page, so it can be saved again
-				//without conflicts.
-				page.data("rev", resp.rev);
+			if (!doc.items.length) {
+				delete doc.items;
+			}
+			callback(doc);
+		});
+	}
+
+	function onSaveList() {
+		toList(function (list) {
+			listsDb.put(list, function (err, resp) {
+				function slideUpAfterTimeout(timeout) {
+					return function () {
+						var elem = this;
+						setTimeout(function () {
+							if ($(elem).is(":visible")) {
+								$(elem).slideUp();
+							}
+						}, timeout);
+					};
+				}
+
+				if (err === null) {
+					$("#save-failure").slideUp();
+					$("#save-success").slideDown(slideUpAfterTimeout(5000));
+				} else {
+					$("#save-success").slideUp();
+					$("#save-failure").slideDown(slideUpAfterTimeout(8000));
+				}
+
+				//query the db to get the latest rev (on success it's in
+				//the resp too, but not on err.)
+				listsDb.get(list._id, function (err, resp) {
+					//set the new rev to the page, so it can be saved again
+					//without conflicts.
+					$("#view-page").data("rev", resp._rev);
+				});
 			});
 		});
 	}
 
-	$(function () {
-		$("#back-from-list-page").click(function () {
-			show("#lists-page");
+	function onTeachList () {
+		ifNextPageAllowed(function () {
+			learnPage.learnList($("#view-page").data("id"));
 		});
-		$("#save-list").click(onSaveList);
+	}
 
-		$("#list tbody").on("keyup", "#list input:last", function (event) {
-			//9 is 'tab'.
-			if (event.which !== 9) {
-				newRow();
+	function onLastListInputKeyUp(event) {
+		//9 is 'tab'.
+		if (event.which !== 9) {
+			newRow();
+		}
+	}
+
+	function onRemoveItem() {
+		//remove the current row
+		var currentRow = $($(this).parents("tr")[0]);
+		var nextRow = currentRow.next();
+		currentRow.remove();
+		nextRow.find(".question-input").focus();
+		return false;
+	}
+
+	function onRemoveItemKeyUp(event) {
+		if (event.which === 9 && !event.shiftKey) {
+			//if tabbing but not backtabbing, go to the next
+			//question input.
+			var nextRow = $($(this).parents("tr")[0]).next();
+			$(nextRow).find(".question-input")[0].focus();
+		}
+	}
+
+	function onFinishedCheckboxChange() {
+		//undo the user action, like if the checkbox is disabled.
+		//(not using that because that looks greyed out)
+		var checkbox = $(this);
+		if (checkbox.attr("checked")) {
+			checkbox.removeAttr("checked");
+		} else {
+			checkbox.attr("checked", "checked");
+		}
+		//no focus too.
+		checkbox.blur();
+	}
+
+	function onFinishedCheckboxFocus() {
+		//pass the focus to the first button instead
+		$("#back-from-list-page").focus();
+		return false;
+	}
+
+	function onSharedListsChange(change) {
+		sharedListsDb.query("shares/share_names", {group: true}, function (err, resp) {
+			var shareNames = [];
+			for (var i = 0; i < resp.rows.length; i += 1) {
+				shareNames.push(resp.rows[i].key);
 			}
+			$("#shares-info").text(shareNames.join(", "));
 		});
+	}
 
-		$("#tests").on("change", ".finished-checkbox", function () {
-			//undo the user action, like if the checkbox is disabled.
-			//(not using that because that looks greyed out)
-			var checkbox = $(this);
-			if (checkbox.attr("checked")) {
-				checkbox.removeAttr("checked");
-			} else {
-				checkbox.attr("checked", "checked");
-			}
-		});
-
-	});
-
-	return onViewList;
+	return {
+		viewList: onViewList,
+		retranslate: retranslate
+	};
 }());

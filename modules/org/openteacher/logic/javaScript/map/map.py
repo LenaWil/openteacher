@@ -23,7 +23,7 @@ class JSMapModule(object):
 		super(JSMapModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "map"
+		self.type = "mapfunc"
 		self.javaScriptImplementation = True
 
 	def enable(self):

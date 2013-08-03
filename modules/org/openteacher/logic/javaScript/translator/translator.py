@@ -18,16 +18,16 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class JSSumModule(object):
+class JSTranslatorModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(JSSumModule, self).__init__(*args, **kwargs)
+		super(JSTranslatorModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "sumfunc"
+		self.type = "jsTranslator"
 		self.javaScriptImplementation = True
 
 	def enable(self):
-		with open(self._mm.resourcePath("sum.js")) as f:
+		with open(self._mm.resourcePath("translator.js")) as f:
 			self.code = f.read()
 
 		self.active = True
@@ -38,4 +38,4 @@ class JSSumModule(object):
 		del self.code
 
 def init(moduleManager):
-	return JSSumModule(moduleManager)
+	return JSTranslatorModule(moduleManager)

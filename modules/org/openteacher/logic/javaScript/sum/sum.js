@@ -20,6 +20,8 @@
 var sum;
 
 (function () {
+	"use strict";
+
 	function reduce(func, data) {
 		var result = data.pop();
 		while (data.length) {

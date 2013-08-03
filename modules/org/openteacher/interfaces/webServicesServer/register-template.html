@@ -17,11 +17,10 @@
 	You should have received a copy of the GNU General Public License
 	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<!--FIXME: translations!-->
 <html>
 	<head>
 		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-		<title>OpenTeacher Web - sign up</title>
+		<title>{{ _("OpenTeacher Web - sign up") }}</title>
 		<style type='text/css'>
 			body {
 				margin: 0 auto;
@@ -61,25 +60,26 @@
 	</script>
 	<body onload='focus();'>
 		<div id='page'>
-			<h1>OpenTeacher Web</h1>
-			<h2>Sign up</h2>
+			<h1>{{ _("OpenTeacher Web") }}</h1>
+			<h2>{{ _("Sign up") }}</h2>
 			<p>
-				Welcome to OpenTeacher Web! You can register an account below.
+				{{ _("Welcome to OpenTeacher Web! You can register an account below.") }}
 			</p>
 			<p id='error'>
 				{{ error }}
 			</p>
 			<form action='{{ url_for("services_register_send") }}' method='post'>
 				<input name='redirect' type='hidden' value='{{ redirect }}' />
+				<input name='language' type='hidden' value='{{ language }}' />
 				<table>
 					<tr>
-						<td>Username:</td>
+						<td>{{ _("") }}Username:</td>
 						<td>
 							<input id='focusfield' type='text' name='username' />
 						</td>
 					</tr>
 					<tr>
-						<td>Password:</td>
+						<td>{{ _("Password:") }}</td>
 						<td>
 							<input type='password' name='password' />
 						</td>
@@ -93,8 +93,8 @@
 						<td>
 						</td>
 						<td>
-							<input type='submit' value='Sign up!' />
-							<input type='button' onclick='cancel();' value='Cancel'>
+							<input type='submit' value='{{ _("Sign up!") }}' />
+							<input type='button' onclick='cancel();' value='{{ _("Cancel") }}'>
 						</td>
 					</tr>
 				</table>

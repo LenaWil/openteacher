@@ -19,32 +19,48 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-import bisect
 
 class TestCase(unittest.TestCase):
+	"""Tests TranslationIndexesMerger. No tests for invalid input
+	   currently, but since all real life input is most likely generated
+	   via the TranslationIndexBuilder anyway it's not really worth it.
+
+	"""
 	@property
 	def _mods(self):
-		#test the native python bisect module too, to double check this
-		#tests are right.
-		return [bisect] + list(self._mm.mods("active", type="bisectfunc"))
+		return self._mm.mods("active", type="translationIndexesMerger")
 
-	def testLarger(self):
+	def testMergeTwoLangs(self):
 		for m in self._mods:
-			self.assertEqual(m.bisect([1, 2, 3], 4), 3)
-			self.assertEqual(m.bisect([1, 2, 3], 2000), 3)
+			self.assertEqual(m.mergeIndexes(
+				{"de": {"no": "nein"}},
+				{"nl": {"no": "nee"}},
+			), {
+				"de": {"no": "nein"},
+				"nl": {"no": "nee"},
+			})
 
-	def testMiddle(self):
+	def testSimpleMergeSingleLang(self):
 		for m in self._mods:
-			self.assertEqual(m.bisect([1, 2, 3], 2), 2)
+			self.assertEqual(m.mergeIndexes(
+				{"de": {"no": "nein"}},
+				{"de": {"yes": "ja"}},
+			), {
+				"de": {
+					"no": "nein",
+					"yes": "ja"
+				},
+			})
 
-	def testSmaller(self):
+	def testOverwritingEntry(self):
 		for m in self._mods:
-			self.assertEqual(m.bisect([1, 2, 3], 0), 0)
-			self.assertEqual(m.bisect([1, 2, 3], -100), 0)
-
-	def testFloat(self):
-		for m in self._mods:
-			self.assertEqual(m.bisect([1, 2, 3], 1.4), 1)
+			#last overwrites first
+			self.assertEqual(m.mergeIndexes(
+				{"nl": {"yes": "ja"}},
+				{"nl": {"yes": "zeker"}}
+			), {
+				"nl": {"yes": "zeker"},
+			})
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -53,7 +69,7 @@ class TestModule(object):
 
 		self.type = "test"
 		self.requires = (
-			self._mm.mods(type="bisectfunc"),
+			self._mm.mods(type="translationIndexesMerger"),
 		)
 
 	def enable(self):

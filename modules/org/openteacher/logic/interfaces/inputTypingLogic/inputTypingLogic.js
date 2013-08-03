@@ -208,7 +208,7 @@ InputTypingController = function () {
 			that.correctionShowingDone();
 		}
 		lastResult.result = "right";
-		lastResult.givenAnswer= _("Corrected: %s").replace("%s", lastResult.givenAnswer);
+		lastResult.givenAnswer = _("Corrected: %s").replace("%s", lastResult.givenAnswer);
 
 		that.lessonType.correctLastAnswer(lastResult);
 		that.disableCorrectAnyway.send();

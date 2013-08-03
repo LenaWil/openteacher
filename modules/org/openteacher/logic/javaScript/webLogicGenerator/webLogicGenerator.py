@@ -33,23 +33,31 @@ class WebLogicGeneratorModule(object):
 			"wordListStringParser",
 			"wordListStringComposer",
 
-			#inputTypingLogic
+			#lesson
 			"inputTypingLogic",
+			"javaScriptLessonType",
 
 			#else
-			"javaScriptLessonType",
+			"javaScriptEvent",
 			"noteCalculator",
+			"jsTranslator",
 		]
-		self.requires = tuple(
+		self.requires = [
 			self._mm.mods("javaScriptImplementation", type=type)
 			for type in self._logicModTypes
-		)
+		]
+		self.requires = tuple(self.requires + [
+			self._mm.mods(type="translationIndexesMerger")
+		])
+
+	def _logicMods(self):
+		for type in self._logicModTypes:
+			yield self._modules.default("active", "javaScriptImplementation", type=type)
 
 	def writeLogicCode(self, path):
 		#generate logic javascript
 		logic = u""
-		for type in self._logicModTypes:
-			mod = self._modules.default("active", "javaScriptImplementation", type=type)
+		for mod in self._logicMods():
 			#add to logic code var with an additional tab before every
 			#line
 			logic += "\n\n\n\t" + "\n".join("\t" + s for s in mod.code.split("\n")).strip()
@@ -57,6 +65,13 @@ class WebLogicGeneratorModule(object):
 		template = pyratemp.Template(filename=self._mm.resourcePath("logic.templ.js"))
 		with open(path, "w") as f:
 			f.write(template(code=logic).encode("UTF-8"))
+
+	@property
+	def translationIndex(self):
+		translationIndexes = (getattr(m, "translationIndex", {}) for m in self._logicMods())
+		mergeIndexes = self._modules.default("active", type="translationIndexesMerger").mergeIndexes
+
+		return mergeIndexes(*translationIndexes)
 
 	def enable(self):
 		global pyratemp

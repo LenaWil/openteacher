@@ -40,9 +40,11 @@ class MobileGeneratorModule(object):
 
 		self.requires = (
 			self._mm.mods(type="execute"),
-			self._mm.mods(type="friendlyTranslationNames"),
 			self._mm.mods(type="metadata"),
 			self._mm.mods(type="webLogicGenerator"),
+			self._mm.mods(type="translationIndexBuilder"),
+			self._mm.mods(type="translationIndexesMerger"),
+			self._mm.mods(type="translationIndexJSONWriter"),
 		)
 
 		self.priorities = {
@@ -74,14 +76,9 @@ class MobileGeneratorModule(object):
 		self._modules.default(type="execute").startRunning.handle(self._run)
 
 		self._metadata = self._modules.default("active", type="metadata").metadata
+		self._logicGenerator = self._modules.default("active", type="webLogicGenerator")
 
 		self.active = True
-
-	@property
-	def languages(self, cache={}):
-		if "languages" not in cache:
-			cache["languages"] = self._modules.default("active", type="friendlyTranslationNames").friendlyNames
-		return cache["languages"]
 
 	def _buildSplash(self, width, height, iconPath):
 		#build splash.png
@@ -131,40 +128,19 @@ class MobileGeneratorModule(object):
 		shutil.copytree(self._mm.resourcePath("css"), os.path.join(path, "css"))
 
 	def _generateTranslationFiles(self, path):
-		#generate translation json files from po files
-		translationIndex = {}
+		buildIndex = self._modules.default("active", type="translationIndexBuilder").buildTranslationIndex
+		mergeIndexes = self._modules.default("active", type="translationIndexesMerger").mergeIndexes
+		writeJSONIndex = self._modules.default("active", type="translationIndexJSONWriter").writeJSONIndex
 
-		os.mkdir(os.path.join(path, "translations"))
-		for poname in os.listdir(self._mm.resourcePath("translations")):
-			data = {}
-			if not poname.endswith(".po"):
-				continue
-			popath = os.path.join(self._mm.resourcePath("translations"), poname)
-			po = polib.pofile(popath)
-			for entry in po.translated_entries():
-				data[entry.msgid] = entry.msgstr
-
-			lang = poname[:-len(".po")]
-			jsonname = lang.replace("_", "-") + ".json"
-			translationIndex[lang] = {
-				"url": os.path.join("translations", jsonname),
-				"name": self.languages[lang],
-			}
-
-			with open(os.path.join(path, "translations", jsonname), "w") as f:
-				json.dump(data, f, separators=(",", ":"), encoding="UTF-8")
-
-		translationIndex["en"] = {"name": self.languages["C"]}
-		with open(os.path.join(path, "translations", "index.js"), "w") as f:
-			data = json.dumps(translationIndex, separators=(",", ":"), encoding="UTF-8")
-			f.write("var translationIndex=%s;" % data)
+		index = buildIndex(self._mm.resourcePath("translations"))
+		masterIndex = mergeIndexes(index, self._logicGenerator.translationIndex)
+		writeJSONIndex(masterIndex, os.path.join(path, "translations", "translations"))
 
 	def _writeScripts(self, path):
 		os.mkdir(os.path.join(path, "scr"))
 
-		logicGenerator = self._modules.default("active", type="webLogicGenerator")
 		logicPath = os.path.join(path, "scr", "logic.js")
-		logicGenerator.writeLogicCode(logicPath)
+		self._logicGenerator.writeLogicCode(logicPath)
 
 		#copy scripts
 		scripts = [
@@ -259,6 +235,7 @@ class MobileGeneratorModule(object):
 		self.active = False
 
 		del self._metadata
+		del self._logicGenerator
 		self._modules.default(type="execute").startRunning.unhandle(self._run)
 		del self._modules
 

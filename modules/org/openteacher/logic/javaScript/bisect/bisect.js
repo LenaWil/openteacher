@@ -18,6 +18,8 @@
 */
 
 function bisect(a, x) {
+	"use strict";
+
 	var low = 0;
 	var high = a.length;
 

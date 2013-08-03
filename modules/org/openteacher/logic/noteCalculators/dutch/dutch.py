@@ -29,8 +29,8 @@ class DutchNoteCalculatorModule(object):
 		)
 		self.requires = (
 			self._mm.mods(type="javaScriptEvaluator"),
-			self._mm.mods("javaScriptImplementation", type="map"),
-			self._mm.mods("javaScriptImplementation", type="sum"),
+			self._mm.mods("javaScriptImplementation", type="mapfunc"),
+			self._mm.mods("javaScriptImplementation", type="sumfunc"),
 		)
 		self.filesWithTranslations = ("dutch.py",)
 		self.javaScriptImplementation = True
@@ -45,8 +45,8 @@ class DutchNoteCalculatorModule(object):
 	def enable(self):
 		self._modules = next(iter(self._mm.mods(type="modules")))
 
-		self.code = self._modules.default("active", "javaScriptImplementation", type="map").code
-		self.code += self._modules.default("active", "javaScriptImplementation", type="sum").code
+		self.code = self._modules.default("active", "javaScriptImplementation", type="mapfunc").code
+		self.code += self._modules.default("active", "javaScriptImplementation", type="sumfunc").code
 		with open(self._mm.resourcePath("dutch.js")) as f:
 			self.code += f.read()
 

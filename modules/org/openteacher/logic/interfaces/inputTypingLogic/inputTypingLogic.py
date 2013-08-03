@@ -18,6 +18,8 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+import contextlib
+
 class JSInputTypingLogicModule(object):
 	"""This module offers an object that can be used to control the part
 	   of a GUI where the user types his/her answer in in a test.
@@ -38,6 +40,7 @@ class JSInputTypingLogicModule(object):
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="translationIndexBuilder"),
 		)
 		self.filesWithTranslations = ("inputTypingLogic.js",)
 
@@ -64,6 +67,10 @@ class JSInputTypingLogicModule(object):
 		self.code += self._modules.default("active", "javaScriptImplementation", type="wordsStringChecker").code
 		self._js.eval(self.code)
 
+		with contextlib.ignored(IndexError):
+			buildTranslationIndex = self._modules.default("active", type="translationIndexBuilder").buildTranslationIndex
+			self.translationIndex = buildTranslationIndex(self._mm.resourcePath("translations"))
+
 		self.active = True
 
 	def _retranslate(self):
@@ -84,6 +91,8 @@ class JSInputTypingLogicModule(object):
 		del self._modules
 		del self._js
 		del self.code
+		with contextlib.ignored(AttributeError):
+			del self.translationIndex
 
 def init(moduleManager):
 	return JSInputTypingLogicModule(moduleManager)

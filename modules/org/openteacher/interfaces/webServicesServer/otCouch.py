@@ -1,6 +1,3 @@
-#TODO: check if html submitted inside lists is safe. Reuse code already
-#in OT.
-
 import requests
 import json
 import uuid
@@ -21,12 +18,31 @@ def _only_access_for(username):
 	}
 
 class OTWebCouch(object):
-	def __init__(self, host, username, password, *args, **kwargs):
+	def __init__(self, host, username, password, isSafeHtmlCode, *args, **kwargs):
 		super(OTWebCouch, self).__init__(*args, **kwargs)
 
 		self._host = host
 		self._username = username
 		self._password = password
+
+		self._validationLib = isSafeHtmlCode + "\n" + """
+			exports.assertSafeHtml = function (data) {
+				if (!isSafeHtml(data)) {
+					throw({forbidden: "'" + data + "' isn't valid HTML."});
+				}
+			};
+			exports.requireAttr = function (obj, attr) {
+				if (typeof obj[attr] === "undefined") {
+					throw({"forbidden": name + " should not be undefined."});
+				}
+			};
+			exports.assertValidDate = function (data) {
+				if (isNaN(new Date(data).valueOf())) {
+					//if not a valid date
+					throw({"forbidden": "'" + data + "' should be a valid JSON representation of a JS Date object (as serialized in JS)."});
+				}
+			};
+		"""
 
 	def _req(self, method, endpoint, data=None, auth=None):
 		if data:
@@ -59,14 +75,19 @@ class OTWebCouch(object):
 				_only_access_for(username)
 			).status_code == 200
 			assert self._req("put", "/tests_" + username + "/_design/tests", {
+				"validation_lib": self._validationLib,
 				"validate_doc_update": """
 					function (newDoc, oldDoc, userCtx) {
 						if (newDoc._deleted) {
 							//that's fine.
 							return;
 						}
-						if (typeof newDoc.listId === "undefined") {
-							throw({forbidden: "A test should have a listId."});
+						var lib = require("validation_lib");
+
+						lib.requireAttr(newDoc, "listId");
+						var results = newDoc.results || [];
+						for (var i = 0; i < results.length; i += 1) {
+							lib.assertSafeHtml(results[i].givenAnswer || "");
 						}
 					}
 				""",
@@ -103,24 +124,36 @@ class OTWebCouch(object):
 				"/lists_" + username + "/_security",
 				_only_access_for(username)
 			).status_code == 200
+
 			assert self._req("put", "/lists_" + username + "/_design/lists", {
+				"validation_lib": self._validationLib,
 				"validate_doc_update": """
 					function (newDoc, oldDoc, userCtx) {
 						if (newDoc._deleted) {
 							//that's fine.
 							return;
 						}
-						function require(name) {
-							if (typeof eval(name) === "undefined") {
-								throw({"forbidden": name + " should not be undefined."});
-							}
+						var lib = require("validation_lib");
+
+						lib.requireAttr(newDoc, "title");
+						lib.assertSafeHtml(newDoc, "title");
+
+						lib.requireAttr(newDoc, "shares");
+						for (var i = 0; i < newDoc.shares.length; i += 1) {
+							lib.assertSafeHtml(newDoc.shares[i]);
 						}
-						require("newDoc.shares");
-						require("newDoc.items");
-						require("newDoc.title");
-						if (new Date(newDoc.lastEdited).valueOf() === NaN) {
-							//if not a valid date
-							throw({"forbidden": "newDoc.lastEdited should be a valid JSON representation of a JS Date object (as serialized in JS)."})
+
+						lib.requireAttr(newDoc, "lastEdited");
+						lib.assertValidDate(newDoc.lastEdited);
+
+						var items = newDoc.items || [];
+						for (var i = 0; i < items.length; i += 1) {
+							var item = items[i];
+							lib.assertSafeHtml(item.comment || "");
+							lib.assertSafeHtml(item.commentAfterAnswering || "");
+							//close enough...
+							lib.assertSafeHtml((item.questions || []).toString());
+							lib.assertSafeHtml((item.answers || []).toString());
 						}
 					}
 				""",
@@ -287,7 +320,7 @@ class OTWebCouch(object):
 				{
 					"id": 1,
 					"questions": [["twee"]],
-					"answers": [["two"]]
+					"answers": [["two"]],
 				}
 			],
 			"title": "something"
@@ -317,22 +350,18 @@ class OTWebCouch(object):
 
 		self._req("post", "/lists_test/_design/lists/_update/set_last_edited_to_now", {
 			"shares": ["testShare"],
-			"items": [],
 			"title": "a"
 		}, auth=testAuth)
 		self._req("post", "/lists_test/_design/lists/_update/set_last_edited_to_now", {
 			"shares": ["testShare"],
-			"items": [],
 			"title": "b"
 		}, auth=testAuth)
 		self._req("post", "/lists_test/_design/lists/_update/set_last_edited_to_now", {
 			"shares": ["testShareB"],
-			"items": [],
 			"title": "c"
 		}, auth=testAuth)
 		self._req("post", "/lists_test/_design/lists/_update/set_last_edited_to_now", {
 			"shares": [],
-			"items": [],
 			"title": "d"
 		}, auth=testAuth)
 		self._req("post", "/settings_test", {
@@ -368,10 +397,19 @@ class OTWebCouch(object):
 		self._req("post", "/_replicator/_compact")
 
 if __name__ == "__main__":
+	#CAUTION: This 'test runner' code passes in a stub for the
+	#isSafeHtml function, making it possible to inject malicious html.
+	#Do NOT use this in production.
+
 	import os
 	with open(os.path.join(os.path.dirname(__file__), "ot-web-config.json")) as f:
 		config = json.load(f)
-	couch = OTWebCouch(config["COUCHDB_HOST"], config["COUCHDB_ADMIN_USERNAME"], config["COUCHDB_ADMIN_PASSWORD"])
+	couch = OTWebCouch(
+		config["COUCHDB_HOST"],
+		config["COUCHDB_ADMIN_USERNAME"],
+		config["COUCHDB_ADMIN_PASSWORD"],
+		"function isSafeHtml () {return true;}"
+	)
 
 	iterator = couch.test()
 	#set up

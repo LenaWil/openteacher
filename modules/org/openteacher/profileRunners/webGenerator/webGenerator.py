@@ -31,20 +31,38 @@ class WebGeneratorModule(object):
 		self.requires = (
 			self._mm.mods(type="execute"),
 			self._mm.mods(type="webLogicGenerator"),
+			self._mm.mods(type="translationIndexBuilder"),
+			self._mm.mods(type="translationIndexesMerger"),
+			self._mm.mods(type="translationIndexJSONWriter"),
+			self._mm.mods(type="metadata"),
 		)
 		self.priorities = {
 			"default": -1,
 			"generate-web": 0,
 		}
+		#all files directly in the scr directory are web-specific and
+		#thus ui related and thus contain translations. (In theory ;))
+		self.filesWithTranslations = (
+			"static/scr/learn-list.js",
+			"static/scr/lists-overview.js",
+			"static/scr/login.js",
+			"static/scr/main.js",
+			"static/scr/view-list.js",
+		)
 
 	def enable(self):
 		global pyratemp
+		global QtGui
 		try:
 			import pyratemp
+			from PyQt4 import QtGui
 		except ImportError:
 			return
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._modules.default(type="execute").startRunning.handle(self._run)
+		self._logicGenerator = self._modules.default("active", type="webLogicGenerator")
+
+		self._metadata = self._modules.default("active", type="metadata").metadata
 
 		self.active = True
 
@@ -69,19 +87,49 @@ class WebGeneratorModule(object):
 
 		#create the config file
 		template = pyratemp.Template(filename=self._mm.resourcePath("config.templ.js"))
-		with open(os.path.join(path, "scr/config.js"), "w") as f:
-			f.write(template(couchdbHost=couchdbHost, servicesHost=servicesHost).encode("UTF-8"))
+		with open(os.path.join(path, "scr/generated/config.js"), "w") as f:
+			f.write(template(
+				couchdbHost=couchdbHost,
+				servicesHost=servicesHost,
+				appName=self._metadata
+			).encode("UTF-8"))
+
+		#create the style file
+		template = pyratemp.Template(filename=self._mm.resourcePath("style.templ.css"))
+		hue = self._metadata["mainColorHue"]
+		data = {
+			"headerBgColor": QtGui.QColor.fromHsv(hue, 41, 250).name(),
+			"footerBgColor": QtGui.QColor.fromHsv(hue, 30, 228).name(),
+		}
+		with open(os.path.join(path, "css/style.css"), "w") as f:
+			f.write(template(**data).encode("UTF-8"))
 
 		#create the logic file
-		logicGenerator = self._modules.default("active", type="webLogicGenerator")
-		logicPath = os.path.join(path, "scr", "logic.js")
-		logicGenerator.writeLogicCode(logicPath)
+		logicPath = os.path.join(path, "scr/generated/logic.js")
+		self._logicGenerator.writeLogicCode(logicPath)
+
+		#write the translation index
+		buildIndex = self._modules.default("active", type="translationIndexBuilder").buildTranslationIndex
+		mergeIndexes = self._modules.default("active", type="translationIndexesMerger").mergeIndexes
+		writeJSONIndex = self._modules.default("active", type="translationIndexJSONWriter").writeJSONIndex
+
+		index = buildIndex(self._mm.resourcePath("translations"))
+		masterIndex = mergeIndexes(index, self._logicGenerator.translationIndex)
+		url = "scr/generated/translations"
+		writeJSONIndex(masterIndex, os.path.join(path, url), url)
+
+		#copy the logo
+		shutil.copy(self._metadata["iconPath"], os.path.join(path, "img/logo"))
+
+		print "Writing OpenTeacher web to '%s' is now done." % path
 
 	def disable(self):
 		self.active = False
 
 		self._modules.default(type="execute").startRunning.unhandle(self._run)
+		del self._logicGenerator
 		del self._modules
+		del self._metadata
 
 def init(moduleManager):
 	return WebGeneratorModule(moduleManager)

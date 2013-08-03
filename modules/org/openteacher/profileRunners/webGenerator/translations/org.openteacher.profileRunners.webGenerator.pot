@@ -1,0 +1,150 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-08-01 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: static/scr/learn-list.js:5
+msgid "Question:"
+msgstr ""
+
+#: static/scr/learn-list.js:6
+msgid "Check!"
+msgstr ""
+
+#: static/scr/learn-list.js:7
+msgid "Skip"
+msgstr ""
+
+#: static/scr/learn-list.js:8
+msgid "Correct anyway"
+msgstr ""
+
+#: static/scr/learn-list.js:9 static/scr/view-list.js:15
+msgid "Back to the lists page"
+msgstr ""
+
+#: static/scr/lists-overview.js:5
+msgid "Lists overview"
+msgstr ""
+
+#: static/scr/lists-overview.js:6
+msgid "Remove selected lists"
+msgstr ""
+
+#: static/scr/lists-overview.js:7
+msgid "Create new list"
+msgstr ""
+
+#: static/scr/lists-overview.js:8
+msgid "View"
+msgstr ""
+
+#: static/scr/lists-overview.js:9
+msgid "Teach me!"
+msgstr ""
+
+#: static/scr/lists-overview.js:10
+msgid "Last edited:"
+msgstr ""
+
+#: static/scr/lists-overview.js:30
+msgid "New list"
+msgstr ""
+
+#: static/scr/login.js:4
+msgid "Log in"
+msgstr ""
+
+#: static/scr/login.js:6
+msgid "New? Click here to sign up."
+msgstr ""
+
+#: static/scr/login.js:7
+msgid "You registered succesfully. You can now log in."
+msgstr ""
+
+#: static/scr/login.js:8
+msgid "You cancelled the registration."
+msgstr ""
+
+#: static/scr/login.js:10
+msgid "Username:"
+msgstr ""
+
+#: static/scr/login.js:11
+msgid "Password:"
+msgstr ""
+
+#: static/scr/login.js:12
+msgid "Log in!"
+msgstr ""
+
+#: static/scr/login.js:15
+msgid "Or view a shared list"
+msgstr ""
+
+#: static/scr/main.js:36
+msgid "OpenTeacher Web"
+msgstr ""
+
+#: static/scr/view-list.js:3
+msgid "List"
+msgstr ""
+
+#: static/scr/view-list.js:4
+msgid "Title:"
+msgstr ""
+
+#: static/scr/view-list.js:5
+msgid "Shares:"
+msgstr ""
+
+#: static/scr/view-list.js:6
+msgid "Questions"
+msgstr ""
+
+#: static/scr/view-list.js:7
+msgid "Answers"
+msgstr ""
+
+#: static/scr/view-list.js:8
+msgid "Currently existing shares: "
+msgstr ""
+
+#: static/scr/view-list.js:10
+msgid "Test results"
+msgstr ""
+
+#: static/scr/view-list.js:11
+msgid "Date"
+msgstr ""
+
+#: static/scr/view-list.js:12
+msgid "Note"
+msgstr ""
+
+#: static/scr/view-list.js:13
+msgid "Completed"
+msgstr ""
+
+#: static/scr/view-list.js:16
+msgid "Save"
+msgstr ""
+
+#: static/scr/view-list.js:20
+msgid "-"
+msgstr ""

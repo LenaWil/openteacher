@@ -29,9 +29,13 @@ $!code!$
 		parseList: parseList,
 		composeList: composeList,
 
-		//other
+		//lesson
 		LessonType: LessonType,
 		InputTypingController: InputTypingController,
-		calculateNote: calculateNote
+		calculateNote: calculateNote,
+
+		//other
+		Event: Event,
+		translator: translator
 	}
 }());

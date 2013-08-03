@@ -27,15 +27,27 @@ var isSafeHtml = (function () {
 		"tt", "u", "ul", "var"
 	];
 
+	var tagRe = new RegExp("<\\s*([a-zA-Z]+)( [^>]*)?/?>");
+
 	return function (html) {
-		var tagRe = new RegExp("<\\s*([a-zA-Z]+)(?: [^>]*)?/?>");
-		remainingHtml = html;
+		if (typeof html !== "string") {
+			return false;
+		}
+		var remainingHtml = html;
 		while (true) {
 			var match = remainingHtml.match(tagRe);
 			if (match) {
 				var tag = match[1].toLowerCase();
 				if (whitelist.indexOf(tag) === -1) {
-					return false; //unsafe html
+					return false; //unsafe tag
+				}
+				attrs = (match[2] || "");
+				if (attrs.indexOf("=") !== -1) {
+					//having at least one attribute: unsafe. Some
+					//attributes are harmless, but that would require
+					//another whitelist (and in the case of style='',
+					//the most useful one, CSS parsing). -> maybe later.
+					return false;
 				}
 				//+1 so the current tag is not matched again.
 				var pos = remainingHtml.search(tagRe) + 1;

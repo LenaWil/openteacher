@@ -26,16 +26,16 @@ class PercentsCalculatorModule(object):
 		self.type = "percentsCalculator"
 		self.requires = (
 			self._mm.mods(type="javaScriptEvaluator"),
-			self._mm.mods("javaScriptImplementation", type="map"),
-			self._mm.mods("javaScriptImplementation", type="sum"),
+			self._mm.mods("javaScriptImplementation", type="mapfunc"),
+			self._mm.mods("javaScriptImplementation", type="sumfunc"),
 		)
 		self.javaScriptImplementation = True
 
 	def enable(self):
 		modules = next(iter(self._mm.mods(type="modules")))
 		self._js = modules.default("active", type="javaScriptEvaluator").createEvaluator()
-		self.code = modules.default("active", "javaScriptImplementation", type="map").code
-		self.code += modules.default("active", "javaScriptImplementation", type="sum").code
+		self.code = modules.default("active", "javaScriptImplementation", type="mapfunc").code
+		self.code += modules.default("active", "javaScriptImplementation", type="sumfunc").code
 		with open(self._mm.resourcePath("percentsCalculator.js")) as f:
 			self.code += f.read()
 		self._js.eval(self.code)

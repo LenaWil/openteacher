@@ -1,4 +1,4 @@
-// pouchdb.nightly - 2013-07-27T05:01:20
+// pouchdb.nightly - 2013-07-31T02:01:34
 
 (function() {
  // BEGIN Math.uuid.js
@@ -491,7 +491,9 @@ var extend = function() {
 
         // Don't bring in undefined values
         } else if ( copy !== undefined ) {
-          target[ name ] = copy;
+          if (!(isArray(options) && isFunction(copy))) {
+            target[ name ] = copy;
+          }
         }
       }
     }
@@ -1604,7 +1606,6 @@ function replicate(src, target, opts, promise) {
   };
 
   function docsWritten(err, res, len) {
-    requests.notifyRequestComplete();
     if (opts.onChange) {
       for (var i = 0; i < len; i++) {
         /*jshint validthis:true */
@@ -1613,7 +1614,11 @@ function replicate(src, target, opts, promise) {
     }
     pending -= len;
     result.docs_written += len;
-    isCompleted();
+
+    writeCheckpoint(src, target, repId, last_seq, function(err, res) {
+      requests.notifyRequestComplete();
+      isCompleted();
+    });
   }
 
   function writeDocs() {
@@ -1683,9 +1688,7 @@ function replicate(src, target, opts, promise) {
   function isCompleted() {
     if (completed && pending === 0) {
       result.end_time = new Date();
-      writeCheckpoint(src, target, repId, last_seq, function(err, res) {
-        call(opts.complete, err, result);
-      });
+      call(opts.complete, null, result);
     }
   }
 
@@ -1774,18 +1777,6 @@ var call = function(fun) {
     var args = Array.prototype.slice.call(arguments, 1);
     fun.apply(this, args);
   }
-};
-
-// Wrapper for functions that call the bulkdocs api with a single doc,
-// if the first result is an error, return an error
-var yankError = function(callback) {
-  return function(err, results) {
-    if (err || results[0].error) {
-      call(callback, err || results[0]);
-    } else {
-      call(callback, null, results[0]);
-    }
-  };
 };
 
 var isLocalId = function(id) {
@@ -1972,11 +1963,13 @@ var arrayFirst = function(arr, callback) {
 var filterChange = function(opts) {
   return function(change) {
     var req = {};
+    var hasFilter = opts.filter && typeof opts.filter === 'function';
+
     req.query = opts.query_params;
-    if (opts.filter && !opts.filter.call(this, change.doc, req)) {
+    if (opts.filter && hasFilter && !opts.filter.call(this, change.doc, req)) {
       return false;
     }
-    if (opts.doc_ids && opts.doc_ids.indexOf(change.id) !== -1) {
+    if (opts.doc_ids && opts.doc_ids.indexOf(change.id) === -1) {
       return false;
     }
     if (!opts.include_docs) {
@@ -2064,7 +2057,6 @@ if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     Crypto: Crypto,
     call: call,
-    yankError: yankError,
     isLocalId: isLocalId,
     isAttachmentId: isAttachmentId,
     parseDoc: parseDoc,
@@ -2164,8 +2156,8 @@ var Changes = function() {
   return api;
 };
 
-/*globals Pouch: true, yankError: false, extend: false, call: false, parseDocId: false, traverseRevTree: false */
-/*globals arrayFirst: false, rootToLeaf: false, computeHeight: false */
+/*globals Pouch: true, extend, call, parseDocId, traverseRevTree */
+/*globals arrayFirst, rootToLeaf, computeHeight */
 /*globals cordova, isCordova */
 
 "use strict";
@@ -2173,6 +2165,19 @@ var Changes = function() {
 /*
  * A generic pouch adapter
  */
+
+// Wrapper for functions that call the bulkdocs api with a single doc,
+// if the first result is an error, return an error
+function yankError(callback) {
+  return function(err, results) {
+    if (err || results[0].error) {
+      call(callback, err || results[0]);
+    } else {
+      call(callback, null, results[0]);
+    }
+  };
+}
+
 var PouchAdapter = function(opts, callback) {
 
   var api = {};
@@ -3532,23 +3537,23 @@ var HttpPouch = function(opts, callback) {
     var fetchTimeout = 10;
     var fetchRetryCount = 0;
 
+    var results = {results: []};
+
     var fetched = function(err, res) {
       // If the result of the ajax call (res) contains changes (res.results)
       if (res && res.results) {
+        results.last_seq = res.last_seq;
         // For each change
-        var hasFilter = opts.filter && typeof opts.filter === 'function';
         var req = {};
         req.query = opts.query_params;
         res.results = res.results.filter(function(c) {
           leftToFetch--;
-          if (opts.aborted || hasFilter && !opts.filter.apply(this, [c.doc, req])) {
-            return false;
+          var ret = filterChange(opts)(c);
+          if (ret) {
+            results.results.push(c);
+            call(opts.onChange, c);
           }
-          if (opts.doc_ids && opts.doc_ids.indexOf(c.id) !== -1) {
-            return false;
-          }
-          call(opts.onChange, c);
-          return true;
+          return ret;
         });
       }
 
@@ -3558,8 +3563,10 @@ var HttpPouch = function(opts, callback) {
         lastFetchedSeq = res.last_seq;
       }
 
+      var resultsLength = res && res.results.length || 0;
       var finished = (limit && leftToFetch <= 0) ||
-        (!limit && lastFetchedSeq === remoteLastSeq) ||
+        (res && !resultsLength) ||
+        (resultsLength && res.last_seq === remoteLastSeq) ||
         (opts.descending && lastFetchedSeq !== 0);
 
       if (opts.continuous || !finished) {
@@ -3581,7 +3588,7 @@ var HttpPouch = function(opts, callback) {
         setTimeout(function() { fetch(lastFetchedSeq, fetched); }, retryWait);
       } else {
         // We're done, call the callback
-        call(opts.complete, null, res);
+        call(opts.complete, null, results);
       }
     };
 
@@ -5292,7 +5299,7 @@ var MapReduce = function(db) {
         }
       },
 
-      "_stats": function(keys, values, rereduce){
+      "_stats": function(keys, values, rereduce) {
         return {
           'sum': sum(values),
           'min': Math.min.apply(null, values),
@@ -5300,8 +5307,10 @@ var MapReduce = function(db) {
           'count': values.length,
           'sumsqr': (function(){
             var _sumsqr = 0;
-            for(var idx in values){
+            for(var idx in values) {
+              if (typeof values[idx] === 'number') {
               _sumsqr += values[idx] * values[idx];
+              }
             }
             return _sumsqr;
           })()
@@ -5388,6 +5397,7 @@ var MapReduce = function(db) {
           e.value = fun.reduce(e.key, e.value) || null;
           e.key = e.key[0][0];
         });
+
         options.complete(null, {
           rows: ('limit' in options)
             ? groups.slice(0, options.limit)
@@ -5395,7 +5405,7 @@ var MapReduce = function(db) {
           total_rows: groups.length
         });
       }
-    }
+    };
 
     db.changes({
       conflicts: true,

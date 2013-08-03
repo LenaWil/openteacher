@@ -1,13 +1,13 @@
 /* global */
 body {
 	font-family: sans-serif;
-	max-width: 960px;
-	padding: 1em;
-	margin: 0 auto;
+	margin: 0;
 }
+
 body, a, button, input {
 	color: #333;
 }
+
 a {
 	text-decoration: none;
 }
@@ -15,6 +15,7 @@ a:hover {
 	text-decoration: underline;
 	color: #666;
 }
+
 table {
 	border-collapse: collapse;
 }
@@ -23,6 +24,7 @@ td, th {
 	vertical-align: middle;
 	padding: 0.25em;
 }
+
 input {
 	padding: 0.25em;
 	margin: 0;
@@ -31,36 +33,108 @@ button, input[type='button'], input[type='submit'] {
 	margin: 0.5em 0;
 	padding: 0.25em;
 }
+
 /* utilities */
 .smaller {
 	font-size: smaller;
 }
+
 .lighter {
 	color: #555;
 }
+
 .odd {
 	background-color: #eee;
 }
 
 /* shared, but not global */
-#list, #lists, #list-metadata, #tests, #list input, #list-metadata input {
+#list, #lists, #list-metadata, #tests {
 	width: 100%;
 }
-#login-page, #lists-page, #list-page, #register-iframe, #learn-page {
+
+#login-page, #lists-page, #view-page, #register-iframe, #learn-page {
 	display: none;
+}
+
+#register-success, #register-failure, #save-success, #save-failure {
+	display: none;
+}
+#save-success, #register-success {
+	color: green;
+}
+#save-failure, #register-failure {
+	color: red;
+}
+
+#header, #footer {
+	width: 100%;
+}
+
+#content, #header-inner, #footer-inner {
+	max-width: 960px;
+	margin: 0 auto;
+}
+
+#content {
+	padding: 1em;
+	margin-bottom: 1.75em;
+}
+
+/* header */
+#header {
+	background-color: @!headerBgColor!@;
+}
+
+#header-title {
+	margin: 0;
+	padding: 0.75em 0;
+}
+
+#logo {
+	float: left;
+	height: 4em;
+	margin-top: 0.75em;
+	margin-right: 1em;
+}
+
+/* footer */
+#footer {
+	background-color: @!footerBgColor!@;
+	position: fixed;
+	bottom: 0;
+}
+
+#footer-inner {
+	padding: 0.25em;
+	text-align: right;
 }
 
 /* lists page */
 .links {
 	float: right;
 }
+#loading-box {
+	text-align: center;
+}
 
 /* list page */
-.question-cell {
+#list-metadata input {
+	width: 100%;
+}
+
+.question-wrapper {
+	padding-right: 0.25em;
+}
+.answer-wrapper {
+	padding-left: 0.25em;
 	padding-right: 0.5em;
 }
-.answer-cell {
-	padding-left: 0.5em;
+.question-input, .answer-input {
+	width: 100%;
+}
+
+.last-remove-item {
+	display: none;
 }
 
 /* login page */
@@ -73,6 +147,7 @@ button, input[type='button'], input[type='submit'] {
 	width: 90%;
 	height: 100%;
 }
+
 #login-button {
 	width: 100%;
 }

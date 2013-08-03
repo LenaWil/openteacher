@@ -18,6 +18,8 @@
 */
 
 function map(func, data) {
+	"use strict";
+
 	var results = [];
 	for (var i = 0; i < data.length; i += 1) {
 		results.push(func(data[i]));

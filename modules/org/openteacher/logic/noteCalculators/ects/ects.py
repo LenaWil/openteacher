@@ -27,7 +27,7 @@ class ECTSNoteCalculatorModule(object):
 		self.type = "noteCalculator"
 		self.requires = (
 			self._mm.mods("javaScriptImplementation", type="percentsCalculator"),
-			self._mm.mods("javaScriptImplementation", type="bisect"),
+			self._mm.mods("javaScriptImplementation", type="bisectfunc"),
 			self._mm.mods(type="javaScriptEvaluator"),
 		)
 		self.uses = (
@@ -53,7 +53,7 @@ class ECTSNoteCalculatorModule(object):
 		self.code += self._modules.default(
 			"active",
 			"javaScriptImplementation",
-			type="bisect"
+			type="bisectfunc"
 		).code
 		with open(self._mm.resourcePath("ects.js")) as f:
 			self.code += f.read()

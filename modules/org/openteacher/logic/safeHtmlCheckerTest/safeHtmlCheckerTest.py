@@ -19,6 +19,7 @@
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
+import datetime
 
 class TestCase(unittest.TestCase):
 	def _assertSafe(self, html):
@@ -83,6 +84,22 @@ class TestCase(unittest.TestCase):
 
 	def testImg(self):
 		self._assertUnsafe("<p>some text <img src='#' /></p>")
+
+	def testNonString(self):
+		def test():
+			pass
+		self._assertUnsafe(23)
+		self._assertUnsafe(datetime.datetime.now())
+		self._assertUnsafe([])
+		self._assertUnsafe({})
+		self._assertUnsafe(None)
+		self._assertUnsafe(False)
+		self._assertUnsafe(test)
+
+	def testAttribute(self):
+		self._assertUnsafe("<b onclick='alert(1);'>test</b>")
+		#by choice.
+		self._assertUnsafe("<b style='color:#333'>abc</test>")
 
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):

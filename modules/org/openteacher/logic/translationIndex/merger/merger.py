@@ -18,24 +18,35 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
-class JSSumModule(object):
+class TranslationIndexesMergerModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(JSSumModule, self).__init__(*args, **kwargs)
+		super(TranslationIndexesMergerModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "sumfunc"
-		self.javaScriptImplementation = True
+		self.type = "translationIndexesMerger"
 
 	def enable(self):
-		with open(self._mm.resourcePath("sum.js")) as f:
-			self.code = f.read()
-
 		self.active = True
+
+	def mergeIndexes(self, *indexes):
+		"""Merges translation ``*indexes`` into one master index.
+		
+		   Useful when multiple files that have translations need to
+		   share one translation function which uses an index. (The
+		   default OT translator doesn't, the JavaScript translator
+		   does.)
+
+		"""
+		self._masterIndex = {}
+		for index in indexes:
+			for langCode, translations in index.iteritems():
+				if not langCode in self._masterIndex:
+					self._masterIndex[langCode] = {}
+				self._masterIndex[langCode].update(translations)
+		return self._masterIndex
 
 	def disable(self):
 		self.active = False
 
-		del self.code
-
 def init(moduleManager):
-	return JSSumModule(moduleManager)
+	return TranslationIndexesMergerModule(moduleManager)

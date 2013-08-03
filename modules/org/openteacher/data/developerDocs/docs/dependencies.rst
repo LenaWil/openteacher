@@ -12,15 +12,15 @@ works just fine.
 Dependencies for using OpenTeacher
 ==================================
 
-* python
-* python-qt4
-* python-qt4-phonon
-* python-qt4-gl
-* python-enchant
-* python-chardet
-* pyttsx (currently included)
-* pyratemp (currently included)
 * espeak
+* pyratemp (currently included)
+* python
+* python-chardet
+* python-enchant
+* python-qt4
+* python-qt4-gl
+* python-qt4-phonon
+* pyttsx (currently included)
 * tesseract-ocr or cuneiform
 
 also (test server):
@@ -44,18 +44,19 @@ and if we ever implement updates:
 Dependencies for developing OpenTeacher
 =======================================
 
-* python-flask
+* couchdb
+* cython
+* gettext
+* python-babel
 * python-cherrypy3
-* python-pygments
 * python-docutils
+* python-faulthandler
+* python-flask
 * python-launchpadlib
 * python-polib
+* python-pygments
 * python-pygraphviz
 * python-twisted
-* python-faulthandler
-* python-babel
-* gettext
-* cython
 
 (deb build only & optional:)
 
@@ -103,8 +104,6 @@ Incompatible dependencies: CPython 3.x
 --------------------------------------
 
 * pyttsx (no detectable effort ongoing)
-* python-flask (but: 'https://github.com/mitsuhiko/flask/issues/587')
 * python-launchpadlib (https://bugs.launchpad.net/launchpadlib/+bug/1060734)
 * python-twisted (but: http://twistedmatrix.com/trac/milestone/Python-3.x & http://twistedmatrix.com/trac/wiki/Plan/Python3)
-* python-babel (but: http://babel.edgewall.org/ticket/209)
 * PyInstaller (but: http://www.pyinstaller.org/ticket/85)
