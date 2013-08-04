@@ -17,7 +17,8 @@ def before_request():
 		app.config["COUCHDB_HOST"],
 		app.config["COUCHDB_ADMIN_USERNAME"],
 		app.config["COUCHDB_ADMIN_PASSWORD"],
-		app.config["IS_SAFE_HTML_JS"]
+		app.config["DB_SKELETON_DIR"],
+		app.config["IS_SAFE_HTML_JS"],
 	)
 
 def requires_auth(f):

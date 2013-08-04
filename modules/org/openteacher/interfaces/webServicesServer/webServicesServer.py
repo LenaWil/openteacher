@@ -49,6 +49,7 @@ class WebServicesServerModule(object):
 
 		modules = next(iter(self._mm.mods(type="modules")))
 		self.app.config["IS_SAFE_HTML_JS"] = modules.default("javaScriptImplementation", type="safeHtmlChecker").code
+		self.app.config["DB_SKELETON_DIR"] = self._mm.resourcePath("db_skeleton")
 		self.app.config["TRANSLATIONS_DIR"] = self._mm.resourcePath("translations")
 
 		def gettextFunctions(language):

@@ -134,7 +134,7 @@ class MobileGeneratorModule(object):
 
 		index = buildIndex(self._mm.resourcePath("translations"))
 		masterIndex = mergeIndexes(index, self._logicGenerator.translationIndex)
-		writeJSONIndex(masterIndex, os.path.join(path, "translations", "translations"))
+		writeJSONIndex(masterIndex, os.path.join(path, "translations"), "translations")
 
 	def _writeScripts(self, path):
 		os.mkdir(os.path.join(path, "scr"))

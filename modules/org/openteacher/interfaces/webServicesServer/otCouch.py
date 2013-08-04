@@ -2,6 +2,7 @@ import requests
 import json
 import uuid
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -18,31 +19,55 @@ def _only_access_for(username):
 	}
 
 class OTWebCouch(object):
-	def __init__(self, host, username, password, isSafeHtmlCode, *args, **kwargs):
+	def __init__(self, host, username, password, dbSkeletonDir, isSafeHtmlCode, *args, **kwargs):
 		super(OTWebCouch, self).__init__(*args, **kwargs)
 
 		self._host = host
 		self._username = username
 		self._password = password
 
-		self._validationLib = isSafeHtmlCode + "\n" + """
-			exports.assertSafeHtml = function (data) {
-				if (!isSafeHtml(data)) {
-					throw({forbidden: "'" + data + "' isn't valid HTML."});
+		self._codeDir = dbSkeletonDir
+		self._validationLib = isSafeHtmlCode + "\n" + self._getJs("validationLib.js")
+		self._presentationLib = self._getJs("presentationLib.js")
+
+	def _getJs(self, endpoint):
+		with open(os.path.join(self._codeDir, endpoint)) as f:
+			return f.read()
+
+	def _design_from(self, endpoint, additionalData):
+		join = os.path.join
+
+		base = join(self._codeDir, endpoint)
+		parts = os.listdir(base)
+		design_doc = {}
+
+		if "validate_doc_update.js" in parts:
+			design_doc["validate_doc_update"] = self._getJs(join(endpoint, "validate_doc_update.js"))
+
+		for type in ["updates", "lists", "shows"]:
+			if type in parts:
+				design_doc[type] = {}
+
+				allOfType = os.listdir(join(base, type))
+				for oneOfTypeJs in allOfType:
+					oneOfType = oneOfTypeJs[:-len(".js")]
+					design_doc[type][oneOfType] = self._getJs(join(endpoint, type, oneOfTypeJs))
+
+		if "views" in parts:
+			design_doc["views"] = {}
+
+			views = os.listdir(join(base, "views"))
+			for view in views:
+				viewObj = {
+					"map": self._getJs(join(endpoint, "views", view, "map.js")),
 				}
-			};
-			exports.requireAttr = function (obj, attr) {
-				if (typeof obj[attr] === "undefined") {
-					throw({"forbidden": name + " should not be undefined."});
-				}
-			};
-			exports.assertValidDate = function (data) {
-				if (isNaN(new Date(data).valueOf())) {
-					//if not a valid date
-					throw({"forbidden": "'" + data + "' should be a valid JSON representation of a JS Date object (as serialized in JS)."});
-				}
-			};
-		"""
+				reducePath = join(endpoint, "views", view, "reduce.js")
+				if os.path.exists(join(self._codeDir, reducePath)):
+					viewObj["reduce"] = self._getJs(reducePath)
+				design_doc["views"][view] = viewObj
+
+		design_doc.update(additionalData)
+		return design_doc
 
 	def _req(self, method, endpoint, data=None, auth=None):
 		if data:
@@ -74,40 +99,9 @@ class OTWebCouch(object):
 				"/tests_" + username + "/_security",
 				_only_access_for(username)
 			).status_code == 200
-			assert self._req("put", "/tests_" + username + "/_design/tests", {
+			assert self._req("put", "/tests_" + username + "/_design/tests", self._design_from("tests", {
 				"validation_lib": self._validationLib,
-				"validate_doc_update": """
-					function (newDoc, oldDoc, userCtx) {
-						if (newDoc._deleted) {
-							//that's fine.
-							return;
-						}
-						var lib = require("validation_lib");
-
-						lib.requireAttr(newDoc, "listId");
-						var results = newDoc.results || [];
-						for (var i = 0; i < results.length; i += 1) {
-							lib.assertSafeHtml(results[i].givenAnswer || "");
-						}
-					}
-				""",
-				"views": {
-					"by_list_id": {
-						"map": """
-							function (doc) {
-								if(doc._id.indexOf("_design") !== 0) {
-									try {
-										var startTime = doc.results[0].active.start;
-									} catch (e) {
-										var startTime = null;
-									}
-									emit([doc.listId, startTime], doc);
-								}
-							}
-						""",
-					},
-				},
-			}).status_code == 201
+			})).status_code == 201
 
 			#settings
 			assert self._req("put", "/settings_" + username).status_code == 201
@@ -125,60 +119,10 @@ class OTWebCouch(object):
 				_only_access_for(username)
 			).status_code == 200
 
-			assert self._req("put", "/lists_" + username + "/_design/lists", {
+			assert self._req("put", "/lists_" + username + "/_design/lists", self._design_from("lists", {
 				"validation_lib": self._validationLib,
-				"validate_doc_update": """
-					function (newDoc, oldDoc, userCtx) {
-						if (newDoc._deleted) {
-							//that's fine.
-							return;
-						}
-						var lib = require("validation_lib");
-
-						lib.requireAttr(newDoc, "title");
-						lib.assertSafeHtml(newDoc, "title");
-
-						lib.requireAttr(newDoc, "shares");
-						for (var i = 0; i < newDoc.shares.length; i += 1) {
-							lib.assertSafeHtml(newDoc.shares[i]);
-						}
-
-						lib.requireAttr(newDoc, "lastEdited");
-						lib.assertValidDate(newDoc.lastEdited);
-
-						var items = newDoc.items || [];
-						for (var i = 0; i < items.length; i += 1) {
-							var item = items[i];
-							lib.assertSafeHtml(item.comment || "");
-							lib.assertSafeHtml(item.commentAfterAnswering || "");
-							//close enough...
-							lib.assertSafeHtml((item.questions || []).toString());
-							lib.assertSafeHtml((item.answers || []).toString());
-						}
-					}
-				""",
-				"updates": {
-					"set_last_edited_to_now": """
-						function (doc, req) {
-							doc = JSON.parse(req.body);
-							doc._id = req.uuid;
-							doc.lastEdited = new Date();
-							return [doc, toJSON(doc)];
-						}
-					""",
-				},
-				"views": {
-					"by_title": {
-						"map": """
-							function (doc) {
-								if(doc._id.indexOf("_design") !== 0) {
-									emit([doc.title.toLowerCase(), doc.lastEdited], doc);
-								}
-							}
-						"""
-					}
-				}
-			}).status_code == 201
+				"presentation_lib": self._presentationLib,
+			})).status_code == 201
 
 			#shared_lists
 			assert self._req("put", "/shared_lists_" + username).status_code == 201
@@ -192,61 +136,9 @@ class OTWebCouch(object):
 					"roles": [],
 				}
 			}).status_code == 200
-			assert self._req("put", "/shared_lists_" + username + "/_design/shares", {
-				"views": {
-					"by_name": {
-						"map": """
-							function (doc) {
-								if(doc._id.indexOf("_design") !== 0) {
-									for (var i = 0; i < doc.shares.length; i += 1) {
-										//sort order: by share, by title
-										emit([doc.shares[i], doc.title.toLowerCase(), doc.lastEdited], doc);
-									}
-								}
-							}
-						""",
-					},
-					"share_names": {
-						"map": """
-							function (doc) {
-								if(doc._id.indexOf("_design") !== 0) {
-									for (var i = 0; i < doc.shares.length; i += 1) {
-										emit(doc.shares[i], null);
-									}
-								}
-							}
-						""",
-						"reduce": """
-							function (key, values, rereduce) {
-								return null;
-							}
-						"""
-					},
-				},
-				"validate_doc_update": """
-					function (newDoc, oldDoc, userCtx) {
-						if (userCtx.roles.indexOf("_admin") === -1) {
-							throw({"unauthorized": "need to be admin to make changes."});
-						}
-						if (newDoc._deleted) {
-							//that's fine.
-							return;
-						}
-						if (oldDoc && oldDoc.shares.length) {
-							//You can never get a shared list
-							//de-published again, but at least it's
-							//removed from the view this time, and from
-							//next time on changes to the list will not
-							//be visible anymore (until the list is
-							//shared again.)
-							return;
-						}
-						if (!newDoc.shares.length) {
-							throw({"forbidden": "should be here only if having shares."});
-						}
-					}
-				"""
-			}).status_code == 201
+			assert self._req("put", "/shared_lists_" + username + "/_design/shares", self._design_from("shared_lists", {
+				"presentation_lib": self._presentationLib,
+			})).status_code == 201
 
 			#replicator
 			assert self._req("put", "/_replicator/lists_to_shared_lists_" + username, {
@@ -372,6 +264,7 @@ class OTWebCouch(object):
 		#see: https://wiki.apache.org/couchdb/View_collation#Complex_keys
 		try:
 			assert len(self._req("get", '/lists_test/_design/lists/_view/by_title?startkey=["a"]&endkey=["b", {}]').json()["rows"]) == 2
+			assert self._req("get", "/lists_test/_design/lists/_show/print/" + listId).status_code == 200
 			assert len(self._req("get", "/shared_lists_test/_design/shares/_view/share_names?group=true").json()["rows"]) == 2
 			assert len(self._req("get", '/shared_lists_test/_design/shares/_view/by_name?startkey=["testShareB"]&endkey=["testShareB", {}, {}]').json()["rows"]) == 2
 			assert len(self._req("get", '/tests_test/_design/tests/_view/by_list_id?startkey=["%s"]&endkey=["%s", {}]&descending=true' % (listId, listId)).json()["rows"]) == 1
@@ -385,6 +278,7 @@ class OTWebCouch(object):
 			assert self._req("get", "/lists_test/_design/list/_view/by_title", auth=test2Auth).status_code == 401
 			assert self._req("get", "/shared_lists_test/_design/shares/_view/share_names?group=true").status_code == 200
 			assert self._req("get", '/shared_lists_test/_design/shares/_view/by_name?startkey=["testShareB"]&endkey=["testShareB", {}, {}]').status_code == 200
+			assert self._req("get", '/shared_lists_test/_design/shares/_list/feed/by_name?startkey=["testShareB"]&endkey=["testShareB", {}, {}]').status_code == 200
 		except AssertionError:
 			print e
 
@@ -401,13 +295,13 @@ if __name__ == "__main__":
 	#isSafeHtml function, making it possible to inject malicious html.
 	#Do NOT use this in production.
 
-	import os
 	with open(os.path.join(os.path.dirname(__file__), "ot-web-config.json")) as f:
 		config = json.load(f)
 	couch = OTWebCouch(
 		config["COUCHDB_HOST"],
 		config["COUCHDB_ADMIN_USERNAME"],
 		config["COUCHDB_ADMIN_PASSWORD"],
+		os.path.join(os.path.dirname(__file__), "db_skeleton"),
 		"function isSafeHtml () {return true;}"
 	)
 
