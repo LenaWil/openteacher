@@ -1,0 +1,61 @@
+# Brazilian Portuguese translation for openteacher
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-27 15:37+0200\n"
+"PO-Revision-Date: 2013-08-04 13:11+0000\n"
+"Last-Translator: Adriano Steffler <Unknown>\n"
+"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-08-05 05:54+0000\n"
+"X-Generator: Launchpad (build 16718)\n"
+
+#: courseHeroApi.py:163
+msgid ""
+"Enter a search term and press the search button to search coursehero.com for "
+"sets. Then select the set or sets you want to import and click OK."
+msgstr ""
+"Digite um termo de pesquisa e pressione o botão de busca para procurar o "
+"sítio coursehero.com por conjuntos. Então selecione o conjunto ou os "
+"conjuntos que você deseja importar e clique em OK."
+
+#: courseHeroApi.py:164
+msgid "E.g.: french holiday vocabulary"
+msgstr "Por exemplo: vocabulário de férias em francês"
+
+#: courseHeroApi.py:165
+msgid "Search"
+msgstr "Pesquisar"
+
+#: courseHeroApi.py:166
+msgid "Search coursehero.com"
+msgstr "Pesquisar no sítio coursehero.com"
+
+#: courseHeroApi.py:244
+msgid "Import from coursehero.com"
+msgstr "Importar do sítio coursehero.com"
+
+#: courseHeroApi.py:270
+msgid "No coursehero.com connection"
+msgstr "Não há conexão com o sítio coursehero.com"
+
+#: courseHeroApi.py:271
+msgid ""
+"coursehero.com didn't accept the connection. Are you sure that your internet "
+"connection works and coursehero.com is online?"
+msgstr ""
+"O sítio coursehero.com não aceitou a conexão. Você tem certeza de que a sua "
+"conexão de Internet está funcionando e de que o sítio coursehero.com está "
+"online?"
+
+#: courseHeroApi.py:313
+msgid "The word list was imported from coursehero.com successfully."
+msgstr ""
+"A lista de palavras foi importada com sucesso do sítio coursehero.com."
