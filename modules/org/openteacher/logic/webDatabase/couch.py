@@ -4,6 +4,8 @@ import uuid
 import logging
 import os
 
+join = os.path.join
+
 logger = logging.getLogger(__name__)
 
 def _only_access_for(username):
@@ -31,12 +33,10 @@ class WebCouch(object):
 		self._presentationLib = generateWordsHtml + "\n" + self._getJs("presentationLib.js")
 
 	def _getJs(self, endpoint):
-		with open(os.path.join(self._codeDir, endpoint)) as f:
+		with open(join(self._codeDir, endpoint)) as f:
 			return f.read()
 
 	def _design_from(self, endpoint, additionalData):
-		join = os.path.join
-
 		base = join(self._codeDir, endpoint)
 		parts = os.listdir(base)
 		design_doc = {}
@@ -54,20 +54,24 @@ class WebCouch(object):
 					design_doc[type][oneOfType] = self._getJs(join(endpoint, type, oneOfTypeJs))
 
 		if "views" in parts:
-			design_doc["views"] = {}
-
-			views = os.listdir(join(base, "views"))
-			for view in views:
-				viewObj = {
-					"map": self._getJs(join(endpoint, "views", view, "map.js")),
-				}
-				reducePath = join(endpoint, "views", view, "reduce.js")
-				if os.path.exists(join(self._codeDir, reducePath)):
-					viewObj["reduce"] = self._getJs(reducePath)
-				design_doc["views"][view] = viewObj
+			design_doc["views"] = self._gatherViews(join(base, "views"), endpoint)
 
 		design_doc.update(additionalData)
 		return design_doc
+
+	def _gatherViews(self, path, endpoint):
+		viewsObj = {}
+
+		views = os.listdir(path)
+		for view in views:
+			viewObj = {
+				"map": self._getJs(join(endpoint, "views", view, "map.js")),
+			}
+			reducePath = join(endpoint, "views", view, "reduce.js")
+			if os.path.exists(join(self._codeDir, reducePath)):
+				viewObj["reduce"] = self._getJs(reducePath)
+			viewsObj[view] = viewObj
+		return viewsObj
 
 	def req(self, method, endpoint, data=None, auth=None):
 		if data:
