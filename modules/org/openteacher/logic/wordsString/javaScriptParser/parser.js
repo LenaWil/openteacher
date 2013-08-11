@@ -21,8 +21,8 @@ var parse = (function () {
 	"use strict";
 	var obligatoryRe, wordRe, reverseAndTrim, isEmpty;
 
-	obligatoryRe = new RegExp(" \\.[0-9]+(?!\\\\)");
-	wordRe = new RegExp("[,;](?!\\\\)");
+	obligatoryRe = / \.[0-9]+(?!\\)/;
+	wordRe = /[,;](?!\\)/;
 
 	reverseAndTrim = function (i) {
 		//reverse all words (the characters) back and trim them

@@ -69,7 +69,7 @@
 	<body>
 		<table>
 			<tbody>
-				<!--(for i, item in enumerate(list["items"]))-->
+				<!--(for i, item in enumerate(list.get("items", [])))-->
 				<tr class='<!--(if list["items"].index(item) % 2)--> even<!--(end)--><!--(if i == len(list["items"]) -1)--> last-row<!--(end)-->'>
 					<td>
 						<iframe frameborder='0' src='@!item["filename"]!@'></iframe>

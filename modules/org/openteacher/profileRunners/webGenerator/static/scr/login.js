@@ -1,3 +1,5 @@
+var username;
+
 var loginPage = (function () {
 	function retranslate() {
 		//login part
@@ -16,7 +18,7 @@ var loginPage = (function () {
 	}
 
 	function onLogin() {
-		var username = $("#username").val();
+		username = $("#username").val();
 		var password = $("#password").val();
 
 		function sync(db, remoteDb, onChange) {

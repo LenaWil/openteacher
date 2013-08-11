@@ -36,6 +36,6 @@ $!code!$
 
 		//other
 		Event: Event,
-		translator: translator
+		translator: translator,
 	}
 }());

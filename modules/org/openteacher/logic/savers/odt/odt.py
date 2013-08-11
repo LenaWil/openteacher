@@ -30,7 +30,7 @@ class OdtSaverModule(object):
 		}
 
 		self.requires = (
-			self._mm.mods(type="wordsHtmlGenerator"),
+			self._mm.mods(type="htmlGenerator", dataType="words"),
 			self._mm.mods(type="ui"),
 		)
 		self.uses = (
@@ -84,7 +84,8 @@ class OdtSaverModule(object):
 	def save(self, type, lesson, path):
 		html = self._modules.default(
 			"active",
-			type="wordsHtmlGenerator"
+			type="htmlGenerator",
+			dataType="words",
 		).generate(lesson, margin="0.5em", coloredRows=False)
 
 		doc = QtGui.QTextDocument()

@@ -43,8 +43,8 @@
 	</head>
 	<body>
 	<div id='container'>
-		<img src='@!resources["mapPath"]!@' />
-		<!--(for item in list["items"])-->
+		<img src='@!resources.get("mapPath", "")!@' />
+		<!--(for item in list.get("items", []))-->
 			<div class='place' style='left: @!item["x"] - 1!@px; top: @!item["y"] - 6!@px;'>• @!item["name"]!@</div>
 		<!--(end)-->
 	</div>

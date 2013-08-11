@@ -186,6 +186,12 @@ class TestCase(unittest.TestCase):
 			],
 		}))
 
+	def testAllEnabled(self):
+		self.assertEqual(
+			set(self._mm.mods(type="save")),
+			set(self._mm.mods("active", type="save"))
+		)
+
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestModule, self).__init__(*args, **kwargs)

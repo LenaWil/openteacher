@@ -30,7 +30,7 @@ class HtmlSaverModule(object):
 		}
 
 		self.requires = (
-			self._mm.mods(type="wordsHtmlGenerator"),
+			self._mm.mods(type="htmlGenerator", dataType="words"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -78,7 +78,8 @@ class HtmlSaverModule(object):
 	def save(self, type, lesson, path):
 		html = self._modules.default(
 			"active",
-			type="wordsHtmlGenerator"
+			type="htmlGenerator",
+			dataType="words"
 		).generate(lesson, margin="0.5em")
 
 		with open(path, 'w') as htmlfile:

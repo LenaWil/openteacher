@@ -24,7 +24,8 @@ class TopoHtmlGeneratorModule(object):
 		super(TopoHtmlGeneratorModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "topoHtmlGenerator"
+		self.type = "htmlGenerator"
+		self.dataType = "topo"
 
 	def generate(self, lesson, name=""):
 		templatePath = self._mm.resourcePath("template.html")

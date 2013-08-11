@@ -25,7 +25,7 @@ class PrintModule(object):
 
 		self.type = "print"
 		self.requires = (
-			self._mm.mods(type="mediaHtmlGenerator"),
+			self._mm.mods(type="htmlGenerator", dataType="media"),
 		)
 		self.filesWithTranslations = ("media.py",)
 	
@@ -71,7 +71,8 @@ class PrintModule(object):
 	def print_(self, type, lesson, printer):
 		html = self._modules.default(
 			"active",
-			type="mediaHtmlGenerator"
+			type="htmlGenerator",
+			dataType="media"
 		).generate(lesson)
 
 		self._printer = printer

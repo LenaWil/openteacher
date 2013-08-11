@@ -60,31 +60,3 @@ class ModuleFilterer(object):
 					break
 			if append:
 				yield module
-
-	#the elegant implementation. Maybe generator expressions will once
-	#be optimized enough to use it. (In CPython or Cython)
-	#
-	#~ def __iter__(self):
-		#~ return (
-			#~ module
-			#~ for module in self._modules
-			#~ if (
-				#~ self._matchesWhere(module)
-				#~ and
-				#~ self._matchesWhereTrue(module)
-			#~ )
-		#~ )
-#~ 
-	#~ def _matchesWhere(self, module):
-		#~ #matches where
-		#~ return all(
-			#~ hasattr(module, attribute) and getattr(module, attribute) == value
-			#~ for attribute, value in self._where.iteritems()
-		#~ )
-#~ 
-	#~ def _matchesWhereTrue(self, module):
-		#~ #matches where true
-		#~ return all(
-			#~ getattr(module, attribute, False)
-			#~ for attribute in self._whereTrue
-		#~ )

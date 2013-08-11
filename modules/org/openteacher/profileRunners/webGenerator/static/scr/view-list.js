@@ -15,9 +15,12 @@ var viewPage = (function () {
 
 		$("#back-from-list-page").text(_("Back to the lists page"));
 		$("#save-list").text(_("Save"));
+		$("#print-list").text(_("Print"));
 		$("#teach-list").text(_("Teach me!"));
+
 		$("#save-success").text(_("Saved the list succesfully."));
-		$("#save-failure").text(_("Couldn't save the list, because it has been edited elsewhere in the meantime. You can either discard your changes, or save again (overwriting the changes made elsewhere)."));
+		$("#save-forbidden").text(_("Can't save the document because it contains invalid content. Maybe you used unsafe HTML, or left fields empty that should not be empty?"));
+		$("#save-conflict").text(_("Couldn't save the list, because it has been edited elsewhere in the meantime. You can either discard your changes, or save again (overwriting the changes made elsewhere)."));
 
 		//TRANSLATORS: used to indicate that a table
 		//TRANSLATORS: value is unknown.
@@ -48,7 +51,7 @@ var viewPage = (function () {
 
 	function addRow(item) {
 		$(".last-remove-item").removeClass("last-remove-item");
-		var row = renderTemplate("#list-template", {
+		var row = tmpl("list-template", {
 			item: item,
 			compose: logic.compose
 		});
@@ -71,7 +74,7 @@ var viewPage = (function () {
 			tbody.empty();
 
 			for (var i = 0; i < resp.rows.length; i += 1) {
-				tbody.append(renderTemplate("#tests-template", {
+				tbody.append(tmpl("tests-template", {
 					test: resp.rows[i].value,
 					calculateNote: logic.calculateNote,
 					classes: tbody.children().length % 2 ? "even" : "odd"
@@ -90,6 +93,7 @@ var viewPage = (function () {
 		$("#back-from-list-page").click(onBackFromListPage);
 		$("#save-list").click(onSaveList);
 		$("#teach-list").click(onTeachList);
+		$("#print-list").click(onPrintList);
 
 		$("#list tbody").on("keyup", "#list input:last", onLastListInputKeyUp);
 
@@ -174,7 +178,7 @@ var viewPage = (function () {
 
 	function onSaveList() {
 		toList(function (list) {
-			listsDb.put(list, function (err, resp) {
+			PouchDBext.withValidation.put(listsDb, list, function (err, resp) {
 				function slideUpAfterTimeout(timeout) {
 					return function () {
 						var elem = this;
@@ -187,11 +191,18 @@ var viewPage = (function () {
 				}
 
 				if (err === null) {
-					$("#save-failure").slideUp();
+					$("#save-conflict").slideUp();
+					$("#save-forbidden").slideUp();
 					$("#save-success").slideDown(slideUpAfterTimeout(5000));
 				} else {
 					$("#save-success").slideUp();
-					$("#save-failure").slideDown(slideUpAfterTimeout(8000));
+					if (err.forbidden) {
+						$("#save-conflict").slideUp();
+						$("#save-forbidden").slideDown(slideUpAfterTimeout(8000));
+					} else {
+						$("#save-forbidden").slideUp();
+						$("#save-conflict").slideDown(slideUpAfterTimeout(8000));
+					}
 				}
 
 				//query the db to get the latest rev (on success it's in
@@ -208,6 +219,18 @@ var viewPage = (function () {
 	function onTeachList () {
 		ifNextPageAllowed(function () {
 			learnPage.learnList($("#view-page").data("id"));
+		});
+	}
+
+	function onPrintList() {
+		var id = $("#view-page").data("id");
+		PouchDBext.show(listsDb, "lists/print/" + id, function (err, resp) {
+			var frame = $("#print-frame")[0];
+			var doc = frame.contentDocument;
+			doc.open();
+			doc.write(resp.body);
+			doc.close();
+			frame.contentWindow.print();
 		});
 	}
 

@@ -5,20 +5,18 @@ import collections
 import json
 import gettext
 
-#import otCouch is handled by the module.
-#gettextFunctions too.
+#import createWebDatabase is handled by the module.
+#import gettextFunctions too.
 
 app = flask.Flask(__name__)
 
 #utils
 @app.before_request
 def before_request():
-	flask.g.couch = otCouch.OTWebCouch(
+	flask.g.couch = createWebDatabase(
 		app.config["COUCHDB_HOST"],
 		app.config["COUCHDB_ADMIN_USERNAME"],
 		app.config["COUCHDB_ADMIN_PASSWORD"],
-		app.config["DB_SKELETON_DIR"],
-		app.config["IS_SAFE_HTML_JS"],
 	)
 
 def requires_auth(f):

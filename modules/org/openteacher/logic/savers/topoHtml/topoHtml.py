@@ -33,7 +33,7 @@ class HtmlSaverModule(object):
 		}
 
 		self.requires = (
-			self._mm.mods(type="mediaHtmlGenerator"),
+			self._mm.mods(type="htmlGenerator", dataType="topo"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -82,7 +82,8 @@ class HtmlSaverModule(object):
 		name = os.path.splitext(os.path.basename(path))[0]
 		html = self._modules.default(
 			"active",
-			type="topoHtmlGenerator"
+			type="htmlGenerator",
+			dataType="topo"
 		).generate(lesson, name=name)
 
 		resourceDir = path + ".resources"

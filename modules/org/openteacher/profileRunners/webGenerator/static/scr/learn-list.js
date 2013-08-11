@@ -32,7 +32,7 @@ var learnPage = (function () {
 	}
 
 	function newItem(item) {
-		$("#question-label").text(logic.compose(item.questions || []));
+		$("#question-label").html(logic.compose(item.questions || []));
 	}
 
 	function lessonDone(callback) {
@@ -48,7 +48,7 @@ var learnPage = (function () {
 		} else {
 			var doc = currentList.tests[0];
 			doc.listId = currentList._id;
-			testsDb.post(doc, callback);
+			PouchDBext.withValidation.post(testsDb, doc, callback);
 		}
 	}
 

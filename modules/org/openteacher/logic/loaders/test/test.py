@@ -113,6 +113,12 @@ class TestCase(unittest.TestCase):
 				self.assertNotIn(item["id"], ids)
 				ids.add(item["id"])
 
+	def testAllEnabled(self):
+		self.assertEqual(
+			set(self._mm.mods(type="load")),
+			set(self._mm.mods("active", type="load"))
+		)
+
 class TestModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(TestModule, self).__init__(*args, **kwargs)

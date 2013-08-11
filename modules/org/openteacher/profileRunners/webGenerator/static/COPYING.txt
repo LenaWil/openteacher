@@ -1,5 +1,5 @@
 Get the source used to create this web app at:
-TODO
+https://code.launchpad.net/~openteachermaintainers/openteacher/3.x
 
 *:
 	Copyright 2013, Marten de Vries
@@ -36,7 +36,9 @@ scr/library/jquery.js:
 
 
 scr/library/pouchdb.js:
-	TODO
+		Apache License
+  Version 2.0, January 2004
+http://www.apache.org/licenses/
 
 img/loading.gif:
 	jQuery Mobile Framework Git Build: SHA1: b49cc06499abf8f987cf90f35349cfac0918c939 <> Date: Tue Oct 2 11:22:34 2012 -0700

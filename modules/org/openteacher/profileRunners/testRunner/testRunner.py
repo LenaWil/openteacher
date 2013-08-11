@@ -36,6 +36,7 @@ class TestRunnerModule(object):
 		)
 		self.uses = (
 			self._mm.mods(type="test"),
+			self._mm.mods(type="testSuite"),
 		)
 
 	def enable(self):
@@ -63,8 +64,10 @@ class TestRunnerModule(object):
 		for module in self._mm.mods("active", type="test"):
 			#set the test mode
 			module.TestCase.mode = mode
-			newTests = unittest.TestLoader().loadTestsFromTestCase(module.TestCase)
+			newTests = unittest.defaultTestLoader.loadTestsFromTestCase(module.TestCase)
 			testSuite.addTests(newTests)
+		for module in self._mm.mods("active", type="testSuite"):
+			testSuite.addTests(module.testSuite)
 		result = unittest.TextTestRunner().run(testSuite)
 
 def init(moduleManager):

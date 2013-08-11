@@ -26,7 +26,14 @@ class TestCase(unittest.TestCase):
 		allTests = set(self._mm.mods(type="test"))
 
 		disabledTests = allTests - enabledTests
-		self.assertEqual(disabledTests, set([]), msg=self._buildMessage(disabledTests))
+		self.assertEqual(disabledTests, set(), msg=self._buildMessage(disabledTests))
+
+	def testIfAllTestSuitesAreEnaled(self):
+		enabledTestSuites = set(self._mm.mods("active", type="testSuite"))
+		allTestSuites = set(self._mm.mods(type="testSuite"))
+
+		disabledTestSuites = allTestSuites - enabledTestSuites
+		self.assertEqual(disabledTestSuites, set(), msg=self._buildMessage(disabledTestSuites))
 
 	def _buildMessage(self, disabledTests):
 		testPaths = (test.__class__.__file__ for test in disabledTests)
@@ -39,6 +46,10 @@ class TestModule(object):
 		self._mm = moduleManager
 
 		self.type = "test"
+		self.uses = (
+			self._mm.mods(type="test"),
+			self._mm.mods(type="testSuite"),
+		)
 
 	def enable(self):
 		self.TestCase = TestCase

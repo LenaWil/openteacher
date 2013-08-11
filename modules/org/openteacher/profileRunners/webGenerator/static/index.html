@@ -6,8 +6,9 @@
 		<link rel='shortcut icon' href='img/logo' />
 		<!-- libraries -->
 		<script type='text/javascript' src='scr/library/pouchdb.js'></script>
+		<script type='text/javascript' src='scr/library/pouchdb_ext.js'></script>
 		<script type='text/javascript' src='scr/library/jquery.js'></script>
-		<script type='text/javascript' src='scr/library/template.js'></script>
+		<script type='text/javascript' src='scr/library/tmpl.js'></script>
 		<!-- generated code -->
 		<script type='text/javascript' src='scr/generated/logic.js'></script>
 		<script type='text/javascript' src='scr/generated/config.js'></script>
@@ -18,13 +19,13 @@
 		<script type='text/javascript' src='scr/login.js'></script>
 		<script type='text/javascript' src='scr/main.js'></script>
 		<script type='text/javascript' src='scr/view-list.js'></script>
-		<script type='text/x-template' id='lists-template'>
-			<tr class='@!classes!@' data-id='@!doc._id!@' data-rev='@!doc._rev!@'>
+		<script type='text/x-tmpl' id='lists-template'>
+			<tr class='{%= o.classes %}' data-id='{%= o.doc._id %}' data-rev='{%= o.doc._rev %}'>
 				<td>
 					<input type='checkbox' />
 				</td>
 				<td>
-					<a href='#view-list'>@!doc.title!@</a>
+					<a href='#view-list'>{%= o.doc.title %}</a>
 					<span class='links lighter'>
 						<a class='view-link' href='#view-list'></a> |
 						<a class='learn-link' href='#learn-list'></a>
@@ -32,21 +33,21 @@
 					<br />
 					<span class='smaller lighter'>
 						<span class='last-edited-label'></span>
-						@!new Date(doc.lastEdited).toLocaleString()!@
+						{%= new Date(o.doc.lastEdited).toLocaleString() %}
 					</span>
 				</td>
 			</tr>
 		</script>
-		<script type='text/x-template' id='list-template'>
-			<tr data-id='@!item.id!@'>
+		<script type='text/x-tmpl' id='list-template'>
+			<tr data-id='{%= o.item.id %}'>
 				<td>
 					<div class='question-wrapper'>
-						<input class='question-input' value='@!compose(item.questions || [])!@' />
+						<input class='question-input' value='{%= o.compose(o.item.questions || []) %}' />
 					</div>
 				</td>
 				<td>
 					<div class='answer-wrapper'>
-						<input class='answer-input' value='@!compose(item.answers || [])!@' />
+						<input class='answer-input' value='{%= o.compose(o.item.answers || []) %}' />
 					</div>
 				</td>
 				<td>
@@ -54,21 +55,18 @@
 				</td>
 			</tr>
 		</script>
-		<script type='text/x-template' id='tests-template'>
-			<tr class='@!classes!@'>
+		<script type='text/x-tmpl' id='tests-template'>
+			<tr class='{%= o.classes %}'>
 				<td>
-					@!
-						try {
-							var result = new Date(test.results[0].active.start);
-						} catch (e) {
-							var result = "<span class='unknown'></span>";
-						}
-						result;
-					!@
+					{% try { %}
+							{%= new Date(o.test.results[0].active.start).toLocaleString() %};
+					{% } catch (e) { %}
+							<span class='unknown'></span>;
+					{% } %}
 				</td>
-				<td>@!calculateNote(test)!@</td>
+				<td>{%= o.calculateNote(o.test) %}</td>
 				<td>
-					<input type='checkbox' class='finished-checkbox' @!test.finished?"checked='checked'": ""!@ />
+					<input type='checkbox' class='finished-checkbox' {%= o.test.finished ? "checked='checked'": "" %} />
 				</td>
 			</tr>
 		</script>
@@ -181,10 +179,14 @@
 					</table>
 				</div>
 				<p id='save-success'></p>
-				<p id='save-failure'></p>
+				<p id='save-forbidden'></p>
+				<p id='save-conflict'></p>
 				<button id='back-from-list-page'></button>
 				<button id='save-list'></button>
+				<button id='print-list'></button>
 				<button id='teach-list'></button>
+
+				<iframe id='print-frame' name='print-frame'></iframe>
 			</div>
 			<div id='learn-page'>
 				<p>

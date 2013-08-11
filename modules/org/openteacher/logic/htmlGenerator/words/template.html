@@ -1,33 +1,30 @@
-#!
-#!	Copyright 2011-2012, Marten de Vries
-#!
-#!	This file is part of OpenTeacher.
-#!
-#!	OpenTeacher is free software: you can redistribute it and/or modify
-#!	it under the terms of the GNU General Public License as published by
-#!	the Free Software Foundation, either version 3 of the License, or
-#!	(at your option) any later version.
-#!
-#!	OpenTeacher is distributed in the hope that it will be useful,
-#!	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#!	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#!	GNU General Public License for more details.
-#!
-#!	You should have received a copy of the GNU General Public License
-#!	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
-#!
-<!--(set_escape)-->
-	html
-<!--(end)-->
-<!doctype html>
+{% /*
+	Copyright 2011-2013, Marten de Vries
+
+	This file is part of OpenTeacher.
+
+	OpenTeacher is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	OpenTeacher is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
+*/ %}
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title>@!list.get("title", u"")!@</title>
+		<title>{%= o.list.title || "" %}</title>
 		<style type='text/css'>
 			body {
 				font-family:Verdana, Helvetica, Arial, sans-serif;
-				margin:@!margin!@;
+				margin:{%= o.margin %};
 			}
 
 			h1 {
@@ -53,17 +50,17 @@
 			.question, #question-header {
 				padding-left:1em;
 			}
-			
+
 			.answer, #answer-header {
 				padding-left:2em;
 				padding-right:0;
 			}
-			
-			<!--(if coloredRows)-->
+
+			{% if (o.coloredRows) { %}
 			.even {
 				background-color:#ddd;
 			}
-			<!--(end)-->
+			{% } %}
 
 			th, td {
 				padding: 0.25em;
@@ -71,27 +68,27 @@
 		</style>
 	</head>
 	<body>
-		<h1>@!list.get("title", u"")!@</h1>
+		<h1>{%= o.list.title || "" %}</h1>
 		<table>
 			<thead>
 				<tr>
 					<th id='number-header'></th>
-					<th id='question-header'>@!list.get("questionLanguage", u"")!@</th>
-					<th id='answer-header'>@!list.get("answerLanguage", U"")!@</th>
+					<th id='question-header'>{%= o.list.questionLanguage || "" %}</th>
+					<th id='answer-header'>{%= o.list.answerLanguage || "" %}</th>
 				</tr>
 			</thead>
 			<tbody>
-			<!--(for word in list["items"])-->
-				<!--(if list["items"].index(word) % 2)-->
+			{% for (var i = 0; i < (o.list.items || []).length; i += 1) { %}
+				{% if (i % 2) { %}
 				<tr class='even'>
-				<!--(else)-->
+				{% } else { %}
 				<tr class='odd'>
-				<!--(end)-->
-					<td class='number'>@!list["items"].index(word) +1!@</td>
-					<td class='question'>@!compose(word.get("questions", []))!@</td>
-					<td class='answer'>@!compose(word.get("answers", []))!@</td>
+				{% } %}
+					<td class='number'>{%= i + 1 %}</td>
+					<td class='question'>{%= o.compose(o.list.items[i].questions || []) %}</td>
+					<td class='answer'>{%= o.compose(o.list.items[i].answers || []) %}</td>
 				</tr>
-			<!--(end)-->
+			{% } %}
 			</tbody>
 		</table>
 	</body>

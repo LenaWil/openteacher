@@ -56,13 +56,13 @@ button, input[type='button'], input[type='submit'] {
 	display: none;
 }
 
-#register-success, #register-failure, #save-success, #save-failure {
+#register-success, #register-failure, #save-success, #save-conflict, #save-forbidden {
 	display: none;
 }
 #save-success, #register-success {
 	color: green;
 }
-#save-failure, #register-failure {
+#save-conflict, #save-forbidden, #register-failure {
 	color: red;
 }
 
@@ -135,6 +135,10 @@ button, input[type='button'], input[type='submit'] {
 
 .last-remove-item {
 	display: none;
+}
+
+#print-frame {
+	display:none;
 }
 
 /* login page */

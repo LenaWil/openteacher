@@ -22,11 +22,11 @@ var overviewPage = (function () {
 				_deleted: true
 			});
 		});
-		listsDb.bulkDocs({docs: deleteDocs});
+		PouchDBext.withValidation.bulkDocs(listsDb, {docs: deleteDocs});
 	}
 
 	function onNewList() {
-		listsDb.post({
+		PouchDBext.withValidation.post(listsDb, {
 			"title": _("New list"),
 			"items": [],
 			"shares": [],
@@ -55,7 +55,7 @@ var overviewPage = (function () {
 			for (var i = 0; i < resp.rows.length; i += 1) {
 				var doc = resp.rows[i].value;
 
-				var rows = renderTemplate("#lists-template", {
+				var rows = tmpl("lists-template", {
 					doc: doc,
 					classes: tbody.children().length % 2 ? "even" : "odd"
 				});

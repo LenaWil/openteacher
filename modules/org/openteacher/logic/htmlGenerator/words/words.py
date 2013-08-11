@@ -19,17 +19,50 @@
 #	You should have received a copy of the GNU General Public License
 #	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
 
+import json
+
 class WordsHtmlGeneratorModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(WordsHtmlGeneratorModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "wordsHtmlGenerator"
+		self.type = "htmlGenerator"
+		self.dataType = "words"
 		self.requires = (
-			self._mm.mods(type="wordsStringComposer"),
+			self._mm.mods(type="javaScriptEvaluator"),
+			self._mm.mods("javaScriptImplementation", type="wordsStringComposer"),
+			self._mm.mods(type="jsLib", name="tmpl"),
 		)
+		self.javaScriptImplementation = True
 
-	def generate(self, lesson, margin="0", coloredRows=True):
+	def enable(self):
+		global pyratemp
+		try:
+			import pyratemp
+		except ImportError:
+			return #remain inactive
+		self._modules = set(self._mm.mods(type="modules")).pop()
+
+		with open(self._mm.resourcePath("words.js")) as f:
+			self.code = f.read()
+		with open(self._mm.resourcePath("template.html")) as f:
+			self.code += "var WORDS_HTML_GENERATOR_TEMPLATE = %s;\n\n" % json.dumps(f.read())
+		self.code += self._modules.default("active", "javaScriptImplementation", type="wordsStringComposer").code
+		self.code += self._modules.default("active", type="jsLib", name="tmpl").code
+
+		self._js = self._modules.default("active", type="javaScriptEvaluator").createEvaluator()
+		self._js.eval(self.code)
+
+		self.active = True
+
+	def disable(self):
+		self.active = False
+
+		del self._modules
+		del self.code
+		del self._js
+
+	def generate(self, lesson, margin=None, coloredRows=None):
 		"""Generates a html document which provides an overview of all
 		   the questions and answers in `lesson`. It includes an inline
 		   stylesheet.
@@ -40,44 +73,7 @@ class WordsHtmlGeneratorModule(object):
 		     different background colors than the even ones.
 
 		"""
-		class EvalPseudoSandbox(pyratemp.EvalPseudoSandbox):
-			def __init__(self2, *args, **kwargs):
-				pyratemp.EvalPseudoSandbox.__init__(self2, *args, **kwargs)
-
-				self2.register("compose", self.compose)
-
-		templatePath = self._mm.resourcePath("template.html")
-		t = pyratemp.Template(
-			open(templatePath).read(),
-			eval_class=EvalPseudoSandbox
-		)
-		return t(**{
-			"list": lesson.list,
-			"margin": margin,
-			"coloredRows": coloredRows,
-		})
-
-	@property
-	def compose(self):
-		return self._modules.default(
-			"active",
-			type="wordsStringComposer"
-		).compose
-
-	def enable(self):
-		global pyratemp
-		try:
-			import pyratemp
-		except ImportError:
-			return #remain inactive
-		self._modules = set(self._mm.mods(type="modules")).pop()
-
-		self.active = True
-
-	def disable(self):
-		self.active = False
-
-		del self._modules
+		return self._js["generateWordsHtml"](lesson.list, margin=margin, coloredRows=coloredRows)
 
 def init(moduleManager):
 	return WordsHtmlGeneratorModule(moduleManager)

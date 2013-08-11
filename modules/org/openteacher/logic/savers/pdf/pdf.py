@@ -30,7 +30,7 @@ class PdfSaverModule(object):
 		}
 
 		self.requires = (
-			self._mm.mods(type="wordsHtmlGenerator"),
+			self._mm.mods(type="htmlGenerator", dataType="words"),
 			self._mm.mods(type="ui"),
 		)
 		self.uses = (
@@ -88,7 +88,8 @@ class PdfSaverModule(object):
 
 		html = self._modules.default(
 			"active",
-			type="wordsHtmlGenerator"
+			type="htmlGenerator",
+			dataType="words"
 		).generate(lesson)
 
 		self._doc = QtWebKit.QWebView()

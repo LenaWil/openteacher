@@ -34,6 +34,7 @@ class TestCase(unittest.TestCase):
 					"jsdiff" in path or
 					"admin_files" in path or
 					"pouchdb" in path or
+					os.path.join("javaScript", "libraries") in path or
 					"templ" in path #templates contain stuff that isn't valid JS.
 				)
 				if jsFile and not exclude:

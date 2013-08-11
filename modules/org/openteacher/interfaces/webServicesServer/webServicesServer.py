@@ -28,7 +28,7 @@ class WebServicesServerModule(object):
 
 		self.type = "webServicesServer"
 		self.requires = (
-			self._mm.mods("javaScriptImplementation", type="safeHtmlChecker"),
+			self._mm.mods(type="webDatabase"),
 			self._mm.mods(type="translator"),
 		)
 		self.filesWithTranslations = ("serverImpl.py", "register-template.html")
@@ -36,20 +36,22 @@ class WebServicesServerModule(object):
 	def enable(self):
 		try:
 			self._server = self._mm.import_("serverImpl")
-			self._server.otCouch = self._mm.import_("otCouch")
 		except ImportError:
 			return
 
 		self.app = self._server.app
-		with contextlib.ignored(IOError):
-			with open(self._mm.resourcePath("ot-web-config.json")) as f:
+		try:
+			with open(self._mm.resourcePath("web-config.json")) as f:
 				self.app.config.update(json.load(f))
+		except IOError:
+			#cleanup & remain disabled
+			del self._server
+			del self.app
+			return
 
 		self.app.config["REGISTER_TEMPLATE_PATH"] = self._mm.resourcePath("register-template.html")
 
 		modules = next(iter(self._mm.mods(type="modules")))
-		self.app.config["IS_SAFE_HTML_JS"] = modules.default("javaScriptImplementation", type="safeHtmlChecker").code
-		self.app.config["DB_SKELETON_DIR"] = self._mm.resourcePath("db_skeleton")
 		self.app.config["TRANSLATIONS_DIR"] = self._mm.resourcePath("translations")
 
 		def gettextFunctions(language):
@@ -57,6 +59,7 @@ class WebServicesServerModule(object):
 			translationDir = self._mm.resourcePath("translations")
 			return translator.gettextFunctions(translationDir, language)
 		self._server.gettextFunctions = gettextFunctions
+		self._server.createWebDatabase = modules.default("active", type="webDatabase").createWebDatabase
 
 		self.active = True
 

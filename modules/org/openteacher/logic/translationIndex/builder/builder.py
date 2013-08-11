@@ -57,7 +57,7 @@ class TranslationIndexBuilderModule(object):
 		global polib
 		try:
 			import polib
-		except IndexError:
+		except ImportError:
 			pass
 		self.active = True
 

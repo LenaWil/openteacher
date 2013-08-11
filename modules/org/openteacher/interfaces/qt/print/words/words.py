@@ -29,7 +29,7 @@ class PrintModule(object):
 		)
 		self.requires = (
 			self._mm.mods(type="metadata"),
-			self._mm.mods(type="wordsHtmlGenerator"),
+			self._mm.mods(type="htmlGenerator", dataType="words"),
 		)
 		self.filesWithTranslations = ("words.py",)
 	
@@ -75,7 +75,8 @@ class PrintModule(object):
 	def print_(self, type, lesson, printer):
 		html = self._modules.default(
 			"active",
-			type="wordsHtmlGenerator"
+			type="htmlGenerator",
+			dataType="words"
 		).generate(lesson)
 
 		name = self._modules.default("active", type="metadata").metadata["name"]

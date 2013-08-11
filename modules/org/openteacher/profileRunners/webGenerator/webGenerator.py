@@ -31,6 +31,7 @@ class WebGeneratorModule(object):
 		self.requires = (
 			self._mm.mods(type="execute"),
 			self._mm.mods(type="webLogicGenerator"),
+			self._mm.mods(type="jsLib", name="tmpl"),
 			self._mm.mods(type="translationIndexBuilder"),
 			self._mm.mods(type="translationIndexesMerger"),
 			self._mm.mods(type="translationIndexJSONWriter"),
@@ -84,6 +85,10 @@ class WebGeneratorModule(object):
 
 		#copy all static stuff
 		shutil.copytree(self._mm.resourcePath("static"), path)
+
+		#copy global libraries
+		with open(os.path.join(path, "scr/library/tmpl.js"), "w") as f:
+			f.write(self._modules.default(type="jsLib", name="tmpl").code)
 
 		#create the config file
 		template = pyratemp.Template(filename=self._mm.resourcePath("config.templ.js"))

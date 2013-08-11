@@ -24,7 +24,8 @@ class MediaHtmlGeneratorModule(object):
 		super(MediaHtmlGeneratorModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "mediaHtmlGenerator"
+		self.type = "htmlGenerator"
+		self.dataType = "media"
 
 	def generate(self, lesson, name="", margin="0"):
 		templatePath = self._mm.resourcePath("template.html")
