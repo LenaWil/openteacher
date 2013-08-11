@@ -38,6 +38,11 @@ class OtxxLoaderModule(object):
 
 		atexit.register(self._cleanupTempPaths)
 
+	def _normPaths(self, list):
+		for item in list["items"]:
+			item["filename"] = os.path.normpath(item["filename"])
+		return list
+
 	def _stringsToDatetimes(self, list):
 		if not "tests" in list:
 			return list
@@ -61,6 +66,7 @@ class OtxxLoaderModule(object):
 			listFile = zipFile.open("list.json")
 			list = json.load(listFile)
 			list = self._stringsToDatetimes(list)
+			list = self._normPaths(list)
 
 			resources = {}
 			for resourceKey, filename in resourceFilenames.iteritems():

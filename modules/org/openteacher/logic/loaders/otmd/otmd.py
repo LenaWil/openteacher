@@ -21,6 +21,9 @@
 
 import zipfile
 import contextlib
+import os
+import ntpath
+import posixpath
 
 class OpenTeachingMediaLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -96,9 +99,10 @@ class OpenTeachingMediaLoaderModule(object):
 
 		# Replace filenames with their real (temporary) files
 		for item in lesson["list"]["items"]:
-			with contextlib.ignored(KeyError):
-				#Remote-data items give a KeyError
-				item["filename"] = lesson["resources"][item["filename"]]
+			for key in lesson["resources"].keys():
+				# Windows paths need to be converted to use / to compare to zip paths
+				if key == item["filename"].replace(ntpath.sep, posixpath.sep):
+					item["filename"] = lesson["resources"][key]
 
 		return lesson
 
