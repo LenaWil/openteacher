@@ -26,21 +26,21 @@ import json
 import datetime
 import logging
 
-logger = logging.getLogger("flashcardexchange")
+logger = logging.getLogger("cram")
 
-class FlashcardexchangeApi(object):
+class CramApi(object):
 	"""See for documentation of the API this communicates with:
-	   www.flashcardexchange.com/docs/api
+	   http://www.cram.com/docs/api
 
 	"""
 	def __init__(self, appId, parse, getLanguageName, *args, **kwargs):
-		super(FlashcardexchangeApi, self).__init__(*args, **kwargs)
+		super(CramApi, self).__init__(*args, **kwargs)
 
 		self._appId = appId
 		self._parse = parse
 		self._getLanguageName = getLanguageName
 
-		self._baseUrl = "https://api.flashcardexchange.com/v2"
+		self._baseUrl = "https://api.cram.com/v2"
 
 	def _open(self, url, **kwargs):
 		kwargs["client_id"] = self._appId
@@ -163,10 +163,10 @@ def installQtClasses():
 			return unicode(self._searchBox.text())
 
 		def retranslate(self):
-			self._label.setText(_("Enter a search term and press the search button to search flashcardexchange.com for sets. Then select the set or sets you want to import and click OK."))
+			self._label.setText(_("Enter a search term and press the search button to search Cram.com for sets. Then select the set or sets you want to import and click OK."))
 			self._searchBox.setPlaceholderText(_("E.g.: spanish travel vocabulary"))
 			self._searchButton.setText(_("Search"))
-			self.setWindowTitle(_("Search flashcardexchange.com"))
+			self.setWindowTitle(_("Search Cram.com"))
 
 		def keyPressEvent(self, event):
 			if event.key() != QtCore.Qt.Key_Return:
@@ -175,12 +175,12 @@ def installQtClasses():
 				#isn't, either.)
 				return super(SearchDialog, self).keyPressEvent(event)
 
-class FlashcardexchangeApiModule(object):
+class CramApiModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(FlashcardexchangeApiModule, self).__init__(*args, **kwargs)
+		super(CramApiModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
-		self.type = "flashcardexchangeApi"
+		self.type = "cramApi"
 		self.requires = (
 			self._mm.mods(type="ui"),
 			self._mm.mods(type="buttonRegister"),
@@ -191,7 +191,7 @@ class FlashcardexchangeApiModule(object):
 		self.uses = (
 			self._mm.mods(type="translator"),
 		)
-		self.filesWithTranslations = ("flashcardexchangeApi.py",)
+		self.filesWithTranslations = ("cramApi.py",)
 
 		self.priorities = {
 			"default": 525,
@@ -220,6 +220,7 @@ class FlashcardexchangeApiModule(object):
 
 		try:
 			self._appIdSetting = self._modules.default(type="settings").registerSetting(**{
+				#legacy: flashcardexchange was renamed to cram in 2013
 				"internal_name": "org.openteacher.flashcardexchangeApi.clientId",
 				"type": "short_text",
 				"defaultValue": CLIENT_ID,
@@ -242,7 +243,7 @@ class FlashcardexchangeApiModule(object):
 
 	@property
 	def _api(self):
-		return FlashcardexchangeApi(self._appIdSetting["value"], self._parse, self._getLanguageName)
+		return CramApi(self._appIdSetting["value"], self._parse, self._getLanguageName)
 
 	def _retranslate(self):
 		global _
@@ -258,10 +259,10 @@ class FlashcardexchangeApiModule(object):
 				self._mm.resourcePath("translations")
 			)
 
-		self._button.changeText.send(_("Import from flashcardexchange.com"))
+		self._button.changeText.send(_("Import from Cram.com"))
 
 		self._appIdSetting.update({
-			"name": _("flashcardexchange.com API client id"),
+			"name": _("Cram.com API client id"),
 		})
 
 		#Translate all active dialogs
@@ -288,8 +289,8 @@ class FlashcardexchangeApiModule(object):
 	def _noConnection(self):
 		QtGui.QMessageBox.warning(
 			self._uiModule.qtParent,
-			_("No flashcardexchange.com connection"),
-			_("flashcardexchange.com didn't accept the connection. Are you sure that your internet connection works and flashcardexchange.com is online?")
+			_("No Cram.com connection"),
+			_("Cram.com didn't accept the connection. Are you sure that your internet connection works and Cram.com is online?")
 		)
 
 	def doImport(self):
@@ -323,7 +324,7 @@ class FlashcardexchangeApiModule(object):
 			return
 
 		#everything went well
-		self._uiModule.statusViewer.show(_("The word list was imported from flashcardexchange.com successfully."))
+		self._uiModule.statusViewer.show(_("The word list was imported from Cram.com successfully."))
 
 	def _loadList(self, list):
 		self._modules.default("active", type="loaderGui").loadFromLesson("words", list)
@@ -341,4 +342,4 @@ class FlashcardexchangeApiModule(object):
 		del self._appIdSetting
 
 def init(moduleManager):
-	return FlashcardexchangeApiModule(moduleManager)
+	return CramApiModule(moduleManager)

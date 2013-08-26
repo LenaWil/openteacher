@@ -127,7 +127,11 @@ class TestCase(unittest.TestCase):
 
 		for mod in self._mm.mods:
 			startVars = set(vars(mod).keys()) - set(["active"])
-			success, enabledMods = self._enableIncludingDependenciesIfNotActive(mod, minimalDependencies)
+			try:
+				success, enabledMods = self._enableIncludingDependenciesIfNotActive(mod, minimalDependencies)
+			except RuntimeError:
+				print mod
+				raise
 			self._disableDependencyTree(enabledMods)
 			endVars = set(vars(mod).keys()) - set(["active"])
 			try:
@@ -151,6 +155,8 @@ class TestModule(object):
 		self.type = "test"
 
 	def enable(self):
+		import sys
+		sys.setrecursionlimit(100)
 		self.TestCase = TestCase
 		self.TestCase._masterModuleManager = self._mm
 		self.active = True

@@ -46,6 +46,7 @@ class TestModule(object):
 
 	def disable(self):
 		self.active = False
+
 		del self.testSuite
 
 def init(moduleManager):

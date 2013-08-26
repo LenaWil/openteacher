@@ -4,7 +4,15 @@ var PouchDBext = (function () {
 		var require;
 		if (requireContext) {
 			require = function (libPath) {
-				var exports = {};
+				var module = {
+					id: libPath,
+					//no way to fill in current and parent as far as I
+					//know
+					current: undefined,
+					parent: undefined,
+					exports: {}
+				};
+				var exports = module.exports;
 
 				var path = libPath.split("/");
 				var lib = requireContext;
@@ -12,25 +20,40 @@ var PouchDBext = (function () {
 					lib = lib[path[i]];
 				}
 				eval(lib);
-				return exports;
-			}
+				return module.exports;
+			};
 		}
+		var isArray = Array.isArray;
+		var toJSON = JSON.stringify;
+		var log = console.log;
+		var sum = function (array) {
+			return array.reduce(function (a, b) {
+				return a + b;
+			});
+		};
 
 		var statements = "";
-		for (name in extraVars) {
-			statements += "var " + name + " = extraVars[" + name + "];\n";
+		for (var name in extraVars) {
+			if (extraVars.hasOwnProperty(name)) {
+				statements += "var " + name + " = extraVars['" + name + "'];\n";
+			}
 		}
 
 		return eval(statements + program);
 	}
 
-	var providesFuncs = {};
-	function provides(type, func) {
-		providesFuncs[type] = function () {
-			return {
-				code: 200,
-				body: func()
-			};
+	function buildProvidesCtx() {
+		var providesFuncs = {};
+		return {
+			provides: function provides(type, func) {
+				providesFuncs[type] = function () {
+					return {
+						code: 200,
+						body: func()
+					};
+				};
+			},
+			funcs: providesFuncs
 		};
 	}
 
@@ -39,14 +62,14 @@ var PouchDBext = (function () {
 			getValidationFunctions(db, function (err, validationFuncs) {
 				if (err) {
 					callback(err, null);
-					return
+					return;
 				}
 				if (!validationFuncs.length) {
 					//no validation functions -> success
 					callback(null, true);
-					return
+					return;
 				}
-				getOldDoc(db, newDoc._id, function (oldDoc) {
+				getOldDoc(db, newDoc._id, function (err, oldDoc) {
 					try {
 						validationFuncs.forEach(function (validationFunc) {
 							validationFunc(newDoc, oldDoc, newOptions.userCtx, newOptions.secObj);
@@ -58,12 +81,12 @@ var PouchDBext = (function () {
 							callback({"exception_occurred": e}, null);
 						}
 						return;
-					};
+					}
 					//passed all validation functions -> success
 					callback(null, true);
 				});
 			});
-		})
+		});
 	}
 	function fillInValidationOptions(db, options, callback) {
 		if (!options) {
@@ -89,7 +112,7 @@ var PouchDBext = (function () {
 					db: resp.db_name,
 					name: null,
 					roles: []
-				}
+				};
 				callback(options);
 			});
 		} else {
@@ -111,7 +134,7 @@ var PouchDBext = (function () {
 				return {
 					doc: row.doc,
 					func: row.doc.validate_doc_update
-				}
+				};
 			});
 			validationFuncs = validationFuncs.filter(function (info) {
 				return typeof info.func !== "undefined";
@@ -212,7 +235,7 @@ var PouchDBext = (function () {
 					});
 				});
 			},
-			//also add this for attachments?
+			//TODO: also add this for attachments?
 		},
 		show: function (db, showPath, callback) {
 			var designDocName = showPath.split("/")[0];
@@ -221,15 +244,18 @@ var PouchDBext = (function () {
 			db.get("_design/" + designDocName, function (err, designDoc) {
 				if (err) {
 					callback(err, null);
+					return;
 				}
 				db.get(docId, function (err, doc) {
 					if (err) {
 						callback(err, null);
 					}
 					var result;
+					var providesCtx = buildProvidesCtx();
 					try {
 						var func = couchEval(designDoc, {
-							provides: provides
+							provides: providesCtx.provides,
+							registerTypes: function () {}
 						}, designDoc.shows[showName]);
 						result = func(doc, null);
 					} catch (e) {
@@ -237,11 +263,71 @@ var PouchDBext = (function () {
 					}
 
 					if (!result) {
-						result = providesFuncs.html();
+						result = providesCtx.funcs.html();
+					}
+					callback(null, result);
+				});
+			});
+		},
+		list: function (db, listPath, opts, callback) {
+			if (typeof opts === "function") {
+				callback = opts;
+				opts = {};
+			}
+			var designDocName = listPath.split("/")[0];
+			var listName = listPath.split("/")[1];
+			var viewName = listPath.split("/")[2];
+
+			db.get("_design/" + designDocName, function (err, designDoc) {
+				if (err) {
+					callback(err, null);
+					return;
+				}
+				db.query(designDocName + "/" + viewName, opts, function (err, view) {
+					if (err) {
+						callback(err, null);
+						return;
+					}
+					var result;
+					var sent = "";
+					var providesCtx = buildProvidesCtx();
+					var i = -1;
+					try {
+						var func = couchEval(designDoc, {
+							provides: providesCtx.provides,
+							registerTypes: function () {},
+							getRow: function () {
+								i += 1;
+								return view.rows[i];
+							},
+							start: function () {},
+							send: function (data) {
+								sent += data;
+							},
+						}, designDoc.lists[listName]);
+						//TODO: (head, req) arguments should make more sense.
+						result = func(null, {
+							info: {
+								db_name: "shared_lists_test"
+							},
+							headers: {
+								Host: COUCHDB_HOST.split("/")[2]
+							},
+							raw_path: "/shared_lists_test/_design/" + designDocName + "/_list/" + listName + "/" + viewName
+						}) || "";
+					} catch (e) {
+						callback({"exception_occurred": e}, null);
+					}
+
+					result = sent + (result || "");
+					if (!result) {
+						//FIXME. Same for show()
+						result = providesCtx.funcs.atom();
+						result.body = sent + result.body;
 					}
 					callback(null, result);
 				});
 			});
 		}
-	}
+	};
 }());
