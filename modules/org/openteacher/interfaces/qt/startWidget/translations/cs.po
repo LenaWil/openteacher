@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-06-27 15:37+0200\n"
-"PO-Revision-Date: 2012-05-11 22:26+0000\n"
-"Last-Translator: Jakub Šnapka <snapka@seznam.cz>\n"
+"PO-Revision-Date: 2013-08-28 17:20+0000\n"
+"Last-Translator: Jan Havran <Unknown>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-28 05:54+0000\n"
-"X-Generator: Launchpad (build 16681)\n"
+"X-Launchpad-Export-Date: 2013-08-29 04:58+0000\n"
+"X-Generator: Launchpad (build 16738)\n"
 "Language: cs\n"
 
 #: startWidget.py:248
@@ -28,7 +28,7 @@ msgstr "Načíst lekci:"
 
 #: startWidget.py:250
 msgid "Load from the internet"
-msgstr ""
+msgstr "Načíst z Internetu"
 
 #: startWidget.py:252
 msgid "Recently opened:"
