@@ -223,6 +223,9 @@ class MediaDisplayModule(object):
 
 	def _retranslate(self):
 		#setup translation
+		global _
+		global ngettext
+		
 		try:
 			translator = self._modules.default("active", type="translator")
 		except IndexError:

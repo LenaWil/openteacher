@@ -221,6 +221,18 @@ class Lesson(object):
 
 	@list.setter
 	def list(self, list):
+		# Check if all the items are supported
+		modules = self._modules.sort("active", type="mediaType")
+		for item in list["items"]:
+			itemSupported = False
+			for module in modules:
+				if module.supports(item["filename"]):
+					itemSupported = True
+					break
+			if not itemSupported:
+				QtGui.QMessageBox.critical(self.enterWidget, _("Unsupported media"), _("This type of media isn't supported on your computer"))
+				self.stop()
+				return
 		# Load the list
 		self.enterWidget.list = list
 		# Update the widgets
