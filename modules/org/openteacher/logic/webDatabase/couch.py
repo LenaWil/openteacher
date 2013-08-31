@@ -167,7 +167,10 @@ class WebCouch(object):
 
 	def check_auth(self, username, password):
 		session = self.req("get", "/_session", auth=requests.auth.HTTPBasicAuth(username, password)).json()
-		return username == session["userCtx"]["name"]
+		try:
+			return username == session["userCtx"]["name"]
+		except KeyError:
+			return False
 
 	def delete_user(self, username, password):
 		try:

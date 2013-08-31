@@ -3,7 +3,6 @@ import recaptcha.client.captcha
 import functools
 import collections
 import json
-import gettext
 
 #import createWebDatabase is handled by the module.
 #import gettextFunctions too.
@@ -20,14 +19,19 @@ def before_request():
 	)
 
 def requires_auth(f):
+	def auth_err(msg):
+		resp = flask.jsonify({"error": msg})
+		resp.status_code = 401
+		resp.headers["WWW-Authenticate"] = 'Basic realm="OpenTeacher Web"'
+		return resp
+
 	@functools.wraps(f)
 	def decorated(*args, **kwargs):
 		auth = flask.request.authorization
-		if not auth or not flask.g.couch.check_auth(auth.username, auth.password):
-			resp = flask.jsonify({"error": "authentication_required"})
-			resp.status_code = 401
-			resp.headers["WWW-Authenticate"] = 'Basic realm="OpenTeacher Web"'
-			return resp
+		if not auth:
+			return auth_err("authentication_required")
+		if not flask.g.couch.check_auth(auth.username, auth.password):
+			return auth_err("wrong_username_or_password")
 		return f(*args, **kwargs)
 	return decorated
 

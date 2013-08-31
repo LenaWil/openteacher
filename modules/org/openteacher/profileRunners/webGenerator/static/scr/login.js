@@ -99,18 +99,21 @@ var loginPage = (function () {
 			.attr("src", registerUrl)
 			.slideDown("slow")
 			.load(function () {
-				var iframeQuery;
 				try {
-					iframeQuery = this.contentDocument.location.search;
+					if (this.contentDocument.location.pathname.indexOf("empty.html") === -1) {
+						//not yet at the redirect path
+						return;
+					}
 				} catch(e) {
 					if (e.name === "TypeError") {
+						//Single-origin violation means we're not yet
+						//at the redirect path -> ignore.
 						return;
 					}
 					throw(e);
 				}
-				//if here, the register page is 'done'. We can't get the
-				//query string of any other page than our own, and it
-				//gets redirected to our own page when that happens.
+				var iframeQuery = this.contentDocument.location.search;
+				//if here, the register page is 'done'.
 				if (iframeQuery === "?status=ok") {
 					$("#register-success").fadeIn();
 					$("#register-failure").fadeOut();
