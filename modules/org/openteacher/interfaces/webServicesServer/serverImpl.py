@@ -108,6 +108,7 @@ def services_register_send():
 @app.route("/deregister", methods=["POST"])
 @requires_auth
 def services_deregister():
+	auth = flask.request.authorization
 	try:
 		flask.g.couch.delete_user(auth.username, auth.password)
 	except ValueError, e:

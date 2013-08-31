@@ -13,6 +13,10 @@ var loginPage = (function () {
 		$("#password-label").text(_("Password:"));
 		$("#login-button").val(_("Log in!"));
 
+		//session box
+		$("#logout-link").text(_("Log out"));
+		$("#deregister-link").text(_("Deregister"));
+
 		//share part
 		$("#share-part .subheader").text(_("Or view a shared list"));
 	}
@@ -20,14 +24,19 @@ var loginPage = (function () {
 	function onLogin() {
 		username = $("#username").val();
 		var password = $("#password").val();
+		$("#login-form")[0].reset();
 
 		function sync(db, remoteDb, onChange) {
 			var options = {continuous: true};
 			if (onChange) {
 				options.onChange = onChange;
 			}
-			db.replicate.to(remoteDb, options);
-			db.replicate.from(remoteDb, options);
+			var to = db.replicate.to(remoteDb, options);
+			var from = db.replicate.from(remoteDb, options);
+			return function cancel() {
+				to.cancel();
+				from.cancel();
+			}
 		}
 
 		loggedIn(username, password, function () {
@@ -36,11 +45,34 @@ var loginPage = (function () {
 			xhr.open("GET", COUCHDB_HOST + "/_session");
 			xhr.send();
 			show("#lists-page");
-			sync(listsDb, COUCHDB_HOST + "/lists_" + username, listsChanged.send);
-			sync(sharedListsDb, COUCHDB_HOST + "/shared_lists_" + username, sharedListsChanged.send);
-			sync(testsDb, COUCHDB_HOST + "tests_" + username, testsChanged.send);
-			sync(settingsDb, COUCHDB_HOST + "settings_" + username, settingsChanged.send);
+			$("#session-box").fadeIn();
+
+			var cancel1 = sync(listsDb, COUCHDB_HOST + "/lists_" + username, listsChanged.send);
+			var cancel2 = sync(sharedListsDb, COUCHDB_HOST + "/shared_lists_" + username, sharedListsChanged.send);
+			var cancel3 = sync(testsDb, COUCHDB_HOST + "tests_" + username, testsChanged.send);
+			var cancel4 = sync(settingsDb, COUCHDB_HOST + "settings_" + username, settingsChanged.send);
+
+			cancelSync = function () {
+				cancel1();
+				cancel2();
+				cancel3();
+				cancel4();
+			}
 		});
+		return false;
+	}
+
+	function onLogout() {
+		$("#session-box").fadeOut();
+		show("#login-page");
+		cancelSync();
+
+		var xhr = new XMLHttpRequest();
+		xhr.withCredentials = true;
+		xhr.open("DELETE", COUCHDB_HOST + "/_session");
+		xhr.setRequestHeader("Content-Type", "application/json");
+		xhr.send();
+
 		return false;
 	}
 
@@ -96,7 +128,16 @@ var loginPage = (function () {
 		return false;
 	}
 
+	function onDeregister() {
+		//FIXME. Ask for confirmation & then send the POST request to
+		//the services API that kills the account.
+		return false;
+	}
+
 	$(function () {
+		$("#logout-link").click(onLogout);
+		$("#deregister-link").click(onDeregister);
+
 		$("#register-link").click(onRegister);
 		$("#login-form").submit(onLogin);
 

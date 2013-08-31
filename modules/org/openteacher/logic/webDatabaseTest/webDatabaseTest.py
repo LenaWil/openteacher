@@ -118,7 +118,7 @@ class TestCase(unittest.TestCase):
 				assert couch.req("get", "/lists_test/_design/lists/_show/print/" + listId).status_code == 200
 				assert len(couch.req("get", "/shared_lists_test/_design/shares/_view/share_names?group=true").json()["rows"]) == 2
 				assert len(couch.req("get", '/shared_lists_test/_design/shares/_view/by_name?startkey=["testShareB"]&endkey=["testShareB", {}, {}]').json()["rows"]) == 2
-				assert len(couch.req("get", '/tests_test/_design/tests/_view/by_list_id?startkey=["%s"]&endkey=["%s", {}]&descending=true' % (listId, listId)).json()["rows"]) == 1
+				assert len(couch.req("get", '/tests_test/_design/tests/_view/by_list_id?startkey=["%s", {}]&endkey=["%s"]&descending=true' % (listId, listId)).json()["rows"]) == 1
 			except:
 				traceback.print_exc()
 

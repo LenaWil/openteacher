@@ -97,6 +97,12 @@ button, input[type='button'], input[type='submit'] {
 	margin-right: 1em;
 }
 
+#session-box {
+	display: none;
+	padding: 0.5em;
+	float: right;
+}
+
 /* footer */
 #footer {
 	background-color: @!footerBgColor!@;
