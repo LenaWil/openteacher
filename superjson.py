@@ -38,12 +38,8 @@ class _Dumper(object):
 			return self._default(obj)
 		raise TypeError("Couldn't convert '%s' to JSON." % obj)
 
-	def dumps(self, obj, separators=None, default=None):
+	def dumps(self, obj, default=None, **kwargs):
 		self._default = default
-		return json.dumps(
-			obj,
-			separators=separators,
-			default=self._abcToStandardTypes
-		)
+		return json.dumps(obj, default=self._abcToStandardTypes, **kwargs)
 
 dumps = _Dumper().dumps

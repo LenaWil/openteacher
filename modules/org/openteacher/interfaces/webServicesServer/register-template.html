@@ -68,7 +68,7 @@
 			<p id='error'>
 				{{ error }}
 			</p>
-			<form action='{{ url_for("services_register_send") }}' method='post'>
+			<form action='{{ url_for("register_send") }}' method='post'>
 				<input name='redirect' type='hidden' value='{{ redirect }}' />
 				<input name='language' type='hidden' value='{{ language }}' />
 				<table>

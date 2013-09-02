@@ -4,6 +4,8 @@ var viewPage = (function () {
 		$("#title-label").text(_("Title:"));
 		$("#shares-label").text(_("Shares:"));
 		$("#shares-info-label").text(_("Currently existing shares:"));
+		$("#question-lang").attr("placeholder", _("Question language"));
+		$("#answer-lang").attr("placeholder", _("Answer language"));
 		$("#list-questions-header").text(_("Questions"));
 		$("#list-answers-header").text(_("Answers"));
 		$(".remove-item").attr("title", _("Remove this item"));
@@ -16,6 +18,7 @@ var viewPage = (function () {
 		$("#back-from-list-page").text(_("Back to the lists page"));
 		$("#save-list").text(_("Save"));
 		$("#print-list").text(_("Print"));
+		$("#download-list").text(_("Download"));
 		$("#teach-list").text(_("Teach me!"));
 
 		$("#save-success").text(_("Saved the list succesfully."));
@@ -31,9 +34,11 @@ var viewPage = (function () {
 		listsDb.get(id, function (err, resp) {
 			$("#title").val(resp.title);
 			$("#shares").val(resp.shares.join(", "));
+			$("#question-lang").val(resp.questionLanguage || "");
+			$("#answer-lang").val(resp.answerLanguage || "");
 			$("#view-page").data("id", id);
 			$("#view-page").data("rev", resp._rev);
-			$("#list tbody").empty();
+			$("#list-items").empty();
 			var items = resp.items || [];
 			for (var i = 0; i < items.length; i += 1) {
 				addRow(items[i]);
@@ -55,11 +60,11 @@ var viewPage = (function () {
 			item: item,
 			compose: logic.compose
 		});
-		$("#list tbody").append(row);
+		$("#list-items").append(row);
 	}
 
 	function newRow() {
-		var lastId = parseInt($("#list tbody tr:last").data("id"), 10);
+		var lastId = parseInt($("#list-items tr:last").data("id"), 10);
 		if (isNaN(lastId)) {
 			lastId = -1;
 		}
@@ -70,7 +75,7 @@ var viewPage = (function () {
 
 	function testsLoaded(err, resp) {
 		if (resp.rows.length !== 0) {
-			var tbody = $("#tests tbody");
+			var tbody = $("#tests-items");
 			tbody.empty();
 
 			for (var i = 0; i < resp.rows.length; i += 1) {
@@ -85,7 +90,7 @@ var viewPage = (function () {
 			$("#tests-part").show();
 		}
 		show("#view-page", function () {
-			$("#list tbody tr:last .question-input").focus();
+			$("#list-items tr:last .question-input").focus();
 		});
 	}
 
@@ -94,11 +99,12 @@ var viewPage = (function () {
 		$("#save-list").click(onSaveList);
 		$("#teach-list").click(onTeachList);
 		$("#print-list").click(onPrintList);
+		$("#download-list").click(onDownloadList);
 
-		$("#list tbody").on("keyup", "#list input:last", onLastListInputKeyUp);
+		$("#list-items").on("keyup", "#list input:last", onLastListInputKeyUp);
 
-		$("#list tbody").on("click", ".remove-item", onRemoveItem);
-		$("#list tbody").on("keyup", ".remove-item", onRemoveItemKeyUp);
+		$("#list-items").on("click", ".remove-item", onRemoveItem);
+		$("#list-items").on("keyup", ".remove-item", onRemoveItemKeyUp);
 
 		$("#tests").on("change", ".finished-checkbox", onFinishedCheckboxChange);
 		$("#tests").on("focus", ".finished-checkbox", onFinishedCheckboxFocus);
@@ -147,6 +153,15 @@ var viewPage = (function () {
 			});
 			doc.shares = unfilteredShares.filter(function (s) {return s !== "";});
 
+			doc.questionLanguage = $("#question-lang").val();
+			if (!doc.questionLanguage) {
+				delete doc.questionLanguage;
+			}
+			doc.answerLanguage = $("#answer-lang").val();
+			if (!doc.answerLanguage) {
+				delete doc.answerLanguage;
+			}
+
 			//make an object that maps id to items, so we can later
 			//update items instead of replacing them.
 			var oldItemsList = doc.items;
@@ -157,7 +172,7 @@ var viewPage = (function () {
 
 			doc.items = [];
 			//last row is always empty.
-			$("#list tbody tr:not(:last)").each(function () {
+			$("#list-items tr:not(:last)").each(function () {
 				var tr = $(this);
 
 				var id = parseInt(tr.data("id"), 10);
@@ -179,17 +194,6 @@ var viewPage = (function () {
 	function onSaveList() {
 		toList(function (list) {
 			PouchDBext.withValidation.put(listsDb, list, function (err, resp) {
-				function slideUpAfterTimeout(timeout) {
-					return function () {
-						var elem = this;
-						setTimeout(function () {
-							if ($(elem).is(":visible")) {
-								$(elem).slideUp();
-							}
-						}, timeout);
-					};
-				}
-
 				if (err === null) {
 					$("#save-conflict").slideUp();
 					$("#save-forbidden").slideUp();
@@ -231,6 +235,22 @@ var viewPage = (function () {
 			doc.write(resp.body);
 			doc.close();
 			frame.contentWindow.print();
+		});
+	}
+
+	function onDownloadList(list) {
+		toList(function (list) {
+			$("<form class='invisible'></form>")
+				.attr("action", SERVICES_HOST + "/save")
+				.attr("method", "POST")
+				.attr("target", "download-frame")
+				.append("<input name='username' value='" + username + "' />")
+				.append("<input name='password' value='" + password + "' />")
+				.append("<input name='list' value='" + JSON.stringify(list) + "' />")
+				.append("<input name='filename' value='" + list.title + ".otwd' />")
+				.appendTo("body")
+				.submit()
+				.remove();
 		});
 	}
 

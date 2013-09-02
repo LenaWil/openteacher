@@ -56,13 +56,13 @@ button, input[type='button'], input[type='submit'] {
 	display: none;
 }
 
-#register-success, #register-failure, #save-success, #save-conflict, #save-forbidden {
+#register-success, #register-failure, #save-success, #save-conflict, #save-forbidden, #load-failure {
 	display: none;
 }
 #save-success, #register-success {
 	color: green;
 }
-#save-conflict, #save-forbidden, #register-failure {
+#save-conflict, #save-forbidden, #register-failure, #load-failure {
 	color: red;
 }
 
@@ -78,6 +78,16 @@ button, input[type='button'], input[type='submit'] {
 #content {
 	padding: 1em;
 	margin-bottom: 1.75em;
+}
+
+#register-iframe, #upload-part {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 5%;
+	border: 0;
+	width: 90%;
+	height: 100%;
 }
 
 /* header */
@@ -123,9 +133,27 @@ button, input[type='button'], input[type='submit'] {
 	text-align: center;
 }
 
+/* upload page */
+#upload-part {
+	background-color: @!footerBgColor!@;
+}
+#upload-form {
+	background-color: #fff;
+	width: 600px;
+	margin: 0 auto;
+	padding: 50px 100px;
+}
+#file-box {
+	width: 50%;
+}
+
 /* list page */
-#list-metadata input {
+#list-metadata input, #list-languages input, .question-input, .answer-input {
 	width: 100%;
+}
+
+#list-languages input {
+	font-weight: 500;
 }
 
 .question-wrapper {
@@ -135,29 +163,16 @@ button, input[type='button'], input[type='submit'] {
 	padding-left: 0.25em;
 	padding-right: 0.5em;
 }
-.question-input, .answer-input {
-	width: 100%;
+
+.invisible, .last-remove-item {
+	visibility: hidden;
 }
 
-.last-remove-item {
-	display: none;
-}
-
-#print-frame {
+#print-frame, #download-frame {
 	display:none;
 }
 
 /* login page */
-#register-iframe {
-	display: none;
-	position: absolute;
-	top: 0;
-	left: 5%;
-	border: 0;
-	width: 90%;
-	height: 100%;
-}
-
 #login-button {
 	width: 100%;
 }

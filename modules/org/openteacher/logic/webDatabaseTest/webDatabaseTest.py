@@ -66,7 +66,9 @@ class TestCase(unittest.TestCase):
 						"answers": [["two"]],
 					}
 				],
-				"title": "something"
+				"title": "something",
+				"questionLanguage": "Dutch",
+				"answerLanguage": "English",
 			}, auth=testAuth).json()["_id"]
 			assert couch.req("post", "/tests_test", {
 				"listId": listId,

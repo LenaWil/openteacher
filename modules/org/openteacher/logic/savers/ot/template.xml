@@ -19,7 +19,7 @@
 	<title>@!wordList.get("title", u"")!@</title>
 	<question_language>@!wordList.get("questionLanguage", u"")!@</question_language>
 	<answer_language>@!wordList.get("answerLanguage", u"")!@</answer_language>
-	<!--(for word in wordList["items"])-->
+	<!--(for word in wordList.get("items", []))-->
 	<word>
 		<known>@!word["known"] or u"-"!@</known>
 		<foreign>@!word["foreign" or u"-"]!@</foreign>

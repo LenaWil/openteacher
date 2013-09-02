@@ -15,6 +15,9 @@
 		lib.assertSafeHtml(newDoc.shares[i]);
 	}
 
+	lib.assertSafeHtml(newDoc.questionLanguage || "");
+	lib.assertSafeHtml(newDoc.answerLanguage || "");
+
 	lib.requireAttr(newDoc, "lastEdited");
 	lib.assertValidDate(newDoc.lastEdited);
 

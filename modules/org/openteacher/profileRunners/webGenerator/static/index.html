@@ -14,6 +14,7 @@
 		<script type='text/javascript' src='scr/generated/config.js'></script>
 		<script type='text/javascript' src='scr/generated/translations/index.js'></script>
 		<!-- web-specific code -->
+		<script type='text/javascript' src='scr/util.js'></script>
 		<script type='text/javascript' src='scr/learn-list.js'></script>
 		<script type='text/javascript' src='scr/lists-overview.js'></script>
 		<script type='text/javascript' src='scr/login.js'></script>
@@ -51,7 +52,7 @@
 					</div>
 				</td>
 				<td>
-					<a href='#' class='remove-item last-remove-item'>X</button>
+					<a href='#' class='remove-item last-remove-item'>X</a>
 				</td>
 			</tr>
 		</script>
@@ -133,6 +134,17 @@
 				</table>
 				<button id='remove-selected'></button>
 				<button id='new-list'></button>
+				<button id='load-list-from-computer'></button>
+				<div id='upload-part'>
+					<form id='upload-form' action='#'>
+						<p id='upload-explanation'></p>
+						<p id='upload-exts' class='smaller'></p>
+						<p id='load-failure'></p>
+						<input id='file-box' multiple='multiple' type='file' /><br />
+						<input id='do-upload' type='submit' />
+						<button id='cancel-upload'></button><br />
+					</form>
+				</div>
 			</div>
 			<div id='view-page'>
 				<h2 class='subheader'></h2>
@@ -165,7 +177,21 @@
 								<th id='list-answers-header'></th>
 							</tr>
 						</thead>
-						<tbody></tbody>
+						<tbody id='list-languages'>
+							<tr>
+								<td>
+									<div class='question-wrapper'>
+										<input class='question-input' id='question-lang'>
+									</div>
+								</td>
+								<td>
+									<div class='answer-wrapper'>
+										<input class='answer-input' id='answer-lang'>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+						<tbody id='list-items'></tbody>
 					</table>
 				</div>
 				<div id='tests-part'>
@@ -188,9 +214,11 @@
 				<button id='back-from-list-page'></button>
 				<button id='save-list'></button>
 				<button id='print-list'></button>
+				<button id='download-list'></button>
 				<button id='teach-list'></button>
 
 				<iframe id='print-frame' name='print-frame'></iframe>
+				<iframe id='download-frame' name='download-frame'></iframe>
 			</div>
 			<div id='learn-page'>
 				<p>

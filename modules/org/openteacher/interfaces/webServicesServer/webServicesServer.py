@@ -31,6 +31,10 @@ class WebServicesServerModule(object):
 			self._mm.mods(type="webDatabase"),
 			self._mm.mods(type="translator"),
 		)
+		self.uses = (
+			self._mm.mods(type="load"),
+			self._mm.mods(type="save"),
+		)
 		self.filesWithTranslations = ("serverImpl.py", "register-template.html")
 
 	def enable(self):
@@ -60,6 +64,10 @@ class WebServicesServerModule(object):
 			return translator.gettextFunctions(translationDir, language)
 		self._server.gettextFunctions = gettextFunctions
 		self._server.createWebDatabase = modules.default("active", type="webDatabase").createWebDatabase
+		self._server.loaders = modules.sort("active", type="load")
+		self._server.savers = modules.sort("active", type="save")
+
+		self._server.initialize_endpoints()
 
 		self.active = True
 

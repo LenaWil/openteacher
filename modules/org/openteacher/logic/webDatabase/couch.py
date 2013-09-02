@@ -88,13 +88,13 @@ class WebCouch(object):
 
 		try:
 			#user
-			assert self.req("post", "/_users", ({
+			assert self.req("post", "/_users", {
 				"_id": "org.couchdb.user:" + username,
 				"type": "user",
 				"name": username,
 				"password": password,
 				"roles": [],
-			})).status_code == 201
+			}).status_code == 201
 
 			#tests
 			assert self.req("put", "/tests_" + username).status_code == 201

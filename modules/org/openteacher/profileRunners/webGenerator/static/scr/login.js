@@ -1,4 +1,4 @@
-var username;
+var username, password;
 
 var loginPage = (function () {
 	function retranslate() {
@@ -23,7 +23,7 @@ var loginPage = (function () {
 
 	function onLogin() {
 		username = $("#username").val();
-		var password = $("#password").val();
+		password = $("#password").val();
 		$("#login-form")[0].reset();
 
 		function sync(db, remoteDb, onChange) {
@@ -132,6 +132,15 @@ var loginPage = (function () {
 	}
 
 	function onDeregister() {
+		var sure = window.confirm(_("Are you sure you want to deregister? This will remove your account and all data associated with it, without a possibility to recover!"));
+		if (sure) {
+			servicesRequest({
+				url: "/deregister",
+				type: "POST",
+				success: onLogout
+			})
+		}
+
 		//FIXME. Ask for confirmation & then send the POST request to
 		//the services API that kills the account.
 		return false;
