@@ -19,7 +19,7 @@ a:hover {
 table {
 	border-collapse: collapse;
 }
-td, th {
+td, th, li {
 	text-align: left;
 	vertical-align: middle;
 	padding: 0.25em;
@@ -48,21 +48,21 @@ button, input[type='button'], input[type='submit'] {
 }
 
 /* shared, but not global */
-#list, #lists, #list-metadata, #tests {
+#list, #lists, #list-metadata, #tests, #share-lists {
 	width: 100%;
 }
 
-#login-page, #lists-page, #view-page, #register-iframe, #learn-page {
+#login-page, #lists-page, #view-page, #learn-page, #shares-page, #share-page {
 	display: none;
 }
 
-#register-success, #register-failure, #save-success, #save-conflict, #save-forbidden, #load-failure {
+#register-success, #register-failure, #save-success, #save-conflict, #save-forbidden, #load-failure, #share-error {
 	display: none;
 }
 #save-success, #register-success {
 	color: green;
 }
-#save-conflict, #save-forbidden, #register-failure, #load-failure {
+#save-conflict, #save-forbidden, #register-failure, #load-failure, #share-error {
 	color: red;
 }
 
@@ -80,7 +80,7 @@ button, input[type='button'], input[type='submit'] {
 	margin-bottom: 1.75em;
 }
 
-#register-iframe, #upload-part {
+#register-iframe, #upload-part, #download-part {
 	display: none;
 	position: absolute;
 	top: 0;
@@ -88,6 +88,17 @@ button, input[type='button'], input[type='submit'] {
 	border: 0;
 	width: 90%;
 	height: 100%;
+}
+
+#upload-part, #download-part {
+	background-color: @!footerBgColor!@;
+}
+
+.part-inner {
+	background-color: #fff;
+	width: 600px;
+	margin: 0 auto;
+	padding: 50px 100px;
 }
 
 /* header */
@@ -113,6 +124,10 @@ button, input[type='button'], input[type='submit'] {
 	float: right;
 }
 
+.links {
+	float: right;
+}
+
 /* footer */
 #footer {
 	background-color: @!footerBgColor!@;
@@ -126,23 +141,11 @@ button, input[type='button'], input[type='submit'] {
 }
 
 /* lists page */
-.links {
-	float: right;
-}
 #loading-box {
 	text-align: center;
 }
 
 /* upload page */
-#upload-part {
-	background-color: @!footerBgColor!@;
-}
-#upload-form {
-	background-color: #fff;
-	width: 600px;
-	margin: 0 auto;
-	padding: 50px 100px;
-}
 #file-box {
 	width: 50%;
 }
@@ -172,9 +175,22 @@ button, input[type='button'], input[type='submit'] {
 	display:none;
 }
 
+/* share page */
+#share-lists {
+	list-style: none;
+	padding: 0;
+}
+#share-lists li {
+	padding: 0.25em 0.5em;
+}
+
 /* login page */
 #login-button {
 	width: 100%;
+}
+
+#shares-link {
+	text-decoration: underline;
 }
 
 /* learn page */

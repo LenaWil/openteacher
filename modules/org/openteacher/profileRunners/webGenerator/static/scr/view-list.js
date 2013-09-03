@@ -25,6 +25,9 @@ var viewPage = (function () {
 		$("#save-forbidden").text(_("Can't save the document because it contains invalid content. Maybe you used unsafe HTML, or left fields empty that should not be empty?"));
 		$("#save-conflict").text(_("Couldn't save the list, because it has been edited elsewhere in the meantime. You can either discard your changes, or save again (overwriting the changes made elsewhere)."));
 
+		$("#download-explanation").text(_("Please choose the file you want to download from the options below. Not sure? Then download the file ending in '.otwd'."))
+		$("#close-download").text(_("Close"));
+
 		//TRANSLATORS: used to indicate that a table
 		//TRANSLATORS: value is unknown.
 		$(".unknown").text(_("-"));
@@ -46,12 +49,18 @@ var viewPage = (function () {
 			newRow();
 
 			$("#tests-part").hide();
-			testsDb.query("tests/by_list_id", {
-				startkey: [id],
-				endkey: [id, {}],
-				descending: true
-			}, testsLoaded);
+			loadTests(id, {descending: true}, testsLoaded)
 		});
+	}
+
+	function loadTests(id, opts, callback) {
+		if (typeof opts === "function") {
+			callback = opts;
+			opts = {};
+		}
+		opts.startkey = [id];
+		opts.endkey = [id, {}];
+		testsDb.query("tests/by_list_id", opts, callback);
 	}
 
 	function addRow(item) {
@@ -75,7 +84,7 @@ var viewPage = (function () {
 
 	function testsLoaded(err, resp) {
 		if (resp.rows.length !== 0) {
-			var tbody = $("#tests-items");
+			var tbody = $("#tests tbody");
 			tbody.empty();
 
 			for (var i = 0; i < resp.rows.length; i += 1) {
@@ -100,6 +109,9 @@ var viewPage = (function () {
 		$("#teach-list").click(onTeachList);
 		$("#print-list").click(onPrintList);
 		$("#download-list").click(onDownloadList);
+
+		$("#download-links").on("click", "a", onDownloadFile);
+		$("#close-download").click(closeDownload);
 
 		$("#list-items").on("keyup", "#list input:last", onLastListInputKeyUp);
 
@@ -238,20 +250,54 @@ var viewPage = (function () {
 		});
 	}
 
-	function onDownloadList(list) {
-		toList(function (list) {
-			$("<form class='invisible'></form>")
-				.attr("action", SERVICES_HOST + "/save")
-				.attr("method", "POST")
-				.attr("target", "download-frame")
-				.append("<input name='username' value='" + username + "' />")
-				.append("<input name='password' value='" + password + "' />")
-				.append("<input name='list' value='" + JSON.stringify(list) + "' />")
-				.append("<input name='filename' value='" + list.title + ".otwd' />")
-				.appendTo("body")
-				.submit()
-				.remove();
+	function onDownloadList() {
+		$("#download-part").slideDown();
+
+		servicesRequest({
+			url: "/save/supported_extensions",
+			success: function (json) {
+				var exts = json.result.sort();
+				exts = exts.map(function (ext) {
+					return "." + ext;
+				});
+
+				$("#download-links").empty()
+				$.each(exts, function (i, ext) {
+					var link = tmpl("link-template", {
+						title: $("#title").val(),
+						ext: ext
+					});
+					$("#download-links").append(link);
+				});
+			},
 		});
+	}
+
+	function closeDownload() {
+		$("#download-part").slideUp();
+	}
+
+	function onDownloadFile() {
+		var ext = $(this).data("ext");
+		toList(function (list) {
+			loadTests(list._id, function (err, resp) {
+				list.tests = resp.rows.map(function (row) {
+					return row.value;
+				});
+				$("<form class='invisible'></form>")
+					.attr("action", SERVICES_HOST + "/save")
+					.attr("method", "POST")
+					.attr("target", "download-frame")
+					.append("<input name='username' value='" + username + "' />")
+					.append("<input name='password' value='" + password + "' />")
+					.append("<input name='list' value='" + JSON.stringify(list) + "' />")
+					.append("<input name='filename' value='" + list.title + ext + "' />")
+					.appendTo("body")
+					.submit()
+					.remove();
+			});
+		});
+		return false;
 	}
 
 	function onLastListInputKeyUp(event) {

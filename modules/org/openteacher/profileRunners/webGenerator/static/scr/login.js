@@ -15,7 +15,7 @@ var loginPage = (function () {
 
 		//session box
 		$("#logout-link").text(_("Log out"));
-		$("#deregister-link").text(_("Deregister"));
+		$("#deregister-link").text(_("Unsubscribe"));
 
 		//share part
 		$("#share-part .subheader").text(_("Or view a shared list"));
@@ -25,19 +25,6 @@ var loginPage = (function () {
 		username = $("#username").val();
 		password = $("#password").val();
 		$("#login-form")[0].reset();
-
-		function sync(db, remoteDb, onChange) {
-			var options = {continuous: true};
-			if (onChange) {
-				options.onChange = onChange;
-			}
-			var to = db.replicate.to(remoteDb, options);
-			var from = db.replicate.from(remoteDb, options);
-			return function cancel() {
-				to.cancel();
-				from.cancel();
-			}
-		}
 
 		loggedIn(username, password, function () {
 			var xhr = new XMLHttpRequest();
@@ -132,17 +119,23 @@ var loginPage = (function () {
 	}
 
 	function onDeregister() {
-		var sure = window.confirm(_("Are you sure you want to deregister? This will remove your account and all data associated with it, without a possibility to recover!"));
+		var sure = window.confirm(_("Are you sure you want to unsubscribe? This will remove your account and all data associated with it. Keep in mind that there's no recovery procedure!"));
 		if (sure) {
 			servicesRequest({
 				url: "/deregister",
 				type: "POST",
 				success: onLogout
-			})
+			});
 		}
 
 		//FIXME. Ask for confirmation & then send the POST request to
 		//the services API that kills the account.
+		return false;
+	}
+
+	function toShares () {
+		sharesPage.show();
+
 		return false;
 	}
 
@@ -155,6 +148,8 @@ var loginPage = (function () {
 
 		show("#login-page");
 		$("#username").focus();
+
+		$("#shares-link").click(toShares);
 	});
 
 	return {retranslate: retranslate};

@@ -17,20 +17,6 @@ var sharedListsChanged = new logic.Event();
 var testsChanged = new logic.Event();
 var settingsChanged = new logic.Event();
 
-function show(page, whenDone) {
-	function hidingDone (slow) {
-		var speed = slow ? "slow": "fast";
-		$(page).fadeIn(speed, whenDone);
-	}
-
-	var pagesToHide = $("#login-page:visible, #lists-page:visible, #view-page:visible, #learn-page:visible");
-	if (pagesToHide.length) {
-		pagesToHide.fadeOut("fast", hidingDone);
-	} else {
-		hidingDone(true);
-	}
-}
-
 $(function () {
 	function retranslate() {
 		var otWeb = _("OpenTeacher Web");
@@ -41,16 +27,19 @@ $(function () {
 		$("#license-and-source-link").text(_("License information and source code"));
 	}
 
-	doRetranslate = function () {
+	function doRetranslate() {
 		lang = navigator.language;
 		logic.translator(translationIndex, lang, function (tr) {
 			_ = tr;
 			retranslate();
 			loginPage.retranslate();
+			sharesPage.retranslate();
+			sharePage.retranslate();
 			overviewPage.retranslate();
 			learnPage.retranslate();
 			viewPage.retranslate();
 		});
 	};
+
 	doRetranslate();
 });

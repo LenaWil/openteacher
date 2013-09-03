@@ -6,9 +6,9 @@ var overviewPage = (function () {
 		$("#remove-selected").text(_("Remove selected lists"));
 		$("#new-list").text(_("Create new list"));
 		$("#load-list-from-computer").text(_("Upload list from computer"))
-		$(".view-link").text(_("View"));
+		$("#lists .view-link").text(_("View"));
 		$(".learn-link").text(_("Teach me!"));
-		$(".last-edited-label").text(_("Last edited:"));
+		$("#lists .last-edited-label").text(_("Last edited:"));
 
 		$("#do-upload").val(_("Upload file"));
 		$("#cancel-upload").text(_("Cancel"));
@@ -59,7 +59,16 @@ var overviewPage = (function () {
 	function onLoadSuccess(doc) {
 		doc.title = doc.title || _("Uploaded list")
 		doc = webifyList(doc);
-		PouchDBext.withValidation.post(listsDb, doc);
+
+		tests = doc.tests || [];
+		delete doc.tests;
+
+		PouchDBext.withValidation.post(listsDb, doc, function (err, resp) {
+			$.each(tests, function (i, test) {
+				test.listId = resp.id;
+				PouchDBext.withValidation.post(testsDb, test);
+			});
+		});
 		onCancelUpload();
 	}
 

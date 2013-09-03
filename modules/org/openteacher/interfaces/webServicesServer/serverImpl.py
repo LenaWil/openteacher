@@ -7,6 +7,7 @@ import tempfile
 import os
 import datetime
 import json
+import contextlib
 
 #Imports handled by the module:
 #
@@ -275,6 +276,16 @@ def initialize_endpoints():
 			return jsonErr("Please specify the 'list' field in the body form data.")
 		except ValueError:
 			return jsonErr("The posted list is invalid json.")
+
+		dateFormat = "%Y-%m-%dT%H:%M:%S.%fZ"
+		for item in list.get("items", []):
+			with contextlib.ignored(KeyError):
+				item["created"] = datetime.datetime.strptime(item["created"], dateFormat)
+		for test in list.get("tests", []):
+			for result in test.get("results", []):
+				with contextlib.ignored(KeyError):
+					result["active"]["start"] = datetime.datetime.strptime(result["active"]["start"], dateFormat)
+					result["active"]["end"] = datetime.datetime.strptime(result["active"]["end"], dateFormat)
 		lesson = DummyLesson(list)
 
 		try:
