@@ -57,6 +57,8 @@ def requires_auth(f):
 
 #Thanks Armin Ronacher! See: http://flask.pocoo.org/snippets/56/
 def crossdomain(origin=None, methods=None, headers=None, credentials="false", max_age=21600, attach_to_all=True, automatic_options=True):
+	if not origin:
+		return lambda f: f
 	if methods is not None:
 		methods = ', '.join(sorted(x.upper() for x in methods))
 	if headers is not None and not isinstance(headers, basestring):
