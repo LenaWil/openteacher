@@ -7,45 +7,45 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-06-27 15:38+0200\n"
+"POT-Creation-Date: 2013-09-06 17:44+0200\n"
 "PO-Revision-Date: 2012-10-26 22:34+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-06-28 05:52+0000\n"
 "X-Generator: Launchpad (build 16681)\n"
-"Language: ru\n"
 
-#: gui.py:111
+#: inputTyping.py:111
 msgid "Correct answer: <b>{answers}</b> [{diff}]"
 msgstr "Правильный ответ: <b>{answers}</b> [{diff}]"
 
-#: gui.py:113
+#: inputTyping.py:113
 msgid "Correct answer: <b>{answers}</b>"
 msgstr "Правильный ответ: <b>{answers}</b>"
 
-#: gui.py:126
+#: inputTyping.py:126
 msgid "Check!"
 msgstr "Проверить!"
 
-#: gui.py:127
+#: inputTyping.py:127
 msgid "Correct anyway"
 msgstr "Всё равно верно"
 
-#: gui.py:128
+#: inputTyping.py:128
 msgid "Skip"
 msgstr "Пропустить"
 
-#: gui.py:248
+#: inputTyping.py:248
 msgid "Fade duration when wrong (milliseconds)"
 msgstr "Продолжительность исчезновения при ошибке (миллисекунд)"
 
-#: gui.py:249
+#: inputTyping.py:249
 msgid "Lesson"
 msgstr "Урок"
 
-#: gui.py:250
+#: inputTyping.py:250
 msgid "Words lesson"
 msgstr "Словарный урок"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-06-27 15:37+0200\n"
+"POT-Creation-Date: 2013-09-06 17:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,68 +17,68 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gui.py:86
+#: ocrGui.py:86
 msgid "Introduction"
 msgstr ""
 
-#: gui.py:87
+#: ocrGui.py:87
 msgid ""
 "This wizard will guide you through the process of creating a word list from "
 "a scan or picture of a physical word list. Click 'Next' to start."
 msgstr ""
 
-#: gui.py:119
+#: ocrGui.py:119
 msgid "Choose an image"
 msgstr ""
 
-#: gui.py:121
+#: ocrGui.py:121
 msgid ""
 "Please choose the location of the scan or picture of the physical word list "
 "on your system below."
 msgstr ""
 
-#: gui.py:122
+#: ocrGui.py:122
 msgid "Click here to choose a location"
 msgstr ""
 
-#: gui.py:123
+#: ocrGui.py:123
 msgid "Location:"
 msgstr ""
 
-#: gui.py:128
+#: ocrGui.py:128
 msgid "Images ({extensions})"
 msgstr ""
 
-#: gui.py:166
+#: ocrGui.py:166
 msgid "Make image ready"
 msgstr ""
 
-#: gui.py:167
+#: ocrGui.py:167
 msgid ""
 "Please make sure the image is rotated completely upright with the rotation "
 "slider under this text:"
 msgstr ""
 
-#: gui.py:168
+#: ocrGui.py:168
 msgid ""
 "When the image is completely upright, make a selection on the image with the "
 "mouse with in the left top the first question to include and in the right "
 "bottom the last answer to include. Click 'Next' when done."
 msgstr ""
 
-#: gui.py:210
+#: ocrGui.py:210
 msgid "No selection was made"
 msgstr ""
 
-#: gui.py:210
+#: ocrGui.py:210
 msgid "No selection was made. Please try again."
 msgstr ""
 
-#: gui.py:221 gui.py:222
+#: ocrGui.py:221 ocrGui.py:222
 msgid "Recognizing word list..."
 msgstr ""
 
-#: gui.py:235
+#: ocrGui.py:235
 msgid ""
 "Down here, you can see a preview of the result. There will probably be some "
 "wrongly recognized words in there, but the structure of the word list should "
@@ -86,14 +86,14 @@ msgid ""
 "'Finish'."
 msgstr ""
 
-#: gui.py:236
+#: ocrGui.py:236
 msgid "Result preview"
 msgstr ""
 
-#: gui.py:351
+#: ocrGui.py:351
 msgid "Create words lesson from a scan or picture"
 msgstr ""
 
-#: gui.py:354
+#: ocrGui.py:354
 msgid "Words lesson from picture"
 msgstr ""

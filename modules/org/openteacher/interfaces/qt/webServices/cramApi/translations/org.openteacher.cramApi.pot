@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-06-27 15:37+0200\n"
+"POT-Creation-Date: 2013-09-06 17:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,42 +17,42 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: flashcardexchangeApi.py:166
+#: cramApi.py:166
 msgid ""
-"Enter a search term and press the search button to search flashcardexchange."
-"com for sets. Then select the set or sets you want to import and click OK."
+"Enter a search term and press the search button to search Cram.com for sets. "
+"Then select the set or sets you want to import and click OK."
 msgstr ""
 
-#: flashcardexchangeApi.py:167
+#: cramApi.py:167
 msgid "E.g.: spanish travel vocabulary"
 msgstr ""
 
-#: flashcardexchangeApi.py:168
+#: cramApi.py:168
 msgid "Search"
 msgstr ""
 
-#: flashcardexchangeApi.py:169
-msgid "Search flashcardexchange.com"
+#: cramApi.py:169
+msgid "Search Cram.com"
 msgstr ""
 
-#: flashcardexchangeApi.py:261
-msgid "Import from flashcardexchange.com"
+#: cramApi.py:262
+msgid "Import from Cram.com"
 msgstr ""
 
-#: flashcardexchangeApi.py:264
-msgid "flashcardexchange.com API client id"
+#: cramApi.py:265
+msgid "Cram.com API client id"
 msgstr ""
 
-#: flashcardexchangeApi.py:291
-msgid "No flashcardexchange.com connection"
+#: cramApi.py:292
+msgid "No Cram.com connection"
 msgstr ""
 
-#: flashcardexchangeApi.py:292
+#: cramApi.py:293
 msgid ""
-"flashcardexchange.com didn't accept the connection. Are you sure that your "
-"internet connection works and flashcardexchange.com is online?"
+"Cram.com didn't accept the connection. Are you sure that your internet "
+"connection works and Cram.com is online?"
 msgstr ""
 
-#: flashcardexchangeApi.py:326
-msgid "The word list was imported from flashcardexchange.com successfully."
+#: cramApi.py:327
+msgid "The word list was imported from Cram.com successfully."
 msgstr ""

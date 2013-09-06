@@ -45,5 +45,5 @@ function sync(db, remoteDb, onChange, complete) {
 	return function cancel() {
 		to.cancel();
 		from.cancel();
-	}
+	};
 }

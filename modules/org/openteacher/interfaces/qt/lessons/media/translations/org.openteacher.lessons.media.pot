@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-06-27 15:38+0200\n"
+"POT-Creation-Date: 2013-09-06 17:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,15 +25,23 @@ msgstr ""
 msgid "Unnamed"
 msgstr ""
 
-#: media.py:200 media.py:239
+#: media.py:200 media.py:251
 #, python-format
 msgid "Media lesson: %s"
 msgstr ""
 
-#: media.py:284
+#: media.py:233
+msgid "Unsupported media"
+msgstr ""
+
+#: media.py:233
+msgid "This type of media isn't supported on your computer"
+msgstr ""
+
+#: media.py:296
 msgid "Empty question or answer"
 msgstr ""
 
-#: media.py:285
+#: media.py:297
 msgid "Please enter at least one question and one answer for every item."
 msgstr ""

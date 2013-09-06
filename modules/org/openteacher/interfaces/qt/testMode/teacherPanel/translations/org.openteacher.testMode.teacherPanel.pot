@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-06-03 15:54+0200\n"
+"POT-Creation-Date: 2013-09-06 17:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -116,10 +116,10 @@ msgstr ""
 msgid "Correct"
 msgstr ""
 
-#: teacherPanel.py:684
+#: teacherPanel.py:685
 msgid "Teacher panel"
 msgstr ""
 
-#: teacherPanel.py:686
+#: teacherPanel.py:687
 msgid "Teacher Panel"
 msgstr ""

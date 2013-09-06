@@ -6,9 +6,9 @@ var sharesPage = (function () {
 
 	function retranslate() {
 		$("#shares-page .subheader").text(_("Shares"));
-		$("#share-owner-label").text(_("Share owner's username:"))
-		$("#find-shares").val(_("Find available shares"))
-		$("#share-error").text(_("An error occurred while getting shares. Please make sure that the user exists and that your internet connection works correctly."))
+		$("#share-owner-label").text(_("Share owner's username:"));
+		$("#find-shares").val(_("Find available shares"));
+		$("#share-error").text(_("An error occurred while getting shares. Please make sure that the user exists and that your internet connection works correctly."));
 	}
 
 	function whenComplete(err, resp) {
@@ -43,7 +43,7 @@ var sharesPage = (function () {
 				COUCHDB_HOST + "/" + currentDbName,
 				updateView,
 				whenComplete
-			)
+			);
 		});
 
 		this.reset();
@@ -53,7 +53,7 @@ var sharesPage = (function () {
 	function shareDetailRequested() {
 		var name = $(this).text();
 		sharePage.show(name);
-		return false
+		return false;
 	}
 
 	$(function () {

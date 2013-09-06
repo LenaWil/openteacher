@@ -15,17 +15,17 @@ var sharePage = (function () {
 		currentDb = new PouchDB(currentDbName);
 
 		$("#share-page .subheader").text(name);
-		var opts = {startkey: [name], endkey: [name, {}, {}]}
+		var opts = {startkey: [name], endkey: [name, {}, {}]};
 
 		currentDb.query("shares/by_name", opts, function (err, resp) {
 			$("#share-lists").empty();
 			$.each(resp.rows, function (i, row) {
-				var row = tmpl("share-list-template", {
+				var list = tmpl("share-list-template", {
 					doc: row.value,
 					dbName: currentDbName,
 					classes: i % 2 ? "even" : "odd"
 				});
-				$("#share-lists").append(row);
+				$("#share-lists").append(list);
 			});
 			retranslate();
 		});
@@ -44,7 +44,7 @@ var sharePage = (function () {
 
 	function onTakeOver() {
 		//FIXME.
-		return false
+		return false;
 	}
 
 	$(function () {
@@ -55,5 +55,5 @@ var sharePage = (function () {
 	return {
 		show: onShow,
 		retranslate: retranslate
-	}
+	};
 }());

@@ -25,7 +25,7 @@ var viewPage = (function () {
 		$("#save-forbidden").text(_("Can't save the document because it contains invalid content. Maybe you used unsafe HTML, or left fields empty that should not be empty?"));
 		$("#save-conflict").text(_("Couldn't save the list, because it has been edited elsewhere in the meantime. You can either discard your changes, or save again (overwriting the changes made elsewhere)."));
 
-		$("#download-explanation").text(_("Please choose the file you want to download from the options below. Not sure? Then download the file ending in '.otwd'."))
+		$("#download-explanation").text(_("Please choose the file you want to download from the options below. Not sure? Then download the file ending in '.otwd'."));
 		$("#close-download").text(_("Close"));
 
 		//TRANSLATORS: used to indicate that a table
@@ -49,7 +49,7 @@ var viewPage = (function () {
 			newRow();
 
 			$("#tests-part").hide();
-			loadTests(id, {descending: true}, testsLoaded)
+			loadTests(id, {descending: true}, testsLoaded);
 		});
 	}
 
@@ -261,7 +261,7 @@ var viewPage = (function () {
 					return "." + ext;
 				});
 
-				$("#download-links").empty()
+				$("#download-links").empty();
 				$.each(exts, function (i, ext) {
 					var link = tmpl("link-template", {
 						title: $("#title").val(),

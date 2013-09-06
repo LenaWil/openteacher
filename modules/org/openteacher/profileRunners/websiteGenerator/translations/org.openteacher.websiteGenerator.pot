@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-06-27 15:38+0200\n"
+"POT-Creation-Date: 2013-09-06 17:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -136,44 +136,23 @@ msgid ""
 "Foundation</a>."
 msgstr ""
 
-#: templates/download.html:8 templates/index.html:27
-msgid "Download OpenTeacher 3.1"
+#: templates/download.html:8 templates/index.html:25
+msgid "Download OpenTeacher 3.2"
 msgstr ""
 
-#: templates/download.html:11
-msgid ""
-"Available in Brazilian Protuguese, Chinese (Traditional), Dutch, Frysian and "
-"Spanish."
-msgstr ""
-
-#: templates/download.html:11
-msgid "Want more languages?"
-msgstr ""
-
-#: templates/download.html:11
-msgid "Download the older OpenTeacher 2"
-msgstr ""
-
-#: templates/download.html:20
-msgid ""
-"Note: Windows XP users must install the <a href=\"http://www.microsoft.com/"
-"downloads/en/details.aspx?FamilyID=9b2da534-3e03-4391-8a4d-074b9f2bc1bf"
-"\">Visual C++ 2008 Redistributable Package</a> to run OpenTeacher."
-msgstr ""
-
-#: templates/download.html:25
+#: templates/download.html:22
 msgid "For portable (USB-)drives"
 msgstr ""
 
-#: templates/download.html:70
+#: templates/download.html:76
 msgid "Python 2 source with setup.py (for other Linux)"
 msgstr ""
 
-#: templates/download.html:79
+#: templates/download.html:85
 msgid "Python 2 source"
 msgstr ""
 
-#: templates/documentation.html:6 templates/base.html:53
+#: templates/documentation.html:6 templates/base.html:54
 msgid "Documentation"
 msgstr ""
 
@@ -219,72 +198,64 @@ msgstr ""
 
 #: templates/index.html:8
 msgid ""
-"<strong>OpenTeacher</strong> is an opensource <strong>vocabulary training</"
-"strong> application that helps you <strong>learn</strong> a <strong>foreign "
-"language</strong>!"
-msgstr ""
-
-#: templates/index.html:10
-msgid ""
-"<strong>Enter a list of words</strong> in both a known and a foreign "
-"language, and OpenTeacher <strong>tests you</strong>."
+"<strong>OpenTeacher</strong> is an opensource application that <strong>helps "
+"you learn</strong> a variety of <strong>subjects</strong>."
 msgstr ""
 
 #: templates/index.html:12
 msgid "OpenTeacher has the following features (among others):"
 msgstr ""
 
-#: templates/index.html:15
-msgid "Words, places and media lessons"
+#: templates/index.html:14
+msgid "Viewing both recent and past results of tests with graphs"
 msgstr ""
 
-#: templates/index.html:16
+#: templates/index.html:15
 msgid "Smart question asking and interval training"
 msgstr ""
 
+#: templates/index.html:16
+msgid ""
+"Reverse rehearsal (the answer is asked, and you need to give the question)"
+msgstr ""
+
 #: templates/index.html:17
-msgid "Easy symbol, Greek and Cyrillic input"
+msgid ""
+"Read support for more than 29 file formats; write support for over 14 file "
+"formats"
 msgstr ""
 
 #: templates/index.html:18
-msgid "Text-to-speech pronounciation"
+msgid "Learn typing with our Typing Tutor which adapts itself to your skills"
 msgstr ""
 
 #: templates/index.html:19
-msgid "Read and write T2K (Teach2000), wrts and read ABBYY Lingvo Tutor files"
+msgid "Print your word lists, media items and topography maps"
 msgstr ""
 
 #: templates/index.html:20
-msgid "Save and open your online WRTS lists"
-msgstr ""
-
-#: templates/index.html:21
-msgid "Print your word lists"
-msgstr ""
-
-#: templates/index.html:22
 msgid ""
-"Available in Arabic, Australian English, Brazilian Protuguese, Chinese "
-"(Traditional), Croatian, Czech, Danish, Dutch, French, German, Hebrew, "
-"Hungarian, Japanese, Korean, Polish, Russian, Serbian, Slovenian, Spanish, "
-"Swedish and Turkish."
+"(Partly) available in Arabic, Brazilian Portuguese, Simplified Chinese, "
+"Traditional Chinese, Czech, Dutch, Finnish, French, Frisian, Galician, "
+"German, Greek, Hungarian, Italian, Japanese, Polish, Russian, Sinhalese, "
+"Spanish and Turkish"
 msgstr ""
 
-#: templates/index.html:25
+#: templates/index.html:23
 msgid ""
-"OpenTeacher 3.1 is available for <strong>Linux and Windows</strong>. "
-"OpenTeacher 2.2.1 is available for <strong>Mac</strong>."
+"OpenTeacher 3.2 is available for <strong>Linux, Windows and Mac OS X</"
+"strong>."
 msgstr ""
 
-#: templates/index.html:28
+#: templates/index.html:26
 msgid "for"
 msgstr ""
 
-#: templates/index.html:30
+#: templates/index.html:28
 msgid "Other systems and distro-specific packages"
 msgstr ""
 
-#: templates/contribute.html:6 templates/base.html:54
+#: templates/contribute.html:6 templates/base.html:55
 msgid "Contribute"
 msgstr ""
 
@@ -361,15 +332,15 @@ msgstr ""
 msgid "Free exam training software"
 msgstr ""
 
-#: templates/base.html:50
+#: templates/base.html:51
 msgid "Home"
 msgstr ""
 
-#: templates/base.html:51
+#: templates/base.html:52
 msgid "About"
 msgstr ""
 
-#: templates/base.html:52
+#: templates/base.html:53
 msgid "Download"
 msgstr ""
 
@@ -517,15 +488,16 @@ msgid "The Openteacher 2 file format is an XML 1.0 file with UTF-8 encoding."
 msgstr ""
 
 #: docsTemplates/the-openteacher-format.html:7
+#, python-format
 msgid ""
-"An XML-scheme of the file format can be downloaded <a href=\"files/"
-"openteacher.xsd\">here</a>."
+"An XML-scheme of the file format can be downloaded <a href=\"%s\">here</a>."
 msgstr ""
 
 #: docsTemplates/the-openteacher-format.html:8
+#, python-format
 msgid ""
-"NOTE: For the OpenTeacher 3 file format, please refer to <a href=\"http://"
-"sourceforge.net/apps/mediawiki/openteacher/index.php\"> the wiki.</a>"
+"NOTE: For the OpenTeacher 3 file format, please refer to <a href=\"%s\"> the "
+"developer documentation.</a>"
 msgstr ""
 
 #: docsTemplates/the-openteacher-format.html:10

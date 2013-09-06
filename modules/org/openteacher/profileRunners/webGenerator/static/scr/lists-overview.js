@@ -5,15 +5,15 @@ var overviewPage = (function () {
 		$("#lists-page .subheader").text(_("Lists overview"));
 		$("#remove-selected").text(_("Remove selected lists"));
 		$("#new-list").text(_("Create new list"));
-		$("#load-list-from-computer").text(_("Upload list from computer"))
+		$("#load-list-from-computer").text(_("Upload list from computer"));
 		$("#lists .view-link").text(_("View"));
 		$(".learn-link").text(_("Teach me!"));
 		$("#lists .last-edited-label").text(_("Last edited:"));
 
 		$("#do-upload").val(_("Upload file"));
 		$("#cancel-upload").text(_("Cancel"));
-		$("#upload-explanation").text(_("Please select the file you want to upload below, and click 'upload' when you're done. Supported file extensions are:"))
-		$("#load-failure").text(_("Couldn't load file. Is the file type supported and the file not corrupted?"))
+		$("#upload-explanation").text(_("Please select the file you want to upload below, and click 'upload' when you're done. Supported file extensions are:"));
+		$("#load-failure").text(_("Couldn't load file. Is the file type supported and the file not corrupted?"));
 	}
 
 	function onRemoveSelected() {
@@ -57,7 +57,7 @@ var overviewPage = (function () {
 	}
 
 	function onLoadSuccess(doc) {
-		doc.title = doc.title || _("Uploaded list")
+		doc.title = doc.title || _("Uploaded list");
 		doc = webifyList(doc);
 
 		tests = doc.tests || [];
@@ -133,7 +133,7 @@ var overviewPage = (function () {
 		var exts = json.result.map(function (ext) {
 			return "." + ext;
 		});
-		var exts = exts.sort().join(", ");
+		exts = exts.sort().join(", ");
 		$("#upload-exts").text(exts);
 	}
 

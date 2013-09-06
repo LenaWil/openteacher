@@ -7,43 +7,43 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-06-27 15:37+0200\n"
+"POT-Creation-Date: 2013-09-06 17:44+0200\n"
 "PO-Revision-Date: 2013-07-20 13:46+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Launchpad-Export-Date: 2013-07-22 05:49+0000\n"
 "X-Generator: Launchpad (build 16696)\n"
-"Language: \n"
 
-#: model.py:95
+#: typingTutorModel.py:95
 msgid "Belgian AZERTY"
 msgstr "Belgian AZERTY"
 
-#: model.py:96
+#: typingTutorModel.py:96
 msgid "Colemak"
 msgstr "Colemak"
 
-#: model.py:97
+#: typingTutorModel.py:97
 msgid "Dvorak Simplified Keyboard"
 msgstr "Dvorak Simplified Keyboard"
 
-#: model.py:98
+#: typingTutorModel.py:98
 msgid "French AZERTY"
 msgstr "French AZERTY"
 
-#: model.py:99
+#: typingTutorModel.py:99
 msgid "QWERTY"
 msgstr "QWERTY"
 
-#: model.py:100
+#: typingTutorModel.py:100
 msgid "QWERTZ"
 msgstr "QWERTZ"
 
-#: model.py:183
+#: typingTutorModel.py:183
 msgid ""
 "Welcome, I'm your personal OpenTeacher typing tutor. We'll improve your "
 "typing skills by doing simple exercises. Between the exercises, I'll give "
@@ -55,77 +55,83 @@ msgid ""
 "character. When your fingers are in position, press {space} to start the "
 "first lesson. Work for accuracy at first, not speed."
 msgstr ""
-"歡迎，我是您個人的 OpenTeacher 打字助教。我們將會做一些簡單練習來增進您的打字技巧。在練習過程中，我會給您指令。讓我們開始吧：\n"
+"歡迎，我是您個人的 OpenTeacher 打字助教。我們將會做一些簡單練習來增進您的打字"
+"技巧。在練習過程中，我會給您指令。讓我們開始吧：\n"
 "\n"
-"首先將您的手指放在所謂的 home row: 您的手指，由左至右，在沒有打字時應該一直在按鍵 "
-"'{a}','{s}','{d}','{f}','{space}','{space}','{j}','{k}','{l}' 和 '{;}' "
-"上面。當您的手指就位後，按 {space} 來開始第一課。首先要注意的是準確性，而不是速度。"
+"首先將您的手指放在所謂的 home row: 您的手指，由左至右，在沒有打字時應該一直在"
+"按鍵 '{a}','{s}','{d}','{f}','{space}','{space}','{j}','{k}','{l}' 和 '{;}' "
+"上面。當您的手指就位後，按 {space} 來開始第一課。首先要注意的是準確性，而不是"
+"速度。"
 
-#: model.py:198
+#: typingTutorModel.py:198
 msgid ""
 "Congratulations, you finished this typing course! If you want to continue, "
 "you can, but this is the end of the instructions. You did a great job!"
-msgstr "恭禧，您完成了打字課程！如果您想繼續，沒問題，但教學到此結束。您做得真好！"
+msgstr ""
+"恭禧，您完成了打字課程！如果您想繼續，沒問題，但教學到此結束。您做得真好！"
 
-#: model.py:208
+#: typingTutorModel.py:208
 msgid "Congratulations, you finished your first exercise!"
 msgstr "恭禧，您完成了第一個練習！"
 
-#: model.py:225
+#: typingTutorModel.py:225
 #, python-format
 msgid "You made %s mistake, please keep trying until you can do it flawless."
 msgid_plural ""
 "You made %s mistakes, please keep trying until you can do it flawless."
 msgstr[0] "您打錯了 %s 次，請繼續嚐試直到無瑕疵。"
 
-#: model.py:230
+#: typingTutorModel.py:230
 #, python-format
 msgid "Too bad, you made %s mistake. Keep practising to get better!"
 msgid_plural "Too bad, you made %s mistakes. Keep practising to get better!"
 msgstr[0] "真可惜，你有 %s 個錯誤。持續練習來保持精進吧！"
 
-#: model.py:237
+#: typingTutorModel.py:237
 msgid "To archieve that, you might try slowing down a bit."
 msgstr "要達到那，您也許嘗試打慢點。"
 
-#: model.py:241
+#: typingTutorModel.py:241
 msgid "You made zero mistakes. Now try to improve your typing speed a bit."
 msgstr "完全正確。接著嘗試增加些打字速度。"
 
-#: model.py:247
+#: typingTutorModel.py:247
 msgid ""
 "You made zero mistakes and are typing fast enough, so you can continue "
 "practising some new letter combinations. Keep up the good work!"
 msgstr "完全正確，並且打字速度夠快，所以您可以繼續練習新的字母組合。保持下去！"
 
-#: model.py:248
+#: typingTutorModel.py:248
 msgid ""
 "You did it flawlessly and fast! Continue practising some new letters "
 "combinations to get even better!"
 msgstr "打字很完美並且快速！繼續練習新的字母組合讓自己更上一層樓！"
 
-#: model.py:252
+#: typingTutorModel.py:252
 msgid ""
 "You're now going to learn letters that aren't on the home row. To see which "
 "fingers you need to use, see the keyboard image on your screen. When you're "
 "not using a finger to type a letter, put it back on the home row directly."
-msgstr "您現在將要學的字母不在 home row 上。看螢幕上鍵盤圖像以明白用哪幾支手指。當您手指沒打字時，將他直接放回 home row。"
+msgstr ""
+"您現在將要學的字母不在 home row 上。看螢幕上鍵盤圖像以明白用哪幾支手指。當您"
+"手指沒打字時，將他直接放回 home row。"
 
-#: model.py:255
+#: typingTutorModel.py:255
 msgid ""
 "The keys you're going to practise now are typed by the left and right index "
 "finger and further away from those fingers than the other keys we practised "
 "on the current row. Make sure you return your finger to its position on the "
 "home row when you're typing another letter."
-msgstr "您現在將要練習的按鍵是由左、右手食指來打，並且是比目前熟練的行離得更遠。"
+msgstr ""
+"您現在將要練習的按鍵是由左、右手食指來打，並且是比目前熟練的行離得更遠。"
 
-#: model.py:259
+#: typingTutorModel.py:259
 msgid ""
 "You made zero mistakes and are typing fast enough, so you can continue "
 "practising with some new words. Keep up the good work!"
 msgstr "完全正確，並且打字速度夠快，所以您可以繼續練習新的字母組合。保持下去！"
 
-#: model.py:260
+#: typingTutorModel.py:260
 msgid ""
 "You did it flawlessly and fast! Continue practising with new words to get "
 "even better!"

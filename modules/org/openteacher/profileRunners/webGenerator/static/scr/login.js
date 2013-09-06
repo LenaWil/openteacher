@@ -44,7 +44,7 @@ var loginPage = (function () {
 				cancel2();
 				cancel3();
 				cancel4();
-			}
+			};
 		});
 		return false;
 	}

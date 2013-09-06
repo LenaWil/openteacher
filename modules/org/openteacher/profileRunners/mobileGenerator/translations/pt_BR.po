@@ -7,25 +7,206 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-06-27 15:37+0200\n"
+"POT-Creation-Date: 2013-09-06 17:44+0200\n"
 "PO-Revision-Date: 2012-12-26 21:21+0000\n"
 "Last-Translator: Adriano Steffler <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-06-28 05:54+0000\n"
 "X-Generator: Launchpad (build 16681)\n"
-"Language: pt_BR\n"
 
-#: scr/gui.js:39
-msgid "Menu"
-msgstr "Menu"
+#: scr/copyrightInfoDialog.js:29 scr/optionsDialog.js:101
+msgid "Copyright info"
+msgstr ""
 
-#: scr/gui.js:42
+#: scr/enterTab.js:43 scr/gui.js:42
 msgid "Enter list"
 msgstr "Inserir lista"
 
-#: scr/gui.js:43
+#: scr/enterTab.js:44
+#, fuzzy
+msgid "Word list:"
+msgstr "Inserir lista"
+
+#: scr/enterTab.js:45
+msgid ""
+"Welcome = Welkom\n"
+"to = bij\n"
+"OpenTeacher mobile = OpenTeacher mobile\n"
+msgstr ""
+
+#: scr/enterTab.js:47
+msgid "Error"
+msgstr ""
+
+#: scr/enterTab.js:48
+msgid "Missing equals sign or tab"
+msgstr ""
+
+#: scr/enterTab.js:49
+msgid ""
+"Please make sure every line contains an '='-sign or tab between the "
+"questions and answers."
+msgstr ""
+
+#: scr/enterTab.js:50 scr/teachTab.js:239
+msgid "Ok"
+msgstr ""
+
+#: scr/gui.js:39 scr/menuDialog.js:165
+msgid "Menu"
+msgstr "Menu"
+
+#: scr/gui.js:43 scr/teachTab.js:224
 msgid "Teach me!"
 msgstr "Ensine-me!"
+
+#: scr/menuDialog.js:166
+#, fuzzy
+msgid "New list"
+msgstr "Inserir lista"
+
+#: scr/menuDialog.js:167 scr/menuDialog.js:185
+msgid "Load list"
+msgstr ""
+
+#: scr/menuDialog.js:168 scr/menuDialog.js:173
+#, fuzzy
+msgid "Save list"
+msgstr "Inserir lista"
+
+#: scr/menuDialog.js:169 scr/menuDialog.js:190
+msgid "Remove list"
+msgstr ""
+
+#: scr/menuDialog.js:170 scr/optionsDialog.js:94
+msgid "Options"
+msgstr ""
+
+#: scr/menuDialog.js:174
+msgid "Please choose a name for the current list, so it can be saved."
+msgstr ""
+
+#: scr/menuDialog.js:175
+msgid "Name:"
+msgstr ""
+
+#: scr/menuDialog.js:176
+msgid "Done"
+msgstr ""
+
+#: scr/menuDialog.js:178
+msgid "Warning"
+msgstr ""
+
+#: scr/menuDialog.js:179
+msgid "There is already a list named like that."
+msgstr ""
+
+#: scr/menuDialog.js:180
+msgid "If you continue, it will be overwritten. Continue?"
+msgstr ""
+
+#: scr/menuDialog.js:181
+msgid "Yes"
+msgstr ""
+
+#: scr/menuDialog.js:182
+msgid "No"
+msgstr ""
+
+#: scr/menuDialog.js:186
+msgid "Please choose the list you want to load."
+msgstr ""
+
+#: scr/menuDialog.js:187 scr/menuDialog.js:192
+#, fuzzy
+msgid "Filter lists..."
+msgstr "Inserir lista"
+
+#: scr/menuDialog.js:191
+msgid "Please choose the list you want to remove."
+msgstr ""
+
+#: scr/optionsDialog.js:95
+msgid "Language:"
+msgstr ""
+
+#: scr/optionsDialog.js:97
+msgid "Practising mode:"
+msgstr ""
+
+#: scr/optionsDialog.js:98 scr/practisingModeChoiceDialog.js:47
+msgid "Think answer"
+msgstr ""
+
+#: scr/optionsDialog.js:99 scr/practisingModeChoiceDialog.js:48
+msgid "Type answer"
+msgstr ""
+
+#: scr/practisingModeChoiceDialog.js:45
+msgid "Practising mode choice"
+msgstr ""
+
+#: scr/practisingModeChoiceDialog.js:46
+msgid "Please choose the practising mode you want to use:"
+msgstr ""
+
+#: scr/practisingModeChoiceDialog.js:49
+msgid ""
+"If you ever want to change your choice, you can do so in the options dialog, "
+"which is accessable by clicking 'Menu' and then 'Options'."
+msgstr ""
+
+#: scr/teachTab.js:225
+msgid "Question:"
+msgstr ""
+
+#: scr/teachTab.js:226
+msgid "Answer:"
+msgstr ""
+
+#: scr/teachTab.js:227
+msgid "Check!"
+msgstr ""
+
+#: scr/teachTab.js:228
+msgid "Skip"
+msgstr ""
+
+#: scr/teachTab.js:229
+msgid "Correct anyway"
+msgstr ""
+
+#: scr/teachTab.js:230
+msgid ""
+"Think about the answer, and press the 'View answer' button when you're done."
+msgstr ""
+
+#: scr/teachTab.js:231
+msgid "View answer"
+msgstr ""
+
+#: scr/teachTab.js:232
+msgid "Translation:"
+msgstr ""
+
+#: scr/teachTab.js:233
+msgid "I was right"
+msgstr ""
+
+#: scr/teachTab.js:234
+msgid "I was wrong"
+msgstr ""
+
+#: scr/teachTab.js:237 scr/teachTab.js:238
+msgid "Test completed!"
+msgstr ""
+
+#: scr/teachTab.js:240
+#, python-format
+msgid "Your note: %s"
+msgstr ""
