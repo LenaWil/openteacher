@@ -7,27 +7,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-09-06 17:44+0200\n"
-"PO-Revision-Date: 2013-05-29 12:17+0000\n"
+"POT-Creation-Date: 2013-09-06 17:46+0200\n"
+"PO-Revision-Date: 2013-09-06 18:16+0000\n"
 "Last-Translator: Simon Schütte <simonschuette@arcor.de>\n"
 "Language-Team: German <de@li.org>\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-28 05:54+0000\n"
-"X-Generator: Launchpad (build 16681)\n"
+"X-Launchpad-Export-Date: 2013-09-07 05:25+0000\n"
+"X-Generator: Launchpad (build 16760)\n"
+"Language: de\n"
 
 #: cramApi.py:166
-#, fuzzy
 msgid ""
 "Enter a search term and press the search button to search Cram.com for sets. "
 "Then select the set or sets you want to import and click OK."
 msgstr ""
-"Geben Sie einen Suchbegriff ein und klicken Sie auf die Schaltfläche Suchen, "
-"um unter flashcardexchange.com Datensätze zu suchen. Wählen Sie den "
-"gewünschten Satz oder Sätze aus, die Sie importieren wollen und klicken Sie "
-"auf OK."
 
 #: cramApi.py:167
 msgid "E.g.: spanish travel vocabulary"
@@ -38,36 +33,27 @@ msgid "Search"
 msgstr "Suchen"
 
 #: cramApi.py:169
-#, fuzzy
 msgid "Search Cram.com"
-msgstr "flashcardexchange.com durchsuchen"
+msgstr ""
 
 #: cramApi.py:262
-#, fuzzy
 msgid "Import from Cram.com"
-msgstr "Von flashcardexchange.com importieren"
+msgstr ""
 
 #: cramApi.py:265
-#, fuzzy
 msgid "Cram.com API client id"
-msgstr "flashcardexchange.com API Client ID"
+msgstr ""
 
 #: cramApi.py:292
-#, fuzzy
 msgid "No Cram.com connection"
-msgstr "Keine flashcardexchange.com Verbindung"
+msgstr ""
 
 #: cramApi.py:293
-#, fuzzy
 msgid ""
 "Cram.com didn't accept the connection. Are you sure that your internet "
 "connection works and Cram.com is online?"
 msgstr ""
-"flashcardexchange.com hat die Verbindung nicht akzeptiert. Sind Sie sicher, "
-"dass Ihre Internetverbindung funktioniert und flashcardexchange.com online "
-"ist?"
 
 #: cramApi.py:327
-#, fuzzy
 msgid "The word list was imported from Cram.com successfully."
-msgstr "Die Wortliste von flashcardexchange.com wurde erfolgreich importiert."
+msgstr ""

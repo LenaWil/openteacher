@@ -7,26 +7,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-09-06 17:44+0200\n"
-"PO-Revision-Date: 2013-04-29 12:15+0000\n"
-"Last-Translator: kodadiirem <Unknown>\n"
+"POT-Creation-Date: 2013-09-06 17:46+0200\n"
+"PO-Revision-Date: 2013-09-06 18:14+0000\n"
+"Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Turkish <tr@li.org>\n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-28 05:54+0000\n"
-"X-Generator: Launchpad (build 16681)\n"
+"X-Launchpad-Export-Date: 2013-09-07 05:25+0000\n"
+"X-Generator: Launchpad (build 16760)\n"
+"Language: tr\n"
 
 #: cramApi.py:166
-#, fuzzy
 msgid ""
 "Enter a search term and press the search button to search Cram.com for sets. "
 "Then select the set or sets you want to import and click OK."
 msgstr ""
-"Bir arama terimi girin ve flashcardexchange.com'da ayar aramak için arama "
-"düğmesine basın. Sonra içe aktarmak istediğiniz ayarı ya da ayarları seçin "
-"ve Tamam'a tıklayın."
 
 #: cramApi.py:167
 msgid "E.g.: spanish travel vocabulary"
@@ -37,36 +33,27 @@ msgid "Search"
 msgstr "Arama"
 
 #: cramApi.py:169
-#, fuzzy
 msgid "Search Cram.com"
-msgstr "Flashcardexchange.com'da ara"
+msgstr ""
 
 #: cramApi.py:262
-#, fuzzy
 msgid "Import from Cram.com"
-msgstr "Flashcardexchange.com'dan içeri aktar"
+msgstr ""
 
 #: cramApi.py:265
-#, fuzzy
 msgid "Cram.com API client id"
-msgstr "flashcardexchange.com API client id"
+msgstr ""
 
 #: cramApi.py:292
-#, fuzzy
 msgid "No Cram.com connection"
-msgstr "flashcardexchange.com bağlantısı yok"
+msgstr ""
 
 #: cramApi.py:293
-#, fuzzy
 msgid ""
 "Cram.com didn't accept the connection. Are you sure that your internet "
 "connection works and Cram.com is online?"
 msgstr ""
-"flashcardexchange.com bağlantıyı kabul etmedi. İnternet bağlantınızın "
-"çalışır olduğundan ve flashcardexchange.com'un çevirim içi olduğundan emin "
-"misiniz?"
 
 #: cramApi.py:327
-#, fuzzy
 msgid "The word list was imported from Cram.com successfully."
-msgstr "Kelime listesi flashcardexchange.com'dan başarıyla içeri aktarıldı."
+msgstr ""

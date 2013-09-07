@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-09-06 17:44+0200\n"
+"POT-Creation-Date: 2013-09-06 17:46+0200\n"
 "PO-Revision-Date: 2013-09-04 07:19+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-05 04:48+0000\n"
-"X-Generator: Launchpad (build 16758)\n"
+"X-Launchpad-Export-Date: 2013-09-07 05:25+0000\n"
+"X-Generator: Launchpad (build 16760)\n"
+"Language: ru\n"
 
 #: templates/about.html:6
 msgid "OpenTeacher helps you learn"
@@ -110,11 +110,11 @@ msgstr ""
 #: templates/about.html:22
 msgid ""
 "One of the important things about OpenTeacher is that it's open source "
-"software released under the <a href=\"https://www.gnu.org/copyleft/gpl.html"
-"\">GNU General Public License</a>. This means everyone can see the "
-"OpenTeacher source code: the way OpenTeacher was built. It also means that "
-"the <strong>knowledge</strong> that was used to make OpenTeacher <strong>can "
-"be reused by others</strong>."
+"software released under the <a "
+"href=\"https://www.gnu.org/copyleft/gpl.html\">GNU General Public "
+"License</a>. This means everyone can see the OpenTeacher source code: the "
+"way OpenTeacher was built. It also means that the <strong>knowledge</strong> "
+"that was used to make OpenTeacher <strong>can be reused by others</strong>."
 msgstr ""
 
 #: templates/about.html:24
@@ -130,10 +130,10 @@ msgstr ""
 msgid ""
 "Anyone who wants to make modifications to OpenTeacher can also do so. If "
 "your organisation needs to make a modified version of OpenTeacher, this is "
-"perfectly possible as long as the <a href=\"https://www.gnu.org/copyleft/gpl."
-"html\">GPL</a> remains intact. Experience also tells us that if many users "
-"want a new feature implemented, there is often a software developer who "
-"implements this."
+"perfectly possible as long as the <a "
+"href=\"https://www.gnu.org/copyleft/gpl.html\">GPL</a> remains intact. "
+"Experience also tells us that if many users want a new feature implemented, "
+"there is often a software developer who implements this."
 msgstr ""
 
 #: templates/about.html:26
@@ -146,9 +146,8 @@ msgid ""
 msgstr ""
 
 #: templates/download.html:8 templates/index.html:25
-#, fuzzy
 msgid "Download OpenTeacher 3.2"
-msgstr "Скачать OpenTeacher 3.1"
+msgstr ""
 
 #: templates/download.html:22
 msgid "For portable (USB-)drives"
@@ -253,8 +252,8 @@ msgstr ""
 
 #: templates/index.html:23
 msgid ""
-"OpenTeacher 3.2 is available for <strong>Linux, Windows and Mac OS X</"
-"strong>."
+"OpenTeacher 3.2 is available for <strong>Linux, Windows and Mac OS "
+"X</strong>."
 msgstr ""
 
 #: templates/index.html:26
@@ -274,11 +273,11 @@ msgid ""
 "Contributing to OpenTeacher is very easy, because OpenTeacher is, as the "
 "name implies, open source software. For us, this not only means that "
 "everyone can see the source code, but also that everyone can contribute! If "
-"you want to help, you can start contributing immediately at the <a href="
-"\"http://www.launchpad.net/openteacher\">Launchpad platform</a>, meet us at "
-"<a href=\"http://webchat.freenode.net/?channels=openteacher\">the chat</a> "
-"(#openteacher at irc.freenode.net), or you can e-mail us at <a href=\"mailto:"
-"contribute@openteacher.org\">contribute@openteacher.org</a>."
+"you want to help, you can start contributing immediately at the <a "
+"href=\"http://www.launchpad.net/openteacher\">Launchpad platform</a>, meet "
+"us at <a href=\"http://webchat.freenode.net/?channels=openteacher\">the "
+"chat</a> (#openteacher at irc.freenode.net), or you can e-mail us at <a "
+"href=\"mailto:contribute@openteacher.org\">contribute@openteacher.org</a>."
 msgstr ""
 
 #: templates/contribute.html:10
@@ -304,11 +303,13 @@ msgid ""
 "<strong>Help translating</strong><br />We are always looking for people who "
 "want to help us translate OpenTeacher! Currently OpenTeacher is only "
 "available in English and Dutch, so translators are very welcome. Language "
-"files are available at <a href=\"http://www.launchpad.net/openteacher"
-"\">Launchpad</a> in the Qt TS file format. You can easily translate directly "
-"via <a href=\"http://www.launchpad.net/openteacher\">Launchpad</a>. Another "
-"option is <a href=\"http://qt-apps.org/content/show.php/Qt+Linguist+Download?"
-"content=89360\">Qt Linguist</a>."
+"files are available at <a "
+"href=\"http://www.launchpad.net/openteacher\">Launchpad</a> in the Qt TS "
+"file format. You can easily translate directly via <a "
+"href=\"http://www.launchpad.net/openteacher\">Launchpad</a>. Another option "
+"is <a href=\"http://qt-"
+"apps.org/content/show.php/Qt+Linguist+Download?content=89360\">Qt "
+"Linguist</a>."
 msgstr ""
 
 #: templates/contribute.html:21
@@ -316,8 +317,8 @@ msgid ""
 "<strong>Help testing</strong><br />To make sure OpenTeacher works fine, we "
 "need people to test the latest revisions of OpenTeacher. You can download "
 "the sources of the individual revisions from the bzr branch lp:openteacher. "
-"If you find any bugs, in the revisions or the releases, please <a href="
-"\"https://bugs.launchpad.net/openteacher/+filebug\">report a bug at "
+"If you find any bugs, in the revisions or the releases, please <a "
+"href=\"https://bugs.launchpad.net/openteacher/+filebug\">report a bug at "
 "Launchpad</a>."
 msgstr ""
 
@@ -469,8 +470,8 @@ msgstr ""
 
 #: docsTemplates/install-arch.html:9
 msgid ""
-"Install the package from the terminal with <strong>pacman -U &lt;filename&gt;"
-"</strong>"
+"Install the package from the terminal with <strong>pacman -U "
+"&lt;filename&gt;</strong>"
 msgstr ""
 
 #: docsTemplates/install-ubuntu.html:6
@@ -509,12 +510,10 @@ msgid "The Openteacher 2 file format is an XML 1.0 file with UTF-8 encoding."
 msgstr "Формат файлов Openteacher 2 - это XML 1.0 файл в кодировке UTF-8."
 
 #: docsTemplates/the-openteacher-format.html:7
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "An XML-scheme of the file format can be downloaded <a href=\"%s\">here</a>."
 msgstr ""
-"XML-схема формата файла может быть получена <a href=\"files/openteacher.xsd"
-"\">здесь</a>."
 
 #: docsTemplates/the-openteacher-format.html:8
 #, python-format
@@ -561,13 +560,14 @@ msgstr "OpenTeacher не работает под Windows!"
 
 #: docsTemplates/faq.html:7
 msgid ""
-"To run OpenTeacher on Windows you need to install the <a href=\"http://www."
-"microsoft.com/downloads/en/details.aspx?"
-"FamilyID=9b2da534-3e03-4391-8a4d-074b9f2bc1bf\">Microsoft Visual C++ "
-"Redistributable Package</a> and <a href=\"https://www.microsoft.com/download/"
-"en/details.aspx?id=19\">.NET Framework 2.0</a>. If that does not work, "
-"please file a bug report in <a href=\"http://www.launchpad.net/openteacher"
-"\">Launchpad</a> or send an e-mail."
+"To run OpenTeacher on Windows you need to install the <a "
+"href=\"http://www.microsoft.com/downloads/en/details.aspx?FamilyID=9b2da534-"
+"3e03-4391-8a4d-074b9f2bc1bf\">Microsoft Visual C++ Redistributable "
+"Package</a> and <a "
+"href=\"https://www.microsoft.com/download/en/details.aspx?id=19\">.NET "
+"Framework 2.0</a>. If that does not work, please file a bug report in <a "
+"href=\"http://www.launchpad.net/openteacher\">Launchpad</a> or send an e-"
+"mail."
 msgstr ""
 
 #: docsTemplates/faq.html:8
@@ -577,25 +577,13 @@ msgstr ""
 #: docsTemplates/faq.html:9
 msgid ""
 "Make sure that both <strong>python2</strong> and <strong>pyqt</strong> are "
-"installed. If you use OpenTeacher from source, you have to link <strong>/usr/"
-"bin/python</strong> to <strong>/usr/bin/python2</strong> instead of <strong>/"
-"usr/bin/python3</strong>, or change the first line of <strong>bin/"
-"openteacher.py</strong> from <strong>&#35;!/usr/bin/env python</strong> to "
-"<strong>&#35;!/usr/bin/env python2</strong>. You can also just install "
-"OpenTeacher via the ArchLinux (.pkg.tar.xz) package, available on the "
-"Download page. If that does not work, please file a bug report in <a href="
-"\"http://www.launchpad.net/openteacher\">Launchpad</a> or send an e-mail."
+"installed. If you use OpenTeacher from source, you have to link "
+"<strong>/usr/bin/python</strong> to <strong>/usr/bin/python2</strong> "
+"instead of <strong>/usr/bin/python3</strong>, or change the first line of "
+"<strong>bin/openteacher.py</strong> from <strong>&#35;!/usr/bin/env "
+"python</strong> to <strong>&#35;!/usr/bin/env python2</strong>. You can also "
+"just install OpenTeacher via the ArchLinux (.pkg.tar.xz) package, available "
+"on the Download page. If that does not work, please file a bug report in <a "
+"href=\"http://www.launchpad.net/openteacher\">Launchpad</a> or send an e-"
+"mail."
 msgstr ""
-
-#~ msgid ""
-#~ "Available in Brazilian Protuguese, Chinese (Traditional), Dutch, Frysian "
-#~ "and Spanish."
-#~ msgstr ""
-#~ "Доступно на Бразильском, Португальском, Китайском (Традиционном), "
-#~ "Датском, Французском и Испанском языках."
-
-#~ msgid "Download the older OpenTeacher 2"
-#~ msgstr "Загрузить старые версии OpenTeacher"
-
-#~ msgid "Print your word lists"
-#~ msgstr "Распечатать список слов"

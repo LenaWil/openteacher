@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-09-06 17:44+0200\n"
-"PO-Revision-Date: 2013-08-03 21:27+0000\n"
+"POT-Creation-Date: 2013-09-06 17:46+0200\n"
+"PO-Revision-Date: 2013-09-06 18:52+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-08-04 05:26+0000\n"
-"X-Generator: Launchpad (build 16718)\n"
+"X-Launchpad-Export-Date: 2013-09-07 05:25+0000\n"
+"X-Generator: Launchpad (build 16760)\n"
+"Language: \n"
 
 #: static/scr/learn-list.js:5
 msgid "Question:"
@@ -52,7 +52,7 @@ msgstr "Maak een nieuwe lijst aan"
 
 #: static/scr/lists-overview.js:8
 msgid "Upload list from computer"
-msgstr ""
+msgstr "Upload lijst vanaf computer"
 
 #: static/scr/lists-overview.js:9
 msgid "View"
@@ -68,22 +68,26 @@ msgstr "Laatst gewijzigd:"
 
 #: static/scr/lists-overview.js:13
 msgid "Upload file"
-msgstr ""
+msgstr "Upload bestand"
 
 #: static/scr/lists-overview.js:14
 msgid "Cancel"
-msgstr ""
+msgstr "Annuleren"
 
 #: static/scr/lists-overview.js:15
 msgid ""
 "Please select the file you want to upload below, and click 'upload' when "
 "you're done. Supported file extensions are:"
 msgstr ""
+"Selecteer alstublieft het bestand dat u wilt uploaden, en klik op 'upload' "
+"wanneer u klaar bent. Ondersteunde bestandsextensies zijn:"
 
 #: static/scr/lists-overview.js:16
 msgid ""
 "Couldn't load file. Is the file type supported and the file not corrupted?"
 msgstr ""
+"Kon het bestand niet laden. Is het bestandstype ondersteund en het bestand "
+"niet beschadigd?"
 
 #: static/scr/lists-overview.js:44
 msgid "New list"
@@ -91,7 +95,7 @@ msgstr "Nieuwe lijst"
 
 #: static/scr/lists-overview.js:60
 msgid "Uploaded list"
-msgstr ""
+msgstr "Lijst geuploaded"
 
 #: static/scr/login.js:6
 msgid "Log in"
@@ -122,13 +126,12 @@ msgid "Log in!"
 msgstr "Log in!"
 
 #: static/scr/login.js:17
-#, fuzzy
 msgid "Log out"
-msgstr "Log in"
+msgstr "Afmelden"
 
 #: static/scr/login.js:18
 msgid "Unsubscribe"
-msgstr ""
+msgstr "Uitschrijven"
 
 #: static/scr/login.js:21
 msgid "Or view a shared list"
@@ -139,6 +142,8 @@ msgid ""
 "Are you sure you want to unsubscribe? This will remove your account and all "
 "data associated with it. Keep in mind that there's no recovery procedure!"
 msgstr ""
+"Weet u zeker dat u wilt uitschrijven? Dit zal uw account verwijderen met "
+"alle bijbehorende data. Bedenk dat er geen herstelprocedure is!"
 
 #: static/scr/main.js:22
 msgid "OpenTeacher Web"
@@ -146,7 +151,7 @@ msgstr "OpenTeacher Web"
 
 #: static/scr/main.js:27
 msgid "License information and source code"
-msgstr ""
+msgstr "Licentieinformatie en broncode"
 
 #: static/scr/view-list.js:3
 msgid "List"
@@ -162,16 +167,15 @@ msgstr "Shares:"
 
 #: static/scr/view-list.js:6
 msgid "Currently existing shares:"
-msgstr ""
+msgstr "Huidige bestaande shares:"
 
 #: static/scr/view-list.js:7
-#, fuzzy
 msgid "Question language"
-msgstr "Vraag:"
+msgstr "Taal van de vragen"
 
 #: static/scr/view-list.js:8
 msgid "Answer language"
-msgstr ""
+msgstr "Taal van de antwoorden"
 
 #: static/scr/view-list.js:9
 msgid "Questions"
@@ -183,7 +187,7 @@ msgstr "Antwoorden"
 
 #: static/scr/view-list.js:11
 msgid "Remove this item"
-msgstr ""
+msgstr "Dit item verwijderen"
 
 #: static/scr/view-list.js:13
 msgid "Test results"
@@ -207,21 +211,24 @@ msgstr "Opslaan"
 
 #: static/scr/view-list.js:20
 msgid "Print"
-msgstr ""
+msgstr "Afdrukken"
 
 #: static/scr/view-list.js:21
 msgid "Download"
-msgstr ""
+msgstr "Download"
 
 #: static/scr/view-list.js:24
 msgid "Saved the list succesfully."
-msgstr ""
+msgstr "De lijst is met succes opgeslagen."
 
 #: static/scr/view-list.js:25
 msgid ""
 "Can't save the document because it contains invalid content. Maybe you used "
 "unsafe HTML, or left fields empty that should not be empty?"
 msgstr ""
+"Kan het document niet opslaan omdat het ongeldige inhoud bevat. Misschien "
+"heeft u ongeldige HTML gebruikt, of velden leeg gelaten die dat niet zouden "
+"moeten zijn?"
 
 #: static/scr/view-list.js:26
 msgid ""
@@ -229,16 +236,21 @@ msgid ""
 "meantime. You can either discard your changes, or save again (overwriting "
 "the changes made elsewhere)."
 msgstr ""
+"Kon de lijst niet opslaan, omdat die elders bewerkt is in de tussentijd. U "
+"kunt uw wijzigingen weggooien, of opnieuw opslaan (wat de wijzigingen elders "
+"overschrijft)."
 
 #: static/scr/view-list.js:28
 msgid ""
 "Please choose the file you want to download from the options below. Not "
 "sure? Then download the file ending in '.otwd'."
 msgstr ""
+"Kies alstublieft het bestand dat u wilt downloaden tussen de opties hier "
+"beneden. Weet u het niet? Kies dan het bestand dat eindigt in '.otwd'."
 
 #: static/scr/view-list.js:29
 msgid "Close"
-msgstr ""
+msgstr "Sluiten"
 
 #: static/scr/view-list.js:33
 msgid "-"
@@ -247,3 +259,4 @@ msgstr "-"
 #: static/scr/view-list.js:143
 msgid "There are unsaved changes. Are you sure you want to leave this page?"
 msgstr ""
+"Er zijn onopgeslagen wijzigingen. Weet u zeker dat u de pagina wilt verlaten?"

@@ -7,116 +7,30 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-03-10 21:22+0100\n"
-"PO-Revision-Date: 2013-03-26 17:02+0000\n"
+"POT-Creation-Date: 2013-09-06 17:46+0200\n"
+"PO-Revision-Date: 2013-09-06 18:57+0000\n"
 "Last-Translator: Michael Tel <m.tel@xs4all.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-27 05:05+0000\n"
-"X-Generator: Launchpad (build 16540)\n"
+"X-Launchpad-Export-Date: 2013-09-07 05:25+0000\n"
+"X-Generator: Launchpad (build 16760)\n"
 "Language: nl\n"
 
-#: scr/gui.js:167 scr/gui.js:625
-msgid "Menu"
-msgstr "Menu"
-
-#: scr/gui.js:168
-msgid "New list"
-msgstr "Nieuwe lijst"
-
-#: scr/gui.js:169 scr/gui.js:187
-msgid "Load list"
-msgstr "Laad lijst"
-
-#: scr/gui.js:170 scr/gui.js:175
-msgid "Save list"
-msgstr "Lijst opslaan"
-
-#: scr/gui.js:171 scr/gui.js:192
-msgid "Remove list"
-msgstr "Verwijder lijst"
-
-#: scr/gui.js:172 scr/gui.js:277
-msgid "Options"
-msgstr "Opties"
-
-#: scr/gui.js:176
-msgid "Please choose a name for the current list, so it can be saved."
-msgstr ""
-"Kies alstublieft een naam voor de huidige lijst, zodat deze opgeslagen kan "
-"worden."
-
-#: scr/gui.js:177
-msgid "Name:"
-msgstr "Naam:"
-
-#: scr/gui.js:178
-msgid "Done"
-msgstr "Klaar"
-
-#: scr/gui.js:180
-msgid "Warning"
-msgstr "Waarschuwing"
-
-#: scr/gui.js:181
-msgid "There is already a list named like that."
-msgstr "Er is al een lijst die zo heet."
-
-#: scr/gui.js:182
-msgid "If you continue, it will be overwritten. Continue?"
-msgstr "Als u doorgaat, zal deze overschreven worden. Doorgaan?"
-
-#: scr/gui.js:183
-msgid "Yes"
-msgstr "Ja"
-
-#: scr/gui.js:184
-msgid "No"
-msgstr "Nee"
-
-#: scr/gui.js:188
-msgid "Please choose the list you want to load."
-msgstr "Kies alstublieft de lijst die u wilt laden."
-
-#: scr/gui.js:189 scr/gui.js:194
-msgid "Filter lists..."
-msgstr "Filter lijsten..."
-
-#: scr/gui.js:193
-msgid "Please choose the list you want to remove."
-msgstr "Kies alstublieft de lijst die u wilt verwijderen."
-
-#: scr/gui.js:201 scr/gui.js:284
+#: scr/copyrightInfoDialog.js:29 scr/optionsDialog.js:101
 msgid "Copyright info"
 msgstr "Copyrightinformatie"
 
-#: scr/gui.js:278
-msgid "Language:"
-msgstr "Taal:"
-
-#: scr/gui.js:280
-msgid "Practising mode:"
-msgstr "Oefenmodus:"
-
-#: scr/gui.js:281 scr/gui.js:604
-msgid "Think answer"
-msgstr "Denk antwoord"
-
-#: scr/gui.js:282 scr/gui.js:605
-msgid "Type answer"
-msgstr "Typ antwoord"
-
-#: scr/gui.js:307 scr/gui.js:628
+#: scr/enterTab.js:43 scr/gui.js:42
 msgid "Enter list"
 msgstr "Lijst invoeren"
 
-#: scr/gui.js:308
+#: scr/enterTab.js:44
 msgid "Word list:"
-msgstr "Woordenlijst:"
+msgstr "Woordjeslijst:"
 
-#: scr/gui.js:309
+#: scr/enterTab.js:45
 msgid ""
 "Welcome = Welkom\n"
 "to = bij\n"
@@ -126,15 +40,15 @@ msgstr ""
 "to = bij\n"
 "OpenTeacher mobile = OpenTeacher mobile\n"
 
-#: scr/gui.js:311
+#: scr/enterTab.js:47
 msgid "Error"
 msgstr "Fout"
 
-#: scr/gui.js:312
+#: scr/enterTab.js:48
 msgid "Missing equals sign or tab"
 msgstr "Missend gelijkheidsteken of tab"
 
-#: scr/gui.js:313
+#: scr/enterTab.js:49
 msgid ""
 "Please make sure every line contains an '='-sign or tab between the "
 "questions and answers."
@@ -142,78 +56,164 @@ msgstr ""
 "Zorg er alstublieft voor dat iedere regel een '='-teken of een tab tussen de "
 "vragen en de antwoorden bevat."
 
-#: scr/gui.js:314 scr/gui.js:547
+#: scr/enterTab.js:50 scr/teachTab.js:239
 msgid "Ok"
 msgstr "Ok"
 
-#: scr/gui.js:532 scr/gui.js:629
+#: scr/gui.js:39 scr/menuDialog.js:165
+msgid "Menu"
+msgstr "Menu"
+
+#: scr/gui.js:43 scr/teachTab.js:224
 msgid "Teach me!"
 msgstr "Overhoor me!"
 
-#: scr/gui.js:533
-msgid "Question:"
-msgstr "Vraag:"
+#: scr/menuDialog.js:166
+msgid "New list"
+msgstr "Nieuwe lijst"
 
-#: scr/gui.js:534
-msgid "Answer:"
-msgstr "Antwoord:"
+#: scr/menuDialog.js:167 scr/menuDialog.js:185
+msgid "Load list"
+msgstr "Lijst laden"
 
-#: scr/gui.js:535
-msgid "Check!"
-msgstr "Controleer!"
+#: scr/menuDialog.js:168 scr/menuDialog.js:173
+msgid "Save list"
+msgstr "Lijst opslaan"
 
-#: scr/gui.js:536
-msgid "Skip"
-msgstr "Sla over"
+#: scr/menuDialog.js:169 scr/menuDialog.js:190
+msgid "Remove list"
+msgstr "Verwijder lijst"
 
-#: scr/gui.js:537
-msgid "Correct anyway"
-msgstr "Toch goed"
+#: scr/menuDialog.js:170 scr/optionsDialog.js:94
+msgid "Options"
+msgstr "Opties"
 
-#: scr/gui.js:538
-msgid ""
-"Think about the answer, and press the 'View answer' button when you're done."
+#: scr/menuDialog.js:174
+msgid "Please choose a name for the current list, so it can be saved."
 msgstr ""
-"Denk na over het antwoord en druk op de 'Toon antwoord'-knop wanneer u klaar "
-"bent."
+"Kies alstublieft een naam voor de huidige lijst, zodat deze opgeslagen kan "
+"worden."
 
-#: scr/gui.js:539
-msgid "View answer"
-msgstr "Toon antwoord"
+#: scr/menuDialog.js:175
+msgid "Name:"
+msgstr "Naam:"
 
-#: scr/gui.js:540
-msgid "Translation:"
-msgstr "Vertaling:"
+#: scr/menuDialog.js:176
+msgid "Done"
+msgstr "Klaar"
 
-#: scr/gui.js:541
-msgid "I was right"
-msgstr "Ik had het goed"
+#: scr/menuDialog.js:178
+msgid "Warning"
+msgstr "Waarschuwing"
 
-#: scr/gui.js:542
-msgid "I was wrong"
-msgstr "Ik had het fout"
+#: scr/menuDialog.js:179
+msgid "There is already a list named like that."
+msgstr "Er is al een lijst die zo heet."
 
-#: scr/gui.js:545 scr/gui.js:546
-msgid "Test completed!"
-msgstr "Toets afgerond!"
+#: scr/menuDialog.js:180
+msgid "If you continue, it will be overwritten. Continue?"
+msgstr "Als u doorgaat, zal deze overschreven worden. Doorgaan?"
 
-#: scr/gui.js:548
-#, python-format
-msgid "Your note: %s"
-msgstr "Uw cijfer: %s"
+#: scr/menuDialog.js:181
+msgid "Yes"
+msgstr "Ja"
 
-#: scr/gui.js:602
+#: scr/menuDialog.js:182
+msgid "No"
+msgstr "Nee"
+
+#: scr/menuDialog.js:186
+msgid "Please choose the list you want to load."
+msgstr "Kies alstublieft de lijst die u wilt laden."
+
+#: scr/menuDialog.js:187 scr/menuDialog.js:192
+msgid "Filter lists..."
+msgstr "Filter lijsten..."
+
+#: scr/menuDialog.js:191
+msgid "Please choose the list you want to remove."
+msgstr "Kies alstublieft de lijst die u wilt verwijderen."
+
+#: scr/optionsDialog.js:95
+msgid "Language:"
+msgstr "Taal:"
+
+#: scr/optionsDialog.js:97
+msgid "Practising mode:"
+msgstr "Oefenmodus:"
+
+#: scr/optionsDialog.js:98 scr/practisingModeChoiceDialog.js:47
+msgid "Think answer"
+msgstr "Denk antwoord"
+
+#: scr/optionsDialog.js:99 scr/practisingModeChoiceDialog.js:48
+msgid "Type answer"
+msgstr "Typ antwoord"
+
+#: scr/practisingModeChoiceDialog.js:45
 msgid "Practising mode choice"
 msgstr "Oefenmoduskeuze"
 
-#: scr/gui.js:603
+#: scr/practisingModeChoiceDialog.js:46
 msgid "Please choose the practising mode you want to use:"
 msgstr "Kies alstublieft de oefenmodus die u wilt gebruiken:"
 
-#: scr/gui.js:606
+#: scr/practisingModeChoiceDialog.js:49
 msgid ""
 "If you ever want to change your choice, you can do so in the options dialog, "
 "which is accessable by clicking 'Menu' and then 'Options'."
 msgstr ""
 "Als u ooit uw keuze wilt veranderen, kunt u dat doen in het optiesvenster, "
 "dat bereikbaar is door te klikken op 'Menu' en 'Opties'."
+
+#: scr/teachTab.js:225
+msgid "Question:"
+msgstr "Vraag:"
+
+#: scr/teachTab.js:226
+msgid "Answer:"
+msgstr "Antwoord:"
+
+#: scr/teachTab.js:227
+msgid "Check!"
+msgstr "Controleer!"
+
+#: scr/teachTab.js:228
+msgid "Skip"
+msgstr "Sla over"
+
+#: scr/teachTab.js:229
+msgid "Correct anyway"
+msgstr "Toch goed"
+
+#: scr/teachTab.js:230
+msgid ""
+"Think about the answer, and press the 'View answer' button when you're done."
+msgstr ""
+"Denk na over het antwoord en druk op de 'Toon antwoord'-knop wanneer u klaar "
+"bent."
+
+#: scr/teachTab.js:231
+msgid "View answer"
+msgstr "Toon antwoord"
+
+#: scr/teachTab.js:232
+msgid "Translation:"
+msgstr "Vertaling:"
+
+#: scr/teachTab.js:233
+msgid "I was right"
+msgstr "Ik had het goed"
+
+#: scr/teachTab.js:234
+msgid "I was wrong"
+msgstr "Ik had het fout"
+
+#: scr/teachTab.js:237 scr/teachTab.js:238
+msgid "Test completed!"
+msgstr "Toets afgerond!"
+
+#: scr/teachTab.js:240
+#, python-format
+msgid "Your note: %s"
+msgstr "Uw cijfer: %s"

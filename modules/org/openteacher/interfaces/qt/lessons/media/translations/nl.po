@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-09-06 17:44+0200\n"
-"PO-Revision-Date: 2013-03-26 18:49+0000\n"
-"Last-Translator: Michael Tel <m.tel@xs4all.nl>\n"
+"POT-Creation-Date: 2013-09-06 17:46+0200\n"
+"PO-Revision-Date: 2013-09-06 16:26+0000\n"
+"Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-28 05:52+0000\n"
-"X-Generator: Launchpad (build 16681)\n"
+"X-Launchpad-Export-Date: 2013-09-07 05:22+0000\n"
+"X-Generator: Launchpad (build 16760)\n"
+"Language: \n"
 
 #: media.py:159
 msgid "Create media lesson"
@@ -24,7 +24,7 @@ msgstr "Maak een mediales aan"
 
 #: media.py:199
 msgid "Unnamed"
-msgstr ""
+msgstr "Naamloos"
 
 #: media.py:200 media.py:251
 #, python-format
@@ -33,11 +33,11 @@ msgstr "Mediales: %s"
 
 #: media.py:233
 msgid "Unsupported media"
-msgstr ""
+msgstr "Niet ondersteunde media"
 
 #: media.py:233
 msgid "This type of media isn't supported on your computer"
-msgstr ""
+msgstr "Dit type media wordt niet ondersteund op uw computer"
 
 #: media.py:296
 msgid "Empty question or answer"
@@ -82,8 +82,7 @@ msgstr "Vul voor ieder item ten minste één vraag of één antwoord in."
 #~ msgstr "Waarschuwing"
 
 #~ msgid ""
-#~ "Are you sure you want to go back to the enter tab? This will end your "
-#~ "lesson!"
+#~ "Are you sure you want to go back to the enter tab? This will end your lesson!"
 #~ msgstr ""
 #~ "Weet u zeker dat je terug wilt naar de invoertab? Dat beëindigt uw les!"
 
@@ -102,5 +101,6 @@ msgstr "Vul voor ieder item ten minste één vraag of één antwoord in."
 #~ msgid "Media Lesson"
 #~ msgstr "Mediales"
 
+#, python-format
 #~ msgid "Media lesson %s"
 #~ msgstr "Mediales %s"

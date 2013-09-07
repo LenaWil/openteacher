@@ -7,25 +7,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-09-06 17:44+0200\n"
-"PO-Revision-Date: 2013-05-29 08:17+0000\n"
+"POT-Creation-Date: 2013-09-06 17:46+0200\n"
+"PO-Revision-Date: 2013-09-06 18:03+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-28 05:54+0000\n"
-"X-Generator: Launchpad (build 16681)\n"
+"X-Launchpad-Export-Date: 2013-09-07 05:25+0000\n"
+"X-Generator: Launchpad (build 16760)\n"
+"Language: \n"
 
 #: cramApi.py:166
-#, fuzzy
 msgid ""
 "Enter a search term and press the search button to search Cram.com for sets. "
 "Then select the set or sets you want to import and click OK."
 msgstr ""
-"輸入搜尋字串並按搜尋按鈕來搜尋 flashcardexchange.com 結果。然後選擇您想要匯入"
-"的結果並按 OK"
 
 #: cramApi.py:167
 msgid "E.g.: spanish travel vocabulary"
@@ -36,35 +33,27 @@ msgid "Search"
 msgstr "搜尋"
 
 #: cramApi.py:169
-#, fuzzy
 msgid "Search Cram.com"
-msgstr "搜尋 flashcardexchange.com"
+msgstr ""
 
 #: cramApi.py:262
-#, fuzzy
 msgid "Import from Cram.com"
-msgstr "從 flashcardexchange.com 滙入"
+msgstr ""
 
 #: cramApi.py:265
-#, fuzzy
 msgid "Cram.com API client id"
-msgstr "flashcardexchange.com API client id"
+msgstr ""
 
 #: cramApi.py:292
-#, fuzzy
 msgid "No Cram.com connection"
-msgstr "和 flashcardexchange.com 沒有連線"
+msgstr ""
 
 #: cramApi.py:293
-#, fuzzy
 msgid ""
 "Cram.com didn't accept the connection. Are you sure that your internet "
 "connection works and Cram.com is online?"
 msgstr ""
-"flashcardexchange.com 沒有接受連線。您確定您的網路連線有正常，並且 "
-"flashcardexchange.com 在線上？"
 
 #: cramApi.py:327
-#, fuzzy
 msgid "The word list was imported from Cram.com successfully."
-msgstr "從 flashcardexchange.com 匯入單字列表成功。"
+msgstr ""

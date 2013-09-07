@@ -7,116 +7,30 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-03-10 21:22+0100\n"
-"PO-Revision-Date: 2012-12-26 19:51+0000\n"
+"POT-Creation-Date: 2013-09-06 17:46+0200\n"
+"PO-Revision-Date: 2013-09-06 18:17+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-11 05:05+0000\n"
-"X-Generator: Launchpad (build 16523)\n"
+"X-Launchpad-Export-Date: 2013-09-07 05:25+0000\n"
+"X-Generator: Launchpad (build 16760)\n"
 "Language: ru\n"
 
-#: scr/gui.js:167 scr/gui.js:625
-msgid "Menu"
-msgstr "Меню"
-
-#: scr/gui.js:168
-msgid "New list"
-msgstr "Новый список"
-
-#: scr/gui.js:169 scr/gui.js:187
-msgid "Load list"
-msgstr "Загрузить список"
-
-#: scr/gui.js:170 scr/gui.js:175
-msgid "Save list"
-msgstr "Сохранить список"
-
-#: scr/gui.js:171 scr/gui.js:192
-msgid "Remove list"
-msgstr "Удалить список"
-
-#: scr/gui.js:172 scr/gui.js:277
-msgid "Options"
-msgstr "Параметры"
-
-#: scr/gui.js:176
-msgid "Please choose a name for the current list, so it can be saved."
-msgstr ""
-"Пожалуйста, выберите имя для текущего списка, под которым он может быть "
-"сохранен."
-
-#: scr/gui.js:177
-msgid "Name:"
-msgstr "Имя:"
-
-#: scr/gui.js:178
-msgid "Done"
-msgstr "Готово"
-
-#: scr/gui.js:180
-msgid "Warning"
-msgstr "Предупреждение"
-
-#: scr/gui.js:181
-msgid "There is already a list named like that."
-msgstr "Список с таким именем уже существует."
-
-#: scr/gui.js:182
-msgid "If you continue, it will be overwritten. Continue?"
-msgstr "Если продолжить он будет заменён. Продолжать?"
-
-#: scr/gui.js:183
-msgid "Yes"
-msgstr "Да"
-
-#: scr/gui.js:184
-msgid "No"
-msgstr "Нет"
-
-#: scr/gui.js:188
-msgid "Please choose the list you want to load."
-msgstr "Выберите список который вы хотите загрузить."
-
-#: scr/gui.js:189 scr/gui.js:194
-msgid "Filter lists..."
-msgstr "Фильтр списков..."
-
-#: scr/gui.js:193
-msgid "Please choose the list you want to remove."
-msgstr "Выберите список который вы хотите удалить."
-
-#: scr/gui.js:201 scr/gui.js:284
+#: scr/copyrightInfoDialog.js:29 scr/optionsDialog.js:101
 msgid "Copyright info"
 msgstr "Авторские права"
 
-#: scr/gui.js:278
-msgid "Language:"
-msgstr "Язык:"
-
-#: scr/gui.js:280
-msgid "Practising mode:"
-msgstr "Режим практики:"
-
-#: scr/gui.js:281 scr/gui.js:604
-msgid "Think answer"
-msgstr "Обдумать ответ"
-
-#: scr/gui.js:282 scr/gui.js:605
-msgid "Type answer"
-msgstr "Напечатайте ответ"
-
-#: scr/gui.js:307 scr/gui.js:628
+#: scr/enterTab.js:43 scr/gui.js:42
 msgid "Enter list"
 msgstr "Введите список"
 
-#: scr/gui.js:308
+#: scr/enterTab.js:44
 msgid "Word list:"
 msgstr "Список слов:"
 
-#: scr/gui.js:309
+#: scr/enterTab.js:45
 msgid ""
 "Welcome = Welkom\n"
 "to = bij\n"
@@ -126,15 +40,15 @@ msgstr ""
 "to = в\n"
 "OpenTeacher mobile = OpenTeacher mobile\n"
 
-#: scr/gui.js:311
+#: scr/enterTab.js:47
 msgid "Error"
 msgstr "Ошибка"
 
-#: scr/gui.js:312
+#: scr/enterTab.js:48
 msgid "Missing equals sign or tab"
 msgstr "Пропущен знак равенства или табуляция"
 
-#: scr/gui.js:313
+#: scr/enterTab.js:49
 msgid ""
 "Please make sure every line contains an '='-sign or tab between the "
 "questions and answers."
@@ -142,77 +56,163 @@ msgstr ""
 "Пожалуйста, убедитесь, что каждая строка содержит знак '=' или символ "
 "табуляции между вопросами и ответами."
 
-#: scr/gui.js:314 scr/gui.js:547
+#: scr/enterTab.js:50 scr/teachTab.js:239
 msgid "Ok"
 msgstr "ОК"
 
-#: scr/gui.js:532 scr/gui.js:629
+#: scr/gui.js:39 scr/menuDialog.js:165
+msgid "Menu"
+msgstr "Меню"
+
+#: scr/gui.js:43 scr/teachTab.js:224
 msgid "Teach me!"
 msgstr "Научи меня!"
 
-#: scr/gui.js:533
-msgid "Question:"
-msgstr "Вопрос:"
+#: scr/menuDialog.js:166
+msgid "New list"
+msgstr "Новый список"
 
-#: scr/gui.js:534
-msgid "Answer:"
-msgstr "Ответ:"
+#: scr/menuDialog.js:167 scr/menuDialog.js:185
+msgid "Load list"
+msgstr "Загрузить список"
 
-#: scr/gui.js:535
-msgid "Check!"
-msgstr "Проверить!"
+#: scr/menuDialog.js:168 scr/menuDialog.js:173
+msgid "Save list"
+msgstr "Сохранить список"
 
-#: scr/gui.js:536
-msgid "Skip"
-msgstr "Пропустить"
+#: scr/menuDialog.js:169 scr/menuDialog.js:190
+msgid "Remove list"
+msgstr "Удалить список"
 
-#: scr/gui.js:537
-msgid "Correct anyway"
-msgstr "Всё равно верно"
+#: scr/menuDialog.js:170 scr/optionsDialog.js:94
+msgid "Options"
+msgstr "Параметры"
 
-#: scr/gui.js:538
-msgid ""
-"Think about the answer, and press the 'View answer' button when you're done."
+#: scr/menuDialog.js:174
+msgid "Please choose a name for the current list, so it can be saved."
 msgstr ""
-"Подумайте об ответе и нажмите кнопку «Показать ответ», когда закончите."
+"Пожалуйста, выберите имя для текущего списка, под которым он может быть "
+"сохранен."
 
-#: scr/gui.js:539
-msgid "View answer"
-msgstr "Показать ответ"
+#: scr/menuDialog.js:175
+msgid "Name:"
+msgstr "Имя:"
 
-#: scr/gui.js:540
-msgid "Translation:"
-msgstr "Перевод:"
+#: scr/menuDialog.js:176
+msgid "Done"
+msgstr "Готово"
 
-#: scr/gui.js:541
-msgid "I was right"
-msgstr "Я был прав"
+#: scr/menuDialog.js:178
+msgid "Warning"
+msgstr "Предупреждение"
 
-#: scr/gui.js:542
-msgid "I was wrong"
-msgstr "Я ошибался"
+#: scr/menuDialog.js:179
+msgid "There is already a list named like that."
+msgstr "Список с таким именем уже существует."
 
-#: scr/gui.js:545 scr/gui.js:546
-msgid "Test completed!"
-msgstr "Тест завершен!"
+#: scr/menuDialog.js:180
+msgid "If you continue, it will be overwritten. Continue?"
+msgstr "Если продолжить он будет заменён. Продолжать?"
 
-#: scr/gui.js:548
-#, python-format
-msgid "Your note: %s"
-msgstr "Ваша оценка: %s"
+#: scr/menuDialog.js:181
+msgid "Yes"
+msgstr "Да"
 
-#: scr/gui.js:602
+#: scr/menuDialog.js:182
+msgid "No"
+msgstr "Нет"
+
+#: scr/menuDialog.js:186
+msgid "Please choose the list you want to load."
+msgstr "Выберите список который вы хотите загрузить."
+
+#: scr/menuDialog.js:187 scr/menuDialog.js:192
+msgid "Filter lists..."
+msgstr "Фильтр списков..."
+
+#: scr/menuDialog.js:191
+msgid "Please choose the list you want to remove."
+msgstr "Выберите список который вы хотите удалить."
+
+#: scr/optionsDialog.js:95
+msgid "Language:"
+msgstr "Язык:"
+
+#: scr/optionsDialog.js:97
+msgid "Practising mode:"
+msgstr "Режим практики:"
+
+#: scr/optionsDialog.js:98 scr/practisingModeChoiceDialog.js:47
+msgid "Think answer"
+msgstr "Обдумать ответ"
+
+#: scr/optionsDialog.js:99 scr/practisingModeChoiceDialog.js:48
+msgid "Type answer"
+msgstr "Напечатайте ответ"
+
+#: scr/practisingModeChoiceDialog.js:45
 msgid "Practising mode choice"
 msgstr "Выбор режима практики"
 
-#: scr/gui.js:603
+#: scr/practisingModeChoiceDialog.js:46
 msgid "Please choose the practising mode you want to use:"
 msgstr "Пожалуйста, выберите режим практики, который вы хотите использовать:"
 
-#: scr/gui.js:606
+#: scr/practisingModeChoiceDialog.js:49
 msgid ""
 "If you ever want to change your choice, you can do so in the options dialog, "
 "which is accessable by clicking 'Menu' and then 'Options'."
 msgstr ""
 "Если вы хотите изменить свой выбор, вы можете сделать это в диалоге "
 "настроек, которые доступны при нажатии \"Меню\" и затем \"Параметры\"."
+
+#: scr/teachTab.js:225
+msgid "Question:"
+msgstr "Вопрос:"
+
+#: scr/teachTab.js:226
+msgid "Answer:"
+msgstr "Ответ:"
+
+#: scr/teachTab.js:227
+msgid "Check!"
+msgstr "Проверить!"
+
+#: scr/teachTab.js:228
+msgid "Skip"
+msgstr "Пропустить"
+
+#: scr/teachTab.js:229
+msgid "Correct anyway"
+msgstr "Всё равно верно"
+
+#: scr/teachTab.js:230
+msgid ""
+"Think about the answer, and press the 'View answer' button when you're done."
+msgstr ""
+"Подумайте об ответе и нажмите кнопку «Показать ответ», когда закончите."
+
+#: scr/teachTab.js:231
+msgid "View answer"
+msgstr "Показать ответ"
+
+#: scr/teachTab.js:232
+msgid "Translation:"
+msgstr "Перевод:"
+
+#: scr/teachTab.js:233
+msgid "I was right"
+msgstr "Я был прав"
+
+#: scr/teachTab.js:234
+msgid "I was wrong"
+msgstr "Я ошибался"
+
+#: scr/teachTab.js:237 scr/teachTab.js:238
+msgid "Test completed!"
+msgstr "Тест завершен!"
+
+#: scr/teachTab.js:240
+#, python-format
+msgid "Your note: %s"
+msgstr "Ваша оценка: %s"
