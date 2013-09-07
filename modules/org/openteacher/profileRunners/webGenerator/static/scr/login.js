@@ -1,7 +1,7 @@
 var username, password;
 
 var loginPage = (function () {
-	function retranslate() {
+	languageChanged.handle(function () {
 		//login part
 		$("#login-part .subheader").text(_("Log in"));
 
@@ -19,9 +19,9 @@ var loginPage = (function () {
 
 		//share part
 		$("#share-part .subheader").text(_("Or view a shared list"));
-	}
+	});
 
-	function onLogin() {
+	function onLoginRequested() {
 		username = $("#username").val();
 		password = $("#password").val();
 		$("#login-form")[0].reset();
@@ -31,7 +31,7 @@ var loginPage = (function () {
 			xhr.withCredentials = true;
 			xhr.open("GET", COUCHDB_HOST + "/_session");
 			xhr.send();
-			show("#lists-page");
+			hasher.setHash("lists");
 			$("#session-box").fadeIn();
 
 			var cancel1 = sync(listsDb, COUCHDB_HOST + "/lists_" + username, listsChanged.send);
@@ -49,20 +49,6 @@ var loginPage = (function () {
 		return false;
 	}
 
-	function onLogout() {
-		$("#session-box").fadeOut();
-		show("#login-page");
-		cancelSync();
-
-		var xhr = new XMLHttpRequest();
-		xhr.withCredentials = true;
-		xhr.open("DELETE", COUCHDB_HOST + "/_session");
-		xhr.setRequestHeader("Content-Type", "application/json");
-		xhr.send();
-
-		return false;
-	}
-
 	function loggedIn(username, password, done) {
 		var xhr = new XMLHttpRequest();
 		xhr.withCredentials = true;
@@ -76,7 +62,7 @@ var loginPage = (function () {
 		xhr.send(JSON.stringify({"name": username, "password": password}));
 	}
 
-	function onRegister() {
+	crossroads.addRoute("register", function () {
 		//fixme: replace C with actual language
 		var pn = document.location.pathname;
 		var emptyFilePath = pn.slice(0, pn.lastIndexOf("/")) + "/empty.html";
@@ -114,43 +100,41 @@ var loginPage = (function () {
 				$(this)
 					.attr("src", registerUrl + "&screenshotonly=true")
 					.slideUp("slow");
+				hasher.setHash("login");
 		});
-		return false;
-	}
+	});
 
-	function onDeregister() {
+	crossroads.addRoute("deregister", function () {
 		var sure = window.confirm(_("Are you sure you want to unsubscribe? This will remove your account and all data associated with it. Keep in mind that there's no recovery procedure!"));
 		if (sure) {
 			servicesRequest({
 				url: "/deregister",
 				type: "POST",
-				success: onLogout
+				success: function () {
+					crossroads.parse("logout");
+				}
 			});
 		}
-
-		//FIXME. Ask for confirmation & then send the POST request to
-		//the services API that kills the account.
-		return false;
-	}
-
-	function toShares () {
-		sharesPage.show();
-
-		return false;
-	}
-
-	$(function () {
-		$("#logout-link").click(onLogout);
-		$("#deregister-link").click(onDeregister);
-
-		$("#register-link").click(onRegister);
-		$("#login-form").submit(onLogin);
-
-		show("#login-page");
-		$("#username").focus();
-
-		$("#shares-link").click(toShares);
 	});
 
-	return {retranslate: retranslate};
+	crossroads.addRoute("login", function () {
+		show("#login-page");
+		$("#username").focus();
+	});
+
+	crossroads.addRoute("logout", function () {
+		$("#session-box").fadeOut();
+		hasher.replaceHash("login");
+		cancelSync();
+
+		var xhr = new XMLHttpRequest();
+		xhr.withCredentials = true;
+		xhr.open("DELETE", COUCHDB_HOST + "/_session");
+		xhr.setRequestHeader("Content-Type", "application/json");
+		xhr.send();
+	});
+
+	$(function () {
+		$("#login-form").submit(onLoginRequested);
+	});
 }());

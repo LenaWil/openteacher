@@ -32,26 +32,7 @@ var viewPage = (function () {
 		//TRANSLATORS: value is unknown.
 		$(".unknown").text(_("-"));
 	}
-
-	function onViewList(id) {
-		listsDb.get(id, function (err, resp) {
-			$("#title").val(resp.title);
-			$("#shares").val(resp.shares.join(", "));
-			$("#question-lang").val(resp.questionLanguage || "");
-			$("#answer-lang").val(resp.answerLanguage || "");
-			$("#view-page").data("id", id);
-			$("#view-page").data("rev", resp._rev);
-			$("#list-items").empty();
-			var items = resp.items || [];
-			for (var i = 0; i < items.length; i += 1) {
-				addRow(items[i]);
-			}
-			newRow();
-
-			$("#tests-part").hide();
-			loadTests(id, {descending: true}, testsLoaded);
-		});
-	}
+	languageChanged.handle(retranslate);
 
 	function loadTests(id, opts, callback) {
 		if (typeof opts === "function") {
@@ -102,27 +83,6 @@ var viewPage = (function () {
 			$("#list-items tr:last .question-input").focus();
 		});
 	}
-
-	$(function () {
-		$("#back-from-list-page").click(onBackFromListPage);
-		$("#save-list").click(onSaveList);
-		$("#teach-list").click(onTeachList);
-		$("#print-list").click(onPrintList);
-		$("#download-list").click(onDownloadList);
-
-		$("#download-links").on("click", "a", onDownloadFile);
-		$("#close-download").click(closeDownload);
-
-		$("#list-items").on("keyup", "#list input:last", onLastListInputKeyUp);
-
-		$("#list-items").on("click", ".remove-item", onRemoveItem);
-		$("#list-items").on("keyup", ".remove-item", onRemoveItemKeyUp);
-
-		$("#tests").on("change", ".finished-checkbox", onFinishedCheckboxChange);
-		$("#tests").on("focus", ".finished-checkbox", onFinishedCheckboxFocus);
-
-		sharedListsChanged.handle(onSharedListsChange);
-	});
 
 	function onBackFromListPage() {
 		ifNextPageAllowed(function () {
@@ -250,56 +210,6 @@ var viewPage = (function () {
 		});
 	}
 
-	function onDownloadList() {
-		$("#download-part").slideDown();
-
-		servicesRequest({
-			url: "/save/supported_extensions",
-			success: function (json) {
-				var exts = json.result.sort();
-				exts = exts.map(function (ext) {
-					return "." + ext;
-				});
-
-				$("#download-links").empty();
-				$.each(exts, function (i, ext) {
-					var link = tmpl("link-template", {
-						title: $("#title").val(),
-						ext: ext
-					});
-					$("#download-links").append(link);
-				});
-			},
-		});
-	}
-
-	function closeDownload() {
-		$("#download-part").slideUp();
-	}
-
-	function onDownloadFile() {
-		var ext = $(this).data("ext");
-		toList(function (list) {
-			loadTests(list._id, function (err, resp) {
-				list.tests = resp.rows.map(function (row) {
-					return row.value;
-				});
-				$("<form class='invisible'></form>")
-					.attr("action", SERVICES_HOST + "/save")
-					.attr("method", "POST")
-					.attr("target", "download-frame")
-					.append("<input name='username' value='" + username + "' />")
-					.append("<input name='password' value='" + password + "' />")
-					.append("<input name='list' value='" + JSON.stringify(list) + "' />")
-					.append("<input name='filename' value='" + list.title + ext + "' />")
-					.appendTo("body")
-					.submit()
-					.remove();
-			});
-		});
-		return false;
-	}
-
 	function onLastListInputKeyUp(event) {
 		//9 is 'tab'.
 		if (event.which !== 9) {
@@ -354,8 +264,100 @@ var viewPage = (function () {
 		});
 	}
 
-	return {
-		viewList: onViewList,
-		retranslate: retranslate
-	};
+	$(function () {
+		$("#back-from-list-page").click(function () {
+			hasher.setHash("lists");
+		});
+		$("#save-list").click(onSaveList);
+		$("#teach-list").click(function () {
+			hasher.setHash("lists/" + $("#view-page").data("id") + "/learn");
+		});
+		$("#print-list").click(onPrintList);
+		$("#download-list").click(function () {
+			hasher.setHash("lists/" + $("#view-page").data("id") + "/download");
+		});
+
+		$("#close-download").click(function () {
+			hasher.setHash("lists/" + $("#view-page").data("id") + "/view");
+		});
+
+		$("#list-items").on("keyup", "#list input:last", onLastListInputKeyUp);
+
+		$("#list-items").on("click", ".remove-item", onRemoveItem);
+		$("#list-items").on("keyup", ".remove-item", onRemoveItemKeyUp);
+
+		$("#tests").on("change", ".finished-checkbox", onFinishedCheckboxChange);
+		$("#tests").on("focus", ".finished-checkbox", onFinishedCheckboxFocus);
+
+		sharedListsChanged.handle(onSharedListsChange);
+	});
+
+	var route = crossroads.addRoute("lists/{id}/download");
+	route.matched.add(function (id) {
+		$("#download-part").slideDown();
+
+		servicesRequest({
+			url: "/save/supported_extensions",
+			success: function (json) {
+				var exts = json.result.sort();
+				exts = exts.map(function (ext) {
+					return "." + ext;
+				});
+
+				$("#download-links").empty();
+				$.each(exts, function (i, ext) {
+					var link = tmpl("link-template", {
+						id: id,
+						title: $("#title").val(),
+						ext: ext
+					});
+					$("#download-links").append(link);
+				});
+			},
+		});
+	});
+	route.switched.add(function () {
+		$("#download-part").slideUp();
+	});
+
+	crossroads.addRoute("lists/{id}/download/{extension}", 	function (id, ext) {
+		toList(function (list) {
+			loadTests(id, function (err, resp) {
+				list.tests = resp.rows.map(function (row) {
+					return row.value;
+				});
+				$("<form class='invisible'></form>")
+					.attr("action", SERVICES_HOST + "/save")
+					.attr("method", "POST")
+					.attr("target", "download-frame")
+					.append("<input name='username' value='" + username + "' />")
+					.append("<input name='password' value='" + password + "' />")
+					.append("<input name='list' value='" + JSON.stringify(list) + "' />")
+					.append("<input name='filename' value='" + list.title + ext + "' />")
+					.appendTo("body")
+					.submit()
+					.remove();
+			});
+		});
+	});
+
+	crossroads.addRoute("lists/{id}/view", function (id) {
+		listsDb.get(id, function (err, resp) {
+			$("#title").val(resp.title);
+			$("#shares").val(resp.shares.join(", "));
+			$("#question-lang").val(resp.questionLanguage || "");
+			$("#answer-lang").val(resp.answerLanguage || "");
+			$("#view-page").data("id", id);
+			$("#view-page").data("rev", resp._rev);
+			$("#list-items").empty();
+			var items = resp.items || [];
+			for (var i = 0; i < items.length; i += 1) {
+				addRow(items[i]);
+			}
+			newRow();
+
+			$("#tests-part").hide();
+			loadTests(id, {descending: true}, testsLoaded);
+		});
+	});
 }());

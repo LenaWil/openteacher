@@ -1,6 +1,4 @@
 var sharePage = (function () {
-	var currentDb;
-
 	function retranslate() {
 		$("#back-to-shares").text(_("Back to the shares page"));
 		$("#share-lists .last-edited-label").text(_("Last edited:"));
@@ -10,23 +8,35 @@ var sharePage = (function () {
 		//TRANSLATORS: (https://en.wikipedia.org/wiki/Web_feed)
 		$("#share-feed-link").attr("title", _("Feed"));
 	}
+	languageChanged.handle(retranslate);
 
-	function onShow(name) {
-		currentDb = new PouchDB(currentDbName);
+	$(function () {
+		$("#back-to-shares").click(function () {
+			//calling directly doesn't work it seems.
+			history.back();
+		});
+	});
 
-		$("#share-page .subheader").text(name);
-		var opts = {startkey: [name], endkey: [name, {}, {}]};
+	crossroads.addRoute("shares/{username}/{shareName}", function (username, shareName) {
+		var currentDbName = "shared_lists_" + username;
+		var currentDb = new PouchDB(currentDbName);
+
+		$("#share-page .subheader").text(shareName);
+		var opts = {startkey: [shareName], endkey: [shareName, {}, {}]};
 
 		currentDb.query("shares/by_name", opts, function (err, resp) {
 			$("#share-lists").empty();
 			$.each(resp.rows, function (i, row) {
 				var list = tmpl("share-list-template", {
 					doc: row.value,
+					shareName: shareName,
+					username: username,
 					dbName: currentDbName,
 					classes: i % 2 ? "even" : "odd"
 				});
 				$("#share-lists").append(list);
 			});
+			//update ui translation
 			retranslate();
 		});
 
@@ -36,24 +46,10 @@ var sharePage = (function () {
 		);
 
 		show("#share-page");
-	}
-
-	function backToShares() {
-		sharesPage.show();
-	}
-
-	function onTakeOver() {
-		//FIXME.
-		return false;
-	}
-
-	$(function () {
-		$("#share-lists").on("click", ".take-over-link", onTakeOver);
-		$("#back-to-shares").click(backToShares);
 	});
 
-	return {
-		show: onShow,
-		retranslate: retranslate
-	};
+	crossroads.addRoute("shares/{username}/{shareName}/{docId}/take-over", function (username, shareName, docId) {
+		//FIXME.
+		console.log("takeover " + username + shareName + docId);
+	});
 }());

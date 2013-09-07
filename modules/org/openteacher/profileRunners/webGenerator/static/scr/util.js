@@ -11,6 +11,10 @@ function servicesRequest(opts) {
 }
 
 function show(page, whenDone) {
+	if ($(page + ":visible").length) {
+		//page already shown.
+		return;
+	}
 	function hidingDone (slow) {
 		var speed = slow ? "slow": "fast";
 		$(page).fadeIn(speed, whenDone);

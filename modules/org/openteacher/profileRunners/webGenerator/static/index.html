@@ -11,18 +11,21 @@ Or be consistent and also exclude unsaved changes when saving?-->
 		<script type='text/javascript' src='scr/library/pouchdb_ext.js'></script>
 		<script type='text/javascript' src='scr/library/jquery.js'></script>
 		<script type='text/javascript' src='scr/library/tmpl.js'></script>
+		<script type='text/javascript' src='scr/library/signals.js'></script>
+		<script type='text/javascript' src='scr/library/crossroads.js'></script>
+		<script type='text/javascript' src='scr/library/hasher.js'></script>
 		<!-- generated code -->
 		<script type='text/javascript' src='scr/generated/logic.js'></script>
 		<script type='text/javascript' src='scr/generated/config.js'></script>
 		<script type='text/javascript' src='scr/generated/translations/index.js'></script>
 		<!-- web-specific code -->
 		<script type='text/javascript' src='scr/util.js'></script>
+		<script type='text/javascript' src='scr/main.js'></script>
 		<script type='text/javascript' src='scr/share.js'></script>
 		<script type='text/javascript' src='scr/shares.js'></script>
 		<script type='text/javascript' src='scr/learn-list.js'></script>
 		<script type='text/javascript' src='scr/lists-overview.js'></script>
 		<script type='text/javascript' src='scr/login.js'></script>
-		<script type='text/javascript' src='scr/main.js'></script>
 		<script type='text/javascript' src='scr/view-list.js'></script>
 		<script type='text/x-tmpl' id='lists-template'>
 			<tr class='{%= o.classes %}' data-id='{%= o.doc._id %}' data-rev='{%= o.doc._rev %}'>
@@ -30,10 +33,10 @@ Or be consistent and also exclude unsaved changes when saving?-->
 					<input type='checkbox' />
 				</td>
 				<td>
-					<a href='#view-list'>{%= o.doc.title %}</a>
+					<a href='#/lists/{%= o.doc._id %}/view'>{%= o.doc.title %}</a>
 					<span class='links lighter'>
-						<a class='view-link' href='#view-list'></a> |
-						<a class='learn-link' href='#learn-list'></a>
+						<a class='view-link' href='#/lists/{%= o.doc._id %}/view'></a> |
+						<a class='learn-link' href='#/lists/{%= o.doc._id %}/learn'></a>
 					</span>
 					<br />
 					<span class='smaller lighter'>
@@ -49,7 +52,7 @@ Or be consistent and also exclude unsaved changes when saving?-->
 				<a href='{%= viewUrl %}'>{%= o.doc.title %}</a>
 				<span class='links lighter'>
 					<a class='view-link' href='{%= viewUrl %}'></a> |
-					<a data-id='{%= o.doc._id %}' class='take-over-link' href='#'></a>
+					<a data-id='{%= o.doc._id %}' class='take-over-link' href='#/shares/{%= o.username + "/" + o.shareName + "/" + o.doc._id %}/take-over'></a>
 				</span>
 				<br />
 				<span class='smaller lighter'>
@@ -92,23 +95,23 @@ Or be consistent and also exclude unsaved changes when saving?-->
 		</script>
 		<script type='text/x-tmpl' id='link-template'>
 			<li>
-				<a data-ext='{%= o.ext %}' href='#'>{%= o.title + o.ext %}</a>
+				<a href='#/lists/{%= o.id %}/download/{%= o.ext %}'>{%= o.title + o.ext %}</a>
+			</li>
+		</script>
+		<script type='text/x-tmpl' id='share-template'>
+			<li>
+				<a href='#/shares/{%= o.username + "/" + o.row.key %}'>{%= o.row.key %}</a>
 			</li>
 		</script>
 		<link rel='stylesheet' type='text/css' href='css/style.css' />
-		<script type='text/x-tmpl' id='share-template'>
-			<li>
-				<a href='#'>{%= o.key %}</a>
-			</li>
-		</script>
 	</head>
 	<body>
 		<div id='header'>
 			<div id='header-inner'>
 				<img id='logo' src='img/logo' />
 				<div class='smaller' id='session-box'>
-					<a href='#' id='deregister-link'></a> |
-					<a href='#' id='logout-link'></a>
+					<a href='#/deregister' id='deregister-link'></a> |
+					<a href='#/logout' id='logout-link'></a>
 				</div>
 				<h1 id='header-title'></h1>
 			</div>
@@ -120,7 +123,7 @@ Or be consistent and also exclude unsaved changes when saving?-->
 					<p id='register-success'></p>
 					<p id='register-failure'></p>
 					<p>
-						<a href='#' id='register-link'></a>
+						<a href='#/register' id='register-link'></a>
 					</p>
 					<form id='login-form' action='#'>
 						<table>
@@ -148,7 +151,7 @@ Or be consistent and also exclude unsaved changes when saving?-->
 				</div>
 				<iframe id='register-iframe'></iframe>
 				<div id='share-part'>
-					<a id='shares-link' href='#'><h2 class='subheader'></h2></a>
+					<a id='shares-link' href='#/shares'><h2 class='subheader'></h2></a>
 				</div>
 			</div>
 			<div id='shares-page'>

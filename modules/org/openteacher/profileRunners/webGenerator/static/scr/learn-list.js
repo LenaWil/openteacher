@@ -1,35 +1,15 @@
 var learnPage = (function () {
 	var lessonType, currentList;
 
-	function retranslate() {
+	languageChanged.handle(function () {
 		$("#question-label-label").text(_("Question:"));
 		$("#check-button").val(_("Check!"));
 		$("#skip-button").val(_("Skip"));
 		$("#correct-anyway-button").val(_("Correct anyway"));
 		$("#back-from-learn-page").text(_("Back to the lists page"));
-	}
+	});
 
 	var controller = new logic.InputTypingController();
-
-	function onLearnList (id) {
-		listsDb.get(id, function (err, list) {
-			currentList = list;
-			indexes = [];
-			for (i = 0; i < list.items.length; i += 1) {
-				indexes.push(i);
-			}
-
-			lessonType = new logic.LessonType(list, indexes);
-			lessonType.newItem.handle(newItem);
-			lessonType.lessonDone.handle(lessonDone);
-
-			controller.lessonType = lessonType;
-
-			show("#learn-page", function () {
-				lessonType.start();
-			});
-		});
-	}
 
 	function newItem(item) {
 		$("#question-label").html(logic.compose(item.questions || []));
@@ -38,7 +18,7 @@ var learnPage = (function () {
 	function lessonDone(callback) {
 		if (typeof callback === "undefined") {
 			callback = function () {
-				viewPage.viewList(currentList._id);
+				hasher.setHash("lists/" + currentList._id + "/view")
 			};
 		}
 		if (typeof currentList.tests === "undefined") {
@@ -66,7 +46,7 @@ var learnPage = (function () {
 	$(function () {
 		$("#back-from-learn-page").click(function () {
 			lessonDone(function () {
-				show("#lists-page");
+				hasher.setHash("lists");
 			});
 		});
 
@@ -122,8 +102,23 @@ var learnPage = (function () {
 		$("#learn-answer-input").keyup(controller.userIsTyping);
 	});
 
-	return {
-		learnList: onLearnList,
-		retranslate: retranslate
-	};
+	var route = crossroads.addRoute("lists/{id}/learn", function (id) {
+		listsDb.get(id, function (err, list) {
+			currentList = list;
+			indexes = [];
+			for (i = 0; i < list.items.length; i += 1) {
+				indexes.push(i);
+			}
+
+			lessonType = new logic.LessonType(list, indexes);
+			lessonType.newItem.handle(newItem);
+			lessonType.lessonDone.handle(lessonDone);
+
+			controller.lessonType = lessonType;
+
+			show("#learn-page", function () {
+				lessonType.start();
+			});
+		});
+	});
 }());

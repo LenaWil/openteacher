@@ -15,6 +15,7 @@ var overviewPage = (function () {
 		$("#upload-explanation").text(_("Please select the file you want to upload below, and click 'upload' when you're done. Supported file extensions are:"));
 		$("#load-failure").text(_("Couldn't load file. Is the file type supported and the file not corrupted?"));
 	}
+	languageChanged.handle(retranslate);
 
 	function onRemoveSelected() {
 		var deleteDocs = [];
@@ -48,14 +49,6 @@ var overviewPage = (function () {
 		});
 	}
 
-	function onLoadListFromComputer() {
-		$("#upload-part").slideDown();
-		servicesRequest({
-			url: "/load/supported_extensions",
-			success: onExtensionsLoaded,
-		});
-	}
-
 	function onLoadSuccess(doc) {
 		doc.title = doc.title || _("Uploaded list");
 		doc = webifyList(doc);
@@ -69,15 +62,11 @@ var overviewPage = (function () {
 				PouchDBext.withValidation.post(testsDb, test);
 			});
 		});
-		onCancelUpload();
+		hasher.setHash("lists");
 	}
 
 	function onLoadError() {
 		$("#load-failure").slideDown(slideUpAfterTimeout(5000));
-	}
-
-	function onCancelUpload() {
-		$("#upload-part").slideUp();
 	}
 
 	function onUploadSubmit() {
@@ -96,16 +85,6 @@ var overviewPage = (function () {
 			});
 		});
 		this.reset();
-		return false;
-	}
-
-	function onListLinkClicked() {
-		var tr = $(this).parents("tr")[0];
-		var id = $(tr).data("id");
-		({
-			"#view-list": viewPage.viewList,
-			"#learn-list": learnPage.learnList
-		})[$(this).attr("href")](id);
 		return false;
 	}
 
@@ -140,14 +119,31 @@ var overviewPage = (function () {
 	$(function () {
 		$("#remove-selected").click(onRemoveSelected);
 		$("#new-list").click(onNewList);
-		$("#load-list-from-computer").click(onLoadListFromComputer);
-		$("#lists").on("click", "a", onListLinkClicked);
+		$("#load-list-from-computer").click(function () {
+			hasher.setHash("lists/upload-from-computer")
+		});
 
 		$("#upload-form").submit(onUploadSubmit);
-		$("#cancel-upload").click(onCancelUpload);
+		$("#cancel-upload").click(function () {
+			hasher.setHash("lists");
+		});
 
 		listsChanged.handle(onListsChange);
 	});
 
-	return {retranslate: retranslate};
+	crossroads.addRoute("lists", function () {
+		show("#lists-page");
+	});
+
+	var route = crossroads.addRoute("lists/upload-from-computer")
+	route.matched.add(function () {
+		$("#upload-part").slideDown();
+		servicesRequest({
+			url: "/load/supported_extensions",
+			success: onExtensionsLoaded,
+		});
+	});
+	route.switched.add(function () {
+		$("#upload-part").slideUp();
+	});
 }());

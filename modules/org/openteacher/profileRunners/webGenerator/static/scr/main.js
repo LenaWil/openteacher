@@ -1,4 +1,4 @@
-var doRetranslate, _;
+var translate, _;
 
 //FIXME: remove the .destroy()'s when the db isn't completely
 //repopulated each time anymore.
@@ -17,29 +17,39 @@ var sharedListsChanged = new logic.Event();
 var testsChanged = new logic.Event();
 var settingsChanged = new logic.Event();
 
+var languageChanged = new logic.Event();
+
 $(function () {
-	function retranslate() {
+	//translation
+	languageChanged.handle(function () {
 		var otWeb = _("OpenTeacher Web");
 
 		document.title = otWeb;
 		$("#header-title").text(otWeb);
 
 		$("#license-and-source-link").text(_("License information and source code"));
-	}
+	});
 
-	function doRetranslate() {
+	function translate() {
 		lang = navigator.language;
 		logic.translator(translationIndex, lang, function (tr) {
 			_ = tr;
-			retranslate();
-			loginPage.retranslate();
-			sharesPage.retranslate();
-			sharePage.retranslate();
-			overviewPage.retranslate();
-			learnPage.retranslate();
-			viewPage.retranslate();
+			languageChanged.send();
 		});
 	}
+	translate();
 
-	doRetranslate();
+	//routing
+	function parseHash(newHash, oldHash) {
+		crossroads.parse(newHash);
+	}
+	hasher.initialized.add(parseHash);
+	hasher.changed.add(parseHash);
+	//start listening
+	hasher.init();
+	if (!hasher.getHash()) {
+		//when there's no hash path to specify otherwise, go to the
+		//login page.
+		hasher.replaceHash("login")
+	};
 });
