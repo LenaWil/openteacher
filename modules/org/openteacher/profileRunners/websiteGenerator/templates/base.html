@@ -3,7 +3,7 @@ None
 <!--(end)-->
 
 <!doctype html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="@!currentLanguage.replace('_', '-')!@" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="google-site-verification" content="SWpsP6A2_ikJwMzbKFnR1aXFd_C1z60v-BG3IOIBulI" />
@@ -21,6 +21,7 @@ None
 <script src="@!url('../scripts/thumbnails.js')!@" type="text/javascript"></script>
 <script src="@!url('../scripts/downloadButton.js')!@" type="text/javascript"></script>
 <script src="@!url('../scripts/linkToHere.js')!@" type="text/javascript"></script>
+<script src="@!url('../scripts/language.js')!@" type="text/javascript"></script>
 <script type="text/javascript">
 // Set current menu item
 selectedMenuItem = '#@!pageName!@Link';
@@ -43,10 +44,20 @@ _gaq.push(['_trackPageview']);
 
 <div id="body">
 	<div id="header">
-		<div id="languageBar">
-			<a href="../en"><img src="@!url('../images/flags/us.gif')!@" alt="English (US)" /></a>
-			<a href="../nl"><img src="@!url('../images/flags/nl.gif')!@" alt="Nederlands" /></a>
-		</div>
+		<ul id="languageBar">
+			<li>
+				<a id='currentLanguage' href="../@!url(currentLanguage)!@">@!languages[currentLanguage]!@ ▾</a>
+			</li>
+			<div id='otherLanguages'>
+			<!--(for code, name in sorted(languages.iteritems(), key=lambda (c, n): n))-->
+				<!--(if currentLanguage != code)-->
+					<li>
+						<a href="../@!url(code)!@">@!name!@</a>
+					</li>
+				<!--(end)-->
+			<!--(end)-->
+			</div>
+		</ul>
 		<ul id="menu">
 			<li><a class="aLink menuLink" id="indexLink" href="@!url('index.html')!@" rel="index">@!tr('Home')!@</a></li>
 			<li><a class="aLink menuLink" id="aboutLink" href="@!url('about.html')!@" rel="about">@!tr('About')!@</a></li>

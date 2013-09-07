@@ -26,6 +26,7 @@ import shutil
 import tempfile
 import atexit
 import json
+import glob
 
 DOWNLOAD_LINKS = {
 	"windows": "http://sourceforge.net/projects/openteacher/files/openteacher/3.2/openteacher-3.2-windows-setup.msi/download",
@@ -198,6 +199,7 @@ class WebsiteGeneratorModule(object):
 			self._mm.mods(type="userDocumentation"),
 			self._mm.mods(type="userDocumentationWrapper"),
 			self._mm.mods(type="backgroundImageGenerator"),
+			self._mm.mods(type="friendlyTranslationNames"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -324,7 +326,8 @@ class WebsiteGeneratorModule(object):
 		"""
 		# The default (US English) (unicode as translate function)
 		self._tr = unicode
-		self._generatePages("en")
+		self._langCode = "en"
+		self._generatePages()
 
 		try:
 			translator = self._modules.default("active", type="translator")
@@ -335,14 +338,14 @@ class WebsiteGeneratorModule(object):
 			for moname in os.listdir(self._mm.resourcePath('translations')):
 				if not moname.endswith('.mo'):
 					continue
-				langCode = os.path.splitext(moname)[0]
+				self._langCode = os.path.splitext(moname)[0]
 
 				# Set translation function
-				_, ngettext = translator.gettextFunctions(self._mm.resourcePath("translations"), language=langCode)
+				_, ngettext = translator.gettextFunctions(self._mm.resourcePath("translations"), language=self._langCode)
 				self._tr = _
 
 				# Generate
-				self._generatePages(langCode)
+				self._generatePages()
 
 		# Generate inAppDocumentation pages.
 		for lang in list(self._userDocMod.availableTranslations) + ["en"]:
@@ -351,13 +354,13 @@ class WebsiteGeneratorModule(object):
 			with open(destination, "w") as f:
 				f.write(html.encode("UTF-8"))
 
-	def _generatePages(self, lang):
+	def _generatePages(self):
 		"""Generates all pages in a certain language in a subdirectory
 		   of the main output path. First it generates the normal pages,
 		   then the documentation ones.
 
 		"""
-		self._langDir = os.path.join(self._path, lang)
+		self._langDir = os.path.join(self._path, self._langCode)
 		os.mkdir(self._langDir)
 
 		templates = ["about.html", "download.html", "documentation.html", "index.html", "contribute.html"]
@@ -370,17 +373,17 @@ class WebsiteGeneratorModule(object):
 			os.path.join(self._docsTemplatesDir, f)
 			for f in os.listdir(self._docsTemplatesDir)
 		]
-		documentationTemplatePaths.append(self._getUsingOpenTeacher3Path(lang))
+		documentationTemplatePaths.append(self._getUsingOpenTeacher3Path())
 		for filename in documentationTemplatePaths:
 			self._generateDocumentationPage(filename)
 
-	def _getUsingOpenTeacher3Path(self, lang):
+	def _getUsingOpenTeacher3Path(self):
 		path = tempfile.mkdtemp()
 		#make sure it's cleaned up...
 		self._tempPaths.append(path)
 
 		filePath = os.path.join(path, "using-openteacher-3.html")
-		html = self._userDocMod.getHtml("../images/docs/3", lang)
+		html = self._userDocMod.getHtml("../images/docs/3", self._langCode)
 		with open(filePath, "w") as f:
 			f.write(html.encode("UTF-8"))
 		return filePath
@@ -423,13 +426,30 @@ class WebsiteGeneratorModule(object):
 		with open(os.path.join(self._langDir, pageName), "w") as f:
 			f.write(page.encode("UTF-8"))
 
+	@property
+	def _languages(self, cache={}):
+		if not cache:
+			translationNames = self._modules.default("active", type="friendlyTranslationNames").friendlyNames
+
+			cache["en"] = translationNames["C"]
+			for mofile in glob.glob(self._mm.resourcePath("translations/*.mo")):
+				name = os.path.splitext(os.path.basename(mofile))[0]
+				cache[name] = translationNames.get(name, name)
+		return cache
+
 	def _wrapContent(self, pageName, content):
 		"""Wraps content into a page template"""
 
 		filename = os.path.join(self._templatesDir, "base.html")
 		templatePath = pageName
 		pageName = os.path.splitext(pageName)[0]
-		return self._evaluateTemplate(filename, pageName, pageName=pageName, content=content, downloadLinksJson=json.dumps(DOWNLOAD_LINKS))
+		return self._evaluateTemplate(filename, pageName,
+			pageName=pageName,
+			currentLanguage=self._langCode,
+			languages=self._languages,
+			content=content,
+			downloadLinksJson=json.dumps(DOWNLOAD_LINKS)
+		)
 
 	def _evaluateTemplate(self, templatePath, thisPage, **kwargs):
 		class EvalPseudoSandbox(pyratemp.EvalPseudoSandbox):
