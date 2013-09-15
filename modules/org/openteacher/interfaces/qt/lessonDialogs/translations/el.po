@@ -1,0 +1,47 @@
+# Greek translation for openteacher
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-09-07 12:16+0200\n"
+"PO-Revision-Date: 2013-09-14 07:44+0000\n"
+"Last-Translator: Yannis Kaskamanidis <ttnfy17@yahoo.gr>\n"
+"Language-Team: Greek <el@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-09-15 05:58+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
+
+#: lessonDialogs.py:84
+msgid "Unsaved data"
+msgstr "Μη αποθηκευμένα δεδομένα"
+
+#: lessonDialogs.py:85
+msgid "There are unsaved items or results. Are you sure you want to close?"
+msgstr ""
+"Υπάρχουν μη αποθηκευμένα αντικείμενα ή αποτελέσματα. Θέλετε σίγουρα να "
+"κλείσετε;"
+
+#: lessonDialogs.py:101
+msgid "Warning"
+msgstr "Προειδοποίηση"
+
+#: lessonDialogs.py:103
+msgid ""
+"Are you sure you want to go back to the enter tab? This will end your lesson!"
+msgstr ""
+"Θέλετε σίγουρα να επιστρέψετε στην καρτέλα εισαγωγής; Αυτό θα τερματίσει το "
+"μάθημά σας."
+
+#: lessonDialogs.py:114
+msgid "Not enough items"
+msgstr "Δεν υπάρχουν αρκετά αντικείμενα"
+
+#: lessonDialogs.py:115
+msgid "You need to add items to your test first"
+msgstr "Πρέπει πρώτα να εισάγετε αντικείμενα στη δοκιμασία σας"

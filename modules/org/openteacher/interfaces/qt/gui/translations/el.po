@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-09-07 12:15+0200\n"
-"PO-Revision-Date: 2012-12-15 07:07+0000\n"
-"Last-Translator: Yannis Kaskamanidis <Unknown>\n"
+"PO-Revision-Date: 2013-09-14 07:41+0000\n"
+"Last-Translator: Yannis Kaskamanidis <ttnfy17@yahoo.gr>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-08 04:47+0000\n"
-"X-Generator: Launchpad (build 16760)\n"
+"X-Launchpad-Export-Date: 2013-09-15 05:58+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 "Language: el\n"
 
 #: gui.py:423
@@ -48,7 +48,7 @@ msgstr "&Άνοιγμα"
 
 #: ui.py:275
 msgid "Open &into current list"
-msgstr ""
+msgstr "Άνοιγμα στην τρέχουσα λίστα"
 
 #: ui.py:276
 msgid "&Save"
@@ -72,7 +72,7 @@ msgstr "&Επεξεργασία"
 
 #: ui.py:282
 msgid "&Reverse list"
-msgstr ""
+msgstr "Αντίστροφη λίστα"
 
 #: ui.py:283
 msgid "&Settings"
