@@ -281,6 +281,12 @@ hr
 	margin-right: 40px;
 }
 
+.twitter-timeline {
+	width: 300px;
+	height: 600px;
+	float: right;
+}
+
 /* About */
 #aboutContent
 {
