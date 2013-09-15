@@ -20,6 +20,13 @@ def _only_access_for(username):
 		}
 	}
 
+ADMIN_ONLY_VALIDATE_DOC_UPDATE = """
+(function (newDoc, oldDoc, userCtx) {
+	if (userCtx.roles.indexOf("_admin") === -1) {
+		throw({"unauthorized": "need to be admin to make changes."});
+	}});
+"""
+
 class WebCouch(object):
 	def __init__(self, host, username, password, dbSkeletonDir, isSafeHtmlCode, generateWordsHtml, *args, **kwargs):
 		super(WebCouch, self).__init__(*args, **kwargs)
@@ -82,10 +89,10 @@ class WebCouch(object):
 		func = getattr(requests, method)
 		return func(self._host + endpoint, auth=auth, headers=headers, data=data)
 
-	def new_user(self, username, password):
-		if len(password) < 8 or password.isalnum():
-			raise ValueError("unsafe_password")
+	def create_anonymous_user(self):
+		self._create_user("anonymous", "anonymous", anonymous=True)
 
+	def _create_user(self, username, password, anonymous):
 		try:
 			#user
 			assert self.req("post", "/_users", {
@@ -103,9 +110,12 @@ class WebCouch(object):
 				"/tests_" + username + "/_security",
 				_only_access_for(username)
 			).status_code == 200
-			assert self.req("put", "/tests_" + username + "/_design/tests", self._design_from("tests", {
+			tests_design_doc = self._design_from("tests", {
 				"validation_lib": self._validationLib,
-			})).status_code == 201
+			})
+			if anonymous:
+				tests_design_doc["validate_doc_update"] = ADMIN_ONLY_VALIDATE_DOC_UPDATE
+			assert self.req("put", "/tests_" + username + "/_design/tests", tests_design_doc).status_code == 201
 
 			#settings
 			assert self.req("put", "/settings_" + username).status_code == 201
@@ -114,6 +124,11 @@ class WebCouch(object):
 				"/settings_" + username + "/_security",
 				_only_access_for(username)
 			).status_code == 200
+			settings_design_doc = self._design_from("settings", {})
+			if anonymous:
+				settings_design_doc["validate_doc_update"] = ADMIN_ONLY_VALIDATE_DOC_UPDATE
+			if settings_design_doc:
+				assert self.req("put", "/settings_" + username + "/_design/settings", settings_design_doc).status_code == 201
 
 			#lists
 			assert self.req("put", "/lists_" + username).status_code == 201
@@ -122,24 +137,16 @@ class WebCouch(object):
 				"/lists_" + username + "/_security",
 				_only_access_for(username)
 			).status_code == 200
-
-			assert self.req("put", "/lists_" + username + "/_design/lists", self._design_from("lists", {
+			lists_design_doc = self._design_from("lists", {
 				"validation_lib": self._validationLib,
 				"presentation_lib": self._presentationLib,
-			})).status_code == 201
+			})
+			if anonymous:
+				lists_design_doc["validate_doc_update"] = ADMIN_ONLY_VALIDATE_DOC_UPDATE
+			assert self.req("put", "/lists_" + username + "/_design/lists", lists_design_doc).status_code == 201
 
 			#shared_lists
 			assert self.req("put", "/shared_lists_" + username).status_code == 201
-			assert self.req("put", "/shared_lists_" + username + "/_security", {
-				"admins": {
-					"names": [],
-					"roles": [],
-				},
-				"members": {
-					"names": [],
-					"roles": [],
-				}
-			}).status_code == 200
 			assert self.req("put", "/shared_lists_" + username + "/_design/shares", self._design_from("shared_lists", {
 				"presentation_lib": self._presentationLib,
 			})).status_code == 201
@@ -155,6 +162,30 @@ class WebCouch(object):
 				#Workaround for https://issues.apache.org/jira/browse/COUCHDB-1415
 				"random_value": str(uuid.uuid4()),
 			}).status_code == 201
+
+			#add one 'default' list
+			assert self.req("post", "/lists_" + username + "/_design/lists/_update/set_last_edited_to_now", {
+				"shares": [],
+				"items": [
+					{
+						"id": 0,
+						"questions": [["een"]],
+						"answers": [["one"]],
+					},
+					{
+						"id": 1,
+						"questions": [["twee"]],
+						"answers": [["two"]],
+					},
+					{
+						"id": 1,
+						"questions": [["drie"]],
+						"answers": [["three"]],
+					}
+				],
+				"title": "Example list",
+			}).status_code == 201
+
 		except AssertionError, e:
 			logger.debug(e, exc_info=True)
 			try:
@@ -164,6 +195,12 @@ class WebCouch(object):
 				#create_user didn't succeed.
 				pass
 			raise ValueError("username_taken")
+
+	def new_user(self, username, password):
+		if len(password) < 8 or password.isalnum():
+			raise ValueError("unsafe_password")
+
+		self._create_user(username, password, anonymous=False)
 
 	def check_auth(self, username, password):
 		session = self.req("get", "/_session", auth=requests.auth.HTTPBasicAuth(username, password)).json()

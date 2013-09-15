@@ -1,5 +1,6 @@
 import flask
 import recaptcha.client.captcha
+import feedparser
 import functools
 import collections
 import superjson
@@ -8,6 +9,10 @@ import os
 import datetime
 import json
 import contextlib
+import datetime
+import locale
+
+locale.setlocale(locale.LC_ALL, "C")
 
 #Imports handled by the module:
 #
@@ -15,6 +20,7 @@ import contextlib
 #import gettextFunctions
 #import loaders
 #import savers
+#import metadata
 
 app = flask.Flask(__name__)
 
@@ -37,7 +43,7 @@ def before_request():
 def requires_auth(f):
 	def auth_err(msg):
 		resp = jsonErr(msg, 401)
-		resp.headers["WWW-Authenticate"] = 'Basic realm="OpenTeacher Web"'
+		resp.headers["WWW-Authenticate"] = 'Basic realm="%s Web"' % metadata["name"]
 		return resp
 
 	@functools.wraps(f)
@@ -133,16 +139,32 @@ def jsonify(data):
 	resp.headers["Content-Type"] = "application/json"
 	return resp
 
+def jsonp(f):
+	@functools.wraps(f)
+	def wrapper(*args, **kwargs):
+		resp = f(*args, **kwargs)
+		try:
+			callback = flask.request.args["callback"]
+		except KeyError:
+			return resp
+		else:
+			content = str(callback) + "(" + superjson.dumps(resp) + ")"
+			resp = flask.make_response(content)
+			resp.headers["Content-Type"] = "application/javascript"
+			return resp
+	return wrapper
+
 def initialize_endpoints():
 	#services
 	@app.route("/", methods=["OPTIONS", "GET"])
 	@allowCrossDomainFromTrustedOrigins
 	def services():
 		data = collections.OrderedDict([
-			("welcome", "OpenTeacher Web services"),
+			("welcome", "%s Web services" % metadata["name"]),
 			("info", "All api entry points require HTTP Basic Authentication."),
 			("web_entry_points", [
 				flask.url_for("register"),
+				flask.url_for("news"),
 			]),
 			("api_entry_points", [
 				flask.url_for("deregister"),
@@ -153,6 +175,16 @@ def initialize_endpoints():
 			])
 		])
 		return jsonify(data)
+
+	@app.route("/news")
+	@jsonp
+	def news():
+		def niceTime(struct):
+			obj = datetime.datetime(*struct[:6])
+			return obj.strftime("%H:%M:%S at %B %d, %Y")
+		feed = feedparser.parse(metadata["newsFeedUrl"])
+		with open(app.config["NEWS_TEMPLATE_PATH"]) as f:
+			return flask.render_template_string(f.read(), feed=feed, niceTime=niceTime)
 
 	@app.route("/register")
 	def register():

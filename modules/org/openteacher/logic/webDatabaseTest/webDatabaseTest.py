@@ -48,6 +48,7 @@ class TestCase(unittest.TestCase):
 			TEST2_USER = "test2"
 			TEST2_PASSW = "s2Sjgjk*92"
 
+			couch.create_anonymous_user()
 			couch.new_user(TEST_USER, TEST_PASSW)
 			testAuth = requests.auth.HTTPBasicAuth(TEST_USER, TEST_PASSW)
 
@@ -140,6 +141,7 @@ class TestCase(unittest.TestCase):
 			#and tear down
 			couch.delete_user(TEST2_USER, TEST2_PASSW)
 			couch.delete_user(TEST_USER, TEST_PASSW)
+			couch.delete_user("anonymous", "")
 
 			couch.req("post", "/_users/_compact")
 			couch.req("post", "/_replicator/_compact")

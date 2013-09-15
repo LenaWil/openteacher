@@ -274,6 +274,13 @@ hr
 	padding: 5px;
 }
 
+/* News */
+#newsContent
+{
+	margin-left: 40px;
+	margin-right: 40px;
+}
+
 /* About */
 #aboutContent
 {

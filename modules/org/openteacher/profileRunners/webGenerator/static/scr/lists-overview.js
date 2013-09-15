@@ -1,5 +1,5 @@
 var overviewPage = (function () {
-	var newListText;
+	var newListText, cancelChanges;
 
 	function retranslate() {
 		$("#lists-page .subheader").text(_("Lists overview"));
@@ -15,7 +15,7 @@ var overviewPage = (function () {
 		$("#upload-explanation").text(_("Please select the file you want to upload below, and click 'upload' when you're done. Supported file extensions are:"));
 		$("#load-failure").text(_("Couldn't load file. Is the file type supported and the file not corrupted?"));
 	}
-	languageChanged.handle(retranslate);
+	session.languageChanged.handle(retranslate);
 
 	function onRemoveSelected() {
 		var deleteDocs = [];
@@ -29,7 +29,7 @@ var overviewPage = (function () {
 				_deleted: true
 			});
 		});
-		PouchDBext.withValidation.bulkDocs(listsDb, {docs: deleteDocs});
+		PouchDBext.withValidation.bulkDocs(session.userDbs.lists, {docs: deleteDocs});
 	}
 
 	function webifyList(list) {
@@ -44,8 +44,8 @@ var overviewPage = (function () {
 			items: [],
 			title: _("New list")
 		});
-		PouchDBext.withValidation.post(listsDb, list, function (err, resp) {
-			viewPage.viewList(resp.id);
+		PouchDBext.withValidation.post(session.userDbs.lists, list, function (err, resp) {
+			hasher.setHash("lists/" + resp.id);
 		});
 	}
 
@@ -56,10 +56,10 @@ var overviewPage = (function () {
 		tests = doc.tests || [];
 		delete doc.tests;
 
-		PouchDBext.withValidation.post(listsDb, doc, function (err, resp) {
+		PouchDBext.withValidation.post(session.userDbs.lists, doc, function (err, resp) {
 			$.each(tests, function (i, test) {
 				test.listId = resp.id;
-				PouchDBext.withValidation.post(testsDb, test);
+				PouchDBext.withValidation.post(session.userDbs.tests, test);
 			});
 		});
 		hasher.setHash("lists");
@@ -89,7 +89,7 @@ var overviewPage = (function () {
 	}
 
 	function onListsChange(change) {
-		listsDb.query("lists/by_title", function(err, resp) {
+		session.userDbs.lists.query("lists/by_title", function(err, resp) {
 			$("#loading-box").slideUp("fast");
 
 			var tbody = $("#lists tbody");
@@ -127,23 +127,38 @@ var overviewPage = (function () {
 		$("#cancel-upload").click(function () {
 			hasher.setHash("lists");
 		});
-
-		listsChanged.handle(onListsChange);
 	});
 
-	crossroads.addRoute("lists", function () {
+	var listsRoute = crossroads.addRoute("lists")
+	listsRoute.matched.add(function () {
+		if (!session.loggedIn) {
+			session.next = "lists";
+			hasher.replaceHash("login");
+			return;
+		}
+		cancelChanges = session.onUserDbChanges.lists(onListsChange);
 		show("#lists-page");
 	});
+	listsRoute.switched.add(function () {
+		if (session.loggedIn) {
+			cancelChanges();
+		}
+	});
 
-	var route = crossroads.addRoute("lists/upload-from-computer")
-	route.matched.add(function () {
+	var uploadRoute = crossroads.addRoute("lists/upload-from-computer")
+	uploadRoute.matched.add(function () {
+		if (!session.loggedIn) {
+			session.next = "lists/upload-from-computer";
+			hasher.replaceHash("login");
+			return;
+		}
 		$("#upload-part").slideDown();
 		servicesRequest({
 			url: "/load/supported_extensions",
 			success: onExtensionsLoaded,
 		});
 	});
-	route.switched.add(function () {
+	uploadRoute.switched.add(function () {
 		$("#upload-part").slideUp();
 	});
 }());

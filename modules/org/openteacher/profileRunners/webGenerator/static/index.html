@@ -21,6 +21,8 @@ Or be consistent and also exclude unsaved changes when saving?-->
 		<!-- web-specific code -->
 		<script type='text/javascript' src='scr/util.js'></script>
 		<script type='text/javascript' src='scr/main.js'></script>
+		<script type='text/javascript' src='scr/404.js'></script>
+		<script type='text/javascript' src='scr/license-and-source.js'></script>
 		<script type='text/javascript' src='scr/share.js'></script>
 		<script type='text/javascript' src='scr/shares.js'></script>
 		<script type='text/javascript' src='scr/learn-list.js'></script>
@@ -117,7 +119,17 @@ Or be consistent and also exclude unsaved changes when saving?-->
 			</div>
 		</div>
 		<div id='content'>
-			<div id='login-page'>
+			<div class='page' id='notfound-page'>
+				<h2 class='subheader'></h2>
+				<p id='notfound-explanation'></p>
+				<button id='back-to-start'></button>
+			</div>
+			<div class='page' id='license-and-source-page'>
+				<h2 class='subheader'></h2>
+				<pre id='license-and-source-info'></pre>
+				<button id='back-from-license-and-source'></button>
+			</div>
+			<div class='page' id='login-page'>
 				<div id='login-part'>
 					<h2 class='subheader'></h2>
 					<p id='register-success'></p>
@@ -144,6 +156,9 @@ Or be consistent and also exclude unsaved changes when saving?-->
 									<td colspan='2'>
 										<input id='login-button' type='submit' />
 									</td>
+									<td>
+										| <a id='login-anonymously-link' href='#/login-anonymously'></a>
+									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -154,7 +169,7 @@ Or be consistent and also exclude unsaved changes when saving?-->
 					<a id='shares-link' href='#/shares'><h2 class='subheader'></h2></a>
 				</div>
 			</div>
-			<div id='shares-page'>
+			<div class='page 'id='shares-page'>
 				<h2 class='subheader'></h2>
 				<form id='share-owner-form' action='#'>
 					<label for='share-owner' id='share-owner-label'></label>
@@ -163,8 +178,9 @@ Or be consistent and also exclude unsaved changes when saving?-->
 				</form>
 				<p id='share-error'></p>
 				<ul id='share-links'></ul>
+				<button id='back-from-shares'></button>
 			</div>
-			<div id='share-page'>
+			<div class='page' id='share-page'>
 				<a class='links' href='#' id='share-feed-link'>
 					<img src='img/feed-icon.png' />
 				</a>
@@ -173,7 +189,7 @@ Or be consistent and also exclude unsaved changes when saving?-->
 				</ul>
 				<button id='back-to-shares'></button>
 			</div>
-			<div id='lists-page'>
+			<div class='page' id='lists-page'>
 				<h2 class='subheader'></h2>
 				<div id='loading-box'>
 					<img src='img/loading.gif' />
@@ -198,7 +214,7 @@ Or be consistent and also exclude unsaved changes when saving?-->
 					</div>
 				</div>
 			</div>
-			<div id='view-page'>
+			<div class='page' id='view-page'>
 				<h2 class='subheader'></h2>
 				<div id='list-part'>
 					<table id='list-metadata'>
@@ -279,7 +295,7 @@ Or be consistent and also exclude unsaved changes when saving?-->
 				<iframe id='print-frame' name='print-frame'></iframe>
 				<iframe id='download-frame' name='download-frame'></iframe>
 			</div>
-			<div id='learn-page'>
+			<div class='page' id='learn-page'>
 				<p>
 					<span id='question-label-label'></span><br />
 					<span id='question-label'></span><br />
@@ -297,7 +313,7 @@ Or be consistent and also exclude unsaved changes when saving?-->
 		</div>
 		<div id='footer'>
 			<div id='footer-inner'>
-				<a href='COPYING.txt' class='smaller lighter' id='license-and-source-link'></a>
+				<a href='#/license-and-source' class='smaller lighter' id='license-and-source-link'></a>
 			</div>
 		</div>
 	</body>

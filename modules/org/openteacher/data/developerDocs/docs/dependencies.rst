@@ -57,6 +57,8 @@ Dependencies for developing OpenTeacher
 * python-pygments
 * python-pygraphviz
 * python-twisted
+* python-recaptcha
+* python-feedparser
 
 (deb build only & optional:)
 

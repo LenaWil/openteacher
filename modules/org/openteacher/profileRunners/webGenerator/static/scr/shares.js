@@ -1,31 +1,30 @@
 var sharesPage = (function () {
-	var cancel;
+	var sharesDb, currentUsername, cancelChanges;
 
-	languageChanged.handle(function () {
+	session.languageChanged.handle(function () {
 		$("#shares-page .subheader").text(_("Shares"));
 		$("#share-owner-label").text(_("Share owner's username:"));
 		$("#find-shares").val(_("Find available shares"));
 		$("#share-error").text(_("An error occurred while getting shares. Please make sure that the user exists and that your internet connection works correctly."));
+		$("#back-from-shares").text(_("Back"));
 	});
 
-	function whenComplete(err, resp) {
-		if (err) {
-			updateView();
-			$("#share-error").slideDown(slideUpAfterTimeout(8000));
-		}
+	function onSyncError() {
+		updateView();
+		$("#share-error").slideDown(slideUpAfterTimeout(8000));
 	}
 
 	function emptyView() {
 		$("#share-links").empty();
 	}
 
-	function updateView(username) {
+	function updateView() {
 		emptyView();
 		sharesDb.query("shares/share_names", {group: true}, function (err, resp) {
 			$.each(resp.rows, function (i, row) {
 				var link = tmpl("share-template", {
 					row: row,
-					username: username
+					username: currentUsername
 				});
 				$("#share-links").append(link);
 			});
@@ -42,6 +41,9 @@ var sharesPage = (function () {
 
 	$(function () {
 		$("#share-owner-form").submit(shareOwnerRequested);
+		$("#back-from-shares").click(function () {
+			history.back();
+		});
 	});
 
 	crossroads.addRoute("shares", function () {
@@ -51,29 +53,32 @@ var sharesPage = (function () {
 		});
 	});
 
-	crossroads.addRoute("shares/{username}", function (username) {
+	function currentDbName() {
+		return "shared_lists_" + currentUsername;
+	}
+
+	var sharesRoute = crossroads.addRoute("shares/{username}");
+	sharesRoute.matched.add(function (username) {
 		//first set up the base page
 		crossroads.parse("shares");
 
-		//then handel the data on the page
-		if (cancel) {
-			cancel();
-		}
-		var currentDbName = "shared_lists_" + username;
+		currentUsername = username;
+
 		//fixme: remove destroy when not using demo data all the time
 		//anymore.
-		//fixme: handle sync at a more global place so share.js can set
-		//it into motion too?
-		PouchDB.destroy(currentDbName, function () {
-			sharesDb = new PouchDB(currentDbName);
-			cancel = sync(
-				sharesDb,
-				COUCHDB_HOST + "/" + currentDbName,
-				function () {
-					updateView(username);
-				},
-				whenComplete
-			);
+		PouchDB.destroy(currentDbName(), function () {
+			sharesDb = new PouchDB(currentDbName());
+			sync.start(currentDbName());
+			sync.errorsFor(currentDbName()).handle(onSyncError);
+			cancelChanges = sync.onChangesFor(currentDbName(), updateView);
 		});
+	});
+	sharesRoute.switched.add(function () {
+		if (currentUsername) {
+			sync.stop(currentDbName());
+			sync.errorsFor(currentDbName()).unhandle(onSyncError);
+			cancelChanges();
+		}
+		currentUsername = undefined;
 	});
 }());

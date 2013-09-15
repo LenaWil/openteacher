@@ -111,7 +111,7 @@ var PouchDBext = (function () {
 				options.userCtx = {
 					db: resp.db_name,
 					name: null,
-					roles: []
+					roles: ["_admin"]
 				};
 				callback(options);
 			});

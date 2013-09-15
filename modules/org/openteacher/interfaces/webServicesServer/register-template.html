@@ -49,15 +49,15 @@
 				color: #ff0000;
 			}
 		</style>
+		<script type='text/javascript'>
+			var focus = function () {
+				document.getElementById("focusfield").focus();
+			};
+			var cancel = function () {
+				document.location = "{{ redirect }}?status=cancel";
+			};
+		</script>
 	</head>
-	<script>
-		var focus = function () {
-			document.getElementById("focusfield").focus();
-		};
-		var cancel = function () {
-			document.location = "{{ redirect }}?status=cancel";
-		};
-	</script>
 	<body onload='focus();'>
 		<div id='page'>
 			<h1>{{ _("OpenTeacher Web") }}</h1>
@@ -93,8 +93,11 @@
 						<td>
 						</td>
 						<td>
-							<input type='submit' value='{{ _("Sign up!") }}' />
-							<input type='button' onclick='cancel();' value='{{ _("Cancel") }}'>
+							{# Setting variables because otherwise xgettext doesn't detect them. #}
+							{% set sign_up = _("Sign up!") %}
+							{% set cancel = _("Cancel") %}
+							<input type='submit' value='{{ sign_up }}' />
+							<input type='button' onclick='cancel();' value='{{ cancel }}'>
 						</td>
 					</tr>
 				</table>

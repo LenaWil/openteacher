@@ -1,0 +1,14 @@
+<!--(set_escape)-->
+None
+<!--(end)-->
+
+<div id='newsContent'>
+	<div id='feedHtml'></div>
+	<a class="twitter-timeline" data-dnt="true" href="https://twitter.com/openteacher"  data-widget-id="379263831429496832">Tweets by @openteacher</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+<script>
+// Loads the news page's contents
+$.getJSON("http://web.openteacher.org/services/news?callback=?", function (html) {
+	$("#feedHtml").append(html);
+})
+</script>

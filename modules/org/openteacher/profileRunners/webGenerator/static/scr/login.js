@@ -1,7 +1,7 @@
 var username, password;
 
 var loginPage = (function () {
-	languageChanged.handle(function () {
+	session.languageChanged.handle(function () {
 		//login part
 		$("#login-part .subheader").text(_("Log in"));
 
@@ -13,6 +13,9 @@ var loginPage = (function () {
 		$("#password-label").text(_("Password:"));
 		$("#login-button").val(_("Log in!"));
 
+		$("#login-anonymously-link").text(_("Login anonymously"));
+		$("#login-anonymously-link").attr("title", _("All data will only be available locally, and will be gone when your browser's local storage is cleared."));
+
 		//session box
 		$("#logout-link").text(_("Log out"));
 		$("#deregister-link").text(_("Unsubscribe"));
@@ -22,52 +25,46 @@ var loginPage = (function () {
 	});
 
 	function onLoginRequested() {
-		username = $("#username").val();
-		password = $("#password").val();
+		auth = {
+			username: $("#username").val(),
+			password: $("#password").val()
+		}
 		$("#login-form")[0].reset();
 
-		loggedIn(username, password, function () {
-			var xhr = new XMLHttpRequest();
-			xhr.withCredentials = true;
-			xhr.open("GET", COUCHDB_HOST + "/_session");
-			xhr.send();
-			hasher.setHash("lists");
-			$("#session-box").fadeIn();
+		sync.start("lists_" + auth.username, auth);
+		sync.start("shared_lists_" + auth.username, auth);
+		sync.start("tests_" + auth.username, auth);
+		sync.start("settings_" + auth.username, auth);
 
-			var cancel1 = sync(listsDb, COUCHDB_HOST + "/lists_" + username, listsChanged.send);
-			var cancel2 = sync(sharedListsDb, COUCHDB_HOST + "/shared_lists_" + username, sharedListsChanged.send);
-			var cancel3 = sync(testsDb, COUCHDB_HOST + "tests_" + username, testsChanged.send);
-			var cancel4 = sync(settingsDb, COUCHDB_HOST + "settings_" + username, settingsChanged.send);
-
-			cancelSync = function () {
-				cancel1();
-				cancel2();
-				cancel3();
-				cancel4();
+		session.userDbs = {}
+		session.onUserDbChanges = {}
+		$(["lists", "shared_lists", "tests", "settings"]).each(function (i, dbName) {
+			var fullName = dbName + "_" + auth.username;
+			session.userDbs[dbName] = new PouchDB(fullName);
+			session.onUserDbChanges[dbName] = function (callback) {
+				return sync.onChangesFor(fullName, callback);
 			};
 		});
+
+		session.username = auth.username;
+		session.password = auth.password
+		session.loggedIn = true;
+
+		hasher.setHash(session.next || "lists");
+		delete session.next;
+
+		$("#session-box").fadeIn();
+
 		return false;
 	}
 
-	function loggedIn(username, password, done) {
-		var xhr = new XMLHttpRequest();
-		xhr.withCredentials = true;
-		xhr.onreadystatechange = function () {
-			if (xhr.readyState === 4) {
-				done();
-			}
-		};
-		xhr.open("POST", COUCHDB_HOST + "/_session");
-		xhr.setRequestHeader("Content-Type", "application/json");
-		xhr.send(JSON.stringify({"name": username, "password": password}));
-	}
-
 	crossroads.addRoute("register", function () {
-		//fixme: replace C with actual language
 		var pn = document.location.pathname;
 		var emptyFilePath = pn.slice(0, pn.lastIndexOf("/")) + "/empty.html";
-		var redirect = document.location.origin + emptyFilePath;
-		var registerUrl = SERVICES_HOST + "/register?language=C&redirect=" + redirect;
+		var registerUrl = SERVICES_HOST + "/register?" + $.param({
+			redirect: document.location.origin + emptyFilePath,
+			language: (navigator.language || "").replace("_", "-") || "C"
+		});
 		$("#register-iframe")
 			.attr("src", registerUrl)
 			.slideDown("slow")
@@ -105,6 +102,11 @@ var loginPage = (function () {
 	});
 
 	crossroads.addRoute("deregister", function () {
+		if (!session.loggedIn) {
+			session.next = "deregister";
+			hasher.replaceHash("login");
+			return;
+		}
 		var sure = window.confirm(_("Are you sure you want to unsubscribe? This will remove your account and all data associated with it. Keep in mind that there's no recovery procedure!"));
 		if (sure) {
 			servicesRequest({
@@ -114,6 +116,8 @@ var loginPage = (function () {
 					crossroads.parse("logout");
 				}
 			});
+		} else {
+			history.back();
 		}
 	});
 
@@ -122,16 +126,27 @@ var loginPage = (function () {
 		$("#username").focus();
 	});
 
+	crossroads.addRoute("login-anonymously", function () {
+		$("#username").val("anonymous"),
+		$("#password").val("anonymous");
+		onLoginRequested();
+	});
+
 	crossroads.addRoute("logout", function () {
 		$("#session-box").fadeOut();
-		hasher.replaceHash("login");
-		cancelSync();
 
-		var xhr = new XMLHttpRequest();
-		xhr.withCredentials = true;
-		xhr.open("DELETE", COUCHDB_HOST + "/_session");
-		xhr.setRequestHeader("Content-Type", "application/json");
-		xhr.send();
+		sync.stop("lists_" + session.username);
+		sync.stop("shared_lists_" + session.username);
+		sync.stop("tests_" + session.username);
+		sync.stop("settings_" + session.username);
+
+		delete session.username;
+		delete session.password;
+		delete session.userDbs;
+		delete session.onUserDbChanges;
+		session.loggedIn = false;
+
+		hasher.replaceHash("login");
 	});
 
 	$(function () {

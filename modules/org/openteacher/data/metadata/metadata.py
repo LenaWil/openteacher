@@ -74,6 +74,7 @@ class MetadataModule(object):
 			"documentationUrl": _("http://openteacher.org/documentation.html"),
 			"updatesUrl": "http://openteacher.org/updates/updates.json",
 			"updatesSignatureUrl": "http://openteacher.org/updates/updates.json.asc",
+			"newsFeedUrl": "http://feeds.launchpad.net/openteacher/announcements.atom",
 			"iconPath": self._mm.resourcePath("openteacher.png"),
 			"licenseIntro": open(self._mm.resourcePath("license_intro.txt")).read(),
 			"license": open(self._mm.resourcePath("license.txt")).read(),

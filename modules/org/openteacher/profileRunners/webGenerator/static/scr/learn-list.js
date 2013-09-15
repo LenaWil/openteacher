@@ -1,12 +1,12 @@
 var learnPage = (function () {
 	var lessonType, currentList;
 
-	languageChanged.handle(function () {
+	session.languageChanged.handle(function () {
 		$("#question-label-label").text(_("Question:"));
 		$("#check-button").val(_("Check!"));
 		$("#skip-button").val(_("Skip"));
 		$("#correct-anyway-button").val(_("Correct anyway"));
-		$("#back-from-learn-page").text(_("Back to the lists page"));
+		$("#back-from-learn-page").text(_("Back"));
 	});
 
 	var controller = new logic.InputTypingController();
@@ -28,7 +28,7 @@ var learnPage = (function () {
 		} else {
 			var doc = currentList.tests[0];
 			doc.listId = currentList._id;
-			PouchDBext.withValidation.post(testsDb, doc, callback);
+			PouchDBext.withValidation.post(session.userDbs.tests, doc, callback);
 		}
 	}
 
@@ -46,7 +46,7 @@ var learnPage = (function () {
 	$(function () {
 		$("#back-from-learn-page").click(function () {
 			lessonDone(function () {
-				hasher.setHash("lists");
+				history.back();
 			});
 		});
 
@@ -102,8 +102,13 @@ var learnPage = (function () {
 		$("#learn-answer-input").keyup(controller.userIsTyping);
 	});
 
-	var route = crossroads.addRoute("lists/{id}/learn", function (id) {
-		listsDb.get(id, function (err, list) {
+	crossroads.addRoute("lists/{id}/learn", function (id) {
+		if (!session.loggedIn) {
+			session.next = "lists/" + id + "/learn";
+			hasher.replaceHash("login");
+			return;
+		}
+		session.userDbs.lists.get(id, function (err, list) {
 			currentList = list;
 			indexes = [];
 			for (i = 0; i < list.items.length; i += 1) {

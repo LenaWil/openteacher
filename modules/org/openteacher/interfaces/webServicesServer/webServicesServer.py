@@ -30,6 +30,7 @@ class WebServicesServerModule(object):
 		self.requires = (
 			self._mm.mods(type="webDatabase"),
 			self._mm.mods(type="translator"),
+			self._mm.mods(type="metadata"),
 		)
 		self.uses = (
 			self._mm.mods(type="load"),
@@ -54,6 +55,7 @@ class WebServicesServerModule(object):
 			return
 
 		self.app.config["REGISTER_TEMPLATE_PATH"] = self._mm.resourcePath("register-template.html")
+		self.app.config["NEWS_TEMPLATE_PATH"] = self._mm.resourcePath("news-template.html")
 
 		modules = next(iter(self._mm.mods(type="modules")))
 		self.app.config["TRANSLATIONS_DIR"] = self._mm.resourcePath("translations")
@@ -66,6 +68,7 @@ class WebServicesServerModule(object):
 		self._server.createWebDatabase = modules.default("active", type="webDatabase").createWebDatabase
 		self._server.loaders = modules.sort("active", type="load")
 		self._server.savers = modules.sort("active", type="save")
+		self._server.metadata = modules.default("active", type="metadata").metadata
 
 		self._server.initialize_endpoints()
 

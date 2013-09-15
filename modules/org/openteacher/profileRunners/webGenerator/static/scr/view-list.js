@@ -1,4 +1,6 @@
 var viewPage = (function () {
+	var cancelChanges;
+
 	function retranslate() {
 		$("#list-part .subheader").text(_("List"));
 		$("#title-label").text(_("Title:"));
@@ -32,7 +34,7 @@ var viewPage = (function () {
 		//TRANSLATORS: value is unknown.
 		$(".unknown").text(_("-"));
 	}
-	languageChanged.handle(retranslate);
+	session.languageChanged.handle(retranslate);
 
 	function loadTests(id, opts, callback) {
 		if (typeof opts === "function") {
@@ -41,7 +43,7 @@ var viewPage = (function () {
 		}
 		opts.startkey = [id];
 		opts.endkey = [id, {}];
-		testsDb.query("tests/by_list_id", opts, callback);
+		session.userDbs.tests.query("tests/by_list_id", opts, callback);
 	}
 
 	function addRow(item) {
@@ -94,7 +96,7 @@ var viewPage = (function () {
 		var page = $("#view-page");
 		var id = page.data("id");
 		var rev = page.data("rev");
-		listsDb.get(id, {rev: rev}, function (err, resp) {
+		session.userDbs.lists.get(id, {rev: rev}, function (err, resp) {
 			toList(function (list) {
 				//JSON.stringify isn't meant for this, but it seems to
 				//work.
@@ -113,7 +115,7 @@ var viewPage = (function () {
 		var id = page.data("id");
 		var rev = page.data("rev");
 
-		listsDb.get(id, function (err, doc) {
+		session.userDbs.lists.get(id, function (err, doc) {
 			//supplement the already existing doc with the saved values.
 			doc._rev = rev;
 			doc.title = $("#title").val();
@@ -165,7 +167,7 @@ var viewPage = (function () {
 
 	function onSaveList() {
 		toList(function (list) {
-			PouchDBext.withValidation.put(listsDb, list, function (err, resp) {
+			PouchDBext.withValidation.put(session.userDbs.lists, list, function (err, resp) {
 				if (err === null) {
 					$("#save-conflict").slideUp();
 					$("#save-forbidden").slideUp();
@@ -183,7 +185,7 @@ var viewPage = (function () {
 
 				//query the db to get the latest rev (on success it's in
 				//the resp too, but not on err.)
-				listsDb.get(list._id, function (err, resp) {
+				session.userDbs.lists.get(list._id, function (err, resp) {
 					//set the new rev to the page, so it can be saved again
 					//without conflicts.
 					$("#view-page").data("rev", resp._rev);
@@ -200,7 +202,7 @@ var viewPage = (function () {
 
 	function onPrintList() {
 		var id = $("#view-page").data("id");
-		PouchDBext.show(listsDb, "lists/print/" + id, function (err, resp) {
+		PouchDBext.show(session.userDbs.lists, "lists/print/" + id, function (err, resp) {
 			var frame = $("#print-frame")[0];
 			var doc = frame.contentDocument;
 			doc.open();
@@ -255,7 +257,7 @@ var viewPage = (function () {
 	}
 
 	function onSharedListsChange(change) {
-		sharedListsDb.query("shares/share_names", {group: true}, function (err, resp) {
+		session.userDbs.shared_lists.query("shares/share_names", {group: true}, function (err, resp) {
 			var shareNames = [];
 			for (var i = 0; i < resp.rows.length; i += 1) {
 				shareNames.push(resp.rows[i].key);
@@ -288,12 +290,20 @@ var viewPage = (function () {
 
 		$("#tests").on("change", ".finished-checkbox", onFinishedCheckboxChange);
 		$("#tests").on("focus", ".finished-checkbox", onFinishedCheckboxFocus);
-
-		sharedListsChanged.handle(onSharedListsChange);
 	});
 
-	var route = crossroads.addRoute("lists/{id}/download");
-	route.matched.add(function (id) {
+	var downloadRoute = crossroads.addRoute("lists/{id}/download");
+	var firstTimeDownloadRoute = true;
+	downloadRoute.matched.add(function (id) {
+		var url = "lists/" + id + "/download";
+		if (notFoundIfNotLoggedIn(url) === 404) {
+			return;
+		}
+		if (firstTimeDownloadRoute) {
+			crossroads.parse("lists/" + id + "/view");
+			firstTimeDownloadRoute = false;
+			crossroads.parse(url);
+		}
 		$("#download-part").slideDown();
 
 		servicesRequest({
@@ -316,11 +326,18 @@ var viewPage = (function () {
 			},
 		});
 	});
-	route.switched.add(function () {
-		$("#download-part").slideUp();
+	downloadRoute.switched.add(function () {
+		if (!firstTimeDownloadRoute) {
+			$("#download-part").slideUp();
+			firstTimeDownloadRoute = true;
+		}
 	});
 
 	crossroads.addRoute("lists/{id}/download/{extension}", 	function (id, ext) {
+		if (notFoundIfNotLoggedIn("lists/" + id + "/download/" + ext) === 404) {
+			return;
+		}
+		crossroads.parse("lists/" + id + "/view");
 		toList(function (list) {
 			loadTests(id, function (err, resp) {
 				list.tests = resp.rows.map(function (row) {
@@ -330,8 +347,8 @@ var viewPage = (function () {
 					.attr("action", SERVICES_HOST + "/save")
 					.attr("method", "POST")
 					.attr("target", "download-frame")
-					.append("<input name='username' value='" + username + "' />")
-					.append("<input name='password' value='" + password + "' />")
+					.append("<input name='username' value='" + session.username + "' />")
+					.append("<input name='password' value='" + session.password + "' />")
 					.append("<input name='list' value='" + JSON.stringify(list) + "' />")
 					.append("<input name='filename' value='" + list.title + ext + "' />")
 					.appendTo("body")
@@ -341,8 +358,27 @@ var viewPage = (function () {
 		});
 	});
 
-	crossroads.addRoute("lists/{id}/view", function (id) {
-		listsDb.get(id, function (err, resp) {
+	function notFoundIfNotLoggedIn(nextUrl) {
+		if (!session.loggedIn) {
+			session.next = nextUrl;
+			hasher.replaceHash("login");
+			return 404;
+		}
+	}
+
+	viewRoute = crossroads.addRoute("lists/{id}/view")
+	viewRoute.matched.add(function (id) {
+		if (notFoundIfNotLoggedIn("lists/" + id + "/view") === 404) {
+			return;
+		}
+		cancelChanges = session.onUserDbChanges.shared_lists(onSharedListsChange);
+
+		session.userDbs.lists.get(id, function (err, resp) {
+			if (err) {
+				//trigger 404 page.
+				viewRoute.switched.dispatch();
+				crossroads.bypassed.dispatch();
+			}
 			$("#title").val(resp.title);
 			$("#shares").val(resp.shares.join(", "));
 			$("#question-lang").val(resp.questionLanguage || "");
@@ -359,5 +395,10 @@ var viewPage = (function () {
 			$("#tests-part").hide();
 			loadTests(id, {descending: true}, testsLoaded);
 		});
+	});
+	viewRoute.switched.add(function () {
+		if (session.loggedIn) {
+			cancelChanges();
+		}
 	});
 }());

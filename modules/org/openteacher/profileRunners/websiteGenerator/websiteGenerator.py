@@ -363,7 +363,7 @@ class WebsiteGeneratorModule(object):
 		self._langDir = os.path.join(self._path, self._langCode)
 		os.mkdir(self._langDir)
 
-		templates = ["about.html", "download.html", "documentation.html", "index.html", "contribute.html"]
+		templates = ["about.html", "news.html", "download.html", "documentation.html", "index.html", "contribute.html"]
 		for pageName in templates:
 			self._generatePage(pageName)
 
@@ -421,8 +421,12 @@ class WebsiteGeneratorModule(object):
 		   disk
 
 		"""
+		#write content file (used by ajax)
+		with open(os.path.join(self._langDir, os.path.splitext(pageName)[0] + ".contentonly.html"), "w") as f:
+			f.write(content.encode("UTF-8"))
 		page = self._wrapContent(pageName, content)
 
+		#write html file (used on first page load)
 		with open(os.path.join(self._langDir, pageName), "w") as f:
 			f.write(page.encode("UTF-8"))
 
