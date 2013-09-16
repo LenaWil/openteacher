@@ -32,13 +32,24 @@ class DummyLesson(object):
 		self.resources = {}
 
 #utils
-@app.before_request
-def before_request():
-	flask.g.couch = createWebDatabase(
-		app.config["COUCHDB_HOST"],
-		app.config["COUCHDB_ADMIN_USERNAME"],
-		app.config["COUCHDB_ADMIN_PASSWORD"],
-	)
+def get_couch():
+	try:
+		return flask.g.couch
+	except AttributeError:
+		flask.g.couch = createWebDatabase(
+			app.config["COUCHDB_HOST"],
+			app.config["COUCHDB_ADMIN_USERNAME"],
+			app.config["COUCHDB_ADMIN_PASSWORD"],
+		)
+		return get_couch()
+
+feed = {}
+def get_feed():
+	last_updated = feed.get("last_update", datetime.datetime.min)
+	if datetime.datetime.now() - last_updated > datetime.timedelta(minutes=30):
+		feed["data"] = feedparser.parse(metadata["newsFeedUrl"])
+		feed["last_update"] = datetime.datetime.now()
+	return feed["data"]
 
 def requires_auth(f):
 	def auth_err(msg):
@@ -56,7 +67,7 @@ def requires_auth(f):
 			}
 		if not auth:
 			return auth_err("authentication_required")
-		if not flask.g.couch.check_auth(auth["username"], auth["password"]):
+		if not get_couch().check_auth(auth["username"], auth["password"]):
 			return auth_err("wrong_username_or_password")
 		return f(*args, **kwargs)
 	return decorated
@@ -182,9 +193,8 @@ def initialize_endpoints():
 		def niceTime(struct):
 			obj = datetime.datetime(*struct[:6])
 			return obj.strftime("%H:%M:%S at %B %d, %Y")
-		feed = feedparser.parse(metadata["newsFeedUrl"])
 		with open(app.config["NEWS_TEMPLATE_PATH"]) as f:
-			return flask.render_template_string(f.read(), feed=feed, niceTime=niceTime)
+			return flask.render_template_string(f.read(), feed=get_feed(), niceTime=niceTime)
 
 	@app.route("/register")
 	def register():
@@ -240,7 +250,7 @@ def initialize_endpoints():
 		username = flask.request.form["username"]
 		password = flask.request.form["password"]
 		try:
-			flask.g.couch.new_user(username, password)
+			get_couch().new_user(username, password)
 		except ValueError, e:
 			return error(str(e))
 
@@ -252,7 +262,7 @@ def initialize_endpoints():
 	def deregister():
 		auth = flask.request.authorization
 		try:
-			flask.g.couch.delete_user(auth.username, auth.password)
+			get_couch().delete_user(auth.username, auth.password)
 		except ValueError, e:
 			return jsonErr(str(e))
 		return jsonify({"result": "ok"})

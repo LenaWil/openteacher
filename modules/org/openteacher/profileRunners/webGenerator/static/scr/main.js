@@ -45,7 +45,8 @@ $(function () {
 	});
 
 	function translate() {
-		lang = navigator.language;
+		//browserLanguage for IE
+		lang = navigator.language || navigator.browserLanguage;
 		logic.translator(translationIndex, lang, function (tr) {
 			_ = tr;
 			session.languageChanged.send();
