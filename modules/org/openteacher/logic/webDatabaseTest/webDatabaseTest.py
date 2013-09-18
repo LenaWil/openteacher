@@ -40,8 +40,6 @@ class TestCase(unittest.TestCase):
 			)
 
 			#set up
-			assert couch.req("get", "/").json()["version"] >= "1.2.0"
-
 			TEST_USER = "test"
 			TEST_PASSW = "hsdfjkh3$4"
 

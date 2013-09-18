@@ -338,9 +338,9 @@ var viewPage = (function () {
 			return;
 		}
 		crossroads.parse("lists/" + id + "/view");
-		toList(function (list) {
-			loadTests(id, function (err, resp) {
-				list.tests = resp.rows.map(function (row) {
+		session.userDbs.lists.get($("#view-page").data("id"), function (err, list) {
+			loadTests(id, function (err, tests) {
+				list.tests = tests.rows.map(function (row) {
 					return row.value;
 				});
 				$("<form class='invisible'></form>")
@@ -370,6 +370,11 @@ var viewPage = (function () {
 	viewRoute.matched.add(function (id) {
 		if (notFoundIfNotLoggedIn("lists/" + id + "/view") === 404) {
 			return;
+		}
+		if (session.username === "anonymous") {
+			$("#download-list").hide();
+		} else {
+			$("#download-list").show();
 		}
 		cancelChanges = session.onUserDbChanges.shared_lists(onSharedListsChange);
 

@@ -45,7 +45,7 @@ var overviewPage = (function () {
 			title: _("New list")
 		});
 		PouchDBext.withValidation.post(session.userDbs.lists, list, function (err, resp) {
-			hasher.setHash("lists/" + resp.id);
+			hasher.setHash("lists/" + resp.id + "/view");
 		});
 	}
 
@@ -135,6 +135,11 @@ var overviewPage = (function () {
 			session.next = "lists";
 			hasher.replaceHash("login");
 			return;
+		}
+		if (session.username === "anonymous") {
+			$("#load-list-from-computer").hide();
+		} else {
+			$("#load-list-from-computer").show();
 		}
 		cancelChanges = session.onUserDbChanges.lists(onListsChange);
 		show("#lists-page");

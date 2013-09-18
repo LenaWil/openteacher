@@ -1,6 +1,22 @@
 <!DOCTYPE html>
-<!--FIXME: include unsaved changes when printing? Or ask user?
-Or be consistent and also exclude unsaved changes when saving?-->
+<!--
+TODO: Fix browser/platform compatibility. At least should be possible:
+ * Recent firefox
+ * Recent Chrome
+ * Recent Safari
+ * Recent Opera
+ * IE 10
+
+WISHLIST:
+ * Add access to shared lists when logged in
+ * Start using the settings db. Most important: language (changing the
+   language on your desktop and having your phone update its web page
+   language the moment you click the language, how cool is that?)
+ * In mind practising (and more?)
+ * Making OT mobile work with PouchDB (so it can share the same data
+   backend.)
+ * OT Desktop integration
+-->
 <html>
 	<head>
 		<meta charset='UTF-8' />
@@ -112,7 +128,7 @@ Or be consistent and also exclude unsaved changes when saving?-->
 			<div id='header-inner'>
 				<img id='logo' src='img/logo' />
 				<div class='smaller' id='session-box'>
-					<a href='#/deregister' id='deregister-link'></a> |
+					<span id='deregister-part'><a href='#/deregister' id='deregister-link'></a> |</span>
 					<a href='#/logout' id='logout-link'></a>
 				</div>
 				<h1 id='header-title'></h1>
@@ -126,8 +142,9 @@ Or be consistent and also exclude unsaved changes when saving?-->
 			</div>
 			<div class='page' id='license-and-source-page'>
 				<h2 class='subheader'></h2>
+				<button class='back-from-license-and-source'></button>
 				<pre id='license-and-source-info'></pre>
-				<button id='back-from-license-and-source'></button>
+				<button class='back-from-license-and-source'></button>
 			</div>
 			<div class='page' id='login-page'>
 				<div id='login-part'>
@@ -313,6 +330,7 @@ Or be consistent and also exclude unsaved changes when saving?-->
 		</div>
 		<div id='footer'>
 			<div id='footer-inner'>
+				<span style='color: red' class='smaller'>This is beta software - you data <strong>isn't</strong> safe with us ;)</span> |
 				<a href='#/license-and-source' class='smaller lighter' id='license-and-source-link'></a>
 			</div>
 		</div>

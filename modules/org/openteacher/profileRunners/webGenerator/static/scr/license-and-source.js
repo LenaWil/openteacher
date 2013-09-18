@@ -1,9 +1,9 @@
 session.languageChanged.handle(function () {
 	$("#license-and-source-page .subheader").text(_("License information and source code"));
-	$("#back-from-license-and-source").text(_("Back"));
+	$(".back-from-license-and-source").text(_("Back"));
 })
 $(function () {
-	$("#back-from-license-and-source").click(function () {
+	$(".back-from-license-and-source").click(function () {
 		history.back();
 	});
 })

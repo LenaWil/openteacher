@@ -24,6 +24,11 @@ var loginPage = (function () {
 		$("#share-part .subheader").text(_("Or view a shared list"));
 	});
 
+	function redirectAfterLogin() {
+		hasher.setHash(session.next || "lists");
+		delete session.next;
+	}
+
 	function onLoginRequested() {
 		auth = {
 			username: $("#username").val(),
@@ -31,6 +36,7 @@ var loginPage = (function () {
 		}
 		$("#login-form")[0].reset();
 
+		//FIXME: handle login failing.
 		sync.start("lists_" + auth.username, auth);
 		sync.start("shared_lists_" + auth.username, auth);
 		sync.start("tests_" + auth.username, auth);
@@ -50,10 +56,14 @@ var loginPage = (function () {
 		session.password = auth.password
 		session.loggedIn = true;
 
-		hasher.setHash(session.next || "lists");
-		delete session.next;
+		redirectAfterLogin();
 
 		$("#session-box").fadeIn();
+		if (session.username === "anonymous") {
+			$("#deregister-part").hide();
+		} else {
+			$("#deregister-part").show();
+		}
 
 		return false;
 	}
@@ -122,6 +132,10 @@ var loginPage = (function () {
 	});
 
 	crossroads.addRoute("login", function () {
+		if (session.loggedIn) {
+			redirectAfterLogin();
+			return;
+		}
 		show("#login-page");
 		$("#username").focus();
 	});
