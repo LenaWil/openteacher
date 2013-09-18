@@ -28,7 +28,7 @@ class TestCase(unittest.TestCase):
 		disabledTests = allTests - enabledTests
 		self.assertEqual(disabledTests, set(), msg=self._buildMessage(disabledTests))
 
-	def testIfAllTestSuitesAreEnaled(self):
+	def testIfAllTestSuitesAreEnabled(self):
 		enabledTestSuites = set(self._mm.mods("active", type="testSuite"))
 		allTestSuites = set(self._mm.mods(type="testSuite"))
 

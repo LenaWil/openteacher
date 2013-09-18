@@ -119,6 +119,8 @@ class RosettaPrioritiesUpdaterModule(object):
 			priority = 1
 			#add the priorities of all mods depending on this one
 			for otherMod in self._mm.mods:
+				if mod == otherMod:
+					continue
 				for selector in getattr(otherMod, "requires", []):
 					if mod in selector:
 						priority += self._modPriority(otherMod)

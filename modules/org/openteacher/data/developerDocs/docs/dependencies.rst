@@ -48,7 +48,6 @@ Dependencies for developing OpenTeacher
 * cython
 * gettext
 * python-babel
-* python-cherrypy3
 * python-docutils
 * python-faulthandler
 * python-flask

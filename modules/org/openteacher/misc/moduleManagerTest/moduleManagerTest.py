@@ -64,14 +64,18 @@ class TestCase(unittest.TestCase):
 		enabledMods = []
 
 		for selector in getattr(mod, "requires", []):
-			success, enabledMods = self._enableDependencySelector(selector, minimalDependencies, enabledMods)
+			#remove recursiveness
+			selected = set(selector) - set([mod])
+			success, enabledMods = self._enableDependencySelector(selected, minimalDependencies, enabledMods)
 			if not success:
 				#fast exit
 				return False, enabledMods
 
 		if not minimalDependencies:
 			for selector in getattr(mod, "uses", []):
-				success, enabledMods = self._enableDependencySelector(selector, minimalDependencies, enabledMods)
+				#remove recursiveness
+				selected = set(selector) - set([mod])
+				success, enabledMods = self._enableDependencySelector(selected, minimalDependencies, enabledMods)
 		return True, enabledMods
 
 	def _enableDependencySelector(self, selector, minimalDependencies, enabledMods):
@@ -84,7 +88,8 @@ class TestCase(unittest.TestCase):
 				if minimalDependencies:
 					#dependencies met for this selector, stop trying
 					break
-		#dependencies couldn't be satisfied
+		#if reaching the end of the loop, dependencies couldn't be
+		#satisfied
 		return success, enabledMods
 
 	def _disableDependencyTree(self, mods):
@@ -156,7 +161,6 @@ class TestModule(object):
 
 	def enable(self):
 		import sys
-		sys.setrecursionlimit(100)
 		self.TestCase = TestCase
 		self.TestCase._masterModuleManager = self._mm
 		self.active = True
