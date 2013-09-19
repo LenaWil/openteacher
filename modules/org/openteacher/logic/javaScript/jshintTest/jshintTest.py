@@ -34,6 +34,10 @@ class TestCase(unittest.TestCase):
 					"jsdiff" in path or
 					"admin_files" in path or
 					"pouchdb" in path or
+					"bCrypt" in path or
+					"signals.js" in path or
+					"crossroads.js" in path or
+					"hasher.js" in path or
 					os.path.join("javaScript", "libraries") in path or
 					"templ" in path #templates contain stuff that isn't valid JS.
 				)

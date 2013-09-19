@@ -33,7 +33,7 @@ var loginPage = (function () {
 		auth = {
 			username: $("#username").val(),
 			password: $("#password").val()
-		}
+		};
 		$("#login-form")[0].reset();
 
 		//FIXME: handle login failing.
@@ -42,8 +42,8 @@ var loginPage = (function () {
 		sync.start("tests_" + auth.username, auth);
 		sync.start("settings_" + auth.username, auth);
 
-		session.userDbs = {}
-		session.onUserDbChanges = {}
+		session.userDbs = {};
+		session.onUserDbChanges = {};
 		$(["lists", "shared_lists", "tests", "settings"]).each(function (i, dbName) {
 			var fullName = dbName + "_" + auth.username;
 			session.userDbs[dbName] = new PouchDB(fullName);
@@ -53,7 +53,7 @@ var loginPage = (function () {
 		});
 
 		session.username = auth.username;
-		session.password = auth.password
+		session.password = auth.password;
 		session.loggedIn = true;
 
 		redirectAfterLogin();
@@ -141,7 +141,7 @@ var loginPage = (function () {
 	});
 
 	crossroads.addRoute("login-anonymously", function () {
-		$("#username").val("anonymous"),
+		$("#username").val("anonymous");
 		$("#password").val("anonymous");
 		onLoginRequested();
 	});

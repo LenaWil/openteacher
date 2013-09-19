@@ -10,7 +10,7 @@ var sync = (function () {
 				count: 0,
 				changes: new logic.Event(),
 				errors: new logic.Event()
-			}
+			};
 		}
 	}
 
@@ -32,7 +32,7 @@ var sync = (function () {
 				};
 				var db = new PouchDB(dbName);
 				var remoteName = COUCHDB_HOST + "/" + dbName;
-				var remoteDb = new PouchDB(remoteName, {auth: auth})
+				var remoteDb = new PouchDB(remoteName, {auth: auth});
 				var to = db.replicate.to(remoteDb, opts);
 				var from = db.replicate.from(remoteDb, opts);
 
@@ -40,7 +40,7 @@ var sync = (function () {
 					//both ways
 					to.cancel();
 					from.cancel();
-				}
+				};
 			}
 		},
 		stop: function (dbName) {
@@ -59,7 +59,7 @@ var sync = (function () {
 
 			return syncs[dbName].errors;
 		}
-	}
+	};
 	return api;
 }());
 

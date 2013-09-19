@@ -18,7 +18,7 @@ var learnPage = (function () {
 	function lessonDone(callback) {
 		if (typeof callback === "undefined") {
 			callback = function () {
-				hasher.setHash("lists/" + currentList._id + "/view")
+				hasher.setHash("lists/" + currentList._id + "/view");
 			};
 		}
 		if (typeof currentList.tests === "undefined") {

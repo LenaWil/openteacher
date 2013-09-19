@@ -490,6 +490,7 @@ class WebsiteGeneratorModule(object):
 		self.active = False
 
 		del self._modules
+		del self._iconPath
 		del self._hue
 		del self._lineColor
 

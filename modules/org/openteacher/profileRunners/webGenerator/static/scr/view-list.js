@@ -333,7 +333,7 @@ var viewPage = (function () {
 		}
 	});
 
-	crossroads.addRoute("lists/{id}/download/{extension}", 	function (id, ext) {
+	crossroads.addRoute("lists/{id}/download/{extension}", function (id, ext) {
 		if (notFoundIfNotLoggedIn("lists/" + id + "/download/" + ext) === 404) {
 			return;
 		}
@@ -366,7 +366,7 @@ var viewPage = (function () {
 		}
 	}
 
-	viewRoute = crossroads.addRoute("lists/{id}/view")
+	viewRoute = crossroads.addRoute("lists/{id}/view");
 	viewRoute.matched.add(function (id) {
 		if (notFoundIfNotLoggedIn("lists/" + id + "/view") === 404) {
 			return;

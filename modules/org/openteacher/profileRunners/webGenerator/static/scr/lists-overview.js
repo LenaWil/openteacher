@@ -120,7 +120,7 @@ var overviewPage = (function () {
 		$("#remove-selected").click(onRemoveSelected);
 		$("#new-list").click(onNewList);
 		$("#load-list-from-computer").click(function () {
-			hasher.setHash("lists/upload-from-computer")
+			hasher.setHash("lists/upload-from-computer");
 		});
 
 		$("#upload-form").submit(onUploadSubmit);
@@ -129,7 +129,7 @@ var overviewPage = (function () {
 		});
 	});
 
-	var listsRoute = crossroads.addRoute("lists")
+	var listsRoute = crossroads.addRoute("lists");
 	listsRoute.matched.add(function () {
 		if (!session.loggedIn) {
 			session.next = "lists";
@@ -150,7 +150,7 @@ var overviewPage = (function () {
 		}
 	});
 
-	var uploadRoute = crossroads.addRoute("lists/upload-from-computer")
+	var uploadRoute = crossroads.addRoute("lists/upload-from-computer");
 	uploadRoute.matched.add(function () {
 		if (!session.loggedIn) {
 			session.next = "lists/upload-from-computer";

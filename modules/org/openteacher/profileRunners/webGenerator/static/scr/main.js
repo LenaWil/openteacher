@@ -31,7 +31,7 @@ var session = {
 	languageChanged: new logic.Event(),
 	languageChangeDone: new logic.Event(),
 	loggedIn: false
-}
+};
 
 $(function () {
 	//translation
@@ -68,8 +68,8 @@ $(function () {
 		if (!location.hash) {
 			//when there's no hash path to specify otherwise, go to the
 			//login page.
-			hasher.replaceHash("login")
-		};
+			hasher.replaceHash("login");
+		}
 		hasher.init();
-	})
+	});
 });

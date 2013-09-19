@@ -52,7 +52,7 @@ var sharePage = (function () {
 		}
 	}
 
-	var shareRoute = crossroads.addRoute("shares/{username}/{shareName}")
+	var shareRoute = crossroads.addRoute("shares/{username}/{shareName}");
 	shareRoute.matched.add(function (username, shareName) {
 		currentUsername = username;
 		currentShareName = shareName;
@@ -87,7 +87,7 @@ var sharePage = (function () {
 			hasher.replaceHash("login");
 			return;
 		}
-		var db = new PouchDB(currentDbName())
+		var db = new PouchDB(currentDbName());
 		db.get(docId, function (err, resp) {
 			if (resp) {
 				//make it act like a new doc. This way, we don't get
@@ -101,6 +101,6 @@ var sharePage = (function () {
 				//somehow the doc isn't found -> 404.
 				crossroads.bypassed.dispatch(url);
 			}
-		})
+		});
 	});
 }());
