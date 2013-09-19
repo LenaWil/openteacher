@@ -42,9 +42,8 @@ command while inside the newly created `openteacher` directory::
 	bzr pull
 
 When you have the source code, you can start OpenTeacher by running the
-following command inside the `openteacher` directory:
+following command inside the `openteacher` directory::
 
-..
 	python openteacher.py
 
 This command does require several dependencies, which are listed at the
