@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-09-19 11:35+0200\n"
+"POT-Creation-Date: 2013-09-19 20:53+0200\n"
 "PO-Revision-Date: 2013-07-21 09:47+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
@@ -683,3 +683,14 @@ msgstr ""
 "可以只安裝 OpenTeacher 的 ArchLinux (.pkg.tar.xz) package，可從下載區域取得。"
 "假如無法運作，請回報臭蟲到 <a href=\"http://www.launchpad.net/openteacher"
 "\">Launchpad</a> 或寄封 e-mail。"
+
+#: docsTemplates/faq.html:10
+msgid "How can I let OpenTeacher pronounce words/places?"
+msgstr ""
+
+#: docsTemplates/faq.html:11
+msgid ""
+"You can enable this in the settings. Click Edit > Settings, then select the "
+"Pronounciation tab. Then tick the box before 'Pronounce words' and/or "
+"'Pronounce places'."
+msgstr ""
