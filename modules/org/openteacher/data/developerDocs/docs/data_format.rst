@@ -2,8 +2,14 @@
 Data format
 ===========
 
+This page describes the data format as used internally in OpenTeacher.
+
 All data types are described in Python objects. (dicts, unicode strings,
 bools, datetime, lists, etc.)
+
+The OpenTeaching words, topography & media file formats (\*.otwd, \*ottp
+& \*.otmd) are pretty much the below described data formats serialized
+to JSON, saved inside a zip file.
 
 .. contents:: `Contents:`
 
