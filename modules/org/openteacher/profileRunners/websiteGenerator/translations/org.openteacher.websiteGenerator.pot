@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-09-07 12:16+0200\n"
+"POT-Creation-Date: 2013-09-19 11:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,11 +27,11 @@ msgstr ""
 
 #: templates/about.html:9
 msgid ""
-"OpenTeacher <strong>helps you learn</strong> what you need to know for you "
+"OpenTeacher <strong>helps you learn</strong> what you need to know for your "
 "next test. OpenTeacher allows you to make use of a lesson type where you are "
-"being teached in small parts. Once you know one part, OpenTeacher moves on "
-"to the next. This should help you remember large doses of information "
-"without being overwhelmed by it's size."
+"being taught in small parts. Once you know one part, OpenTeacher moves on to "
+"the next. This should help you remember large doses of information without "
+"being overwhelmed by its size."
 msgstr ""
 
 #: templates/about.html:10
@@ -152,7 +152,7 @@ msgstr ""
 msgid "Python 2 source"
 msgstr ""
 
-#: templates/documentation.html:6 templates/base.html:54
+#: templates/documentation.html:6 templates/base.html:66
 msgid "Documentation"
 msgstr ""
 
@@ -262,7 +262,7 @@ msgstr ""
 msgid "Other systems and distro-specific packages"
 msgstr ""
 
-#: templates/contribute.html:6 templates/base.html:55
+#: templates/contribute.html:6 templates/base.html:67
 msgid "Contribute"
 msgstr ""
 
@@ -339,15 +339,19 @@ msgstr ""
 msgid "Free exam training software"
 msgstr ""
 
-#: templates/base.html:51
+#: templates/base.html:62
 msgid "Home"
 msgstr ""
 
-#: templates/base.html:52
+#: templates/base.html:63
+msgid "News"
+msgstr ""
+
+#: templates/base.html:64
 msgid "About"
 msgstr ""
 
-#: templates/base.html:53
+#: templates/base.html:65
 msgid "Download"
 msgstr ""
 

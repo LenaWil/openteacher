@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-09-07 12:15+0200\n"
+"POT-Creation-Date: 2013-09-19 11:35+0200\n"
 "PO-Revision-Date: 2013-09-04 07:15+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-09-08 04:50+0000\n"
 "X-Generator: Launchpad (build 16760)\n"
-"Language: ru\n"
 
 #: static/scr/learn-list.js:5
 msgid "Question:"
@@ -34,9 +34,9 @@ msgstr "Пропустить"
 msgid "Correct anyway"
 msgstr "Всё равно верно"
 
-#: static/scr/learn-list.js:9 static/scr/view-list.js:18
-msgid "Back to the lists page"
-msgstr "Назад к спискам"
+#: static/scr/learn-list.js:9
+msgid "Back"
+msgstr ""
 
 #: static/scr/lists-overview.js:5
 msgid "Lists overview"
@@ -58,7 +58,7 @@ msgstr ""
 msgid "View"
 msgstr "Обзор"
 
-#: static/scr/lists-overview.js:10 static/scr/view-list.js:22
+#: static/scr/lists-overview.js:10 static/scr/view-list.js:24
 msgid "Teach me!"
 msgstr "Научи меня!"
 
@@ -85,11 +85,11 @@ msgid ""
 "Couldn't load file. Is the file type supported and the file not corrupted?"
 msgstr ""
 
-#: static/scr/lists-overview.js:44
+#: static/scr/lists-overview.js:45
 msgid "New list"
 msgstr "Новый список"
 
-#: static/scr/lists-overview.js:60
+#: static/scr/lists-overview.js:53
 msgid "Uploaded list"
 msgstr ""
 
@@ -121,127 +121,141 @@ msgstr "Пароль:"
 msgid "Log in!"
 msgstr "Войти!"
 
+#: static/scr/login.js:16
+msgid "Login anonymously"
+msgstr ""
+
 #: static/scr/login.js:17
+msgid ""
+"All data will only be available locally, and will be gone when your "
+"browser's local storage is cleared."
+msgstr ""
+
+#: static/scr/login.js:20
 msgid "Log out"
 msgstr ""
 
-#: static/scr/login.js:18
+#: static/scr/login.js:21
 msgid "Unsubscribe"
 msgstr ""
 
-#: static/scr/login.js:21
+#: static/scr/login.js:24
 msgid "Or view a shared list"
 msgstr ""
 
-#: static/scr/login.js:122
+#: static/scr/login.js:120
 msgid ""
 "Are you sure you want to unsubscribe? This will remove your account and all "
 "data associated with it. Keep in mind that there's no recovery procedure!"
 msgstr ""
 
-#: static/scr/main.js:22
+#: static/scr/main.js:39
 msgid "OpenTeacher Web"
 msgstr ""
 
-#: static/scr/main.js:27
+#: static/scr/main.js:44
 msgid "License information and source code"
 msgstr ""
 
-#: static/scr/view-list.js:3
+#: static/scr/view-list.js:5
 msgid "List"
 msgstr "Список"
 
-#: static/scr/view-list.js:4
+#: static/scr/view-list.js:6
 msgid "Title:"
 msgstr "Название:"
 
-#: static/scr/view-list.js:5
+#: static/scr/view-list.js:7
 msgid "Shares:"
 msgstr ""
 
-#: static/scr/view-list.js:6
+#: static/scr/view-list.js:8
 msgid "Currently existing shares:"
 msgstr ""
 
-#: static/scr/view-list.js:7
+#: static/scr/view-list.js:9
 msgid "Question language"
 msgstr ""
 
-#: static/scr/view-list.js:8
+#: static/scr/view-list.js:10
 msgid "Answer language"
 msgstr ""
 
-#: static/scr/view-list.js:9
+#: static/scr/view-list.js:11
 msgid "Questions"
 msgstr "Вопросы"
 
-#: static/scr/view-list.js:10
+#: static/scr/view-list.js:12
 msgid "Answers"
 msgstr "Ответы"
 
-#: static/scr/view-list.js:11
+#: static/scr/view-list.js:13
 msgid "Remove this item"
 msgstr ""
 
-#: static/scr/view-list.js:13
+#: static/scr/view-list.js:15
 msgid "Test results"
 msgstr "Результаты теста"
 
-#: static/scr/view-list.js:14
+#: static/scr/view-list.js:16
 msgid "Date"
 msgstr "Дата"
 
-#: static/scr/view-list.js:15
+#: static/scr/view-list.js:17
 msgid "Note"
 msgstr "Примечание"
 
-#: static/scr/view-list.js:16
+#: static/scr/view-list.js:18
 msgid "Completed"
 msgstr "Выполнено"
 
-#: static/scr/view-list.js:19
+#: static/scr/view-list.js:20
+msgid "Back to the lists page"
+msgstr "Назад к спискам"
+
+#: static/scr/view-list.js:21
 msgid "Save"
 msgstr "Сохранить"
 
-#: static/scr/view-list.js:20
+#: static/scr/view-list.js:22
 msgid "Print"
 msgstr ""
 
-#: static/scr/view-list.js:21
+#: static/scr/view-list.js:23
 msgid "Download"
 msgstr ""
 
-#: static/scr/view-list.js:24
+#: static/scr/view-list.js:26
 msgid "Saved the list succesfully."
 msgstr ""
 
-#: static/scr/view-list.js:25
+#: static/scr/view-list.js:27
 msgid ""
 "Can't save the document because it contains invalid content. Maybe you used "
 "unsafe HTML, or left fields empty that should not be empty?"
 msgstr ""
 
-#: static/scr/view-list.js:26
+#: static/scr/view-list.js:28
 msgid ""
 "Couldn't save the list, because it has been edited elsewhere in the "
 "meantime. You can either discard your changes, or save again (overwriting "
 "the changes made elsewhere)."
 msgstr ""
 
-#: static/scr/view-list.js:28
+#: static/scr/view-list.js:30
 msgid ""
 "Please choose the file you want to download from the options below. Not "
 "sure? Then download the file ending in '.otwd'."
 msgstr ""
 
-#: static/scr/view-list.js:29
+#: static/scr/view-list.js:31
 msgid "Close"
 msgstr ""
 
-#: static/scr/view-list.js:33
+#: static/scr/view-list.js:35
 msgid "-"
 msgstr "-"
 
-#: static/scr/view-list.js:143
+#: static/scr/view-list.js:105
 msgid "There are unsaved changes. Are you sure you want to leave this page?"
 msgstr ""

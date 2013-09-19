@@ -316,6 +316,8 @@ class WebsiteGeneratorModule(object):
 			(fromPath("ubulogo.png"), toPath("images/downloadbuttons/ubuntu-button")),
 			(fromPath("winlogo.png"), toPath("images/downloadbuttons/windows-button")),
 		])
+		#icon
+		shutil.copy(self._iconPath, toPath("images/openteacher-icon.png"))
 
 	def _generateHtml(self):
 		"""Generates all html files: first for US English and then for
@@ -478,6 +480,7 @@ class WebsiteGeneratorModule(object):
 		self._modules.default(type="execute").startRunning.handle(self.generateWebsite)
 
 		metadata = self._modules.default("active", type="metadata").metadata
+		self._iconPath = metadata["iconPath"]
 		self._hue = metadata["mainColorHue"]
 		self._lineColor = self._modules.default("active", type="backgroundImageGenerator").lineColor
 
