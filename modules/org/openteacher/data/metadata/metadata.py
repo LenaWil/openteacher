@@ -91,7 +91,7 @@ OpenTeacher {version} has the following features:
  - Viewing both recent and past results of tests with graphs
  - Smart question asking and interval training
  - Reverse rehearsal (the answer is asked, and you need to give the question)
- - Read support for more than 29 file formats; write support for over 14 file formats
+ - Read support for more than 30 file formats; write support for over 14 file formats
  - Learn typing with our Typing Tutor which adapts itself to your skills
  - Print your word lists, media items and topography maps
  - (Partly) available in Arabic, Brazilian Portuguese, Simplified Chinese,

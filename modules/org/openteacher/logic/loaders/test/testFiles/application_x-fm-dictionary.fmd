@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE freshmemory-dict>
+<dict version="1.0">
+    <fields>
+        <field>Question</field>
+        <field>Answer</field>
+        <field style="Example">Example</field>
+    </fields>
+    <packs>
+        <pack>
+            <qst>Question</qst>
+            <ans>Answer</ans>
+            <ans>Example</ans>
+        </pack>
+        <pack>
+            <qst>Answer</qst>
+            <ans>Question</ans>
+            <ans>Example</ans>
+        </pack>
+    </packs>
+    <entries>
+        <e>
+            <f>een</f>
+            <f>one</f>
+        </e>
+        <e>
+            <f>twee</f>
+            <f>two</f>
+            <f>een, twee, drie</f>
+        </e>
+        <e>
+            <f>drie</f>
+            <f>three</f>
+        </e>
+        <e/>
+    </entries>
+</dict>
