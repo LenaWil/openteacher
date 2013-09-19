@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-09-19 11:35+0200\n"
+"POT-Creation-Date: 2013-09-19 21:32+0200\n"
 "PO-Revision-Date: 2012-12-23 21:31+0000\n"
 "Last-Translator: Jakub Šnapka <snapka@seznam.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -102,37 +102,41 @@ msgstr "Nebyl vybrán žádný seznam. Zkuste to prosím znovu."
 msgid "The word list was imported from WRDS successfully."
 msgstr "Seznam slovíček byl úspěšně importován z WRDS."
 
-#: ui.py:73
+#: ui.py:78
 msgid "WRDS - login please:"
 msgstr "WRDS - přihlaste se prosím:"
 
-#: ui.py:76
+#: ui.py:81
 msgid "Email:"
 msgstr "Email:"
 
-#: ui.py:79
+#: ui.py:84
 msgid "Password:"
 msgstr "Heslo:"
 
-#: ui.py:82
+#: ui.py:86
+msgid "Click here for more information about WRDS and its registration page."
+msgstr ""
+
+#: ui.py:88
 msgid "Remember email address and password"
 msgstr "Zapamatovat email a heslo"
 
-#: ui.py:115
+#: ui.py:121
 msgid "WRDS - Please choose a list:"
 msgstr "WRDS - vyberte prosím seznam:"
 
-#: ui.py:142
+#: ui.py:148
 msgid "WRDS Share:"
 msgstr ""
 
 #. TRANSLATORS: please only translate the 'share-name' part here,
 #. TRANSLATORS: unless you have a good reason to do something
 #. TRANSLATORS: else, of course ;).
-#: ui.py:146
+#: ui.py:152
 msgid "share-name.wrts.nl"
 msgstr ""
 
-#: ui.py:147
+#: ui.py:153
 msgid "Get from share"
 msgstr ""

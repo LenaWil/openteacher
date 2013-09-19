@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-09-19 11:35+0200\n"
+"POT-Creation-Date: 2013-09-19 21:32+0200\n"
 "PO-Revision-Date: 2012-07-16 07:43+0000\n"
 "Last-Translator: El Achèche ANIS <elachecheanis@gmail.com>\n"
 "Language-Team: Arabic <ar@li.org>\n"
@@ -97,37 +97,41 @@ msgstr ""
 msgid "The word list was imported from WRDS successfully."
 msgstr ""
 
-#: ui.py:73
+#: ui.py:78
 msgid "WRDS - login please:"
 msgstr ""
 
-#: ui.py:76
+#: ui.py:81
 msgid "Email:"
 msgstr ""
 
-#: ui.py:79
+#: ui.py:84
 msgid "Password:"
 msgstr ""
 
-#: ui.py:82
+#: ui.py:86
+msgid "Click here for more information about WRDS and its registration page."
+msgstr ""
+
+#: ui.py:88
 msgid "Remember email address and password"
 msgstr ""
 
-#: ui.py:115
+#: ui.py:121
 msgid "WRDS - Please choose a list:"
 msgstr ""
 
-#: ui.py:142
+#: ui.py:148
 msgid "WRDS Share:"
 msgstr ""
 
 #. TRANSLATORS: please only translate the 'share-name' part here,
 #. TRANSLATORS: unless you have a good reason to do something
 #. TRANSLATORS: else, of course ;).
-#: ui.py:146
+#: ui.py:152
 msgid "share-name.wrts.nl"
 msgstr ""
 
-#: ui.py:147
+#: ui.py:153
 msgid "Get from share"
 msgstr ""

@@ -34,6 +34,10 @@ class LoginDialog(QtGui.QDialog):
 		if store:
 			self.saveCheckbox = QtGui.QCheckBox("", self)
 
+		self.registerLabel = QtGui.QLabel(self)
+		self.registerLabel.setWordWrap(True)
+		self.registerLabel.setOpenExternalLinks(True)
+
 		buttonBox = QtGui.QDialogButtonBox(
 			QtGui.QDialogButtonBox.Cancel | QtGui.QDialogButtonBox.Ok,
 			parent=self
@@ -50,6 +54,7 @@ class LoginDialog(QtGui.QDialog):
 		layout = QtGui.QVBoxLayout()
 		layout.addLayout(self.flayout)
 		layout.addStretch()
+		layout.addWidget(self.registerLabel)
 		layout.addWidget(buttonBox)
 
 		self.setLayout(layout)
@@ -78,6 +83,7 @@ class LoginDialog(QtGui.QDialog):
 		self.flayout.itemAt(1, QtGui.QFormLayout.LabelRole).widget().setText(
 			_("Password:")
 		)
+		self.registerLabel.setText("<a href='https://wrds.eu/'>%s</a>" % _("Click here for more information about WRDS and its registration page."))
 		with contextlib.ignored(AttributeError):
 			self.saveCheckbox.setText(_("Remember email address and password"))
 
