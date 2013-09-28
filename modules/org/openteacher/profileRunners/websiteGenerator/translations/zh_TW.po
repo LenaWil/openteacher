@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-09-19 21:37+0200\n"
-"PO-Revision-Date: 2013-07-21 09:47+0000\n"
-"Last-Translator: Louie Chen <louie23@gmail.com>\n"
+"PO-Revision-Date: 2013-09-27 07:15+0000\n"
+"Last-Translator: Walter Cheuk <wwycheuk@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-20 05:54+0000\n"
-"X-Generator: Launchpad (build 16765)\n"
+"X-Launchpad-Export-Date: 2013-09-28 05:44+0000\n"
+"X-Generator: Launchpad (build 16774)\n"
 "Language: \n"
 
 #: templates/about.html:6
@@ -400,11 +400,11 @@ msgstr "自由的測驗訓練軟體"
 
 #: templates/base.html:62
 msgid "Home"
-msgstr "主页"
+msgstr "主頁"
 
 #: templates/base.html:63
 msgid "News"
-msgstr ""
+msgstr "新聞"
 
 #: templates/base.html:64
 msgid "About"
@@ -667,13 +667,3 @@ msgid ""
 "Pronounciation tab. Then tick the box before 'Pronounce words' and/or "
 "'Pronounce places'."
 msgstr ""
-
-#~ msgid ""
-#~ "OpenTeacher <strong>helps you learn</strong> what you need to know for you "
-#~ "next test. OpenTeacher allows you to make use of a lesson type where you are "
-#~ "being teached in small parts. Once you know one part, OpenTeacher moves on "
-#~ "to the next. This should help you remember large doses of information "
-#~ "without being overwhelmed by it's size."
-#~ msgstr ""
-#~ "OpenTeacher <strong>幫助你學習</strong> 你的下個測試所需要知道的。OpenTeacher "
-#~ "允許你使用課程種類每次學習一小部份。一旦學會某一部份，OpenTeacher 會移到下一部份。這樣能幫助你記憶大量資訊而不被數量所壓倒。"
