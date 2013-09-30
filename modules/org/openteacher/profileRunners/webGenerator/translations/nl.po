@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-09-19 21:37+0200\n"
-"PO-Revision-Date: 2013-09-06 18:52+0000\n"
+"PO-Revision-Date: 2013-09-29 18:05+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-20 05:54+0000\n"
-"X-Generator: Launchpad (build 16765)\n"
+"X-Launchpad-Export-Date: 2013-09-30 05:22+0000\n"
+"X-Generator: Launchpad (build 16774)\n"
 "Language: \n"
 
 #: static/scr/learn-list.js:5
@@ -36,7 +36,7 @@ msgstr "Toch goed"
 
 #: static/scr/learn-list.js:9
 msgid "Back"
-msgstr ""
+msgstr "Vorige"
 
 #: static/scr/lists-overview.js:5
 msgid "Lists overview"
@@ -127,13 +127,15 @@ msgstr "Log in!"
 
 #: static/scr/login.js:16
 msgid "Login anonymously"
-msgstr ""
+msgstr "Log anoniem in"
 
 #: static/scr/login.js:17
 msgid ""
 "All data will only be available locally, and will be gone when your "
 "browser's local storage is cleared."
 msgstr ""
+"Alle data zal alleen lokaal beschikbaar zijn, en zal verdwijnen zodra de "
+"local storage van uw browser geleegd wordt."
 
 #: static/scr/login.js:20
 msgid "Log out"

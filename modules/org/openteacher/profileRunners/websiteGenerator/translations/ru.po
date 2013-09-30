@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-09-19 21:37+0200\n"
-"PO-Revision-Date: 2013-09-04 07:19+0000\n"
+"PO-Revision-Date: 2013-09-29 14:38+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-20 05:54+0000\n"
-"X-Generator: Launchpad (build 16765)\n"
+"X-Launchpad-Export-Date: 2013-09-30 05:22+0000\n"
+"X-Generator: Launchpad (build 16774)\n"
 "Language: ru\n"
 
 #: templates/about.html:6
@@ -520,7 +520,7 @@ msgstr "Формат файлов Openteacher 2 - это XML 1.0 файл в к�
 #, python-format
 msgid ""
 "An XML-scheme of the file format can be downloaded <a href=\"%s\">here</a>."
-msgstr ""
+msgstr "XML-схему формата файла можно скачать <a href=\"%s\">здесь</a>."
 
 #: docsTemplates/the-openteacher-format.html:8
 #, python-format
@@ -579,7 +579,7 @@ msgstr ""
 
 #: docsTemplates/faq.html:8
 msgid "OpenTeacher won't run on ArchLinux!"
-msgstr ""
+msgstr "OpenTeacher не работает на ArchLinux!"
 
 #: docsTemplates/faq.html:9
 msgid ""
@@ -605,15 +605,3 @@ msgid ""
 "Pronounciation tab. Then tick the box before 'Pronounce words' and/or "
 "'Pronounce places'."
 msgstr ""
-
-#~ msgid ""
-#~ "OpenTeacher <strong>helps you learn</strong> what you need to know for you "
-#~ "next test. OpenTeacher allows you to make use of a lesson type where you are "
-#~ "being teached in small parts. Once you know one part, OpenTeacher moves on "
-#~ "to the next. This should help you remember large doses of information "
-#~ "without being overwhelmed by it's size."
-#~ msgstr ""
-#~ "OpenTeacher <strong>поможет Вам узнать</strong> что Вам нужно знать для "
-#~ "следующего теста. OpenTeacher предоставляет урок, разделенный на мелкие "
-#~ "части. Когда Вы усваиваете что-то, OpenTeacher переходит к следующей части. "
-#~ "Это помогает усваивать больше информации, не пугая её общим размером."

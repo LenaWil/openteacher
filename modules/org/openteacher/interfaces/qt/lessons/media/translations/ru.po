@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-09-19 21:37+0200\n"
-"PO-Revision-Date: 2013-07-28 21:55+0000\n"
+"PO-Revision-Date: 2013-09-29 14:25+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-20 05:51+0000\n"
-"X-Generator: Launchpad (build 16765)\n"
+"X-Launchpad-Export-Date: 2013-09-30 05:22+0000\n"
+"X-Generator: Launchpad (build 16774)\n"
 "Language: ru\n"
 
 #: media.py:159
@@ -33,11 +33,11 @@ msgstr "Мультимедийный урок: %s"
 
 #: media.py:233
 msgid "Unsupported media"
-msgstr ""
+msgstr "Неподдерживаемый медиафайл"
 
 #: media.py:233
 msgid "This type of media isn't supported on your computer"
-msgstr ""
+msgstr "Этот тип медиафайлов не поддерживается вашим компьютером"
 
 #: media.py:296
 msgid "Empty question or answer"

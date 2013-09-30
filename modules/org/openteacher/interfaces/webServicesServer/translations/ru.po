@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-09-19 21:38+0200\n"
-"PO-Revision-Date: 2013-09-16 03:50+0000\n"
+"PO-Revision-Date: 2013-09-29 14:23+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-20 05:54+0000\n"
-"X-Generator: Launchpad (build 16765)\n"
+"X-Launchpad-Export-Date: 2013-09-30 05:22+0000\n"
+"X-Generator: Launchpad (build 16774)\n"
 "Language: ru\n"
 
 #: serverImpl.py:214
 msgid "Invalid captcha. Please try again."
-msgstr ""
+msgstr "Неверная капча. Попробуйте ещё раз."
 
 #: serverImpl.py:215
 #, python-format
@@ -28,18 +28,20 @@ msgid ""
 "Your password should at least be %s characters long, and contain special "
 "(non alphanumeric) characters. Please try again."
 msgstr ""
+"Ваш пароль должен быть не менее %s символов и должен содержать специальные "
+"(не буквенно-цифровые) символы. Попробуйте еще раз."
 
 #: serverImpl.py:216
 msgid "The username you requested is already taken. Please try again."
-msgstr ""
+msgstr "Запрашиваемое имя пользователя уже занято. Попробуйте еще раз."
 
 #: register-template.html:23
 msgid "OpenTeacher Web - sign up"
-msgstr ""
+msgstr "Сайт OpenTeacher - вход"
 
 #: register-template.html:63
 msgid "OpenTeacher Web"
-msgstr ""
+msgstr "Сайт OpenTeacher"
 
 #: register-template.html:64
 msgid "Sign up"
@@ -48,6 +50,8 @@ msgstr "Регистрация"
 #: register-template.html:66
 msgid "Welcome to OpenTeacher Web! You can register an account below."
 msgstr ""
+"Добро пожаловать на сайт OpenTeacher! Вы можете зарегистрировать учётную "
+"запись ниже."
 
 #: register-template.html:76
 msgid "Username:"
