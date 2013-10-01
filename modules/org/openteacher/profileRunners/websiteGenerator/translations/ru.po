@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-09-19 21:37+0200\n"
-"PO-Revision-Date: 2013-09-29 14:38+0000\n"
+"PO-Revision-Date: 2013-09-30 18:59+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-30 05:22+0000\n"
+"X-Launchpad-Export-Date: 2013-10-01 05:27+0000\n"
 "X-Generator: Launchpad (build 16774)\n"
 "Language: ru\n"
 
@@ -143,19 +143,19 @@ msgstr ""
 
 #: templates/download.html:8 templates/index.html:25
 msgid "Download OpenTeacher 3.2"
-msgstr ""
+msgstr "Скачать OpenTeacher 3.2"
 
 #: templates/download.html:22
 msgid "For portable (USB-)drives"
-msgstr ""
+msgstr "Для переносных (USB-)дисков"
 
 #: templates/download.html:76
 msgid "Python 2 source with setup.py (for other Linux)"
-msgstr ""
+msgstr "Исходный код на Python 2 с setup.py (для прочих версий Linux)"
 
 #: templates/download.html:85
 msgid "Python 2 source"
-msgstr ""
+msgstr "Исходный код на Python 2"
 
 #: templates/documentation.html:6 templates/base.html:66
 msgid "Documentation"
@@ -216,7 +216,7 @@ msgstr ""
 
 #: templates/index.html:12
 msgid "OpenTeacher has the following features (among others):"
-msgstr ""
+msgstr "OpenTeacher обладает следующими возможностями (среди прочих):"
 
 #: templates/index.html:14
 msgid "Viewing both recent and past results of tests with graphs"
@@ -258,6 +258,7 @@ msgid ""
 "OpenTeacher 3.2 is available for <strong>Linux, Windows and Mac OS "
 "X</strong>."
 msgstr ""
+"OpenTeacher 3.2 iдоступен для <strong>Linux, Windows и Mac OS X</strong>."
 
 #: templates/index.html:26
 msgid "for"
@@ -352,7 +353,7 @@ msgstr "Главная"
 
 #: templates/base.html:63
 msgid "News"
-msgstr ""
+msgstr "Новости"
 
 #: templates/base.html:64
 msgid "About"
@@ -430,6 +431,9 @@ msgid ""
 "Then enter all words you want to learn, seperating the foreign and known "
 "language by =, and the words by newlines (see the screenshot for an example)."
 msgstr ""
+"Затем введите все слова, которые вы хотите изучить, разделяя известный и  "
+"иностранный и язык знаком =, а слова символами новой строки (см. скриншот "
+"для примера)."
 
 #: docsTemplates/using-openteacher-2.html:20
 msgid ""
@@ -474,12 +478,15 @@ msgid ""
 "Download the ArchLinux package .pkg.tar.xz from the Download section of this "
 "website."
 msgstr ""
+"Скачайте пакет для ArchLinux .pkg.tar.xz в разделе Скачать этого сайта."
 
 #: docsTemplates/install-arch.html:9
 msgid ""
 "Install the package from the terminal with <strong>pacman -U "
 "&lt;filename&gt;</strong>"
 msgstr ""
+"Установите пакет выполнив в терминале команду <strong>pacman -U "
+"&lt;filename&gt;</strong>"
 
 #: docsTemplates/install-ubuntu.html:6
 msgid ""
@@ -490,23 +497,27 @@ msgstr ""
 #: docsTemplates/install-ubuntu.html:8
 msgid ""
 "Download the Ubuntu .deb file from the Download section of this website."
-msgstr ""
+msgstr "Скачайте .deb файл для Ubuntu в разделе Скачать этого сайта."
 
 #: docsTemplates/install-ubuntu.html:9
 msgid ""
 "When the download has completed, doubleclick the .deb file you just "
 "downloaded. This will open the Ubuntu Software Center."
 msgstr ""
+"Когда загрузка завершится, выполните двойной щелчок  по загруженному .deb "
+"файлу. Это откроет Центр приложений Ubuntu."
 
 #: docsTemplates/install-ubuntu.html:12
 msgid "Click &quot;install&quot; to start the installation."
-msgstr ""
+msgstr "Нажмите &quot;install&quot; для начала установки."
 
 #: docsTemplates/install-ubuntu.html:13
 msgid ""
 "When the installation has finished, you can start OpenTeacher from "
 "Applications -> Education -> OpenTeacher."
 msgstr ""
+"Когда установка завершится, вы можете запустить OpenTeacher в меню "
+"Приложения -> Образовательные -> OpenTeacher."
 
 #: docsTemplates/the-openteacher-format.html:5
 msgid "The Openteacher 2 file format"

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-09-19 21:37+0200\n"
-"PO-Revision-Date: 2013-09-04 07:15+0000\n"
+"PO-Revision-Date: 2013-09-30 19:07+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-20 05:54+0000\n"
-"X-Generator: Launchpad (build 16765)\n"
+"X-Launchpad-Export-Date: 2013-10-01 05:27+0000\n"
+"X-Generator: Launchpad (build 16774)\n"
 "Language: ru\n"
 
 #: static/scr/learn-list.js:5
@@ -36,7 +36,7 @@ msgstr "Всё равно верно"
 
 #: static/scr/learn-list.js:9
 msgid "Back"
-msgstr ""
+msgstr "Назад"
 
 #: static/scr/lists-overview.js:5
 msgid "Lists overview"
@@ -52,7 +52,7 @@ msgstr "Создать список"
 
 #: static/scr/lists-overview.js:8
 msgid "Upload list from computer"
-msgstr ""
+msgstr "Передать список с компьютера"
 
 #: static/scr/lists-overview.js:9
 msgid "View"
@@ -68,11 +68,11 @@ msgstr "Последнее изменение:"
 
 #: static/scr/lists-overview.js:13
 msgid "Upload file"
-msgstr ""
+msgstr "Загрузить файл"
 
 #: static/scr/lists-overview.js:14
 msgid "Cancel"
-msgstr ""
+msgstr "Отмена"
 
 #: static/scr/lists-overview.js:15
 msgid ""
@@ -91,7 +91,7 @@ msgstr "Новый список"
 
 #: static/scr/lists-overview.js:53
 msgid "Uploaded list"
-msgstr ""
+msgstr "Отправленный список"
 
 #: static/scr/login.js:6
 msgid "Log in"
@@ -123,7 +123,7 @@ msgstr "Войти!"
 
 #: static/scr/login.js:16
 msgid "Login anonymously"
-msgstr ""
+msgstr "Войти анонимно"
 
 #: static/scr/login.js:17
 msgid ""
@@ -133,11 +133,11 @@ msgstr ""
 
 #: static/scr/login.js:20
 msgid "Log out"
-msgstr ""
+msgstr "Выход"
 
 #: static/scr/login.js:21
 msgid "Unsubscribe"
-msgstr ""
+msgstr "Отписаться"
 
 #: static/scr/login.js:24
 msgid "Or view a shared list"
@@ -151,11 +151,11 @@ msgstr ""
 
 #: static/scr/main.js:39
 msgid "OpenTeacher Web"
-msgstr ""
+msgstr "Сайт OpenTeacher"
 
 #: static/scr/main.js:44
 msgid "License information and source code"
-msgstr ""
+msgstr "Информация о лицензии и исходный код"
 
 #: static/scr/view-list.js:5
 msgid "List"
@@ -175,11 +175,11 @@ msgstr ""
 
 #: static/scr/view-list.js:9
 msgid "Question language"
-msgstr ""
+msgstr "Язык вопросов"
 
 #: static/scr/view-list.js:10
 msgid "Answer language"
-msgstr ""
+msgstr "Язык ответов"
 
 #: static/scr/view-list.js:11
 msgid "Questions"
@@ -191,7 +191,7 @@ msgstr "Ответы"
 
 #: static/scr/view-list.js:13
 msgid "Remove this item"
-msgstr ""
+msgstr "Удалить этот элемент"
 
 #: static/scr/view-list.js:15
 msgid "Test results"
@@ -219,15 +219,15 @@ msgstr "Сохранить"
 
 #: static/scr/view-list.js:22
 msgid "Print"
-msgstr ""
+msgstr "Печать"
 
 #: static/scr/view-list.js:23
 msgid "Download"
-msgstr ""
+msgstr "Скачать"
 
 #: static/scr/view-list.js:26
 msgid "Saved the list succesfully."
-msgstr ""
+msgstr "Список успешно сохранён."
 
 #: static/scr/view-list.js:27
 msgid ""
@@ -250,7 +250,7 @@ msgstr ""
 
 #: static/scr/view-list.js:31
 msgid "Close"
-msgstr ""
+msgstr "Закрыть"
 
 #: static/scr/view-list.js:35
 msgid "-"
@@ -259,3 +259,4 @@ msgstr "-"
 #: static/scr/view-list.js:105
 msgid "There are unsaved changes. Are you sure you want to leave this page?"
 msgstr ""
+"Есть несохраненные изменения. Вы уверены, что хотите покинуть эту страницу?"
