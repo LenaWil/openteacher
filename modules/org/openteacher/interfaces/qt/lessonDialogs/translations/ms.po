@@ -1,0 +1,45 @@
+# Malay translation for openteacher
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-09-19 21:38+0200\n"
+"PO-Revision-Date: 2013-10-02 02:33+0000\n"
+"Last-Translator: abuyop <Unknown>\n"
+"Language-Team: Malay <ms@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-10-02 05:26+0000\n"
+"X-Generator: Launchpad (build 16774)\n"
+
+#: lessonDialogs.py:84
+msgid "Unsaved data"
+msgstr "Data tidak disimpan"
+
+#: lessonDialogs.py:85
+msgid "There are unsaved items or results. Are you sure you want to close?"
+msgstr ""
+"Terdapat item atau keputusan tidak disimpan. Anda pasti hendak menutupnya?"
+
+#: lessonDialogs.py:101
+msgid "Warning"
+msgstr "Amaran"
+
+#: lessonDialogs.py:103
+msgid ""
+"Are you sure you want to go back to the enter tab? This will end your lesson!"
+msgstr ""
+"Anda pasti hendak undur untk masukkan tab? Ia akan tamatkan pelajaran anda!"
+
+#: lessonDialogs.py:114
+msgid "Not enough items"
+msgstr "Item tidak mencukupi"
+
+#: lessonDialogs.py:115
+msgid "You need to add items to your test first"
+msgstr "Anda perlu tambah item pada ujian pertama anda"
