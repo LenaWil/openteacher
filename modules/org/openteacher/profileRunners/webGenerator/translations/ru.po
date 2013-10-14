@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-09-19 21:37+0200\n"
-"PO-Revision-Date: 2013-09-30 19:07+0000\n"
+"PO-Revision-Date: 2013-10-13 16:52+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-01 05:27+0000\n"
-"X-Generator: Launchpad (build 16774)\n"
+"X-Launchpad-Export-Date: 2013-10-14 05:22+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
 "Language: ru\n"
 
 #: static/scr/learn-list.js:5
@@ -79,11 +79,15 @@ msgid ""
 "Please select the file you want to upload below, and click 'upload' when "
 "you're done. Supported file extensions are:"
 msgstr ""
+"Пожалуйста, выберите файл, который вы хотите загрузить ниже и нажмите кнопку "
+"\"Загрузить\", когда вы закончите. Поддерживаемые форматы файлов:"
 
 #: static/scr/lists-overview.js:16
 msgid ""
 "Couldn't load file. Is the file type supported and the file not corrupted?"
 msgstr ""
+"Не удалось загрузить файл. Поддерживается ли этот тип файла и файл не "
+"поврежден?"
 
 #: static/scr/lists-overview.js:45
 msgid "New list"
@@ -130,6 +134,8 @@ msgid ""
 "All data will only be available locally, and will be gone when your "
 "browser's local storage is cleared."
 msgstr ""
+"Все данные будут доступны только локально и будут потеряны, при очистке "
+"локального хранилища вашего браузера."
 
 #: static/scr/login.js:20
 msgid "Log out"
@@ -141,13 +147,16 @@ msgstr "Отписаться"
 
 #: static/scr/login.js:24
 msgid "Or view a shared list"
-msgstr ""
+msgstr "Обзор списка общих ресурсов"
 
 #: static/scr/login.js:120
 msgid ""
 "Are you sure you want to unsubscribe? This will remove your account and all "
 "data associated with it. Keep in mind that there's no recovery procedure!"
 msgstr ""
+"Вы уверены, что хотите отказаться от подписки? Это приведет к удалению "
+"вашего аккаунта и всех данных, связанных с ним. Имейте в виду, что процедуры "
+"восстановления не существует!"
 
 #: static/scr/main.js:39
 msgid "OpenTeacher Web"
@@ -167,11 +176,11 @@ msgstr "Название:"
 
 #: static/scr/view-list.js:7
 msgid "Shares:"
-msgstr ""
+msgstr "Общие ресурсы:"
 
 #: static/scr/view-list.js:8
 msgid "Currently existing shares:"
-msgstr ""
+msgstr "Существующие общие ресурсы:"
 
 #: static/scr/view-list.js:9
 msgid "Question language"
@@ -234,6 +243,9 @@ msgid ""
 "Can't save the document because it contains invalid content. Maybe you used "
 "unsafe HTML, or left fields empty that should not be empty?"
 msgstr ""
+"Невозможно сохранить документ, поскольку он содержит недопустимое "
+"содержание. Может быть, вы использовали небезопасные HTML теги или оставили "
+"пустыми поля, которые не должны быть пустыми?"
 
 #: static/scr/view-list.js:28
 msgid ""
@@ -241,12 +253,17 @@ msgid ""
 "meantime. You can either discard your changes, or save again (overwriting "
 "the changes made elsewhere)."
 msgstr ""
+"Невозможно сохранить список, потому что он отредактирован в другом месте в "
+"это время. Вы можете или отменить изменения, или сохранить снова "
+"(перезаписав изменений, внесенные в другом месте)."
 
 #: static/scr/view-list.js:30
 msgid ""
 "Please choose the file you want to download from the options below. Not "
 "sure? Then download the file ending in '.otwd'."
 msgstr ""
+"Пожалуйста, выберите файл, который необходимо скачать из списка ниже. Не "
+"уверены? Тогда скачайте файл, заканчивающийся на '.otwd'."
 
 #: static/scr/view-list.js:31
 msgid "Close"

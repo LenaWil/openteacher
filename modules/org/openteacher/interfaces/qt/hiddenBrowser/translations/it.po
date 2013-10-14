@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-09-19 21:37+0200\n"
-"PO-Revision-Date: 2013-10-13 14:51+0000\n"
+"POT-Creation-Date: 2013-09-19 21:38+0200\n"
+"PO-Revision-Date: 2013-10-13 15:16+0000\n"
 "Last-Translator: Domenico Ragusa <domenicoragusa388@gmail.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,14 +17,14 @@ msgstr ""
 "X-Launchpad-Export-Date: 2013-10-14 05:22+0000\n"
 "X-Generator: Launchpad (build 16799)\n"
 
-#: progressViewer.py:61
-msgid "Pause"
+#: hiddenBrowser.py:87
+msgid "Hide the browser!"
+msgstr "Nascondi il browser!"
+
+#: hiddenBrowser.py:88
+msgid "Hide the others; make space for the browser"
+msgstr "Nascondi gli altri; fai spazio per il browser"
+
+#: hiddenBrowser.py:252
+msgid "Enable hidden browser (hide it by moving the slider)"
 msgstr ""
-
-#: progressViewer.py:68
-msgid "Thinking"
-msgstr "Pensando"
-
-#: progressViewer.py:72
-msgid "Answering"
-msgstr "Rispondendo"

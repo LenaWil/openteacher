@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-09-19 21:37+0200\n"
-"PO-Revision-Date: 2013-10-13 14:51+0000\n"
+"PO-Revision-Date: 2013-10-13 14:42+0000\n"
 "Last-Translator: Domenico Ragusa <domenicoragusa388@gmail.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,14 +17,23 @@ msgstr ""
 "X-Launchpad-Export-Date: 2013-10-14 05:22+0000\n"
 "X-Generator: Launchpad (build 16799)\n"
 
-#: progressViewer.py:61
-msgid "Pause"
+#. TRANSLATORS: This is one of the file formats OpenTeacher
+#. TRANSLATORS: saves to.
+#: otmd.py:60
+msgid "Open Teaching Media"
 msgstr ""
 
-#: progressViewer.py:68
-msgid "Thinking"
-msgstr "Pensando"
+#. TRANSLATORS: name of a setting
+#: otmd.py:63
+msgid "Enable compression"
+msgstr "Abilitare compressione"
 
-#: progressViewer.py:72
-msgid "Answering"
-msgstr "Rispondendo"
+#. TRANSLATORS: setting category.
+#: otmd.py:65
+msgid "Input and output"
+msgstr "Input e output"
+
+#. TRANSLATORS: setting subcategory; .otmd is a file extension.
+#: otmd.py:67
+msgid ".otmd saving"
+msgstr ""

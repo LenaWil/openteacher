@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-09-19 21:37+0200\n"
-"PO-Revision-Date: 2013-02-25 10:52+0000\n"
-"Last-Translator: Guybrush88 <Unknown>\n"
+"PO-Revision-Date: 2013-10-13 14:48+0000\n"
+"Last-Translator: Domenico Ragusa <domenicoragusa388@gmail.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-20 05:53+0000\n"
-"X-Generator: Launchpad (build 16765)\n"
+"X-Launchpad-Export-Date: 2013-10-14 05:22+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
 "Language: it\n"
 
 #: startWidget.py:248
@@ -28,7 +28,7 @@ msgstr "Carica lezione:"
 
 #: startWidget.py:250
 msgid "Load from the internet"
-msgstr ""
+msgstr "Caricare da internet"
 
 #: startWidget.py:252
 msgid "Recently opened:"

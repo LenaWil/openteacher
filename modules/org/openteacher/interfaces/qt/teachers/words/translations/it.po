@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-09-19 21:38+0200\n"
-"PO-Revision-Date: 2013-10-13 15:01+0000\n"
+"PO-Revision-Date: 2013-10-13 11:53+0000\n"
 "Last-Translator: Domenico Ragusa <domenicoragusa388@gmail.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,34 +17,38 @@ msgstr ""
 "X-Launchpad-Export-Date: 2013-10-14 05:22+0000\n"
 "X-Generator: Launchpad (build 16799)\n"
 
-#: words.py:233
-msgid "Questions"
+#: words.py:62
+msgid "I'm ready, start the lesson!"
+msgstr "Sono pronto, inizia la lezione!"
+
+#: words.py:64 words.py:516
+msgid "Lesson settings"
+msgstr "Impostazioni lezione"
+
+#: words.py:127
+msgid "Change lesson settings"
+msgstr "Cambia le impostazioni della lezione"
+
+#: words.py:128
+msgid "Word:"
+msgstr "Parola:"
+
+#: words.py:129
+msgid "Next"
 msgstr ""
 
-#: words.py:233
-msgid "Answers"
+#: words.py:508
+msgid "Lesson type"
+msgstr "Tipo di lezione"
+
+#: words.py:509
+msgid "Word list order and filters"
 msgstr ""
 
-#: words.py:233
-msgid "Comment"
-msgstr ""
+#: words.py:510
+msgid "Word modifications"
+msgstr "Modifiche parole"
 
-#: words.py:233
-msgid "Comment after answering"
-msgstr ""
-
-#: words.py:475
-msgid "Title:"
-msgstr "Titolo:"
-
-#: words.py:476
-msgid "Question language:"
-msgstr "Lingua domanda:"
-
-#: words.py:477
-msgid "Answer language:"
-msgstr "Lingua risposta:"
-
-#: words.py:478
-msgid "Remove selected row(s)"
-msgstr "Rimuovere la riga(e) selezionate"
+#: words.py:515
+msgid "Words lesson"
+msgstr "Lezione sulle parole"

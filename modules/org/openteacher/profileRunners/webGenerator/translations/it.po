@@ -8,26 +8,26 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-09-19 21:37+0200\n"
-"PO-Revision-Date: 2013-10-11 08:09+0000\n"
+"PO-Revision-Date: 2013-10-13 15:15+0000\n"
 "Last-Translator: Domenico Ragusa <domenicoragusa388@gmail.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-12 05:20+0000\n"
+"X-Launchpad-Export-Date: 2013-10-14 05:22+0000\n"
 "X-Generator: Launchpad (build 16799)\n"
 
 #: static/scr/learn-list.js:5
 msgid "Question:"
-msgstr ""
+msgstr "Domanda:"
 
 #: static/scr/learn-list.js:6
 msgid "Check!"
-msgstr ""
+msgstr "Controlla!"
 
 #: static/scr/learn-list.js:7
 msgid "Skip"
-msgstr ""
+msgstr "Salta"
 
 #: static/scr/learn-list.js:8
 msgid "Correct anyway"
@@ -35,7 +35,7 @@ msgstr ""
 
 #: static/scr/learn-list.js:9
 msgid "Back"
-msgstr ""
+msgstr "Indietro"
 
 #: static/scr/lists-overview.js:5
 msgid "Lists overview"
@@ -59,11 +59,11 @@ msgstr ""
 
 #: static/scr/lists-overview.js:10 static/scr/view-list.js:24
 msgid "Teach me!"
-msgstr ""
+msgstr "Insegnamelo!"
 
 #: static/scr/lists-overview.js:11
 msgid "Last edited:"
-msgstr ""
+msgstr "Ultima modifica:"
 
 #: static/scr/lists-overview.js:13
 msgid "Upload file"
@@ -78,15 +78,18 @@ msgid ""
 "Please select the file you want to upload below, and click 'upload' when "
 "you're done. Supported file extensions are:"
 msgstr ""
+"Per favore selezionare un file sottostante che si vuole caricare, e click "
+"'upload' quando si è pronti. Le estensioni dei file supportati sono:"
 
 #: static/scr/lists-overview.js:16
 msgid ""
 "Couldn't load file. Is the file type supported and the file not corrupted?"
 msgstr ""
+"Impossibile caricare il file. Il tipo di file è supportato e non è corrotto?"
 
 #: static/scr/lists-overview.js:45
 msgid "New list"
-msgstr ""
+msgstr "Nuovo elenco"
 
 #: static/scr/lists-overview.js:53
 msgid "Uploaded list"
@@ -98,15 +101,15 @@ msgstr ""
 
 #: static/scr/login.js:8
 msgid "New? Click here to sign up."
-msgstr ""
+msgstr "Nuovo? Clicca qui per registrarti."
 
 #: static/scr/login.js:9
 msgid "You registered succesfully. You can now log in."
-msgstr ""
+msgstr "Ti sei registrato con successo. Ora puoi accedere."
 
 #: static/scr/login.js:10
 msgid "You cancelled the registration."
-msgstr ""
+msgstr "Hai cancellato la registrazione"
 
 #: static/scr/login.js:12
 msgid "Username:"
@@ -118,11 +121,11 @@ msgstr ""
 
 #: static/scr/login.js:14
 msgid "Log in!"
-msgstr ""
+msgstr "Accedi!"
 
 #: static/scr/login.js:16
 msgid "Login anonymously"
-msgstr ""
+msgstr "Accedi anonimamente"
 
 #: static/scr/login.js:17
 msgid ""
@@ -132,7 +135,7 @@ msgstr ""
 
 #: static/scr/login.js:20
 msgid "Log out"
-msgstr ""
+msgstr "Esci"
 
 #: static/scr/login.js:21
 msgid "Unsubscribe"
@@ -140,7 +143,7 @@ msgstr ""
 
 #: static/scr/login.js:24
 msgid "Or view a shared list"
-msgstr ""
+msgstr "O vedi un elenco condiviso:"
 
 #: static/scr/login.js:120
 msgid ""
@@ -154,7 +157,7 @@ msgstr ""
 
 #: static/scr/main.js:44
 msgid "License information and source code"
-msgstr ""
+msgstr "Informazione di licenza e codice sorgente"
 
 #: static/scr/view-list.js:5
 msgid "List"
@@ -162,7 +165,7 @@ msgstr ""
 
 #: static/scr/view-list.js:6
 msgid "Title:"
-msgstr ""
+msgstr "Titolo:"
 
 #: static/scr/view-list.js:7
 msgid "Shares:"
@@ -174,11 +177,11 @@ msgstr ""
 
 #: static/scr/view-list.js:9
 msgid "Question language"
-msgstr ""
+msgstr "Lingua domanda"
 
 #: static/scr/view-list.js:10
 msgid "Answer language"
-msgstr ""
+msgstr "Lingua risposta"
 
 #: static/scr/view-list.js:11
 msgid "Questions"
@@ -194,11 +197,11 @@ msgstr ""
 
 #: static/scr/view-list.js:15
 msgid "Test results"
-msgstr ""
+msgstr "Risultati del test"
 
 #: static/scr/view-list.js:16
 msgid "Date"
-msgstr ""
+msgstr "Data:"
 
 #: static/scr/view-list.js:17
 msgid "Note"
@@ -210,7 +213,7 @@ msgstr ""
 
 #: static/scr/view-list.js:20
 msgid "Back to the lists page"
-msgstr ""
+msgstr "Ritornare alla pagina degli elenchi"
 
 #: static/scr/view-list.js:21
 msgid "Save"
@@ -226,7 +229,7 @@ msgstr ""
 
 #: static/scr/view-list.js:26
 msgid "Saved the list succesfully."
-msgstr ""
+msgstr "Elenco salvato con successo."
 
 #: static/scr/view-list.js:27
 msgid ""
@@ -249,7 +252,7 @@ msgstr ""
 
 #: static/scr/view-list.js:31
 msgid "Close"
-msgstr ""
+msgstr "Chiudi"
 
 #: static/scr/view-list.js:35
 msgid "-"
@@ -258,3 +261,5 @@ msgstr ""
 #: static/scr/view-list.js:105
 msgid "There are unsaved changes. Are you sure you want to leave this page?"
 msgstr ""
+"Ci sono dei cambiamenti non salvati. Sei sicuro che vuoi uscire da questa "
+"pagina?"

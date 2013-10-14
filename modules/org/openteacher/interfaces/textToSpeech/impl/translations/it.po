@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-09-19 21:37+0200\n"
-"PO-Revision-Date: 2013-10-13 14:51+0000\n"
+"PO-Revision-Date: 2013-10-13 11:54+0000\n"
 "Last-Translator: Domenico Ragusa <domenicoragusa388@gmail.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,14 +17,18 @@ msgstr ""
 "X-Launchpad-Export-Date: 2013-10-14 05:22+0000\n"
 "X-Generator: Launchpad (build 16799)\n"
 
-#: progressViewer.py:61
-msgid "Pause"
+#: impl.py:143
+msgid "Voice name (language)"
 msgstr ""
 
-#: progressViewer.py:68
-msgid "Thinking"
-msgstr "Pensando"
+#: impl.py:144
+msgid "Speed"
+msgstr "Velocità"
 
-#: progressViewer.py:72
-msgid "Answering"
-msgstr "Rispondendo"
+#: impl.py:147
+msgid "Pronounciation"
+msgstr "Pronuncia"
+
+#: impl.py:148
+msgid "Voice"
+msgstr ""
