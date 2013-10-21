@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-09-19 21:37+0200\n"
-"PO-Revision-Date: 2013-01-28 11:27+0000\n"
-"Last-Translator: Phillip Sz <Unknown>\n"
+"PO-Revision-Date: 2013-10-21 02:50+0000\n"
+"Last-Translator: Phil Krämer <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-20 05:53+0000\n"
-"X-Generator: Launchpad (build 16765)\n"
+"X-Launchpad-Export-Date: 2013-10-21 04:46+0000\n"
+"X-Generator: Launchpad (build 16807)\n"
 "Language: de\n"
 
 #: media.py:173
 msgid "Title:"
-msgstr ""
+msgstr "Titel:"
 
 #: media.py:175
 msgid "Remove"
@@ -28,11 +28,11 @@ msgstr "Entfernen"
 
 #: media.py:176
 msgid "Add local media"
-msgstr ""
+msgstr "Lokale Medien hinzufügen"
 
 #: media.py:177
 msgid "Add remote media"
-msgstr ""
+msgstr "Entfernte Medien hinzufügen"
 
 #: media.py:179
 msgid "Name:"
@@ -48,7 +48,7 @@ msgstr "Antwort:"
 
 #: media.py:199
 msgid "Select file(s)"
-msgstr ""
+msgstr "Datei(en) auswählen"
 
 #: media.py:201
 msgid "Media"
@@ -56,13 +56,15 @@ msgstr "Medien"
 
 #: media.py:222
 msgid "File URL"
-msgstr ""
+msgstr "Datei-Adresse"
 
 #: media.py:223
 msgid ""
 "Enter the URL of your website or media item.\n"
 "Supported video sites: "
 msgstr ""
+"Geben  Sie die Adresse Ihrer Webseite oder der Mediendatei ein.\n"
+"Unterstützte Videoportale: "
 
 #: media.py:274
 msgid "Unsupported file type"
@@ -70,4 +72,4 @@ msgstr "Nicht unterstütztes Dateiformat"
 
 #: media.py:275
 msgid "This type of file is not supported:\n"
-msgstr ""
+msgstr "Dieser Dateityp wird nicht unterstützt:\n"
