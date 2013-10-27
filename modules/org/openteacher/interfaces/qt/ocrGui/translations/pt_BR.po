@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-09-19 21:37+0200\n"
-"PO-Revision-Date: 2013-09-06 21:16+0000\n"
-"Last-Translator: Rubens Bueno <rubensvsbueno@gmail.com>\n"
+"PO-Revision-Date: 2013-10-26 22:17+0000\n"
+"Last-Translator: Adriano Steffler <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-20 05:54+0000\n"
-"X-Generator: Launchpad (build 16765)\n"
+"X-Launchpad-Export-Date: 2013-10-27 06:00+0000\n"
+"X-Generator: Launchpad (build 16810)\n"
 "Language: pt_BR\n"
 
 #: ocrGui.py:86
@@ -40,8 +40,8 @@ msgid ""
 "Please choose the location of the scan or picture of the physical word list "
 "on your system below."
 msgstr ""
-"Por favor, escolha o local do exame ou a imagem da lista de palavras física "
-"no sistema abaixo."
+"Por favor, escolha o local do arquivo escaneado ou da imagem da lista de "
+"palavras física no seu sistema abaixo."
 
 #: ocrGui.py:122
 msgid "Click here to choose a location"
@@ -49,11 +49,11 @@ msgstr "Clique aqui para escolher um local"
 
 #: ocrGui.py:123
 msgid "Location:"
-msgstr "Localização:"
+msgstr "Local:"
 
 #: ocrGui.py:128
 msgid "Images ({extensions})"
-msgstr "Imagens ({extensions})"
+msgstr "Imagens ({extensões})"
 
 #: ocrGui.py:166
 msgid "Make image ready"
@@ -64,8 +64,8 @@ msgid ""
 "Please make sure the image is rotated completely upright with the rotation "
 "slider under this text:"
 msgstr ""
-"Por favor, faça com que a imagem esteja rotacionada na posição vertical com "
-"a barra de rotação sob este texto:"
+"Por favor, certifique-se de que a imagem esteja virada na posição vertical "
+"com a barra de rotação sob este texto:"
 
 #: ocrGui.py:168
 msgid ""
@@ -74,9 +74,9 @@ msgid ""
 "bottom the last answer to include. Click 'Next' when done."
 msgstr ""
 "Quando a imagem estivar totalmente na posição vertical, faça uma seleção na "
-"imagem com o mouse, com o canto superior direito na primeira questão a "
-"incluir e o canto inferior direito na última questão a incluir. Clique em "
-"'Próximo' quando estiver pronto."
+"imagem com o mause, com a primeira questão a incluir no canto superior "
+"direito e a última questão a incluir canto inferior direito. Clique em "
+"\"Próximo\" quando estiver pronto."
 
 #: ocrGui.py:210
 msgid "No selection was made"
@@ -99,8 +99,8 @@ msgid ""
 msgstr ""
 "Aqui você pode ver uma previsão do resultado. Provavelmente haverá algumas "
 "palavras incorretamente reconhecidas aqui, mas a estrutura da lista de "
-"palavras será reconhecível. Se não, clique 'Voltar' e tente de novo. Caso "
-"contrário, clique em 'Terminar'."
+"palavras será reconhecível. Se não, clique \"Voltar\" e tente novamente. "
+"Caso contrário, clique em \"Concluir\"."
 
 #: ocrGui.py:236
 msgid "Result preview"

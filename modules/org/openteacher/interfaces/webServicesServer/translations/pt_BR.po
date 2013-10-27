@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-09-19 21:38+0200\n"
-"PO-Revision-Date: 2013-09-06 21:21+0000\n"
-"Last-Translator: Rubens Bueno <rubensvsbueno@gmail.com>\n"
+"PO-Revision-Date: 2013-10-26 22:26+0000\n"
+"Last-Translator: Adriano Steffler <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-20 05:54+0000\n"
-"X-Generator: Launchpad (build 16765)\n"
+"X-Launchpad-Export-Date: 2013-10-27 06:00+0000\n"
+"X-Generator: Launchpad (build 16810)\n"
 "Language: pt_BR\n"
 
 #: serverImpl.py:214
 msgid "Invalid captcha. Please try again."
-msgstr "Captcha inválido. Por favor, tente de novo."
+msgstr "Captcha inválido. Por favor, tente novamente."
 
 #: serverImpl.py:215
 #, python-format
@@ -28,17 +28,17 @@ msgid ""
 "Your password should at least be %s characters long, and contain special "
 "(non alphanumeric) characters. Please try again."
 msgstr ""
-"Sua senha deve ter ao menos %s caracteres, e conter caracteres especiais "
-"(não alfanuméricos). Por favor, tente de novo."
+"A sua senha deve ter ao menos %s caracteres, e conter caracteres especiais "
+"(não alfanuméricos). Por favor, tente novamente."
 
 #: serverImpl.py:216
 msgid "The username you requested is already taken. Please try again."
 msgstr ""
-"O nome de usuário solicitado já está em uso. Por favor, tente de novo."
+"O nome de usuário solicitado já está em uso. Por favor, tente novamente."
 
 #: register-template.html:23
 msgid "OpenTeacher Web - sign up"
-msgstr "OpenTeacher web - registre-se"
+msgstr "OpenTeacher Web - cadastre-se"
 
 #: register-template.html:63
 msgid "OpenTeacher Web"
@@ -46,11 +46,11 @@ msgstr "OpenTeacher Web"
 
 #: register-template.html:64
 msgid "Sign up"
-msgstr "Inscreva-se"
+msgstr "Cadastre-se"
 
 #: register-template.html:66
 msgid "Welcome to OpenTeacher Web! You can register an account below."
-msgstr "Bem-vindo a OpenTeacher Web! Você pode registrar uma conta abaixo."
+msgstr "Bem-vindo ao OpenTeacher Web! Você pode registrar uma conta abaixo."
 
 #: register-template.html:76
 msgid "Username:"
@@ -62,8 +62,8 @@ msgstr "Senha:"
 
 #: register-template.html:97
 msgid "Sign up!"
-msgstr ""
+msgstr "Cadastre-se!"
 
 #: register-template.html:98
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"

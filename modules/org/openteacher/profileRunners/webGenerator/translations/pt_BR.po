@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-09-19 21:37+0200\n"
-"PO-Revision-Date: 2013-08-04 13:33+0000\n"
+"PO-Revision-Date: 2013-10-26 23:22+0000\n"
 "Last-Translator: Adriano Steffler <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-20 05:54+0000\n"
-"X-Generator: Launchpad (build 16765)\n"
+"X-Launchpad-Export-Date: 2013-10-27 06:00+0000\n"
+"X-Generator: Launchpad (build 16810)\n"
 "Language: pt_BR\n"
 
 #: static/scr/learn-list.js:5
@@ -36,7 +36,7 @@ msgstr "Corrigir de qualquer maneira"
 
 #: static/scr/learn-list.js:9
 msgid "Back"
-msgstr ""
+msgstr "Voltar"
 
 #: static/scr/lists-overview.js:5
 msgid "Lists overview"
@@ -52,7 +52,7 @@ msgstr "Criar uma nova lista"
 
 #: static/scr/lists-overview.js:8
 msgid "Upload list from computer"
-msgstr ""
+msgstr "Enviar uma lista a partir deste computador"
 
 #: static/scr/lists-overview.js:9
 msgid "View"
@@ -68,22 +68,27 @@ msgstr "Último editado:"
 
 #: static/scr/lists-overview.js:13
 msgid "Upload file"
-msgstr ""
+msgstr "Enviar um arquivo"
 
 #: static/scr/lists-overview.js:14
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #: static/scr/lists-overview.js:15
 msgid ""
 "Please select the file you want to upload below, and click 'upload' when "
 "you're done. Supported file extensions are:"
 msgstr ""
+"Por favor, selecione abaixo o arquivo que você deseja enviar, e clique em "
+"\"Enviar\" quando você estiver pronto. As extensões de arquivo suportadas "
+"são:"
 
 #: static/scr/lists-overview.js:16
 msgid ""
 "Couldn't load file. Is the file type supported and the file not corrupted?"
 msgstr ""
+"Não foi possível carregar o arquivo. O tipo de arquivo é suportado e o "
+"arquivo não está corrompido?"
 
 #: static/scr/lists-overview.js:45
 msgid "New list"
@@ -91,7 +96,7 @@ msgstr "Nova lista"
 
 #: static/scr/lists-overview.js:53
 msgid "Uploaded list"
-msgstr ""
+msgstr "Lista enviada:"
 
 #: static/scr/login.js:6
 msgid "Log in"
@@ -123,21 +128,23 @@ msgstr "Entrar!"
 
 #: static/scr/login.js:16
 msgid "Login anonymously"
-msgstr ""
+msgstr "Entrar anonimamente"
 
 #: static/scr/login.js:17
 msgid ""
 "All data will only be available locally, and will be gone when your "
 "browser's local storage is cleared."
 msgstr ""
+"Todos os dados estarão disponíveis apenas localmente, e serão apagados "
+"quando o armazenamento local do seu navegador for limpo."
 
 #: static/scr/login.js:20
 msgid "Log out"
-msgstr ""
+msgstr "Sair"
 
 #: static/scr/login.js:21
 msgid "Unsubscribe"
-msgstr ""
+msgstr "Cancelar a inscrição"
 
 #: static/scr/login.js:24
 msgid "Or view a shared list"
@@ -148,6 +155,9 @@ msgid ""
 "Are you sure you want to unsubscribe? This will remove your account and all "
 "data associated with it. Keep in mind that there's no recovery procedure!"
 msgstr ""
+"Você tem certeza de que deseja cancelar a inscrição? Essa ação removerá a "
+"sua conta e todos os dados associados a ela. Tenha em mente de que não há "
+"procedimento de recuperação!"
 
 #: static/scr/main.js:39
 msgid "OpenTeacher Web"
@@ -155,7 +165,7 @@ msgstr "OpenTeacher Web"
 
 #: static/scr/main.js:44
 msgid "License information and source code"
-msgstr ""
+msgstr "Informações de licença e de código-fonte"
 
 #: static/scr/view-list.js:5
 msgid "List"
@@ -171,15 +181,15 @@ msgstr "Compartilhamentos:"
 
 #: static/scr/view-list.js:8
 msgid "Currently existing shares:"
-msgstr ""
+msgstr "Compartilhamentos existentes atualmente:"
 
 #: static/scr/view-list.js:9
 msgid "Question language"
-msgstr ""
+msgstr "Língua da pergunta"
 
 #: static/scr/view-list.js:10
 msgid "Answer language"
-msgstr ""
+msgstr "Língua da resposta"
 
 #: static/scr/view-list.js:11
 msgid "Questions"
@@ -191,7 +201,7 @@ msgstr "Respostas"
 
 #: static/scr/view-list.js:13
 msgid "Remove this item"
-msgstr ""
+msgstr "Remover este item"
 
 #: static/scr/view-list.js:15
 msgid "Test results"
@@ -219,21 +229,24 @@ msgstr "Salvar"
 
 #: static/scr/view-list.js:22
 msgid "Print"
-msgstr ""
+msgstr "Imprimir"
 
 #: static/scr/view-list.js:23
 msgid "Download"
-msgstr ""
+msgstr "Baixar"
 
 #: static/scr/view-list.js:26
 msgid "Saved the list succesfully."
-msgstr ""
+msgstr "A lista foi salva com sucesso."
 
 #: static/scr/view-list.js:27
 msgid ""
 "Can't save the document because it contains invalid content. Maybe you used "
 "unsafe HTML, or left fields empty that should not be empty?"
 msgstr ""
+"Não foi possível salvar o documento, porque ele contém conteúdo inválido. "
+"Talvez você tenha usado HTML não seguro ou deixou campos em branco que não "
+"deveriam estar em branco?"
 
 #: static/scr/view-list.js:28
 msgid ""
@@ -241,16 +254,22 @@ msgid ""
 "meantime. You can either discard your changes, or save again (overwriting "
 "the changes made elsewhere)."
 msgstr ""
+"Não foi possível salvar a lista, porque, entrementes, ela foi editada em "
+"outro local. Você pode ou descartar as suas alterações ou salvá-las "
+"novamente (sobrescrevendo as alterações feitas em outro local)."
 
 #: static/scr/view-list.js:30
 msgid ""
 "Please choose the file you want to download from the options below. Not "
 "sure? Then download the file ending in '.otwd'."
 msgstr ""
+"Por favor, selecione o arquivo que você deseja baixar nas opções abaixo. "
+"Você não tem certeza de qual baixar? Então baixe o arquivo com a terminação "
+"\".otwd\"."
 
 #: static/scr/view-list.js:31
 msgid "Close"
-msgstr ""
+msgstr "Fechar"
 
 #: static/scr/view-list.js:35
 msgid "-"
@@ -259,3 +278,5 @@ msgstr "-"
 #: static/scr/view-list.js:105
 msgid "There are unsaved changes. Are you sure you want to leave this page?"
 msgstr ""
+"Há alterações que não foram salvas. Você tem certeza de que quer sair desta "
+"página?"

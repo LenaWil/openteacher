@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-09-19 21:37+0200\n"
-"PO-Revision-Date: 2013-03-16 20:26+0000\n"
+"PO-Revision-Date: 2013-10-27 01:25+0000\n"
 "Last-Translator: Adriano Steffler <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-20 05:54+0000\n"
-"X-Generator: Launchpad (build 16765)\n"
+"X-Launchpad-Export-Date: 2013-10-27 06:00+0000\n"
+"X-Generator: Launchpad (build 16810)\n"
 "Language: pt_BR\n"
 
 #: templates/about.html:6
@@ -41,6 +41,10 @@ msgid ""
 "track of your progress and tells you how much you know. In this way you can "
 "<strong>make sure that you know enough to pass your next test</strong>!"
 msgstr ""
+"Você também pode ser testado pelo OpenTeacher. Enquanto o OpenTeacher testa "
+"você, ele acompanha o seu progresso e lhe diz o quanto você sabe. Desse "
+"modo, você pode <strong>se certificar de que você sabe o suficiente para "
+"passar para o seu próximo teste</strong>!"
 
 #: templates/about.html:12
 msgid "Learn on many locations"
@@ -139,11 +143,11 @@ msgstr ""
 
 #: templates/download.html:8 templates/index.html:25
 msgid "Download OpenTeacher 3.2"
-msgstr ""
+msgstr "Baixar o OpenTeacher 3.2"
 
 #: templates/download.html:22
 msgid "For portable (USB-)drives"
-msgstr ""
+msgstr "Para dispositivos (USB) portáteis"
 
 #: templates/download.html:76
 msgid "Python 2 source with setup.py (for other Linux)"
@@ -151,51 +155,51 @@ msgstr ""
 
 #: templates/download.html:85
 msgid "Python 2 source"
-msgstr ""
+msgstr "Fonte em Python 2"
 
 #: templates/documentation.html:6 templates/base.html:66
 msgid "Documentation"
-msgstr ""
+msgstr "Documentação"
 
 #: templates/documentation.html:8
 msgid "User documentation"
-msgstr ""
+msgstr "Documentação do usuário"
 
 #: templates/documentation.html:9
 msgid "Using OpenTeacher 3: Quick start"
-msgstr ""
+msgstr "Usando o OpenTeacher 3: Guia rápido"
 
 #: templates/documentation.html:10
 msgid "Using OpenTeacher 2: Quick start"
-msgstr ""
+msgstr "Usando o OpenTeacher 2: Guia rápido"
 
 #: templates/documentation.html:11 docsTemplates/install-ubuntu.html:5
 msgid "Installing OpenTeacher in Ubuntu"
-msgstr ""
+msgstr "Instalando o OpenTeacher no Ubuntu"
 
 #: templates/documentation.html:12 docsTemplates/install-arch.html:5
 msgid "Installing OpenTeacher in ArchLinux"
-msgstr ""
+msgstr "Instalando o OpenTeacher no ArchLinux"
 
 #: templates/documentation.html:13 docsTemplates/faq.html:5
 msgid "Frequently Asked Questions"
-msgstr ""
+msgstr "Perguntas frequentes"
 
 #: templates/documentation.html:16
 msgid "Developer documentation"
-msgstr ""
+msgstr "Documentação do desenvolvedor"
 
 #: templates/documentation.html:17
 msgid "The OpenTeacher 2 file format"
-msgstr ""
+msgstr "O formato de arquivo OpenTeacher 2"
 
 #: templates/documentation.html:20
 msgid "Translator documentation"
-msgstr ""
+msgstr "Documentação do tradutor"
 
 #: templates/documentation.html:21
 msgid "Translator Notes"
-msgstr ""
+msgstr "Notas do tradutor"
 
 #: templates/index.html:8
 msgid ""
@@ -212,11 +216,11 @@ msgstr ""
 
 #: templates/index.html:12
 msgid "OpenTeacher has the following features (among others):"
-msgstr ""
+msgstr "O OpenTeacher tem os seguintes recursos (dentre outros):"
 
 #: templates/index.html:14
 msgid "Viewing both recent and past results of tests with graphs"
-msgstr ""
+msgstr "Visualizar resultados recentes e antigos de testes com gráficos"
 
 #: templates/index.html:15
 msgid "Smart question asking and interval training"
@@ -257,7 +261,7 @@ msgstr ""
 
 #: templates/index.html:26
 msgid "for"
-msgstr ""
+msgstr "para"
 
 #: templates/index.html:28
 msgid "Other systems and distro-specific packages"
