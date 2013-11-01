@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-09-19 21:37+0200\n"
-"PO-Revision-Date: 2013-10-27 01:25+0000\n"
+"PO-Revision-Date: 2013-10-31 16:30+0000\n"
 "Last-Translator: Adriano Steffler <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-28 05:30+0000\n"
-"X-Generator: Launchpad (build 16810)\n"
+"X-Launchpad-Export-Date: 2013-11-01 06:02+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 "Language: pt_BR\n"
 
 #: templates/about.html:6
@@ -34,6 +34,12 @@ msgid ""
 "the next. This should help you remember large doses of information without "
 "being overwhelmed by its size."
 msgstr ""
+"O OpenTeacher <strong>ajuda você a estudar</strong> o que você precisa saber "
+"para a sua próxima prova. O OpenTeacher lhe possibilita usar um tipo de "
+"lição em que você será ensinado em pequenas partes. Quando você souber uma "
+"parte, o OpenTeacher passará para a próxima lição. Isso ajudará você a se "
+"lembrar de grandes quantidades de informação sem ser acabrunhado pela sua "
+"quantia."
 
 #: templates/about.html:10
 msgid ""
@@ -152,6 +158,7 @@ msgstr "Para dispositivos (USB) portáteis"
 #: templates/download.html:76
 msgid "Python 2 source with setup.py (for other Linux)"
 msgstr ""
+"Código-fonte em Python 2 com o setup.py (para outras distribuições Linux)"
 
 #: templates/download.html:85
 msgid "Python 2 source"
@@ -206,6 +213,9 @@ msgid ""
 "<strong>OpenTeacher</strong> is an opensource application that <strong>helps "
 "you learn</strong> a variety of <strong>subjects</strong>."
 msgstr ""
+"O <strong>OpenTeacher</strong> é um aplicativo de código aberto que "
+"<strong>ajuda você a estudar</strong> uma grande variedade de "
+"<strong>assuntos</strong>."
 
 #: templates/index.html:10
 msgid ""
@@ -213,6 +223,9 @@ msgid ""
 "<strong>answers</strong>, or download them from the "
 "<strong>internet</strong>, and OpenTeacher <strong>tests you</strong>."
 msgstr ""
+"Você simplesmente digita as <strong>questões</strong> e as "
+"<strong>respostas</strong>, ou as baixa da <strong>internet</strong>, e o "
+"OpenTeacher <strong>avalia você</strong>."
 
 #: templates/index.html:12
 msgid "OpenTeacher has the following features (among others):"
@@ -236,14 +249,19 @@ msgid ""
 "Read support for more than 29 file formats; write support for over 14 file "
 "formats"
 msgstr ""
+"Suporte para leitura de mais de 29 formatos de arquivo; suporte para escrita "
+"em mais de 14 formatos de arquivo"
 
 #: templates/index.html:18
 msgid "Learn typing with our Typing Tutor which adapts itself to your skills"
 msgstr ""
+"Aprenda a digitar com o nosso tutor de digitação, que se adapta às suas "
+"habilidades"
 
 #: templates/index.html:19
 msgid "Print your word lists, media items and topography maps"
 msgstr ""
+"Imprima as suas listas de palavras, itens de mídia e mapas topográficos"
 
 #: templates/index.html:20
 msgid ""
@@ -252,12 +270,18 @@ msgid ""
 "German, Greek, Hungarian, Italian, Japanese, Polish, Russian, Sinhalese, "
 "Spanish and Turkish"
 msgstr ""
+"(Parcialmente) disponível em árabe, português brasileiro, chinês "
+"simplificado, chinês tradicional, tcheco, holandês, finlandês, francês, "
+"frísio, galício, alemão, grego, húngaro, italiano, japonês, polonês, russo, "
+"cingalês, espanhol e turco"
 
 #: templates/index.html:23
 msgid ""
 "OpenTeacher 3.2 is available for <strong>Linux, Windows and Mac OS "
 "X</strong>."
 msgstr ""
+"O OpenTeacher 3.2 está disponível para <strong>Linux, Windows e Mac OS "
+"X</strong>."
 
 #: templates/index.html:26
 msgid "for"
@@ -266,6 +290,7 @@ msgstr "para"
 #: templates/index.html:28
 msgid "Other systems and distro-specific packages"
 msgstr ""
+"Outros sistemas e pacotes específicos para determinadas distribuições"
 
 #: templates/contribute.html:6 templates/base.html:67
 msgid "Contribute"
@@ -348,31 +373,31 @@ msgstr ""
 
 #: templates/base.html:62
 msgid "Home"
-msgstr ""
+msgstr "Página inicial"
 
 #: templates/base.html:63
 msgid "News"
-msgstr ""
+msgstr "Novidades"
 
 #: templates/base.html:64
 msgid "About"
-msgstr ""
+msgstr "Sobre"
 
 #: templates/base.html:65
 msgid "Download"
-msgstr ""
+msgstr "Baixar"
 
 #: templates/docpage.html:8
 msgid "Go back to documentation"
-msgstr ""
+msgstr "Voltar à documentação"
 
 #: templates/docpage.html:9
 msgid "Link to this page"
-msgstr ""
+msgstr "Linque para esta página"
 
 #: docsTemplates/translator-notes.html:5
 msgid "Translator notes"
-msgstr ""
+msgstr "Notas para tradutores"
 
 #: docsTemplates/translator-notes.html:7
 msgid ""
@@ -384,7 +409,7 @@ msgstr ""
 
 #: docsTemplates/translator-notes.html:9
 msgid "List of all keyboard shortcuts in OpenTeacher:"
-msgstr ""
+msgstr "Lista de todos os atalhos de teclado do OpenTeacher:"
 
 #: docsTemplates/translator-notes.html:15
 msgid "deprecated, should be changed to &quot;Return&quot;"
@@ -392,7 +417,7 @@ msgstr ""
 
 #: docsTemplates/using-openteacher-2.html:5
 msgid "Using OpenTeacher 2: A Quick Start"
-msgstr ""
+msgstr "Usando o OpenTeacher 2: um guia rápido"
 
 #: docsTemplates/using-openteacher-2.html:7
 msgid ""
@@ -410,7 +435,7 @@ msgstr ""
 
 #: docsTemplates/using-openteacher-2.html:11
 msgid "Start OpenTeacher"
-msgstr ""
+msgstr "Iniciar o OpenTeacher"
 
 #: docsTemplates/using-openteacher-2.html:15
 msgid ""
@@ -418,6 +443,9 @@ msgid ""
 "language, which, in our case, is English, and the foreign language (the "
 "language you want to learn), which, in our case, is French."
 msgstr ""
+"Dê um título para a lista de palavras que você digitar. Digite também a "
+"língua conhecida, que, no nosso caso, é o português, e a língua estrangeira "
+"(a língua que você quer aprender), que, no nosso caso, é o francês."
 
 #: docsTemplates/using-openteacher-2.html:16
 msgid ""
@@ -445,6 +473,9 @@ msgid ""
 "you. If you did not enter the right translation, OpenTeacher will show you "
 "the correct answer, and the difference from your answer."
 msgstr ""
+"Se você digitou a tradução certa, a próxima questão será perguntada a você. "
+"Se você não digitar a tradução certa, o OpenTeacher lhe mostrará a resposta "
+"correta e a diferença da sua resposta."
 
 #: docsTemplates/using-openteacher-2.html:30
 msgid ""
