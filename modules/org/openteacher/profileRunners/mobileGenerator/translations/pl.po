@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-09-19 21:37+0200\n"
-"PO-Revision-Date: 2013-04-21 01:24+0000\n"
+"PO-Revision-Date: 2013-11-02 03:00+0000\n"
 "Last-Translator: pp/bs <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-20 05:54+0000\n"
-"X-Generator: Launchpad (build 16765)\n"
+"X-Launchpad-Export-Date: 2013-11-02 06:10+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 "Language: pl\n"
 
 #: scr/copyrightInfoDialog.js:29 scr/optionsDialog.js:101
 msgid "Copyright info"
-msgstr ""
+msgstr "Informacja o prawach autorskich"
 
 #: scr/enterTab.js:43 scr/gui.js:42
 msgid "Enter list"
@@ -28,7 +28,7 @@ msgstr "Wprowadź listę"
 
 #: scr/enterTab.js:44
 msgid "Word list:"
-msgstr ""
+msgstr "Lista słów"
 
 #: scr/enterTab.js:45
 msgid ""
@@ -39,21 +39,23 @@ msgstr ""
 
 #: scr/enterTab.js:47
 msgid "Error"
-msgstr ""
+msgstr "Błąd"
 
 #: scr/enterTab.js:48
 msgid "Missing equals sign or tab"
-msgstr ""
+msgstr "Brak znaku równości lub tabulacji"
 
 #: scr/enterTab.js:49
 msgid ""
 "Please make sure every line contains an '='-sign or tab between the "
 "questions and answers."
 msgstr ""
+"Upewnij się, że każda linia zawiera znak \"=\" lub znak tabulacji pomiędzy "
+"pytaniem a odpowiedzią."
 
 #: scr/enterTab.js:50 scr/teachTab.js:239
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #: scr/gui.js:39 scr/menuDialog.js:165
 msgid "Menu"
@@ -65,71 +67,72 @@ msgstr "Naucz mnie!"
 
 #: scr/menuDialog.js:166
 msgid "New list"
-msgstr ""
+msgstr "Nowa lista"
 
 #: scr/menuDialog.js:167 scr/menuDialog.js:185
 msgid "Load list"
-msgstr ""
+msgstr "Załaduj listę"
 
 #: scr/menuDialog.js:168 scr/menuDialog.js:173
 msgid "Save list"
-msgstr ""
+msgstr "Zapisz listę"
 
 #: scr/menuDialog.js:169 scr/menuDialog.js:190
 msgid "Remove list"
-msgstr ""
+msgstr "Usuń listę"
 
 #: scr/menuDialog.js:170 scr/optionsDialog.js:94
 msgid "Options"
-msgstr ""
+msgstr "Opcje"
 
 #: scr/menuDialog.js:174
 msgid "Please choose a name for the current list, so it can be saved."
-msgstr ""
+msgstr "Wybierz nazwę aktualnej listy, aby można ją było zapisać."
 
 #: scr/menuDialog.js:175
 msgid "Name:"
-msgstr ""
+msgstr "Nazwa:"
 
 #: scr/menuDialog.js:176
 msgid "Done"
-msgstr ""
+msgstr "Gotowe"
 
 #: scr/menuDialog.js:178
 msgid "Warning"
-msgstr ""
+msgstr "Ostrzeżenie"
 
 #: scr/menuDialog.js:179
 msgid "There is already a list named like that."
-msgstr ""
+msgstr "Lista o takiej nazwie już istnieje."
 
 #: scr/menuDialog.js:180
 msgid "If you continue, it will be overwritten. Continue?"
 msgstr ""
+"Jeśli kontynuujesz, stara nazwa zostanie zastąpiona nową. Kontynuować?"
 
 #: scr/menuDialog.js:181
 msgid "Yes"
-msgstr ""
+msgstr "Tak"
 
 #: scr/menuDialog.js:182
 msgid "No"
-msgstr ""
+msgstr "Nie"
 
 #: scr/menuDialog.js:186
 msgid "Please choose the list you want to load."
-msgstr ""
+msgstr "Wybierz listę, którą chcesz załadować."
 
 #: scr/menuDialog.js:187 scr/menuDialog.js:192
 msgid "Filter lists..."
-msgstr ""
+msgstr "Filtruj listy..."
 
 #: scr/menuDialog.js:191
 msgid "Please choose the list you want to remove."
-msgstr ""
+msgstr "Wybierz listę, którą chcesz usunąć."
 
 #: scr/optionsDialog.js:95
 msgid "Language:"
-msgstr ""
+msgstr "Język:"
 
 #: scr/optionsDialog.js:97
 msgid "Practising mode:"
@@ -137,11 +140,11 @@ msgstr ""
 
 #: scr/optionsDialog.js:98 scr/practisingModeChoiceDialog.js:47
 msgid "Think answer"
-msgstr ""
+msgstr "Pomyśl odpowiedź"
 
 #: scr/optionsDialog.js:99 scr/practisingModeChoiceDialog.js:48
 msgid "Type answer"
-msgstr ""
+msgstr "Wpisz odpowiedź"
 
 #: scr/practisingModeChoiceDialog.js:45
 msgid "Practising mode choice"
@@ -156,22 +159,24 @@ msgid ""
 "If you ever want to change your choice, you can do so in the options dialog, "
 "which is accessable by clicking 'Menu' and then 'Options'."
 msgstr ""
+"Jeśli kiedyś będziesz chciał zmienić swoją decyzję, możesz to zrobić w oknie "
+"opcji, dostępnym po kliknięciu 'Menu', a następnie 'Opcji'."
 
 #: scr/teachTab.js:225
 msgid "Question:"
-msgstr ""
+msgstr "Pytanie:"
 
 #: scr/teachTab.js:226
 msgid "Answer:"
-msgstr ""
+msgstr "Odpowiedź:"
 
 #: scr/teachTab.js:227
 msgid "Check!"
-msgstr ""
+msgstr "Sprawdź!"
 
 #: scr/teachTab.js:228
 msgid "Skip"
-msgstr ""
+msgstr "Pomiń"
 
 #: scr/teachTab.js:229
 msgid "Correct anyway"
@@ -181,28 +186,30 @@ msgstr ""
 msgid ""
 "Think about the answer, and press the 'View answer' button when you're done."
 msgstr ""
+"Zastanów się nad odpowiedzią, a następnie naciśnij przycisk 'Pokaż "
+"odpowiedź'."
 
 #: scr/teachTab.js:231
 msgid "View answer"
-msgstr ""
+msgstr "Pokaż odpowiedź"
 
 #: scr/teachTab.js:232
 msgid "Translation:"
-msgstr ""
+msgstr "Tłumaczenie:"
 
 #: scr/teachTab.js:233
 msgid "I was right"
-msgstr ""
+msgstr "Miałem rację"
 
 #: scr/teachTab.js:234
 msgid "I was wrong"
-msgstr ""
+msgstr "Myliłem się"
 
 #: scr/teachTab.js:237 scr/teachTab.js:238
 msgid "Test completed!"
-msgstr ""
+msgstr "Test ukończony!"
 
 #: scr/teachTab.js:240
 #, python-format
 msgid "Your note: %s"
-msgstr ""
+msgstr "Twoja ocena: %s"

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-09-19 21:37+0200\n"
-"PO-Revision-Date: 2013-06-10 20:27+0000\n"
-"Last-Translator: Michał Kudela <10mkudela@gmail.com>\n"
+"PO-Revision-Date: 2013-11-02 02:24+0000\n"
+"Last-Translator: pp/bs <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-20 05:51+0000\n"
-"X-Generator: Launchpad (build 16765)\n"
+"X-Launchpad-Export-Date: 2013-11-02 06:10+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 "Language: pl\n"
 
 #: media.py:159
@@ -24,20 +24,20 @@ msgstr "Utwórz lekcję medialną"
 
 #: media.py:199
 msgid "Unnamed"
-msgstr ""
+msgstr "Bez nazwy"
 
 #: media.py:200 media.py:251
 #, python-format
 msgid "Media lesson: %s"
-msgstr ""
+msgstr "Lekcja medialna: %s"
 
 #: media.py:233
 msgid "Unsupported media"
-msgstr ""
+msgstr "Nieobsługiwane źródło mediów"
 
 #: media.py:233
 msgid "This type of media isn't supported on your computer"
-msgstr ""
+msgstr "Ten rodzaj mediów nie jest obsługiwany na twoim komputerze"
 
 #: media.py:296
 msgid "Empty question or answer"

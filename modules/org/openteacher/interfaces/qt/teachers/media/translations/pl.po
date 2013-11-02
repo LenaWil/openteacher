@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-09-19 21:37+0200\n"
-"PO-Revision-Date: 2013-11-01 03:32+0000\n"
+"PO-Revision-Date: 2013-11-02 02:45+0000\n"
 "Last-Translator: pp/bs <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,26 +17,12 @@ msgstr ""
 "X-Launchpad-Export-Date: 2013-11-02 06:10+0000\n"
 "X-Generator: Launchpad (build 16820)\n"
 
-#: about.py:43
-msgid "Project website"
-msgstr "Strona WWW projektu"
+#. TRANSLATORS: lesson types are e.g. 'smart', 'all once' and 'interval'
+#: media.py:123
+msgid "Lesson type:"
+msgstr "Rodzaj lekcji:"
 
-#: about.py:93
-msgid "Full license text"
-msgstr ""
-
-#: about.py:199
-msgid "Thanks to all Launchpad contributors!"
-msgstr ""
-
-#: about.py:244 about.py:245
-msgid "About"
-msgstr "O programie"
-
-#: about.py:246
-msgid "License"
-msgstr "Licencja"
-
-#: about.py:247
-msgid "Authors"
-msgstr "Autorzy"
+#. TRANSLATORS: a button which the user presses to tell the computer it should check his/her answer.
+#: media.py:125
+msgid "Check"
+msgstr "Sprawdź"

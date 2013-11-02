@@ -1,0 +1,55 @@
+# Polish translation for openteacher
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-09-19 21:37+0200\n"
+"PO-Revision-Date: 2013-11-02 02:37+0000\n"
+"Last-Translator: pp/bs <Unknown>\n"
+"Language-Team: Polish <pl@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-11-02 06:10+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
+
+#: testsViewer.py:51
+msgid "Date"
+msgstr "Data"
+
+#: testsViewer.py:52
+msgid "Note"
+msgstr "Ocena"
+
+#: testsViewer.py:53
+msgid "Completed"
+msgstr "Ukończone"
+
+#: testsViewer.py:118
+msgid "Highest note:"
+msgstr "Najwyższa ocena:"
+
+#: testsViewer.py:121
+msgid "Average note:"
+msgstr "Średnia ocena:"
+
+#: testsViewer.py:124
+msgid "Lowest note:"
+msgstr "Najniższa ocena:"
+
+#. TRANSLATORS: This is meant as 'here would normally
+#. stand a note, but not today.' If '-' isn't
+#. appropriate in you language for that, please replace.
+#. Otherwise, just copy the original.
+#: testsViewer.py:140 testsViewer.py:145 testsViewer.py:149 testsViewer.py:173
+#: testsViewer.py:179
+msgid "-"
+msgstr "-"
+
+#: testsViewer.py:247
+msgid "Back"
+msgstr "Wstecz"

@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-09-19 21:38+0200\n"
-"PO-Revision-Date: 2013-11-02 02:28+0000\n"
+"PO-Revision-Date: 2013-11-02 02:17+0000\n"
 "Last-Translator: pp/bs <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,20 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-11-02 06:10+0000\n"
 "X-Generator: Launchpad (build 16820)\n"
-"Language: pl\n"
 
-#: topo.py:128
-msgid "Create topography lesson"
-msgstr "Utwórz lekcję topografii"
-
-#. TRANSLATORS: used as a label in case a filename of a topo
-#. TRANSLATORS: lesson isn't available. (E.g. because it's
-#. TRANSLATORS: downloaded from some kind of web service.)
-#: topo.py:218
-msgid "Import source"
-msgstr "Zaimportowane źródło"
-
-#: topo.py:224 topo.py:291 topo.py:293
-#, python-format
-msgid "Topo lesson: %s"
-msgstr "Lekcja topografii: %s"
+#: german.py:85
+msgid "German"
+msgstr "Niemiecki"
