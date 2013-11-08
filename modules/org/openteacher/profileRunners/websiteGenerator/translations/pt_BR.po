@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-09-19 21:37+0200\n"
-"PO-Revision-Date: 2013-10-31 16:30+0000\n"
+"PO-Revision-Date: 2013-11-07 19:46+0000\n"
 "Last-Translator: Adriano Steffler <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-01 06:02+0000\n"
+"X-Launchpad-Export-Date: 2013-11-08 06:01+0000\n"
 "X-Generator: Launchpad (build 16820)\n"
 "Language: pt_BR\n"
 
@@ -35,7 +35,7 @@ msgid ""
 "being overwhelmed by its size."
 msgstr ""
 "O OpenTeacher <strong>ajuda você a estudar</strong> o que você precisa saber "
-"para a sua próxima prova. O OpenTeacher lhe possibilita usar um tipo de "
+"para a sua próxima avaliação. O OpenTeacher lhe possibilita usar um tipo de "
 "lição em que você será ensinado em pequenas partes. Quando você souber uma "
 "parte, o OpenTeacher passará para a próxima lição. Isso ajudará você a se "
 "lembrar de grandes quantidades de informação sem ser acabrunhado pela sua "
@@ -75,6 +75,11 @@ msgid ""
 "lists that you created in OpenTeacher. This way you can <strong>use the same "
 "lists everywhere you go</strong>!"
 msgstr ""
+"O OpenTeacher tem uma excelente integração com o tutor de língua na rede "
+"Wrts (também conhecido como <a href=\"http://www.wrds.eu/\">Wrds</a>). Você "
+"pode acessar, editar e estudar todas as suas listas do Wrds diretamente do "
+"OpenTeacher ou adicionar novas listas que você criou no OpenTeacher. Desse "
+"modo, você pode <strong>utilizar as mesmas listas em toda parte</strong>!"
 
 #: templates/about.html:16
 msgid "OpenTeacher helps you teach"
@@ -92,6 +97,13 @@ msgid ""
 "can help the students learn this information by themselves. It can "
 "<strong>improve the student's results</strong> and saves the teacher time."
 msgstr ""
+"Ao passo que o OpenTeacher é, primariamente, focado em estudantes, o "
+"OpenTeacher também funciona muito bem como uma <strong>ferramenta para "
+"auxiliar professores</strong> a oferecer aos seus alunos a educação correta. "
+"Enquanto os professores ainda fornecem as informações, o OpenTeacher pode "
+"ajudar os estudantes a aprenderem essas informações por si mesmos. Ele pode "
+"<strong>melhorar os resultados dos estudantes</strong> e poupar o tempo do "
+"professor."
 
 #: templates/about.html:19
 msgid ""
@@ -307,6 +319,15 @@ msgid ""
 "chat</a> (#openteacher at irc.freenode.net), or you can e-mail us at <a "
 "href=\"mailto:contribute@openteacher.org\">contribute@openteacher.org</a>."
 msgstr ""
+"Contribuir para o OpenTeacher é muito fácil, porque o OpenTeacher é, como o "
+"nome sugere, um programa de código aberto. Para nós, isso significa não "
+"somente que todos possam ver o código-fonte, mas também que todos possam "
+"contribuir! Se você deseja ajudar, você pode começar a contribuir "
+"imediatamente na <a href=\"http://www.launchpad.net/openteacher\">plataforma "
+"Launchpad</a>, nos conhecer no <a "
+"href=\"http://webchat.freenode.net/?channels=openteacher\">bate-papo</a> "
+"(#openteacher at irc.freenode.net), ou você pode nos contactar no endereço "
+"<a href=\"mailto:contribute@openteacher.org\">contribute@openteacher.org</a>."
 
 #: templates/contribute.html:10
 msgid "There are several ways to contribute to OpenTeacher:"
@@ -325,6 +346,8 @@ msgid ""
 "<strong>Designers</strong>. It's important that OpenTeacher looks good! Do "
 "you know anything about design? Contact us."
 msgstr ""
+"<strong>Projetistas gráficos</strong>. É importante que o OpenTeacher tenha "
+"uma boa aparência! Você sabe algo sobre projetos gráficos? Contacte-nos."
 
 #: templates/contribute.html:19
 msgid ""
@@ -426,12 +449,18 @@ msgid ""
 "this example we are assuming that you already know English, and you want to "
 "learn French."
 msgstr ""
+"Este guia rápido mostra a você como fazer um auto-teste simples usando o "
+"OpenTeacher 2. Hoje nós aprenderemos a contar até dez em francês! Para esse "
+"exemplo, nós presumimos que você já sabe inglês e que você gostaria de "
+"aprender francês."
 
 #: docsTemplates/using-openteacher-2.html:9
 msgid ""
 "The screenshots are all taken in Ubuntu, but this should all work exactly "
 "the same in Windows and Mac OS X."
 msgstr ""
+"Todas as capturas de tela são do Ubuntu, mas tudo o que foi mostrado deve "
+"funcionar exatamente igual no Windows e no Mac OS X."
 
 #: docsTemplates/using-openteacher-2.html:11
 msgid "Start OpenTeacher"
@@ -452,12 +481,18 @@ msgid ""
 "Then enter all words you want to learn, seperating the foreign and known "
 "language by =, and the words by newlines (see the screenshot for an example)."
 msgstr ""
+"Depois digite todas as palavras que você gostaria de aprender, separando a "
+"língua estrangeira e a língua conhecida por =, e as palavras por mudanças de "
+"linhas (veja a captura de tela para um exemplo)."
 
 #: docsTemplates/using-openteacher-2.html:20
 msgid ""
 "Click \"Enter!\". Now the table of words on the bottom will be filled with "
 "your words. You have now successfully made your word list!"
 msgstr ""
+"Clique em \"Inserir!\" Agora a tabela de palavras na parte de baixo será "
+"preenchida com as suas palavras. Agora você criou com sucesso a sua lista de "
+"palavras!"
 
 #: docsTemplates/using-openteacher-2.html:24
 msgid ""
@@ -482,6 +517,8 @@ msgid ""
 "Once the test is completed, OpenTeacher will tell you if you did well by "
 "giving you a &quot;note&quot; (grade)."
 msgstr ""
+"Assim que o teste estiver completo, o OpenTeacher lhe dirá se você foi bem, "
+"dando uma &quot;nota&quot; (graduação)."
 
 #: docsTemplates/install-arch.html:6
 msgid ""
@@ -511,16 +548,19 @@ msgstr ""
 msgid ""
 "Download the Ubuntu .deb file from the Download section of this website."
 msgstr ""
+"Baixe o arquivo .deb do Ubuntu da Seção de arquivos para baixar neste sítio."
 
 #: docsTemplates/install-ubuntu.html:9
 msgid ""
 "When the download has completed, doubleclick the .deb file you just "
 "downloaded. This will open the Ubuntu Software Center."
 msgstr ""
+"Quando o arquivo estiver baixado, dê um clique duplo no arquivo .deb que "
+"você acabou de baixar. Essa ação abrirá a central de programas do Ubuntu."
 
 #: docsTemplates/install-ubuntu.html:12
 msgid "Click &quot;install&quot; to start the installation."
-msgstr ""
+msgstr "Clique em &quot;instalar&quot; para iniciar a instalação."
 
 #: docsTemplates/install-ubuntu.html:13
 msgid ""
@@ -530,7 +570,7 @@ msgstr ""
 
 #: docsTemplates/the-openteacher-format.html:5
 msgid "The Openteacher 2 file format"
-msgstr ""
+msgstr "O formato de arquivo Openteacher 2"
 
 #: docsTemplates/the-openteacher-format.html:6
 msgid "The Openteacher 2 file format is an XML 1.0 file with UTF-8 encoding."
@@ -551,39 +591,39 @@ msgstr ""
 
 #: docsTemplates/the-openteacher-format.html:10
 msgid "Node structure"
-msgstr ""
+msgstr "Estrutura de nós"
 
 #: docsTemplates/the-openteacher-format.html:25
 msgid "The title of the word list"
-msgstr ""
+msgstr "O título da lista de palavras"
 
 #: docsTemplates/the-openteacher-format.html:26
 msgid "The name of the question language"
-msgstr ""
+msgstr "O nome da língua da pergunta"
 
 #: docsTemplates/the-openteacher-format.html:27
 msgid "The name of the answer language"
-msgstr ""
+msgstr "O nome da língua da resposta"
 
 #: docsTemplates/the-openteacher-format.html:29
 msgid "This word in the question language"
-msgstr ""
+msgstr "Esta palavra na língua da pergunta"
 
 #: docsTemplates/the-openteacher-format.html:30
 msgid "This word in the answer language"
-msgstr ""
+msgstr "Esta palavra na língua da resposta"
 
 #: docsTemplates/the-openteacher-format.html:31
 msgid "The results of this word in the format of 0/0"
-msgstr ""
+msgstr "Os resultados desta palavra no formato de 0/0"
 
 #: docsTemplates/the-openteacher-format.html:37
 msgid "Example a word list saved in the OpenTeacher 2 format"
-msgstr ""
+msgstr "Exemplo de uma lista de palavras salva no formato OpenTeacher 2"
 
 #: docsTemplates/faq.html:6
 msgid "OpenTeacher won't run on Windows!"
-msgstr ""
+msgstr "O OpenTeacher não quer funcionar no Windows!"
 
 #: docsTemplates/faq.html:7
 msgid ""
@@ -599,7 +639,7 @@ msgstr ""
 
 #: docsTemplates/faq.html:8
 msgid "OpenTeacher won't run on ArchLinux!"
-msgstr ""
+msgstr "O OpenTeacher não quer funcionar no ArchLinux!"
 
 #: docsTemplates/faq.html:9
 msgid ""
