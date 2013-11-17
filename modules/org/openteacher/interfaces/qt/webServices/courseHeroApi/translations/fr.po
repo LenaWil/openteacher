@@ -1,0 +1,60 @@
+# French translation for openteacher
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-09-19 21:37+0200\n"
+"PO-Revision-Date: 2013-11-16 21:56+0000\n"
+"Last-Translator: Tubuntu <Unknown>\n"
+"Language-Team: French <fr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-11-17 05:32+0000\n"
+"X-Generator: Launchpad (build 16831)\n"
+
+#: courseHeroApi.py:163
+msgid ""
+"Enter a search term and press the search button to search coursehero.com for "
+"sets. Then select the set or sets you want to import and click OK."
+msgstr ""
+"Entrez un terme à rechercher et appuyez sur le bouton de recherche pour "
+"effectuer une recherche d'éléments sur coursehero.com. Ensuite sélectionnez "
+"les éléments à importer et cliquez OK."
+
+#: courseHeroApi.py:164
+msgid "E.g.: french holiday vocabulary"
+msgstr "Ex : vocabulaire français de vacances"
+
+#: courseHeroApi.py:165
+msgid "Search"
+msgstr "Recherche"
+
+#: courseHeroApi.py:166
+msgid "Search coursehero.com"
+msgstr "Recherche sur coursehero.com"
+
+#: courseHeroApi.py:244
+msgid "Import from coursehero.com"
+msgstr "Importer de coursehero.com"
+
+#: courseHeroApi.py:270
+msgid "No coursehero.com connection"
+msgstr "Pas de connexion coursehero.com"
+
+#: courseHeroApi.py:271
+msgid ""
+"coursehero.com didn't accept the connection. Are you sure that your internet "
+"connection works and coursehero.com is online?"
+msgstr ""
+"coursehero.com n'a pas accepter la connexion. Êtes-vous certain que votre "
+"connexion internet fonctionne et que coursehero.com est en ligne ?"
+
+#: courseHeroApi.py:313
+msgid "The word list was imported from coursehero.com successfully."
+msgstr ""
+"La liste de mots a été importée avec succès à partir de coursehero.com."
