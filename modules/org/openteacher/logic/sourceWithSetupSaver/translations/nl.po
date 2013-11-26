@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.1\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-09-19 21:37+0200\n"
+"POT-Creation-Date: 2013-11-26 22:11+0100\n"
 "PO-Revision-Date: 2013-03-26 18:04+0000\n"
 "Last-Translator: Michael Tel <m.tel@xs4all.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-09-20 05:54+0000\n"
 "X-Generator: Launchpad (build 16765)\n"
-"Language: \n"
 
 #: manpage.templ:29
 msgid "SYNOPSIS"
@@ -38,8 +38,7 @@ msgstr ""
 
 #: manpage.templ:39
 msgid "Lessons can be loaded from both files and the internet."
-msgstr ""
-"Lessen kunnen geladen worden vanuit zowel bestanden als het internet."
+msgstr "Lessen kunnen geladen worden vanuit zowel bestanden als het internet."
 
 #: manpage.templ:40
 msgid ""
@@ -79,6 +78,7 @@ msgid "show a help message"
 msgstr "laat een hulpboodschap zien"
 
 #: manpage.templ:51
+#, python-brace-format
 msgid "run {name} as specified by {profile}, {profile} should be one of:"
 msgstr ""
 "start {name} zoals gespecificeerd door {profile}, {profile} moet één zijn "
@@ -93,5 +93,6 @@ msgid "AUTHOR"
 msgstr "AUTEUR"
 
 #: manpage.templ:61
+#, python-brace-format
 msgid "Contact: {email}"
 msgstr "Contact: {email}"

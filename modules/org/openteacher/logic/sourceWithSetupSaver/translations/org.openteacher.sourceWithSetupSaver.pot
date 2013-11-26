@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2013-09-19 21:37+0200\n"
+"POT-Creation-Date: 2013-11-26 22:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,6 +71,7 @@ msgid "show a help message"
 msgstr ""
 
 #: manpage.templ:51
+#, python-brace-format
 msgid "run {name} as specified by {profile}, {profile} should be one of:"
 msgstr ""
 
@@ -83,5 +84,6 @@ msgid "AUTHOR"
 msgstr ""
 
 #: manpage.templ:61
+#, python-brace-format
 msgid "Contact: {email}"
 msgstr ""
