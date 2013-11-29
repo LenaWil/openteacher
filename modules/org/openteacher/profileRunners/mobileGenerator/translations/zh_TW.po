@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-11-26 22:11+0100\n"
-"PO-Revision-Date: 2013-05-29 07:31+0000\n"
+"PO-Revision-Date: 2013-11-28 16:18+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-27 05:17+0000\n"
-"X-Generator: Launchpad (build 16845)\n"
+"X-Launchpad-Export-Date: 2013-11-29 05:20+0000\n"
+"X-Generator: Launchpad (build 16847)\n"
 "Language: \n"
 
 #: scr/copyrightInfoDialog.js:29 scr/optionsDialog.js:101
 msgid "Copyright info"
-msgstr ""
+msgstr "版權資訊"
 
 #: scr/enterTab.js:43 scr/gui.js:42
 msgid "Enter list"
@@ -28,7 +28,7 @@ msgstr "輸入列表"
 
 #: scr/enterTab.js:44
 msgid "Word list:"
-msgstr ""
+msgstr "單字列表："
 
 #: scr/enterTab.js:45
 msgid ""
@@ -36,24 +36,27 @@ msgid ""
 "to = bij\n"
 "OpenTeacher mobile = OpenTeacher mobile\n"
 msgstr ""
+"Welcome = 歡迎\n"
+"to = 來到\n"
+"OpenTeacher mobile = OpenTeacher mobile\n"
 
 #: scr/enterTab.js:47
 msgid "Error"
-msgstr ""
+msgstr "錯誤"
 
 #: scr/enterTab.js:48
 msgid "Missing equals sign or tab"
-msgstr ""
+msgstr "缺少 = 或 tab"
 
 #: scr/enterTab.js:49
 msgid ""
 "Please make sure every line contains an '='-sign or tab between the "
 "questions and answers."
-msgstr ""
+msgstr "請確定每行在問題和答案間都有包含 = 或 tab"
 
 #: scr/enterTab.js:50 scr/teachTab.js:239
 msgid "Ok"
-msgstr ""
+msgstr "確定"
 
 #: scr/gui.js:39 scr/menuDialog.js:165
 msgid "Menu"
@@ -65,71 +68,71 @@ msgstr "教我！"
 
 #: scr/menuDialog.js:166
 msgid "New list"
-msgstr ""
+msgstr "新建列表"
 
 #: scr/menuDialog.js:167 scr/menuDialog.js:185
 msgid "Load list"
-msgstr ""
+msgstr "載入列表"
 
 #: scr/menuDialog.js:168 scr/menuDialog.js:173
 msgid "Save list"
-msgstr ""
+msgstr "儲存列表"
 
 #: scr/menuDialog.js:169 scr/menuDialog.js:190
 msgid "Remove list"
-msgstr ""
+msgstr "移除列表"
 
 #: scr/menuDialog.js:170 scr/optionsDialog.js:94
 msgid "Options"
-msgstr ""
+msgstr "選項"
 
 #: scr/menuDialog.js:174
 msgid "Please choose a name for the current list, so it can be saved."
-msgstr ""
+msgstr "請選擇一個名稱給目前列表，才能夠儲存。"
 
 #: scr/menuDialog.js:175
 msgid "Name:"
-msgstr ""
+msgstr "名稱:"
 
 #: scr/menuDialog.js:176
 msgid "Done"
-msgstr ""
+msgstr "完成"
 
 #: scr/menuDialog.js:178
 msgid "Warning"
-msgstr ""
+msgstr "警告"
 
 #: scr/menuDialog.js:179
 msgid "There is already a list named like that."
-msgstr ""
+msgstr "已經有個一樣的列表名稱。"
 
 #: scr/menuDialog.js:180
 msgid "If you continue, it will be overwritten. Continue?"
-msgstr ""
+msgstr "假如你繼續，將會覆蓋舊檔。繼續嗎？"
 
 #: scr/menuDialog.js:181
 msgid "Yes"
-msgstr ""
+msgstr "是"
 
 #: scr/menuDialog.js:182
 msgid "No"
-msgstr ""
+msgstr "否"
 
 #: scr/menuDialog.js:186
 msgid "Please choose the list you want to load."
-msgstr ""
+msgstr "請選擇想要載入的列表。"
 
 #: scr/menuDialog.js:187 scr/menuDialog.js:192
 msgid "Filter lists..."
-msgstr ""
+msgstr "過濾列表..."
 
 #: scr/menuDialog.js:191
 msgid "Please choose the list you want to remove."
-msgstr ""
+msgstr "請選擇想要刪除的列表。"
 
 #: scr/optionsDialog.js:95
 msgid "Language:"
-msgstr ""
+msgstr "語言："
 
 #: scr/optionsDialog.js:97
 msgid "Practising mode:"
@@ -137,11 +140,11 @@ msgstr ""
 
 #: scr/optionsDialog.js:98 scr/practisingModeChoiceDialog.js:47
 msgid "Think answer"
-msgstr ""
+msgstr "思考答案"
 
 #: scr/optionsDialog.js:99 scr/practisingModeChoiceDialog.js:48
 msgid "Type answer"
-msgstr ""
+msgstr "輸入答案"
 
 #: scr/practisingModeChoiceDialog.js:45
 msgid "Practising mode choice"
@@ -159,44 +162,44 @@ msgstr ""
 
 #: scr/teachTab.js:225
 msgid "Question:"
-msgstr ""
+msgstr "問題："
 
 #: scr/teachTab.js:226
 msgid "Answer:"
-msgstr ""
+msgstr "答案："
 
 #: scr/teachTab.js:227
 msgid "Check!"
-msgstr ""
+msgstr "檢查！"
 
 #: scr/teachTab.js:228
 msgid "Skip"
-msgstr ""
+msgstr "跳過"
 
 #: scr/teachTab.js:229
 msgid "Correct anyway"
-msgstr ""
+msgstr "無論如何都算對"
 
 #: scr/teachTab.js:230
 msgid ""
 "Think about the answer, and press the 'View answer' button when you're done."
-msgstr ""
+msgstr "思考答案，當你想好後按 \"顯示答案\""
 
 #: scr/teachTab.js:231
 msgid "View answer"
-msgstr ""
+msgstr "顯示答案"
 
 #: scr/teachTab.js:232
 msgid "Translation:"
-msgstr ""
+msgstr "翻譯："
 
 #: scr/teachTab.js:233
 msgid "I was right"
-msgstr ""
+msgstr "我答對了"
 
 #: scr/teachTab.js:234
 msgid "I was wrong"
-msgstr ""
+msgstr "我答錯了"
 
 #: scr/teachTab.js:237 scr/teachTab.js:238
 msgid "Test completed!"

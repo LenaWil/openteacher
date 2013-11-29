@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-11-26 22:12+0100\n"
-"PO-Revision-Date: 2013-09-27 07:15+0000\n"
-"Last-Translator: Walter Cheuk <wwycheuk@gmail.com>\n"
+"PO-Revision-Date: 2013-11-28 17:04+0000\n"
+"Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-27 05:17+0000\n"
-"X-Generator: Launchpad (build 16845)\n"
+"X-Launchpad-Export-Date: 2013-11-29 05:20+0000\n"
+"X-Generator: Launchpad (build 16847)\n"
 "Language: \n"
 
 #: templates/about.html:6
@@ -170,7 +170,7 @@ msgstr ""
 
 #: templates/download.html:8 templates/index.html:25
 msgid "Download OpenTeacher 3.2"
-msgstr ""
+msgstr "下載 OpenTeacher 3.2"
 
 #: templates/download.html:22
 msgid "For portable (USB-)drives"
@@ -247,7 +247,7 @@ msgstr "OpenTeacher 有下列特點（和其他比較起來）："
 
 #: templates/index.html:14
 msgid "Viewing both recent and past results of tests with graphs"
-msgstr ""
+msgstr "檢視最近和過去測試結果的圖表。"
 
 #: templates/index.html:15
 msgid "Smart question asking and interval training"
@@ -270,7 +270,7 @@ msgstr ""
 
 #: templates/index.html:19
 msgid "Print your word lists, media items and topography maps"
-msgstr ""
+msgstr "列印你的單字列表、媒體項目及地形地圖"
 
 #: templates/index.html:20
 msgid ""
@@ -285,6 +285,7 @@ msgid ""
 "OpenTeacher 3.2 is available for <strong>Linux, Windows and Mac OS "
 "X</strong>."
 msgstr ""
+"OpenTeacher 3.2 有 <strong>Linux, Windows and Mac OS X</strong> 平台可下載。"
 
 #: templates/index.html:26
 msgid "for"
@@ -568,7 +569,7 @@ msgstr "OpenTeacher 2 檔案格式是一種以 UTF-8 編碼的 XML 1.0 檔案。
 #, python-format
 msgid ""
 "An XML-scheme of the file format can be downloaded <a href=\"%s\">here</a>."
-msgstr ""
+msgstr "<a href=\"%s\">這裡</a> 可以下載 XML-scheme 格式的檔案。"
 
 #: docsTemplates/the-openteacher-format.html:8
 #, python-format

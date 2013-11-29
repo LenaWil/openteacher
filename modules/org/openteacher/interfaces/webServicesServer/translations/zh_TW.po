@@ -1,0 +1,65 @@
+# Chinese (Traditional) translation for openteacher
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-11-26 22:12+0100\n"
+"PO-Revision-Date: 2013-11-28 15:53+0000\n"
+"Last-Translator: Louie Chen <louie23@gmail.com>\n"
+"Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-11-29 05:20+0000\n"
+"X-Generator: Launchpad (build 16847)\n"
+
+#: serverImpl.py:214
+msgid "Invalid captcha. Please try again."
+msgstr "無效的驗證碼。請重試一次。"
+
+#: serverImpl.py:215
+#, python-format
+msgid ""
+"Your password should at least be %s characters long, and contain special "
+"(non alphanumeric) characters. Please try again."
+msgstr "你的密碼應該至少有 %s 碼，並且包含特殊（不是數字）字元。請重試一次。"
+
+#: serverImpl.py:216
+msgid "The username you requested is already taken. Please try again."
+msgstr "你要求的用戶名稱已有人使用。請重試一次。"
+
+#: register-template.html:23
+msgid "OpenTeacher Web - sign up"
+msgstr "OpenTeacher Web - 註冊"
+
+#: register-template.html:63
+msgid "OpenTeacher Web"
+msgstr "OpenTeacher Web"
+
+#: register-template.html:64
+msgid "Sign up"
+msgstr "註冊"
+
+#: register-template.html:66
+msgid "Welcome to OpenTeacher Web! You can register an account below."
+msgstr "歡迎來到 OpenTeacher Web! 你可以在下方註冊新帳號。"
+
+#: register-template.html:76
+msgid "Username:"
+msgstr "用戶名稱："
+
+#: register-template.html:82
+msgid "Password:"
+msgstr "密碼："
+
+#: register-template.html:97
+msgid "Sign up!"
+msgstr "註冊！"
+
+#: register-template.html:98
+msgid "Cancel"
+msgstr "取消"

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-11-26 22:12+0100\n"
-"PO-Revision-Date: 2013-08-13 14:12+0000\n"
+"PO-Revision-Date: 2013-11-28 16:50+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-27 05:17+0000\n"
-"X-Generator: Launchpad (build 16845)\n"
+"X-Launchpad-Export-Date: 2013-11-29 05:20+0000\n"
+"X-Generator: Launchpad (build 16847)\n"
 "Language: \n"
 
 #: static/scr/learn-list.js:5
@@ -28,7 +28,7 @@ msgstr "檢查！"
 
 #: static/scr/learn-list.js:7
 msgid "Skip"
-msgstr ""
+msgstr "跳過"
 
 #: static/scr/learn-list.js:8
 msgid "Correct anyway"
@@ -36,134 +36,134 @@ msgstr "無論如何都算對"
 
 #: static/scr/learn-list.js:9
 msgid "Back"
-msgstr ""
+msgstr "返回"
 
 #: static/scr/lists-overview.js:5
 msgid "Lists overview"
-msgstr ""
+msgstr "列表概要"
 
 #: static/scr/lists-overview.js:6
 msgid "Remove selected lists"
-msgstr ""
+msgstr "刪除選擇列表"
 
 #: static/scr/lists-overview.js:7
 msgid "Create new list"
-msgstr ""
+msgstr "建立新列表"
 
 #: static/scr/lists-overview.js:8
 msgid "Upload list from computer"
-msgstr ""
+msgstr "從電腦上傳列表"
 
 #: static/scr/lists-overview.js:9
 msgid "View"
-msgstr ""
+msgstr "檢視"
 
 #: static/scr/lists-overview.js:10 static/scr/view-list.js:24
 msgid "Teach me!"
-msgstr ""
+msgstr "教我！"
 
 #: static/scr/lists-overview.js:11
 msgid "Last edited:"
-msgstr ""
+msgstr "最後編輯："
 
 #: static/scr/lists-overview.js:13
 msgid "Upload file"
-msgstr ""
+msgstr "上傳檔案"
 
 #: static/scr/lists-overview.js:14
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #: static/scr/lists-overview.js:15
 msgid ""
 "Please select the file you want to upload below, and click 'upload' when "
 "you're done. Supported file extensions are:"
-msgstr ""
+msgstr "請選擇下方要上傳檔案，並在完成後點擊 \"上傳\"。支援格式有："
 
 #: static/scr/lists-overview.js:16
 msgid ""
 "Couldn't load file. Is the file type supported and the file not corrupted?"
-msgstr ""
+msgstr "無法載入檔案。檔案格式有支援而且沒壞掉嗎？"
 
 #: static/scr/lists-overview.js:45
 msgid "New list"
-msgstr ""
+msgstr "新建列表"
 
 #: static/scr/lists-overview.js:53
 msgid "Uploaded list"
-msgstr ""
+msgstr "已上傳列表"
 
 #: static/scr/login.js:6
 msgid "Log in"
-msgstr ""
+msgstr "登入"
 
 #: static/scr/login.js:8
 msgid "New? Click here to sign up."
-msgstr ""
+msgstr "初次來嗎？點擊這裡註冊帳號。"
 
 #: static/scr/login.js:9
 msgid "You registered succesfully. You can now log in."
-msgstr ""
+msgstr "註冊成功。你現在可以登入。"
 
 #: static/scr/login.js:10
 msgid "You cancelled the registration."
-msgstr ""
+msgstr "你已取消註冊。"
 
 #: static/scr/login.js:12
 msgid "Username:"
-msgstr ""
+msgstr "用戶名稱："
 
 #: static/scr/login.js:13
 msgid "Password:"
-msgstr ""
+msgstr "密碼："
 
 #: static/scr/login.js:14
 msgid "Log in!"
-msgstr ""
+msgstr "登入！"
 
 #: static/scr/login.js:16
 msgid "Login anonymously"
-msgstr ""
+msgstr "匿名登入"
 
 #: static/scr/login.js:17
 msgid ""
 "All data will only be available locally, and will be gone when your "
 "browser's local storage is cleared."
-msgstr ""
+msgstr "所有資料只有在本地端有效，並且會在你清除瀏覽器本地儲存時消失。"
 
 #: static/scr/login.js:20
 msgid "Log out"
-msgstr ""
+msgstr "登出"
 
 #: static/scr/login.js:21
 msgid "Unsubscribe"
-msgstr ""
+msgstr "取消訂閱"
 
 #: static/scr/login.js:24
 msgid "Or view a shared list"
-msgstr ""
+msgstr "或是檢視共享列表"
 
 #: static/scr/login.js:120
 msgid ""
 "Are you sure you want to unsubscribe? This will remove your account and all "
 "data associated with it. Keep in mind that there's no recovery procedure!"
-msgstr ""
+msgstr "你確定要取消訂閱嗎？這樣會刪除你的帳號及所有關聯的資料。記住並沒有回復的方法。"
 
 #: static/scr/main.js:39
 msgid "OpenTeacher Web"
-msgstr ""
+msgstr "OpenTeacher Web"
 
 #: static/scr/main.js:44
 msgid "License information and source code"
-msgstr ""
+msgstr "版權資訊和原始碼"
 
 #: static/scr/view-list.js:5
 msgid "List"
-msgstr ""
+msgstr "列表"
 
 #: static/scr/view-list.js:6
 msgid "Title:"
-msgstr ""
+msgstr "標題："
 
 #: static/scr/view-list.js:7
 msgid "Shares:"
@@ -175,87 +175,87 @@ msgstr ""
 
 #: static/scr/view-list.js:9
 msgid "Question language"
-msgstr ""
+msgstr "問題語言"
 
 #: static/scr/view-list.js:10
 msgid "Answer language"
-msgstr ""
+msgstr "答案語言"
 
 #: static/scr/view-list.js:11
 msgid "Questions"
-msgstr ""
+msgstr "問題"
 
 #: static/scr/view-list.js:12
 msgid "Answers"
-msgstr ""
+msgstr "答案"
 
 #: static/scr/view-list.js:13
 msgid "Remove this item"
-msgstr ""
+msgstr "移除此項目"
 
 #: static/scr/view-list.js:15
 msgid "Test results"
-msgstr ""
+msgstr "測試結果"
 
 #: static/scr/view-list.js:16
 msgid "Date"
-msgstr ""
+msgstr "日期"
 
 #: static/scr/view-list.js:17
 msgid "Note"
-msgstr ""
+msgstr "註解"
 
 #: static/scr/view-list.js:18
 msgid "Completed"
-msgstr ""
+msgstr "已完成"
 
 #: static/scr/view-list.js:20
 msgid "Back to the lists page"
-msgstr ""
+msgstr "回到列表頁面"
 
 #: static/scr/view-list.js:21
 msgid "Save"
-msgstr ""
+msgstr "儲存"
 
 #: static/scr/view-list.js:22
 msgid "Print"
-msgstr ""
+msgstr "列印"
 
 #: static/scr/view-list.js:23
 msgid "Download"
-msgstr ""
+msgstr "下載"
 
 #: static/scr/view-list.js:26
 msgid "Saved the list succesfully."
-msgstr ""
+msgstr "儲存列表成功。"
 
 #: static/scr/view-list.js:27
 msgid ""
 "Can't save the document because it contains invalid content. Maybe you used "
 "unsafe HTML, or left fields empty that should not be empty?"
-msgstr ""
+msgstr "無法儲存文件因為包含無效內容。也許你用不安全的 HTML，或左邊欄位不應該留空白的位置留了空白？"
 
 #: static/scr/view-list.js:28
 msgid ""
 "Couldn't save the list, because it has been edited elsewhere in the "
 "meantime. You can either discard your changes, or save again (overwriting "
 "the changes made elsewhere)."
-msgstr ""
+msgstr "無法儲存列表因為同時在別處被編輯過。你可以丟棄你的修改，或再儲存一次（覆蓋掉別處的修改）。"
 
 #: static/scr/view-list.js:30
 msgid ""
 "Please choose the file you want to download from the options below. Not "
 "sure? Then download the file ending in '.otwd'."
-msgstr ""
+msgstr "請從下方選項中選擇你要下載的檔案。不確定？就下載檔名結尾為 '.otwd' 的檔案。"
 
 #: static/scr/view-list.js:31
 msgid "Close"
-msgstr ""
+msgstr "關閉"
 
 #: static/scr/view-list.js:35
 msgid "-"
-msgstr ""
+msgstr "-"
 
 #: static/scr/view-list.js:105
 msgid "There are unsaved changes. Are you sure you want to leave this page?"
-msgstr ""
+msgstr "有尚未儲存的修改。確定要離開本頁面嗎？"
