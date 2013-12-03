@@ -1,0 +1,207 @@
+# Hungarian translation for openteacher
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-11-26 22:11+0100\n"
+"PO-Revision-Date: 2013-12-02 22:58+0000\n"
+"Last-Translator: Úr Balázs <urbalazs@gmail.com>\n"
+"Language-Team: Hungarian <hu@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-12-03 05:50+0000\n"
+"X-Generator: Launchpad (build 16856)\n"
+
+#: scr/copyrightInfoDialog.js:29 scr/optionsDialog.js:101
+msgid "Copyright info"
+msgstr "Szerzői jogi információk"
+
+#: scr/enterTab.js:43 scr/gui.js:42
+msgid "Enter list"
+msgstr "Lista megadása"
+
+#: scr/enterTab.js:44
+msgid "Word list:"
+msgstr "Szólista:"
+
+#: scr/enterTab.js:45
+msgid ""
+"Welcome = Welkom\n"
+"to = bij\n"
+"OpenTeacher mobile = OpenTeacher mobile\n"
+msgstr ""
+
+#: scr/enterTab.js:47
+msgid "Error"
+msgstr "Hiba"
+
+#: scr/enterTab.js:48
+msgid "Missing equals sign or tab"
+msgstr "Hiányzó egyenlőségjel vagy tabulátor"
+
+#: scr/enterTab.js:49
+msgid ""
+"Please make sure every line contains an '='-sign or tab between the "
+"questions and answers."
+msgstr ""
+
+#: scr/enterTab.js:50 scr/teachTab.js:239
+msgid "Ok"
+msgstr "OK"
+
+#: scr/gui.js:39 scr/menuDialog.js:165
+msgid "Menu"
+msgstr "Menü"
+
+#: scr/gui.js:43 scr/teachTab.js:224
+msgid "Teach me!"
+msgstr "Tanuljunk!"
+
+#: scr/menuDialog.js:166
+msgid "New list"
+msgstr "Új lista"
+
+#: scr/menuDialog.js:167 scr/menuDialog.js:185
+msgid "Load list"
+msgstr "Lista betöltése"
+
+#: scr/menuDialog.js:168 scr/menuDialog.js:173
+msgid "Save list"
+msgstr "Lista mentése"
+
+#: scr/menuDialog.js:169 scr/menuDialog.js:190
+msgid "Remove list"
+msgstr "Lista eltávolítása"
+
+#: scr/menuDialog.js:170 scr/optionsDialog.js:94
+msgid "Options"
+msgstr "Beállítások"
+
+#: scr/menuDialog.js:174
+msgid "Please choose a name for the current list, so it can be saved."
+msgstr ""
+
+#: scr/menuDialog.js:175
+msgid "Name:"
+msgstr "Név:"
+
+#: scr/menuDialog.js:176
+msgid "Done"
+msgstr "Kész"
+
+#: scr/menuDialog.js:178
+msgid "Warning"
+msgstr "Figyelmeztetés"
+
+#: scr/menuDialog.js:179
+msgid "There is already a list named like that."
+msgstr "Már van egy ilyen nevű lista."
+
+#: scr/menuDialog.js:180
+msgid "If you continue, it will be overwritten. Continue?"
+msgstr "Ha folytatja, felül lesz írva. Folytatja?"
+
+#: scr/menuDialog.js:181
+msgid "Yes"
+msgstr "Igen"
+
+#: scr/menuDialog.js:182
+msgid "No"
+msgstr "Nem"
+
+#: scr/menuDialog.js:186
+msgid "Please choose the list you want to load."
+msgstr "Válassza ki azt a listát, amelyet be szeretne tölteni."
+
+#: scr/menuDialog.js:187 scr/menuDialog.js:192
+msgid "Filter lists..."
+msgstr "Listák szűrése…"
+
+#: scr/menuDialog.js:191
+msgid "Please choose the list you want to remove."
+msgstr "Válassza ki azt a listát, amelyet el szeretne távolítani."
+
+#: scr/optionsDialog.js:95
+msgid "Language:"
+msgstr "Nyelv:"
+
+#: scr/optionsDialog.js:97
+msgid "Practising mode:"
+msgstr "Gyakorlás mód:"
+
+#: scr/optionsDialog.js:98 scr/practisingModeChoiceDialog.js:47
+msgid "Think answer"
+msgstr ""
+
+#: scr/optionsDialog.js:99 scr/practisingModeChoiceDialog.js:48
+msgid "Type answer"
+msgstr ""
+
+#: scr/practisingModeChoiceDialog.js:45
+msgid "Practising mode choice"
+msgstr ""
+
+#: scr/practisingModeChoiceDialog.js:46
+msgid "Please choose the practising mode you want to use:"
+msgstr ""
+
+#: scr/practisingModeChoiceDialog.js:49
+msgid ""
+"If you ever want to change your choice, you can do so in the options dialog, "
+"which is accessable by clicking 'Menu' and then 'Options'."
+msgstr ""
+
+#: scr/teachTab.js:225
+msgid "Question:"
+msgstr ""
+
+#: scr/teachTab.js:226
+msgid "Answer:"
+msgstr ""
+
+#: scr/teachTab.js:227
+msgid "Check!"
+msgstr ""
+
+#: scr/teachTab.js:228
+msgid "Skip"
+msgstr ""
+
+#: scr/teachTab.js:229
+msgid "Correct anyway"
+msgstr ""
+
+#: scr/teachTab.js:230
+msgid ""
+"Think about the answer, and press the 'View answer' button when you're done."
+msgstr ""
+
+#: scr/teachTab.js:231
+msgid "View answer"
+msgstr ""
+
+#: scr/teachTab.js:232
+msgid "Translation:"
+msgstr ""
+
+#: scr/teachTab.js:233
+msgid "I was right"
+msgstr ""
+
+#: scr/teachTab.js:234
+msgid "I was wrong"
+msgstr ""
+
+#: scr/teachTab.js:237 scr/teachTab.js:238
+msgid "Test completed!"
+msgstr ""
+
+#: scr/teachTab.js:240
+#, python-format
+msgid "Your note: %s"
+msgstr ""

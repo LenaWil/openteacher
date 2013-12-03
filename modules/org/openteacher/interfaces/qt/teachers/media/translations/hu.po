@@ -1,14 +1,14 @@
 # Hungarian translation for openteacher
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the openteacher package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-11-26 22:12+0100\n"
-"PO-Revision-Date: 2013-12-02 22:26+0000\n"
+"PO-Revision-Date: 2013-12-02 22:29+0000\n"
 "Last-Translator: Úr Balázs <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,16 +16,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-12-03 05:50+0000\n"
 "X-Generator: Launchpad (build 16856)\n"
-"Language: hu\n"
 
-#: symbols.py:102
-msgid "Symbols"
-msgstr "Szimbólumok"
+#. TRANSLATORS: lesson types are e.g. 'smart', 'all once' and 'interval'
+#: media.py:123
+msgid "Lesson type:"
+msgstr "Lecketípus:"
 
-#: symbols.py:106
-msgid "Lesson"
-msgstr "Lecke"
-
-#: symbols.py:107
-msgid "Words lesson"
-msgstr "Szólecke"
+#. TRANSLATORS: a button which the user presses to tell the computer it should check his/her answer.
+#: media.py:125
+msgid "Check"
+msgstr "Ellenőrzés"
