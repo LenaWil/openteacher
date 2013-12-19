@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-11-26 22:12+0100\n"
-"PO-Revision-Date: 2013-09-30 18:59+0000\n"
-"Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
+"PO-Revision-Date: 2013-12-18 19:18+0000\n"
+"Last-Translator: Pasha.P.Komar <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-27 05:17+0000\n"
-"X-Generator: Launchpad (build 16845)\n"
+"X-Launchpad-Export-Date: 2013-12-19 05:48+0000\n"
+"X-Generator: Launchpad (build 16872)\n"
 "Language: ru\n"
 
 #: templates/about.html:6
 msgid "OpenTeacher helps you learn"
-msgstr "OpenTeacher поможет Вам узнать"
+msgstr "OpenTeacher помогает Вам учить"
 
 #: templates/about.html:8
 msgid "Improve your results with OpenTeacher"
@@ -34,6 +34,11 @@ msgid ""
 "the next. This should help you remember large doses of information without "
 "being overwhelmed by its size."
 msgstr ""
+"OpenTeacher поможет Вам подготовиться к экзамену, <strong>помогая выучить "
+"</strong> необходимое. OpenTeacher позволяет изучать информацию постепенно, "
+"в небольшом количестве. Как только вы выучилии одну часть, OpenTeacher "
+"переходит к следующей. Такой способ помогает запоминать большое количество "
+"информации без серьёзной нагрузки."
 
 #: templates/about.html:10
 msgid ""
@@ -41,10 +46,10 @@ msgid ""
 "track of your progress and tells you how much you know. In this way you can "
 "<strong>make sure that you know enough to pass your next test</strong>!"
 msgstr ""
-"Также Вы можете пройти тест от OpenTeacher. Пока OpenTeacher будет "
-"тестировать Вас, он будет отслеживать прогресс и сообщит Вам как много вы "
-"знаете. Таким образом Вы можете <strong>убедиться что Вы знаете достаточно, "
-"чтобы перейти на следующий тест</strong>!"
+"С OpenTeacher Вы можете практиковаться. Во время практики OpenTeacher "
+"отслеживает прогресс и даёт Вам обратную связь. Таким образом, <strong>Вы "
+"можете быть уверены в том, что знаете достаточно, чтобы сдать свой следующий "
+"экзамен</strong>!"
 
 #: templates/about.html:12
 msgid "Learn on many locations"
@@ -60,6 +65,14 @@ msgid ""
 "for Windows available, so if you can't miss OpenTeacher (which we can all "
 "understand), you can take it with you!"
 msgstr ""
+"Формат файлов OpenTeacher (&quot;lists&quot;) очень прост и Вы всегда можете "
+"сохранить любую информацию, которую ввели. OpenTeacher позволяет сохранять "
+"информацию во множество форматов, включая T2K (Teach2000) и WRTS. Эти файлы "
+"можно взять с собой куда угодно! Даже если у Вас нет под рукой программы "
+"OpenTeacher, Вы все равно можете учить слова. Кроме того, существует "
+"<strong> портативная версия</strong> OpenTeacher для Windows, поэтому, если "
+"Вы не можете жить без OpenTeacher (что, конечно, мы все понимаем), Вы можете "
+"взять её с собой!"
 
 #: templates/about.html:14
 msgid ""
@@ -69,10 +82,15 @@ msgid ""
 "lists that you created in OpenTeacher. This way you can <strong>use the same "
 "lists everywhere you go</strong>!"
 msgstr ""
+"OpenTeacher отлично интегрируется с онлайн-помощником Wrts (так же известный "
+"как <a href=\"http://www.wrds.eu/\">Wrds</a>). Вы легко можете получить "
+"доступ к своим спискам слов в Wrts или добавить новые прямо из OpenTeacher. "
+"Таким образом, можно использовать <strong>одни и те же списки слов где "
+"угодно</strong>!"
 
 #: templates/about.html:16
 msgid "OpenTeacher helps you teach"
-msgstr "OpenTeacher помогает Вам учитьсь"
+msgstr "OpenTeacher помогает Вам обучать"
 
 #: templates/about.html:17
 msgid "Offer your students the help they need"
@@ -86,6 +104,12 @@ msgid ""
 "can help the students learn this information by themselves. It can "
 "<strong>improve the student's results</strong> and saves the teacher time."
 msgstr ""
+"И хотя OpenTeacher ориентируется, в первую очередь, на студентов, эта "
+"программа выступает <strong>отличным инструментом и для "
+"преподавателей</strong>. Преподаватель предоставляет студентам информацию, а "
+"OpenTeacher помогает им изучать эту информацию. OpenTeacher может "
+"<strong>улучшить результаты студентов</strong> и сохранить преподавателям "
+"время."
 
 #: templates/about.html:19
 msgid ""
@@ -98,10 +122,17 @@ msgid ""
 "OpenTeacher can read many file formats, including the popular T2K "
 "(Teach2000), Wrts, and ABBYY Lingvo Tutor."
 msgstr ""
+"Формат файлов OpenTeacher позволяет упростить <strong>передачу "
+"информации</strong> от преподавателя к студенту. Преподаватель может создать "
+"и переслать файл студентам, которые могут использовать его в OpenTeacher для "
+"обучения и тестирования. Кроме того, многие издатели книг для изучения "
+"языков предоставляют вместе с книгами списки слов для самостоятельного "
+"изучения. OpenTeacher способен распозновать множество форматов файлов, "
+"включая популярные T2K (Teach2000), Wrts и ABBYY Lingvo Tutor."
 
 #: templates/about.html:21
 msgid "Open source in the classroom"
-msgstr ""
+msgstr "Открытое ПО в классе"
 
 #: templates/about.html:22
 msgid ""
@@ -112,6 +143,12 @@ msgid ""
 "way OpenTeacher was built. It also means that the <strong>knowledge</strong> "
 "that was used to make OpenTeacher <strong>can be reused by others</strong>."
 msgstr ""
+"Один из наиболее важных преимуществ OpenTeacher заключается в том, что это "
+"открытое программное обеспечение и распространяется под лицензией <a "
+"href=\"https://www.gnu.org/copyleft/gpl.html\">GNU General Public "
+"License</a>. Это означает, что исходный код программы доступен каждому. Это "
+"также означает, что <strong> знание</strong>, использованное для создания "
+"OpenTeacher, <strong>может быть использовано и другими</strong>."
 
 #: templates/about.html:24
 msgid ""
@@ -121,6 +158,10 @@ msgid ""
 "distributions. This way we try to provide OpenTeacher to anyone who wants to "
 "use it."
 msgstr ""
+"Поскольку OpenTeacher - это открытое ПО, его код легко доступен и может "
+"использоваться для компиляции под любую платформу. Мы предлагаем готовые "
+"приложения для Windows, Mac OS X и Linux, пытаясь, таким образом, сделать "
+"доступным OpenTeacher для всех, кто хочет его использовать."
 
 #: templates/about.html:25
 msgid ""
@@ -131,6 +172,13 @@ msgid ""
 "Experience also tells us that if many users want a new feature implemented, "
 "there is often a software developer who implements this."
 msgstr ""
+"Каждый, кто желает, может вносить изменения в OpenTeacher. Если Вашей "
+"организации нужна модифицированная версия OpenTeacher, это вполне возможно, "
+"при условии, что лицензия <a "
+"href=\"https://www.gnu.org/copyleft/gpl.html\">GPL</a> останется неизменной. "
+"Опыт нам также подсказывает, что если многие пользователи нуждаются в "
+"реализации новой возможности, всегда найдется разработчик, который сможет её "
+"реализовать."
 
 #: templates/about.html:26
 msgid ""
@@ -140,6 +188,12 @@ msgid ""
 "software, please visit the <a href=\"https://www.fsf.org/\">Free Software "
 "Foundation</a>."
 msgstr ""
+"OpenTeacher полностью поддерживается и направляется сообществом. Все "
+"разработчики программы - <strong> волонтеры</strong>, и OpenTeacher "
+"<strong>не является проектом, ориентированным на получение прибыли</strong>. "
+"Получить более подробную информацию об открытом программном обеспечении Вы "
+"можете на этом сайте <a href=\"https://www.fsf.org/\">Free Software "
+"Foundation</a>."
 
 #: templates/download.html:8 templates/index.html:25
 msgid "Download OpenTeacher 3.2"
@@ -167,11 +221,11 @@ msgstr "Руководство пользователя"
 
 #: templates/documentation.html:9
 msgid "Using OpenTeacher 3: Quick start"
-msgstr "Использование OpenTeacher 3: Быстрый старт"
+msgstr "Использование OpenTeacher 3: Начало работы"
 
 #: templates/documentation.html:10
 msgid "Using OpenTeacher 2: Quick start"
-msgstr "Использование OpenTeacher 2: Быстрый старт"
+msgstr "Использование OpenTeacher 2: Начало работы"
 
 #: templates/documentation.html:11 docsTemplates/install-ubuntu.html:5
 msgid "Installing OpenTeacher in Ubuntu"
@@ -191,7 +245,7 @@ msgstr "Документация для разработчиков"
 
 #: templates/documentation.html:17
 msgid "The OpenTeacher 2 file format"
-msgstr "OpenTeacher 2 формат файла"
+msgstr "Формат файла OpenTeacher 2"
 
 #: templates/documentation.html:20
 msgid "Translator documentation"
@@ -199,13 +253,15 @@ msgstr "Документация для переводчиков"
 
 #: templates/documentation.html:21
 msgid "Translator Notes"
-msgstr "Примечания переводчика"
+msgstr "Примечания переводчиков"
 
 #: templates/index.html:8
 msgid ""
 "<strong>OpenTeacher</strong> is an opensource application that <strong>helps "
 "you learn</strong> a variety of <strong>subjects</strong>."
 msgstr ""
+"<strong>OpenTeacher</strong> - это открытое программное обеспечение, которое "
+"<strong>помогает изучать</strong> различные <strong>предметы</strong>."
 
 #: templates/index.html:10
 msgid ""
