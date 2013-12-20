@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2013-11-26 22:12+0100\n"
-"PO-Revision-Date: 2013-12-18 19:18+0000\n"
+"PO-Revision-Date: 2013-12-19 15:53+0000\n"
 "Last-Translator: Pasha.P.Komar <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-12-19 05:48+0000\n"
+"X-Launchpad-Export-Date: 2013-12-20 05:21+0000\n"
 "X-Generator: Launchpad (build 16872)\n"
 "Language: ru\n"
 
 #: templates/about.html:6
 msgid "OpenTeacher helps you learn"
-msgstr "OpenTeacher помогает Вам учить"
+msgstr "OpenTeacher помогает Вам учиться"
 
 #: templates/about.html:8
 msgid "Improve your results with OpenTeacher"
@@ -35,10 +35,10 @@ msgid ""
 "being overwhelmed by its size."
 msgstr ""
 "OpenTeacher поможет Вам подготовиться к экзамену, <strong>помогая выучить "
-"</strong> необходимое. OpenTeacher позволяет изучать информацию постепенно, "
-"в небольшом количестве. Как только вы выучилии одну часть, OpenTeacher "
-"переходит к следующей. Такой способ помогает запоминать большое количество "
-"информации без серьёзной нагрузки."
+"</strong> необходимую информацию. OpenTeacher позволяет изучать информацию "
+"постепенно, в небольшом количестве. Как только Вы выучили одну часть, "
+"OpenTeacher переходит к следующей. Такой способ помогает запоминать большое "
+"количество информации без серьёзной нагрузки."
 
 #: templates/about.html:10
 msgid ""
@@ -71,7 +71,7 @@ msgstr ""
 "можно взять с собой куда угодно! Даже если у Вас нет под рукой программы "
 "OpenTeacher, Вы все равно можете учить слова. Кроме того, существует "
 "<strong> портативная версия</strong> OpenTeacher для Windows, поэтому, если "
-"Вы не можете жить без OpenTeacher (что, конечно, мы все понимаем), Вы можете "
+"Вы не можете жить без OpenTeacher (что, конечно, вполне понятно), Вы можете "
 "взять её с собой!"
 
 #: templates/about.html:14
@@ -94,7 +94,7 @@ msgstr "OpenTeacher помогает Вам обучать"
 
 #: templates/about.html:17
 msgid "Offer your students the help they need"
-msgstr "Предложите Вашим студентам необходимую им помощь"
+msgstr "Предложите Вашим студентам необходимую помощь"
 
 #: templates/about.html:18
 msgid ""
@@ -107,9 +107,8 @@ msgstr ""
 "И хотя OpenTeacher ориентируется, в первую очередь, на студентов, эта "
 "программа выступает <strong>отличным инструментом и для "
 "преподавателей</strong>. Преподаватель предоставляет студентам информацию, а "
-"OpenTeacher помогает им изучать эту информацию. OpenTeacher может "
-"<strong>улучшить результаты студентов</strong> и сохранить преподавателям "
-"время."
+"OpenTeacher помогает им её изучать. OpenTeacher может <strong>улучшить "
+"результаты студентов</strong> и сохранить преподавателям время."
 
 #: templates/about.html:19
 msgid ""
@@ -127,7 +126,7 @@ msgstr ""
 "и переслать файл студентам, которые могут использовать его в OpenTeacher для "
 "обучения и тестирования. Кроме того, многие издатели книг для изучения "
 "языков предоставляют вместе с книгами списки слов для самостоятельного "
-"изучения. OpenTeacher способен распозновать множество форматов файлов, "
+"изучения. OpenTeacher способен распознавать множество форматов файлов, "
 "включая популярные T2K (Teach2000), Wrts и ABBYY Lingvo Tutor."
 
 #: templates/about.html:21
@@ -143,11 +142,11 @@ msgid ""
 "way OpenTeacher was built. It also means that the <strong>knowledge</strong> "
 "that was used to make OpenTeacher <strong>can be reused by others</strong>."
 msgstr ""
-"Один из наиболее важных преимуществ OpenTeacher заключается в том, что это "
+"Одно из наиболее важных преимуществ OpenTeacher заключается в том, что это "
 "открытое программное обеспечение и распространяется под лицензией <a "
 "href=\"https://www.gnu.org/copyleft/gpl.html\">GNU General Public "
 "License</a>. Это означает, что исходный код программы доступен каждому. Это "
-"также означает, что <strong> знание</strong>, использованное для создания "
+"также означает, что <strong> знание</strong>, использованное при создании "
 "OpenTeacher, <strong>может быть использовано и другими</strong>."
 
 #: templates/about.html:24
@@ -158,10 +157,12 @@ msgid ""
 "distributions. This way we try to provide OpenTeacher to anyone who wants to "
 "use it."
 msgstr ""
-"Поскольку OpenTeacher - это открытое ПО, его код легко доступен и может "
-"использоваться для компиляции под любую платформу. Мы предлагаем готовые "
-"приложения для Windows, Mac OS X и Linux, пытаясь, таким образом, сделать "
-"доступным OpenTeacher для всех, кто хочет его использовать."
+"Поскольку OpenTeacher - это открытое программное обеспечение, оно легко "
+"доступно каждому. Исходный код OpenTeacher может использоваться для создания "
+"приложения под, практически, любую платформу. На данный момент, мы "
+"предоставляем уже скомпилированные версии для Windows, Mac OS X и различные "
+"дистрибутивы Linux. Таким образом, мы предоставляем возможность использовать "
+"OpenTeacher каждому, кто желает им пользоваться."
 
 #: templates/about.html:25
 msgid ""
@@ -176,8 +177,8 @@ msgstr ""
 "организации нужна модифицированная версия OpenTeacher, это вполне возможно, "
 "при условии, что лицензия <a "
 "href=\"https://www.gnu.org/copyleft/gpl.html\">GPL</a> останется неизменной. "
-"Опыт нам также подсказывает, что если многие пользователи нуждаются в "
-"реализации новой возможности, всегда найдется разработчик, который сможет её "
+"Опыт нам также подсказывает, что если  пользователи нуждаются в реализации "
+"новой возможности, всегда найдется разработчик, который сможет её "
 "реализовать."
 
 #: templates/about.html:26
@@ -192,7 +193,7 @@ msgstr ""
 "разработчики программы - <strong> волонтеры</strong>, и OpenTeacher "
 "<strong>не является проектом, ориентированным на получение прибыли</strong>. "
 "Получить более подробную информацию об открытом программном обеспечении Вы "
-"можете на этом сайте <a href=\"https://www.fsf.org/\">Free Software "
+"можете на  сайте <a href=\"https://www.fsf.org/\">Free Software "
 "Foundation</a>."
 
 #: templates/download.html:8 templates/index.html:25
@@ -269,6 +270,9 @@ msgid ""
 "<strong>answers</strong>, or download them from the "
 "<strong>internet</strong>, and OpenTeacher <strong>tests you</strong>."
 msgstr ""
+"Просто введите <strong>вопросы</strong> и <strong>ответы</strong> или "
+"скачайте их из <strong> интернета </strong>, и позвольте OpenTeacher "
+"<strong>протестировать</strong> Вас."
 
 #: templates/index.html:12
 msgid "OpenTeacher has the following features (among others):"
@@ -276,30 +280,36 @@ msgstr "OpenTeacher обладает следующими возможностя
 
 #: templates/index.html:14
 msgid "Viewing both recent and past results of tests with graphs"
-msgstr ""
+msgstr "Обзор недавних результатов и графиков"
 
 #: templates/index.html:15
 msgid "Smart question asking and interval training"
-msgstr ""
+msgstr "Умное тестирование и практика с интервалами"
 
 #: templates/index.html:16
 msgid ""
 "Reverse rehearsal (the answer is asked, and you need to give the question)"
 msgstr ""
+"Тренировка в обратном порядке (даётся ответ и Вам требуется предоставить "
+"соответствующий вопрос)"
 
 #: templates/index.html:17
 msgid ""
 "Read support for more than 29 file formats; write support for over 14 file "
 "formats"
 msgstr ""
+"Поддержка чтения более 29 форматов файлов; поддержка записи в 14 форматов и "
+"более"
 
 #: templates/index.html:18
 msgid "Learn typing with our Typing Tutor which adapts itself to your skills"
 msgstr ""
+"Возможность получить навык быстрой печати с помощью Помощника Печати, "
+"который умеет подстраиваться под Ваш уровень"
 
 #: templates/index.html:19
 msgid "Print your word lists, media items and topography maps"
-msgstr ""
+msgstr "Печать списков слов, мультимедийных файлов и топографических карт"
 
 #: templates/index.html:20
 msgid ""
@@ -308,6 +318,10 @@ msgid ""
 "German, Greek, Hungarian, Italian, Japanese, Polish, Russian, Sinhalese, "
 "Spanish and Turkish"
 msgstr ""
+"Доступен (частично) на Арабском, Венгерском, Галисийском, Голландском, "
+"Греческом, Испанском, Итальянском, Китайском (Упрощенный, Традиционный), "
+"Немецком, Польском, Португальском (Бразилия), Русском, Сингальском, "
+"Турецком, Финском, Французском, Фризском, Чешском и Японском языках."
 
 #: templates/index.html:23
 msgid ""
@@ -322,7 +336,7 @@ msgstr "для"
 
 #: templates/index.html:28
 msgid "Other systems and distro-specific packages"
-msgstr ""
+msgstr "Другие системы и пакеты для особых дистрибутивов"
 
 #: templates/contribute.html:6 templates/base.html:67
 msgid "Contribute"
@@ -339,10 +353,19 @@ msgid ""
 "chat</a> (#openteacher at irc.freenode.net), or you can e-mail us at <a "
 "href=\"mailto:contribute@openteacher.org\">contribute@openteacher.org</a>."
 msgstr ""
+"Помогать OpenTeacher довольно просто, поскольку, как подсказывает название, "
+"это свободное программное обеспечение. Это означает не только то, что каждый "
+"может увидеть исходный код программы, но и то, что сделать свой вклад может "
+"также любой! Если у Вас есть такое желание, можете начать здесь - <a "
+"href=\"http://www.launchpad.net/openteacher\">Launchpad platform</a>, или "
+"встретиться с нами в чате <a "
+"href=\"http://webchat.freenode.net/?channels=openteacher\">the chat</a> "
+"(#openteacher at irc.freenode.net), или написать нам письмо <a "
+"href=\"mailto:contribute@openteacher.org\">contribute@openteacher.org</a>."
 
 #: templates/contribute.html:10
 msgid "There are several ways to contribute to OpenTeacher:"
-msgstr ""
+msgstr "OpenTeacher можно помочь несколькими способами:"
 
 #: templates/contribute.html:13
 msgid ""
@@ -351,12 +374,19 @@ msgid ""
 "<a href=\"http://www.launchpad.net/openteacher\">Launchpad</a> and help us "
 "immediately! We are currently also looking for:"
 msgstr ""
+"<strong>Присоединиться к разработке</strong><br /> OpenTeacher всегда "
+"пригодятся разработчики. У Вас есть опыт разработки с использованием Python "
+"и фреймворка Qt4? Тогда присоединяйтесь к нам - <a "
+"href=\"http://www.launchpad.net/openteacher\">Launchpad</a>! На данный "
+"момент нам нужны:"
 
 #: templates/contribute.html:15
 msgid ""
 "<strong>Designers</strong>. It's important that OpenTeacher looks good! Do "
 "you know anything about design? Contact us."
 msgstr ""
+"<strong>Дизайнеры</strong>. Нам важно, чтобы OpenTeacher выглядел прекрасно! "
+"Знаете что-нибудь о дизайне? Свяжитесь с нами."
 
 #: templates/contribute.html:19
 msgid ""
@@ -371,6 +401,16 @@ msgid ""
 "apps.org/content/show.php/Qt+Linguist+Download?content=89360\">Qt "
 "Linguist</a>."
 msgstr ""
+"<strong>Присоединиться к переводу</strong><br />Мы всегда в поиске людей, "
+"готовых помочь нам перевести OpenTeacher! На данный момент программа "
+"доступна только на Английском и Голландском языках. Файлы для переводов "
+"доступны здесь - <a "
+"href=\"http://www.launchpad.net/openteacher\">Launchpad</a>, в формате Qt "
+"TS. Вы можете начать перевод на <a "
+"href=\"http://www.launchpad.net/openteacher\">Launchpad</a>, или "
+"воспользоваться приложением  <a href=\"http://qt-"
+"apps.org/content/show.php/Qt+Linguist+Download?content=89360\">Qt "
+"Linguist</a>."
 
 #: templates/contribute.html:21
 msgid ""
@@ -381,6 +421,13 @@ msgid ""
 "href=\"https://bugs.launchpad.net/openteacher/+filebug\">report a bug at "
 "Launchpad</a>."
 msgstr ""
+"<strong>Присоединяйтесь к тестированию</strong><br />Чтобы убедиться, что "
+"OpenTeacher работает стабильно, нам нужны энтузиасты для тестирования новых "
+"выпусков программы. Исходные коды отдельных версий доступны на bzr branch "
+"lp:openteacher. Если Вы нашли ошибки в конкретной версии или в программе в "
+"целом, пожалуйста, <a "
+"href=\"https://bugs.launchpad.net/openteacher/+filebug\">сообщите о них на "
+"Launchpad</a>"
 
 #: templates/contribute.html:23
 msgid ""
@@ -391,6 +438,13 @@ msgid ""
 "packaging. Also people who run Linux distributions or other systems "
 "(especially OpenSuSE) OpenTeacher isn't packaged for are welcome."
 msgstr ""
+"<strong>Присоединяйтесь к распространению</strong><br />Для того, чтобы "
+"OpenTeacher был доступен каждому, необходимо сделать программу доступной для "
+"максимально возможного числа платформ. На данный момент для нас проблемно "
+"компилировать программу под Mac OS X, поскольку у нас нет компьютеров Mac. "
+"Мы ищем владельцев Mac, способных нам помочь с созданием пакетов под эту "
+"платформу. Также мы приглашаем пользователей различных дистрибутивов Linux "
+"(особенно OpenSUSE) и других платформ, для которых еще нет готовых программ."
 
 #: templates/contribute.html:25
 msgid ""
@@ -398,10 +452,14 @@ msgid ""
 "students about OpenTeacher. The best way to make people use OpenTeacher is "
 "to tell them it exists!"
 msgstr ""
+"<strong>Присоединяйтесь к продвижению</strong><br /> Рассказывайте своим "
+"друзьям, преподавателям и студентам об OpenTeacher. Лучший способ помочь "
+"людям использовать OpenTeacher - рассказать им о том, что такая программа "
+"существует!"
 
 #: templates/base.html:16
 msgid "Free exam training software"
-msgstr ""
+msgstr "Бесплатное приложение для подготовки к экзаменам"
 
 #: templates/base.html:62
 msgid "Home"
@@ -429,7 +487,7 @@ msgstr "Ссылка на эту страницу"
 
 #: docsTemplates/translator-notes.html:5
 msgid "Translator notes"
-msgstr "Заметки перводчика"
+msgstr "Примечания переводчикам"
 
 #: docsTemplates/translator-notes.html:7
 msgid ""
@@ -438,18 +496,22 @@ msgid ""
 "translate Ctrl+S to Strg+S, you should also translate Ctrl+Q to Strg+Q and "
 "all other keyboard shortcuts the same way)."
 msgstr ""
+"Если Вы переводите OpenTeacher на другой язык, пожалуйста, не забывайте, что "
+"комбинации клавиш также нуждаются в переводе (Пример с немецким языком: если "
+"Вы переводите Ctrl+S как Strg+S, Вы должны переводить таким же образом и "
+"Ctrl+Q как Strg+Q и все остальные комбинации клавиш)"
 
 #: docsTemplates/translator-notes.html:9
 msgid "List of all keyboard shortcuts in OpenTeacher:"
-msgstr "Список всех горячих клавиш в OpenTeacher:"
+msgstr "Список всех комбинаций клавиш в OpenTeacher:"
 
 #: docsTemplates/translator-notes.html:15
 msgid "deprecated, should be changed to &quot;Return&quot;"
-msgstr ""
+msgstr "устаревшее, должно быть заменено на &quot;Return&quot;"
 
 #: docsTemplates/using-openteacher-2.html:5
 msgid "Using OpenTeacher 2: A Quick Start"
-msgstr "Использование OpenTeacher 2: Быстрый старт"
+msgstr "Использование OpenTeacher 2: Начало работы"
 
 #: docsTemplates/using-openteacher-2.html:7
 msgid ""
@@ -458,6 +520,9 @@ msgid ""
 "this example we are assuming that you already know English, and you want to "
 "learn French."
 msgstr ""
+"Данное руководство покажет Вам как быстро приступить к работе с OpenTeacher "
+"2. Сегодня мы научимся считать до 10 на французском! Этот пример "
+"предполагает, что Вы уже знаете английский язык и хотите выучить французский."
 
 #: docsTemplates/using-openteacher-2.html:9
 msgid ""
@@ -477,25 +542,27 @@ msgid ""
 "language, which, in our case, is English, and the foreign language (the "
 "language you want to learn), which, in our case, is French."
 msgstr ""
-"Введите заголовок списка для слов которые вы собираетесь добавить. Вводить "
-"следует на известном вам языке,в данном случае это английский или русский, и "
-"иностранном языке (языке, который вы хотите изучить), в нашем случае это "
-"французский."
+"Придумайте заголовок для списка слов, которые Вы собираетесь добавить. "
+"Введите также название используемого языка (в данном случае - английский) и "
+"название иностранного языка (в данном случае - французский), который Вы "
+"собираетесь изучить."
 
 #: docsTemplates/using-openteacher-2.html:16
 msgid ""
 "Then enter all words you want to learn, seperating the foreign and known "
 "language by =, and the words by newlines (see the screenshot for an example)."
 msgstr ""
-"Затем введите все слова, которые вы хотите изучить, разделяя известный и  "
-"иностранный и язык знаком =, а слова символами новой строки (см. скриншот "
-"для примера)."
+"Теперь введите все слова, которые Вы планируете изучить, разделяя изучаемый "
+"и используемый языки знаком \"=\", а слова - новой строкой (для примера, см. "
+"скриншот)"
 
 #: docsTemplates/using-openteacher-2.html:20
 msgid ""
 "Click \"Enter!\". Now the table of words on the bottom will be filled with "
 "your words. You have now successfully made your word list!"
 msgstr ""
+"Нажмите \"Enter\". Теперь таблица в нижней части программы будет содержать "
+"ваши слова. Поздравляем, Вы только что создали свой список слов!"
 
 #: docsTemplates/using-openteacher-2.html:24
 msgid ""
@@ -504,6 +571,10 @@ msgid ""
 "it in the text field. When you have entered the translation, press Enter on "
 "your keyboard, or click \"Check!\""
 msgstr ""
+"Выберите вкладку \"Обучение\" вверху, чтобы начать практиковаться. Вам будет "
+"дано слово на известном языке и предложено напечатать перевод в поле для "
+"ввода текста. После того, как Вы введете перевод, нажмите кнопку "
+"\"Проверить!\" или клавишу \"Enter\" на клавиатуре."
 
 #: docsTemplates/using-openteacher-2.html:26
 msgid ""
@@ -511,23 +582,25 @@ msgid ""
 "you. If you did not enter the right translation, OpenTeacher will show you "
 "the correct answer, and the difference from your answer."
 msgstr ""
-"Если Вы ввели правильный перевод,  то вам будет задан следующий вопрос. Если "
-"вы ввели неправильный перевод, OpenTeacher покажет вам правильный ответ, и "
-"отличие от вашего ответа."
+"Если Вы ввели перевод правильно, Вам будет предложено новое слово. Если Вы "
+"ошиблись, OpenTeacher покажет Вам правильный вариант, а также разницу между "
+"ним и Вашим вариантом."
 
 #: docsTemplates/using-openteacher-2.html:30
 msgid ""
 "Once the test is completed, OpenTeacher will tell you if you did well by "
 "giving you a &quot;note&quot; (grade)."
 msgstr ""
+"По окончанию практики OpenTeacher покажет насколько хорошо Вы справились и "
+"поставит &quot;note&quot; (оценка)"
 
 #: docsTemplates/install-arch.html:6
 msgid ""
 "This simple guide explains how to install OpenTeacher for ArchLinux. I will "
 "be using ArchLinux 2010.05."
 msgstr ""
-"Это руководство объясняет как установить OpenTeacher для ArchLinux. "
-"Использовалась ArchLinux 2010.05."
+"Это руководство объясняет как установить OpenTeacher для ArchLinux на "
+"примере ArchLinux 2010.05."
 
 #: docsTemplates/install-arch.html:8
 msgid ""
@@ -541,7 +614,7 @@ msgid ""
 "Install the package from the terminal with <strong>pacman -U "
 "&lt;filename&gt;</strong>"
 msgstr ""
-"Установите пакет выполнив в терминале команду <strong>pacman -U "
+"Установите пакет, выполнив в терминале команду <strong>pacman -U "
 "&lt;filename&gt;</strong>"
 
 #: docsTemplates/install-ubuntu.html:6
@@ -549,6 +622,8 @@ msgid ""
 "This simple guide explains how to install OpenTeacher for Ubuntu. I will be "
 "using Ubuntu 10.10 (Maverick Meerkat) for this."
 msgstr ""
+"Это руководство по установке OpenTeacher в Ubuntu на примере Ubuntu 10.10 "
+"(Maverick Meerkat)."
 
 #: docsTemplates/install-ubuntu.html:8
 msgid ""
@@ -560,8 +635,8 @@ msgid ""
 "When the download has completed, doubleclick the .deb file you just "
 "downloaded. This will open the Ubuntu Software Center."
 msgstr ""
-"Когда загрузка завершится, выполните двойной щелчок  по загруженному .deb "
-"файлу. Это откроет Центр приложений Ubuntu."
+"По завершению загрузки, дважды нажмите на загруженный .deb файл. Это "
+"запустит Центр Приложений Ubuntu."
 
 #: docsTemplates/install-ubuntu.html:12
 msgid "Click &quot;install&quot; to start the installation."
@@ -595,10 +670,12 @@ msgid ""
 "NOTE: For the OpenTeacher 3 file format, please refer to <a href=\"%s\"> the "
 "developer documentation.</a>"
 msgstr ""
+"Примечание: по поводу формата файлов OpenTeacher 3 обратитесь, пожалуйста, к "
+"<a href=\"%s\"> документации разработчиков.</a>"
 
 #: docsTemplates/the-openteacher-format.html:10
 msgid "Node structure"
-msgstr ""
+msgstr "Структура узла"
 
 #: docsTemplates/the-openteacher-format.html:25
 msgid "The title of the word list"
@@ -622,15 +699,15 @@ msgstr "Это слово на языке ответов"
 
 #: docsTemplates/the-openteacher-format.html:31
 msgid "The results of this word in the format of 0/0"
-msgstr ""
+msgstr "Результаты для этого слова в виде 0/0"
 
 #: docsTemplates/the-openteacher-format.html:37
 msgid "Example a word list saved in the OpenTeacher 2 format"
-msgstr "Пример списка слов сохранённого в формате OpenTeacher 2"
+msgstr "Пример списка слов, сохранённого в формате OpenTeacher 2"
 
 #: docsTemplates/faq.html:6
 msgid "OpenTeacher won't run on Windows!"
-msgstr "OpenTeacher не работает под Windows!"
+msgstr "OpenTeacher не запустится в Windows!"
 
 #: docsTemplates/faq.html:7
 msgid ""
@@ -643,10 +720,18 @@ msgid ""
 "href=\"http://www.launchpad.net/openteacher\">Launchpad</a> or send an e-"
 "mail."
 msgstr ""
+"Чтобы запустить OpenTeacher в Windows вам нужно установить <a "
+"href=\"http://www.microsoft.com/downloads/en/details.aspx?FamilyID=9b2da534-"
+"3e03-4391-8a4d-074b9f2bc1bf\">Microsoft Visual C++ Redistributable "
+"Package</a> и <a "
+"href=\"https://www.microsoft.com/download/en/details.aspx?id=19\">.NET "
+"Framework 2.0</a>. Если это не помогло, пожалуйста, оставьте сообщение об "
+"ошибке на <a href=\"http://www.launchpad.net/openteacher\">Launchpad</a> или "
+"напишите нам."
 
 #: docsTemplates/faq.html:8
 msgid "OpenTeacher won't run on ArchLinux!"
-msgstr "OpenTeacher не работает на ArchLinux!"
+msgstr "OpenTeacher не запустится на ArchLinux!"
 
 #: docsTemplates/faq.html:9
 msgid ""
@@ -661,10 +746,21 @@ msgid ""
 "href=\"http://www.launchpad.net/openteacher\">Launchpad</a> or send an e-"
 "mail."
 msgstr ""
+"Пожалуйста, убедитесь, что в Вашей системе установлены "
+"<strong>python2</strong> и <strong>pyqt</strong>. Если Вы собрали "
+"OpenTeacher из исходных файлов, необходимо сделать ссылку в "
+"<strong>/usr/bin/python</strong> на <strong>/usr/bin/python2</strong> "
+"(вместо <strong>/usr/bin/python3</strong>) или заменить первую строку "
+"(<strong>&#35;!/usr/bin/env python</strong>) в файле "
+"<strong>bin/openteacher.py</strong> на <strong>&#35;!/usr/bin/env "
+"python2</strong>. Вы также можете установить OpenTeacher через пакет для "
+"ArchLinux (.pkg.tar.xz), доступный на странице загрузок. Если это не "
+"помогло, пожалуйста, оставвьте сообщение об ошибке на <a "
+"href=\"http://www.launchpad.net/openteacher\">Launchpad</a> или напишите нам."
 
 #: docsTemplates/faq.html:10
 msgid "How can I let OpenTeacher pronounce words/places?"
-msgstr ""
+msgstr "Как заставить OpenTeacher произносить слова/места?"
 
 #: docsTemplates/faq.html:11
 msgid ""
@@ -672,3 +768,6 @@ msgid ""
 "Pronounciation tab. Then tick the box before 'Pronounce words' and/or "
 "'Pronounce places'."
 msgstr ""
+"Эту возможность можно активировать в настройках. Перейдите в меню Правка > "
+"Настройки, выберите вкладку Произношение. Отметьте флажок напротив опций "
+"\"Произносить слова\" и/или \"Произносить места\"."
