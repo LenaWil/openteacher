@@ -190,19 +190,18 @@ services useful for a much broader set of modules. They are:
   to add your own tabs to the user interface. When depending on this,
   you can be sure that a QApplication is active and an X server too.
 
-.. _modules: ../modules/org/openteacher/modules.html
-.. _settings: ../modules/org/openteacher/settings.html
-.. _execute: ../modules/org/openteacher/execute.html
-.. _dataStore: ../modules/org/openteacher/dataStore.html
-.. _settings: ../modules/org/openteacher/settings.html
-.. _metadata: ../modules/org/openteacher/metadata.html
-.. _event: ../modules/org/openteacher/event.html
-.. _buttonRegister: ../modules/org/openteacher/buttonRegister.html
-.. _javaScriptEvaluator: ../modules/org/openteacher/javaScript/evaluator.html
-.. _authors: ../modules/org/openteacher/authors.html
-.. _openteacherAuthors: ../modules/org/openteacher/openteacherAuthors.html
-.. _qtApp: ../modules/org/openteacher/qtApp.html
-.. _gui: ../modules/org/openteacher/gui.html
+.. _modules: ../modules/org/openteacher/logic/modules.html
+.. _execute: ../modules/org/openteacher/logic/execute.html
+.. _dataStore: ../modules/org/openteacher/logic/dataStore.html
+.. _settings: ../modules/org/openteacher/logic/settings.html
+.. _metadata: ../modules/org/openteacher/data/metadata.html
+.. _event: ../modules/org/openteacher/logic/event.html
+.. _buttonRegister: ../modules/org/openteacher/logic/interfaces/buttonRegister.html
+.. _javaScriptEvaluator: ../modules/org/openteacher/logic/javaScript/evaluator.html
+.. _authors: ../modules/org/openteacher/logic/authors.html
+.. _openteacherAuthors: ../modules/org/openteacher/data/openteacherAuthors.html
+.. _qtApp: ../modules/org/openteacher/interfaces/qt/qtApp.html
+.. _gui: ../modules/org/openteacher/interfaces/qt/gui.html
 
 See also
 ========
