@@ -42,7 +42,7 @@ class IrcBotModule(object):
 		try:
 			bot = self._mm.import_("bot")
 		except ImportError:
-			sys.stderr.write("For this developer module to work, you need to have twisted and launchpadlib installed.\n")
+			sys.stderr.write("For this developer module to work, you need to have twisted, bzrlib and launchpadlib installed.\n")
 			return #module stays inactive
 
 		self._modules = set(self._mm.mods(type="modules")).pop()

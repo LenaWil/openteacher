@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012-2013, Marten de Vries
+#	Copyright 2012-2014, Marten de Vries
 #	Copyright 2012, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -23,12 +23,19 @@
 #since the word 'fixme' is used multiple times for other reasons.
 
 from twisted.words.protocols import irc
-from twisted.internet import protocol, reactor, ssl
+from twisted.internet import protocol, reactor, ssl, task
 
 from launchpadlib import launchpad
 import re
 import urllib2
 import urllib
+import time
+import bzrlib.branch
+import bzrlib.plugin
+
+#support for the lp:branchname shortcut
+bzrlib.plugin.load_plugins()
+
 
 class OpenTeacherBot(irc.IRCClient):
 	sessionKey = None
@@ -134,14 +141,16 @@ class OpenTeacherBot(irc.IRCClient):
 
 	def signedOn(self):
 		print "Signed on. Now getting key and joining channels."
-		
+
 		self._setSessionKey()
-		
+
 		for channel in self.factory.channels:
 			self.join(channel)
 
-	def joined(self, channel):
-		print "Joined %s." % (channel,)
+		self._branchRevnos = {}
+		for branch in self.factory.branches:
+			call = task.LoopingCall(self._checkBranch, branch)
+			call.start(60 * 5) #every 5 minutes
 
 	def _setSessionKey(self):
 		# Get a session key from appspot
@@ -155,6 +164,33 @@ class OpenTeacherBot(irc.IRCClient):
 				self.sessionKey = m.group(1)
 				return True
 		return False
+
+	def _checkBranch(self, branchName):
+		branch = bzrlib.branch.Branch.open(branchName)
+
+		old_revno = self._branchRevnos.get(branchName, branch.revno())
+		new_revno = branch.revno()
+
+		revnos = range(old_revno + 1, new_revno + 1)
+		revids = [branch.get_rev_id(revno) for revno in revnos]
+		revs = branch.repository.get_revisions(revids)
+
+		#[-4:] to prevent a flood. More than 4 revisions pushed in one
+		#time is probably not worth printing anyway.
+		for revno, rev in zip(revnos, revs)[-4:]:
+			authors = rev.get_apparent_authors()
+			authors = (a.rsplit(" ", 1)[0] for a in authors)
+			resp = u"Revision {revno} pushed to {branchName} by {authors}: {summary}".format(
+				authors=", ".join(authors),
+				branchName=branchName,
+				revno=revno,
+				summary=rev.get_summary()
+			).encode("UTF-8")
+			self.msg(self.factory.branchChannel, resp)
+		self._branchRevnos[branchName] = new_revno
+
+	def joined(self, channel):
+		print "Joined %s." % (channel,)
 
 	def _buildBugResponse(self, msg, user):
 		#bugs
@@ -326,8 +362,10 @@ class OpenTeacherBot(irc.IRCClient):
 class OpenTeacherBotFactory(protocol.ClientFactory):
 	protocol = OpenTeacherBot
 
-	def __init__(self, channels, nickname, realname, password, admins):
+	def __init__(self, channels, branchChannel, branches, nickname, realname, password, admins):
 		self.channels = channels
+		self.branchChannel = branchChannel
+		self.branches = branches
 		self.nickname = nickname
 		self.realname = realname
 		self.password = password
@@ -353,6 +391,10 @@ on irc. Then press ctrl+c here.\n"""
 	config = {
 		"channels": [
 			"##PyTest",
+		],
+		"branchChannel": "##PyTest",
+		"branches": [
+			"lp:openteacher",
 		],
 		"nickname": "OTbot-dev",
 		"realname": "http://openteacher.org/",
