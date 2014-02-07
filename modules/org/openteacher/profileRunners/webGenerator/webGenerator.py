@@ -50,6 +50,7 @@ class WebGeneratorModule(object):
 			"static/scr/main.js",
 			"static/scr/view-list.js",
 		)
+		self.devMod = True
 
 	def enable(self):
 		global pyratemp

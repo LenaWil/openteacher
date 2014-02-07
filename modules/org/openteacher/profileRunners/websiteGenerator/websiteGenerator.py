@@ -209,6 +209,7 @@ class WebsiteGeneratorModule(object):
 			"generate-website": 0,
 			"default": -1,
 		}
+		self.devMod = True
 
 		self._templatesDir = self._mm.resourcePath("templates")
 		self._docsTemplatesDir = self._mm.resourcePath("docsTemplates")

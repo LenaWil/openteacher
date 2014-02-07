@@ -54,6 +54,7 @@ class CodeDocumentationModule(object):
 			"code-documentation": 0,
 			"default": -1,
 		}
+		self.devMod = True
 
 	def showDocumentation(self):
 		print "Serving at 0.0.0.0:8080. Ctrl + C to abort"

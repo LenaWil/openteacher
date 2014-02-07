@@ -30,6 +30,7 @@ class DeveloperDocumentationModule(object):
 		self._mm = moduleManager
 
 		self.type = "devDocs"
+		self.devMod = True
 
 	def enable(self):
 		self.developerDocumentationBaseDirectory = self._mm.resourcePath("docs")

@@ -76,8 +76,9 @@ class SourceSaverModule(object):
 			elif isPyPackage:
 				shutil.copytree(originalPath, copyPath)
 
-		#copy all modules available in self._mm.mods
-		for mod in self._mm.mods:
+		#copy all modules needed by users
+		userMods = set(self._mm.mods) - set(self._mm.mods("devMod"))
+		for mod in userMods:
 			dir = os.path.dirname(mod.__class__.__file__)
 			commonLen = len(os.path.commonprefix([moduleBase, dir]))
 			dest = os.path.join(

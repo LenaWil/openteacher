@@ -60,6 +60,7 @@ class MobileGeneratorModule(object):
 			"scr/practisingModeChoiceDialog.js",
 			"scr/teachTab.js",
 		)
+		self.devMod = True
 
 	def enable(self):
 		global QtCore, QtGui

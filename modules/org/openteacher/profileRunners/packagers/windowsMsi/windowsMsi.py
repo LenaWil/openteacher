@@ -113,6 +113,7 @@ class WindowsMsiPackagerModule(object):
 			"package-windows-msi": 0,
 			"default": -1,
 		}
+		self.devMod = True
 
 		self._ids = {}
 		self._idCounter = itertools.count()
