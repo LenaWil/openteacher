@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2014-02-08 13:26+0100\n"
+"POT-Creation-Date: 2014-02-08 15:00+0100\n"
 "PO-Revision-Date: 2011-08-01 15:54+0000\n"
 "Last-Translator: supersasho <supersasho@gmail.com>\n"
 "Language-Team: Slovak <sk@li.org>\n"
@@ -37,7 +37,7 @@ msgstr ""
 #. TRANSLATORS: This are the copyrightable years for
 #. TRANSLATORS: OpenTeacher.
 #: metadata.py:65
-msgid "2008-2013"
+msgid "2008-2014"
 msgstr ""
 
 #. TRANSLATORS: If you want to change this to another, e.g.

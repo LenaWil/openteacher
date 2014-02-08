@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2014-02-08 13:26+0100\n"
-"PO-Revision-Date: 2013-12-02 21:24+0000\n"
+"POT-Creation-Date: 2014-02-08 15:00+0100\n"
+"PO-Revision-Date: 2014-02-08 15:02+0100\n"
 "Last-Translator: Úr Balázs <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "Language: hu\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2014-02-07 06:27+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #. TRANSLATORS: This is OpenTeacher's version number.
 #: metadata.py:54
@@ -37,8 +37,8 @@ msgstr "Az OpenTeacher szerzői"
 #. TRANSLATORS: This are the copyrightable years for
 #. TRANSLATORS: OpenTeacher.
 #: metadata.py:65
-msgid "2008-2013"
-msgstr "2008-2013"
+msgid "2008-2014"
+msgstr "2008-2014"
 
 #. TRANSLATORS: If you want to change this to another, e.g.
 #. localized website, please contact us

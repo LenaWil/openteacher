@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2013, Marten de Vries
+#	Copyright 2011-2014, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -62,7 +62,7 @@ class MetadataModule(object):
 			"authors": _("OpenTeacher authors"),
 			#TRANSLATORS: This are the copyrightable years for
 			#TRANSLATORS: OpenTeacher.
-			"copyrightYears": _("2008-2013"),
+			"copyrightYears": _("2008-2014"),
 			#TRANSLATORS: If you want to change this to another, e.g.
 			#localized website, please contact us
 			#(openteachermaintainers@lists.launchpad.net) first.
