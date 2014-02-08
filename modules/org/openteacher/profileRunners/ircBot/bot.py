@@ -31,11 +31,6 @@ import urllib2
 import urllib
 import time
 import bzrlib.branch
-import bzrlib.plugin
-
-#support for the lp:branchname shortcut
-bzrlib.plugin.load_plugins()
-
 
 class OpenTeacherBot(irc.IRCClient):
 	sessionKey = None
@@ -148,8 +143,8 @@ class OpenTeacherBot(irc.IRCClient):
 			self.join(channel)
 
 		self._branchRevnos = {}
-		for branch in self.factory.branches:
-			call = task.LoopingCall(self._checkBranch, branch)
+		for branchName, branchUrl in self.factory.branches.iteritems():
+			call = task.LoopingCall(self._checkBranch, branchName, branchUrl)
 			call.start(60 * 5) #every 5 minutes
 
 	def _setSessionKey(self):
@@ -165,10 +160,10 @@ class OpenTeacherBot(irc.IRCClient):
 				return True
 		return False
 
-	def _checkBranch(self, branchName):
-		branch = bzrlib.branch.Branch.open(branchName)
+	def _checkBranch(self, branchName, branchUrl):
+		branch = bzrlib.branch.Branch.open(branchUrl)
 
-		old_revno = self._branchRevnos.get(branchName, branch.revno())
+		old_revno = self._branchRevnos.get(branchUrl, branch.revno())
 		new_revno = branch.revno()
 
 		revnos = range(old_revno + 1, new_revno + 1)
@@ -187,7 +182,7 @@ class OpenTeacherBot(irc.IRCClient):
 				summary=rev.get_summary()
 			).encode("UTF-8")
 			self.msg(self.factory.branchChannel, resp)
-		self._branchRevnos[branchName] = new_revno
+		self._branchRevnos[branchUrl] = new_revno
 
 	def joined(self, channel):
 		print "Joined %s." % (channel,)
@@ -393,9 +388,9 @@ on irc. Then press ctrl+c here.\n"""
 			"##PyTest",
 		],
 		"branchChannel": "##PyTest",
-		"branches": [
-			"lp:openteacher",
-		],
+		"branches": {
+			"lp:openteacher": "http://bazaar.launchpad.net/~openteachermaintainers/openteacher/3.x/",
+		},
 		"nickname": "OTbot-dev",
 		"realname": "http://openteacher.org/",
 		"password": None,
