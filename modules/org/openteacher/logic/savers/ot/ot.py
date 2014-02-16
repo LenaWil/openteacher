@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2013, Marten de Vries
+#	Copyright 2011-2014, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -47,7 +47,6 @@ class OpenTeacherSaverModule(object):
 			return #remain inactive
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.saves = {"words": ["ot"]}
 
 		try:
 			translator = self._modules.default("active", type="translator")
@@ -68,17 +67,18 @@ class OpenTeacherSaverModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		#TRANSLATORS: Please don't translate 'OpenTeacher' unless you've
-		#TRANSLATORS: a good reason for doing so in your language, of
-		#TRANSLATORS: course. This is used to describe the file format
-		#TRANSLATORS: of the OpenTeacher 2.x series in a file dialog.
-		self.name = _("OpenTeacher 2.x")
+		self.saves = {"words": {
+			#TRANSLATORS: Please don't translate 'OpenTeacher' unless you've
+			#TRANSLATORS: a good reason for doing so in your language, of
+			#TRANSLATORS: course. This is used to describe the file format
+			#TRANSLATORS: of the OpenTeacher 2.x series in a file dialog.
+			"ot": _("OpenTeacher 2.x"),
+		}}
 
 	def disable(self):
 		self.active = False
 
 		del self._modules
-		del self.name
 		del self.saves
 
 	@property

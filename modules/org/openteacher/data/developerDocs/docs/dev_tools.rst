@@ -79,7 +79,7 @@ getting the environment in which it executes is needed (otherwise it'll
 crash). Also, it takes quite some time to execute (45 minutes on a
 laptop with an Intel i3 CPU). But, it will generate all the packages you
 need without any manual interference. Used to generate the packages on:
-http://web.openteacher.org/regular-builds/ .
+http://web.openteacher.org/regular-builds/.
 
 python openteacher.py -p package-arch
 -------------------------------------
@@ -100,7 +100,8 @@ dependencies. Works on a Mac only.
 python openteacher.py -p package-rpm
 ------------------------------------
 Builds an .rpm package build on the current running instance of
-OpenTeacher. Recommended to run this on the OS that this .rpm targets.
+OpenTeacher. Running this on the OS that this .rpm targets is
+recommended.
 
 python openteacher.py -p package-source
 ---------------------------------------
@@ -111,12 +112,12 @@ python openteacher.py -p package-source-with-setup
 Packages the source of this installation into a tarball, and includes a
 setup.py file. Next to that, man pages, a .desktop and a menu file are
 included. Handy as a base for packaging for linux distributions. (In
-fact, most of the other package-* commands for linux distros use this
-behind the screen.)
+fact, most of the other package-* commands for linux distributions use
+this behind the screen.)
 
 python openteacher.py -p package-windows-msi
 ---------------------------------------------
-Generates a Windows executable and an Microsoft Installer (.msi) file
+Generates a Windows executable and a Microsoft Installer (.msi) file
 that can be used to install it. Windows only.
 
 python openteacher.py -p package-windows-portable

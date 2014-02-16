@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2013, Marten de Vries
+#	Copyright 2011-2014, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -68,7 +68,10 @@ class FileDialogsModule(object):
 		if not fileType:
 			fileType = _("Lessons")
 		stringExts = ("*." + ext for ext, name in exts)
-		filter = u"%s (%s)" % (fileType, u" ".join(stringExts))
+		filters = [u"%s (%s)" % (fileType, u" ".join(stringExts))]
+		for ext, name in exts:
+			filters.append(u"%s (*.%s)" % (name, ext))
+		filter = u";;".join(filters)
 
 		fileDialog = QtGui.QFileDialog()
 		fileDialog.setFileMode(QtGui.QFileDialog.ExistingFile)

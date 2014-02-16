@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2012, 2014, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -46,9 +46,11 @@ class TxtSaverModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		#TRANSLATORS: This is one of the file types OpenTeacher can
-		#TRANSLATORS: export to.
-		self.name = _("Plain text")
+		self.saves = {"words": {
+			#TRANSLATORS: This is one of the file types OpenTeacher can
+			#TRANSLATORS: export to.
+			"txt": _("Plain text")
+		}}
 		self._maxLenSetting.update({
 				"name": _("Minimum amount of spaces between words"),
 				"category": _("Input and output"),
@@ -57,7 +59,6 @@ class TxtSaverModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.saves = {"words": ["txt"]}
 
 		try:
 			self._settings = self._modules.default(type="settings")
@@ -88,7 +89,6 @@ class TxtSaverModule(object):
 		self.active = False
 
 		del self._modules
-		del self.name
 		del self.saves
 		if hasattr(self, "_settings"):
 			del self._settings

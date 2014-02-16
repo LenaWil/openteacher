@@ -35,7 +35,7 @@ bzr by executing the following command::
 	bzr branch lp:openteacher
 
 This will take some time, because it doesn't only download the current
-version of the source code, but also all of the history of it. Next
+version of the source code, but also all the history of it. Next
 updates will be quicker. You can do those by executing the following
 command while inside the newly created `openteacher` directory::
 
@@ -65,7 +65,7 @@ Most Python programs are organized in Python packages and modules. For
 OpenTeacher, we wanted something more flexible. Something which would
 allow us to just take out pieces of code, leaving the remaining code
 in a working state. Also, we wanted it to be very easy to make multiple
-implementations, of which the one to use can be chosen at runtime.
+implementations, of which the one to use can be chosen at run time.
 
 To accomplish this, we developed the module manager. It's in the files
 ``moduleManager.py`` and ``moduleFilterer.pyx``, in the root of the
@@ -79,20 +79,20 @@ A module is a Python object defined inside a Python file that is loaded
 by the module manager. It gets passed an instance of that same module
 manager to access the other modules. That should be enough to understand
 `the first file template's structure <file_templates.rst>`_, excluding
-the ``enable()``, ``disable()`` and ``type`` properties.. (``init()`` is
+the ``enable()``, ``disable()`` and ``type`` properties. (``init()`` is
 called by the module manager to collect the file's module object.)
 
 Where do I store my module?
 ---------------------------
 
 The main Python file is named the same as the directory it is in, with
-the extension ".py" added. There can be additional python files inside
+the extension '.py' added. There can be additional python files inside
 which can be imported via the ``ModuleManager.import_()`` method. If you
 want to access non-Python files in the same module, you can do so via
 the ``ModuleManager.resourcePath()`` function.
 
 The module's directory may be put inside other directories, as long as
-it's placed somewhere in the modules directory next to
+it's placed somewhere in the 'modules' directory next to
 ``openteacher.py``. In OpenTeacher, we use the 'reversed domain'
 naming strategy to ensure modules their names won't conflict with each
 other. When writing a module that implements, say, a game for the words
@@ -131,7 +131,7 @@ a few standard attributes:
 - ``enable()``: see ``active``
 - ``disable()``: see ``active``
 - ``requires``: optional. Specifies a list of module selectors that all
-  need to match at least one time before this modules' ``enable()`` may
+  need to match at least one time before this module's ``enable()`` may
   be called.
 - ``uses``: optional. Specifies a list of module selectors that match
   modules this module can use, but aren't required by it. Before
@@ -150,24 +150,24 @@ Useful modules
 ==============
 When writing an OpenTeacher module, you have access to every other
 module. In a lot of situations, you're only interested in a few next to
-modules that your module directly needs to do it's job. (E.g. a module
+modules that your module directly needs to do its job. (E.g. a module
 that represents a word list as a string, needs the module that
 represents a word as a string), there are a few modules that provide
 services useful for a much broader set of modules. They are:
 
 - modules_; can be used to query other modules based on their
   priorities (via ``default`` and ``sort``). There's guaranteed to be
-  only one modules module. To get it, use this snippet:
+  only one 'modules' module. To get it, use this snippet:
   ``next(iter(self._mm.mods(type="modules")))`` (``self._mm`` being the
   module manager.)
 - execute_; modules that can control the program flow (e.g. GUIs, CLIs,
-  webservers in OT), handle the ``startRunning`` event of this module.
+  web servers in OT), handle the ``startRunning`` event of this module.
   That way, they start running after all initialization handled by this
   module is complete. There's guaranteed to be only one execute module
   too, but it's still common to use the execute module to access it
   nonetheless. (snippet: ``self._modules.default(type="execute")`` with
-  self._modules as the modules module.)
-- dataStore_; allows storing data persistently accross program runs.
+  self._modules as the 'modules' module.)
+- dataStore_; allows storing data persistently across program runs.
 - settings_; allows registering settings (that are e.g. shown in the
   GUI.)
 - metadata_; keeps all kind of info about the 'brand' OpenTeacher. Like
@@ -185,7 +185,7 @@ services useful for a much broader set of modules. They are:
   OpenTeacher, there is the openteacherAuthors_ module.
 - qtApp_; when your module requires this module, it can be sure that
   a QApplication is running. It's not guaranteed there's an X server
-  running on linux, though, use gui_ for that.
+  running on Linux, though, use gui_ for that.
 - gui_; the most important function of this module is that it allows you
   to add your own tabs to the user interface. When depending on this,
   you can be sure that a QApplication is active and an X server too.

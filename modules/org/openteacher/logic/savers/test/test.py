@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012-2013, Marten de Vries
+#	Copyright 2012-2014, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -148,7 +148,7 @@ class TestCase(unittest.TestCase):
 				{
 					"id": 0,
 					"questions": [(u"eén",), (u"uno", u"un",)],
-					"answers": [(u"twee", u"deux"), ("two", "zwei")],
+					"answers": [(u"twée", u"deux"), ("two", "zwei")],
 					"created": datetime.datetime.now(),
 				},
 				{

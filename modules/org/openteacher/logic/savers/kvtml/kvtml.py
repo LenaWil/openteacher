@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2013, Marten de Vries
+#	Copyright 2011-2014, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -47,8 +47,12 @@ class KvtmlSaverModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		#TRANSLATORS: A document format used by some KDE applications.
-		self.name = _("KDE Vocabulary Document")
+		self.saves = {
+			"words": {
+				#TRANSLATORS: A document format used by some KDE applications.
+				"kvtml": _("KDE Vocabulary Document"),
+			}
+		}
 
 	def enable(self):
 		global pyratemp
@@ -58,8 +62,6 @@ class KvtmlSaverModule(object):
 			return #remain inactive
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._metadata = self._modules.default("active", type="metadata").metadata
-
-		self.saves = {"words": ["kvtml"]}
 
 		try:
 			translator = self._modules.default("active", type="translator")
@@ -76,7 +78,6 @@ class KvtmlSaverModule(object):
 
 		del self._modules
 		del self._metadata
-		del self.name
 		del self.saves
 
 	@property

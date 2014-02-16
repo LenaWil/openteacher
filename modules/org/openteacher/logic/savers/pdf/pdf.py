@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2012, 2014, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -47,13 +47,15 @@ class PdfSaverModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		#TRANSLATORS: This is the name of a document exchange standard.
-		#TRANSLATORS: Please just use the English name of it, unless the
-		#TRANSLATORS: standard is known under another name in your
-		#TRANSLATORS: language (or you have a very good reason yourself
-		#TRANSLATORS: for translating it). For more information on PDF:
-		#TRANSLATORS: http://en.wikipedia.org/wiki/PDF
-		self.name = _("Portable Document Format")
+		self.saves = {"words": {
+			#TRANSLATORS: This is the name of a document exchange standard.
+			#TRANSLATORS: Please just use the English name of it, unless the
+			#TRANSLATORS: standard is known under another name in your
+			#TRANSLATORS: language (or you have a very good reason yourself
+			#TRANSLATORS: for translating it). For more information on PDF:
+			#TRANSLATORS: http://en.wikipedia.org/wiki/PDF
+			"pdf": _("Portable Document Format"),
+		}}
 
 	def enable(self):
 		global QtGui, QtWebKit
@@ -62,7 +64,6 @@ class PdfSaverModule(object):
 		except ImportError:
 			return
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.saves = {"words": ["pdf"]}
 
 		try:
 			translator = self._modules.default("active", type="translator")
@@ -78,7 +79,6 @@ class PdfSaverModule(object):
 		self.active = False
 
 		del self._modules
-		del self.name
 		del self.saves
 
 	def save(self, type, lesson, path):

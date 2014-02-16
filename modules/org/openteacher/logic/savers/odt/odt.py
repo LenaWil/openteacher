@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
-#	Copyright 2011-2013, Marten de Vries
+#	Copyright 2011-2014, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -30,8 +30,7 @@ class OdtSaverModule(object):
 		}
 
 		self.requires = (
-			self._mm.mods(type="htmlGenerator", dataType="words"),
-			self._mm.mods(type="ui"),
+			self._mm.mods(type="odtSaver"),
 		)
 		self.uses = (
 			self._mm.mods(type="translator"),
@@ -39,13 +38,7 @@ class OdtSaverModule(object):
 		self.filesWithTranslations = ("odt.py",)
 
 	def enable(self):
-		global QtGui
-		try:
-			from PyQt4 import QtGui
-		except ImportError:
-			return
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.saves = {"words": ["odt"]}
 
 		try:
 			translator = self._modules.default("active", type="translator")
@@ -66,35 +59,26 @@ class OdtSaverModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		#TRANSLATORS: This is the name of a file format standard. Please
-		#TRANSLATORS: just use the English name of it, unless the
-		#TRANSLATORS: standard is known under another name in your
-		#TRANSLATORS: language (or you have a very good reason yourself
-		#TRANSLATORS: for translating it). For more information about
-		#TRANSLATORS: ODT: http://en.wikipedia.org/wiki/OpenDocument
-		self.name = _("OpenDocument Text")
+
+		self.saves = {"words": {
+			#TRANSLATORS: This is the name of a file format standard. Please
+			#TRANSLATORS: just use the English name of it, unless the
+			#TRANSLATORS: standard is known under another name in your
+			#TRANSLATORS: language (or you have a very good reason yourself
+			#TRANSLATORS: for translating it). For more information about
+			#TRANSLATORS: ODT: http://en.wikipedia.org/wiki/OpenDocument
+			"odt": _("OpenDocument Text")
+		}}
 
 	def disable(self):
 		self.active = False
 
 		del self._modules
-		del self.name
 		del self.saves
 
 	def save(self, type, lesson, path):
-		html = self._modules.default(
-			"active",
-			type="htmlGenerator",
-			dataType="words",
-		).generate(lesson, margin="0.5em", coloredRows=False)
-
-		doc = QtGui.QTextDocument()
-		doc.setHtml(html)
-
-		#odf -> OpenDocument Format
-		writer = QtGui.QTextDocumentWriter(path, "odf")
-		writer.write(doc)
-
+		odtSaver = self._modules.default("active", type="odtSaver")
+		odtSaver.save(lesson, path)
 		lesson.path = None
 
 def init(moduleManager):

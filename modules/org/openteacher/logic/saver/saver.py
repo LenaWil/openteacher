@@ -52,11 +52,12 @@ class SaverModule(object):
 
 		#Collect exts the loader modules support, if there is a gui
 		#module for the data type(s) they can provide
-		return [
-			(ext, module.name)
-			for module in self._modules.sort("active", type="save")
-			for ext in module.saves.get(dataType, [])
-		]
+		result = []
+		for module in self._modules.sort("active", type="save"):
+			formats = module.saves.get(dataType, {}).iteritems()
+			for ext, name in sorted(formats, key=lambda (ext, name): name):
+				result.append((ext, name))
+		return result
 
 	@property
 	def saveSupport(self):

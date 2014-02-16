@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2012, 2014, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -49,10 +49,12 @@ class WrtsSaverModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		#TRANSLATORS: WRDS is the name of a web service. Also known as
-		#TRANSLATORS: WRTS (the Dutch name). International website:
-		#http://wrds.eu/
-		self.name = _("WRDS")
+		self.saves = {"words": {
+			#TRANSLATORS: WRDS is the name of a web service. Also known as
+			#TRANSLATORS: WRTS (the Dutch name). International website:
+			#http://wrds.eu/
+			"wrts": _("WRDS"),
+		}}
 
 	def enable(self):
 		global pyratemp
@@ -62,8 +64,6 @@ class WrtsSaverModule(object):
 			return #remain inactive
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._metadata = self._modules.default("active", type="metadata").metadata
-
-		self.saves = {"words": ["wrts"]}
 
 		try:
 			translator = self._modules.default("active", type="translator")
@@ -80,7 +80,6 @@ class WrtsSaverModule(object):
 
 		del self._modules
 		del self._metadata
-		del self.name
 		del self.saves
 
 	@property

@@ -72,7 +72,7 @@ Dependencies for developing OpenTeacher
 satisfied takes time.)
 
 * ssh
-* virtualbox
+* VirtualBox
 * the right network setup
 * properly installed VM's.
 
@@ -90,21 +90,22 @@ Incompatible dependencies: PyPy
 * python-qt4-gl
 * python-enchant
 * python-pygraphviz
-* python-faulthandler (although similar tools might exist)
+* python-faulthandler (although similar tools might exist, necessary?)
 * python-gi
 * PyInstaller
+* python-bzrlib
 
 unsure (but they probably work as they probably don't use C extensions):
 
 * python-launchpadlib
 * python-polib
 * python-gnupg
-* urwid
 
 Incompatible dependencies: CPython 3.x
 --------------------------------------
 
-* pyttsx (no detectable effort ongoing)
+* pyttsx (but: https://github.com/parente/pyttsx/issues/21)
+* python-bzrlib (no visible effort ongoing)
 * python-launchpadlib (https://bugs.launchpad.net/launchpadlib/+bug/1060734)
 * python-twisted (but: http://twistedmatrix.com/trac/milestone/Python-3.x & http://twistedmatrix.com/trac/wiki/Plan/Python3)
 * PyInstaller (but: http://www.pyinstaller.org/ticket/85)

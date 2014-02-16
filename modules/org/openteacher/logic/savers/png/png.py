@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2012, 2014, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -44,17 +44,18 @@ class PngSaverModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		#TRANSLATORS: This is the name of an image format. Please just
-		#TRANSLATORS: use the English name of it, unless the format is
-		#TRANSLATORS: known under another name in your language (or you
-		#TRANSLATORS: have a very good reason yourself for translating
-		#TRANSLATORS: it). For more information on PNG:
-		#TRANSLATORS: http://en.wikipedia.org/wiki/Portable_Network_Graphics
-		self.name = _("Portable Network Graphics")
+		self.saves = {"topo": {
+			#TRANSLATORS: This is the name of an image format. Please just
+			#TRANSLATORS: use the English name of it, unless the format is
+			#TRANSLATORS: known under another name in your language (or you
+			#TRANSLATORS: have a very good reason yourself for translating
+			#TRANSLATORS: it). For more information on PNG:
+			#TRANSLATORS: http://en.wikipedia.org/wiki/Portable_Network_Graphics
+			"png": _("Portable Network Graphics"),
+		}}
 
 	def enable(self):		
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.saves = {"topo": ["png"]}
 
 		try:
 			translator = self._modules.default("active", type="translator")
@@ -70,7 +71,6 @@ class PngSaverModule(object):
 		self.active = False
 
 		del self._modules
-		del self.name
 		del self.saves
 
 	def save(self, type, lesson, path):

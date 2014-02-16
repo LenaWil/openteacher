@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2012, 2014, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -49,13 +49,16 @@ class CsvSaverModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		#TRANSLATORS: This is one of the file types OpenTeacher can
-		#TRANSLATORS: export to.
-		self.name = _("Spreadsheet")
+
+		self.saves = {
+			"words": {
+				#TRANSLATORS: This is one of the file types OpenTeacher
+				#TRANSLATORS: can export to.
+				"csv":	_("Spreadsheet")
+			}
+		}
 
 	def enable(self):
-		self.saves = {"words": ["csv"]}
-
 		#Translations
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		try:
@@ -72,7 +75,6 @@ class CsvSaverModule(object):
 		self.active = False
 
 		del self._modules
-		del self.name
 		del self.saves
 
 	@property
@@ -91,12 +93,16 @@ class CsvSaverModule(object):
 			#write header
 			questionsHeader = ql or _("Questions").encode("UTF-8")
 			answersHeader = al or _("Answers").encode("UTF-8")
-			writer.writerow([questionsHeader, answersHeader])
+			commentHeader = _("Comment").encode("UTF-8")
+			commentAfterAnsweringHeader = _("Comment after answering").encode("UTF-8")
+			writer.writerow([questionsHeader, answersHeader, commentHeader, commentAfterAnsweringHeader])
 			#write items
 			for item in lesson.list.get("items", []):
 				questions = self._compose(item.get("questions", [])).encode("UTF-8")
 				answers = self._compose(item.get("answers", [])).encode("UTF-8")
-				writer.writerow([questions, answers])
+				comment = item.get("comment", u"").encode("UTF-8")
+				commentAfterAnswering = item.get("commentAfterAnswering", u"").encode("UTF-8")
+				writer.writerow([questions, answers, comment, commentAfterAnswering])
 
 		lesson.path = None
 

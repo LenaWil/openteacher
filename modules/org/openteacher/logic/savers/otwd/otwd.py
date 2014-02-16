@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2012, 2014 Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -46,15 +46,15 @@ class OpenTeachingWordsSaverModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		#TRANSLATORS: This is one of the file formats OpenTeacher
-		#TRANSLATORS: saves to.
-		self.name = _("Open Teaching Words")
+		self.saves = {"words": {
+			#TRANSLATORS: This is one of the file formats OpenTeacher
+			#TRANSLATORS: saves to.
+			"otwd": _("Open Teaching Words"),
+		}}
 
 	def enable(self):		
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._otxxSaver = self._modules.default("active", type="otxxSaver")
-
-		self.saves = {"words": ["otwd"]}
 
 		try:
 			translator = self._modules.default("active", type="translator")
@@ -74,7 +74,6 @@ class OpenTeachingWordsSaverModule(object):
 
 		del self._modules
 		del self._otxxSaver
-		del self.name
 		del self.saves
 
 def init(moduleManager):

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
-#	Copyright 2011-2013, Marten de Vries
+#	Copyright 2011-2014, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -42,7 +42,6 @@ class HtmlSaverModule(object):
 
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.saves = {"media": ["html"]}
 
 		try:
 			translator = self._modules.default("active", type="translator")
@@ -63,19 +62,21 @@ class HtmlSaverModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		#TRANSLATORS: This is the name of an internet standard. Please
-		#TRANSLATORS: just use the English name of it, unless the
-		#TRANSLATORS: standard is known under another name in your
-		#TRANSLATORS: language (or you have a very good reason yourself
-		#TRANSLATORS: for translating it). For more information about
-		#TRANSLATORS: HTML: http://en.wikipedia.org/wiki/HTML
-		self.name = _("Hyper Text Markup Language")
+
+		self.saves = {"media": {
+			#TRANSLATORS: This is the name of an internet standard. Please
+			#TRANSLATORS: just use the English name of it, unless the
+			#TRANSLATORS: standard is known under another name in your
+			#TRANSLATORS: language (or you have a very good reason yourself
+			#TRANSLATORS: for translating it). For more information about
+			#TRANSLATORS: HTML: http://en.wikipedia.org/wiki/HTML
+			"html": _("Hyper Text Markup Language")
+		}}
 
 	def disable(self):
 		self.active = False
 
 		del self._modules
-		del self.name
 		del self.saves
 
 	def save(self, type, lesson, path):

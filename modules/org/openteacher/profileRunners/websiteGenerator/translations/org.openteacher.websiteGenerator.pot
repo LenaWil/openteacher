@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenTeacher 3.2\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2014-02-08 15:05+0100\n"
+"POT-Creation-Date: 2014-02-16 12:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -198,8 +198,8 @@ msgstr ""
 
 #: templates/index.html:8
 msgid ""
-"<strong>OpenTeacher</strong> is an opensource application that <strong>helps "
-"you learn</strong> a variety of <strong>subjects</strong>."
+"<strong>OpenTeacher</strong> is an open source application that "
+"<strong>helps you learn</strong> a variety of <strong>subjects</strong>."
 msgstr ""
 
 #: templates/index.html:10
@@ -228,7 +228,7 @@ msgstr ""
 
 #: templates/index.html:17
 msgid ""
-"Read support for more than 29 file formats; write support for over 14 file "
+"Read support for more than 30 file formats; write support for over 20 file "
 "formats"
 msgstr ""
 

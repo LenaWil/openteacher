@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2012, 2014 Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -55,9 +55,11 @@ class OpenTeachingMediaSaverModule(object):
 				self._mm.resourcePath("translations")
 			)
 
-		#TRANSLATORS: This is one of the file formats OpenTeacher
-		#TRANSLATORS: saves to.
-		self.name = _("Open Teaching Media")
+		self.saves = {"media": {
+			#TRANSLATORS: This is one of the file formats OpenTeacher
+			#TRANSLATORS: saves to.
+			"otmd": _("Open Teaching Media"),
+		}}
 		self._compressionSetting.update({
 			#TRANSLATORS: name of a setting
 			"name": _("Enable compression"),
@@ -70,8 +72,6 @@ class OpenTeachingMediaSaverModule(object):
 	def enable(self):		
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._otxxSaver = self._modules.default("active", type="otxxSaver")
-
-		self.saves = {"media": ["otmd"]}
 
 		try:
 			self._settings = self._modules.default(type="settings")
@@ -103,7 +103,6 @@ class OpenTeachingMediaSaverModule(object):
 		del self._otxxSaver
 		del self._settings
 		del self._compressionSetting
-		del self.name
 		del self.saves
 
 	def save(self, type, lesson, path):

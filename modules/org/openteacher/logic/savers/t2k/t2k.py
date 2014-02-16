@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2012, 2014, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -45,9 +45,11 @@ class Teach2000SaverModule(object):
 			_, ngettext = translator.gettextFunctions(
 				self._mm.resourcePath("translations")
 			)
-		#TRANSLATORS: This is the name of an application. For more info
-		#TRANSLATORS: about Teach2000: http://www.teach2000.org/
-		self.name = _("Teach2000")
+		self.saves = {"words": {
+			#TRANSLATORS: This is the name of an application. For more info
+			#TRANSLATORS: about Teach2000: http://www.teach2000.org/
+			"t2k": _("Teach2000"),
+		}}
 
 	def enable(self):
 		global pyratemp
@@ -56,7 +58,6 @@ class Teach2000SaverModule(object):
 		except ImportError:
 			return #remain inactive
 		self._modules = set(self._mm.mods(type="modules")).pop()
-		self.saves = {"words": ["t2k"]}
 
 		try:
 			translator = self._modules.default("active", type="translator")
@@ -72,7 +73,6 @@ class Teach2000SaverModule(object):
 		self.active = False
 
 		del self._modules
-		del self.name
 		del self.saves
 
 	def save(self, type, lesson, path):
