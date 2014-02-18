@@ -1,13 +1,13 @@
 # Dutch translation for openteacher
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openteacher package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2014-02-16 12:53+0100\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-02-16 12:54+0100\n"
 "PO-Revision-Date: 2014-02-17 15:13+0000\n"
 "Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -16,20 +16,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2014-02-18 05:32+0000\n"
 "X-Generator: Launchpad (build 16916)\n"
-"Language: nl\n"
 
-#: sylkSaver.py:102
-msgid "Questions"
-msgstr "Vragen"
-
-#: sylkSaver.py:102
-msgid "Answers"
-msgstr "Antwoorden"
-
-#: sylkSaver.py:102
-msgid "Comment"
-msgstr "Commentaar"
-
-#: sylkSaver.py:102
-msgid "Comment after answering"
-msgstr "Commentaar na het antwoorden"
+#. TRANSLATORS: This is one of the file formats OpenTeacher
+#. TRANSLATORS: saves to. For more info, see:
+#. TRANSLATORS: https://en.wikipedia.org/wiki/SYmbolic_LinK_%28SYLK%29
+#: sylk.py:53
+msgid "SYLK"
+msgstr "SYLK"
