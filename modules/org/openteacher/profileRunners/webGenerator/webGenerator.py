@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2013, Marten de Vries
+#	Copyright 2013-2014, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -21,6 +21,8 @@
 import shutil
 import sys
 import os
+import datetime
+import posixpath
 
 class WebGeneratorModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
@@ -126,6 +128,23 @@ class WebGeneratorModule(object):
 
 		#copy the logo
 		shutil.copy(self._metadata["iconPath"], os.path.join(path, "img/logo"))
+
+		#create the AppCache manifest file
+		template = pyratemp.Template(filename=self._mm.resourcePath("otweb.templ.appcache"))
+		allFiles = sorted(
+			posixpath.relpath(posixpath.join(root, file), path)
+			for root, dirs, files in os.walk(path)
+			for file in files
+			if not file.startswith(".")
+		)
+		manifest = template(**{
+			"now": datetime.datetime.now(),
+			"files": allFiles,
+			"couchdbHost": couchdbHost,
+			"servicesHost": servicesHost,
+		})
+		with open(os.path.join(path, "otweb.appcache"), "w") as f:
+			f.write(manifest.encode("UTF-8"))
 
 		print "Writing OpenTeacher web to '%s' is now done." % path
 

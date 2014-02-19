@@ -2,7 +2,7 @@ Get the source used to create this web app at:
 https://code.launchpad.net/~openteachermaintainers/openteacher/3.x
 
 *:
-	Copyright 2013, Marten de Vries
+	Copyright 2013-2014, Marten de Vries
 
 	This file is part of OpenTeacher.
 

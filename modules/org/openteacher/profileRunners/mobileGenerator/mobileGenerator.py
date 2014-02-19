@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012-2013, Marten de Vries
+#	Copyright 2012-2014, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -24,6 +24,8 @@ import os
 import json
 import urllib2
 import urllib
+import datetime
+import posixpath
 
 class MobileGeneratorModule(object):
 	"""Generates the HTML of OpenTeacher Mobile as a command line
@@ -128,6 +130,23 @@ class MobileGeneratorModule(object):
 		#copy css
 		shutil.copytree(self._mm.resourcePath("css"), os.path.join(path, "css"))
 
+	def _generateAppCacheManifest(self, path):
+		#create the AppCache manifest file
+		template = pyratemp.Template(filename=self._mm.resourcePath("otmobile.templ.appcache"))
+		allFiles = sorted(
+			posixpath.relpath(posixpath.join(root, file), path)
+			for root, dirs, files in os.walk(path)
+			for file in files
+			if not file in [".htaccess", "config.xml", "splash.png"]
+		)
+		manifest = template(**{
+			"now": datetime.datetime.now(),
+			"files": allFiles,
+		})
+		with open(os.path.join(path, "otmobile.appcache"), "w") as f:
+			f.write(manifest.encode("UTF-8"))
+		shutil.copy(self._mm.resourcePath("htaccess"), os.path.join(path, ".htaccess"))
+
 	def _generateTranslationFiles(self, path):
 		buildIndex = self._modules.default("active", type="translationIndexBuilder").buildTranslationIndex
 		mergeIndexes = self._modules.default("active", type="translationIndexesMerger").mergeIndexes
@@ -229,6 +248,8 @@ class MobileGeneratorModule(object):
 		iconPath = self._metadata["iconPath"]
 		self._copyIcon(iconPath, path)
 		self._writeSplash(iconPath, path)
+
+		self._generateAppCacheManifest(path)
 
 		print "Writing %s mobile to '%s' is now done." % (self._metadata["name"], path)
 

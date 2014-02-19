@@ -1,0 +1,11 @@
+CACHE MANIFEST
+#Generated at: @!now.isoformat()!@
+
+CACHE:
+<!--(for file in files)-->
+@!file!@
+<!--(end)-->
+
+NETWORK:
+@!couchdbHost!@
+@!servicesHost!@
