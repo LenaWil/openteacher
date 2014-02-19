@@ -214,10 +214,12 @@ def installQtClasses():
 
 			self.createLessonGroupBox = ButtonsGroupBox()
 			self.loadLessonGroupBox = ButtonsGroupBox([self.loadFromInternetButton])
+			self.helpGroupBox = ButtonsGroupBox()
 
 			openLayout = QtGui.QVBoxLayout()
 			openLayout.addWidget(self.createLessonGroupBox)
 			openLayout.addWidget(self.loadLessonGroupBox)
+			openLayout.addWidget(self.helpGroupBox)
 			openLayout.addStretch()
 
 			left = self.style().pixelMetric(QtGui.QStyle.PM_LayoutLeftMargin)
@@ -247,6 +249,7 @@ def installQtClasses():
 		def retranslate(self):
 			self.createLessonGroupBox.setTitle(_("Create lesson:"))
 			self.loadLessonGroupBox.setTitle(_("Load lesson:"))
+			self.helpGroupBox.setTitle(_("Help"))
 			self.loadFromInternetButton.setText(_("Load from the internet"))
 			with contextlib.ignored(AttributeError):
 				self.recentlyOpenedGroupBox.setTitle(_("Recently opened:"))
@@ -255,6 +258,7 @@ def installQtClasses():
 			return {
 				"create": self.createLessonGroupBox,
 				"load": self.loadLessonGroupBox,
+				"help": self.helpGroupBox,
 				"load-from-internet": self.loadFromInternetButton,
 			}.get(button.category)
 

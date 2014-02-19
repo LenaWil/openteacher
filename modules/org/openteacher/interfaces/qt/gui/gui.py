@@ -288,6 +288,11 @@ class GuiModule(object):
 			self._loadButton.changePriority.send(0)
 			self._loadButton.changeSize.send("small")
 
+			#add a documentation button
+			self._documentationButton = br.registerButton("help")
+			self._documentationButton.clicked.handle(lambda: self._widget.docsAction.triggered.emit(False))
+			self._documentationButton.changeSize.send("small")
+
 		metadata = self._modules.default("active", type="metadata").metadata
 		self._widget.setWindowTitle(metadata["name"])
 		self._widget.setWindowIcon(QtGui.QIcon(metadata["iconPath"]))
@@ -421,6 +426,7 @@ class GuiModule(object):
 				fileTab.retranslate()
 
 		self._loadButton.changeText.send(_("Open from file"))
+		self._documentationButton.changeText.send(_("Documentation"))
 
 	def run(self, onCloseRequested):
 		"""Starts the event loop of the Qt application. 

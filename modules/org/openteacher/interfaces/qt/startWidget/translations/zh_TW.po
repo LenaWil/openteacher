@@ -7,29 +7,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
-"POT-Creation-Date: 2014-02-16 12:53+0100\n"
+"POT-Creation-Date: 2014-02-19 20:15+0100\n"
 "PO-Revision-Date: 2013-05-29 07:24+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2014-02-17 05:50+0000\n"
 "X-Generator: Launchpad (build 16916)\n"
-"Language: \n"
 
-#: startWidget.py:248
+#: startWidget.py:250
 msgid "Create lesson:"
 msgstr "建立課程："
 
-#: startWidget.py:249
+#: startWidget.py:251
 msgid "Load lesson:"
 msgstr "載入課程："
 
-#: startWidget.py:250
+#: startWidget.py:252
+msgid "Help"
+msgstr ""
+
+#: startWidget.py:253
 msgid "Load from the internet"
 msgstr "從 internet 載入"
 
-#: startWidget.py:252
+#: startWidget.py:255
 msgid "Recently opened:"
 msgstr "最近開啟檔案："
