@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2012-12-08 22:48+0000\n"
+"PO-Revision-Date: 2014-03-03 20:49+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-20 05:31+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-03-04 08:04+0000\n"
+"X-Generator: Launchpad (build 16948)\n"
 "Language: ru\n"
 
 #. TRANSLATORS: This is one of the file types OpenTeacher
@@ -34,8 +34,8 @@ msgstr "Ответы"
 
 #: csv_.py:96
 msgid "Comment"
-msgstr ""
+msgstr "Комментарий"
 
 #: csv_.py:97
 msgid "Comment after answering"
-msgstr ""
+msgstr "Комментировать после ответа"
