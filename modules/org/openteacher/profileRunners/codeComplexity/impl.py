@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2013, Marten de Vries
+#	Copyright 2013-2014, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -46,12 +46,15 @@ def complexityInfo(output):
 		if not line:
 			continue
 		result = ComplexityResult._make(eval(line))
-		if not re.search(r"install.*Classes", result.position):
+		#either functions that wrap other functions until the context
+		#is ready (e.g. used for lazy loading flask & PyQt4), or
+		#functions from other sources.
+		if not re.search(r"install.*Classes|initialize.*|crossdomain", result.position):
 			yield result
 
 def complexityForPaths(basePath):
 	for path in pythonPaths(basePath):
-		output = subprocess.check_output(["python", "-m", "mccabe", "--min=9", path]).strip()
+		output = subprocess.check_output(["python", "-m", "mccabe", "--min=8", path]).strip()
 		info = list(complexityInfo(output))
 		if info:
 			yield path, info

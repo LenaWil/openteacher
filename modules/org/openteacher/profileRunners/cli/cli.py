@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012-2013, Marten de Vries
+#	Copyright 2012-2014, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -199,38 +199,41 @@ class CommandLineInterfaceModule(object):
 
 		self._save(baseType, baseLesson, args["output-file"])
 
+	def _convertOne(self, inputPath, outputFormat):
+		#loading
+		type, lesson = self._load(inputPath)
+		if not lesson:
+			print >> sys.stderr, "Couldn't load file '%s', not converting." % inputPath
+			#next file
+			return
+
+		done = False
+		outputPath = os.path.splitext(inputPath)[0] + "." + outputFormat
+		if os.path.exists(outputPath):
+			print >> sys.stderr, "The file '{outfile}' already exists, so '{infile}' can't be converted.".format(outfile=outputPath, infile=inputPath)
+			#next file
+			return
+
+		for mod in self._modules.sort("active", type="save"):
+			for modType, exts in mod.saves.iteritems():
+				if modType == type and outputFormat in exts:
+					mod.save(type, DummyLesson(lesson), outputPath)
+					done = True
+					break
+			if done:
+				break
+		else:
+			print >> sys.stderr, "Couldn't save file '{infile}' in the '{format}' format, not converting.".format(infile=inputPath, format=outputFormat)
+			#next file
+			return
+		print "Converted file '{infile}' to '{outfile}'.".format(infile=inputPath, outfile=outputPath)
+
 	def _convert(self, args):
 		inputPaths = self._expandPaths(args["input-files"])
 		outputFormat = args["output_format"]
 
 		for inputPath in inputPaths:
-			#loading
-			type, lesson = self._load(inputPath)
-			if not lesson:
-				print >> sys.stderr, "Couldn't load file '%s', not converting." % inputPath
-				#next file
-				continue
-
-			done = False
-			outputPath = os.path.splitext(inputPath)[0] + "." + outputFormat
-			if os.path.exists(outputPath):
-				print >> sys.stderr, "The file '{outfile}' already exists, so '{infile}' can't be converted.".format(outfile=outputPath, infile=inputPath)
-				#next file
-				continue
-
-			for mod in self._modules.sort("active", type="save"):
-				for modType, exts in mod.saves.iteritems():
-					if modType == type and outputFormat in exts:
-						mod.save(type, DummyLesson(lesson), outputPath)
-						done = True
-						break
-				if done:
-					break
-			else:
-				print >> sys.stderr, "Couldn't save file '{infile}' in the '{format}' format, not converting.".format(infile=inputPath, format=outputFormat)
-				#next file. Not strictly necessary, but just in case more code's added later...
-				continue
-			print "Converted file '{infile}' to '{outfile}'.".format(infile=inputPath, outfile=outputPath)
+			self._convertOne(inputPath, outputFormat)
 		print "Done."
 
 	def _viewWordList(self, args):

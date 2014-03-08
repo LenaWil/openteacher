@@ -43,7 +43,7 @@ var viewPage = (function () {
 		}
 		opts.startkey = [id];
 		opts.endkey = [id, {}];
-		session.userDbs.tests.query("tests/by_list_id", opts, callback);
+		session.userDbs.private.query("tests/by_list_id", opts, callback);
 	}
 
 	function addRow(item) {
@@ -96,7 +96,7 @@ var viewPage = (function () {
 		var page = $("#view-page");
 		var id = page.data("id");
 		var rev = page.data("rev");
-		session.userDbs.lists.get(id, {rev: rev}, function (err, resp) {
+		session.private.lists.get(id, {rev: rev}, function (err, resp) {
 			toList(function (list) {
 				//JSON.stringify isn't meant for this, but it seems to
 				//work.
@@ -115,7 +115,7 @@ var viewPage = (function () {
 		var id = page.data("id");
 		var rev = page.data("rev");
 
-		session.userDbs.lists.get(id, function (err, doc) {
+		session.userDbs.private.get(id, function (err, doc) {
 			//supplement the already existing doc with the saved values.
 			doc._rev = rev;
 			doc.title = $("#title").val();
@@ -167,7 +167,7 @@ var viewPage = (function () {
 
 	function onSaveList() {
 		toList(function (list) {
-			PouchDBext.withValidation.put(session.userDbs.lists, list, function (err, resp) {
+			PouchDBext.withValidation.put(session.userDbs.private, list, function (err, resp) {
 				if (err === null) {
 					$("#save-conflict").slideUp();
 					$("#save-forbidden").slideUp();
@@ -185,7 +185,7 @@ var viewPage = (function () {
 
 				//query the db to get the latest rev (on success it's in
 				//the resp too, but not on err.)
-				session.userDbs.lists.get(list._id, function (err, resp) {
+				session.userDbs.private.get(list._id, function (err, resp) {
 					//set the new rev to the page, so it can be saved again
 					//without conflicts.
 					$("#view-page").data("rev", resp._rev);
@@ -202,7 +202,7 @@ var viewPage = (function () {
 
 	function onPrintList() {
 		var id = $("#view-page").data("id");
-		PouchDBext.show(session.userDbs.lists, "lists/print/" + id, function (err, resp) {
+		PouchDBext.show(session.userDbs.private, "lists/print/" + id, function (err, resp) {
 			var frame = $("#print-frame")[0];
 			var doc = frame.contentDocument;
 			doc.open();
@@ -338,7 +338,7 @@ var viewPage = (function () {
 			return;
 		}
 		crossroads.parse("lists/" + id + "/view");
-		session.userDbs.lists.get($("#view-page").data("id"), function (err, list) {
+		session.userDbs.private.get($("#view-page").data("id"), function (err, list) {
 			loadTests(id, function (err, tests) {
 				list.tests = tests.rows.map(function (row) {
 					return row.value;
@@ -378,7 +378,7 @@ var viewPage = (function () {
 		}
 		cancelChanges = session.onUserDbChanges.shared_lists(onSharedListsChange);
 
-		session.userDbs.lists.get(id, function (err, resp) {
+		session.userDbs.private.get(id, function (err, resp) {
 			if (err) {
 				//trigger 404 page.
 				viewRoute.switched.dispatch();

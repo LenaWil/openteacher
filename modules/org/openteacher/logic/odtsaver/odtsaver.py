@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
-#	Copyright 2011-2013, Marten de Vries
+#	Copyright 2011-2014, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -57,6 +57,8 @@ class OdtSaverModule(object):
 
 	def disable(self):
 		self.active = False
+
+		del self._modules
 
 def init(moduleManager):
 	return OdtSaverModule(moduleManager)

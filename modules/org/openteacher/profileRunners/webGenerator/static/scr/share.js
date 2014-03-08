@@ -96,7 +96,7 @@ var sharePage = (function () {
 				//(yeah, pretty unlikely. :P)
 				delete resp._id;
 				delete resp._rev;
-				session.userDbs.lists.post(resp);
+				session.userDbs.private.post(resp);
 			} else {
 				//somehow the doc isn't found -> 404.
 				crossroads.bypassed.dispatch(url);

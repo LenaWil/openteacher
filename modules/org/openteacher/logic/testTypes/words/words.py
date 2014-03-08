@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2008-2011, Milan Boers
-#	Copyright 2009-2013, Marten de Vries
+#	Copyright 2009-2014, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -21,6 +21,7 @@
 
 class WordsTestTypeModule(object):
 	QUESTION, ANSWER, GIVEN_ANSWER, CORRECT = xrange(4)
+
 	def __init__(self, moduleManager, *args, **kwargs):
 		super(WordsTestTypeModule, self).__init__(*args, **kwargs)
 
@@ -82,26 +83,24 @@ class WordsTestTypeModule(object):
 	
 	@property
 	def _mostDoneWrong(self):
-		# Get the id of the item most done wrong
-		mostWrong = 0
-		mostWrongId = None
-		
+		# Get the item most done wrong
+		mostWrongCount = 0
+		mostWrongItem = None
+
 		for item in self._list["items"]:
 			wrong = 0
 			for result in self._test["results"]:
 				if item["id"] == result["itemId"] and result["result"] == "wrong":
 					wrong += 1
-			if wrong > mostWrong:
-				mostWrong = wrong
-				mostWrongId = item["id"]
-		
+			if wrong > mostWrongCount:
+				mostWrongCount = wrong
+				mostWrongItem = item
+
 		# Get the question of the item most done wrong
-		for item in self._list["items"]:
-			if item["id"] == mostWrongId:
-				return self._modules.default(
-					"active",
-					type="wordsStringComposer"
-				).compose(item["questions"])
+		return self._modules.default(
+			"active",
+			type="wordsStringComposer"
+		).compose(mostWrongItem["questions"])
 	
 	@property
 	def properties(self):

@@ -243,24 +243,7 @@ class GuiModule(object):
 		self._ui = self._mm.import_("ui")
 		self._ui.ICON_PATH = self._mm.resourcePath("icons/")
 
-		# Add Aero glass option on Windows
-		try:
-			settings = self._modules.default(type="settings")
-		except IndexError, e:
-			self._aeroSetting = None
-		else:
-			if platform.system() == "Windows" and platform.version() >= 6.0:
-				self._aeroSetting = settings.registerSetting(**{
-					"internal_name": "org.openteacher.gui.aero",
-					"name": "Use Aero glass (experimental)",
-					"type": "boolean",
-					"category": "User interface",
-					"subcategory": "Effects",
-					"defaultValue": False,
-					"advanced": True,
-				})
-			else:
-				self._aeroSetting = None
+		self._registerAeroSettingOnWindows()
 
 		#try to load translations for Qt itself
 		qtTranslator = QtCore.QTranslator()
@@ -350,6 +333,26 @@ class GuiModule(object):
 		self._addingTab = False
 
 		self.active = True
+
+	def _registerAeroSettingOnWindows(self):
+		# Add Aero glass option on Windows
+		try:
+			settings = self._modules.default(type="settings")
+		except IndexError, e:
+			self._aeroSetting = None
+		else:
+			if platform.system() == "Windows" and platform.version() >= 6.0:
+				self._aeroSetting = settings.registerSetting(**{
+					"internal_name": "org.openteacher.gui.aero",
+					"name": "Use Aero glass (experimental)",
+					"type": "boolean",
+					"category": "User interface",
+					"subcategory": "Effects",
+					"defaultValue": False,
+					"advanced": True,
+				})
+			else:
+				self._aeroSetting = None
 
 	def _onTabChanged(self):
 		#when adding a tab, this triggers a bit too early. Because of

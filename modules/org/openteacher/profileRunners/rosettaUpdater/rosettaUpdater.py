@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012, Marten de Vries
+#	Copyright 2012-2014, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -102,32 +102,43 @@ class RosettaPrioritiesUpdaterModule(object):
 			templatePath = glob.glob(relPotPathGlob)[0]
 			paths.add((templatePath, template))
 
-		for priority, template in sorted(priorities):
+		self._savePriorities(sorted(priorities))
+		self._savePaths(sorted(paths))
+
+	def _savePriorities(self, priorities):
+		for priority, template in priorities:
 			print "Setting %s priority to %s" % (template.name, priority)
 			template.priority = priority
 			template.lp_save()
 
-		for path, template in sorted(paths):
+	def _savePaths(self, paths):
+		for path, template in paths:
 			print "Setting %s path to %s" % (template.name, path)
 			template.path = path
 			template.lp_save()
 
+	def _calculateModPriority(self, mod):
+		#start priority
+		priority = 1
+		#add the priorities of all mods depending on this one
+		for otherMod in self._mm.mods:
+			if mod == otherMod:
+				continue
+			priority += self._requirementsPriority(getattr(otherMod,  "requires", []))
+			usesPriority = self._requirementsPriority(getattr(otherMod, "uses", []))
+			priority += int(round(0.75 * usesPriority))
+
+	def _requirementsPriority(self, requirements):
+		priority = 0
+		for selector in requirements:
+			if mod in selector:
+				priority += self._modPriority(otherMod)
+		return priority
+
 	def _modPriority(self, mod, cache={}):
 		#caching to speed things up a bit. It's needed.
 		if mod not in cache:
-			#start priority
-			priority = 1
-			#add the priorities of all mods depending on this one
-			for otherMod in self._mm.mods:
-				if mod == otherMod:
-					continue
-				for selector in getattr(otherMod, "requires", []):
-					if mod in selector:
-						priority += self._modPriority(otherMod)
-				for selector in getattr(otherMod, "uses", []):
-					if mod in selector:
-						priority += int(round(0.75 * self._modPriority(otherMod)))
-			cache[mod] = priority
+			cache[mod] = self._calculateModPriority(mod)
 		return cache[mod]
 
 	def enable(self):

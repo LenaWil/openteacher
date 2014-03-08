@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2013, Marten de Vries
+#	Copyright 2013-2014, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -50,7 +50,8 @@ class TestCase(unittest.TestCase):
 			couch.new_user(TEST_USER, TEST_PASSW)
 			testAuth = requests.auth.HTTPBasicAuth(TEST_USER, TEST_PASSW)
 
-			listId = couch.req("post", "/lists_test/_design/lists/_update/set_last_edited_to_now", {
+			listId = couch.req("post", "/private_test/_design/lists/_update/set_last_edited_to_now", {
+				"type": "list",
 				"shares": ["testShare", "testShareB"],
 				"items": [
 					{
@@ -69,7 +70,8 @@ class TestCase(unittest.TestCase):
 				"questionLanguage": "Dutch",
 				"answerLanguage": "English",
 			}, auth=testAuth).json()["_id"]
-			assert couch.req("post", "/tests_test", {
+			assert couch.req("post", "/private_test", {
+				"type": "test",
 				"listId": listId,
 
 				"finished": True, 
@@ -92,34 +94,39 @@ class TestCase(unittest.TestCase):
 				"pauses": [],
 			}).status_code == 201
 
-			assert couch.req("post", "/lists_test/_design/lists/_update/set_last_edited_to_now", {
+			assert couch.req("post", "/private_test/_design/lists/_update/set_last_edited_to_now", {
+				"type": "list",
 				"shares": ["testShare"],
-				"title": "a"
+				"title": "a",
 			}, auth=testAuth).status_code == 201
-			assert couch.req("post", "/lists_test/_design/lists/_update/set_last_edited_to_now", {
+			assert couch.req("post", "/private_test/_design/lists/_update/set_last_edited_to_now", {
+				"type": "list",
 				"shares": ["testShare"],
-				"title": "b"
+				"title": "b",
 			}, auth=testAuth).status_code == 201
-			assert couch.req("post", "/lists_test/_design/lists/_update/set_last_edited_to_now", {
+			assert couch.req("post", "/private_test/_design/lists/_update/set_last_edited_to_now", {
+				"type": "list",
 				"shares": ["testShareB"],
-				"title": "c"
+				"title": "c",
 			}, auth=testAuth).status_code == 201
-			assert couch.req("post", "/lists_test/_design/lists/_update/set_last_edited_to_now", {
+			assert couch.req("post", "/private_test/_design/lists/_update/set_last_edited_to_now", {
+				"type": "list",
 				"shares": [],
-				"title": "d"
+				"title": "d",
 			}, auth=testAuth).status_code == 201
-			assert couch.req("post", "/settings_test", {
+			assert couch.req("post", "/private_test", {
 				"_id": "org.openteacher.test",
+				"type": "setting",
 				"value": 123,
 			}, auth=testAuth).status_code == 201
 
 			#see: https://wiki.apache.org/couchdb/View_collation#Complex_keys
 			try:
-				assert len(couch.req("get", '/lists_test/_design/lists/_view/by_title?startkey=["a"]&endkey=["b", {}]').json()["rows"]) == 2
-				assert couch.req("get", "/lists_test/_design/lists/_show/print/" + listId).status_code == 200
+				assert len(couch.req("get", '/private_test/_design/lists/_view/by_title?startkey=["a"]&endkey=["b", {}]').json()["rows"]) == 2
+				assert couch.req("get", "/private_test/_design/lists/_show/print/" + listId).status_code == 200
 				assert len(couch.req("get", "/shared_lists_test/_design/shares/_view/share_names?group=true").json()["rows"]) == 2
 				assert len(couch.req("get", '/shared_lists_test/_design/shares/_view/by_name?startkey=["testShareB"]&endkey=["testShareB", {}, {}]').json()["rows"]) == 2
-				assert len(couch.req("get", '/tests_test/_design/tests/_view/by_list_id?startkey=["%s", {}]&endkey=["%s"]&descending=true' % (listId, listId)).json()["rows"]) == 1
+				assert len(couch.req("get", '/private_test/_design/tests/_view/by_list_id?startkey=["%s", {}]&endkey=["%s"]&descending=true' % (listId, listId)).json()["rows"]) == 1
 			except:
 				traceback.print_exc()
 
@@ -127,7 +134,7 @@ class TestCase(unittest.TestCase):
 			test2Auth = requests.auth.HTTPBasicAuth(TEST2_USER, TEST2_PASSW)
 
 			try:
-				assert couch.req("get", "/lists_test/_design/list/_view/by_title", auth=test2Auth).status_code == 401
+				assert couch.req("get", "/private_test/_design/lists/_view/by_title", auth=test2Auth).status_code == 401
 				assert couch.req("get", "/shared_lists_test/_design/shares/_view/share_names?group=true").status_code == 200
 				assert couch.req("get", '/shared_lists_test/_design/shares/_view/by_name?startkey=["testShareB"]&endkey=["testShareB", {}, {}]').status_code == 200
 				assert couch.req("get", '/shared_lists_test/_design/shares/_list/feed/by_name?startkey=["testShareB"]&endkey=["testShareB", {}, {}]').status_code == 200
@@ -137,9 +144,9 @@ class TestCase(unittest.TestCase):
 			raw_input("Set up the database & ran db tests. Press enter to tear it down again... ")
 
 			#and tear down
-			couch.delete_user(TEST2_USER, TEST2_PASSW)
-			couch.delete_user(TEST_USER, TEST_PASSW)
-			couch.delete_user("anonymous", "")
+			couch.delete_user(TEST2_USER)
+			couch.delete_user(TEST_USER)
+			couch.delete_user("anonymous")
 
 			couch.req("post", "/_users/_compact")
 			couch.req("post", "/_replicator/_compact")

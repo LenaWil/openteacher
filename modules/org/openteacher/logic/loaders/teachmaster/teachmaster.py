@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2013, Marten de Vries
+#	Copyright 2011-2014, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -105,19 +105,8 @@ class TeachmasterLoaderModule(object):
 		}
 
 		for i, itemTree in enumerate(root.findall("vokabelsatz")):
-			word = {
-				"id": i,
-				"questions": self._parse(itemTree.findtext("spreins") or u""),
-				"answers": [],
-				"comment": itemTree.findtext("bemerkung") or u"",
-			}
-
-			answer = itemTree.findtext("sprzwei")
-			synonym = itemTree.findtext("synonym")
-			if answer:
-				word["answers"].append((answer,))
-			if synonym:
-				word["answers"].append((synonym,))
+			word = self._loadWordFromItemTree(itemTree)
+			word["id"] = i
 
 			list["items"].append(word)
 
@@ -125,6 +114,22 @@ class TeachmasterLoaderModule(object):
 			"resources": {},
 			"list": list,
 		}
+
+	def _loadWordFromItemTree(self, itemTree):
+		word = {
+			"questions": self._parse(itemTree.findtext("spreins") or u""),
+			"answers": [],
+			"comment": itemTree.findtext("bemerkung") or u"",
+		}
+
+		answer = itemTree.findtext("sprzwei")
+		synonym = itemTree.findtext("synonym")
+		if answer:
+			word["answers"].append((answer,))
+		if synonym:
+			word["answers"].append((synonym,))
+
+		return word
 
 def init(moduleManager):
 	return TeachmasterLoaderModule(moduleManager)

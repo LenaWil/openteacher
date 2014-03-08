@@ -1,3 +1,23 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
+#	Copyright 2013-2014, Marten de Vries
+#
+#	This file is part of OpenTeacher.
+#
+#	OpenTeacher is free software: you can redistribute it and/or modify
+#	it under the terms of the GNU General Public License as published by
+#	the Free Software Foundation, either version 3 of the License, or
+#	(at your option) any later version.
+#
+#	OpenTeacher is distributed in the hope that it will be useful,
+#	but WITHOUT ANY WARRANTY; without even the implied warranty of
+#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#	GNU General Public License for more details.
+#
+#	You should have received a copy of the GNU General Public License
+#	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
+
 import requests
 import json
 import uuid
@@ -43,7 +63,7 @@ class WebCouch(object):
 		with open(join(self._codeDir, endpoint)) as f:
 			return f.read()
 
-	def _design_from(self, endpoint, additionalData):
+	def _design_from(self, endpoint, additionalData={}):
 		base = join(self._codeDir, endpoint)
 		parts = os.listdir(base)
 		design_doc = {}
@@ -103,47 +123,27 @@ class WebCouch(object):
 				"roles": [],
 			}).status_code == 201
 
-			#tests
-			assert self.req("put", "/tests_" + username).status_code == 201
+			#private
+			assert self.req("put", "/private_" + username).status_code == 201
 			assert self.req(
 				"put",
-				"/tests_" + username + "/_security",
+				"/private_" + username + "/_security",
 				_only_access_for(username)
 			).status_code == 200
-			tests_design_doc = self._design_from("tests", {
+			private_design_doc = self._design_from("private", {
 				"validation_lib": self._validationLib,
 			})
 			if anonymous:
-				tests_design_doc["validate_doc_update"] = ADMIN_ONLY_VALIDATE_DOC_UPDATE
-			assert self.req("put", "/tests_" + username + "/_design/tests", tests_design_doc).status_code == 201
+				private_design_doc["validate_doc_update"] = ADMIN_ONLY_VALIDATE_DOC_UPDATE
+			assert self.req("put", "/private_" + username + "/_design/private", private_design_doc).status_code == 201
 
-			#settings
-			assert self.req("put", "/settings_" + username).status_code == 201
-			assert self.req(
-				"put",
-				"/settings_" + username + "/_security",
-				_only_access_for(username)
-			).status_code == 200
-			settings_design_doc = self._design_from("settings", {})
-			if anonymous:
-				settings_design_doc["validate_doc_update"] = ADMIN_ONLY_VALIDATE_DOC_UPDATE
-			if settings_design_doc:
-				assert self.req("put", "/settings_" + username + "/_design/settings", settings_design_doc).status_code == 201
-
-			#lists
-			assert self.req("put", "/lists_" + username).status_code == 201
-			assert self.req(
-				"put",
-				"/lists_" + username + "/_security",
-				_only_access_for(username)
-			).status_code == 200
 			lists_design_doc = self._design_from("lists", {
-				"validation_lib": self._validationLib,
 				"presentation_lib": self._presentationLib,
 			})
-			if anonymous:
-				lists_design_doc["validate_doc_update"] = ADMIN_ONLY_VALIDATE_DOC_UPDATE
-			assert self.req("put", "/lists_" + username + "/_design/lists", lists_design_doc).status_code == 201
+			assert self.req("put", "/private_" + username + "/_design/lists", lists_design_doc).status_code == 201
+
+			tests_design_doc = self._design_from("tests")
+			assert self.req("put", "/private_" + username + "/_design/tests", tests_design_doc).status_code == 201
 
 			#shared_lists
 			assert self.req("put", "/shared_lists_" + username).status_code == 201
@@ -152,8 +152,8 @@ class WebCouch(object):
 			})).status_code == 201
 
 			#replicator
-			assert self.req("put", "/_replicator/lists_to_shared_lists_" + username, {
-				"source": "lists_" + username,
+			assert self.req("put", "/_replicator/private_to_shared_lists_" + username, {
+				"source": "private_" + username,
 				"target": "shared_lists_" + username,
 				"continuous": True,
 				"user_ctx": {
@@ -164,7 +164,8 @@ class WebCouch(object):
 			}).status_code == 201
 
 			#add one 'default' list
-			assert self.req("post", "/lists_" + username + "/_design/lists/_update/set_last_edited_to_now", {
+			assert self.req("post", "/private_" + username + "/_design/lists/_update/set_last_edited_to_now", {
+				"type": "list",
 				"shares": [],
 				"items": [
 					{
@@ -189,7 +190,7 @@ class WebCouch(object):
 		except AssertionError, e:
 			logger.debug(e, exc_info=True)
 			try:
-				self.delete_user(username, password)
+				self.delete_user(username)
 			except ValueError:
 				#delete as far as possible, but it'll probably crash since
 				#create_user didn't succeed.
@@ -209,21 +210,19 @@ class WebCouch(object):
 		except KeyError:
 			return False
 
-	def delete_user(self, username, password):
+	def delete_user(self, username):
 		try:
 			#no assertion, because this could actually fail, because the
 			#order is different than in new_user. And it has to be this way
 			#because the DB's that are replicated shouldn't be deleted
 			#already when the replication is done.
-			rev = json.loads(self.req("head", "/_replicator/lists_to_shared_lists_" + username).headers["Etag"])
-			self.req("delete", "/_replicator/lists_to_shared_lists_" + username + "?rev=" + rev)
+			rev = json.loads(self.req("head", "/_replicator/private_to_shared_lists_" + username).headers["Etag"])
+			self.req("delete", "/_replicator/private_to_shared_lists_" + username + "?rev=" + rev)
 
 			rev = json.loads(self.req("head", "/_users/org.couchdb.user:" + username).headers["Etag"])
 			assert self.req("delete", "/_users/org.couchdb.user:" + username + "?rev=" + rev).status_code == 200
 
-			assert self.req("delete", "/tests_" + username).status_code == 200
-			assert self.req("delete", "/settings_" + username).status_code == 200
-			assert self.req("delete", "/lists_" + username).status_code == 200
+			assert self.req("delete", "/private_" + username).status_code == 200
 			assert self.req("delete", "/shared_lists_" + username).status_code == 200
 		except (AssertionError, KeyError), e:
 			logger.debug(e, exc_info=True)

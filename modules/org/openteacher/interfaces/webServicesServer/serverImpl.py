@@ -1,3 +1,23 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
+#	Copyright 2013-2014, Marten de Vries
+#
+#	This file is part of OpenTeacher.
+#
+#	OpenTeacher is free software: you can redistribute it and/or modify
+#	it under the terms of the GNU General Public License as published by
+#	the Free Software Foundation, either version 3 of the License, or
+#	(at your option) any later version.
+#
+#	OpenTeacher is distributed in the hope that it will be useful,
+#	but WITHOUT ANY WARRANTY; without even the implied warranty of
+#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#	GNU General Public License for more details.
+#
+#	You should have received a copy of the GNU General Public License
+#	along with OpenTeacher.  If not, see <http://www.gnu.org/licenses/>.
+
 import flask
 import recaptcha.client.captcha
 import feedparser
@@ -51,12 +71,29 @@ def get_feed():
 		feed["last_update"] = datetime.datetime.now()
 	return feed["data"]
 
-def requires_auth(f):
-	def auth_err(msg):
-		resp = jsonErr(msg, 401)
-		resp.headers["WWW-Authenticate"] = 'Basic realm="%s Web"' % metadata["name"]
-		return resp
+def json_default(item):
+	try:
+		return item.isoformat()
+	except AttributeError, e:
+		raise TypeError("Can't provide a default value")
 
+def jsonify(data):
+	dataJson = superjson.dumps(data, indent=4, default=json_default)
+	resp = flask.make_response(dataJson)
+	resp.headers["Content-Type"] = "application/json"
+	return resp
+
+def json_err(msg, code=400):
+	resp = jsonify({"error": msg})
+	resp.status_code = code
+	return resp
+
+def auth_err(msg):
+	resp = json_err(msg, 401)
+	resp.headers["WWW-Authenticate"] = 'Basic realm="%s Web"' % metadata["name"]
+	return resp
+
+def requires_auth(f):
 	@functools.wraps(f)
 	def decorated(*args, **kwargs):
 		auth = flask.request.authorization
@@ -67,6 +104,8 @@ def requires_auth(f):
 			}
 		if not auth:
 			return auth_err("authentication_required")
+		if auth["username"] == "anonymous":
+			return auth_err("The user 'anonymous' isn't allowed to use the services API.")
 		if not get_couch().check_auth(auth["username"], auth["password"]):
 			return auth_err("wrong_username_or_password")
 		return f(*args, **kwargs)
@@ -116,13 +155,8 @@ def crossdomain(origin=None, methods=None, headers=None, credentials="false", ma
 		return functools.update_wrapper(wrapped_function, f)
 	return decorator
 
-def allowCrossDomainFromTrustedOrigins(f):
+def allow_cross_domain_from_trusted_origins(f):
 	return crossdomain(origin=app.config["TRUSTED_ORIGINS"], credentials=True, headers="authorization")(f)
-
-def jsonErr(msg, code=400):
-	resp = jsonify({"error": msg})
-	resp.status_code = code
-	return resp
 
 def load_exts(_cache=[]):
 	if not _cache:
@@ -137,18 +171,6 @@ def save_exts(_cache=[]):
 		for saver in savers:
 			_cache.extend(saver.saves.get("words", []))
 	return _cache
-
-def jsonDefault(item):
-	try:
-		return item.isoformat()
-	except AttributeError, e:
-		raise TypeError("Can't provide a default value")
-
-def jsonify(data):
-	dataJson = superjson.dumps(data, indent=4, default=jsonDefault)
-	resp = flask.make_response(dataJson)
-	resp.headers["Content-Type"] = "application/json"
-	return resp
 
 def jsonp(f):
 	@functools.wraps(f)
@@ -168,7 +190,7 @@ def jsonp(f):
 def initialize_endpoints():
 	#services
 	@app.route("/", methods=["OPTIONS", "GET"])
-	@allowCrossDomainFromTrustedOrigins
+	@allow_cross_domain_from_trusted_origins
 	def services():
 		data = collections.OrderedDict([
 			("welcome", "%s Web services" % metadata["name"]),
@@ -190,11 +212,11 @@ def initialize_endpoints():
 	@app.route("/news")
 	@jsonp
 	def news():
-		def niceTime(struct):
+		def nice_time(struct):
 			obj = datetime.datetime(*struct[:6])
 			return obj.strftime("%H:%M:%S at %B %d, %Y")
 		with open(app.config["NEWS_TEMPLATE_PATH"]) as f:
-			return flask.render_template_string(f.read(), feed=get_feed(), niceTime=niceTime)
+			return flask.render_template_string(f.read(), feed=get_feed(), nice_time=nice_time)
 
 	@app.route("/register")
 	def register():
@@ -257,40 +279,40 @@ def initialize_endpoints():
 		return flask.redirect(redirect_url + "?status=ok")
 
 	@app.route("/deregister", methods=["OPTIONS", "POST"])
-	@allowCrossDomainFromTrustedOrigins
+	@allow_cross_domain_from_trusted_origins
 	@requires_auth
 	def deregister():
 		auth = flask.request.authorization
 		try:
-			get_couch().delete_user(auth.username, auth.password)
+			get_couch().delete_user(auth.username)
 		except ValueError, e:
-			return jsonErr(str(e))
+			return json_err(str(e))
 		return jsonify({"result": "ok"})
 
 	@app.route("/load/supported_extensions", methods=["GET", "OPTIONS"])
-	@allowCrossDomainFromTrustedOrigins
+	@allow_cross_domain_from_trusted_origins
 	@requires_auth
 	def supported_load_extensions():
 		return jsonify({"result": load_exts()})
 
 	@app.route("/load", methods=["OPTIONS", "POST"])
-	@allowCrossDomainFromTrustedOrigins
+	@allow_cross_domain_from_trusted_origins
 	@requires_auth
 	def load():
 		try:
 			f = flask.request.files["file"]
 		except KeyError, e:
-			return jsonErr("Please upload a file (name='file')")
+			return json_err("Please upload a file (name='file')")
 		ext = os.path.splitext(f.filename)[1]
 		#strip the . in .otwd
 		if not ext[1:] in load_exts():
-			return jsonErr("Invalid file type for the uploaded file.")
+			return json_err("Invalid file type for the uploaded file.")
 
 		fd, path = tempfile.mkstemp(ext)
 		os.close(fd)
 		f.save(path)
 
-		resp = jsonErr("Couldn't load file")
+		resp = json_err("Couldn't load file")
 		for loader in loaders:
 			if loader.getFileTypeOf(path) == "words":
 				try:
@@ -305,21 +327,21 @@ def initialize_endpoints():
 		return resp
 
 	@app.route("/save/supported_extensions", methods=["GET", "OPTIONS"])
-	@allowCrossDomainFromTrustedOrigins
+	@allow_cross_domain_from_trusted_origins
 	@requires_auth
 	def supported_save_extensions():
 		return jsonify({"result": save_exts()})
 
 	@app.route("/save", methods=["OPTIONS", "POST"])
-	@allowCrossDomainFromTrustedOrigins
+	@allow_cross_domain_from_trusted_origins
 	@requires_auth
 	def save():
 		try:
 			list = json.loads(flask.request.form["list"])
 		except KeyError:
-			return jsonErr("Please specify the 'list' field in the body form data.")
+			return json_err("Please specify the 'list' field in the body form data.")
 		except ValueError:
-			return jsonErr("The posted list is invalid json.")
+			return json_err("The posted list is invalid json.")
 
 		dateFormat = "%Y-%m-%dT%H:%M:%S.%fZ"
 		for item in list.get("items", []):
@@ -335,14 +357,14 @@ def initialize_endpoints():
 		try:
 			filename = flask.request.form["filename"]
 		except KeyError:
-			return jsonErr("Please specify the 'filename' field in the body form data.")
+			return json_err("Please specify the 'filename' field in the body form data.")
 
 		#[1:] tears of the . in .txt
 		ext = os.path.splitext(filename)[1][1:]
 		if not ext in save_exts():
-			return jsonErr("Unsupported filename extension. (%s)" % ext)
+			return json_err("Unsupported filename extension. (%s)" % ext)
 
-		fd, path = tempfile.mkstemp(ext)
+		fd, path = tempfile.mkstemp("." + ext)
 		os.close(fd)
 		for saver in savers:
 			if ext in saver.saves.get("words", []):

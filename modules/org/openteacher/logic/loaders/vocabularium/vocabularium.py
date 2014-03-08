@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #	Copyright 2011, Milan Boers
-#	Copyright 2011-2013, Marten de Vries
+#	Copyright 2011-2014, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -106,13 +106,12 @@ class VocabulariumLoaderModule(object):
 					#q & a language
 					langs = [lang.strip() for lang in line.split(" ", 1)]
 					list["questionLanguage"], list["answerLanguage"] = langs
-				elif line.startswith("!"):
-					if "title" not in list:
-						#the first comment is used as title. In most
-						#files, there is only one and it ís the title.
-						#
-						#without exclamation mark
-						list["title"] = line[1:].strip()
+				elif line.startswith("!") and "title" not in list:
+					#the first comment is used as title. In most
+					#files, there is only one and it ís the title.
+					#
+					#without exclamation mark
+					list["title"] = line[1:].strip()
 				else:
 					try:
 						questions, answers = line.split("\t")

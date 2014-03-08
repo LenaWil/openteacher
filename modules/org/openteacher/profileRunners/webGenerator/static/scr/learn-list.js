@@ -27,8 +27,9 @@ var learnPage = (function () {
 			callback();
 		} else {
 			var doc = currentList.tests[0];
+			doc.type = "test";
 			doc.listId = currentList._id;
-			PouchDBext.withValidation.post(session.userDbs.tests, doc, callback);
+			PouchDBext.withValidation.post(session.userDbs.private, doc, callback);
 		}
 	}
 
@@ -108,7 +109,7 @@ var learnPage = (function () {
 			hasher.replaceHash("login");
 			return;
 		}
-		session.userDbs.lists.get(id, function (err, list) {
+		session.userDbs.private.get(id, function (err, list) {
 			currentList = list;
 			indexes = [];
 			for (i = 0; i < list.items.length; i += 1) {

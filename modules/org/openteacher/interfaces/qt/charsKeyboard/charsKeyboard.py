@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2009-2012, Marten de Vries
+#	Copyright 2009-2012, 2014, Marten de Vries
 #	Copyright 2008-2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -21,7 +21,9 @@
 
 import weakref
 
-def getCharsKeyboardWidget():
+def installQtClasses():
+	global CharsKeyboardWidget, KeyboardsWidget
+
 	class CharsKeyboardWidget(QtGui.QWidget):
 		"""A keyboard widget that displays all characters passed to it
 		   in the constructor, and emits the letterChosen signal when
@@ -81,9 +83,7 @@ def getCharsKeyboardWidget():
 		def _letterChosen(self):
 			text = unicode(self.sender().text())
 			self.letterChosen.emit(text)
-	return CharsKeyboardWidget
 
-def getKeyboadsWidget():
 	class KeyboardsWidget(QtGui.QTabWidget):
 		"""A container of keyboard widgets, it has one keyboard widget
 		   for every different table of characters.
@@ -105,7 +105,6 @@ def getKeyboadsWidget():
 				self.addTab(tab, module.name)
 				#connect the event that handles letter selection
 				tab.letterChosen.connect(self.letterChosen.send)
-	return KeyboardsWidget
 
 class CharsKeyboardModule(object):
 	"""This module offers an onscreen character keyboard widget, which
@@ -130,9 +129,7 @@ class CharsKeyboardModule(object):
 			from PyQt4 import QtCore, QtGui
 		except ImportError:
 			return
-		global KeyboardsWidget, CharsKeyboardWidget
-		KeyboardsWidget = getKeyboadsWidget()
-		CharsKeyboardWidget = getCharsKeyboardWidget()
+		installQtClasses()
 
 		self._modules = set(self._mm.mods(type="modules")).pop()
 		self._widgets = set()

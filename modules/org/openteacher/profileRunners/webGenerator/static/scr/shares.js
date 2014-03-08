@@ -19,8 +19,8 @@ var sharesPage = (function () {
 	}
 
 	function updateView() {
-		emptyView();
 		sharesDb.query("shares/share_names", {group: true}, function (err, resp) {
+			emptyView();
 			$.each(resp.rows, function (i, row) {
 				var link = tmpl("share-template", {
 					row: row,

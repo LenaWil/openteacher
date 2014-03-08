@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2013, Marten de Vries
+#	Copyright 2011-2014, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -20,9 +20,9 @@
 
 import itertools
 
-class TeachmasterLoaderModule(object):
+class OverhoringsprogrammaTalenLoaderModule(object):
 	def __init__(self, moduleManager, *args, **kwargs):
-		super(TeachmasterLoaderModule, self).__init__(*args, **kwargs)
+		super(OverhoringsprogrammaTalenLoaderModule, self).__init__(*args, **kwargs)
 		self._mm = moduleManager
 
 		self.type = "load"
@@ -84,56 +84,62 @@ class TeachmasterLoaderModule(object):
 		if path.endswith(".ovr"):
 			return "words"
 
+	def _readLine(self, f):
+		data = next(f)
+		return unicode(data, encoding="iso-8859-1").strip()
+
+	def _skipLine(self, f):
+		next(f)
+
 	def load(self, path):
 		"""Loads 'Overhoringsprogramma Talen' (*.ovr) lists. This parser
 		   is based on inspection of files, not on official
 		   documentation.
 
 		"""
-		def readLine(f):
-			data = next(f)
-			return unicode(data, encoding="iso-8859-1").strip()
-
-		def skipLine(f):
-			next(f)
 
 		with open(path, "r") as f:
 			#do something with f
 
 			list = {
-				"items": [],
-				"questionLanguage": readLine(f),
-				"answerLanguage": readLine(f),
+				"questionLanguage": self._readLine(f),
+				"answerLanguage": self._readLine(f),
 			}
 			for i in range(4):
 				#no idea what these lines represent
-				skipLine(f)
+				self._skipLine(f)
 
-			counter = itertools.count()
-			while True:
-				try:
-					questions = readLine(f)
-					answers = []
-					#load answers untill the stop sequence is loaded
-					while answers[-2:] != [u"-", u"0"]:
-						answers.append(readLine(f))
-					#cut off the stop sequence
-					answers = answers[:-2]
-
-					answers = [tuple(answers)]
-				except StopIteration:
-					break
-
-				list["items"].append({
-					"id": next(counter),
-					"questions": self._parse(questions),
-					"answers": answers,
-				})
+			list["items"] = self._loadItems(f)
 
 		return {
 			"resources": {},
 			"list": list,
 		}
 
+	def _loadItems(self, f):
+		items = []
+		counter = itertools.count()
+		while True:
+			try:
+				questions = self._readLine(f)
+				answers = []
+				#load answers untill the stop sequence is loaded
+				while answers[-2:] != [u"-", u"0"]:
+					answers.append(self._readLine(f))
+				#cut off the stop sequence
+				answers = answers[:-2]
+
+				answers = [tuple(answers)]
+			except StopIteration:
+				break
+
+			items.append({
+				"id": next(counter),
+				"questions": self._parse(questions),
+				"answers": answers,
+			})
+
+		return items
+
 def init(moduleManager):
-	return TeachmasterLoaderModule(moduleManager)
+	return OverhoringsprogrammaTalenLoaderModule(moduleManager)

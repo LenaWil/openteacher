@@ -79,16 +79,7 @@ class Teach2000SaverModule(object):
 		#copy, we're going to modify it
 		wordList = copy.deepcopy(lesson.list)
 
-		for word in wordList.get("items", []):
-			word["wrongCount"] = 0
-			word["rightCount"] = 0
-			for test in wordList.get("tests", []):
-				for result in test["results"]:
-					if result["itemId"] == word["id"]:
-						if result["result"] == "right":
-							word["rightCount"] += 1
-						else:
-							word["wrongCount"] += 1
+		self._storeRightWrongCountInWords(wordList)
 
 		for test in wordList.get("tests", []):
 			test["note"] = self._calculateNote(test)
@@ -109,6 +100,18 @@ class Teach2000SaverModule(object):
 			f.write(content.encode("UTF-8"))
 
 		lesson.path = None
+
+	def _storeRightWrongCountInWords(self, wordList):
+		for word in wordList.get("items", []):
+			word["wrongCount"] = 0
+			word["rightCount"] = 0
+			for test in wordList.get("tests", []):
+				for result in test["results"]:
+					if result["itemId"] == word["id"]:
+						if result["result"] == "right":
+							word["rightCount"] += 1
+						else:
+							word["wrongCount"] += 1
 
 	def _calculateNote(self, test):
 		#dutch note, but with full float representation.

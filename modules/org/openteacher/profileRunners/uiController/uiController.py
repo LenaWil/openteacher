@@ -66,6 +66,22 @@ class UiControllerModule(object):
 	def enable(self):
 		self._modules = set(self._mm.mods(type="modules")).pop()
 
+		self._installRequirements()
+
+		try:
+			translator = self._modules.default("active", type="translator")
+		except IndexError:
+			pass
+		else:
+			translator.languageChanged.handle(self._retranslate)
+		self._retranslate()
+
+		self._execute = self._modules.default(type="execute")
+		self._execute.startRunning.handle(self.run)
+
+		self.active = True
+
+	def _installRequirements(self):
 		try:
 			self._store = self._modules.default(type="dataStore").store
 		except IndexError:
@@ -86,24 +102,10 @@ class UiControllerModule(object):
 			self._loader = self._modules.default("active", type="loader")
 		except IndexError:
 			self._loader = None
-
 		try:
 			self._saver = self._modules.default("active", type="saver")
 		except IndexError:
 			self._saver = None
-		self._execute = self._modules.default(type="execute")
-
-		try:
-			translator = self._modules.default("active", type="translator")
-		except IndexError:
-			pass
-		else:
-			translator.languageChanged.handle(self._retranslate)
-		self._retranslate()
-
-		self._execute.startRunning.handle(self.run)
-
-		self.active = True
 
 	def _retranslate(self):
 		global _

@@ -1,10 +1,13 @@
+{% if feed["bozo"] %}
+<h1>News feed unavailable.</h1>
+{% endif %}
 {% for entry in feed.entries %}
 	<h1>
 		{{ entry.title }}
 	</h1>
 	<p>
 		<em>
-			{{ niceTime(entry.updated_parsed) }}
+			{{ nice_time(entry.updated_parsed) }}
 		</em>
 	</p>
 	<div class='feedcontent'>

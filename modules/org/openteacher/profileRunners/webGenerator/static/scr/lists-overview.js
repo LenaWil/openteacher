@@ -29,10 +29,11 @@ var overviewPage = (function () {
 				_deleted: true
 			});
 		});
-		PouchDBext.withValidation.bulkDocs(session.userDbs.lists, {docs: deleteDocs});
+		PouchDBext.withValidation.bulkDocs(session.userDbs.private, {docs: deleteDocs});
 	}
 
 	function webifyList(list) {
+		list.type = "list";
 		list.lastEdited = new Date();
 		list.shares = [];
 
@@ -41,10 +42,11 @@ var overviewPage = (function () {
 
 	function onNewList() {
 		list = webifyList({
+			type: "list",
 			items: [],
 			title: _("New list")
 		});
-		PouchDBext.withValidation.post(session.userDbs.lists, list, function (err, resp) {
+		PouchDBext.withValidation.post(session.userDbs.private, list, function (err, resp) {
 			hasher.setHash("lists/" + resp.id + "/view");
 		});
 	}
@@ -56,10 +58,11 @@ var overviewPage = (function () {
 		tests = doc.tests || [];
 		delete doc.tests;
 
-		PouchDBext.withValidation.post(session.userDbs.lists, doc, function (err, resp) {
+		PouchDBext.withValidation.post(session.userDbs.private, doc, function (err, resp) {
 			$.each(tests, function (i, test) {
+				test.type = "test";
 				test.listId = resp.id;
-				PouchDBext.withValidation.post(session.userDbs.tests, test);
+				PouchDBext.withValidation.post(session.userDbs.private, test);
 			});
 		});
 		hasher.setHash("lists");
@@ -89,12 +92,12 @@ var overviewPage = (function () {
 	}
 
 	function onListsChange(change) {
-		session.userDbs.lists.query("lists/by_title", function(err, resp) {
+		session.userDbs.private.query("lists/by_title", function(err, resp) {
 			$("#loading-box").slideUp("fast");
 
 			var tbody = $("#lists tbody");
 			tbody.empty();
-			for (var i = 0; i < resp.rows.length; i += 1) {
+			$.each(resp.rows, function (i, row) {
 				var doc = resp.rows[i].value;
 
 				var rows = tmpl("lists-template", {
@@ -102,7 +105,7 @@ var overviewPage = (function () {
 					classes: tbody.children().length % 2 ? "even" : "odd"
 				});
 				tbody.append(rows);
-			}
+			});
 			//the lists table contains stuff that needs to be translated.
 			retranslate();
 		});
@@ -141,7 +144,7 @@ var overviewPage = (function () {
 		} else {
 			$("#load-list-from-computer").show();
 		}
-		cancelChanges = session.onUserDbChanges.lists(onListsChange);
+		cancelChanges = session.onUserDbChanges.private(onListsChange);
 		show("#lists-page");
 	});
 	listsRoute.switched.add(function () {

@@ -37,14 +37,12 @@ var loginPage = (function () {
 		$("#login-form")[0].reset();
 
 		//FIXME: handle login failing.
-		sync.start("lists_" + auth.username, auth);
+		sync.start("private_" + auth.username, auth);
 		sync.start("shared_lists_" + auth.username, auth);
-		sync.start("tests_" + auth.username, auth);
-		sync.start("settings_" + auth.username, auth);
 
 		session.userDbs = {};
 		session.onUserDbChanges = {};
-		$(["lists", "shared_lists", "tests", "settings"]).each(function (i, dbName) {
+		$(["private", "shared_lists"]).each(function (i, dbName) {
 			var fullName = dbName + "_" + auth.username;
 			session.userDbs[dbName] = new PouchDB(fullName);
 			session.onUserDbChanges[dbName] = function (callback) {
@@ -149,10 +147,8 @@ var loginPage = (function () {
 	crossroads.addRoute("logout", function () {
 		$("#session-box").fadeOut();
 
-		sync.stop("lists_" + session.username);
+		sync.stop("private_" + session.username);
 		sync.stop("shared_lists_" + session.username);
-		sync.stop("tests_" + session.username);
-		sync.stop("settings_" + session.username);
 
 		delete session.username;
 		delete session.password;

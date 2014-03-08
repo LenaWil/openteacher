@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2012-2013, Marten de Vries
+#	Copyright 2012-2014, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -30,29 +30,32 @@ class TestCase(unittest.TestCase):
 		self._files = glob.glob(self._mm.resourcePath("testFiles") + "/*")
 
 	def _modsForFile(self, file):
+		#files that aren't loadable that have mods to load them with
 		if os.path.basename(file) in ("netherlands.png", "COPYING",):
-			#files that aren't loadable
 			return set()
-		if file.endswith(".xml"):
+		#some files' load mods can't be found by the default algorithm
+		#below. They're in the 'endsWith-dict' below.
+		specialCases = [
 			#Special case for abbyy since it doesn't have a mimetype
-			loadMods = set(self._mm.mods("active", type="load", loads={"xml": ["words"]}))
-		elif file.endswith(".csv"):
+			(".xml", set(self._mm.mods("active", type="load", loads={"xml": ["words"]}))),
 			#same for csv
-			loadMods = set(self._mm.mods("active", type="load", loads={"csv": ["words"]}))
-		elif file.endswith(".db"):
+			(".csv", set(self._mm.mods("active", type="load", loads={"csv": ["words"]}))),
 			#same for sqlite .db
-			loadMods = set(self._mm.mods("active", type="load", loads={"db": ["words"]}))
-		elif file.endswith("gnuVocabTrain.txt"):
+			(".db", set(self._mm.mods("active", type="load", loads={"db": ["words"]}))),
 			#gnuVocabTrain .txt
-			loadMods = set(self._mm.mods("active", type="load", format="gnuVocabTrain"))
-		elif file.endswith("vtrain.txt"):
+			("gnuVocabTrain.txt", set(self._mm.mods("active", type="load", format="gnuVocabTrain"))),
 			#vTrain .txt
-			loadMods = set(self._mm.mods("active", type="load", format="vtrain"))
-		else:
-			mimetype = os.path.basename(file).split(".")[0].replace("_", "/")
-			loadMods = set(self._mm.mods("active", type="load", mimetype=mimetype))
-			self.assertTrue(loadMods, msg="No loader fount for mimetype: %s" % mimetype)
-		return loadMods
+			("vtrain.txt", set(self._mm.mods("active", type="load", format="vtrain"))),
+		]
+		for end, mods in specialCases:
+			if file.endswith(end):
+				return mods
+		#the normal algorithm - dissecting the mimetype from the
+		#filename and loading the load module based on that mimetype.
+		mimetype = os.path.basename(file).split(".")[0].replace("_", "/")
+		mods = set(self._mm.mods("active", type="load", mimetype=mimetype))
+		self.assertTrue(mods, msg="No loader fount for mimetype: %s" % mimetype)
+		return mods
 
 	def _loadFiles(self, results=[]):
 		if self.mode not in MODES:

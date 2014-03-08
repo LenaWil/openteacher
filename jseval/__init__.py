@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2013, Marten de Vries
+#	Copyright 2013-2014, Marten de Vries
 #
 #	This file is part of OpenTeacher.
 #
@@ -233,14 +233,20 @@ class JSEvaluator(object):
 		return self._engine.newObject(proxy, QtScript.QScriptValue(id))
 
 	def _toJSValue(self, value):
+		with utils.ignored(ValueError):
+			return self._convertImmutablePythonValue(value)
+		return self._convertMutablePythonValue(value)
+
+	def _convertImmutablePythonValue(self, value):
 		#immutable values first
 		with utils.ignored(TypeError):
 			return QtScript.QScriptValue(value)
 		#including null (None)
 		if value is None:
 			return self._engine.nullValue()
+		raise ValueError("Unknown value type")
 
-		#mutable values
+	def _convertMutablePythonValue(self, value):
 		#function
 		if callable(value):
 			return self._wrapPythonFunction(value)
@@ -273,17 +279,8 @@ class JSEvaluator(object):
 	def _wrapPythonFunction(self, value):
 		if not value in self._functionCache:
 			def wrapper(context, engine):
-				args = []
-				for i in range(context.argumentCount()):
-					args.append(self._toPythonValue(context.argument(i)))
 				try:
-					#if the last arg is a dict, use keyword arguments.
-					#kinda makes up for the fact JS doesn't support
-					#them...
-					try:
-						result = value(*args[:-1], **dict(args[-1].iteritems()))
-					except (IndexError, TypeError, AttributeError):
-						result = value(*args)
+					result = self._callPythonFunction(context, value)
 				except BaseException, e:
 					#store the exception class so it can be reused
 					#later.
@@ -293,7 +290,7 @@ class JSEvaluator(object):
 					#
 					#tb_next to hide JSEvaluator internals that are
 					#only distraction to library users.
-					pythonTbInfo = sys.exc_info()[2].tb_next
+					pythonTbInfo = sys.exc_info()[2].tb_next.tb_next
 					newTraceback = StringIO.StringIO()
 					limit = self._tbLength(pythonTbInfo)
 					if hasattr(e, "oldTraceback"):
@@ -310,6 +307,23 @@ class JSEvaluator(object):
 				return QtScript.QScriptValue(self._toJSValue(result))
 			self._functionCache[value] = self._engine.newFunction(wrapper)
 		return self._functionCache[value]
+
+	def _callPythonFunction(self, context, func):
+		"""Converts JS args specified in `context` into an (args,
+		   kwargs) tuple which can easily be passed into the Python
+		   function `func`, which is in turn called by this function.
+
+		"""
+		args = []
+		for i in range(context.argumentCount()):
+			args.append(self._toPythonValue(context.argument(i)))
+		#if the last arg is a dict, try to use keyword arguments.
+		#kinda makes up for the fact JS doesn't support
+		#them...
+		try:
+			return func(*args[:-1], **dict(args[-1].iteritems()))
+		except (IndexError, TypeError, AttributeError):
+			return func(*args)
 
 	def _toPythonValue(self, value, scope=None):
 		with utils.ignored(ValueError):

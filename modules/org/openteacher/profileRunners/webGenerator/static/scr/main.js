@@ -2,10 +2,8 @@ var translate, _;
 (function () {
 	//fixme
 	$(["test", "test2", "anonymous"]).each(function (i, username) {
-		PouchDB.destroy("lists_" + username);
+		PouchDB.destroy("private_" + username);
 		PouchDB.destroy("shared_lists_" + username);
-		PouchDB.destroy("tests_" + username);
-		PouchDB.destroy("settings_" + username);
 	});
 }());
 
@@ -14,16 +12,12 @@ var session = {
 	//- username = "...";
 	//- password = "...";
 	//- userDbs = {
-	//    lists: new PouchDB('...'),
-	//    sharedLists: new PouchDB('...'),
-	//    tests: new PouchDB('...'),
-	//    settings: new PouchDB('...')
+	//    private: new PouchDB('...'),
+	//    shared_lists: new PouchDB('...'),
 	//  }
 	// - onUserDbChanges = {
-	//    lists: function (callback) {...; return function cancel() {...};},
+	//    private: function (callback) {...; return function cancel() {...};},
 	//    shared_lists: function (callback) {...; return function cancel() {...};},
-	//    tests: function (callback) {...; return function cancel() {...};},
-	//    settings: function (callback) {...; return function cancel() {...};},
 	//  }
 	//
 	//when redirecting to the login page, you can set:

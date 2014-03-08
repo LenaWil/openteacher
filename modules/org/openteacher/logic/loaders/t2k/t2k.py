@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright 2011-2012, Marten de Vries
+#	Copyright 2011-2012, 2014, Marten de Vries
 #	Copyright 2011, Milan Boers
 #
 #	This file is part of OpenTeacher.
@@ -208,40 +208,7 @@ class Teach2000LoaderModule(object):
 		answerFont = root.findtext("message_data/answer_question") or u""
 
 		for item in root.findall("message_data/items/item"):
-			word = {
-				"id": int(),
-				"questions": list(),
-				"answers": list(),
-			}
-
-			#id
-			word["id"] = self._getId(item)
-
-			#questions
-			word["questions"].append([])
-			for question in item.findall(".//question"):
-				#strip BBCode for now
-				text = self._stripBBCode(question.text)
-				convertedText = self._convertMimicryTypeface(questionFont, text)
-				word["questions"][0].append(convertedText)
-
-			#answers
-			word["answers"].append([])
-			for answer in item.findall(".//answer"):
-				#strip BBCode for now
-				text = self._stripBBCode(answer.text)
-				convertedText = self._convertMimicryTypeface(questionFont, text)
-				word["answers"][0].append(convertedText)
-
-			#remarks (comment in OT)
-			comment = item.findtext("remarks")
-			if comment:
-				word["comment"] = comment
-
-			#remarks_aa (commentAfterAnswering in OT)
-			commentAfterAnswering = item.findtext("remarks_aa")
-			if commentAfterAnswering:
-				word["commentAfterAnswering"] = commentAfterAnswering
+			word = self._loadWordFromTreeItem(questionFont, answerFont, item)
 
 			wordList["items"].append(word)
 
@@ -254,6 +221,43 @@ class Teach2000LoaderModule(object):
 			"resources": {},
 			"list": wordList,
 		}
+
+	def _loadWordFromTreeItem(self, questionFont, answerFont, item):
+		word = {
+			"questions": [],
+			"answers": [],
+		}
+
+		#id
+		word["id"] = self._getId(item)
+
+		#questions
+		word["questions"].append([])
+		for question in item.findall(".//question"):
+			#strip BBCode for now
+			text = self._stripBBCode(question.text)
+			convertedText = self._convertMimicryTypeface(questionFont, text)
+			word["questions"][0].append(convertedText)
+
+		#answers
+		word["answers"].append([])
+		for answer in item.findall(".//answer"):
+			#strip BBCode for now
+			text = self._stripBBCode(answer.text)
+			convertedText = self._convertMimicryTypeface(answerFont, text)
+			word["answers"][0].append(convertedText)
+
+		#remarks (comment in OT)
+		comment = item.findtext("remarks")
+		if comment:
+			word["comment"] = comment
+
+		#remarks_aa (commentAfterAnswering in OT)
+		commentAfterAnswering = item.findtext("remarks_aa")
+		if commentAfterAnswering:
+			word["commentAfterAnswering"] = commentAfterAnswering
+
+		return word
 
 	def _stripBBCode(self, string):
 		"""Strips all BBCode tags"""
