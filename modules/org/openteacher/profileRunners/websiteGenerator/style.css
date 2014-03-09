@@ -281,10 +281,15 @@ hr
 	margin-right: 40px;
 }
 
+#feed-link {
+	float: right;
+}
+
 .twitter-timeline {
 	width: 300px;
 	height: 600px;
 	float: right;
+	clear: both;
 }
 
 /* About */

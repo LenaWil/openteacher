@@ -415,7 +415,7 @@ class WebsiteGeneratorModule(object):
 		"""Gets the content of the page, and writes it into a page."""
 
 		filename = os.path.join(self._templatesDir, pageName)
-		content = self._evaluateTemplate(filename, pageName, downloadLinks=DOWNLOAD_LINKS)
+		content = self._evaluateTemplate(filename, pageName, downloadLinks=DOWNLOAD_LINKS, newsFeedUrl=self._newsFeedUrl)
 
 		self._writePage(pageName, content)
 
@@ -483,6 +483,7 @@ class WebsiteGeneratorModule(object):
 		metadata = self._modules.default("active", type="metadata").metadata
 		self._iconPath = metadata["iconPath"]
 		self._hue = metadata["mainColorHue"]
+		self._newsFeedUrl = metadata["newsFeedUrl"]
 		self._lineColor = self._modules.default("active", type="backgroundImageGenerator").lineColor
 
 		self.active = True
@@ -493,6 +494,7 @@ class WebsiteGeneratorModule(object):
 		del self._modules
 		del self._iconPath
 		del self._hue
+		del self._newsFeedUrl
 		del self._lineColor
 
 def init(moduleManager):
