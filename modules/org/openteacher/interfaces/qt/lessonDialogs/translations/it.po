@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2014-02-19 20:14+0100\n"
-"PO-Revision-Date: 2013-10-09 17:53+0000\n"
-"Last-Translator: Domenico Ragusa <Unknown>\n"
+"PO-Revision-Date: 2014-04-06 05:32+0000\n"
+"Last-Translator: Andrea Luciano Damico <lehti@live.it>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-20 05:30+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-04-06 06:39+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 "Language: it\n"
 
 #: lessonDialogs.py:84
@@ -40,8 +40,8 @@ msgstr ""
 
 #: lessonDialogs.py:114
 msgid "Not enough items"
-msgstr "Non abbastanza oggetti"
+msgstr "Oggetti insufficienti"
 
 #: lessonDialogs.py:115
 msgid "You need to add items to your test first"
-msgstr "Hai bisogno di aggiungere un oggetto al test per prima cosa"
+msgstr "Per prima cosa è necessario aggiungere un oggetto al test"

@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2013-02-25 11:29+0000\n"
-"Last-Translator: Guybrush88 <Unknown>\n"
+"PO-Revision-Date: 2014-04-06 05:25+0000\n"
+"Last-Translator: Andrea Luciano Damico <lehti@live.it>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2014-02-20 05:30+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-04-06 06:39+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 "Language: it\n"
 
 #: testViewer.py:114
@@ -44,10 +44,10 @@ msgstr "Completati: %s"
 #, python-format
 msgid "Total thinking time: %s second"
 msgid_plural "Total thinking time: %s seconds"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Tempo trascorso a pensare: %secondo"
+msgstr[1] "Tempo trascorso a pensare: %secondi"
 
 #: testViewer.py:141
 #, python-format
 msgid "Total thinking time: %s minutes"
-msgstr ""
+msgstr "Tempo trascorso a pensare in totale: %s minuti"

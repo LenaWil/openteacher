@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2013-02-25 10:53+0000\n"
-"Last-Translator: Guybrush88 <Unknown>\n"
+"PO-Revision-Date: 2014-04-06 05:22+0000\n"
+"Last-Translator: Andrea Luciano Damico <lehti@live.it>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-20 05:29+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-04-06 06:39+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 "Language: it\n"
 
 #: gui.py:428
@@ -24,11 +24,11 @@ msgstr "Apri da file"
 
 #: gui.py:429
 msgid "Documentation"
-msgstr ""
+msgstr "Documentazione"
 
 #: ui.py:51
 msgid "Enter list"
-msgstr "Inserire lista:"
+msgstr "Inserisci lista"
 
 #: ui.py:52
 msgid "Teach me!"
@@ -52,7 +52,7 @@ msgstr "&Apri"
 
 #: ui.py:275
 msgid "Open &into current list"
-msgstr ""
+msgstr "Apri nella l%ista corrente"
 
 #: ui.py:276
 msgid "&Save"
@@ -76,7 +76,7 @@ msgstr "&Modifica"
 
 #: ui.py:282
 msgid "&Reverse list"
-msgstr ""
+msgstr "Inv&erti lista"
 
 #: ui.py:283
 msgid "&Settings"
@@ -100,11 +100,11 @@ msgstr "&Documentazione"
 
 #: ui.py:290
 msgid "&About"
-msgstr "&Info su..."
+msgstr "&Informazioni su"
 
 #: ui.py:292
 msgid "Toolbar"
-msgstr "Strumenti"
+msgstr "Barra degli strumenti"
 
 #~ msgid "Close Tab"
 #~ msgstr "Chiudi  la scheda"

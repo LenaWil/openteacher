@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2013-02-25 10:56+0000\n"
-"Last-Translator: Guybrush88 <Unknown>\n"
+"PO-Revision-Date: 2014-04-06 05:31+0000\n"
+"Last-Translator: Andrea Luciano Damico <lehti@live.it>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-20 05:29+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-04-06 06:39+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 "Language: it\n"
 
 #: interval.py:227 interval.py:232
@@ -32,7 +32,7 @@ msgstr "Dimensione massima del gruppo"
 
 #: interval.py:236
 msgid "Minimum amount of questions asked"
-msgstr "Quantità minima di domande chieste"
+msgstr "Quantità minima di domande"
 
 #: interval.py:238
 msgid "Percent right before known"
