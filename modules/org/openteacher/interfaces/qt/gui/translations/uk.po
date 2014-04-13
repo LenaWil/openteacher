@@ -8,18 +8,18 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2014-04-11 12:02+0000\n"
+"PO-Revision-Date: 2014-04-12 11:54+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-12 09:00+0000\n"
+"X-Launchpad-Export-Date: 2014-04-13 06:08+0000\n"
 "X-Generator: Launchpad (build 16976)\n"
 
 #: gui.py:428
 msgid "Open from file"
-msgstr ""
+msgstr "Відкрити з файлу"
 
 #: gui.py:429
 msgid "Documentation"
@@ -27,11 +27,11 @@ msgstr "Документація"
 
 #: ui.py:51
 msgid "Enter list"
-msgstr ""
+msgstr "Записати перелік"
 
 #: ui.py:52
 msgid "Teach me!"
-msgstr ""
+msgstr "Учи мене!"
 
 #: ui.py:53
 msgid "Show results"
@@ -63,7 +63,7 @@ msgstr "Зберегти &як"
 
 #: ui.py:278
 msgid "&Print"
-msgstr "&Друк"
+msgstr "&Друкувати"
 
 #: ui.py:279
 msgid "&Quit"
