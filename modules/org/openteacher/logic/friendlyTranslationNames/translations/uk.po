@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2014-04-14 12:08+0000\n"
+"PO-Revision-Date: 2014-04-14 11:55+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,14 +17,11 @@ msgstr ""
 "X-Launchpad-Export-Date: 2014-04-15 06:32+0000\n"
 "X-Generator: Launchpad (build 16976)\n"
 
-#: translator.py:76
-msgid "Language"
-msgstr "Мова"
-
-#: translator.py:77
-msgid "General"
-msgstr "Загальні"
-
-#: translator.py:78
-msgid "Locale"
-msgstr "Локалізація"
+#. TRANSLATORS: Please replace 'English' with the native name
+#. TRANSLATORS: of the language you're translating to. So
+#. TRANSLATORS: don't translate it literally!
+#. TRANSLATORS: e.g. translate 'Ik spreek Nederlands' if
+#. TRANSLATORS: you're translating to Dutch.
+#: friendlyTranslationNames.py:62
+msgid "I speak English"
+msgstr "Я говорю українською"

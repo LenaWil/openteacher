@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2014-04-11 11:12+0000\n"
+"PO-Revision-Date: 2014-04-14 12:58+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,16 +16,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2014-04-12 09:00+0000\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:32+0000\n"
 "X-Generator: Launchpad (build 16976)\n"
 
 #: testViewer.py:114
 msgid "Results"
-msgstr ""
+msgstr "Результати"
 
 #: testViewer.py:118
 msgid "Note:"
-msgstr ""
+msgstr "Позначка:"
 
 #: testViewer.py:123
 msgid "yes"
@@ -38,16 +38,17 @@ msgstr "ні"
 #: testViewer.py:127
 #, python-format
 msgid "Completed: %s"
-msgstr ""
+msgstr "Завершено: %s"
 
 #: testViewer.py:133
 #, python-format
 msgid "Total thinking time: %s second"
 msgid_plural "Total thinking time: %s seconds"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Загальний час думання: %s секунду"
+msgstr[1] "Загальний час думання: %s секунди"
+msgstr[2] "Загальний час думання: %s секунд"
 
 #: testViewer.py:141
 #, python-format
 msgid "Total thinking time: %s minutes"
-msgstr ""
+msgstr "Загальний час думання: %s хвилин"

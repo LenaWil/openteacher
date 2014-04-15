@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2014-04-12 11:54+0000\n"
+"PO-Revision-Date: 2014-04-14 12:29+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-13 06:08+0000\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:32+0000\n"
 "X-Generator: Launchpad (build 16976)\n"
 
 #: gui.py:428
@@ -35,7 +35,7 @@ msgstr "Учи мене!"
 
 #: ui.py:53
 msgid "Show results"
-msgstr ""
+msgstr "Показати результати"
 
 #: ui.py:272
 msgid "&File"
@@ -51,7 +51,7 @@ msgstr "&Відкрити"
 
 #: ui.py:275
 msgid "Open &into current list"
-msgstr ""
+msgstr "Відкрити в &поточному списку"
 
 #: ui.py:276
 msgid "&Save"
@@ -75,7 +75,7 @@ msgstr "&Зміни"
 
 #: ui.py:282
 msgid "&Reverse list"
-msgstr ""
+msgstr "&Обернути список"
 
 #: ui.py:283
 msgid "&Settings"
