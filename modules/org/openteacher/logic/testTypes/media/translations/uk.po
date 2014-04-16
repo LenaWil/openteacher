@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2014-04-15 11:14+0000\n"
+"PO-Revision-Date: 2014-04-15 11:01+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,14 +17,23 @@ msgstr ""
 "X-Launchpad-Export-Date: 2014-04-16 06:48+0000\n"
 "X-Generator: Launchpad (build 16976)\n"
 
-#: symbols.py:102
-msgid "Symbols"
-msgstr "Символи"
+#: media.py:66
+msgid "Name"
+msgstr ""
 
-#: symbols.py:106
-msgid "Lesson"
-msgstr "Урок"
+#: media.py:67
+msgid "Question"
+msgstr "Запитання"
 
-#: symbols.py:107
-msgid "Words lesson"
-msgstr "Урок зі словами"
+#: media.py:68
+msgid "Answer"
+msgstr "Відповідь"
+
+#: media.py:69
+msgid "Given answer"
+msgstr ""
+
+#. TRANSLATORS: the label of a table column that shows if the user answered a word in the same row correctly.
+#: media.py:71
+msgid "Correct"
+msgstr ""

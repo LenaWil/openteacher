@@ -8,24 +8,24 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2014-04-12 12:24+0000\n"
+"PO-Revision-Date: 2014-04-15 10:58+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-13 06:08+0000\n"
+"X-Launchpad-Export-Date: 2014-04-16 06:48+0000\n"
 "X-Generator: Launchpad (build 16976)\n"
 
 #: inputTyping.py:111
 #, python-brace-format
 msgid "Correct answer: <b>{answers}</b> [{diff}]"
-msgstr ""
+msgstr "Правильна відповідь: <b>{answers}</b> [{diff}]"
 
 #: inputTyping.py:113
 #, python-brace-format
 msgid "Correct answer: <b>{answers}</b>"
-msgstr ""
+msgstr "Правильна відповідь: <b>{answers}</b>"
 
 #: inputTyping.py:126
 msgid "Check!"

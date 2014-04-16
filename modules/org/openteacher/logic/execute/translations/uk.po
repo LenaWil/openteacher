@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2014-04-15 11:14+0000\n"
+"PO-Revision-Date: 2014-04-15 11:13+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,14 +17,10 @@ msgstr ""
 "X-Launchpad-Export-Date: 2014-04-16 06:48+0000\n"
 "X-Generator: Launchpad (build 16976)\n"
 
-#: symbols.py:102
-msgid "Symbols"
-msgstr "Символи"
+#: execute.py:160 execute.py:162
+msgid "Profile"
+msgstr "Профіль"
 
-#: symbols.py:106
-msgid "Lesson"
-msgstr "Урок"
-
-#: symbols.py:107
-msgid "Words lesson"
-msgstr "Урок зі словами"
+#: execute.py:161
+msgid "General"
+msgstr ""
