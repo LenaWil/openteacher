@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2013-09-06 18:57+0000\n"
-"Last-Translator: Marten de Vries <marten@marten-de-vries.nl>\n"
+"PO-Revision-Date: 2014-04-21 00:34+0000\n"
+"Last-Translator: Tobias Bannert <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-20 05:31+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-04-21 04:55+0000\n"
+"X-Generator: Launchpad (build 16985)\n"
 "Language: de\n"
 
 #: scr/copyrightInfoDialog.js:29 scr/optionsDialog.js:101
 msgid "Copyright info"
-msgstr ""
+msgstr "Urheberrechtsinformation"
 
 #: scr/enterTab.js:43 scr/gui.js:42
 msgid "Enter list"
@@ -28,7 +28,7 @@ msgstr "Liste eingeben"
 
 #: scr/enterTab.js:44
 msgid "Word list:"
-msgstr ""
+msgstr "Wortliste:"
 
 #: scr/enterTab.js:45
 msgid ""
@@ -43,7 +43,7 @@ msgstr "Fehler"
 
 #: scr/enterTab.js:48
 msgid "Missing equals sign or tab"
-msgstr "Fehlendes Gleichheitszeichen oder Tabstopp"
+msgstr "Fehlendes Gleichheitszeichen oder Tabulator"
 
 #: scr/enterTab.js:49
 msgid ""
@@ -51,7 +51,7 @@ msgid ""
 "questions and answers."
 msgstr ""
 "Bitte vergiwissern Sie sich, dass jede Zeile zwischen den Fragen und "
-"Antowrten ein '=' oder Tabstopp enthält"
+"Antowrten ein »=« oder Tabulator enthält."
 
 #: scr/enterTab.js:50 scr/teachTab.js:239
 msgid "Ok"
@@ -71,7 +71,7 @@ msgstr "Neue Liste"
 
 #: scr/menuDialog.js:167 scr/menuDialog.js:185
 msgid "Load list"
-msgstr ""
+msgstr "Liste laden"
 
 #: scr/menuDialog.js:168 scr/menuDialog.js:173
 msgid "Save list"
@@ -169,7 +169,7 @@ msgstr "Antwort:"
 
 #: scr/teachTab.js:227
 msgid "Check!"
-msgstr "Überprüfe!"
+msgstr "Überprüfen!"
 
 #: scr/teachTab.js:228
 msgid "Skip"
@@ -183,8 +183,8 @@ msgstr "Trotzdem korrigieren"
 msgid ""
 "Think about the answer, and press the 'View answer' button when you're done."
 msgstr ""
-"Denken Sie über die Antwort nach und drücken Sie auf den Knopf »Antwort "
-"anzeigen«, wenn Sie bereit sind."
+"Denken Sie über die Antwort nach und drücken Sie auf den »Antwort anzeigen«-"
+"Knopf, wenn Sie bereit sind."
 
 #: scr/teachTab.js:231
 msgid "View answer"

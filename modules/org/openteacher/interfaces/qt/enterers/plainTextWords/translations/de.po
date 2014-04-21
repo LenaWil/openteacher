@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2012-11-28 20:44+0000\n"
-"Last-Translator: Hans Schmidt <HansSchmidtPost@googlemail.com>\n"
+"PO-Revision-Date: 2014-04-20 21:35+0000\n"
+"Last-Translator: Tobias Bannert <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-20 05:29+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-04-21 04:55+0000\n"
+"X-Generator: Launchpad (build 16985)\n"
 "Language: de\n"
 
 #: plainTextWords.py:65
@@ -24,16 +24,16 @@ msgid ""
 "and questions from answers with an equals sign ('=') or a tab."
 msgstr ""
 "Bitte geben Sie den Text in das Textfeld ein. Trennen Sie einzelne Wörter "
-"mit einer neuen Zeile und Fragen aus den Antworten mit einem "
-"Gleichheitszeichen ('=') oder einem Tabulator."
+"mit einer neuen Zeile und Fragen von den Antworten mit einem "
+"Gleichheitszeichen (»=«) oder einem Tabulator."
 
 #: plainTextWords.py:66
 msgid "Plain text words enterer"
-msgstr "Eingabemöglichkeit für Wörter als reiner Text"
+msgstr "Eingabemöglichkeit für Wörter als reinen Text"
 
 #: plainTextWords.py:79
 msgid "Missing equals sign or tab"
-msgstr "Fehlendes Gleichheitszeichen oder Tabstopp"
+msgstr "Fehlendes Gleichheitszeichen oder Tabulator"
 
 #: plainTextWords.py:80
 msgid ""
@@ -41,8 +41,8 @@ msgid ""
 "questions and answers."
 msgstr ""
 "Bitte vergiwissern Sie sich, dass jede Zeile zwischen den Fragen und "
-"Antowrten ein '=' oder Tabstopp enthält"
+"Antowrten ein »=« oder Tabulator enthält."
 
 #: plainTextWords.py:167
 msgid "Create words lesson by entering plain text"
-msgstr "Wörter-Lektion durch Eingabe von reinem Text erstellen"
+msgstr "Wörterlektion durch Eingabe von reinem Text erstellen"

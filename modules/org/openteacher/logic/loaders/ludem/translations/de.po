@@ -1,14 +1,14 @@
 # German translation for openteacher
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openteacher package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2014-04-20 21:30+0000\n"
+"PO-Revision-Date: 2014-04-21 00:19+0000\n"
 "Last-Translator: Tobias Bannert <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,12 +16,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2014-04-21 04:55+0000\n"
 "X-Generator: Launchpad (build 16985)\n"
-"Language: de\n"
 
-#: noteCalculatorChooser.py:49
-msgid "Note notation"
-msgstr "Notenschreibweise"
-
-#: noteCalculatorChooser.py:50
-msgid "General"
-msgstr "Allgemein"
+#. TRANSLATORS: This is the name of a file type OpenTeacher can
+#. TRANSLATORS: read. It's named after the program with the same
+#. TRANSLATORS: name. For more info on the program, see:
+#. TRANSLATORS: https://launchpad.net/ludem
+#: ludem.py:56
+msgid "Ludem"
+msgstr "Ludem"

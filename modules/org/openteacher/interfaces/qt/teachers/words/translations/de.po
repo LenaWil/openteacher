@@ -8,27 +8,27 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2013-05-29 12:07+0000\n"
-"Last-Translator: Simon Schütte <simonschuette@arcor.de>\n"
+"PO-Revision-Date: 2014-04-20 21:45+0000\n"
+"Last-Translator: Tobias Bannert <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-20 05:29+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-04-21 04:55+0000\n"
+"X-Generator: Launchpad (build 16985)\n"
 "Language: de\n"
 
 #: words.py:62
 msgid "I'm ready, start the lesson!"
-msgstr "Ich bin bereit, starte die Lektion!"
+msgstr "Ich bin bereit, die Lektion starten!"
 
 #: words.py:64 words.py:516
 msgid "Lesson settings"
-msgstr "Lektions-Einstellungen"
+msgstr "Übungseinheiteinstellungen"
 
 #: words.py:127
 msgid "Change lesson settings"
-msgstr "Lektions-Einstellungen ändern"
+msgstr "Übungseinheiteinstellungen ändern"
 
 #: words.py:128
 msgid "Word:"
@@ -40,11 +40,11 @@ msgstr "Weiter"
 
 #: words.py:508
 msgid "Lesson type"
-msgstr "Lektionsart"
+msgstr "Übungseinheitart"
 
 #: words.py:509
 msgid "Word list order and filters"
-msgstr "Wort-Ordnungsliste und Filter"
+msgstr "Wortordnungsliste und Filter"
 
 #: words.py:510
 msgid "Word modifications"
