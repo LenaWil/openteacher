@@ -1,12 +1,12 @@
 # English (United Kingdom) translation for openteacher
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openteacher package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openteacher\n"
-"Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
 "PO-Revision-Date: 2014-04-22 16:44+0000\n"
 "Last-Translator: Andi Chandler <Unknown>\n"
@@ -16,20 +16,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2014-04-23 06:07+0000\n"
 "X-Generator: Launchpad (build 16985)\n"
-"Language: \n"
 
-#: sylkSaver.py:102
-msgid "Questions"
-msgstr "Questions"
-
-#: sylkSaver.py:102
-msgid "Answers"
-msgstr "Answers"
-
-#: sylkSaver.py:102
-msgid "Comment"
-msgstr "Comment"
-
-#: sylkSaver.py:102
-msgid "Comment after answering"
-msgstr "Comment after answering"
+#. TRANSLATORS: This is one of the file formats OpenTeacher
+#. TRANSLATORS: saves to. For more info, see:
+#. TRANSLATORS: https://en.wikipedia.org/wiki/SYmbolic_LinK_%28SYLK%29
+#: sylk.py:53
+msgid "SYLK"
+msgstr "SYLK"
