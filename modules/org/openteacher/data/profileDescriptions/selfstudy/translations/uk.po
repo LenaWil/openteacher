@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2014-05-08 10:09+0000\n"
+"PO-Revision-Date: 2014-05-08 09:57+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,23 +17,6 @@ msgstr ""
 "X-Launchpad-Export-Date: 2014-05-09 07:12+0000\n"
 "X-Generator: Launchpad (build 16996)\n"
 
-#. TRANSLATORS: This is one of the file formats OpenTeacher
-#. TRANSLATORS: saves to.
-#: otmd.py:61
-msgid "Open Teaching Media"
-msgstr "Медія Open Teacher"
-
-#. TRANSLATORS: name of a setting
-#: otmd.py:65
-msgid "Enable compression"
-msgstr "Дозволити стискання"
-
-#. TRANSLATORS: setting category.
-#: otmd.py:67
-msgid "Input and output"
-msgstr "Ввід та вивід"
-
-#. TRANSLATORS: setting subcategory; .otmd is a file extension.
-#: otmd.py:69
-msgid ".otmd saving"
-msgstr "Зберігання в .otmd"
+#: selfstudy.py:43
+msgid "Everything you need for using OpenTeacher for self-study."
+msgstr "Усе, що потрібно для самонавчання через OpenTeacher."

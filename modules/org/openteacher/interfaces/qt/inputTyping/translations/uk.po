@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2014-04-15 10:58+0000\n"
+"PO-Revision-Date: 2014-05-08 10:43+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-16 06:48+0000\n"
-"X-Generator: Launchpad (build 16976)\n"
+"X-Launchpad-Export-Date: 2014-05-09 07:12+0000\n"
+"X-Generator: Launchpad (build 16996)\n"
 
 #: inputTyping.py:111
 #, python-brace-format
@@ -29,7 +29,7 @@ msgstr "Правильна відповідь: <b>{answers}</b>"
 
 #: inputTyping.py:126
 msgid "Check!"
-msgstr "Перевір!"
+msgstr "Перевірити!"
 
 #: inputTyping.py:127
 msgid "Correct anyway"
@@ -41,7 +41,7 @@ msgstr "Пропустити"
 
 #: inputTyping.py:248
 msgid "Fade duration when wrong (milliseconds)"
-msgstr ""
+msgstr "Тривалість зникання при неправильній відповіді (мілісекунд)"
 
 #: inputTyping.py:249
 msgid "Lesson"
