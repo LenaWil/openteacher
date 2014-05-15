@@ -1,0 +1,78 @@
+# English (United Kingdom) translation for openteacher
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-02-19 20:14+0100\n"
+"PO-Revision-Date: 2014-05-14 19:10+0000\n"
+"Last-Translator: Andi Chandler <Unknown>\n"
+"Language-Team: English (United Kingdom) <en_GB@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2014-05-15 06:00+0000\n"
+"X-Generator: Launchpad (build 17007)\n"
+
+#. TRANSLATORS: This is a file format.
+#: libreofficeFormats.py:107
+msgid "Microsoft Word 97/2000/XP/2003"
+msgstr "Microsoft Word 97/2000/XP/2003"
+
+#. TRANSLATORS: This is a file format.
+#: libreofficeFormats.py:109
+msgid "Rich Text Format"
+msgstr "Rich Text Format"
+
+#. TRANSLATORS: This is a file format.
+#: libreofficeFormats.py:111
+msgid "Office Open XML Text"
+msgstr "Office Open XML Text"
+
+#. TRANSLATORS: This is a file format.
+#: libreofficeFormats.py:113
+msgid "Unified Office Format text"
+msgstr "Unified Office Format text"
+
+#. TRANSLATORS: This is a file format.
+#: libreofficeFormats.py:115
+msgid "StarOffice XML (Writer)"
+msgstr "StarOffice XML (Writer)"
+
+#. TRANSLATORS: This is a file format.
+#: libreofficeFormats.py:117
+msgid "OpenDocument Spreadsheet"
+msgstr "OpenDocument Spreadsheet"
+
+#. TRANSLATORS: This is a file format.
+#: libreofficeFormats.py:119
+msgid "Microsoft Excel 97/2000/XP/2003"
+msgstr "Microsoft Excel 97/2000/XP/2003"
+
+#. TRANSLATORS: This is a file format.
+#: libreofficeFormats.py:121
+msgid "Office Open XML Spreadsheet"
+msgstr "Office Open XML Spreadsheet"
+
+#. TRANSLATORS: This is a file format.
+#: libreofficeFormats.py:123
+msgid "Data Interchange Format"
+msgstr "Data Interchange Format"
+
+#. TRANSLATORS: This is a file format.
+#: libreofficeFormats.py:125
+msgid "dBASE"
+msgstr "dBASE"
+
+#. TRANSLATORS: This is a file format.
+#: libreofficeFormats.py:127
+msgid "Unified Office Format spreadsheet"
+msgstr "Unified Office Format spreadsheet"
+
+#. TRANSLATORS: This is a file format.
+#: libreofficeFormats.py:129
+msgid "StarOffice XML (Calc)"
+msgstr "StarOffice XML (Calc)"
