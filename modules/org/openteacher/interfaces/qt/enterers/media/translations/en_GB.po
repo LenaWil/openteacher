@@ -1,0 +1,74 @@
+# English (United Kingdom) translation for openteacher
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-02-19 20:15+0100\n"
+"PO-Revision-Date: 2014-05-29 13:45+0000\n"
+"Last-Translator: Andi Chandler <Unknown>\n"
+"Language-Team: English (United Kingdom) <en_GB@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2014-05-30 05:43+0000\n"
+"X-Generator: Launchpad (build 17023)\n"
+
+#: media.py:173
+msgid "Title:"
+msgstr "Title:"
+
+#: media.py:175
+msgid "Remove"
+msgstr "Remove"
+
+#: media.py:176
+msgid "Add local media"
+msgstr "Add local media"
+
+#: media.py:177
+msgid "Add remote media"
+msgstr "Add remote media"
+
+#: media.py:179
+msgid "Name:"
+msgstr "Name:"
+
+#: media.py:180
+msgid "Question:"
+msgstr "Question:"
+
+#: media.py:181
+msgid "Answer:"
+msgstr "Answer:"
+
+#: media.py:199
+msgid "Select file(s)"
+msgstr "Select file(s)"
+
+#: media.py:201
+msgid "Media"
+msgstr "Media"
+
+#: media.py:222
+msgid "File URL"
+msgstr "File URL"
+
+#: media.py:223
+msgid ""
+"Enter the URL of your website or media item.\n"
+"Supported video sites: "
+msgstr ""
+"Enter the URL of your website or media item.\n"
+"Supported video sites: "
+
+#: media.py:274
+msgid "Unsupported file type"
+msgstr "Unsupported file type"
+
+#: media.py:275
+msgid "This type of file is not supported:\n"
+msgstr "This type of file is not supported:\n"
