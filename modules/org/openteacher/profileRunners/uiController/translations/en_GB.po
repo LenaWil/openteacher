@@ -1,0 +1,62 @@
+# English (United Kingdom) translation for openteacher
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-02-19 20:15+0100\n"
+"PO-Revision-Date: 2014-06-23 17:01+0000\n"
+"Last-Translator: Andi Chandler <Unknown>\n"
+"Language-Team: English (United Kingdom) <en_GB@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2014-06-24 06:17+0000\n"
+"X-Generator: Launchpad (build 17065)\n"
+
+#: uiController.py:196
+msgid ""
+"Couldn't open the file, because the file type is unknown or it can't be "
+"shown."
+msgstr ""
+"Couldn't open the file, because the file type is unknown or it can't be "
+"shown."
+
+#: uiController.py:198
+msgid ""
+"Couldn't open the file, is it still there and do we have the right to open "
+"it?"
+msgstr ""
+"Couldn't open the file, is it still there and do we have the right to open "
+"it?"
+
+#: uiController.py:200
+msgid "Couldn't open the file, it seems to be corrupted."
+msgstr "Couldn't open the file, it seems to be corrupted."
+
+#: uiController.py:210
+msgid "File opened succesfully."
+msgstr "File opened succesfully."
+
+#: uiController.py:228
+msgid "Can't merge files of different file types."
+msgstr "Can't merge files of different file types."
+
+#: uiController.py:250
+msgid "Opened file into the current list succesfully."
+msgstr "Opened file into the current list succesfully."
+
+#: uiController.py:256
+msgid ""
+"Couldn't save the file, is there enough free disk space and do we have the "
+"right to write to the specified location?"
+msgstr ""
+"Couldn't save the file, is there enough free disk space and do we have the "
+"right to write to the specified location?"
+
+#: uiController.py:258
+msgid "File saved succesfully."
+msgstr "File saved succesfully."
