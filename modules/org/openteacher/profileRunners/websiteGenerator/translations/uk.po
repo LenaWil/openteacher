@@ -8,22 +8,22 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2014-04-14 11:46+0000\n"
+"PO-Revision-Date: 2014-07-05 15:23+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-15 06:32+0000\n"
-"X-Generator: Launchpad (build 16976)\n"
+"X-Launchpad-Export-Date: 2014-07-06 05:48+0000\n"
+"X-Generator: Launchpad (build 17086)\n"
 
 #: templates/about.html:6
 msgid "OpenTeacher helps you learn"
-msgstr ""
+msgstr "OpenTeacher допоможе вчитися"
 
 #: templates/about.html:8
 msgid "Improve your results with OpenTeacher"
-msgstr ""
+msgstr "Покращуйте свої результати з OpenTeacher"
 
 #: templates/about.html:9
 msgid ""
@@ -67,11 +67,11 @@ msgstr ""
 
 #: templates/about.html:16
 msgid "OpenTeacher helps you teach"
-msgstr ""
+msgstr "OpenTeacher допоможе навчати"
 
 #: templates/about.html:17
 msgid "Offer your students the help they need"
-msgstr ""
+msgstr "Запропонуйте своїм студентам необхідну їм допомогу"
 
 #: templates/about.html:18
 msgid ""
@@ -96,7 +96,7 @@ msgstr ""
 
 #: templates/about.html:21
 msgid "Open source in the classroom"
-msgstr ""
+msgstr "Програма з відкритим кодом у класі"
 
 #: templates/about.html:22
 msgid ""
@@ -142,7 +142,7 @@ msgstr "Завантажити OpenTeacher 3.2"
 
 #: templates/download.html:22
 msgid "For portable (USB-)drives"
-msgstr ""
+msgstr "Для портативних (USB-) пристроїв"
 
 #: templates/download.html:76
 msgid "Python 2 source with setup.py (for other Linux)"
@@ -162,39 +162,39 @@ msgstr "Посібник користувача"
 
 #: templates/documentation.html:9
 msgid "Using OpenTeacher 3: Quick start"
-msgstr ""
+msgstr "Користування OpenTeacher 3: Швидкий початок"
 
 #: templates/documentation.html:10
 msgid "Using OpenTeacher 2: Quick start"
-msgstr ""
+msgstr "Користування OpenTeacher 2: Швидкий початок"
 
 #: templates/documentation.html:11 docsTemplates/install-ubuntu.html:5
 msgid "Installing OpenTeacher in Ubuntu"
-msgstr ""
+msgstr "Встановлення OpenTeacher в Ubuntu"
 
 #: templates/documentation.html:12 docsTemplates/install-arch.html:5
 msgid "Installing OpenTeacher in ArchLinux"
-msgstr ""
+msgstr "Встановлення OpenTeacher в ArchLinux"
 
 #: templates/documentation.html:13 docsTemplates/faq.html:5
 msgid "Frequently Asked Questions"
-msgstr ""
+msgstr "Поширені запитання"
 
 #: templates/documentation.html:16
 msgid "Developer documentation"
-msgstr ""
+msgstr "Документація для розробника"
 
 #: templates/documentation.html:17
 msgid "The OpenTeacher 2 file format"
-msgstr ""
+msgstr "Формат файлів OpenTeacher 2"
 
 #: templates/documentation.html:20
 msgid "Translator documentation"
-msgstr ""
+msgstr "Документація для перекладача"
 
 #: templates/documentation.html:21
 msgid "Translator Notes"
-msgstr ""
+msgstr "Примітки для перекладача"
 
 #: templates/index.html:8
 msgid ""
@@ -211,7 +211,7 @@ msgstr ""
 
 #: templates/index.html:12
 msgid "OpenTeacher has the following features (among others):"
-msgstr ""
+msgstr "Деякі особливості OpenTeacher:"
 
 #: templates/index.html:14
 msgid "Viewing both recent and past results of tests with graphs"
@@ -247,20 +247,25 @@ msgid ""
 "German, Greek, Hungarian, Italian, Japanese, Polish, Russian, Sinhalese, "
 "Spanish and Turkish"
 msgstr ""
+"(Частково) доступна арабською, бразильською португальською, галісійською, "
+"голландською, грецькою, іспанською, італійською, спрощеною китайською, "
+"традиційною китайською, німецькою, польською, російською, сингальською, "
+"турецькою, угорською, фінською, французькою, фризькою, чеською та японською"
 
 #: templates/index.html:23
 msgid ""
 "OpenTeacher 3.2 is available for <strong>Linux, Windows and Mac OS "
 "X</strong>."
 msgstr ""
+"OpenTeacher 3.2 доступна для <strong>Linux, Windows та Mac OS X</strong>."
 
 #: templates/index.html:26
 msgid "for"
-msgstr ""
+msgstr "для"
 
 #: templates/index.html:28
 msgid "Other systems and distro-specific packages"
-msgstr ""
+msgstr "Для інших систем та дистрибутивів"
 
 #: templates/contribute.html:6 templates/base.html:67
 msgid "Contribute"
@@ -339,7 +344,7 @@ msgstr ""
 
 #: templates/base.html:16
 msgid "Free exam training software"
-msgstr ""
+msgstr "Вільна програма для підготовки до іспиту"
 
 #: templates/base.html:62
 msgid "Home"
@@ -359,7 +364,7 @@ msgstr "Завантажити"
 
 #: templates/docpage.html:8
 msgid "Go back to documentation"
-msgstr ""
+msgstr "Повернутися до документації"
 
 #: templates/docpage.html:9
 msgid "Link to this page"
@@ -387,7 +392,7 @@ msgstr ""
 
 #: docsTemplates/using-openteacher-2.html:5
 msgid "Using OpenTeacher 2: A Quick Start"
-msgstr ""
+msgstr "Користування OpenTeacher 2: Швидкий початок"
 
 #: docsTemplates/using-openteacher-2.html:7
 msgid ""
@@ -452,59 +457,74 @@ msgid ""
 "This simple guide explains how to install OpenTeacher for ArchLinux. I will "
 "be using ArchLinux 2010.05."
 msgstr ""
+"Дані вказівки пояснюють як встановити OpenTeacher в ArchLinux. Я "
+"використовую ArchLinux 2010.05."
 
 #: docsTemplates/install-arch.html:8
 msgid ""
 "Download the ArchLinux package .pkg.tar.xz from the Download section of this "
 "website."
 msgstr ""
+"Завантажте пакунок .pkg.tar.xz для ArchLinux у розділі Завантажити цього "
+"сайту."
 
 #: docsTemplates/install-arch.html:9
 msgid ""
 "Install the package from the terminal with <strong>pacman -U "
 "&lt;filename&gt;</strong>"
 msgstr ""
+"Встановіть пакунок через термінал командою <strong>pacman -U "
+"&lt;filename&gt;</strong>"
 
 #: docsTemplates/install-ubuntu.html:6
 msgid ""
 "This simple guide explains how to install OpenTeacher for Ubuntu. I will be "
 "using Ubuntu 10.10 (Maverick Meerkat) for this."
 msgstr ""
+"Дані вказівки пояснюють як встановити OpenTeacher в Ubuntu. Я використовую "
+"Ubuntu 10.10 (Maverick Meerkat)."
 
 #: docsTemplates/install-ubuntu.html:8
 msgid ""
 "Download the Ubuntu .deb file from the Download section of this website."
-msgstr ""
+msgstr "Завантажте файл .deb для Ubuntu у розділі Завантажити цього сайту."
 
 #: docsTemplates/install-ubuntu.html:9
 msgid ""
 "When the download has completed, doubleclick the .deb file you just "
 "downloaded. This will open the Ubuntu Software Center."
 msgstr ""
+"Коли файл завантажиться, клацніть по ньому два рази, щоб відкрити його у "
+"Центрі програмного забезпечення."
 
 #: docsTemplates/install-ubuntu.html:12
 msgid "Click &quot;install&quot; to start the installation."
-msgstr ""
+msgstr "Натисніть &quot;Встановити&quot;, щоб почати встановлення."
 
 #: docsTemplates/install-ubuntu.html:13
 msgid ""
 "When the installation has finished, you can start OpenTeacher from "
 "Applications -> Education -> OpenTeacher."
 msgstr ""
+"Після інсталяціії, запустити OpenTeacher можна перейшовши в Програми -> "
+"Навчання -> OpenTeacher."
 
 #: docsTemplates/the-openteacher-format.html:5
 msgid "The Openteacher 2 file format"
-msgstr ""
+msgstr "Формат файлів Openteacher 2"
 
 #: docsTemplates/the-openteacher-format.html:6
 msgid "The Openteacher 2 file format is an XML 1.0 file with UTF-8 encoding."
 msgstr ""
+"Формат файлу Openteacher 2 такий, як у файлі XML 1.0 з кодуванням UTF-8."
 
 #: docsTemplates/the-openteacher-format.html:7
 #, python-format
 msgid ""
 "An XML-scheme of the file format can be downloaded <a href=\"%s\">here</a>."
 msgstr ""
+"Завантажити XML-схему  для цього формату файлів можна <a "
+"href=\"%s\">звідси</a>."
 
 #: docsTemplates/the-openteacher-format.html:8
 #, python-format
@@ -512,6 +532,8 @@ msgid ""
 "NOTE: For the OpenTeacher 3 file format, please refer to <a href=\"%s\"> the "
 "developer documentation.</a>"
 msgstr ""
+"ПРИМІТКА: За форматом файлів для OpenTeacher 3, зверніться, будь ласка, до "
+"<a href=\"%s\"> документації для розробників.</a>"
 
 #: docsTemplates/the-openteacher-format.html:10
 msgid "Node structure"
@@ -519,7 +541,7 @@ msgstr ""
 
 #: docsTemplates/the-openteacher-format.html:25
 msgid "The title of the word list"
-msgstr ""
+msgstr "Назва для списку слів"
 
 #: docsTemplates/the-openteacher-format.html:26
 msgid "The name of the question language"
@@ -543,11 +565,11 @@ msgstr ""
 
 #: docsTemplates/the-openteacher-format.html:37
 msgid "Example a word list saved in the OpenTeacher 2 format"
-msgstr ""
+msgstr "Приклад списку слів збереженого у форматі OpenTeacher 2:"
 
 #: docsTemplates/faq.html:6
 msgid "OpenTeacher won't run on Windows!"
-msgstr ""
+msgstr "OpenTeacher запуститься під Windows!"
 
 #: docsTemplates/faq.html:7
 msgid ""
@@ -563,7 +585,7 @@ msgstr ""
 
 #: docsTemplates/faq.html:8
 msgid "OpenTeacher won't run on ArchLinux!"
-msgstr ""
+msgstr "OpenTeacher запуститься під ArchLinux!"
 
 #: docsTemplates/faq.html:9
 msgid ""
