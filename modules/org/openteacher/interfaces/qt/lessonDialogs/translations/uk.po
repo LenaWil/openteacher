@@ -1,0 +1,43 @@
+# Ukrainian translation for openteacher
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-02-19 20:14+0100\n"
+"PO-Revision-Date: 2014-07-10 08:10+0000\n"
+"Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
+"Language-Team: Ukrainian <uk@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2014-07-11 05:55+0000\n"
+"X-Generator: Launchpad (build 17111)\n"
+
+#: lessonDialogs.py:84
+msgid "Unsaved data"
+msgstr "Незбережені дані"
+
+#: lessonDialogs.py:85
+msgid "There are unsaved items or results. Are you sure you want to close?"
+msgstr ""
+
+#: lessonDialogs.py:101
+msgid "Warning"
+msgstr "Застереження"
+
+#: lessonDialogs.py:103
+msgid ""
+"Are you sure you want to go back to the enter tab? This will end your lesson!"
+msgstr ""
+
+#: lessonDialogs.py:114
+msgid "Not enough items"
+msgstr ""
+
+#: lessonDialogs.py:115
+msgid "You need to add items to your test first"
+msgstr ""
