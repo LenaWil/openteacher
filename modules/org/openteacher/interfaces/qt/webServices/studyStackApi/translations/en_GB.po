@@ -1,0 +1,54 @@
+# English (United Kingdom) translation for openteacher
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-02-19 20:15+0100\n"
+"PO-Revision-Date: 2014-08-04 15:14+0000\n"
+"Last-Translator: Andi Chandler <Unknown>\n"
+"Language-Team: English (United Kingdom) <en_GB@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2014-08-05 06:23+0000\n"
+"X-Generator: Launchpad (build 17147)\n"
+
+#: studyStackApi.py:141
+msgid "Select category"
+msgstr "Select category"
+
+#: studyStackApi.py:142
+msgid "Please select a category"
+msgstr "Please select a category"
+
+#: studyStackApi.py:147
+msgid "Select list"
+msgstr "Select list"
+
+#: studyStackApi.py:148
+msgid "Please select a list"
+msgstr "Please select a list"
+
+#: studyStackApi.py:224
+msgid "Import from studystack.com"
+msgstr "Import from studystack.com"
+
+#: studyStackApi.py:269
+msgid "The word list was imported from Study Stack successfully."
+msgstr "The word list was imported from Study Stack successfully."
+
+#: studyStackApi.py:280
+msgid "No Study Stack connection"
+msgstr "No Study Stack connection"
+
+#: studyStackApi.py:281
+msgid ""
+"Study Stack didn't accept the connection. Are you sure that your internet "
+"connection works and http://www.studystack.com/ is online?"
+msgstr ""
+"Study Stack didn't accept the connection. Are you sure that your Internet "
+"connection works and http://www.studystack.com/ is online?"
