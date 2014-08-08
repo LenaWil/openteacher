@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2013-11-28 16:18+0000\n"
+"PO-Revision-Date: 2014-08-07 15:14+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-20 05:31+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-08-08 06:29+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 "Language: \n"
 
 #: scr/copyrightInfoDialog.js:29 scr/optionsDialog.js:101
@@ -136,7 +136,7 @@ msgstr "語言："
 
 #: scr/optionsDialog.js:97
 msgid "Practising mode:"
-msgstr ""
+msgstr "練習模式:"
 
 #: scr/optionsDialog.js:98 scr/practisingModeChoiceDialog.js:47
 msgid "Think answer"
@@ -148,17 +148,17 @@ msgstr "輸入答案"
 
 #: scr/practisingModeChoiceDialog.js:45
 msgid "Practising mode choice"
-msgstr ""
+msgstr "選擇練習模式"
 
 #: scr/practisingModeChoiceDialog.js:46
 msgid "Please choose the practising mode you want to use:"
-msgstr ""
+msgstr "請選擇想要的練習模式:"
 
 #: scr/practisingModeChoiceDialog.js:49
 msgid ""
 "If you ever want to change your choice, you can do so in the options dialog, "
 "which is accessable by clicking 'Menu' and then 'Options'."
-msgstr ""
+msgstr "假如你想要改變選擇，可以左鍵點擊 \"選單\" -> \"選項\" 從選項對話視窗。"
 
 #: scr/teachTab.js:225
 msgid "Question:"
@@ -203,9 +203,9 @@ msgstr "我答錯了"
 
 #: scr/teachTab.js:237 scr/teachTab.js:238
 msgid "Test completed!"
-msgstr ""
+msgstr "測試完成！"
 
 #: scr/teachTab.js:240
 #, python-format
 msgid "Your note: %s"
-msgstr ""
+msgstr "你的評論: %s"

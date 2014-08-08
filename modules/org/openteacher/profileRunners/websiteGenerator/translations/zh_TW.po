@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2013-11-28 17:04+0000\n"
+"PO-Revision-Date: 2014-08-07 15:57+0000\n"
 "Last-Translator: Louie Chen <louie23@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-20 05:32+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-08-08 06:29+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 "Language: \n"
 
 #: templates/about.html:6
@@ -34,6 +34,8 @@ msgid ""
 "the next. This should help you remember large doses of information without "
 "being overwhelmed by its size."
 msgstr ""
+"OpenTeacher <strong>幫助您學習</strong>在下一次測驗中所需要知道的知識。OpenTeacher "
+"允許您使用一次只教一小部份的課程種類。一旦您學好這些，OpenTeacher 會移到下一部份。這樣將會幫助您記憶大量資訊而不被淹沒。"
 
 #: templates/about.html:10
 msgid ""
@@ -233,6 +235,8 @@ msgid ""
 "<strong>OpenTeacher</strong> is an open source application that "
 "<strong>helps you learn</strong> a variety of <strong>subjects</strong>."
 msgstr ""
+"<strong>OpenTeacher</strong>是<strong>幫助您學習</strong>多樣的<strong>題目</strong>的開放源"
+"始碼軟體。"
 
 #: templates/index.html:10
 msgid ""
@@ -240,6 +244,8 @@ msgid ""
 "<strong>answers</strong>, or download them from the "
 "<strong>internet</strong>, and OpenTeacher <strong>tests you</strong>."
 msgstr ""
+"直接輸入<strong>問題</strong>和<strong>答案</strong>，或從<strong>網際網路</strong>下載，來讓 "
+"OpenTeacher <strong>測試</strong>。"
 
 #: templates/index.html:12
 msgid "OpenTeacher has the following features (among others):"
@@ -256,17 +262,17 @@ msgstr "聰明的問題詢問及間歇式的訓練"
 #: templates/index.html:16
 msgid ""
 "Reverse rehearsal (the answer is asked, and you need to give the question)"
-msgstr ""
+msgstr "反向演練（問答案，而您必須回答問題）"
 
 #: templates/index.html:17
 msgid ""
 "Read support for more than 30 file formats; write support for over 20 file "
 "formats"
-msgstr ""
+msgstr "支援讀取 30 種以上檔案格式；支援寫入超過 20 種檔案格式"
 
 #: templates/index.html:18
 msgid "Learn typing with our Typing Tutor which adapts itself to your skills"
-msgstr ""
+msgstr "用 Typing Tutor 來練習打字以改造您的技能"
 
 #: templates/index.html:19
 msgid "Print your word lists, media items and topography maps"
@@ -279,6 +285,8 @@ msgid ""
 "German, Greek, Hungarian, Italian, Japanese, Polish, Russian, Sinhalese, "
 "Spanish and Turkish"
 msgstr ""
+"(部份)支援阿拉伯語、巴西語、葡萄牙語、簡體中文、正體中文、捷克語、荷蘭語、芬蘭語、法語、夫裡斯蘭語、加裡西亞語、德語、希臘語、匈牙利語、義大利語、日語、"
+"波蘭語、俄語、錫蘭語、西班牙語和土耳其語"
 
 #: templates/index.html:23
 msgid ""
@@ -577,6 +585,7 @@ msgid ""
 "NOTE: For the OpenTeacher 3 file format, please refer to <a href=\"%s\"> the "
 "developer documentation.</a>"
 msgstr ""
+"注意：關於 OpenTeacher 3 檔案格式，請參考 <a href=\"%s\"> the developer documentation.</a>"
 
 #: docsTemplates/the-openteacher-format.html:10
 msgid "Node structure"
@@ -660,11 +669,11 @@ msgstr ""
 
 #: docsTemplates/faq.html:10
 msgid "How can I let OpenTeacher pronounce words/places?"
-msgstr ""
+msgstr "如何讓 OpenTeacher 唸出單字或地點？"
 
 #: docsTemplates/faq.html:11
 msgid ""
 "You can enable this in the settings. Click Edit > Settings, then select the "
 "Pronounciation tab. Then tick the box before 'Pronounce words' and/or "
 "'Pronounce places'."
-msgstr ""
+msgstr "你能從設定中打開選項。點擊編輯>設定，然後選擇發音的表格。接著核選在 \"唸出單字\" 及 \"唸出地點\" 之前的方框。"
