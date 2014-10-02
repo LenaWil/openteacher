@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2013-01-28 11:49+0000\n"
-"Last-Translator: Phillip Sz <Unknown>\n"
+"PO-Revision-Date: 2014-10-01 22:19+0000\n"
+"Last-Translator: psyca <linux@psyca.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-20 05:31+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-10-02 05:49+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 "Language: de\n"
 
 #: vocatrainApi.py:130
@@ -28,11 +28,11 @@ msgstr ""
 
 #: vocatrainApi.py:136
 msgid "Select book"
-msgstr ""
+msgstr "Wähle Buch"
 
 #: vocatrainApi.py:137
 msgid "Please select a book"
-msgstr ""
+msgstr "Bitte wähle ein Buch"
 
 #: vocatrainApi.py:142
 msgid "Select list"
@@ -44,16 +44,16 @@ msgstr ""
 
 #: vocatrainApi.py:223
 msgid "Import from vocatrain.com"
-msgstr ""
+msgstr "Importieren von vocatrain.com"
 
 #: vocatrainApi.py:224
 msgid "Import from woordjesleren.nl"
-msgstr ""
+msgstr "Importieren von woordjesleren.nl"
 
 #: vocatrainApi.py:284
 #, python-format
 msgid "The word list was imported from %s successfully."
-msgstr ""
+msgstr "Die Wörterliste wurde erfolgreich von %s importiert."
 
 #: vocatrainApi.py:302
 #, python-format

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2013-09-06 18:16+0000\n"
-"Last-Translator: Simon Schütte <simonschuette@arcor.de>\n"
+"PO-Revision-Date: 2014-10-01 15:55+0000\n"
+"Last-Translator: psyca <linux@psyca.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-20 05:32+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-10-02 05:49+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 "Language: de\n"
 
 #: cramApi.py:166
@@ -38,7 +38,7 @@ msgstr ""
 
 #: cramApi.py:262
 msgid "Import from Cram.com"
-msgstr ""
+msgstr "Importiere von Cram.com"
 
 #: cramApi.py:265
 msgid "Cram.com API client id"

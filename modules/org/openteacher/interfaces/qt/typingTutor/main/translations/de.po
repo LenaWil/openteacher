@@ -8,23 +8,25 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2014-02-19 20:14+0100\n"
-"PO-Revision-Date: 2013-01-28 11:48+0000\n"
-"Last-Translator: Phillip Sz <Unknown>\n"
+"PO-Revision-Date: 2014-10-01 17:06+0000\n"
+"Last-Translator: psyca <linux@psyca.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-20 05:31+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-10-02 05:49+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 "Language: de\n"
 
 #: main.py:102
 msgid "That's a mistake :(."
-msgstr ""
+msgstr "Dies ist ein Fehler :(."
 
 #: main.py:144
 msgid "Please choose a user name and the keyboard layout you want to learn."
 msgstr ""
+"Bitte wähle einen Nutzernamen und das Tastaturlayout, welches Sie lernen "
+"möchten."
 
 #: main.py:145
 msgid "Username:"
@@ -45,11 +47,11 @@ msgstr ""
 
 #: main.py:205
 msgid "Welcome, please choose your account by clicking on it."
-msgstr ""
+msgstr "Willkommen, bitte wählen Sie ihren Account durch anklicken."
 
 #: main.py:206
 msgid "I am a new user"
-msgstr ""
+msgstr "Ich bin ein neuer Nutzer"
 
 #: main.py:275
 msgid "Level"
@@ -57,15 +59,15 @@ msgstr ""
 
 #: main.py:276
 msgid "Speed (words per minute)"
-msgstr ""
+msgstr "Geschwindigkeit (Wörter pro Minute)"
 
 #: main.py:277
 msgid "Amount of mistakes"
-msgstr ""
+msgstr "Anzahl an Fehler"
 
 #: main.py:278
 msgid "Start exercise"
-msgstr ""
+msgstr "Beginne Übung"
 
 #: main.py:329
 msgid "Username empty"
@@ -73,7 +75,7 @@ msgstr ""
 
 #: main.py:330
 msgid "The username should not be empty. Please try again."
-msgstr ""
+msgstr "Der Nutzername darf nicht leer sein. Bitte versuche es nochmals."
 
 #: main.py:336
 msgid "Username taken"
@@ -81,7 +83,7 @@ msgstr ""
 
 #: main.py:337
 msgid "That username is already taken. Please try again."
-msgstr ""
+msgstr "Der Nutzername wird bereits verwendet. Bitte versuche es nochmals."
 
 #: main.py:438 main.py:448
 msgid "Typing Tutor"

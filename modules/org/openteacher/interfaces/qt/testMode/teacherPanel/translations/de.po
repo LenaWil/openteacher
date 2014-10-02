@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2013-01-28 11:46+0000\n"
-"Last-Translator: Phillip Sz <Unknown>\n"
+"PO-Revision-Date: 2014-10-01 22:21+0000\n"
+"Last-Translator: psyca <linux@psyca.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-20 05:31+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-10-02 05:49+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 "Language: de\n"
 
 #: teacherPanel.py:67
@@ -24,19 +24,19 @@ msgstr "Tests"
 
 #: teacherPanel.py:68
 msgid "Add lesson"
-msgstr ""
+msgstr "Übung hinzufügen"
 
 #: teacherPanel.py:111
 msgid "Select a student/group:"
-msgstr ""
+msgstr "Wähle ein Student/Gruppe:"
 
 #: teacherPanel.py:112
 msgid "Add person/group"
-msgstr ""
+msgstr "Person/Gruppe hinzufügen"
 
 #: teacherPanel.py:113
 msgid "Back"
-msgstr ""
+msgstr "Zurück"
 
 #: teacherPanel.py:180
 msgid "(did not participate)"
@@ -52,7 +52,7 @@ msgstr "Fragen:"
 
 #: teacherPanel.py:227
 msgid "People in this test:"
-msgstr ""
+msgstr "Leute in diesem Test:"
 
 #: teacherPanel.py:228
 msgid "Add person"
@@ -90,11 +90,11 @@ msgstr ""
 
 #: teacherPanel.py:525
 msgid "Answers right:"
-msgstr ""
+msgstr "Richtige Antworten:"
 
 #: teacherPanel.py:527
 msgid "Answers wrong:"
-msgstr ""
+msgstr "Falsche Antworten"
 
 #: teacherPanel.py:529
 #, python-brace-format
@@ -116,7 +116,7 @@ msgstr "Abgegebene Antwort"
 #. TRANSLATORS: The name of a button clicked if an answer is correct.
 #: teacherPanel.py:537
 msgid "Correct"
-msgstr ""
+msgstr "Richtig"
 
 #: teacherPanel.py:685
 msgid "Teacher panel"
