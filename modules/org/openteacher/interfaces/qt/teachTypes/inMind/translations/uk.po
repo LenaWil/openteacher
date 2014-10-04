@@ -8,19 +8,21 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2014-04-12 12:19+0000\n"
+"PO-Revision-Date: 2014-10-03 08:23+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-13 06:08+0000\n"
-"X-Generator: Launchpad (build 16976)\n"
+"X-Launchpad-Export-Date: 2014-10-04 06:12+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #: inMind.py:47
 msgid ""
 "Think about the answer, and press the 'View answer' button when you're done."
 msgstr ""
+"Подумайте про відповідь, і натисніть кнопку 'Переглянути відповідь' коли "
+"будете готові."
 
 #: inMind.py:48
 msgid "View answer"
@@ -32,11 +34,11 @@ msgstr "Пропустити"
 
 #: inMind.py:70
 msgid "I was right"
-msgstr ""
+msgstr "Я правий (-ва)"
 
 #: inMind.py:71
 msgid "I was wrong"
-msgstr ""
+msgstr "Я помилився (-лася)"
 
 #: inMind.py:135
 msgid "Translation: "
@@ -44,4 +46,4 @@ msgstr "Переклад: "
 
 #: inMind.py:199
 msgid "Think answer"
-msgstr ""
+msgstr "Думати відповідь"

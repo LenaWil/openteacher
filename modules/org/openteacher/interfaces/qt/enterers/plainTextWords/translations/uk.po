@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2014-10-03 09:56+0000\n"
+"PO-Revision-Date: 2014-10-03 10:06+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,38 +17,26 @@ msgstr ""
 "X-Launchpad-Export-Date: 2014-10-04 06:12+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
 
-#: words.py:62
-msgid "I'm ready, start the lesson!"
-msgstr "Усе готово, почати урок!"
-
-#: words.py:64 words.py:516
-msgid "Lesson settings"
-msgstr "Налаштування уроку"
-
-#: words.py:127
-msgid "Change lesson settings"
-msgstr "Змінити налаштування уроку"
-
-#: words.py:128
-msgid "Word:"
-msgstr "Слово:"
-
-#: words.py:129
-msgid "Next"
-msgstr "Далі"
-
-#: words.py:508
-msgid "Lesson type"
-msgstr "Тип уроку"
-
-#: words.py:509
-msgid "Word list order and filters"
+#: plainTextWords.py:65
+msgid ""
+"Please enter the plain text in the text edit. Separate words with a new line "
+"and questions from answers with an equals sign ('=') or a tab."
 msgstr ""
 
-#: words.py:510
-msgid "Word modifications"
+#: plainTextWords.py:66
+msgid "Plain text words enterer"
 msgstr ""
 
-#: words.py:515
-msgid "Words lesson"
-msgstr "Урок зі словами"
+#: plainTextWords.py:79
+msgid "Missing equals sign or tab"
+msgstr ""
+
+#: plainTextWords.py:80
+msgid ""
+"Please make sure every line contains an '='-sign or tab between the "
+"questions and answers."
+msgstr ""
+
+#: plainTextWords.py:167
+msgid "Create words lesson by entering plain text"
+msgstr "Створити урок зі словами з введеного простого тексту"

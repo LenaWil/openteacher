@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2014-10-03 09:56+0000\n"
+"PO-Revision-Date: 2014-10-03 08:38+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,38 +17,26 @@ msgstr ""
 "X-Launchpad-Export-Date: 2014-10-04 06:12+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
 
-#: words.py:62
-msgid "I'm ready, start the lesson!"
-msgstr "Усе готово, почати урок!"
+#: repeatAnswer.py:72
+msgid "Click the button to start"
+msgstr "Натисніть кнопку, щоб почати"
 
-#: words.py:64 words.py:516
-msgid "Lesson settings"
-msgstr "Налаштування уроку"
+#: repeatAnswer.py:73
+msgid "Start!"
+msgstr "Почати!"
 
-#: words.py:127
-msgid "Change lesson settings"
-msgstr "Змінити налаштування уроку"
+#: repeatAnswer.py:186
+msgid "Repeat answer"
+msgstr "Повторити відповідь"
 
-#: words.py:128
-msgid "Word:"
-msgstr "Слово:"
+#: repeatAnswer.py:190
+msgid "Repeat mode fade duration (milliseconds)"
+msgstr "Час затухання в режимі повторення (в мілісекундах)"
 
-#: words.py:129
-msgid "Next"
-msgstr "Далі"
+#: repeatAnswer.py:191
+msgid "Lesson"
+msgstr "Урок"
 
-#: words.py:508
-msgid "Lesson type"
-msgstr "Тип уроку"
-
-#: words.py:509
-msgid "Word list order and filters"
-msgstr ""
-
-#: words.py:510
-msgid "Word modifications"
-msgstr ""
-
-#: words.py:515
+#: repeatAnswer.py:192
 msgid "Words lesson"
 msgstr "Урок зі словами"

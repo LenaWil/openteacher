@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2014-10-03 08:46+0000\n"
+"PO-Revision-Date: 2014-10-03 10:15+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,26 +17,6 @@ msgstr ""
 "X-Launchpad-Export-Date: 2014-10-04 06:12+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
 
-#: hangman.py:109
-msgid "Check!"
-msgstr "Перевірити!"
-
-#: hangman.py:110
-msgid "You have already tried this character / word"
-msgstr "Ви вже пробували цей символ / слово"
-
-#: hangman.py:142
-msgid "Mistakes:  "
-msgstr "Помилки:  "
-
-#: hangman.py:166
-msgid "hanged man"
-msgstr ""
-
-#: hangman.py:190
-msgid "You lose, the answer was: "
-msgstr "Ви програли, відповідь була: "
-
-#: hangman.py:297
-msgid "Play hangman"
-msgstr "Зіграти в шибеницю"
+#: wordsNeverAnsweredCorrectly.py:86
+msgid "Only words you never answered correctly"
+msgstr "Лише слова, на які ви ніколи не відповідали правильно"
