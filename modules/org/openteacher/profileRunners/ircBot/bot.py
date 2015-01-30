@@ -320,7 +320,7 @@ class OpenTeacherBot(irc.IRCClient):
 		#Needed in this situation: .codedocumentation while there's a
 		#factoid .code.
 		for key, factoid in reversed(sorted(self.factoids.iteritems(), key=lambda t: len(t[0]))):
-			if key in msg:
+			if key + " " in msg + " ":
 				return factoid
 
 	def privmsg(self, user, channel, msg):
