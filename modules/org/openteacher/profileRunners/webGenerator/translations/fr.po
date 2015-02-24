@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openteacher\n"
 "Report-Msgid-Bugs-To: openteachermaintainers@lists.launchpad.net\n"
 "POT-Creation-Date: 2014-02-19 20:15+0100\n"
-"PO-Revision-Date: 2014-01-11 08:38+0000\n"
-"Last-Translator: D4RK N3T <Unknown>\n"
+"PO-Revision-Date: 2015-02-23 21:03+0000\n"
+"Last-Translator: Jean Marc <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-07 06:40+0000\n"
-"X-Generator: Launchpad (build 17331)\n"
+"X-Launchpad-Export-Date: 2015-02-24 05:33+0000\n"
+"X-Generator: Launchpad (build 17355)\n"
 "Language: fr\n"
 
 #: static/scr/learn-list.js:5
@@ -24,7 +24,7 @@ msgstr "Question:"
 
 #: static/scr/learn-list.js:6
 msgid "Check!"
-msgstr ""
+msgstr "Verifier !"
 
 #: static/scr/learn-list.js:7
 msgid "Skip"
@@ -32,11 +32,11 @@ msgstr "Passer"
 
 #: static/scr/learn-list.js:8
 msgid "Correct anyway"
-msgstr ""
+msgstr "Corriger de toute façon"
 
 #: static/scr/learn-list.js:9
 msgid "Back"
-msgstr ""
+msgstr "Précédent"
 
 #: static/scr/lists-overview.js:5
 msgid "Lists overview"
@@ -56,7 +56,7 @@ msgstr "Télécharger la liste depuis l'ordinateur"
 
 #: static/scr/lists-overview.js:9
 msgid "View"
-msgstr ""
+msgstr "Vue"
 
 #: static/scr/lists-overview.js:10 static/scr/view-list.js:24
 msgid "Teach me!"
@@ -96,7 +96,7 @@ msgstr "Nouvelle liste"
 
 #: static/scr/lists-overview.js:53
 msgid "Uploaded list"
-msgstr ""
+msgstr "Liste téléversée"
 
 #: static/scr/login.js:6
 msgid "Log in"
@@ -116,15 +116,15 @@ msgstr ""
 
 #: static/scr/login.js:12
 msgid "Username:"
-msgstr ""
+msgstr "Nom d'utilisateur :"
 
 #: static/scr/login.js:13
 msgid "Password:"
-msgstr ""
+msgstr "Mot de passe :"
 
 #: static/scr/login.js:14
 msgid "Log in!"
-msgstr ""
+msgstr "Se connecter !"
 
 #: static/scr/login.js:16
 msgid "Login anonymously"
@@ -138,11 +138,11 @@ msgstr ""
 
 #: static/scr/login.js:20
 msgid "Log out"
-msgstr ""
+msgstr "Se déconnecter"
 
 #: static/scr/login.js:21
 msgid "Unsubscribe"
-msgstr ""
+msgstr "Se désabonner"
 
 #: static/scr/login.js:24
 msgid "Or view a shared list"
@@ -164,11 +164,11 @@ msgstr ""
 
 #: static/scr/view-list.js:5
 msgid "List"
-msgstr ""
+msgstr "Liste"
 
 #: static/scr/view-list.js:6
 msgid "Title:"
-msgstr ""
+msgstr "Titre :"
 
 #: static/scr/view-list.js:7
 msgid "Shares:"
@@ -188,31 +188,31 @@ msgstr ""
 
 #: static/scr/view-list.js:11
 msgid "Questions"
-msgstr ""
+msgstr "Questions"
 
 #: static/scr/view-list.js:12
 msgid "Answers"
-msgstr ""
+msgstr "Réponses"
 
 #: static/scr/view-list.js:13
 msgid "Remove this item"
-msgstr ""
+msgstr "Enlever cet élément"
 
 #: static/scr/view-list.js:15
 msgid "Test results"
-msgstr ""
+msgstr "Résultats du test"
 
 #: static/scr/view-list.js:16
 msgid "Date"
-msgstr ""
+msgstr "Date"
 
 #: static/scr/view-list.js:17
 msgid "Note"
-msgstr ""
+msgstr "Remarque"
 
 #: static/scr/view-list.js:18
 msgid "Completed"
-msgstr ""
+msgstr "Terminé"
 
 #: static/scr/view-list.js:20
 msgid "Back to the lists page"
@@ -220,15 +220,15 @@ msgstr ""
 
 #: static/scr/view-list.js:21
 msgid "Save"
-msgstr ""
+msgstr "Sauvegarder"
 
 #: static/scr/view-list.js:22
 msgid "Print"
-msgstr ""
+msgstr "Imprimer"
 
 #: static/scr/view-list.js:23
 msgid "Download"
-msgstr ""
+msgstr "Télécharger"
 
 #: static/scr/view-list.js:26
 msgid "Saved the list succesfully."
@@ -255,11 +255,11 @@ msgstr ""
 
 #: static/scr/view-list.js:31
 msgid "Close"
-msgstr ""
+msgstr "Fermer"
 
 #: static/scr/view-list.js:35
 msgid "-"
-msgstr ""
+msgstr "-"
 
 #: static/scr/view-list.js:105
 msgid "There are unsaved changes. Are you sure you want to leave this page?"

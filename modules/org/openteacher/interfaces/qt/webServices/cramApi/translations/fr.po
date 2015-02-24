@@ -1,0 +1,58 @@
+# French translation for openteacher
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-02-19 20:15+0100\n"
+"PO-Revision-Date: 2015-02-23 20:57+0000\n"
+"Last-Translator: Jean Marc <Unknown>\n"
+"Language-Team: French <fr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2015-02-24 05:33+0000\n"
+"X-Generator: Launchpad (build 17355)\n"
+
+#: cramApi.py:166
+msgid ""
+"Enter a search term and press the search button to search Cram.com for sets. "
+"Then select the set or sets you want to import and click OK."
+msgstr ""
+
+#: cramApi.py:167
+msgid "E.g.: spanish travel vocabulary"
+msgstr ""
+
+#: cramApi.py:168
+msgid "Search"
+msgstr "Rechercher"
+
+#: cramApi.py:169
+msgid "Search Cram.com"
+msgstr ""
+
+#: cramApi.py:262
+msgid "Import from Cram.com"
+msgstr ""
+
+#: cramApi.py:265
+msgid "Cram.com API client id"
+msgstr ""
+
+#: cramApi.py:292
+msgid "No Cram.com connection"
+msgstr ""
+
+#: cramApi.py:293
+msgid ""
+"Cram.com didn't accept the connection. Are you sure that your internet "
+"connection works and Cram.com is online?"
+msgstr ""
+
+#: cramApi.py:327
+msgid "The word list was imported from Cram.com successfully."
+msgstr ""
