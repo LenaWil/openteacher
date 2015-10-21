@@ -1,0 +1,106 @@
+# Urdu translation for openteacher
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-02-19 20:15+0100\n"
+"PO-Revision-Date: 2015-10-20 11:29+0000\n"
+"Last-Translator: Waqar Ahmed <waqar.17a@gmail.com>\n"
+"Language-Team: Urdu <ur@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2015-10-21 06:01+0000\n"
+"X-Generator: Launchpad (build 17812)\n"
+
+#: gui.py:428
+msgid "Open from file"
+msgstr "فائل سے کھولیں"
+
+#: gui.py:429
+msgid "Documentation"
+msgstr "ڈاکومن ٹیشن"
+
+#: ui.py:51
+msgid "Enter list"
+msgstr ""
+
+#: ui.py:52
+msgid "Teach me!"
+msgstr "مجھے پڑھاؤ"
+
+#: ui.py:53
+msgid "Show results"
+msgstr "نتائج دکھائیں"
+
+#: ui.py:272
+msgid "&File"
+msgstr "&فائل"
+
+#: ui.py:273
+msgid "&New"
+msgstr "&نئی"
+
+#: ui.py:274
+msgid "&Open"
+msgstr "&کھولیں"
+
+#: ui.py:275
+msgid "Open &into current list"
+msgstr "موجودہ فہرست کے &اندر کھولیں"
+
+#: ui.py:276
+msgid "&Save"
+msgstr "&محفوظ کریں"
+
+#: ui.py:277
+msgid "Save &As"
+msgstr "محفوظ &بنام"
+
+#: ui.py:278
+msgid "&Print"
+msgstr "&چھاپیں"
+
+#: ui.py:279
+msgid "&Quit"
+msgstr "بند کریں"
+
+#: ui.py:281
+msgid "&Edit"
+msgstr "&ترمیم"
+
+#: ui.py:282
+msgid "&Reverse list"
+msgstr "فہرست &پلٹائیں"
+
+#: ui.py:283
+msgid "&Settings"
+msgstr "&ترتیبات"
+
+#: ui.py:285
+msgid "&View"
+msgstr "&منظر"
+
+#: ui.py:286
+msgid "Fullscreen"
+msgstr "پوری سکرین"
+
+#: ui.py:288
+msgid "&Help"
+msgstr "&مدد"
+
+#: ui.py:289
+msgid "&Documentation"
+msgstr "&ڈاکومن ٹیشن"
+
+#: ui.py:290
+msgid "&About"
+msgstr "متعلق"
+
+#: ui.py:292
+msgid "Toolbar"
+msgstr "ٹول بار"

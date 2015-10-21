@@ -1,0 +1,38 @@
+# Urdu translation for openteacher
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
+# This file is distributed under the same license as the openteacher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openteacher\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-02-19 20:15+0100\n"
+"PO-Revision-Date: 2015-10-20 11:22+0000\n"
+"Last-Translator: Waqar Ahmed <waqar.17a@gmail.com>\n"
+"Language-Team: Urdu <ur@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2015-10-21 06:01+0000\n"
+"X-Generator: Launchpad (build 17812)\n"
+
+#: startWidget.py:250
+msgid "Create lesson:"
+msgstr "سبق بنائیں:"
+
+#: startWidget.py:251
+msgid "Load lesson:"
+msgstr "سبق لوڈ کریں:"
+
+#: startWidget.py:252
+msgid "Help"
+msgstr "ہدایات"
+
+#: startWidget.py:253
+msgid "Load from the internet"
+msgstr "انٹرنیٹ سے لوڈ کریں"
+
+#: startWidget.py:255
+msgid "Recently opened:"
+msgstr "حالیہ کھولی گئی:"
